@@ -66,7 +66,7 @@ def main():
     import getopt
     param = pyx12.params.params()
     try:
-        opts, args = getopt.getopt(sys.argv[1:], '9c:qvHl:')
+        opts, args = getopt.getopt(sys.argv[1:], '9c:qvHl:x:')
     except getopt.error, msg:
         usage()
         raise
