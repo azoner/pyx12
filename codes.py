@@ -35,16 +35,18 @@
 External Codes interface
 """
 
-import os
+import os, os.path
+import sys
 import cPickle
-import xml.dom.minidom
+import libxml2
 from stat import ST_MTIME
 from stat import ST_SIZE
 
-
 # Intrapackage imports
 import errors
-from utils import GetChildElementText
+
+NodeType = {'element_start': 1, 'element_end': 15, 'attrib': 2, 'text': 3, 'CData': 4, 'entity_ref': 5, 'entity_decl':6, 'pi': 7, 'comment': 8, 'doc': 9, 'dtd': 10, 'doc_frag': 11, 'notation': 12}
+
 
 class ExternalCodes:
     """
@@ -60,32 +62,62 @@ class ExternalCodes:
     	"""
 	
 	self.codes = {}
+	code_file = 'map/codes.xml'
+	pickle_file = '%s.%s' % (os.path.splitext(code_file)[0], 'pkl')
+	id = None
 	
     	# init the map of codes from the pickled file codes.pkl
 	try:
-	    if os.stat('map/codes.xml')[ST_MTIME] < os.stat('map/codes.pkl')[ST_MTIME]:
-		self.codes = cPickle.load(open('map/codes.pkl'))
+	    if os.stat(code_file)[ST_MTIME] < os.stat(pickle_file)[ST_MTIME]:
+		self.codes = cPickle.load(open(pickle_file))
 	    else: 
 	        raise "reload codes"
 	except:
-    	    # init the map of codes from codes.xml
-	    dom_codes = xml.dom.minidom.parse('map/codes.xml')
-	    codeset_nodes = dom_codes.getElementsByTagName("codeset")
-	    for codeset_node in codeset_nodes:
-	        id = GetChildElementText(codeset_node, 'id')
-	        code_list = []
-                for code in codeset_node.childNodes:
-	            if code.nodeType == code.ELEMENT_NODE and code.tagName == 'code':
-        	        for a in code.childNodes:
-       	    	            if a.nodeType == a.TEXT_NODE:
-	        	        a.normalize()
-			        code_list.append(a.data)
-	        self.codes[id] = code_list
-	    try:
-	        cPickle.dump(self.codes,open('map/codes.pkl','w'))
-	    except:
-	        pass
-	#print self.codes.keys()
+            try:
+            	reader = libxml2.newTextReaderFilename(code_file)
+            except:
+            	raise errors.x12Error, 'Code file not found: %s' % (code_file)
+            try:
+            	ret = reader.Read()
+            	if ret == -1:
+                    raise errors.XML_Reader_Error, 'Read Error'
+            	elif ret == 0:
+                    raise errors.XML_Reader_Error, 'End of Map File'
+            	while ret == 1:
+                    #print 'map_if', reader.NodeType(), reader.Depth(), reader.Name()
+                    if reader.NodeType() == NodeType['element_start']:
+                    	cur_name = reader.Name()
+                    	if cur_name == 'codeset':
+		    	    code_list = []
+                            base_level = reader.Depth()
+                            #base_name = 'codeset'
+		    	#cur_level = reader.Depth()
+                    elif reader.NodeType() == NodeType['element_end']:
+		    	if reader.Name() == 'codeset':
+			    self.codes[id] = code_list			    
+			    #del code_list
+			    id = None
+#			if reader.Depth() <= base_level:
+#			    ret = reader.Read()
+#                            if ret == -1:
+#                            	raise errors.XML_Reader_Error, 'Read Error'
+#                            elif ret == 0:
+#                            	raise errors.XML_Reader_Error, 'End of Map File'
+#                            break
+                        cur_name = ''
+                    elif reader.NodeType() == NodeType['text'] and base_level + 1 <= reader.Depth():
+                    	if cur_name == 'id':
+                            id = reader.Value()
+                    	elif cur_name == 'code':
+                            code_list.append(reader.Value())
+
+                    ret = reader.Read()
+                    if ret == -1:
+                    	raise errors.XML_Reader_Error, 'Read Error'
+                    elif ret == 0:
+                    	raise errors.XML_Reader_Error, 'End of Map File'
+            except errors.XML_Reader_Error:
+	    	pass
 
     def IsValid(self, key, code):
     	"""
@@ -106,4 +138,8 @@ class ExternalCodes:
 	    if not code in self.codes[key]:
 	        return 0
 	return 1
+
+    def debug_print(self):
+    	for key in self.codes.keys():
+	    print self.codes[key][:10]
 
