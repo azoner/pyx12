@@ -45,6 +45,7 @@ import logging
 from types import *
 import pdb
 #import profile
+import tempfile
 
 # Intrapackage imports
 #sys.path.append('/usr/home/sniper/src')
@@ -114,7 +115,8 @@ def main():
                     target_997 = src_filename + '.997'
                 else:
                     target_997 = os.path.splitext(src_filename)[0] + '.997'
-                fd_997 = open(target_997, 'w')
+                #fd_997 = open(target_997, 'w')
+                fd_997 = tempfile.mkstemp(text=True)
             if flag_html:
                 target_html = os.path.splitext(src_filename)[0] + '.html'
                 fd_html = open(target_html, 'w')
@@ -122,6 +124,8 @@ def main():
                 sys.stderr.write('%s: OK\n' % (src_filename))
             else:
                 sys.stderr.write('%s: Failure\n' % (src_filename))
+            fd_997.seek(0)
+            open(target_997, 'w').write(fd_997.read())
         except IOError:
             logger.error('Could not open files')
             usage()
