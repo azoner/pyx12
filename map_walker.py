@@ -81,46 +81,61 @@ class walk_tree:
 #        if self.is_first_seg_match(node, seg): 
 #            return node # Return the loop node
 
-#        if seg[0] == 'NM1':
-#            pdb.set_trace()
 
         # match next node in loop
         # Finds next child loop or segment in the containing loop
-        node = orig_node
+        #node = orig_node
         node_idx = node.index # Get original index of starting node
         if not (node.is_loop() or node.is_map_root()): 
             node = self.pop_to_parent_loop(node) # Get enclosing loop
         while 1:
             for child in node.children:
+                #logger.debug('id=%s child.index=%i node_idx=%i' % \
+                #    (child.id, child.index, node_idx))
                 if child.index >= node_idx:
+                    logger.debug('id=%s cur_count=%i max_repeat=%i' \
+                        % (child.id, child.cur_count, child.get_max_repeat()))
                     if child.is_segment():
                         if child.is_match(seg):
+                            logger.debug('MATCH segment %s (%s*%s)' % (child.id, seg[0], seg[1]))
+                            if seg[0] == 'INS':
+                                pdb.set_trace()
                             if child.usage == 'N':
                                 raise WEDIError, "Segment %s found but marked as not used" % (child.id)
                             if child is orig_node:
+                                logger.debug('child %s IS orig_node %s' % (child.id, orig_node.id))
                                 child.cur_count += 1
                             else:
-                                child.cur_count = 0
+                                if orig_node.is_segment():
+                                    orig_node.cur_count = 0
+                                    logger.debug('Set orig_node %s cur_count = 0' % (orig_node.id))
+                                child.cur_count = 1
+                                logger.debug('Set child %s cur_count = 1' % (orig_node.id))
                             if child.cur_count > child.get_max_repeat():  # handle seg repeat count
                                 raise WEDIError, "Segment %s exceeded max count.  Found %i, should have %i" \
                                     % (seg[0], child.cur_count, child.get_max_repeat())
                             return child
-                        elif child.usage == 'R':
+                        elif child.usage == 'R' and child.cur_count < 1:
+                            # if child.cur_count == 0:
                             raise WEDIError, "Required segment %s not found" % (child.id)
-                    elif node.is_loop(): 
-                        logger.debug('map_walker: child_node id=%s' % (child.id))
-                        if self.is_first_seg_match(child, seg): 
-                            # XXXXXXX  Handle max seg and loop counts    
-                            if child is orig_node:
-                                child.cur_count += 1
-                            else:
-                                child.cur_count = 0
-                            return child # Return the loop node
                         else:
-                            logger.debug('map_walker: child_node id=%s is node a match' % (child.id))
+                            logger.debug('Segment %s is not a match for (%s*%s)' % (child.id, seg[0], seg[1]))
+                    elif child.is_loop(): 
+                        #logger.debug('child_node id=%s' % (child.id))
+                        if self.is_first_seg_match(child, seg): 
+                            child.cur_count += 1
+                            child.reset_cur_count()
+                            node = child.children[0]
+                            node.cur_count = 1
+                            logger.debug('MATCH Loop %s / Segment %s (%s*%s)' \
+                                % (child.id, node.id, seg[0], seg[1]))
+                            return node # Return the first segment in node
+                        else:
+                            logger.debug('Loop id=%s is not a match for (%s*%s)' % (child.id, seg[0], seg[1]))
             if node.is_map_root(): # If at root and we haven't found the segment yet.
                 raise WEDIError, "Segment %s not found" % (seg[0])
             node_idx = node.index # Get index of current node in tree
+            #node.reset_cur_count()
             node = self.pop_to_parent_loop(node) # Get enclosing parent loop
          
            

@@ -251,6 +251,11 @@ class map_if(x12_node):
     def is_map_root(self):
         return True
 
+    def reset_cur_count(self):
+        for child in self.children:
+            if child.is_loop():
+                child.reset_cur_count()
+
 
 ############################################################
 # Loop Interface
@@ -392,6 +397,11 @@ class loop_if(x12_node):
 
     def is_loop(self):
         return True
+
+    def reset_cur_count(self):
+        for child in self.children:
+            if child.is_loop():
+                child.reset_cur_count()
 
 ############################################################
 # Segment Interface
@@ -536,7 +546,7 @@ class segment_if(x12_node):
         return None
 
     def get_max_repeat(self):
-        if self.max_use is None:
+        if self.max_use is None or self.max_use == '>1':
             return MAXINT
         return int(self.max_use)
     
@@ -571,7 +581,7 @@ class segment_if(x12_node):
         Returns: boolean
         """
         if seg[0] == self.id:
-            if self.children[1].data_type == 'ID' and seg[1] in self.children[1].valid_codes:
+            if self.children[1].data_type == 'ID' and seg[1] not in self.children[1].valid_codes:
                 return False
             return True
         else:
@@ -617,7 +627,8 @@ class segment_if(x12_node):
         """
         pass
 
-        
+    def reset_cur_count(self):
+        cur_count = 0
 
 ############################################################
 # Element Interface
@@ -829,9 +840,11 @@ class element_if(x12_node):
         global codes
         if elem_val == '' or elem_val is None:
             if self.usage == 'N':
-                return 1
+                return True
             elif self.usage == 'R':
                 raise errors.WEDI1Error, 'Element %s is required' % (self.refdes)
+            elif self.usage == 'S':
+                return True
         if (not self.data_type is None) and (self.data_type == 'R' or self.data_type[0] == 'N'):
             elem = string.replace(string.replace(elem_val, '-', ''), '.', '')
             if len(elem) < int(self.min_len):
@@ -854,7 +867,7 @@ class element_if(x12_node):
             raise errors.WEDIError, "Not a valid code for this ID element"
         if not IsValidDataType(elem_val, self.data_type, 'E'):
             raise errors.WEDI1Error, "Invalid X12 datatype: '%s' is not a '%s'" % (elem_val, self.data_type) 
-        return 1
+        return True
 
 
     def parse(self):
