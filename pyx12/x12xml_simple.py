@@ -34,13 +34,14 @@ class x12xml_simple(x12xml):
         x12xml.__init__(self)
         self.writer = XMLWriter(fd)
         self.writer.doctype(
-            u"x12doc", u"-//J Holland//DTD XML X12 Document Conversion1.0//EN//XML",
+            u"x12simple", u"-//J Holland//DTD XML X12 Document Conversion1.0//EN//XML",
             u"%s" % (dtd_urn))
-        self.writer.push(u"x12doc")
+        self.writer.push(u"x12simple")
         self.path = '/'
 
     def __del__(self):
-        self.writer.pop()
+        while len(self.writer) > 0:
+            self.writer.pop()
 
     def seg(self, seg_node, seg_data):
         """
@@ -89,7 +90,8 @@ class x12xml_simple(x12xml):
                     pass
                     #self.writer.empty(u"ele", attrs={u'id': child_node.id})
                 else:
-                    self.writer.elem(u'ele', seg_data[i], attrs={u'id': child_node.id})
+                    #pdb.set_trace()
+                    self.writer.elem(u'ele', seg_data[i].format(), attrs={u'id': child_node.id})
             else:
                 raise EngineError, 'Node must be a either an element or a composite'
         self.writer.pop() #end segment

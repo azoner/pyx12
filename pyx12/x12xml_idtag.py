@@ -35,14 +35,15 @@ class x12xml_idtag(x12xml):
         x12xml.__init__(self)
         self.writer = XMLWriter(fd)
         self.writer.doctype(
-            u"x12doc", u"-//J Holland//DTD XML X12 Document Conversion1.0//EN//XML",
+            u"x12idtag", u"-//J Holland//DTD XML X12 Document Conversion1.0//EN//XML",
             u"%s" % (dtd_urn))
 
-        self.writer.push(u"x12doc")
+        self.writer.push(u"x12idtag")
         self.path = '/'
 
     def __del__(self):
-        self.writer.pop()
+        while len(self.writer) > 0:
+            self.writer.pop()
 
     def seg(self, seg_node, seg_data):
         """
