@@ -1,3 +1,5 @@
+Validate length of D8 and D6 daatatypes.
+
 Config file support
 
 Loop walking bug

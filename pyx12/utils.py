@@ -97,6 +97,10 @@ def IsValidDataType(str, data_type, charset = 'B'):
             (start, end) = str.split('-')
             return IsValidDataType(start, 'D8', charset) and IsValidDataType(end, 'D8', charset) 
         elif data_type in ('DT', 'D8', 'D6'):
+            if data_type == 'D8' and len(str) != 8:
+                raise IsValidError
+            if data_type == 'D6' and len(str) != 6:
+                raise IsValidError
             m = re.compile("[^0-9]+", re.S).search(str)  # first test date for non-numeric chars
             if m:  # invalid string found
                 raise IsValidError 

@@ -67,6 +67,7 @@ class BasicDate(unittest.TestCase):
         self.failUnless(IsValidDataType('020414', 'DT', 'B'))
         self.failUnless(IsValidDataType('960229', 'DT', 'B'))
         self.failUnless(IsValidDataType('200402020400', 'DT', 'B'))
+        self.failUnless(IsValidDataType('20040430', 'DT', 'B'))
         
     def testInvalid(self):
         self.failIf(IsValidDataType('990229', 'DT', 'B'))
@@ -82,6 +83,7 @@ class BasicDate(unittest.TestCase):
         self.failIf(IsValidDataType('20040222040', 'DT', 'B'))
         self.failIf(IsValidDataType('2004022204', 'DT', 'B'))
         self.failIf(IsValidDataType('200402220', 'DT', 'B'))
+        self.failIf(IsValidDataType('20040431', 'DT', 'B'))
 
 class BasicTime(unittest.TestCase):
     def testValid(self):
@@ -180,6 +182,8 @@ class ExtendedDate(unittest.TestCase):
         self.failIf(IsValidDataType('55555555', 'D8', 'E'))
         self.failIf(IsValidDataType('55555555', 'D8', 'B'))
         self.failIf(IsValidDataType('200402024 00', 'D8', 'B'))
+        self.failIf(IsValidDataType('020414', 'D8', 'E'))
+        self.failIf(IsValidDataType('20020414', 'D6', 'E'))
 
 
 class ExtendedTime(unittest.TestCase):

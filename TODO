@@ -9,8 +9,6 @@ TA1 input
 
 LX index incrementing
 
-Error for invalid dates
-
 Error Handling
   Stream Errors to XML
   Combine error XML with HTML/XML/997 output
