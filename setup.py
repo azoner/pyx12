@@ -1,6 +1,7 @@
 from distutils import core
+import pyx12.x12n_document
 
-map_dir = 'share/pyx12/1map'
+map_dir = 'share/pyx12/map'
 kw = {  
     'name': "pyx12",
     'version': pyx12.x12n_document.__version__,
@@ -10,7 +11,7 @@ kw = {
     'author_email': "jholland@kazoocmh.org",
     'url': "http://www.sourceforge.net/pyx12/",
     'packages': ['pyx12'],
-    'scripts' = [ "bin/x12lint.py"],
+    'scripts': [ 'bin/x12lint.py', 'bin/x12html.py', 'bin/x12xml.py'],
     'data_files': [
         (map_dir, ['map/270.4010.X092.A1.xml']),
         (map_dir, ['map/270.4010.X092.xml']),
