@@ -54,9 +54,9 @@
 
   <xsd:complexType name="VersionType">
     <xsd:sequence>
-      <xsd:element name="id" type="xsd:normalizedString"/>
-      <xsd:element name="eff_dte" type="xsd:normalizedString"/>
-      <xsd:element name="exp_dte" type="xsd:normalizedString"/>
+      <xsd:element name="id" type="xsd:normalizedString" minOccurs="0"/>
+      <xsd:element name="eff_dte" type="xsd:normalizedString" minOccurs="0"/>
+      <xsd:element name="exp_dte" type="xsd:normalizedString" minOccurs="0"/>
       <xsd:element name="code" type="xsd:normalizedString" maxOccurs="unbounded"/>
     </xsd:sequence>
   </xsd:complexType>
