@@ -981,7 +981,7 @@ class element_if(x12_node):
             self.__error__(errh, err_str, '6', elem_val)
 
         if elem_val == '' or elem_val is None:
-            if self.usage == 'N':
+            if self.usage in ('N', 'S'):
                 return True
             elif self.usage == 'R':
                 if self.seq != 1 or not self.parent.is_composite() or self.parent.usage == 'R':
@@ -990,8 +990,6 @@ class element_if(x12_node):
                     return False
                 else:
                     return True
-            elif self.usage == 'S':
-                return True
                 
         valid = True
         if (not self.data_type is None) and (self.data_type == 'R' or self.data_type[0] == 'N'):
@@ -1025,19 +1023,7 @@ class element_if(x12_node):
                 self.__error__(errh, err_str, '6', elem_val)
                 valid = False
             
-        #if self.external_codes == 'states':
-        #pdb.set_trace()
-        bValidCode = False
-        if len(self.valid_codes) == 0 and self.external_codes is None:
-            bValidCode = True
-        if elem_val in self.valid_codes:
-            bValidCode = True
-        if self.external_codes is not None and \
-            self.root.ext_codes.IsValid(self.external_codes, elem_val, check_dte):
-            bValidCode = True
-        if not bValidCode:
-            err_str = '(%s) is not a valid code for %s (%s)' % (elem_val, self.name, self.refdes)
-            self.__error__(errh, err_str, '7', elem_val)
+        if not self.__is_valid_code__(elem_val, errh, check_dte):
             valid = False
            
         if not IsValidDataType(elem_val, self.data_type, self.root.param.get_param('charset')):
@@ -1058,17 +1044,22 @@ class element_if(x12_node):
                 valid = False
         return valid
 
+    def __is_valid_code__(self, elem_val, errh, check_dte=None):
+        bValidCode = False
+        if len(self.valid_codes) == 0 and self.external_codes is None:
+            bValidCode = True
+        if elem_val in self.valid_codes:
+            bValidCode = True
+        if self.external_codes is not None and \
+            self.root.ext_codes.IsValid(self.external_codes, elem_val, check_dte):
+            bValidCode = True
+        if not bValidCode:
+            err_str = '(%s) is not a valid code for %s (%s)' % (elem_val, self.name, self.refdes)
+            self.__error__(errh, err_str, '7', elem_val)
+            return False
+        return True
+        
 
-    def parse(self):
-        """
-        Class: element_if
-        Name:    
-        Desc:    
-        Params:  
-                 
-        Returns: list of elements??? 
-        """
-        pass
 
     def get_seg_count(self):
         """
