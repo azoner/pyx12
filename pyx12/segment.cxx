@@ -41,6 +41,7 @@
 #include <fstream>
 
 #include "segment.hxx"
+#include "errors.hxx"
 
 /*
  * Implements an interface to a x12 segment.
@@ -155,28 +156,50 @@ ostream& composite::operator<<(ostream& os, composite& comp)
     return os;
 }
 
-string composite::format()
+string composite::format(char subele_term_='')
 {
+    char term;
+    string ret;
+    if(subele_term_ == '')
+        term = subele_term;
+    else
+        term = subele_term_;
+    if(!elements.empty())
+        ret.append(elements[0].format())
+    iter i = elements.begin() + 1;
+    while(i != str.end()) {
+        ret.append(term);
+        ret.append(i->format());
+    }
+    return ret;
 }
 
-string& composite::get_value()
+string composite::get_value()
 {
+    if(elements.length() == 1)
+        return elements[0].get_value();
+    else
+        throw Pyx12Errors::IndexError("value of composite is undefined");
 }
 
-void composite::set_subele_term(const string& subele_term)
+void composite::set_subele_term(const string& subele_term_)
 {
+    subele_term = subele_term_;
 }
 
 bool composite::is_composite()
 {
+    return true;
 }
 
 bool composite::is_element()
 {
+    return false;
 }
 
 bool composite::is_empty()
 {
+    return elements.empty();
 }
 
 
