@@ -51,6 +51,7 @@ from errors import *
 #import map_if
 #import x12file
 #from utils import *
+import pyx12.segment
 
 logger = logging.getLogger('pyx12.walk_tree')
 #logger.setLevel(logging.DEBUG)
@@ -152,7 +153,8 @@ class walk_tree:
                         elif child.usage == 'R' and child.cur_count < 1:
                             # if child.cur_count == 0:
                             #pdb.set_trace()
-                            errh.add_seg(child, [child.id], seg_count, cur_line, ls_id)
+                            fake_seg = pyx12.segment.segment('%s'% (child.id), '~', '*', ':')
+                            errh.add_seg(child, fake_seg, seg_count, cur_line, ls_id)
                             err_str = "Mandatory segment %s missing" % (child.id)
                             mandatory_segs_missing.append((seg_data.get_seg_id(), '3', err_str))
                             #break
