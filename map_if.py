@@ -263,10 +263,10 @@ class loop_if(x12_node):
         self.parent = parent
         self.path = ''
         self.base_name = 'loop'
+        
         self.id = None
         self.name = None
         self.usage = None
-        self.req_des = None
         self.seq = None
         self.repeat = None
 
@@ -322,8 +322,6 @@ class loop_if(x12_node):
                     self.name = reader.Value()
                 elif cur_name == 'usage' and self.base_name == 'loop':
                     self.usage = reader.Value()
-                elif cur_name == 'req_des' and self.base_name == 'loop':
-                    self.req_des = reader.Value()
                 elif cur_name == 'seq' and self.base_name == 'loop':
                     self.seq = reader.Value()
                 elif cur_name == 'repeat' and self.base_name == 'loop':
@@ -342,7 +340,6 @@ class loop_if(x12_node):
         if self.id: sys.stdout.write('%sid %s\n' % (str(' '*(self.base_level+1)), self.id))
         if self.name: sys.stdout.write('%sname %s\n' % (str(' '*(self.base_level+1)), self.name))
         if self.usage: sys.stdout.write('%susage %s\n' % (str(' '*(self.base_level+1)), self.usage))
-        if self.req_des: sys.stdout.write('%sreq_des %s\n' % (str(' '*(self.base_level+1)), self.req_des))
         if self.seq: sys.stdout.write('%sseq %s\n' % (str(' '*(self.base_level+1)), self.seq))
         if self.repeat: sys.stdout.write('%srepeat%s\n' % (str(' '*(self.base_level+1)), self.repeat))
         for node in self.children:
@@ -396,7 +393,6 @@ class segment_if(x12_node):
         self.id = None
         self.name = None
         self.usage = None
-        self.req_des = None
         self.pos = None
         self.max_use = None
  
@@ -448,8 +444,6 @@ class segment_if(x12_node):
                     self.name = reader.Value()
                 elif cur_name == 'usage' and self.base_name == 'segment':
                     self.usage = reader.Value()
-                elif cur_name == 'req_des' and self.base_name == 'segment':
-                    self.req_des = reader.Value()
                 elif cur_name == 'pos' and self.base_name == 'segment':
                     self.pos = reader.Value()
                 elif cur_name == 'max_use' and self.base_name == 'segment':
@@ -467,7 +461,6 @@ class segment_if(x12_node):
         if self.id: sys.stdout.write('%sid %s\n' % (str(' '*(self.base_level+1)), self.id))
         if self.name: sys.stdout.write('%sname %s\n' % (str(' '*(self.base_level+1)), self.name))
         if self.usage: sys.stdout.write('%susage %s\n' % (str(' '*(self.base_level+1)), self.usage))
-        if self.req_des: sys.stdout.write('%sreq_des %s\n' % (str(' '*(self.base_level+1)), self.req_des))
         if self.pos: sys.stdout.write('%spos %s\n' % (str(' '*(self.base_level+1)), self.pos))
         if self.max_use: sys.stdout.write('%smax_use %s\n' % (str(' '*(self.base_level+1)), self.max_use))
         for node in self.children:
@@ -568,16 +561,14 @@ class element_if(x12_node):
         self.id = None
         self.name = None
         self.usage = None
-        self.req_des = None
-        self.pos = None
-        self.max_use = None
+        #self.pos = None
+        #self.max_use = None
         self.data_ele = None
         self.seq = None
-        self.pos = None
         self.refdes = None
         self.data_type = None
         self.min_len = None
-        self.max_len = None
+        #self.max_len = None
 
         self.valid_codes = []
         self.external_codes = None
@@ -639,12 +630,10 @@ class element_if(x12_node):
                     self.data_ele= reader.Value()
                 elif cur_name == 'usage':
                     self.usage = reader.Value()
-                elif cur_name == 'req_des':
-                    self.req_des = reader.Value()
                 elif cur_name == 'seq':
                     self.seq = reader.Value()
-                elif cur_name == 'pos':
-                    self.pos = reader.Value()
+                #elif cur_name == 'pos':
+                #    self.pos = reader.Value()
                 elif cur_name == 'refdes':
                     self.refdes = reader.Value()
                     self.id = self.refdes
@@ -654,8 +643,8 @@ class element_if(x12_node):
                     self.min_len = reader.Value()
                 elif cur_name == 'max_len':
                     self.max_len = reader.Value()
-                elif cur_name == 'max_use':
-                    self.max_use= reader.Value()
+                #elif cur_name == 'max_use':
+                #    self.max_use= reader.Value()
                 elif cur_name == 'code':
                     self.valid_codes.append(reader.Value())
 #               <valid_codes external="prov_taxonomy"/>
@@ -674,7 +663,6 @@ class element_if(x12_node):
         if self.data_ele: sys.stdout.write('%sdata_ele %s\n' % (str(' '*(self.base_level+1)), self.data_ele))
         if self.name: sys.stdout.write('%sname %s\n' % (str(' '*(self.base_level+1)), self.name))
         if self.usage: sys.stdout.write('%susage %s\n' % (str(' '*(self.base_level+1)), self.usage))
-        if self.req_des: sys.stdout.write('%sreq_des %s\n' % (str(' '*(self.base_level+1)), self.req_des))
         if self.seq: sys.stdout.write('%sseq %s\n' % (str(' '*(self.base_level+1)), self.seq))
         if self.refdes: sys.stdout.write('%srefdes %s\n' % (str(' '*(self.base_level+1)), self.refdes))
         if self.data_type: sys.stdout.write('%sdata_type %s\n' % (str(' '*(self.base_level+1)), self.data_type))
@@ -825,7 +813,6 @@ class composite_if(x12_node):
         #self.id = None
         self.name = None
         self.usage = None
-        self.req_des = None
         self.seq= None
         self.refdes = None
 
@@ -870,8 +857,6 @@ class composite_if(x12_node):
                     self.name = reader.Value()
                 elif cur_name == 'usage':
                     self.usage = reader.Value()
-                elif cur_name == 'req_des':
-                    self.req_des = reader.Value()
                 elif cur_name == 'seq':
                     self.seq = reader.Value()
                 elif cur_name == 'refdes':
@@ -888,7 +873,6 @@ class composite_if(x12_node):
         sys.stdout.write('%s%s %s %s %s\n' % (str(' '*self.base_level), self.base_name, self.base_level, self.id, self.name))
         if self.name: sys.stdout.write('%sname %s\n' % (str(' '*(self.base_level+1)), self.name))
         if self.usage: sys.stdout.write('%susage %s\n' % (str(' '*(self.base_level+1)), self.usage))
-        if self.req_des: sys.stdout.write('%sreq_des %s\n' % (str(' '*(self.base_level+1)), self.req_des))
         if self.seq: sys.stdout.write('%sseq %s\n' % (str(' '*(self.base_level+1)), self.seq))
         if self.refdes: sys.stdout.write('%srefdes %s\n' % (str(' '*(self.base_level+1)), self.refdes))
         for node in self.children:
