@@ -1,0 +1,3 @@
+Restructure interface to x12file
+
+Removed Taxonomy Codes from codes.xml

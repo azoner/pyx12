@@ -141,8 +141,6 @@ class err_handler:
         Params: 
         Note:      
         """
-        #self.x12_src = x12_src
-        #(isa_id, gs_id, st_id, ls_id, seg_count, cur_line) = x12_src.get_id()
 
         self.id = 'ROOT'
         #self.isa_loop_count = 0
@@ -401,16 +399,6 @@ class err_node:
         """
         Class:      err_node
         """
-        #obj = {'id': '', 'seg': seg, 'src_id': src.get_id()}
-#        self.seg = obj['seg']
-#        self.src_id =  obj['src_id']
-#        (isa_id, gs_id, st_id, ls_id, seg_count, cur_line) = self.src_id
-#        self.cur_line = cur_line
-#        self.isa_id = isa_id
-#        self.gs_id = gs_id
-#        self.st_id = st_id
-#        self.ls_id = ls_id
-#        self.seg_count = seg_count
         self.parent = parent
         self.id = None
         self.children = []
@@ -511,9 +499,8 @@ class err_isa(err_node):
         Params:     x12_src - instance of x12file
         """
         self.seg = seg
-        (isa_id, gs_id, st_id, ls_id, seg_count, cur_line) = src.get_id()
-        self.isa_id = isa_id
-        self.cur_line_isa = cur_line
+        self.isa_id = src.get_isa_id()
+        self.cur_line_isa = src.get_cur_line()
         self.cur_line_iea = None
         
         self.isa_trn_set_id = seg[13]
@@ -555,8 +542,7 @@ class err_isa(err_node):
         self.errors.append((err_cde, err_str))
         
     def close(self, node, seg, src):
-        (isa_id, gs_id, st_id, ls_id, seg_count, cur_line) = src.get_id()
-        self.cur_line_iea = cur_line
+        self.cur_line_iea = src.get_cur_line()
 
     def get_cur_line(self):
         """
@@ -618,12 +604,10 @@ class err_gs(err_node):
         Params: fic - Functional Identifier Code (GS01)
         """
         self.seg = seg
-        (isa_id, gs_id, st_id, ls_id, seg_count, cur_line) = src.get_id()
-        self.isa_id = isa_id
-        self.cur_line_gs = cur_line
+        self.isa_id = src.get_isa_id()
+        self.cur_line_gs = src.get_cur_line()
         self.cur_line_ge = None
-        
-        self.gs_control_num = gs_id
+        self.gs_control_num = src.get_gs_id()
         self.fic = self.seg[1]
         self.id = 'GS'
         
@@ -668,10 +652,8 @@ class err_gs(err_node):
         Desc:    
         Params:     
         """
-        (isa_id, gs_id, st_id, ls_id, seg_count, cur_line) = src.get_id()
-        #self.cur_gs_id = gs_id
         # From GE loop
-        self.cur_line_ge = cur_line
+        self.cur_line_ge = src.get_cur_line()
 
         if '1' in self.errors: self.ack_code = 'R'
         elif '2' in self.errors: self.ack_code = 'R'
@@ -766,9 +748,8 @@ class err_st(err_node):
         Params: 
         """
         self.seg = seg
-        (isa_id, gs_id, st_id, ls_id, seg_count, cur_line) = src.get_id()
-        self.trn_set_control_num = st_id
-        self.cur_line_st = cur_line
+        self.trn_set_control_num = src.get_st_id()
+        self.cur_line_st = src.get_cur_line()
         self.cur_line_se = None
         self.trn_set_id = seg[1] # eg 837
 
@@ -809,8 +790,7 @@ class err_st(err_node):
         Desc:    
         Params:     
         """
-        (isa_id, gs_id, st_id, ls_id, seg_count, cur_line) = src.get_id()
-        self.cur_line_se = cur_line
+        self.cur_line_se = src.get_cur_line()
         if self.err_count() > 0:
             self.ack_code = 'R'
         else:
@@ -903,7 +883,6 @@ class err_seg(err_node):
             self.name = map_node.name
             self.pos = map_node.pos
         self.seg_id = seg[0]
-        #(isa_id, gs_id, st_id, ls_id, seg_count, cur_line) = src.get_id()
         self.seg_count = seg_count
         self.cur_line = cur_line
         self.ls_id = ls_id

@@ -108,7 +108,6 @@ def main():
         target_xml = os.path.splitext(src_filename)[0] + '.xml'
         logger.debug('src=%s    xml=%s' % (src_filename, target_xml))
         try:
-            fd_src = open(src_filename, 'r')
             fd_xml = open(target_xml, 'w')
         except:
             logger.error('Could not open files')
@@ -116,7 +115,7 @@ def main():
             sys.exit(2)
 
         try:
-            result = pyx12.x12n_document.x12n_document(param, fd_src, None, None, fd_xml)
+            result = pyx12.x12n_document.x12n_document(param, src_filename, None, None, fd_xml)
             fd_src.close()
             fd_xml.close()
             if not result:

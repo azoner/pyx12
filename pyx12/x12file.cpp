@@ -53,9 +53,7 @@ class x12file
     int seg_count = 0;
     int cur_line = 0;
     string buffer;
-    isa_ids = []
-    gs_ids = []
-    st_ids = []
+    vector<string> isa_ids, gs_ids, st_ids;
     string isa_usage;
     char seg_term, ele_term, subele_term;
 
@@ -73,23 +71,20 @@ class x12file
          *                    << endl;
          *                    */
         //errh = errh
-        loops = []
-        hl_stack = []
-        isa_ids = []
-        gs_ids = []
-        st_ids = []
         string line;
         string err_str;
 
         line = fd.read(ISA_LEN);
         if(line(0,3) != "ISA")
         {
-            err_str = "First line does not begin with 'ISA') %s" % line[)3]
-            raise x12Error, err_str
+            err_str = "First line does not begin with 'ISA') " + line(0,3);
+            //raise x12Error, err_str
         }
         if(line.size() != ISA_LEN)
         {
-            err_str = "ISA line is only %i characters" % len(line)
+            err_str = "ISA line is only ";
+            err_str += itoa(line.length());
+            err_str += " characters";
             //#errh.isa_error('ISA4', err_str)
             //raise x12Error, err_str
         }

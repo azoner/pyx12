@@ -118,7 +118,7 @@ def main():
 
     for src_filename in args:
         try:
-            fd_src = open(src_filename, 'U')
+            #fd_src = open(src_filename, 'U')
             if flag_997:
                 if os.path.splitext(src_filename)[1] == '.997':
                     target_997 = src_filename + '.997'
@@ -131,7 +131,7 @@ def main():
             if flag_html:
                 target_html = os.path.splitext(src_filename)[0] + '.html'
                 fd_html = open(target_html, 'w')
-            if pyx12.x12n_document.x12n_document(param, fd_src, fd_997, fd_html):
+            if pyx12.x12n_document.x12n_document(param, src_filename, fd_997, fd_html):
                 sys.stderr.write('%s: OK\n' % (src_filename))
             else:
                 sys.stderr.write('%s: Failure\n' % (src_filename))

@@ -44,7 +44,7 @@ import pdb
 
 # Intrapackage imports
 from errors import *
-from x12file import seg_str
+from utils import seg_str
 from error_visitor import error_visitor
 
 __author__  = "John Holland <jholland@kazoocmh.org> <john@zoner.org>"

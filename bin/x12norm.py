@@ -5,7 +5,6 @@ import pyx12.error_handler
 import sys
 
 errh = pyx12.error_handler.err_handler()
-fd = sys.stdin
-src = pyx12.x12file.x12file(fd, errh)
+src = pyx12.x12file.x12file('', errh)
 for c in src:
     src.print_seg(c)

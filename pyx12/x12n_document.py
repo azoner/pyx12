@@ -70,7 +70,7 @@ from params import params
 #Global Variables
 #logger = None
 
-def x12n_document(param, fd_src, fd_997, fd_html, fd_xmldoc=None):
+def x12n_document(param, src_file, fd_997, fd_html, fd_xmldoc=None):
     map_path = param.get_param('map_path')
     logger = logging.getLogger('pyx12')
     errh = error_handler.err_handler()
@@ -79,7 +79,7 @@ def x12n_document(param, fd_src, fd_997, fd_html, fd_xmldoc=None):
     
     # Get X12 DATA file
     try:
-        src = x12file.x12file(fd_src, errh) 
+        src = x12file.x12file(src_file, errh) 
     except x12Error:
         logger.error('This does not look like a X12 data file')
         sys.exit(2)
@@ -126,8 +126,7 @@ def x12n_document(param, fd_src, fd_997, fd_html, fd_xmldoc=None):
     node = map.getnodebypath('/ISA')
     logger.debug('Map file loaded')
 
-    fd_src.seek(0)
-    src = x12file.x12file(fd_src, errh) 
+    src = x12file.x12file(src_file, errh) 
     if fd_html:
         html = error_html.error_html(errh, fd_html, src.get_term())
         html.header()
@@ -141,8 +140,9 @@ def x12n_document(param, fd_src, fd_997, fd_html, fd_xmldoc=None):
         #find node
         orig_node = node
         try:
-            (isa_id, gs_id, st_id, ls_id, seg_count, cur_line) = src.get_id()
-            node = walker.walk(node, seg, errh, seg_count, cur_line, ls_id)
+            #(isa_id, gs_id, st_id, ls_id, seg_count, cur_line) = src.get_id()
+            node = walker.walk(node, seg, errh, src.get_seg_count(), \
+                src.get_cur_line(), src.get_ls_id())
         except EngineError:
             logger.error('Source file line %i' % (src.cur_line))
             raise
@@ -158,7 +158,6 @@ def x12n_document(param, fd_src, fd_997, fd_html, fd_xmldoc=None):
                 errh.add_isa_loop(seg, src)
             elif seg[0] == 'IEA':
                 errh.close_isa_loop(node, seg, src)
-                #errh.update_node({'id': 'IEA', 'seg': seg, 'src_id': src.get_id()})
                 # Generate 997
                 #XXX Generate TA1 if needed.
             elif seg[0] == 'GS':
@@ -185,8 +184,8 @@ def x12n_document(param, fd_src, fd_997, fd_html, fd_xmldoc=None):
             elif seg[0] == 'SE':
                 errh.close_st_loop(node, seg, src)
             else:
-                (isa_id, gs_id, st_id, ls_id, seg_count, cur_line) = src.get_id()
-                errh.add_seg(node, seg, seg_count, cur_line, ls_id)
+                #(isa_id, gs_id, st_id, ls_id, seg_count, cur_line) = src.get_id()
+                errh.add_seg(node, seg, src.get_seg_count(), src.get_cur_line(), src.get_ls_id())
 
             node.is_valid(seg, errh)
 

@@ -9,8 +9,7 @@ def main():
         try:
             sys.stdout.write('Source filename: %s\n' % (src_file))
             errh = pyx12.error_handler.err_handler()
-            fd = open(src_file, 'r')
-            src = pyx12.x12file.x12file(fd, errh)
+            src = pyx12.x12file.x12file(src_file, errh)
             state = ''
             for c in src:
                 if c[0] == 'ISA':

@@ -43,7 +43,7 @@ Tracks segment/line/loop counts
 import sys
 import string
 from types import *
-from utils import seg_str
+#from utils import seg_str
 import logging
 
 # Intrapackage imports
@@ -61,14 +61,14 @@ class x12file:
     Desc:    Interface to an X12 data file
     """
 
-    def __init__(self, fd, errh):
+    def __init__(self, src_file, errh):
         """
         Class:      x12file
         Name:       __init__
         Desc:       Initialize the file
-        Params:     fd - source file descriptor
+        Params:     src_file - source file name
         """
-        self.fd = fd
+        self.fd = open(src_file, 'U')
         self.errh = errh
         self.loops = []
         self.hl_stack = []
@@ -82,18 +82,17 @@ class x12file:
         self.gs_ids = []
         self.st_ids = []
         self.isa_usage = None
+        self.errors = []
 
         #self.logger = logging.getLogger('pyx12')
 
         ISA_len = 106
-        line = fd.read(ISA_len)
+        line = self.fd.read(ISA_len)
         if line[:3] != 'ISA': 
             err_str = "First line does not begin with 'ISA': %s" % line[:3]
-            #errh.isa_error('ISA1', err_str)
             raise x12Error, err_str
         if len(line) != ISA_len:
             err_str = 'ISA line is only %i characters' % len(line)
-            #errh.isa_error('ISA4', err_str)
             raise x12Error, err_str
         self.seg_term = line[-1]
         self.ele_term = line[3]
@@ -108,7 +107,7 @@ class x12file:
         return self
 
     def next(self):
-        #errh = self.errh
+        self.errors = []
         try:
             if self.buffer.find(self.seg_term) == -1: # Need more data
                 self.buffer += self.fd.read(DEFAULT_BUFSIZE)
@@ -120,7 +119,8 @@ class x12file:
                     break
             if line[-1] == self.ele_term:
                 err_str = 'Segment contains trailing element terminators'
-                self.errh.seg_error('SEG1', err_str, src_line=self.cur_line+1 )
+                #self.errors.append(('SEG1', err_str, src_line=self.cur_line+1))
+                self.errh.seg_error('SEG1', err_str, src_line=self.cur_line+1)
             seg = string.split(line, self.ele_term)
         except:
             raise StopIteration
@@ -254,11 +254,49 @@ class x12file:
             if loop[0] == 'LS': ls_id = loop[1]
         return (isa_id, gs_id, st_id, ls_id, self.seg_count, self.cur_line)
 
+    def get_isa_id(self): 
+        isa_id = None
+        for loop in self.loops:
+            if loop[0] == 'ISA': isa_id = loop[1]
+        return isa_id
+
+    def get_gs_id(self): 
+        gs_id = None
+        for loop in self.loops:
+            if loop[0] == 'GS': gs_id = loop[1]
+        return gs_id
+
+    def get_st_id(self): 
+        st_id = None
+        for loop in self.loops:
+            if loop[0] == 'ST': st_id = loop[1]
+        return st_id
+
+    def get_ls_id(self): 
+        ls_id = None
+        for loop in self.loops:
+            if loop[0] == 'LS': ls_id = loop[1]
+        return ls_id
+
+    def get_seg_count(self): return self.seg_count
+
+    def get_cur_line(self): return self.cur_line
+
     def print_seg(self, seg):
-        sys.stdout.write('%s' % (seg_str(seg, self.seg_term, self.ele_term, self.subele_term, '\n')))
+        sys.stdout.write('%s' % (self.seg_str(seg, self.seg_term, self.ele_term, self.subele_term, '\n')))
 
     def format_seg(self, seg):
-        return '%s' % (seg_str(seg, self.seg_term, self.ele_term, self.subele_term, '\n'))
+        return '%s' % (self.seg_str(seg, self.seg_term, self.ele_term, self.subele_term, '\n'))
 
     def get_term(self):
         return (self.seg_term, self.ele_term, self.subele_term, '\n')
+
+    def seg_str(self, seg, seg_term, ele_term, subele_term, eol=''):
+        tmp = []
+        for a in seg:
+            if type(a) is ListType:
+                tmp.append(string.join(a, subele_term))
+            else:
+                tmp.append(a)
+        return '%s%s%s' % (string.join(tmp, ele_term), seg_term, eol)
+

@@ -103,8 +103,7 @@ def main():
     try:
         if args:
             src_filename = args[0]
-            fd_src = open(src_filename, 'U')
-            pyx12.x12n_document.x12n_document(param, fd_src, None, fd_html)
+            pyx12.x12n_document.x12n_document(param, src_filename, None, fd_html)
     except KeyboardInterrupt:
         print "\n[interrupt]"
     return True
