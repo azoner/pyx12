@@ -2146,7 +2146,6 @@
           </composite>
         </segment>
       </loop>
-    </loop>
     <loop>
       <id>2000B</id>
       <name>Subscriber Hierarchichal Level</name>
@@ -38773,6 +38772,7 @@
               </element>
             </segment>
           </loop>
+        </loop>
         </loop>
       </loop>
     </loop>
