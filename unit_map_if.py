@@ -57,6 +57,14 @@ class Test_getnodebypath(unittest.TestCase):
         self.assertEqual(node.id, 'CLM')
         self.assertEqual(node.base_name, 'segment')
 
+class IsValidSyntax(unittest.TestCase):
+    def test_fail_bad_syntax(self):
+        seg = ['MEA', 'OG', 'HT', '', '', '', '', '', '']
+        syntax = ['R', 3]
+        (result, err_str) = map_if.is_syntax_valid(seg, syntax)
+        #self.failUnlessRaises(EngineError, map_if.is_syntax_valid, seg, syntax)
+        self.failIf(result, err_str)
+
 class IsValidSyntaxP(unittest.TestCase):
     """
     If has one, must have all
@@ -94,29 +102,47 @@ class IsValidSyntaxR(unittest.TestCase):
     """
 
     def test_R_ok(self):
-        seg = ['NM1', '41', '1', 'Smith', 'Sam', '', '', '', '46', 'AAAA']
-        syntax = ['R', 8, 9]
+        seg = ['REF', '1A', 'AAA', '']
+        syntax = ['R', 2, 3]
         (result, err_str) = map_if.is_syntax_valid(seg, syntax)
         self.failUnless(result, err_str)
         
+    def test_R_ok3(self):
+        seg = ['REF', '1A', 'AAA']
+        syntax = ['R', 2, 3]
+        (result, err_str) = map_if.is_syntax_valid(seg, syntax)
+        self.failUnless(result, err_str)
+        
+    def test_R_fail1(self):
+        #pdb.set_trace()
+        seg = ['REF', '1A']
+        syntax = ['R', 2, 3]
+        (result, err_str) = map_if.is_syntax_valid(seg, syntax)
+        self.failIf(result, err_str)
+
+    def test_R_fail2(self):
+        seg = ['REF', '1A', '']
+        syntax = ['R', 2, 3]
+        (result, err_str) = map_if.is_syntax_valid(seg, syntax)
+        self.failIf(result, err_str)
+
     def test_R_ok1(self):
-        seg = ['NM1', '41', '1', 'Smith', 'Sam', '', '', '', '', 'AAAA']
-        syntax = ['R', 8, 9]
+        seg = ['MEA', 'OG', 'HT', '3', '', '', '', '', '8']
+        syntax = ['R', 3, 5, 6, 8]
         (result, err_str) = map_if.is_syntax_valid(seg, syntax)
         self.failUnless(result, err_str)
 
     def test_R_ok2(self):
-        seg = ['NM1', '41', '1', 'Smith', 'Sam', '', '', '', '46', '']
-        syntax = ['R', 8, 9]
+        seg = ['MEA', 'OG', 'HT', '', '', '', '', '', '8']
+        syntax = ['R', 3, 5, 6, 8]
         (result, err_str) = map_if.is_syntax_valid(seg, syntax)
         self.failUnless(result, err_str)
 
     def test_R_fail_blank(self):
-        seg = ['NM1', '41', '1', 'Smith', 'Sam', '', '', '', '', '']
-        syntax = ['R', 8, 9]
+        seg = ['MEA', 'OG', 'HT', '', '', '', '', '', '']
+        syntax = ['R', 3, 5, 6, 8]
         (result, err_str) = map_if.is_syntax_valid(seg, syntax)
         self.failIf(result, err_str)
-
 
 class IsValidSyntaxC(unittest.TestCase):
     """
@@ -124,25 +150,38 @@ class IsValidSyntaxC(unittest.TestCase):
     """
     def test_C_ok(self):
         seg = ['NM1', '41', '1', 'Smith', 'Sam', '', '', '', '46', 'AAAA']
+        #seg = ['CUR', ]
         syntax = ['C', 8, 9]
         (result, err_str) = map_if.is_syntax_valid(seg, syntax)
         self.failUnless(result, err_str)
         
     def test_C_fail1(self):
-        seg = ['NM1', '41', '1', 'Smith', 'Sam', '', '', '', '', 'AAAA']
-        syntax = ['C', 8, 9]
-        (result, err_str) = map_if.is_syntax_valid(seg, syntax)
-        self.failUnless(result) #, err_str)
-
-    def test_C_fail2(self):
         seg = ['NM1', '41', '1', 'Smith', 'Sam', '', '', '', '46', '']
         syntax = ['C', 8, 9]
         (result, err_str) = map_if.is_syntax_valid(seg, syntax)
         self.failIf(result, err_str)
 
+    def test_C_ok1(self):
+        seg = ['NM1', '41', '1', 'Smith', 'Sam', '', '', '', '', 'AAAA']
+        syntax = ['C', 8, 9]
+        (result, err_str) = map_if.is_syntax_valid(seg, syntax)
+        self.failUnless(result, err_str)
+
+    def test_C_ok2(self):
+        seg = ['NM1', '41', '1', 'Smith', 'Sam', '', '', '', '46', '']
+        syntax = ['C', 7, 8, 9]
+        (result, err_str) = map_if.is_syntax_valid(seg, syntax)
+        self.failUnless(result, err_str)
+
     def test_C_ok_blank(self):
         seg = ['NM1', '41', '1', 'Smith', 'Sam', '', '', '', '', '']
-        syntax = ['C', 8, 9]
+        syntax = ['C', 6, 7, 8, 9]
+        (result, err_str) = map_if.is_syntax_valid(seg, syntax)
+        self.failUnless(result, err_str)
+
+    def test_C_ok_null(self):
+        seg = ['NM1', '41', '1', 'Smith', 'Sam']
+        syntax = ['C', 6, 7, 8, 9]
         (result, err_str) = map_if.is_syntax_valid(seg, syntax)
         self.failUnless(result, err_str)
 
@@ -205,6 +244,12 @@ class IsValidSyntaxE(unittest.TestCase):
 
     def test_E_ok_blank(self):
         seg = ['NM1', '41', '1', 'Smith', 'Sam', '', '', '', '', '', '']
+        syntax = ['E', 8, 9, 10]
+        (result, err_str) = map_if.is_syntax_valid(seg, syntax)
+        self.failUnless(result, err_str)
+
+    def test_E_ok_null(self):
+        seg = ['NM1', '41', '1', 'Smith', 'Sam']
         syntax = ['E', 8, 9, 10]
         (result, err_str) = map_if.is_syntax_valid(seg, syntax)
         self.failUnless(result, err_str)
