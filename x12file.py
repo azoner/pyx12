@@ -164,11 +164,13 @@ class x12file:
         isa_id = None
         gs_id = None
         st_id = None
+        ls_id = None
         for loop in self.loops:
             if loop[0] == 'ISA': isa_id = loop[1]
             if loop[0] == 'GS': gs_id = loop[1]
             if loop[0] == 'ST': st_id = loop[1]
-        return (isa_id, gs_id, st_id, self.seg_count, self.cur_line)
+            if loop[0] == 'LS': ls_id = loop[1]
+        return (isa_id, gs_id, st_id, ls_id, self.seg_count, self.cur_line)
 
 
     def print_seg(self, seg):
