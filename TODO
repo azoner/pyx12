@@ -1,3 +1,9 @@
+Windows issues:
+  NamedTempFile permissions
+  location of map files
+  location of config files
+  path to code file
+
 X070 Map
 
 Wrap scripts in web services
