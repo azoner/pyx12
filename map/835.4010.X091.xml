@@ -356,12 +356,12 @@
           </valid_codes>
         </element>
       </segment>
-      <loop type="explicit">
-        <id>ST</id>
-        <name>Transaction Set Header</name>
+      <loop type="header">
+        <id>HEADER</id>
+        <name>Table 1 - Header</name>
         <usage>R</usage>
-        <seq>001</seq>
-        <repeat>&gt;1</repeat>
+        <seq>010</seq>
+        <repeat>1</repeat>
         <segment>
           <id>ST</id>
           <name>Transaction Set Header</name>
@@ -1654,6 +1654,13 @@
             </composite>
           </segment>
         </loop>
+        </loop>
+        <loop type="detail">
+          <id>DETAIL</id>
+          <name>Table 2 - Detail</name>
+          <usage>S</usage>
+          <seq>020</seq>
+          <repeat>&gt;1</repeat>
         <loop>
           <id>2000</id>
           <name>Header Number</name>
@@ -4808,6 +4815,13 @@
             </loop>
           </loop>
         </loop>
+        </loop>
+      <loop type="footer">
+        <id>FOOTER</id>
+        <name>Table 3 - Footer</name>
+        <usage>R</usage>
+        <seq>030</seq>
+        <repeat>1</repeat>
         <segment>
           <id>PLB</id>
           <name>Provider Adjustment</name>
@@ -5120,6 +5134,7 @@
             <max_len>9</max_len>
           </element>
         </segment>
+      </loop>
       </loop>
       <segment>
         <id>GE</id>
