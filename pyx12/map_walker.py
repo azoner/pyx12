@@ -99,6 +99,7 @@ class walk_tree:
 
         @bug: segments with same position occur out of order
             and first node is required
+        @todo: check single segment loop repeat
         """
 
         #if seg_data.get_seg_id() == 'LX':
