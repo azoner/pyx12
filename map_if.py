@@ -97,6 +97,23 @@ class x12_node:
 	else:
     	    return self.children[idx]
 
+    def is_match(self, seg):
+    	# match also by ID
+        pass
+
+    def walk_tree(self, seg):
+	# handle loop events, pop, push
+	# only concerned with loop and segment nodes
+
+	# repeat of seg
+	# next seg in loop
+	# repeat of loop
+	# child loop
+	# sibling loop
+	# parent loop
+	# - first id element ==
+
+
     def is_map_root(self): return False
 
     def is_loop(self): return False
