@@ -96,15 +96,15 @@ def main():
     logger.addHandler(stderr_hdlr)
     logger.setLevel(logging.INFO)
 
-    #param.set_param('map_path', os.path.expanduser('~/src/pyx12/map/'))
+    #param.set('map_path', os.path.expanduser('~/src/pyx12/map/'))
     for o, a in opts:
         if o == '-v': logger.setLevel(logging.DEBUG)
         if o == '-q': logger.setLevel(logging.ERROR)
-        if o == '-c': param.set_param('charset', a)
-        if o == '-x': param.set_param('exclude_external_codes', a)
-        if o == '-f': param.set_param('force_map_load', True)
-        if o == '-m': param.set_param('map_path', a)
-        if o == '-p': param.set_param('pickle_path', a)
+        if o == '-c': param.set('charset', a)
+        if o == '-x': param.set('exclude_external_codes', a)
+        if o == '-f': param.set('force_map_load', True)
+        if o == '-m': param.set('map_path', a)
+        if o == '-p': param.set('pickle_path', a)
         if o == '-H': flag_html = True
         if o == '-l':
             try:

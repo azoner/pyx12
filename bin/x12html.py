@@ -86,11 +86,11 @@ def main():
     fd_html = None
 
     target_html = ''
-    #param.set_param('map_path', os.path.expanduser('~/src/pyx12/map/'))
+    #param.set('map_path', os.path.expanduser('~/src/pyx12/map/'))
     for o, a in opts:
         #if o == '-v': logger.setLevel(logging.DEBUG)
         if o == '-q': logger.setLevel(logging.ERROR)
-        if o == '-c': param.set_param('charset', a)
+        if o == '-c': param.set('charset', a)
         #if o == '-H': target_html = a
 
     try:

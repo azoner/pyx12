@@ -100,19 +100,19 @@ def main():
     flag_997 = True
     profile = False
     debug = False
-    #param.set_param('map_path', os.path.expanduser('/usr/local/share/pyx12/map'))
-    #param.set_param('pickle_path', os.path.expanduser('/tmp'))
+    #param.set('map_path', os.path.expanduser('/usr/local/share/pyx12/map'))
+    #param.set('pickle_path', os.path.expanduser('/tmp'))
     for o, a in opts:
         if o == '-v': logger.setLevel(logging.DEBUG)
         if o == '-q': logger.setLevel(logging.ERROR)
-        if o == '-c': param.set_param('charset', a)
+        if o == '-c': param.set('charset', a)
         if o == '-d': 
-            param.set_param('debug', True)
+            param.set('debug', True)
             debug = True
-        if o == '-x': param.set_param('exclude_external_codes', a)
-        if o == '-f': param.set_param('force_map_load', True)
-        if o == '-m': param.set_param('map_path', a)
-        if o == '-p': param.set_param('pickle_path', a)
+        if o == '-x': param.set('exclude_external_codes', a)
+        if o == '-f': param.set('force_map_load', True)
+        if o == '-m': param.set('map_path', a)
+        if o == '-p': param.set('pickle_path', a)
         if o == '-P': profile = True
         if o == '-H': flag_html = True
         if o == '-l':

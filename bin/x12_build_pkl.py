@@ -15,9 +15,9 @@ def main():
     param = pyx12.params.params()
     try:
         map_dir = sys.argv[1]
-        param.set_param('map_path', map_dir)
+        param.set('map_path', map_dir)
     except:
-        map_dir = param.get_param('map_path')
+        map_dir = param.get('map_path')
     try:
         pickle_dir = sys.argv[2]
     except:
