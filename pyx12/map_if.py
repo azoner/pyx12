@@ -77,7 +77,7 @@ class x12_node:
 #    def __del__(self):
 #        pass
 
-    def __rept__(self):
+    def __repr__(self):
         return self.name
 
     def getnodebypath(self, path):
@@ -374,12 +374,14 @@ class loop_if(x12_node):
         self.children = []
         self.path = ''
         self.base_name = 'loop'
+        self.type = 'implicit'
         self.cur_count = 0
         
         self.id = None
         self.name = None
         self.usage = None
         self.seq = None
+        self.pos = None
         self.repeat = None
         
         reader = self.root.reader
@@ -392,6 +394,13 @@ class loop_if(x12_node):
 #            self.path = path + '/' + id
 
         self.cur_level = reader.Depth()
+
+        while reader.MoveToNextAttribute():
+            if reader.Name() == 'xid':
+                self.id = reader.Value()
+                self.path = self.id
+            elif reader.Name() == 'type':
+                self.type = reader.Value()
         
         ret = 1 
         while ret == 1:
@@ -446,15 +455,16 @@ class loop_if(x12_node):
             elif tmpNodeType == NodeType['text'] and self.base_level + 2 == \
                     reader.Depth():
                 #print cur_name, reader.Value()
-                if cur_name == 'id' and self.base_name == 'loop':
-                    self.id = reader.Value()
-                    self.path = self.id
-                elif cur_name == 'name' and self.base_name == 'loop':
+                #if cur_name == 'id' and self.base_name == 'loop':
+                #    self.id = reader.Value()
+                #    self.path = self.id
+                if cur_name == 'name' and self.base_name == 'loop':
                     self.name = reader.Value()
                 elif cur_name == 'usage' and self.base_name == 'loop':
                     self.usage = reader.Value()
-                elif cur_name == 'seq' and self.base_name == 'loop':
-                    self.seq = reader.Value()
+                elif cur_name == 'pos' and self.base_name == 'loop':
+                    self.pos = reader.Value()
+                    self.seq = self.pos  # XXX
                 elif cur_name == 'repeat' and self.base_name == 'loop':
                     self.repeat = reader.Value()
 
@@ -481,8 +491,8 @@ class loop_if(x12_node):
             out += '  "%s"' % (self.name)
         if self.usage: 
             out += '  usage: %s' % (self.usage)
-        if self.seq: 
-            out += '  seq: %s' % (self.seq)
+        if self.pos: 
+            out += '  pos: %s' % (self.pos)
         if self.repeat: 
             out += '  repeat: %s' % (self.repeat)
         out += '\n'
@@ -567,6 +577,11 @@ class segment_if(x12_node):
 
         self.cur_level = reader.Depth()
         
+        while reader.MoveToNextAttribute():
+            if reader.Name() == 'xid':
+                self.id = reader.Value()
+                self.path = self.id
+
         ret = 1 
         while ret == 1:
             #print '--- segment while'
@@ -611,10 +626,10 @@ class segment_if(x12_node):
                 
             elif tmpNodeType == NodeType['text'] and self.base_level + 2 == reader.Depth():
                 #print cur_name, reader.Value()
-                if cur_name == 'id' and self.base_name == 'segment':
-                    self.id = reader.Value()
-                    self.path = self.id
-                elif cur_name == 'end_tag' and self.base_name == 'segment':
+                #if cur_name == 'id' and self.base_name == 'segment':
+                #    self.id = reader.Value()
+                #    self.path = self.id
+                if cur_name == 'end_tag' and self.base_name == 'segment':
                     self.end_tag = reader.Value()
                 elif cur_name == 'name' and self.base_name == 'segment':
                     self.name = reader.Value()
@@ -674,12 +689,12 @@ class segment_if(x12_node):
 #        for child in self.children:
 #            if child.is_element():
 #                if child.id == id:
-#                    return seg_data[child.seq].get_value()
+#                    return seg_data[child.pos].get_value()
 #            elif child.is_composite():
 #                for child in self.children:
 #                    if child.is_element():
 #                        if child.id == id:
-#                            return seg_data[child.seq]
+#                            return seg_data[child.pos]
 #        return None
 
     def get_max_repeat(self):
@@ -866,6 +881,11 @@ class element_if(x12_node):
 
         self.cur_level = reader.Depth()
         
+        while reader.MoveToNextAttribute():
+            if reader.Name() == 'xid':
+                self.id = reader.Value()
+                self.refdes = self.id
+
         ret = 1 
         while ret == 1:
             #print '--- segment while'
@@ -917,9 +937,9 @@ class element_if(x12_node):
                     self.path = reader.Value()
                 #elif cur_name == 'pos':
                 #    self.pos = reader.Value()
-                elif cur_name == 'refdes':
-                    self.refdes = reader.Value()
-                    self.id = self.refdes
+                #elif cur_name == 'refdes':
+                #    self.refdes = reader.Value()
+                #    self.id = self.refdes
                 elif cur_name == 'data_type':
                     self.data_type = reader.Value()
                 elif cur_name == 'min_len':
