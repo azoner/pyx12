@@ -43,7 +43,7 @@ import logging
 from types import *
 import pdb
 import tempfile
-import difflib
+#import difflib
 
 # Intrapackage imports
 import pyx12
@@ -62,13 +62,13 @@ def main():
     Set up environment for processing
     """
     param = pyx12.params.params()
-    logger = logging.getLogger('test_functional')
-    logger.setLevel(logging.INFO)
-    formatter = logging.Formatter('%(asctime)s %(levelname)s %(module)s %(lineno)d %(message)s')
+    #logger = logging.getLogger('test_functional')
+    #logger.setLevel(logging.INFO)
+    #formatter = logging.Formatter('%(asctime)s %(levelname)s %(module)s %(lineno)d %(message)s')
 
-    stderr_hdlr = logging.StreamHandler()
-    stderr_hdlr.setFormatter(formatter)
-    logger.addHandler(stderr_hdlr)
+    #stderr_hdlr = logging.StreamHandler()
+    #stderr_hdlr.setFormatter(formatter)
+    #logger.addHandler(stderr_hdlr)
 
     fd_src = None
     fd_997 = None
@@ -86,7 +86,7 @@ def main():
         except ImportError:
             pass
 
-    diff = difflib.Differ(skip_headers)
+    #diff = difflib.Differ(skip_headers)
     try:
         dir = os.path.abspath('./files')
         os.chdir(dir)
@@ -115,12 +115,35 @@ def main():
 
                     pyx12.x12n_document.x12n_document(param, src_filename, fd_997, fd_html)
                     fd_997.seek(0)
+                    open(target_997, 'w').write(fd_997.read())
                     fd_997_base = open(base_997, 'r')
-                    #open(target_997, 'w').write(fd_997.read())
-                    result = list(diff.compare(fd_997_base.readlines(), fd_997.readlines()))
-                    sys.stdout.writelines(result)
+                    #result = list(diff.compare(fd_997_base.readlines(), fd_997.readlines()))
+                    base = fd_997_base.readlines()
+                    fd_997.seek(0)
+                    new = fd_997.readlines()
+                    diff = False
+                    sys.stdout.write('\n%s' % (name))
+                    for i in range(max(len(base), len(new))):
+                        if i < len(base) and base[i][:3] not in ['ISA', 'GS*', 'IEA', 'GE*']:
+                            line_base = base[i].strip()
+                        else:
+                            line_base = ''
+                        if i < len(new) and new[i][:3] not in ['ISA', 'GS*', 'IEA', 'GE*']:
+                            line_new = new[i].strip()
+                        else:
+                            line_new = ''
+                        if line_base != line_new:
+                            diff = True
+                            if line_base != '':
+                                sys.stdout.write('\n- %s' % (line_base))
+                            if line_new != '':
+                                sys.stdout.write('\n+ %s' % (line_new))
+                            sys.stdout.write('\n___')
+                    if not diff:
+                        sys.stdout.write(': OK')
+                    sys.stdout.write('\n')
                 except IOError:
-                    logger.error('Could not open files')
+                    sys.stderr.write('Error: Could not open files\n')
                     sys.exit(2)
                 except KeyboardInterrupt:
                     print "\n[interrupt]"
