@@ -35,6 +35,29 @@ class Delimiters(unittest.TestCase):
         self.assertEqual(src.ele_term, '&')
         self.assertEqual(src.seg_term, '+')
 
+    def test_binary_delimiters(self):
+        str = 'ISA&00&          &00&          &ZZ&ZZ000          &ZZ&ZZ001          &030828&1128&U&00401&000010121&0&T&!+\n'
+        str += 'GS&HC&ZZ000&ZZ001&20030828&1128&17&X&004010X098+\n'
+        str += 'ST&837&11280001+\n'
+        str += 'TST&AA!1!1&BB!5+\n'
+        str += 'SE&3&11280001+\n'
+        str += 'GE&1&17+\n'
+        str += 'IEA&1&000010121+\n'
+        str = str.replace('&', chr(0x1C))
+        str = str.replace('+', chr(0x1D))
+        str = str.replace('!', chr(0x1E))
+        print str
+        fd = tempfile.NamedTemporaryFile()
+        fd.write(str)
+        fd.seek(0)
+        src = pyx12.x12file.x12file(fd.name, self.errh)
+        for seg in src:
+            pass
+        self.assertEqual(self.errh.err_cde, None)
+        self.assertEqual(src.subele_term, chr(0x1E))
+        self.assertEqual(src.ele_term, chr(0x1C))
+        self.assertEqual(src.seg_term, chr(0x1D))
+
     def test_trailing_ele_delim(self):
         str = 'ISA*00*          *00*          *ZZ*ZZ000          *ZZ*ZZ001          *030828*1128*U*00401*000010121*0*T*:~\n'
         str += 'ZZ****~\n'
