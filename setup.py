@@ -56,6 +56,8 @@ kw = {
         ('share/examples/pyx12/test', ['test/test.py', 'test/test_codes.py', \
             'test/test_map_if.py', 'test/test_map_walker.py', \
             'test/test_utils.py', 'test/test_x12file.py']),
+        ('share/examples/pyx12', ['bin/pyx12.conf.xml.sample']),
+        ('etc', ['bin/pyx12.conf.xml.sample']),
         ('share/doc/pyx12/view', ['view/Makefile', 'view/codes.xsl', \
             'view/loop.css', 'view/loop.xsl', 'view/map_seg.xsl', \
             'view/map_sum.xsl', 'view/seg.css', 'view/sum.css'])    
@@ -73,7 +75,7 @@ if (hasattr(core, 'setup_keywords') and
 
 param = pyx12.params.params()
 for file in map_files:
-    param.set_param('map_path', 'map')
+    param.set('map_path', 'map')
     map_file = os.path.basename(file)
 
 core.setup(**kw)

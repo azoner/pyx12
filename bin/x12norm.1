@@ -1,0 +1,47 @@
+.\" Process this file with
+.\" groff -man -Tascii x12norm.1
+.\"
+.TH X12NORM 1 "DECEMBER 2004" FreeBSD "User Manuals"
+.SH NAME
+x12norm \- Normalize the blocking/formatting of X12 documents
+.SH SYNOPSIS
+.B x12norm [-bar] [-c
+.I config-file
+.B ]
+.I file
+.B ...
+.SH DESCRIPTION
+.B x12norm
+Remove/insert segment end of line characters.
+.SH OPTIONS
+.IP -h
+Help
+.IP-e
+Add eol to each segment line
+.IP-f
+Fix.  Try to fix counting errors
+.IP -o <file>
+Output file.
+.SH FILES
+.I /etc/pyx12.conf.xml
+.RS
+The system wide configuration file. See
+.BR x12conf (5)
+for further details.
+.RE
+.I ~/.x12normrc
+.RS
+Per user configuration file. See
+.BR x12conf (5)
+for further details.
+.IR pyx12.conf.xml .
+Overridden by the
+.B -c
+option.
+.SH BUGS
+
+.SH AUTHOR
+John Holland <john at zoner dot org>
+.SH "SEE ALSO"
+.BR x12xml(1),
+.BR x12lint (1)

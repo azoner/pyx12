@@ -5,17 +5,15 @@
 .SH NAME
 x12lint \- validate a HIPAA X12 document
 .SH SYNOPSIS
-.B x12lint [-bar] [-c
-.I config-file
-.B ]
-.I file
+.B x12lint [options]
+.I files
 .B ...
 .SH DESCRIPTION
 .B x12lint
 Validate a HIPAA X12 document.  Generate a 997 response.
 .SH OPTIONS
-.IP -c <b|e>
-Specify X12 character set: b=basic, e=extended
+.IP -c <file>
+XML configuration file
 .IP -d
 Debug Mode.  Implies verbose output.
 .IP -f
@@ -32,6 +30,8 @@ Path to pickle files
 Run a profiler
 .IP -q
 Quiet output
+.IP -s <b|e>
+Specify X12 character set: b=basic, e=extended
 .IP -v
 Verbose output
 .IP -x <tag>
@@ -46,9 +46,9 @@ for further details.
 .I ~/.x12lintrc
 .RS
 Per user configuration file. See
-.BR x12lint (5)
+.BR x12conf (5)
 for further details.
-.IR x12lint.conf .
+.IR pyx12.conf.xml .
 Overridden by the
 .B -c
 option.
@@ -58,5 +58,5 @@ option.
 John Holland <john at zoner dot org>
 .SH "SEE ALSO"
 .BR x12xml(1),
-.BR x12lint (5),
+.BR pyx12conf (5),
 .BR x12norm (1)
