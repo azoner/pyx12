@@ -265,7 +265,7 @@ class err_handler:
         Class:      err_handler
         """
         sout = ''
-        sout += '#%i ' % (self.cur_isa_node.get_cur_line())
+        sout += 'Line:%i ' % (self.cur_isa_node.get_cur_line())
         sout += 'ISA:%s - %s' % (err_cde, err_str)
         logger.error(sout)
         self.cur_isa_node.add_error(err_cde, err_str)
@@ -275,7 +275,7 @@ class err_handler:
         Class:      err_handler
         """
         sout = ''
-        sout += '#%i ' % (self.cur_gs_node.get_cur_line())
+        sout += 'Line:%i ' % (self.cur_gs_node.get_cur_line())
         sout += 'GS:%s - %s' % (err_cde, err_str)
         logger.error(sout)
         self.cur_gs_node.add_error(err_cde, err_str)
@@ -285,7 +285,7 @@ class err_handler:
         Class:      err_handler
         """
         sout = ''
-        sout += '#%i ' % (self.cur_st_node.get_cur_line())
+        sout += 'Line:%i ' % (self.cur_st_node.get_cur_line())
         sout += 'ST:%s - %s' % (err_cde, err_str)
         logger.error(sout)
         self.cur_st_node.add_error(err_cde, err_str)
@@ -297,7 +297,7 @@ class err_handler:
         self._add_cur_seg()
         self.cur_seg_node.add_error(err_cde, err_str, err_value)
         sout = ''
-        sout += '#%i ' % (self.cur_seg_node.get_cur_line())
+        sout += 'Line:%i ' % (self.cur_seg_node.get_cur_line())
         sout += 'SEG:%s - %s' % (err_cde, err_str)
         if err_value:
             sout += ' (%s)' % err_value
@@ -310,7 +310,7 @@ class err_handler:
         self._add_cur_ele()
         self.cur_ele_node.add_error(err_cde, err_str, bad_value) #, pos, data_ele)
         sout = ''
-        sout += '#%i ' % (self.cur_seg_node.get_cur_line())
+        sout += 'Line:%i ' % (self.cur_seg_node.get_cur_line())
         sout += 'ELE:%s - %s' % (err_cde, err_str)
         if bad_value:
             logger.error(' (%s)' % (bad_value))
