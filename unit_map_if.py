@@ -33,6 +33,30 @@ class Test_getnodebypath(unittest.TestCase):
         self.assertEqual(node.id, '1000A')
         self.assertEqual(node.base_name, 'loop')
 
+    def test_get_2000A(self):
+        node = self.map.getnodebypath('/2000A')
+        self.assertEqual(node.id, '2000A')
+        self.assertEqual(node.base_name, 'loop')
+
+    def test_get_2000B(self):
+        #pdb.set_trace()
+        node = self.map.getnodebypath('/2000A/2000B')
+        self.assertNotEqual(node, None)
+        self.assertEqual(node.id, '2000B')
+        self.assertEqual(node.base_name, 'loop')
+
+    def test_get_2300(self):
+        node = self.map.getnodebypath('/2000A/2000B/2300')
+        self.assertNotEqual(node, None)
+        self.assertEqual(node.id, '2300')
+        self.assertEqual(node.base_name, 'loop')
+
+    def test_get_2300_CLM(self):
+        node = self.map.getnodebypath('/2000A/2000B/2300/CLM')
+        self.assertNotEqual(node, None)
+        self.assertEqual(node.id, 'CLM')
+        self.assertEqual(node.base_name, 'segment')
+
 class IsValidSyntaxP(unittest.TestCase):
     """
     If has one, must have all
