@@ -283,7 +283,8 @@ class map_if(x12_node):
             node.debug_print()
 
     def __repr__(self):
-        #out = '%s%s %s %s %s\n' % (str(' '*self.base_level), self.base_name, self.base_level, self.id, self.name)
+        #out = '%s%s %s %s %s\n' % (str(' '*self.base_level), \
+        #   self.base_name, self.base_level, self.id, self.name)
         #out = '%s%s' % (str(' '*self.base_level), self.base_name)
         #out += '%sid %s\n' % (str(' '*(self.base_level+1)), self.id)
         #out += '%sname %s\n' % (str(' '*(self.base_level+1)), self.name)
@@ -331,7 +332,8 @@ class map_if(x12_node):
         if self.cur_iter_node.get_child_count() > 0:
             self.cur_iter_node = self.cur_iter_node.children[0]
             return self.cur_iter_node
-        #node_idx = self.cur_iter_node.index # Get original index of starting node
+        # Get original index of starting node
+        #node_idx = self.cur_iter_node.index 
         cur_node = self.cur_iter_node
         #node = self._pop_to_parent(cur_node) 
         while 1:
@@ -396,8 +398,10 @@ class loop_if(x12_node):
             #processNode(reader)
             tmpNodeType = reader.NodeType()
             if tmpNodeType == NodeType['element_start']:
-                #if reader.Name() in ('map', 'transaction', 'loop', 'segment', 'element'):
-                #    print 'l'*reader.Depth(), reader.Depth(),  self.base_level, reader.NodeType(), reader.Name()
+                #if reader.Name() in ('map', 'transaction', 'loop', \
+                #   'segment', 'element'):
+                #    print 'l'*reader.Depth(), reader.Depth(),  \
+                #       self.base_level, reader.NodeType(), reader.Name()
                 cur_name = reader.Name()
                 if cur_name == 'loop' and self.base_level < reader.Depth():
                     self.children.append(loop_if(self.root, self, index))
@@ -436,7 +440,8 @@ class loop_if(x12_node):
                 #    pass
                 cur_name = ''
                 
-            elif tmpNodeType == NodeType['text'] and self.base_level + 2 == reader.Depth():
+            elif tmpNodeType == NodeType['text'] and self.base_level + 2 == \
+                    reader.Depth():
                 #print cur_name, reader.Value()
                 if cur_name == 'id' and self.base_name == 'loop':
                     self.id = reader.Value()
