@@ -58,8 +58,13 @@ def skip_headers(line1):
         return False
    
 def diff(file1, file2):
-    diff_prg = "/usr/bin/diff -uBb"
-    sp = subprocess.Popen("%s %s %s" % (diff_prg, file1, file2))
+    diff_prg = "/usr/bin/diff"
+    diff_args = (diff_prg, '-uBb', file1, file2)
+    sp = subprocess.Popen(diff_args, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    (stout, stderr) = sp.communicate()
+    if stderr:
+        print stderr
+    return stout
     
 def main():
     """
@@ -92,15 +97,15 @@ def main():
 
     #diff = difflib.Differ(skip_headers)
     try:
-        dir = os.path.abspath('./files')
-        os.chdir(dir)
-        names = os.listdir(dir)
+        dir1 = os.path.abspath('./files')
+        os.chdir(dir1)
+        names = os.listdir(dir1)
     except os.error:
-        print "Can't list", dir
+        print "Can't list", dir1
         names = []
     names.sort()
     for name in names:
-        src_filename = os.path.join(dir, name)
+        src_filename = os.path.join(dir1, name)
         if os.path.isfile(src_filename):
             head, tail = name[:-4], name[-4:]
             if tail == '.txt':
@@ -120,30 +125,12 @@ def main():
                     pyx12.x12n_document.x12n_document(param, src_filename, fd_997, fd_html)
                     fd_997.seek(0)
                     open(target_997, 'w').write(fd_997.read())
-                    fd_997_base = open(base_997, 'r')
-                    #result = list(diff.compare(fd_997_base.readlines(), fd_997.readlines()))
-                    base = fd_997_base.readlines()
-                    fd_997.seek(0)
-                    new = fd_997.readlines()
-                    diff = False
-                    sys.stdout.write('\n%s' % (name))
-                    for i in range(max(len(base), len(new))):
-                        if i < len(base) and base[i][:3] not in ['ISA', 'GS*', 'IEA', 'GE*']:
-                            line_base = base[i].strip()
-                        else:
-                            line_base = ''
-                        if i < len(new) and new[i][:3] not in ['ISA', 'GS*', 'IEA', 'GE*']:
-                            line_new = new[i].strip()
-                        else:
-                            line_new = ''
-                        if line_base != line_new:
-                            diff = True
-                            if line_base != '':
-                                sys.stdout.write('\n- %s' % (line_base))
-                            if line_new != '':
-                                sys.stdout.write('\n+ %s' % (line_new))
-                            sys.stdout.write('\n___')
-                    if not diff:
+                    fd_997.close()
+
+                    diff_txt = diff(base_997, target_997)
+                    if diff:
+                        print diff_txt
+                    else:
                         sys.stdout.write(': OK')
                     sys.stdout.write('\n')
                 except IOError:
