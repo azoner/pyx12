@@ -1,0 +1,4 @@
+Program('test_csegment', 'test_csegment.cxx', \
+    CPPPATH = ['.', '../pyx12', '/usr/include', '/usr/local/include'], \
+    LIBS=['pyx12', 'boost_unit_test_framework', 'libc_r'], \
+    LIBPATH=['.', '../pyx12', '/usr/lib', '/usr/local/lib'])
