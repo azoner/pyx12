@@ -56,10 +56,13 @@ kw = {
 #        (map_dir, pickle_files),
         (map_dir, ['map/README', 'map/codes.xml', 'map/codes.xsd',
         'map/comp_test.xml', 'map/map.xsd', 'map/maps.xml']),
-        ('share/pyx12/doc', ['README.txt']),
-        ('share/pyx12/test', ['test/test.py', 'test/test_codes.py', \
+        ('share/doc/pyx12', ['README.txt']),
+        ('share/examples/pyx12/test', ['test/test.py', 'test/test_codes.py', \
             'test/test_map_if.py', 'test/test_map_walker.py', \
-            'test/test_utils.py,' 'test/test_x12file.py'])
+            'test/test_utils.py', 'test/test_x12file.py']),
+        ('share/doc/pyx12/view', ['view/Makefile', 'view/codes.xsl', \
+            'view/loop.css', 'view/loop.xsl', 'view/map_seg.xsl', \
+            'view/map_sum.xsl', 'view/seg.css', 'view/sum.css'])    
     ],
       #package_dir = {'': ''},
 }
