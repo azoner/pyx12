@@ -71,6 +71,7 @@ class error_html:
         self.ele_term = term[1]
         self.subele_term = term[2]
         self.eol = ''
+        self.last_line = 0
 
     def header(self):
         self.fd.write('<html>\n<head>\n')
@@ -89,16 +90,21 @@ class error_html:
         self.fd.write('<p>\n<a href="http://sourceforge.net/projects/pyx12/">pyx12 project page</a>\n</p>\n')
         self.fd.write('</body>\n</html>\n')
 
-    def print_seg(self, seg):
+    def print_seg(self, seg, src):
         """
         Class:      error_html 
         Name:       visit_root_pre
         Desc:    
         Params:     seg - list of elements
         """
-        # ID pos of bad value
-        self.fd.write('<span class="seg">%s</span><br>\n' % (self._seg_str(seg)))
+        cur_line = src.cur_line
+        err_pos = []
+
         # Find error seg for this seg
+        #   Find any skipped error values
+        # ID pos of bad value
+        #while errh
+        self.fd.write('<span class="seg">%s</span><br>\n' % (self._seg_str(seg)))
         # Show seg and ele errors
         # Handle ST, ...
         
