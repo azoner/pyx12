@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <transaction>
-  <segment>
-    <id>TST</id>
+  <segment xid="TST">
     <name>TEST</name>
     <usage>R</usage>
     <pos>020</pos>
@@ -43,8 +42,7 @@
       </element>
     </composite>
   </segment>
-  <segment>
-    <id>UNU</id>
+  <segment xid="UNU">
     <name>Unused Segment</name>
     <usage>N</usage>
     <pos>030</pos>

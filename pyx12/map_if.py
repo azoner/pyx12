@@ -88,7 +88,7 @@ class x12_node:
         pathl = path.split('/')
         if len(pathl) == 0: return None
         for child in self.children:
-            if child.id == pathl[0]:
+            if child.id.lower() == pathl[0].lower():
                 if len(pathl) == 1:
                     return child
                 else:
@@ -308,7 +308,7 @@ class map_if(x12_node):
         if len(pathl) == 0: return None
         #logger.debug('%s %s %s' % (self.base_name, self.id, pathl[1]))
         for child in self.children:
-            if child.id == pathl[0]:
+            if child.id.lower() == pathl[0].lower():
                 if len(pathl) == 1:
                     return child
                 else:

@@ -272,6 +272,15 @@ class Test_getnodebypath(unittest.TestCase):
         self.assertEqual(node.id, 'CLM')
         self.assertEqual(node.base_name, 'segment')
 
+    def test_get_TST(self):
+        param = params()
+        param.set('map_path', os.path.expanduser('~/src/pyx12/map/'))
+        param.set('pickle_path', os.path.expanduser('~/src/pyx12/map/'))
+        map = pyx12.map_if.load_map_file('comp_test.xml', param)
+        node = map.getnodebypath('/TST')
+        self.assertNotEqual(node, None)
+        self.assertEqual(node.id, 'TST')
+
     def tearDown(self):
         del self.map
         
@@ -437,11 +446,11 @@ def suite():
     #    IsValidSyntaxP, IsValidSyntaxR, IsValidSyntaxC, \
     #    IsValidSyntaxE, IsValidSyntaxL))
     suite = unittest.TestSuite()
-    #suite.addTest(unittest.makeSuite(Test_getnodebypath))
-    #suite.addTest(unittest.makeSuite(TrailingSpaces))
+    suite.addTest(unittest.makeSuite(Test_getnodebypath))
+    suite.addTest(unittest.makeSuite(TrailingSpaces))
     suite.addTest(unittest.makeSuite(CompositeRequirement))
-    #suite.addTest(unittest.makeSuite(ElementRequirement))
-    #suite.addTest(unittest.makeSuite(Element_is_valid))
+    suite.addTest(unittest.makeSuite(ElementRequirement))
+    suite.addTest(unittest.makeSuite(Element_is_valid))
     return suite
                 
 #if __name__ == "__main__":
