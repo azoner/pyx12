@@ -203,7 +203,7 @@ class element:
 	    raise WEDI3Error
 	if not (self.__valid_code__() or codes.IsValid(self.external_codes, self.x12_elem) ):
 	    raise WEDIError, "Not a valid code for this ID element"
-	if not IsValidDataType(self.x12_elem, self.data_type):
+	if not IsValidDataType(self.x12_elem, self.data_type, 'E'):
 	    raise WEDI1Error, "Invalid X12 datatype: '%s' is not a '%s'" % (self.x12_elem, self.data_type) 
 
     def __valid_code__(self):
