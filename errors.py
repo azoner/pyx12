@@ -33,19 +33,19 @@
 """pyx12 package exception classes.
 """
 
-class x12Error(Exception): pass
+class x12Error(Exception):
     """Base class for X12N format errors."""
 
-class ISAError(x12Error): pass
+class ISAError(x12Error):
     """Errors in the ISA or IEA segements."""
 
-class GSError(x12Error): pass
+class GSError(x12Error):
     """Errors in the GS or GE segements."""
 
-class STError(x12Error): pass
+class STError(x12Error):
     """Errors in the ST or SE segements."""
 
-class WEDIError(Exception): pass
+class WEDIError(Exception):
     """Base class for WEDI errors in this module."""
 
 class WEDI1Error(WEDIError): pass
@@ -54,6 +54,6 @@ class WEDI3Error(WEDIError): pass
 class WEDI4Error(WEDIError): pass
 class WEDI5Error(WEDIError): pass
 class WEDI6Error(WEDIError): pass
-class EngineError(Exception): pass
+class EngineError(Exception): 
     """Base class for errors in this module."""
 
