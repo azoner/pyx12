@@ -132,7 +132,9 @@
     </xsl:template>
 
     <xsl:template match="@external">
-	<xsl:text>External Source: </xsl:text><xsl:value-of select="."/><xsl:text> </xsl:text>
+	<xsl:text>External Source: </xsl:text>
+	<a href="codes.html#{.}"><xsl:value-of select="."/></a>
+	<xsl:text> </xsl:text>
     </xsl:template>
 
     <xsl:template match="text()|@*"/>
