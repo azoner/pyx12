@@ -1,4 +1,3 @@
-#! /usr/bin/env /usr/local/bin/python
 # Interface to a X12N IG Map
 #
 #    $Id$
@@ -364,13 +363,13 @@ class segment_if(x12_node):
 		elif cur_name == 'name' and self.base_name == 'segment':
 		    self.name = reader.Value()
 		elif cur_name == 'usage' and self.base_name == 'segment':
-		    self.usage= reader.Value()
+		    self.usage = reader.Value()
 		elif cur_name == 'req_des' and self.base_name == 'segment':
-		    self.req_des= reader.Value()
+		    self.req_des = reader.Value()
 		elif cur_name == 'pos' and self.base_name == 'segment':
-		    self.pos= reader.Value()
+		    self.pos = reader.Value()
 		elif cur_name == 'max_use' and self.base_name == 'segment':
-		    self.max_use= reader.Value()
+		    self.max_use = reader.Value()
 
 	    ret = reader.Read()
 	    if ret == -1:
@@ -385,7 +384,7 @@ class segment_if(x12_node):
     	if self.name: sys.stdout.write('%sname %s\n' % (str(' '*(self.base_level+1)), self.name))
     	if self.usage: sys.stdout.write('%susage %s\n' % (str(' '*(self.base_level+1)), self.usage))
     	if self.req_des: sys.stdout.write('%sreq_des %s\n' % (str(' '*(self.base_level+1)), self.req_des))
-    	if self.pos: sys.stdout.write('%spos%s\n' % (str(' '*(self.base_level+1)), self.pos))
+    	if self.pos: sys.stdout.write('%spos %s\n' % (str(' '*(self.base_level+1)), self.pos))
     	if self.max_use: sys.stdout.write('%smax_use %s\n' % (str(' '*(self.base_level+1)), self.max_use))
 	for node in self.children:
 	    node.debug_print()
@@ -506,6 +505,11 @@ class element_if(x12_node):
 	    	if cur_name == 'element':
 		    self.base_level = reader.Depth()
 		    self.base_name = 'element'
+		elif cur_name == 'valid_codes':
+	            while reader.MoveToNextAttribute():
+		    	#sys.stderr.write('attrib: %s - %s' % (reader.Name(), reader.Value()))
+		    	if reader.Name() == 'external':
+			    self.external_codes = reader.Value()
 		#if self.cur_level < reader.Depth():
 		#    self.cur_path = os.path.join(self.cur_path, cur_name)
 		#elif self.cur_level > reader.Depth():
@@ -525,12 +529,14 @@ class element_if(x12_node):
 		#    pass
 		cur_name = ''
 		
-	    elif reader.NodeType() == NodeType['text'] and self.base_level + 2 == reader.Depth():
+	    elif reader.NodeType() == NodeType['text'] and self.base_level + 2 <= reader.Depth():
 	    	#print cur_name, reader.Value()
 #		if cur_name == 'id':
 #		    self.id = reader.Value()
 		if cur_name == 'name':
 		    self.name = reader.Value()
+		elif cur_name == 'data_ele':
+		    self.data_ele= reader.Value()
 		elif cur_name == 'usage':
 		    self.usage = reader.Value()
 		elif cur_name == 'req_des':
@@ -547,8 +553,11 @@ class element_if(x12_node):
 		    self.min_len = reader.Value()
 		elif cur_name == 'max_len':
 		    self.max_len = reader.Value()
+		elif cur_name == 'max_use':
+		    self.max_use= reader.Value()
 		elif cur_name == 'code':
 		    self.valid_codes.append(reader.Value())
+#               <valid_codes external="prov_taxonomy"/>
 
 
 	    ret = reader.Read()
@@ -561,17 +570,18 @@ class element_if(x12_node):
     def debug_print(self):
     	sys.stdout.write('%s%s %s %s\n' % (str(' '*self.base_level), self.base_name, self.base_level, self.name))
 #    	sys.stdout.write('%sid %s\n' % (str(' '*(self.base_level+1)), self.id))
-    	sys.stdout.write('%sname %s\n' % (str(' '*(self.base_level+1)), self.name))
-    	sys.stdout.write('%susage %s\n' % (str(' '*(self.base_level+1)), self.usage))
-    	sys.stdout.write('%sreq_des %s\n' % (str(' '*(self.base_level+1)), self.req_des))
-    	sys.stdout.write('%sseq %s\n' % (str(' '*(self.base_level+1)), self.seq))
-#    	sys.stdout.write('%spos %s\n' % (str(' '*(self.base_level+1)), self.pos))
-    	sys.stdout.write('%srefdes %s\n' % (str(' '*(self.base_level+1)), self.refdes))
-    	sys.stdout.write('%sdata_type %s\n' % (str(' '*(self.base_level+1)), self.data_type))
-    	sys.stdout.write('%smin_len %s\n' % (str(' '*(self.base_level+1)), self.min_len))
-    	sys.stdout.write('%smax_len %s\n' % (str(' '*(self.base_level+1)), self.max_len))
+    	if self.data_ele: sys.stdout.write('%sdata_ele %s\n' % (str(' '*(self.base_level+1)), self.data_ele))
+    	if self.name: sys.stdout.write('%sname %s\n' % (str(' '*(self.base_level+1)), self.name))
+    	if self.usage: sys.stdout.write('%susage %s\n' % (str(' '*(self.base_level+1)), self.usage))
+    	if self.req_des: sys.stdout.write('%sreq_des %s\n' % (str(' '*(self.base_level+1)), self.req_des))
+    	if self.seq: sys.stdout.write('%sseq %s\n' % (str(' '*(self.base_level+1)), self.seq))
+    	if self.refdes: sys.stdout.write('%srefdes %s\n' % (str(' '*(self.base_level+1)), self.refdes))
+    	if self.data_type: sys.stdout.write('%sdata_type %s\n' % (str(' '*(self.base_level+1)), self.data_type))
+    	if self.min_len: sys.stdout.write('%smin_len %s\n' % (str(' '*(self.base_level+1)), self.min_len))
+    	if self.max_len: sys.stdout.write('%smax_len %s\n' % (str(' '*(self.base_level+1)), self.max_len))
+    	if self.external_codes: sys.stdout.write('%sexternal codes %s\n' % (str(' '*(self.base_level+1)), self.external_codes))
 	if self.valid_codes:
-    	    sys.stdout.write('valid codes:\n' % (str(' '*(self.base_level+1)), self.max_len))
+    	    sys.stdout.write('%svalid codes:\n' % (str(' '*(self.base_level+1))))
 	    for code in self.valid_codes:
     	    	sys.stdout.write('%scode %s\n' % (str(' '*(self.base_level+2)), code))
 	for node in self.children:
@@ -767,6 +777,11 @@ class composite_if(x12_node):
 
     def debug_print(self):
     	sys.stdout.write('%s%s %s %s %s\n' % (str(' '*self.base_level), self.base_name, self.base_level, self.id, self.name))
+    	if self.name: sys.stdout.write('%sname %s\n' % (str(' '*(self.base_level+1)), self.name))
+    	if self.usage: sys.stdout.write('%susage %s\n' % (str(' '*(self.base_level+1)), self.usage))
+    	if self.req_des: sys.stdout.write('%sreq_des %s\n' % (str(' '*(self.base_level+1)), self.req_des))
+    	if self.seq: sys.stdout.write('%sseq %s\n' % (str(' '*(self.base_level+1)), self.seq))
+    	if self.refdes: sys.stdout.write('%srefdes %s\n' % (str(' '*(self.base_level+1)), self.refdes))
 	for node in self.children:
 	    node.debug_print()
 
