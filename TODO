@@ -1,6 +1,9 @@
 Write Errors in html output
   Match current segment to error
   Mark invalid elements in segment
+  Informational lines
+    loops
+
 
 Handle intra-segment dependancies
 
