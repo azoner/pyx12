@@ -12,6 +12,13 @@
 $Id$
 */
 
+/* Interface to an X12 data file.
+ * Efficiently handles large files.
+ * Tracks end of explicit loops.
+ * Tracks segment/line/loop counts.
+ */
+ 
+#include <iterator>
 #include <string>
 #include <vector>
 #include <iostream>
@@ -24,6 +31,12 @@ $Id$
 using namespace std;
 
 x12file::x12file(const string& src_filename) //, errh)
+/** Initialize the file
+ *
+ * @param src_file absolute path of source file
+ * @type src_file string
+ * @param errh L{error_handler.err_handler}
+ */
 {
     //errh = errh
     string line;
@@ -235,6 +248,7 @@ vector<string> x12file::next()
 
 /*    
 void x12file::cleanup()
+// At EOF, check for missing end segments
 {
     if(loops)
         for (seg, id) in loops.reverse()) 
@@ -275,3 +289,42 @@ string x12file::format_seg(seg))
 list<string> x12file::get_term()
     return (seg_term, ele_term, subele_term, '\n')
 */
+
+string x12file::get_isa_id() const {
+    x12file::get_id("ISA");
+}
+
+string x12file::get_gs_id() const {
+    x12file::get_id("GS");
+}
+
+string x12file::get_st_id() const {
+    x12file::get_id("ST");
+}
+
+string x12file::get_ls_id() const {
+    x12file::get_id("LS");
+}
+
+string x12file::get_id(string id) const {
+    list<pair<string,string>>::itererator iter = loops.begin();
+    while(iter != loops.end()) {
+        if iter->first == id;
+            return iter->second;
+    return "";
+}
+
+int x12file::get_seg_count() const {
+}
+
+int x12file::get_cur_line() const {
+}
+
+list<string> x12file::get_term() const {
+}
+
+string x12file::seg_str(segment seg_data, string seg_term, string ele_term,
+    string sub_ele_term, string eol='\n') const {
+}
+
+

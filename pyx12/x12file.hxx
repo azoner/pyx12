@@ -15,12 +15,16 @@ $Id$
 #ifndef PYX12_X12FILE_H_
 #define PYX12_X12FILE_H_
 
-#include <string>
-#include <vector>
-#include <stack>
 #include <iostream>
 #include <fstream>
+#include <list>
+#include <stack>
+#include <string>
+#include <utility>
+#include <vector>
 //#include <ostream>
+
+#include "segment.hxx"
 
 #define BUFSIZE 8*1024
 #define ISA_LEN 106
@@ -30,8 +34,8 @@ using namespace std;
 namespace Pyx12 {
     class x12file {
     private:
-        stack<string> loops;
-        stack<string> hl_stack;
+        list<pair<string, string>> loops;
+        stack<int> hl_stack;
         int gs_count;
         int st_count;
         int hl_count;
@@ -44,13 +48,23 @@ namespace Pyx12 {
         char ele_term;
         char subele_term;
         ifstream src_fs;
+        get_id(string id) const;
 
     public:
         x12file(const string& src_filename); //, errh)
         vector<string> next();
         void cleanup();
         void print_seg(vector<string>);
-        string format_seg(vector<string>);
+        string get_isa_id() const;
+        string get_gs_id() const;
+        string get_st_id() const;
+        string get_ls_id() const;
+        int get_seg_count() const;
+        int get_cur_line() const;
+        list<string> get_term() const;
+        string seg_str(pyx12::segment seg_data, string seg_term, string ele_term, 
+            string sub_ele_term, string eol='\n') const;
+        
     //    ostream& operator<<(ostream&, x12file&);
     };
 };
