@@ -494,22 +494,22 @@ class err_isa(err_node):
     Desc:    Holds source ISA loop errors
     """
 
-    def __init__(self, parent, seg, src):
+    def __init__(self, parent, seg_data, src):
         """
         Class:      err_isa
         Name:       __init__
         Desc:    
         Params:     x12_src - instance of x12file
         """
-        self.seg = seg
+        self.seg_data = seg_data
         self.isa_id = src.get_isa_id()
         self.cur_line_isa = src.get_cur_line()
         self.cur_line_iea = None
         
-        self.isa_trn_set_id = seg[13]
-        self.ta1_req = seg[14]
-        self.orig_date = seg[9]
-        self.orig_time = seg[10]
+        self.isa_trn_set_id = seg_data[12].get_value()
+        self.ta1_req = seg_data[13].get_value()
+        self.orig_date = seg_data[8].get_value()
+        self.orig_time = seg_data[9].get_value()
         self.id = 'ISA'
 
         self.parent = parent
@@ -599,19 +599,19 @@ class err_gs(err_node):
     Desc:    Holds source GS loop information
     """
 
-    def __init__(self, parent, seg, src):
+    def __init__(self, parent, seg_data, src):
         """
         Class:  err_gs
         Name:   __init__
         Desc:    
         Params: fic - Functional Identifier Code (GS01)
         """
-        self.seg = seg
+        self.seg_data = seg_data
         self.isa_id = src.get_isa_id()
         self.cur_line_gs = src.get_cur_line()
         self.cur_line_ge = None
         self.gs_control_num = src.get_gs_id()
-        self.fic = self.seg[1]
+        self.fic = self.seg_data[0].get_value()
         self.id = 'GS'
         
         self.st_loops = []
@@ -648,7 +648,7 @@ class err_gs(err_node):
         """
         self.errors.append((err_cde, err_str))
 
-    def close(self, node, seg, src):
+    def close(self, node, seg_data, src):
         """
         Class:      err_gs
         Name:       close
@@ -667,10 +667,10 @@ class err_gs(err_node):
         else: self.ack_code = 'A'
 
 
-        if seg is None:
+        if seg_data is None:
             self.st_count_orig = 0
         else:
-            self.st_count_orig = int(seg[1]) # AK902
+            self.st_count_orig = int(seg_data[0].get_value()) # AK902
         self.st_count_recv = src.st_count # AK903
         #self.st_count_accept = self.st_count_recv - len(self.children) # AK904
 
@@ -743,18 +743,18 @@ class err_st(err_node):
         
     """
 
-    def __init__(self, parent, seg, src):
+    def __init__(self, parent, seg_data, src):
         """
         Class:  err_st
         Name:   __init__
         Desc:    
         Params: 
         """
-        self.seg = seg
+        self.seg_data = seg_data
         self.trn_set_control_num = src.get_st_id()
         self.cur_line_st = src.get_cur_line()
         self.cur_line_se = None
-        self.trn_set_id = seg[1] # eg 837
+        self.trn_set_id = seg_data[0].get_value() # eg 837
 
         self.id = 'ST'
         
@@ -866,7 +866,7 @@ class err_seg(err_node):
     Name:    err_seg
     Desc:    Segment Errors
     """
-    def __init__(self, parent, map_node, seg, seg_count, cur_line, ls_id):
+    def __init__(self, parent, map_node, seg_data, seg_count, cur_line, ls_id):
         """
         Class:  err_seg
         Name:   __init__
@@ -885,7 +885,7 @@ class err_seg(err_node):
         else:
             self.name = map_node.name
             self.pos = map_node.pos
-        self.seg_id = seg.get_seg_id()
+        self.seg_id = seg_data.get_seg_id()
         self.seg_count = seg_count
         self.cur_line = cur_line
         self.ls_id = ls_id

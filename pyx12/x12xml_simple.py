@@ -66,7 +66,7 @@ class x12xml_simple(x12xml):
     def __del__(self):
         self.writer.pop()
 
-    def seg(self, seg_node, seg):
+    def seg(self, seg_node, seg_data):
         """
         """
         if not seg_node.is_segment():
@@ -99,24 +99,25 @@ class x12xml_simple(x12xml):
                 self.writer.push(u"loop", {u'id': cur_path[i]})
             
         self.writer.push(u"seg", {u'id': seg_node.id})
-        for i in range(1, len(seg)+1):
-            child_node = seg_node.get_child_node_by_idx(i-1)
+        for i in range(len(seg_data)):
+            child_node = seg_node.get_child_node_by_idx(i)
             if child_node.is_composite():
                 self.writer.push(u"comp", {u'id': seg_node.id})
-                comp = seg[i]
-                for j in range(len(comp)):
+                comp_data = seg_data[i]
+                for j in range(len(comp_data)):
                     subele_node = child_node.get_child_node_by_idx(j)
-                    self.writer.elem(u'subele', comp[j], attrs={u'id': subele_node.id})
-                self.writer.pop() #comp
+                    self.writer.elem(u'subele', comp_data[j].get_value(), \
+                        attrs={u'id': subele_node.id})
+                self.writer.pop() #end composite
             elif child_node.is_element():
-                if seg[i] == '':
+                if seg_data[i] == '':
                     pass
                     #self.writer.empty(u"ele", attrs={u'id': child_node.id})
                 else:
-                    self.writer.elem(u'ele', seg[i], attrs={u'id': child_node.id})
+                    self.writer.elem(u'ele', seg_data[i], attrs={u'id': child_node.id})
             else:
                 raise EngineError, 'Node must be a either an element or a composite'
-        self.writer.pop() #seg
+        self.writer.pop() #end segment
 
         self.path = path
         

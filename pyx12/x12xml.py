@@ -60,7 +60,7 @@ class x12xml:
     def __del__(self):
         pass
 
-    def seg(self, seg_node, seg):
+    def seg(self, seg_node, seg_data):
         """
         """
         pass

@@ -105,16 +105,16 @@ class error_html:
         """
         self.fd.write('<span class="info">&nbsp;&nbsp;%s</span><br>\n' % (info_str))
         
-    def gen_seg(self, seg, src, err_node_list):
+    def gen_seg(self, seg_data, src, err_node_list):
         """
         Class:      error_html 
         Name:       gen_seg
         Desc:    
-        Params:     seg - list of elements
+        Params:     seg_data - data segment instance
         """
         cur_line = src.cur_line
 
-        # Find error seg for this seg
+        # Find error seg for this segment
         #   Find any skipped error values
         # ID pos of bad value
         #while errh
@@ -124,24 +124,24 @@ class error_html:
                 ele_pos_map[ele.ele_pos] = ele.subele_pos
 
         t_seg = [] #list of formatted elements
-        seg.format_ele_list(self, t_seg) 
-        for i in range(1, len(seg)+1):
-            if type(seg[i]) is ListType: # Composite
+        seg_data.format_ele_list(self, t_seg) 
+        for i in range(len(seg_data)):
+            if seg_data[i].is_composite():
                 t_seg.append([])
-                for j in range(len(seg[i])):
-                    ele_str = escape_html_chars(seg[i][j])
+                for j in range(len(seg_data[i])):
+                    ele_str = escape_html_chars(seg_data[i][j].get_value())
                     if i in ele_pos_map.keys() and ele_pos_map[i] == j:
                         ele_str = self._wrap_ele_error(ele_str)
                     t_seg[-1].append(ele_str)
             else:
-                ele_str = escape_html_chars(seg[i])
+                ele_str = escape_html_chars(seg_data[i].get_value())
                 if i in ele_pos_map.keys():
                     ele_str = self._wrap_ele_error(ele_str)
                 t_seg.append(ele_str)
                 
         for err_node in err_node_list:
             #for err_tuple in err_node.errors:
-            for err_tuple in err_node.get_error_list(seg.get_seg_id(), True):
+            for err_tuple in err_node.get_error_list(seg_data.get_seg_id(), True):
                 err_cde = err_tuple[0]
                 err_str = err_tuple[1]
                 if err_cde == '3':
@@ -151,7 +151,7 @@ class error_html:
         self.fd.write('<span class="seg">%i: %s</span><br>\n' % \
             (cur_line, self._seg_str(t_seg)))
         for err_node in err_node_list:
-            for err_tuple in err_node.get_error_list(seg.get_seg_id(), False):
+            for err_tuple in err_node.get_error_list(seg_data.get_seg_id(), False):
             #for err_tuple in err_node.errors:
                 err_cde = err_tuple[0]
                 err_str = err_tuple[1]
@@ -159,7 +159,7 @@ class error_html:
                     self.fd.write('<span class="error">&nbsp;%s (Segment Error Code: %s)</span><br>\n' % \
                         (err_str, err_cde))
             for ele in err_node.elements:
-                for (err_cde, err_str, err_val) in ele.get_error_list(seg.get_seg_id(), False):
+                for (err_cde, err_str, err_val) in ele.get_error_list(seg_data.get_seg_id(), False):
                 #for (err_cde, err_str, err_val) in ele.errors:
                     self.fd.write('<span class="error">&nbsp;%s (Element Error Code: %s)</span><br>\n' % \
                         (err_str, err_cde))
@@ -169,7 +169,7 @@ class error_html:
         Class:      error_html
         Name:       _seg_str
         Desc:    
-        Params:     seg - list of elements
+        Params:     seg - list of formatted elements
         """
         return seg_str(seg, self.seg_term, self.ele_term, \
             self.subele_term, self.eol)
