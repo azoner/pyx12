@@ -1,5 +1,5 @@
 ######################################################################
-# Copyright (c) 2001-2004 Kalamazoo Community Mental Health Services,
+# Copyright (c) 2001-2005 Kalamazoo Community Mental Health Services,
 #   John Holland <jholland@kazoocmh.org> <john@zoner.org>
 # All rights reserved.
 #
