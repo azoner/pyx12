@@ -2937,7 +2937,7 @@
         <segment xid="SE">
           <name>820 Trailer</name>
           <usage>R</usage>
-          <pos>010</pos>
+          <pos>050</pos>
           <max_use>1</max_use>
           <element xid="SE01">
             <data_ele>96</data_ele>
