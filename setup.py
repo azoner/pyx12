@@ -36,9 +36,9 @@ map_files = [
     'map/997.4010.xml',
     'map/x12.control.00401.xml' 
 ]
-pickle_files = []
-for file in map_files:
-    pickle_files.append('%s.%s' % (os.path.splitext(file)[0], 'pkl'))
+#pickle_files = []
+#for file in map_files:
+#    pickle_files.append('%s.%s' % (os.path.splitext(file)[0], 'pkl'))
 
 kw = {  
     'name': "pyx12",
@@ -55,7 +55,11 @@ kw = {
         (map_dir, map_files),
 #        (map_dir, pickle_files),
         (map_dir, ['map/README', 'map/codes.xml', 'map/codes.xsd',
-        'map/comp_test.xml', 'map/map.xsd', 'map/maps.xml'])
+        'map/comp_test.xml', 'map/map.xsd', 'map/maps.xml']),
+        ('share/pyx12/doc', ['README.txt']),
+        ('share/pyx12/test', ['test/test.py', 'test/test_codes.py', \
+            'test/test_map_if.py', 'test/test_map_walker.py', \
+            'test/test_utils.py,' 'test/test_x12file.py'])
     ],
       #package_dir = {'': ''},
 }
