@@ -44,6 +44,7 @@ from types import *
 import pdb
 import tempfile
 #import difflib
+import subprocess
 
 # Intrapackage imports
 import pyx12
@@ -55,8 +56,11 @@ def skip_headers(line1):
         return True
     else:
         return False
-
    
+def diff(file1, file2):
+    diff_prg = "/usr/bin/diff -uBb"
+    sp = subprocess.Popen("%s %s %s" % (diff_prg, file1, file2))
+    
 def main():
     """
     Set up environment for processing
