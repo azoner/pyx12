@@ -235,10 +235,10 @@ class segment:
 	tab.decr()
 
     def xml(self):
-        sys.stdout.write('%s<segment code="%s">\n' % (tab.indent(),self.id))
+        sys.stdout.write('%s<segment code="%s">' % (tab.indent(),self.id))
     	for elem in self.element_list:
 	    elem.xml()
-        sys.stdout.write('%s</segment>\n' % (tab.indent()))
+        sys.stdout.write('%s</segment>' % (tab.indent()))
     
     def validate(self):
     	for elem in self.element_list:
@@ -279,15 +279,13 @@ class element:
 	tab.decr()
 
     def xml(self):
-	sys.stdout.write('%s<elem code="%s">%s</elem>\n' % (tab.indent(), self.refdes, self.x12_elem))
+	sys.stdout.write('%s<elem code="%s">%s</elem>' % (tab.indent(), self.refdes, self.x12_elem))
     
     def validate(self):
 	if len(self.x12_elem) < int(self.min_len):
-	    sys.stderr.write('too short: %s len=%i\n' % (self.x12_elem, int(self.min_len))
-	    raise WEDI1Error, "too short"
+	    raise WEDI1Error, 'too short %s len=%i' % (self.x12_elem, int(self.min_len))
 	if len(self.x12_elem) > int(self.max_len):
-	    sys.stderr.write('too long: %s len=%i\n' % (self.x12_elem, int(self.max_len))
-	    raise WEDI1Error, "too long"
+	    raise WEDI1Error, 'too long: %s len=%i' % (self.x12_elem, int(self.max_len))
 	if self.x12_elem == None and self.usage == 'R':
 	    raise WEDI3Error
 	if not (self.__valid_code__() or codes.IsValid(self.external_codes, self.x12_elem) ):
