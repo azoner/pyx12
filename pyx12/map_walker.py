@@ -148,7 +148,6 @@ class walk_tree:
                         elif child.usage == 'R' and child.cur_count < 1:
                             # if child.cur_count == 0:
                             #pdb.set_trace()
-                            #(isa_id, gs_id, st_id, ls_id, seg_count, cur_line) = src.get_id()
                             errh.add_seg(child, [child.id], seg_count, cur_line, ls_id)
                             err_str = "Mandatory segment %s missing" % (child.id)
                             mandatory_segs_missing.append((seg[0], '3', err_str))

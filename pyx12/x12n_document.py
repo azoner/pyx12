@@ -140,7 +140,6 @@ def x12n_document(param, src_file, fd_997, fd_html, fd_xmldoc=None):
         #find node
         orig_node = node
         try:
-            #(isa_id, gs_id, st_id, ls_id, seg_count, cur_line) = src.get_id()
             node = walker.walk(node, seg, errh, src.get_seg_count(), \
                 src.get_cur_line(), src.get_ls_id())
         except EngineError:
@@ -184,7 +183,6 @@ def x12n_document(param, src_file, fd_997, fd_html, fd_xmldoc=None):
             elif seg[0] == 'SE':
                 errh.close_st_loop(node, seg, src)
             else:
-                #(isa_id, gs_id, st_id, ls_id, seg_count, cur_line) = src.get_id()
                 errh.add_seg(node, seg, src.get_seg_count(), src.get_cur_line(), src.get_ls_id())
 
             node.is_valid(seg, errh)
