@@ -547,7 +547,6 @@ class loop_if(x12_node):
         
     def incr_cur_count(self):
         self.cur_count += 1
-        print 'incr loop', self.path, self.cur_count
 
     def reset_child_count(self):
         for child in self.children:
@@ -555,7 +554,6 @@ class loop_if(x12_node):
 
     def reset_cur_count(self):
         self.cur_count = 0
-        print 'reset loop', self.path, self.cur_count
         self.reset_child_count()
 
 ############################################################
@@ -853,11 +851,9 @@ class segment_if(x12_node):
         return self.cur_count
         
     def incr_cur_count(self):
-        print 'incr seg', self.path, self.cur_count
         self.cur_count += 1
 
     def reset_cur_count(self):
-        print 'reset seg', self.path, self.cur_count
         self.cur_count = 0
 
 ############################################################
