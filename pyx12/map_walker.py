@@ -289,10 +289,10 @@ class walk_tree:
         elif loop_node.usage == 'R' and loop_node.cur_count < 1:
             fake_seg = pyx12.segment.segment('%s' % \
                 (first_child_node.id), '~', '*', ':')
-            errh.add_seg(first_child_node, fake_seg, seg_count, cur_line, ls_id)
-            err_str = 'Mandatory segment "%s" (%s) missing' % \
-                (first_child_node.name, first_child_node.id)
-            self.mandatory_segs_missing.append((seg_data.get_seg_id(), '3', err_str))
+            errh.add_seg(loop_node, fake_seg, seg_count, cur_line, ls_id)
+            err_str = 'Mandatory loop "%s" (%s) missing' % \
+                (loop_node.name, loop_node.id)
+            #self.mandatory_segs_missing.append((seg_data.get_seg_id(), '3', err_str))
             #errh.seg_error('3', err_str, None)
         return False
 
