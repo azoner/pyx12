@@ -37,23 +37,19 @@ class base_element:
     """Abstract class base_element
     """
     def __init__(self):
-        raise NotImplementedError()
+        pass
     
     def __len__(self):
         """function length
-        
         returns int
+
         """
         raise NotImplementedError()
     
     def __repr__(self):
-        """function __repr__
-        
-        returns 
-        """
         raise NotImplementedError()
 
-    def format(self):
+    def format(self, subele_term=None):
         raise NotImplementedError()
     
 
@@ -66,7 +62,7 @@ class composite(base_element):
         ele_str: string
         subele_term: char
         """
-
+        base_element.__init__(self)
         self.subele_term = subele_term
         self.subele_term_orig = subele_term
         self.elements = ele_str.split(self.subele_term)
@@ -81,16 +77,16 @@ class composite(base_element):
     def __repr__(self):
         """function __repr__
         
-        returns 
+        returns string
         """
         return '%s' % (string.join(self.elements, self.subele_term))
+
+    def format(self, subele_term):
+        return '%s' % (string.join(self.elements, subele_term))
 
     def set_subele_term(self, subele_term):
         self.subele_term = subele_term
 
-    def format(self, subele_term):
-        return '%s' % (string.join(self.elements, subele_term))
-    
 
 class element(base_element):
     """Class element
@@ -105,6 +101,7 @@ class element(base_element):
         
         returns void
         """
+        base_element.__init__(self)
         self.ele_val = ele_str
     
     def __len__(self):
@@ -117,7 +114,7 @@ class element(base_element):
     def __repr__(self):
         """function __repr__
         
-        returns 
+        returns string
         """
         return self.ele_val
     
