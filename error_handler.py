@@ -32,7 +32,9 @@
 
 
 """
-Interface to an X12 997 Response
+Interface to X12 Errors
+Generates a 997 Response
+Generates an annotated X12 source file
 """
 
 #import os
@@ -46,9 +48,9 @@ from errors import *
 __author__  = "John Holland <jholland@kazoocmh.org> <john@zoner.org>"
 
 
-class if_997:
+class err_root:
     """
-    Name:   if_997
+    Name:   err_root
     Desc:   Interface to an X12 997 Response
             Everytime we hit a GS loop in the source, create a new instance of
             this class.
@@ -77,21 +79,21 @@ class if_997:
         self.gs_loop_count += 1
         return str
 
-#    def add_seg_error(self, seg_id_code, seg_error_code):
-#        self.errors.append(seg_997(seg_id_code, seg_error_code, self))
+    def add_seg_error(self, seg_id_code, seg_error_code):
+        self.errors.append(err_seg(seg_id_code, seg_error_code, self))
         
-#    def add_ele_error(self, seg_id_code, ele_pos, subele_pos=None, ele_ref_num=None, \
-#            ele_err_code, bad_val=None):
-#        try:    
-#            if not self.errors[-1].is_match(seg_id_code, 8, self.x12_src):
-#                self.errors.append(seg_997_err(seg_id_code, 8, self.x12_src))
-#        except:
-#            self.errors.append(seg_997_err(seg_id_code, 8, self.x12_src))
-#        self.errors[-1].append(ele_997_err(ele_pos, subele_pos, ele_ref_num, ele_err_code, bad_val))
+    def add_ele_error(self, seg_id_code, ele_pos, subele_pos=None, ele_ref_num=None, \
+            ele_err_code, bad_val=None):
+        try:    
+            if not self.errors[-1].is_match(seg_id_code, 8, self.x12_src):
+                self.errors.append(err_seg_err(seg_id_code, 8, self.x12_src))
+        except:
+            self.errors.append(err_seg_err(seg_id_code, 8, self.x12_src))
+        self.errors[-1].append(err_ele_err(ele_pos, subele_pos, ele_ref_num, ele_err_code, bad_val))
        
-#    def set_st_id(self, st_id, trn_set_id):
-#        self.cur_st_id = st_id
-#        self.cur_trn_set_id = trn_set_id
+    def set_st_id(self, st_id, trn_set_id):
+        self.cur_st_id = st_id
+        self.cur_trn_set_id = trn_set_id
 
 #    def __iter__(self):
 #        return self
@@ -99,15 +101,15 @@ class if_997:
 #    def next(self):
 #        return None
 
-class gs_997:
+class err_gs:
     """
-    Name:    gs_997
+    Name:    err_gs
     Desc:    Holds source GS loop information
     """
 
     def __init__(self, fic, root):
         """
-        Class:  gs_997
+        Class:  err_gs
         Name:   __init__
         Desc:    
         Params: fic - Functional Identifier Code (GS01)
@@ -128,7 +130,7 @@ class gs_997:
         
     def __repr__(self):
         """
-        Class:  gs_997
+        Class:  err_gs
         Name:   __repr__
         Desc:   Creates 997 data
         Params: 
@@ -138,7 +140,7 @@ class gs_997:
         eol = self.root.eol
         if not (self.ack_code and self.st_count_orig and self.st_count_recv \
             and self.st_count_accept):
-            raise EngineError, 'gs_997 variables not set'
+            raise EngineError, 'err_gs variables not set'
         #ST
         seg = ['ST', '997', '%i'%st_control_num]
         str = x12src.seg_str(seg, eol)
@@ -164,26 +166,26 @@ class gs_997:
         return str
 
 #    def add_seg_error(self, seg_id_code, seg_error_code):
-#        self.errors.append(seg_997_err(seg_id_code, seg_error_code, self.x12_src))
+#        self.errors.append(err_seg_err(seg_id_code, seg_error_code, self.x12_src))
 #        
 #    def add_ele_error(self, seg_id_code, ele_pos, subele_pos=None, ele_ref_num=None, \
 #            ele_err_code, bad_val=None):
 #        try:    
 #            if not self.errors[-1].is_match(seg_id_code, 8, self.x12_src):
-#                self.errors.append(seg_997_err(seg_id_code, 8, self.x12_src))
+#                self.errors.append(err_seg_err(seg_id_code, 8, self.x12_src))
 #        except:
-#            self.errors.append(seg_997_err(seg_id_code, 8, self.x12_src))
-#        self.errors[-1].append(ele_997_err(ele_pos, subele_pos, ele_ref_num, ele_err_code, bad_val))
+#            self.errors.append(err_seg_err(seg_id_code, 8, self.x12_src))
+#        self.errors[-1].append(err_ele_err(ele_pos, subele_pos, ele_ref_num, ele_err_code, bad_val))
         
-class st_997:
+class err_st:
     """
-    Name:    st_997
+    Name:    err_st
     Desc:    ST loops
     """
 
     def __init__(self, trn_set_id_code, root):
         """
-        Class:  st_997
+        Class:  err_st
         Name:   __init__
         Desc:    
         Params: trn_set_id_code - Type of original transaction (837, 278, 835)
@@ -199,12 +201,12 @@ class st_997:
         self.ack_code = None # AK501
         self.err_cde = [] # AK502-6
 
-        self.seg_errors = [] # seg_997 instances
+        self.seg_errors = [] # err_seg instances
 
         
     def __repr__(self):
         """
-        Class:  st_997
+        Class:  err_st
         Name:   __repr__
         Desc:   Creates 997 data
         Params: 
@@ -224,22 +226,22 @@ class st_997:
         return str
 
 #    def add_seg_error(self, seg_id_code, seg_error_code):
-#        self.errors.append(seg_997_err(seg_id_code, seg_error_code, self.x12_src))
+#        self.errors.append(err_seg_err(seg_id_code, seg_error_code, self.x12_src))
         
 #    def add_ele_error(self, seg_id_code, ele_pos, subele_pos=None, ele_ref_num=None, \
 #            ele_err_code, bad_val=None):
 #        try:    
 #            if not self.errors[-1].is_match(seg_id_code, 8, self.x12_src):
-#                self.errors.append(seg_997_err(seg_id_code, 8, self.x12_src))
+#                self.errors.append(err_seg_err(seg_id_code, 8, self.x12_src))
 #        except:
-#            self.errors.append(seg_997_err(seg_id_code, 8, self.x12_src))
-#        self.errors[-1].append(ele_997_err(ele_pos, subele_pos, ele_ref_num, ele_err_code, bad_val))
+#            self.errors.append(err_seg_err(seg_id_code, 8, self.x12_src))
+#        self.errors[-1].append(err_ele_err(ele_pos, subele_pos, ele_ref_num, ele_err_code, bad_val))
        
       
 
-class seg_997:
+class err_seg:
     """
-    Name:    seg_997
+    Name:    err_seg
     Desc:    Segment Errors
     """
     def __init__(self, seg_id_code, root, seg_error_code=None):
@@ -270,7 +272,7 @@ class seg_997:
 
 #    def add_ele_error(self, ele_pos, subele_pos=None, ele_ref_num=None, \
 #        ele_err_code, bad_val=None): 
-#        self.elems.append(ele_997_err(ele_pos, subele_pos, ele_ref_num, ele_err_code, bad_val))
+#        self.elems.append(err_ele_err(ele_pos, subele_pos, ele_ref_num, ele_err_code, bad_val))
 
     def is_match(self, seg_id_code, seg_error_code):
         (isa_id, gs_id, st_id, ls_id, seg_count, cur_line) = self.root.x12_src.get_id()
@@ -279,10 +281,11 @@ class seg_997:
             return True
         return False
 
-class ele_997:
+class err_ele:
     """
-    Name:    ele_997
-    Desc:    Element Errors
+    Name:   err_ele
+    Desc:   Element Errors - Holds and generates output for element and 
+            composite/sub-element errors
     """
     def __init__(self, root, ele_pos, ele_err_code, subele_pos=None, \
         ele_ref_num=None, bad_val=None):
