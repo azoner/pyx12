@@ -14,9 +14,6 @@ import pyx12.segment
 
 
 class Explicit_Loops(unittest.TestCase):
-    """
-    FAIL - no end tag for explicit loop
-    """
     def setUp(self):
         self.walker = walk_tree()
         param = params()
@@ -84,9 +81,6 @@ class Explicit_Loops(unittest.TestCase):
 
 class Implicit_Loops(unittest.TestCase):
     """
-    FAIL - Mandatory segment skipped
-    FAIL - Mandatory loop skipped
-
     TA1 segment
 
     child loop
@@ -97,7 +91,6 @@ class Implicit_Loops(unittest.TestCase):
     start at segment node
     start at element/composite node?
 
-    MATCH loop by first segment
     MATCH HL segment
 
     FAIL - loop repeat exceeds max count
@@ -130,9 +123,9 @@ class Implicit_Loops(unittest.TestCase):
         node = self.walker.walk(node, seg, self.errh, 5, 4, None)
         self.assertEqual(seg.get_seg_id(), node.id)
 
-    def test_segment_required_fail1(self):
+    def test_loop_required_fail1(self):
         """
-        Test for skipped /2000A/2010AA/NM1 segment
+        Test for skipped /2000A/2010AA/NM1 segment - first segment of loop
         """
         node = self.map.getnodebypath('/2000A/HL')
         self.assertNotEqual(node, None)
@@ -145,6 +138,23 @@ class Implicit_Loops(unittest.TestCase):
         #result = node.is_valid(seg_data, self.errh)
         #self.failIf(result)
         self.assertEqual(errh.err_cde, '3', errh.err_str)
+
+    def test_loop_required_ok1(self):
+        """
+        MATCH loop by first segment
+        Test for found /2000A/2010AA/NM1 segment
+        """
+        node = self.map.getnodebypath('/2000A/HL')
+        self.assertNotEqual(node, None)
+        self.assertEqual(node.base_name, 'segment')
+        seg_data = pyx12.segment.segment('HL*1**20*1~', '~', '*', ':')
+        result = node.is_valid(seg_data, self.errh)
+        seg_data = pyx12.segment.segment('NM1*85*1*Provider Name*****XX*24423423~', '~', '*', ':')
+        errh = pyx12.error_handler.errh_null()
+        node = self.walker.walk(node, seg_data, errh, 5, 4, None)
+        result = node.is_valid(seg_data, self.errh)
+        self.failUnless(result)
+        self.assertEqual(errh.err_cde, None)
 
     def tearDown(self):
         del self.errh
@@ -190,12 +200,25 @@ class SegmentWalk(unittest.TestCase):
 #        seg = ['DTP', '999', 'D8', '20040201']
 #        node = self.walker.walk(node, seg, self.errh, 5, 4, None)
 #        self.assertNotEqual(seg.get_seg_id(), node.id)
-    
+
+     def test_segment_required_fail1(self):
+        """
+        Skipped required segment
+        """
+        node = self.map.getnodebypath('/2000A/2010AA/NM1')
+        self.assertNotEqual(node, None)
+        self.assertEqual(node.base_name, 'segment')
+        seg_data = pyx12.segment.segment('N4*NOWHERE*MA*30001~', '~', '*', ':')
+        errh = pyx12.error_handler.errh_null()
+        node = self.walker.walk(node, seg_data, errh, 5, 4, None)
+        self.assertEqual(errh.err_cde, '3', errh.err_str)
+   
     def tearDown(self):
         del self.errh
         del self.map
         del self.walker
         
+
 class Segment_ID_Checks(unittest.TestCase):
 
     def setUp(self):
@@ -241,7 +264,7 @@ def suite():
 #    unittest.main()
 try:
     import psyco
-#    psyco.full()
+    psyco.full()
 except ImportError:
     pass
 unittest.TextTestRunner(verbosity=2).run(suite())
