@@ -504,6 +504,7 @@
       <name>Reference Identifier</name>
       <usage>N</usage>
       <seq>04</seq>
+      <refdes>REF04</refdes>
     </composite>
   </segment>
   <loop>
@@ -1562,6 +1563,7 @@
           <name>Reference Identifier</name>
           <usage>N</usage>
           <seq>04</seq>
+          <refdes>REF04</refdes>
         </composite>
       </segment>
       <segment>
@@ -1616,6 +1618,7 @@
           <name>Reference Identifier</name>
           <usage>N</usage>
           <seq>04</seq>
+          <refdes>REF04</refdes>
         </composite>
       </segment>
       <segment>
@@ -2035,6 +2038,7 @@
           <name>Reference Identifier</name>
           <usage>N</usage>
           <seq>04</seq>
+          <refdes>REF04</refdes>
         </composite>
       </segment>
     </loop>
@@ -2735,6 +2739,7 @@
             <name>Reference Identifier</name>
             <usage>N</usage>
             <seq>04</seq>
+            <refdes>REF04</refdes>
           </composite>
         </segment>
         <segment>
@@ -2782,6 +2787,7 @@
             <name>Reference Identifier</name>
             <usage>N</usage>
             <seq>04</seq>
+            <refdes>REF04</refdes>
           </composite>
         </segment>
       </loop>
@@ -3065,6 +3071,7 @@
             <name>Reference Identifier</name>
             <usage>N</usage>
             <seq>04</seq>
+            <refdes>REF04</refdes>
           </composite>
         </segment>
       </loop>
@@ -3479,6 +3486,7 @@
             <name>Reference Identifier</name>
             <usage>N</usage>
             <seq>04</seq>
+            <refdes>REF04</refdes>
           </composite>
         </segment>
       </loop>
@@ -4684,6 +4692,7 @@
             <name>Actions Indicated</name>
             <usage>N</usage>
             <seq>08</seq>
+            <refdes>PWK08</refdes>
           </composite>
           <element>
             <data_ele>1525</data_ele>
@@ -4945,6 +4954,7 @@
             <name>Reference Identifier</name>
             <usage>N</usage>
             <seq>04</seq>
+            <refdes>REF04</refdes>
           </composite>
         </segment>
         <segment>
@@ -4996,6 +5006,7 @@
             <name>Reference Identifier</name>
             <usage>N</usage>
             <seq>04</seq>
+            <refdes>REF04</refdes>
           </composite>
         </segment>
         <segment>
@@ -5043,6 +5054,7 @@
             <name>Reference Identifier</name>
             <usage>N</usage>
             <seq>04</seq>
+            <refdes>REF04</refdes>
           </composite>
         </segment>
         <segment>
@@ -5091,6 +5103,7 @@
             <name>Reference Identifier</name>
             <usage>N</usage>
             <seq>04</seq>
+            <refdes>REF04</refdes>
           </composite>
         </segment>
         <segment>
@@ -5138,6 +5151,7 @@
             <name>Reference Identifier</name>
             <usage>N</usage>
             <seq>04</seq>
+            <refdes>REF04</refdes>
           </composite>
         </segment>
         <segment>
@@ -5185,6 +5199,7 @@
             <name>Reference Identifier</name>
             <usage>N</usage>
             <seq>04</seq>
+            <refdes>REF04</refdes>
           </composite>
         </segment>
         <segment>
@@ -5232,6 +5247,7 @@
             <name>Reference Identifier</name>
             <usage>N</usage>
             <seq>04</seq>
+            <refdes>REF04</refdes>
           </composite>
         </segment>
         <segment>
@@ -5279,6 +5295,7 @@
             <name>Reference Identifier</name>
             <usage>N</usage>
             <seq>04</seq>
+            <refdes>REF04</refdes>
           </composite>
         </segment>
         <segment>
@@ -5326,6 +5343,7 @@
             <name>Reference Identifier</name>
             <usage>N</usage>
             <seq>04</seq>
+            <refdes>REF04</refdes>
           </composite>
         </segment>
         <segment>
@@ -5373,6 +5391,7 @@
             <name>Reference Identifier</name>
             <usage>N</usage>
             <seq>04</seq>
+            <refdes>REF04</refdes>
           </composite>
         </segment>
         <segment>
@@ -5420,6 +5439,7 @@
             <name>Reference Identifier</name>
             <usage>N</usage>
             <seq>04</seq>
+            <refdes>REF04</refdes>
           </composite>
         </segment>
         <segment>
@@ -5467,6 +5487,7 @@
             <name>Reference Identifier</name>
             <usage>N</usage>
             <seq>04</seq>
+            <refdes>REF04</refdes>
           </composite>
         </segment>
         <segment>
@@ -5514,6 +5535,7 @@
             <name>Reference Identifier</name>
             <usage>N</usage>
             <seq>04</seq>
+            <refdes>REF04</refdes>
           </composite>
         </segment>
         <segment>
@@ -5547,6 +5569,7 @@
             <name>Composite Unit of Measure</name>
             <usage>N</usage>
             <seq>03</seq>
+            <refdes>K303</refdes>
           </composite>
         </segment>
         <segment>
@@ -7021,24 +7044,28 @@
             <name>Health Care Code Information</name>
             <usage>N</usage>
             <seq>09</seq>
+            <refdes>HI09</refdes>
           </composite>
           <composite>
             <data_ele>C022</data_ele>
             <name>Health Care Code Information</name>
             <usage>N</usage>
             <seq>10</seq>
+            <refdes>HI10</refdes>
           </composite>
           <composite>
             <data_ele>C022</data_ele>
             <name>Health Care Code Information</name>
             <usage>N</usage>
             <seq>11</seq>
+            <refdes>HI11</refdes>
           </composite>
           <composite>
             <data_ele>C022</data_ele>
             <name>Health Care Code Information</name>
             <usage>N</usage>
             <seq>12</seq>
+            <refdes>HI12</refdes>
           </composite>
         </segment>
         <segment>
@@ -7629,6 +7656,7 @@
               <name>Provider Specialty Information</name>
               <usage>N</usage>
               <seq>05</seq>
+              <refdes>PRV05</refdes>
             </composite>
             <element>
               <data_ele>1223</data_ele>
@@ -7697,6 +7725,7 @@
               <name>Reference Identifier</name>
               <usage>N</usage>
               <seq>04</seq>
+              <refdes>REF04</refdes>
             </composite>
           </segment>
         </loop>
@@ -7895,6 +7924,7 @@
               <name>Provider Specialty Information</name>
               <usage>N</usage>
               <seq>05</seq>
+              <refdes>PRV05</refdes>
             </composite>
             <element>
               <data_ele>1223</data_ele>
@@ -7963,6 +7993,7 @@
               <name>Reference Identifier</name>
               <usage>N</usage>
               <seq>04</seq>
+              <refdes>REF04</refdes>
             </composite>
           </segment>
         </loop>
@@ -8161,6 +8192,7 @@
               <name>Reference Identifier</name>
               <usage>N</usage>
               <seq>04</seq>
+              <refdes>REF04</refdes>
             </composite>
           </segment>
         </loop>
@@ -8457,6 +8489,7 @@
               <name>Reference Identifier</name>
               <usage>N</usage>
               <seq>04</seq>
+              <refdes>REF04</refdes>
             </composite>
           </segment>
         </loop>
@@ -8652,6 +8685,7 @@
               <name>Reference Identifier</name>
               <usage>N</usage>
               <seq>04</seq>
+              <refdes>REF04</refdes>
             </composite>
           </segment>
         </loop>
@@ -10031,6 +10065,7 @@
                 <name>Reference Identifier</name>
                 <usage>N</usage>
                 <seq>04</seq>
+                <refdes>REF04</refdes>
               </composite>
             </segment>
           </loop>
@@ -10384,6 +10419,7 @@
                 <name>Reference Identifier</name>
                 <usage>N</usage>
                 <seq>04</seq>
+                <refdes>REF04</refdes>
               </composite>
             </segment>
             <segment>
@@ -10432,6 +10468,7 @@
                 <name>Reference Identifier</name>
                 <usage>N</usage>
                 <seq>04</seq>
+                <refdes>REF04</refdes>
               </composite>
             </segment>
             <segment>
@@ -10482,6 +10519,7 @@
                 <name>Reference Identifier</name>
                 <usage>N</usage>
                 <seq>04</seq>
+                <refdes>REF04</refdes>
               </composite>
             </segment>
           </loop>
@@ -10667,6 +10705,7 @@
                 <name>Reference Identifier</name>
                 <usage>N</usage>
                 <seq>04</seq>
+                <refdes>REF04</refdes>
               </composite>
             </segment>
           </loop>
@@ -10854,6 +10893,7 @@
                 <name>Reference Identifier</name>
                 <usage>N</usage>
                 <seq>04</seq>
+                <refdes>REF04</refdes>
               </composite>
             </segment>
           </loop>
@@ -11040,6 +11080,7 @@
                 <name>Reference Identifier</name>
                 <usage>N</usage>
                 <seq>04</seq>
+                <refdes>REF04</refdes>
               </composite>
             </segment>
           </loop>
@@ -11227,6 +11268,7 @@
                 <name>Reference Identifier</name>
                 <usage>N</usage>
                 <seq>04</seq>
+                <refdes>REF04</refdes>
               </composite>
             </segment>
           </loop>
@@ -11415,6 +11457,7 @@
                 <name>Reference Identifier</name>
                 <usage>N</usage>
                 <seq>04</seq>
+                <refdes>REF04</refdes>
               </composite>
             </segment>
           </loop>
@@ -11599,6 +11642,7 @@
                 <name>Reference Identifier</name>
                 <usage>N</usage>
                 <seq>04</seq>
+                <refdes>REF04</refdes>
               </composite>
             </segment>
           </loop>
@@ -12293,6 +12337,7 @@
               <name>Actions Indicated</name>
               <usage>N</usage>
               <seq>08</seq>
+              <refdes>PWK08</refdes>
             </composite>
             <element>
               <data_ele>1525</data_ele>
@@ -14075,6 +14120,7 @@
               <name>Reference Identifier</name>
               <usage>N</usage>
               <seq>04</seq>
+              <refdes>REF04</refdes>
             </composite>
           </segment>
           <segment>
@@ -14122,6 +14168,7 @@
               <name>Reference Identifier</name>
               <usage>N</usage>
               <seq>04</seq>
+              <refdes>REF04</refdes>
             </composite>
           </segment>
           <segment>
@@ -14170,6 +14217,7 @@
               <name>Reference Identifier</name>
               <usage>N</usage>
               <seq>4</seq>
+              <refdes>REF04</refdes>
             </composite>
           </segment>
           <segment>
@@ -14217,6 +14265,7 @@
               <name>Reference Identifier</name>
               <usage>N</usage>
               <seq>04</seq>
+              <refdes>REF04</refdes>
             </composite>
           </segment>
           <segment>
@@ -14264,6 +14313,7 @@
               <name>Reference Identifier</name>
               <usage>N</usage>
               <seq>04</seq>
+              <refdes>REF04</refdes>
             </composite>
           </segment>
           <segment>
@@ -14311,6 +14361,7 @@
               <name>Reference Identifier</name>
               <usage>N</usage>
               <seq>04</seq>
+              <refdes>REF04</refdes>
             </composite>
           </segment>
           <segment>
@@ -14358,6 +14409,7 @@
               <name>Reference Identifier</name>
               <usage>N</usage>
               <seq>04</seq>
+              <refdes>REF04</refdes>
             </composite>
           </segment>
           <segment>
@@ -14405,6 +14457,7 @@
               <name>Reference Identifier</name>
               <usage>N</usage>
               <seq>04</seq>
+              <refdes>REF04</refdes>
             </composite>
           </segment>
           <segment>
@@ -14452,6 +14505,7 @@
               <name>Reference Identifier</name>
               <usage>N</usage>
               <seq>04</seq>
+              <refdes>REF04</refdes>
             </composite>
           </segment>
           <segment>
@@ -14499,6 +14553,7 @@
               <name>Reference Identifier</name>
               <usage>N</usage>
               <seq>04</seq>
+              <refdes>REF04</refdes>
             </composite>
           </segment>
           <segment>
@@ -14547,6 +14602,7 @@
               <name>Reference Identifier</name>
               <usage>N</usage>
               <seq>04</seq>
+              <refdes>REF04</refdes>
             </composite>
           </segment>
           <segment>
@@ -14700,6 +14756,7 @@
               <name>Composite Unit of Measure</name>
               <usage>N</usage>
               <seq>03</seq>
+              <refdes>K303</refdes>
             </composite>
           </segment>
           <segment>
@@ -15805,6 +15862,7 @@
                 <name>Reference Identifier</name>
                 <usage>N</usage>
                 <seq>04</seq>
+                <refdes>REF04</refdes>
               </composite>
             </segment>
           </loop>
@@ -16003,6 +16061,7 @@
                 <name>Provider Specialty Information</name>
                 <usage>N</usage>
                 <seq>5</seq>
+                <refdes>PRV05</refdes>
               </composite>
               <element>
                 <data_ele>1223</data_ele>
@@ -16071,6 +16130,7 @@
                 <name>Reference Identifier</name>
                 <usage>N</usage>
                 <seq>04</seq>
+                <refdes>REF04</refdes>
               </composite>
             </segment>
           </loop>
@@ -16269,6 +16329,7 @@
                 <name>Reference Identifier</name>
                 <usage>N</usage>
                 <seq>04</seq>
+                <refdes>REF04</refdes>
               </composite>
             </segment>
           </loop>
@@ -16565,6 +16626,7 @@
                 <name>Reference Identifier</name>
                 <usage>N</usage>
                 <seq>04</seq>
+                <refdes>REF04</refdes>
               </composite>
             </segment>
           </loop>
@@ -16760,6 +16822,7 @@
                 <name>Reference Identifier</name>
                 <usage>N</usage>
                 <seq>04</seq>
+                <refdes>REF04</refdes>
               </composite>
             </segment>
           </loop>
@@ -17052,6 +17115,7 @@
                 <name>Reference Identifier</name>
                 <usage>N</usage>
                 <seq>04</seq>
+                <refdes>REF04</refdes>
               </composite>
             </segment>
             <segment>
@@ -17370,6 +17434,7 @@
                 <name>Provider Specialty Information</name>
                 <usage>N</usage>
                 <seq>05</seq>
+                <refdes>PRV05</refdes>
               </composite>
               <element>
                 <data_ele>1223</data_ele>
@@ -17438,6 +17503,7 @@
                 <name>Reference Identifier</name>
                 <usage>N</usage>
                 <seq>04</seq>
+                <refdes>REF04</refdes>
               </composite>
             </segment>
           </loop>
@@ -17622,6 +17688,7 @@
                 <name>Reference Identifier</name>
                 <usage>N</usage>
                 <seq>04</seq>
+                <refdes>REF04</refdes>
               </composite>
             </segment>
           </loop>
@@ -18723,6 +18790,7 @@
               <name>Reference Identifier</name>
               <usage>N</usage>
               <seq>04</seq>
+              <refdes>REF04</refdes>
             </composite>
           </segment>
           <segment>
@@ -18770,6 +18838,7 @@
               <name>Reference Identifier</name>
               <usage>N</usage>
               <seq>04</seq>
+              <refdes>REF04</refdes>
             </composite>
           </segment>
         </loop>
@@ -19975,6 +20044,7 @@
               <name>Actions Indicated</name>
               <usage>N</usage>
               <seq>08</seq>
+              <refdes>PWK08</refdes>
             </composite>
             <element>
               <data_ele>1525</data_ele>
@@ -20236,6 +20306,7 @@
               <name>Reference Identifier</name>
               <usage>N</usage>
               <seq>04</seq>
+              <refdes>REF04</refdes>
             </composite>
           </segment>
           <segment>
@@ -20287,6 +20358,7 @@
               <name>Reference Identifier</name>
               <usage>N</usage>
               <seq>04</seq>
+              <refdes>REF04</refdes>
             </composite>
           </segment>
           <segment>
@@ -20334,6 +20406,7 @@
               <name>Reference Identifier</name>
               <usage>N</usage>
               <seq>04</seq>
+              <refdes>REF04</refdes>
             </composite>
           </segment>
           <segment>
@@ -20382,6 +20455,7 @@
               <name>Reference Identifier</name>
               <usage>N</usage>
               <seq>04</seq>
+              <refdes>REF04</refdes>
             </composite>
           </segment>
           <segment>
@@ -20429,6 +20503,7 @@
               <name>Reference Identifier</name>
               <usage>N</usage>
               <seq>04</seq>
+              <refdes>REF04</refdes>
             </composite>
           </segment>
           <segment>
@@ -20476,6 +20551,7 @@
               <name>Reference Identifier</name>
               <usage>N</usage>
               <seq>04</seq>
+              <refdes>REF04</refdes>
             </composite>
           </segment>
           <segment>
@@ -20523,6 +20599,7 @@
               <name>Reference Identifier</name>
               <usage>N</usage>
               <seq>04</seq>
+              <refdes>REF04</refdes>
             </composite>
           </segment>
           <segment>
@@ -20570,6 +20647,7 @@
               <name>Reference Identifier</name>
               <usage>N</usage>
               <seq>04</seq>
+              <refdes>REF04</refdes>
             </composite>
           </segment>
           <segment>
@@ -20617,6 +20695,7 @@
               <name>Reference Identifier</name>
               <usage>N</usage>
               <seq>04</seq>
+              <refdes>REF04</refdes>
             </composite>
           </segment>
           <segment>
@@ -20664,6 +20743,7 @@
               <name>Reference Identifier</name>
               <usage>N</usage>
               <seq>04</seq>
+              <refdes>REF04</refdes>
             </composite>
           </segment>
           <segment>
@@ -20711,6 +20791,7 @@
               <name>Reference Identifier</name>
               <usage>N</usage>
               <seq>04</seq>
+              <refdes>REF04</refdes>
             </composite>
           </segment>
           <segment>
@@ -20758,6 +20839,7 @@
               <name>Reference Identifier</name>
               <usage>N</usage>
               <seq>04</seq>
+              <refdes>REF04</refdes>
             </composite>
           </segment>
           <segment>
@@ -20805,6 +20887,7 @@
               <name>Reference Identifier</name>
               <usage>N</usage>
               <seq>04</seq>
+              <refdes>REF04</refdes>
             </composite>
           </segment>
           <segment>
@@ -20838,6 +20921,7 @@
               <name>Composite Unit of Measure</name>
               <usage>N</usage>
               <seq>03</seq>
+              <refdes>K303</refdes>
             </composite>
           </segment>
           <segment>
@@ -22312,24 +22396,28 @@
               <name>Health Care Code Information</name>
               <usage>N</usage>
               <seq>09</seq>
+              <refdes>HI09</refdes>
             </composite>
             <composite>
               <data_ele>C022</data_ele>
               <name>Health Care Code Information</name>
               <usage>N</usage>
               <seq>10</seq>
+              <refdes>HI10</refdes>
             </composite>
             <composite>
               <data_ele>C022</data_ele>
               <name>Health Care Code Information</name>
               <usage>N</usage>
               <seq>11</seq>
+              <refdes>HI11</refdes>
             </composite>
             <composite>
               <data_ele>C022</data_ele>
               <name>Health Care Code Information</name>
               <usage>N</usage>
               <seq>12</seq>
+              <refdes>HI12</refdes>
             </composite>
           </segment>
           <segment>
@@ -22920,6 +23008,7 @@
                 <name>Provider Specialty Information</name>
                 <usage>N</usage>
                 <seq>05</seq>
+                <refdes>PRV05</refdes>
               </composite>
               <element>
                 <data_ele>1223</data_ele>
@@ -22988,6 +23077,7 @@
                 <name>Reference Identifier</name>
                 <usage>N</usage>
                 <seq>04</seq>
+                <refdes>REF04</refdes>
               </composite>
             </segment>
           </loop>
@@ -23186,6 +23276,7 @@
                 <name>Provider Specialty Information</name>
                 <usage>N</usage>
                 <seq>05</seq>
+                <refdes>PRV05</refdes>
               </composite>
               <element>
                 <data_ele>1223</data_ele>
@@ -23254,6 +23345,7 @@
                 <name>Reference Identifier</name>
                 <usage>N</usage>
                 <seq>04</seq>
+                <refdes>REF04</refdes>
               </composite>
             </segment>
           </loop>
@@ -23452,6 +23544,7 @@
                 <name>Reference Identifier</name>
                 <usage>N</usage>
                 <seq>04</seq>
+                <refdes>REF04</refdes>
               </composite>
             </segment>
           </loop>
@@ -23748,6 +23841,7 @@
                 <name>Reference Identifier</name>
                 <usage>N</usage>
                 <seq>04</seq>
+                <refdes>REF04</refdes>
               </composite>
             </segment>
           </loop>
@@ -23943,6 +24037,7 @@
                 <name>Reference Identifier</name>
                 <usage>N</usage>
                 <seq>04</seq>
+                <refdes>REF04</refdes>
               </composite>
             </segment>
           </loop>
@@ -25323,6 +25418,7 @@
                   <name>Reference Identifier</name>
                   <usage>N</usage>
                   <seq>04</seq>
+                  <refdes>REF04</refdes>
                 </composite>
               </segment>
             </loop>
@@ -25676,6 +25772,7 @@
                   <name>Reference Identifier</name>
                   <usage>N</usage>
                   <seq>04</seq>
+                  <refdes>REF04</refdes>
                 </composite>
               </segment>
               <segment>
@@ -25724,6 +25821,7 @@
                   <name>Reference Identifier</name>
                   <usage>N</usage>
                   <seq>04</seq>
+                  <refdes>REF04</refdes>
                 </composite>
               </segment>
               <segment>
@@ -25774,6 +25872,7 @@
                   <name>Reference Identifier</name>
                   <usage>N</usage>
                   <seq>04</seq>
+                  <refdes>REF04</refdes>
                 </composite>
               </segment>
             </loop>
@@ -25959,6 +26058,7 @@
                   <name>Reference Identifier</name>
                   <usage>N</usage>
                   <seq>04</seq>
+                  <refdes>REF04</refdes>
                 </composite>
               </segment>
             </loop>
@@ -26146,6 +26246,7 @@
                   <name>Reference Identifier</name>
                   <usage>N</usage>
                   <seq>04</seq>
+                  <refdes>REF04</refdes>
                 </composite>
               </segment>
             </loop>
@@ -26332,6 +26433,7 @@
                   <name>Reference Identifier</name>
                   <usage>N</usage>
                   <seq>04</seq>
+                  <refdes>REF04</refdes>
                 </composite>
               </segment>
             </loop>
@@ -26519,6 +26621,7 @@
                   <name>Reference Identifier</name>
                   <usage>N</usage>
                   <seq>04</seq>
+                  <refdes>REF04</refdes>
                 </composite>
               </segment>
             </loop>
@@ -26707,6 +26810,7 @@
                   <name>Reference Identifier</name>
                   <usage>N</usage>
                   <seq>04</seq>
+                  <refdes>REF04</refdes>
                 </composite>
               </segment>
             </loop>
@@ -26891,6 +26995,7 @@
                   <name>Reference Identifier</name>
                   <usage>N</usage>
                   <seq>04</seq>
+                  <refdes>REF04</refdes>
                 </composite>
               </segment>
             </loop>
@@ -27585,6 +27690,7 @@
                 <name>Actions Indicated</name>
                 <usage>N</usage>
                 <seq>08</seq>
+                <refdes>PWK08</refdes>
               </composite>
               <element>
                 <data_ele>1525</data_ele>
@@ -29183,6 +29289,7 @@
                 <name>Composite Unit of Measure</name>
                 <usage>N</usage>
                 <seq>04</seq>
+                <refdes>MEA04</refdes>
               </composite>
               <element>
                 <data_ele>740</data_ele>
@@ -29366,6 +29473,7 @@
                 <name>Reference Identifier</name>
                 <usage>N</usage>
                 <seq>04</seq>
+                <refdes>REF04</refdes>
               </composite>
             </segment>
             <segment>
@@ -29413,6 +29521,7 @@
                 <name>Reference Identifier</name>
                 <usage>N</usage>
                 <seq>04</seq>
+                <refdes>REF04</refdes>
               </composite>
             </segment>
             <segment>
@@ -29461,6 +29570,7 @@
                 <name>Reference Identifier</name>
                 <usage>N</usage>
                 <seq>4</seq>
+                <refdes>REF04</refdes>
               </composite>
             </segment>
             <segment>
@@ -29508,6 +29618,7 @@
                 <name>Reference Identifier</name>
                 <usage>N</usage>
                 <seq>04</seq>
+                <refdes>REF04</refdes>
               </composite>
             </segment>
             <segment>
@@ -29555,6 +29666,7 @@
                 <name>Reference Identifier</name>
                 <usage>N</usage>
                 <seq>04</seq>
+                <refdes>REF04</refdes>
               </composite>
             </segment>
             <segment>
@@ -29602,6 +29714,7 @@
                 <name>Reference Identifier</name>
                 <usage>N</usage>
                 <seq>04</seq>
+                <refdes>REF04</refdes>
               </composite>
             </segment>
             <segment>
@@ -29649,6 +29762,7 @@
                 <name>Reference Identifier</name>
                 <usage>N</usage>
                 <seq>04</seq>
+                <refdes>REF04</refdes>
               </composite>
             </segment>
             <segment>
@@ -29696,6 +29810,7 @@
                 <name>Reference Identifier</name>
                 <usage>N</usage>
                 <seq>04</seq>
+                <refdes>REF04</refdes>
               </composite>
             </segment>
             <segment>
@@ -29743,6 +29858,7 @@
                 <name>Reference Identifier</name>
                 <usage>N</usage>
                 <seq>04</seq>
+                <refdes>REF04</refdes>
               </composite>
             </segment>
             <segment>
@@ -29790,6 +29906,7 @@
                 <name>Reference Identifier</name>
                 <usage>N</usage>
                 <seq>04</seq>
+                <refdes>REF04</refdes>
               </composite>
             </segment>
             <segment>
@@ -29838,6 +29955,7 @@
                 <name>Reference Identifier</name>
                 <usage>N</usage>
                 <seq>04</seq>
+                <refdes>REF04</refdes>
               </composite>
             </segment>
             <segment>
@@ -29991,6 +30109,7 @@
                 <name>Composite Unit of Measure</name>
                 <usage>N</usage>
                 <seq>03</seq>
+                <refdes>K303</refdes>
               </composite>
             </segment>
             <segment>
@@ -31096,6 +31215,7 @@
                   <name>Reference Identifier</name>
                   <usage>N</usage>
                   <seq>04</seq>
+                  <refdes>REF04</refdes>
                 </composite>
               </segment>
             </loop>
@@ -31294,6 +31414,7 @@
                   <name>Provider Specialty Information</name>
                   <usage>N</usage>
                   <seq>5</seq>
+                  <refdes>PRV05</refdes>
                 </composite>
                 <element>
                   <data_ele>1223</data_ele>
@@ -31362,6 +31483,7 @@
                   <name>Reference Identifier</name>
                   <usage>N</usage>
                   <seq>04</seq>
+                  <refdes>REF04</refdes>
                 </composite>
               </segment>
             </loop>
@@ -31560,6 +31682,7 @@
                   <name>Reference Identifier</name>
                   <usage>N</usage>
                   <seq>04</seq>
+                  <refdes>REF04</refdes>
                 </composite>
               </segment>
             </loop>
