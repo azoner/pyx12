@@ -748,9 +748,9 @@ class segment_if(x12_node):
         Class:      segment_if
         Name:       is_valid
         Desc:    
-        Params:     seg - data segment list 
+        Params:     seg - data segment instance
                     errh - instance of error_handler
-        Returns: boolean
+        Returns:    boolean
         """
         valid = True
         child_count = self.get_child_count()
@@ -759,7 +759,7 @@ class segment_if(x12_node):
             err_str = 'Too many elements in segment %s. Has %i, should have %i' % \
                 (seg.get_seg_id(), len(seg), child_count)
             #self.logger.error(err_str)
-            err_value = seg[child_count+1]
+            err_value = seg[child_count+1].__repr__()
             errh.seg_error('3', err_str, err_value)
             valid = False
 
@@ -767,22 +767,19 @@ class segment_if(x12_node):
             #self.logger.debug('i=%i, len(seg)=%i / child_count=%i' % \
             #   (i, len(seg), self.get_child_count()))
             child_node = self.get_child_node_by_idx(i)
-            if i < len(seg):
-                #if type(seg[i+1]) is ListType: # composite
-                #self.logger.debug('i=%i, elem=%s, id=%s' % (i, seg[i+1], child_node.id))
-                if child_node.is_composite():
-                    # Validate composite
-                    comp = seg[i+1]
-                    subele_count = child_node.get_child_count()
-                    if len(comp) > subele_count:
-                        subele_node = child_node.get_child_node_by_idx(subele_count+1)
-                        err_str = 'Too many sub-elements in composite %s' % (subele_node.refdes)
-                        err_value = comp[subele_count]
-                        errh.seg_error('3', err_str, err_value)
-                    valid &= child_node.is_valid(seg[i+1], errh, self.check_dte)
-                elif child_node.is_element():
-                    # Validate Element
-                    valid &= child_node.is_valid(seg[i+1], errh, self.check_dte)
+            if child_node.is_composite():
+                # Validate composite
+                comp = seg[i]
+                subele_count = child_node.get_child_count()
+                if len(comp) > subele_count:
+                    subele_node = child_node.get_child_node_by_idx(subele_count+1)
+                    err_str = 'Too many sub-elements in composite %s' % (subele_node.refdes)
+                    err_value = comp[subele_count]
+                    errh.seg_error('3', err_str, err_value)
+                valid &= child_node.is_valid(seg[i], errh, self.check_dte)
+            elif child_node.is_element():
+                # Validate Element
+                valid &= child_node.is_valid(seg[i], errh, self.check_dte)
         for i in xrange(len(seg), self.get_child_count()):
             #missing required elements
             valid &= child_node.is_valid(None, errh)
@@ -1022,13 +1019,13 @@ class element_if(x12_node):
         # match also by ID
         pass
 
-    def is_valid(self, elem_val, errh, check_dte=None):
+    def is_valid(self, elem, errh, check_dte=None):
         """
         Class:  element_if
         Name:   is_valid 
         Desc:    
         Params:  
-            elem_val - value of element data
+            elem - element instance
             errh - instance of error_handler
             check_dte - date string to check against (YYYYMMDD)
                  
@@ -1036,11 +1033,11 @@ class element_if(x12_node):
         """
         errh.add_ele(self)
 
-        if type(elem_val) is ListType:
+        if len(elem) > 1:
             err_str = 'Data element %s is an invalid composite' % (self.refdes)
-            self.__error__(errh, err_str, '6', elem_val)
+            self.__error__(errh, err_str, '6', elem.__repr__())
 
-        if elem_val == '' or elem_val is None:
+        if elem is None or len(elem) == 0 or elem[0] == '':
             if self.usage in ('N', 'S'):
                 return True
             elif self.usage == 'R':
@@ -1051,15 +1048,16 @@ class element_if(x12_node):
                 else:
                     return True
                 
+        elem_val = elem[0]
         valid = True
         if (not self.data_type is None) and (self.data_type == 'R' or self.data_type[0] == 'N'):
-            elem = string.replace(string.replace(elem_val, '-', ''), '.', '')
-            if len(elem) < int(self.min_len):
+            elem_strip = string.replace(string.replace(elem_val, '-', ''), '.', '')
+            if len(elem_strip) < int(self.min_len):
                 err_str = 'Data element %s is too short: "%s" should be at least %i characters' % \
                     (self.refdes, elem_val, int(self.min_len))
                 self.__error__(errh, err_str, '4', elem_val)
                 valid = False
-            if len(elem) > int(self.max_len):
+            if len(elem_strip) > int(self.max_len):
                 err_str = 'Element %s is too long: "%s" should only be %i characters' % (self.refdes,\
                     elem_val, int(self.max_len))
                 self.__error__(errh, err_str, '5', elem_val)
@@ -1274,16 +1272,13 @@ class composite_if(x12_node):
         Class:      composite_if
         Name:       validate
         Desc:       Validates the composite
-        Params:     comp - composite value or list
+        Params:     comp - element instance, has multiple values
                     errh - instance of error_handler
         Returns:    True on success
         """
         valid = True
         if comp is None or len(comp) == 0 and self.usage == 'N':
             return True
-
-        if not type(comp) is ListType: # composite
-            comp = [comp] 
 
         if self.usage == 'R':
             good_flag = False

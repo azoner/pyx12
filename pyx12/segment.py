@@ -49,6 +49,36 @@ from pyx12.errors import *
 
 class element:
     """Class element
+    """
+
+    def __init__(self, ele_str):
+        """function element
+        
+        ele_str: string
+        
+        returns void
+        """
+        self.value = ele_str
+        
+    def __repr__(self):
+        """function __repr__
+        
+        returns string
+        """
+        return self.value
+
+    def format(self):
+        return self.value
+
+    def get_value(self):
+        return self.value
+
+    def set_value(self, elem_str):
+        self.value = elem_str
+
+
+class composite:
+    """Class element
 
        Can be a simple element or a composite
        A simple element is treated as a composite element with one sub-element.
@@ -65,11 +95,14 @@ class element:
         """
         self.subele_term = subele_term
         self.subele_term_orig = subele_term
-        self.elements = ele_str.split(self.subele_term)
+        members = ele_str.split(self.subele_term)
+        self.elements = []
+        for elem in members:
+            self.elements.append(element(elem))
         
     def __getitem__(self, idx):
         """function operator[]
-        returns element value for idx
+        returns element instance for idx
         """
         return self.elements[idx]
 
@@ -93,10 +126,16 @@ class element:
         
         returns string
         """
-        return '%s' % (string.join(self.elements, self.subele_term))
+        return '%s' % (string.join(map(element.__repr__, self.elements), self.subele_term))
 
     def format(self, subele_term=':'):
-        return '%s' % (string.join(self.elements, subele_term))
+        return '%s' % (string.join(map(element.__repr__, self.elements), subele_term))
+
+    def get_value(self):
+        if len(self.elements) == 1:
+            return self.elements[0].get_value()
+        else:
+            raise IndexError, 'value of composite is undefined'
 
     def set_subele_term(self, subele_term):
         self.subele_term = subele_term
@@ -116,7 +155,6 @@ class element:
 class segment:
     """Class segment
 
-        INDEXING IS 1 BASED
     """
     # Attributes:
     
@@ -141,7 +179,7 @@ class segment:
         if elems:
             self.seg_id = elems[0]
         for ele in elems[1:]:
-            self.elements.append(element(ele, subele_term))
+            self.elements.append(composite(ele, subele_term))
     
     def __repr__(self):
         """function __repr__
@@ -162,7 +200,7 @@ class segment:
     def __setitem__(self, idx, val):
         """function operator[]
         """
-        self.elements[idx] = element(val, self.subele_term)
+        self.elements[idx] = composite(val, self.subele_term)
 
     def __len__(self):
         return len(self.elements)
@@ -185,7 +223,7 @@ class segment:
         else:
             ele_idx = int(rest[:dash]) - 1
             comp_idx = int(rest[dash+1:]) - 1
-        return self.elements[ele_idx][comp_idx]
+        return self.elements[ele_idx][comp_idx].get_value()
     
     def set_seg_term(self, seg_term):
         self.seg_term = seg_term

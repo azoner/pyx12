@@ -21,13 +21,13 @@ class ArbitraryDelimiters(unittest.TestCase):
         self.assertEqual(len(self.seg), 3)
 
     def test_getitem3(self):
-        self.assertEqual(self.seg[2][0], 'ZZ')
+        self.assertEqual(self.seg[2][0].get_value(), 'ZZ')
                     
     def test_getitem1(self):
         self.assertEqual(self.seg[0].__repr__(), 'AA!1!1')
                     
     def test_getitem_minus_1(self):
-        self.assertEqual(self.seg[-1][0], 'ZZ')
+        self.assertEqual(self.seg[-1][0].get_value(), 'ZZ')
                     
     def test_other_terms(self):
         self.assertEqual(self.seg.format('~', '*', ':', ''), 'TST*AA:1:1*BB:5*ZZ~')
@@ -77,10 +77,10 @@ class Composite(unittest.TestCase):
         self.assertEqual(len(self.seg[0]), 3)
 
     def test_composite_indexing(self):
-        self.assertEqual(self.seg[0][0], 'AA')
-        self.assertEqual(self.seg[0][2], 'Y')
-        self.assertEqual(self.seg[0][-1], 'Y')
-        self.failUnlessRaises(IndexError, lambda x: self.seg[0][x], 3)
+        self.assertEqual(self.seg[0][0].get_value(), 'AA')
+        self.assertEqual(self.seg[0][2].get_value(), 'Y')
+        self.assertEqual(self.seg[0][-1].get_value(), 'Y')
+        self.failUnlessRaises(IndexError, lambda x: self.seg[0][x].get_value(), 3)
 
 
 class Simple(unittest.TestCase):
@@ -97,11 +97,11 @@ class Simple(unittest.TestCase):
         self.assertEqual(len(self.seg[0]), 1)
 
     def test_simple_indexing(self):
-        self.assertEqual(self.seg[0][0], 'AA')
-        self.assertEqual(self.seg[1][0], '1')
-        self.assertEqual(self.seg[2][0], 'Y')
-        self.assertEqual(self.seg[2][-1], 'Y')
-        self.failUnlessRaises(IndexError, lambda x: self.seg[0][x], 1)
+        self.assertEqual(self.seg[0][0].get_value(), 'AA')
+        self.assertEqual(self.seg[1][0].get_value(), '1')
+        self.assertEqual(self.seg[2][0].get_value(), 'Y')
+        self.assertEqual(self.seg[2][-1].get_value(), 'Y')
+        self.failUnlessRaises(IndexError, lambda x: self.seg[0][x].get_value(), 1)
 
 
 class RefDes(unittest.TestCase):
@@ -125,6 +125,22 @@ class RefDes(unittest.TestCase):
     def test_composite2(self):
         self.assertEqual(self.seg.get_value_by_ref_des('TST04-1'), 'BB')
 
+class Indexing(unittest.TestCase):
+
+    def setUp(self):
+        seg_str = 'TST*AA*1*Y*BB:5*ZZ'
+        self.seg = pyx12.segment.segment(seg_str, '~', '*', ':')
+
+    def test_index1(self):
+        self.assertEqual(self.seg[0][0].get_value(), 'AA')
+
+    def test_index2(self):
+        self.assertEqual(self.seg[0].get_value(), 'AA')
+
+    def test_getitem3(self):
+        self.assertEqual(self.seg[3][0].get_value(), 'BB')
+        self.assertEqual(self.seg[3][1].get_value(), '5')
+                    
 
 def suite():
     suite = unittest.TestSuite()
@@ -134,6 +150,7 @@ def suite():
     suite.addTest(unittest.makeSuite(Composite))
     suite.addTest(unittest.makeSuite(Simple))
     suite.addTest(unittest.makeSuite(RefDes))
+    suite.addTest(unittest.makeSuite(Indexing))
     return suite
 
 #if __name__ == "__main__":

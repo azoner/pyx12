@@ -191,14 +191,13 @@ class walk_tree:
 
     def _seg_not_found(self, orig_node, seg, errh):
         if seg.get_seg_id() == 'HL':
-            seg_str = string.join(seg, '*')
+            seg_str = seg.format('', '*', ':', '')
         else:
-            seg_str = '%s*%s' % (seg.get_seg_id(), seg[1])
+            seg_str = '%s*%s' % (seg.get_seg_id(), seg[0][0])
         err_str = 'Segment %s not found.  Started at %s' % (seg_str, orig_node.get_path()) 
         errh.seg_error('1', err_str, None)
         #raise EngineError, "Could not find segment %s*%s.  Started at %s" % \
         #    (seg.get_seg_id(), seg[1], orig_node.get_path())
-        
 
     def pop_to_parent_loop(self, node):
         if node.is_map_root():
