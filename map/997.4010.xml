@@ -351,15 +351,10 @@
         <usage>R</usage>
         <pos>020</pos>
         <repeat>&gt;1</repeat>
-        <loop xid="HEADER" type="header">
-          <name>Table 1 - Header</name>
-          <usage>R</usage>
-          <pos>010</pos>
-          <repeat>1</repeat>
           <segment xid="ST">
             <name>Transaction Set Header</name>
             <usage>R</usage>
-            <pos>010</pos>
+            <pos>005</pos>
             <max_use>1</max_use>
             <element xid="ST01">
               <data_ele>143</data_ele>
@@ -384,6 +379,11 @@
             </element>
           </segment>
 <!--End of ST segment-->
+        <loop xid="HEADER" type="header">
+          <name>Table 1 - Header</name>
+          <usage>R</usage>
+          <pos>010</pos>
+          <repeat>1</repeat>
           <segment xid="AK1">
             <name>Functional Group Response Header</name>
             <usage>R</usage>
@@ -990,9 +990,11 @@
 <!--End of DETAIL loop-->
         <loop xid="FOOTER" type="footer">
           <name>Table 3 - Footer</name>
-          <usage>R</usage>
+          <usage>N</usage>
           <pos>030</pos>
           <repeat>1</repeat>
+        </loop>
+<!--End of FOOTER loop-->
           <segment xid="SE">
             <name>Transaction Set Trailer</name>
             <usage>R</usage>
@@ -1018,8 +1020,6 @@
             </element>
           </segment>
 <!--End of SE segment-->
-        </loop>
-<!--End of FOOTER loop-->
       </loop>
 <!--End of ST loop-->
       <segment xid="GE">

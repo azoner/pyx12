@@ -7,30 +7,6 @@
 		John Holland <jholland@kazoocmh.org> <john@zoner.org>
 
     All rights reserved.
-
-	Redistribution and use in source and binary forms, with or without modification, 
-	are permitted provided that the following conditions are met:
-
-	1. Redistributions of source code must retain the above copyright notice, this list 
-	   of conditions and the following disclaimer. 
-	
-	2. Redistributions in binary form must reproduce the above copyright notice, this 
-	   list of conditions and the following disclaimer in the documentation and/or other 
-	   materials provided with the distribution. 
-	
-	3. The name of the author may not be used to endorse or promote products derived 
-	   from this software without specific prior written permission. 
-
-	THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR IMPLIED 
-	WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF 
-	MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO 
-	EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, 
-	EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT 
-	OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS 
-	INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN 
-	CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) 
-	ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF 
-	THE POSSIBILITY OF SUCH DAMAGE.
 -->
 <transaction>
   <id>837</id>
@@ -333,11 +309,6 @@
         <usage>R</usage>
         <pos>020</pos>
         <repeat>&gt;1</repeat>
-        <loop xid="HEADER" type="header">
-          <name>Table 1 - Header</name>
-          <usage>R</usage>
-          <pos>010</pos>
-          <repeat>1</repeat>
           <segment xid="ST">
             <name>Transaction Set Header</name>
             <usage>R</usage>
@@ -366,6 +337,11 @@
             </element>
           </segment>
 <!--End of ST segment-->
+        <loop xid="HEADER" type="header">
+          <name>Table 1 - Header</name>
+          <usage>R</usage>
+          <pos>010</pos>
+          <repeat>1</repeat>
           <segment xid="BHT">
             <name>Beginning of Hierarchical Transaction</name>
             <usage>R</usage>
@@ -35841,9 +35817,11 @@
 <!--End of DETAIL loop-->
         <loop xid="FOOTER" type="footer">
           <name>Table 3 - Footer</name>
-          <usage>R</usage>
+          <usage>N</usage>
           <pos>030</pos>
           <repeat>1</repeat>
+        </loop>
+<!--End of FOOTER loop-->
           <segment xid="SE">
             <name>Transaction Set Trailer</name>
             <usage>R</usage>
@@ -35869,8 +35847,6 @@
             </element>
           </segment>
 <!--End of SE segment-->
-        </loop>
-<!--End of FOOTER loop-->
       </loop>
 <!--End of ST loop-->
       <segment xid="GE">
