@@ -58,7 +58,8 @@ __version__ = pyx12.__version__
 __date__    = pyx12.__date__
 
 def usage():
-    sys.stdout.write('usage: x12html source_file\n')
+    pgm_nme = os.path.basename(sys.argv[0])
+    sys.stdout.write('usage: %s source_file\n' % (pgm_nme))
     
 def main():
     """
@@ -71,7 +72,7 @@ def main():
     except getopt.error, msg:
         usage()
         raise
-        sys.exit(2)
+        return False
     logger = logging.getLogger('pyx12')
     #hdlr = logging.FileHandler('./run.log')
     stderr_hdlr = logging.StreamHandler()
@@ -98,7 +99,7 @@ def main():
     except:
         logger.error('Could not open files')
         usage()
-        sys.exit(2)
+        return False
 
     try:
         if args:

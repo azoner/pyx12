@@ -13,8 +13,9 @@ If no ouput filename is given with -o,  write to stdout.
 """
 
 def usage():
-    sys.stdout.write('x12norm.py %s (%s)\n' % (__version__, __date__))
-    sys.stdout.write('usage: x12norm.py [options] source_file\n')
+    pgm_nme = os.path.basename(sys.argv[0])
+    sys.stdout.write('%s %s (%s)\n' % (pgm_nme, __version__, __date__))
+    sys.stdout.write('usage: %s [options] source_file\n' % (pgm_nme))
     sys.stdout.write('\noptions:\n')
     sys.stdout.write('  -h         Help\n')
     sys.stdout.write('  -e         Add eol to each segment line\n')

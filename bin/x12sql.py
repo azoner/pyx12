@@ -308,7 +308,7 @@ def main():
         opts, args = getopt.getopt(sys.argv[1:], 'c:f:m:p:qv')
     except getopt.error, msg:
         usage()
-        sys.exit(2)
+        return False
     logger = logging.getLogger('pyx12')
     logger.setLevel(logging.INFO)
     formatter = logging.Formatter('%(asctime)s %(levelname)s %(module)s %(lineno)d %(message)s')
@@ -349,7 +349,7 @@ def main():
         except IOError:
             logger.error('Could not open files')
             usage()
-            sys.exit(2)
+            return False
         except KeyboardInterrupt:
             print "\n[interrupt]"
 
