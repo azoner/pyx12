@@ -1,3 +1,5 @@
+XML based config files
+
 Base map_if children on map
   get by id quicker
   get by idx slower?
