@@ -42,7 +42,7 @@ import cPickle
 import libxml2
 import logging
 import os.path
-import pdb
+#import pdb
 import string
 import sys
 from types import *
@@ -78,6 +78,9 @@ class x12_node:
 #        pass
 
     def __repr__(self):
+        """
+        @rtype: string
+        """
         return self.name
 
     def getnodebypath(self, path):
@@ -133,21 +136,39 @@ class x12_node:
         # - first id element ==
 
     def is_first_seg_in_loop(self):
+        """
+        @rtype: boolean
+        """
         return False
 
     def is_map_root(self):
+        """
+        @rtype: boolean
+        """
         return False
 
     def is_loop(self):
+        """
+        @rtype: boolean
+        """
         return False
     
     def is_segment(self):
+        """
+        @rtype: boolean
+        """
         return False
     
     def is_element(self):
+        """
+        @rtype: boolean
+        """
         return False
     
     def is_composite(self):
+        """
+        @rtype: boolean
+        """
         return False
 
 
@@ -274,6 +295,9 @@ class map_if(x12_node):
             node.debug_print()
 
     def __repr__(self):
+        """
+        @rtype: string
+        """
         #out = '%s%s %s %s %s\n' % (str(' '*self.base_level), \
         #   self.base_name, self.base_level, self.id, self.name)
         #out = '%s%s' % (str(' '*self.base_level), self.base_name)
@@ -281,10 +305,16 @@ class map_if(x12_node):
         #out += '%sname %s\n' % (str(' '*(self.base_level+1)), self.name)
         return '%s\n' % (self.id)
 
-    def __path_parent__(self):
+    def _path_parent(self):
+        """
+        @rtype: string
+        """
         return os.path.basename(os.path.dirname(self.cur_path))
 
     def get_path(self):
+        """
+        @rtype: string
+        """
         return self.path
 
     def getnodebypath(self, path):
@@ -302,6 +332,9 @@ class map_if(x12_node):
         return None
             
     def is_map_root(self):
+        """
+        @rtype: boolean
+        """
         return True
 
     def reset_cur_count(self):
@@ -461,6 +494,9 @@ class loop_if(x12_node):
             node.debug_print()
 
     def __repr__(self):
+        """
+        @rtype: string
+        """
         #out = '%s%s %s %s %s\n' % (str(' '*self.base_level), self.base_name, \
         #    self.id, self.name, self.base_level)
         out = ''
@@ -505,9 +541,15 @@ class loop_if(x12_node):
         return i
 
     def is_loop(self):
+        """
+        @rtype: boolean
+        """
         return True
 
-    def is_match(seg_data):
+    def is_match(self, seg_data):
+        """
+        @rtype: boolean
+        """
         child = self.get_child_node_by_idx(0)
         if child.is_loop():
             return child.is_match(seg_data)
@@ -646,6 +688,7 @@ class segment_if(x12_node):
 
     def __repr__(self):
         """
+        @rtype: string
         """
         t1 = str(' '*self.base_level)
         #t2 = str(' '*(self.base_level+1))
@@ -701,6 +744,9 @@ class segment_if(x12_node):
 #        pass
 
     def is_first_seg_in_loop(self):
+        """
+        @rtype: boolean
+        """
         if self is self.get_parent().children[0]:
             return True
         else:
@@ -711,6 +757,7 @@ class segment_if(x12_node):
         is segment given a match to this node?
         @param seg: data segment instance
         @return: boolean
+        @rtype: boolean
         """
         if seg.get_seg_id() == self.id:
             if self.children[0].is_element() \
@@ -733,13 +780,17 @@ class segment_if(x12_node):
         else:
             return False
 
-    def is_segment(self): return True
+    def is_segment(self):
+        """
+        @rtype: boolean
+        """
+        return True
 
     def is_valid(self, seg_data, errh):
         """
         @param seg_data: data segment instance
         @param errh: instance of error_handler
-        @return:    boolean
+        @rtype: boolean
         """
         valid = True
         child_count = self.get_child_count()
@@ -802,7 +853,7 @@ class segment_if(x12_node):
 ############################################################
 # Element Interface
 ############################################################
-class element_if(xpyx12.x12_node12_node):
+class element_if(x12_node):
     def __init__(self, root, parent):
         """
         @requires: Must be entered with a libxml2 element node current
@@ -932,6 +983,7 @@ class element_if(xpyx12.x12_node12_node):
 
     def __repr__(self):
         """
+        @rtype: string
         """
         out = '%s%s "%s"' % (str(' '*self.base_level), self.refdes, self.name)
         if self.data_ele: 
@@ -963,13 +1015,13 @@ class element_if(xpyx12.x12_node12_node):
 #    def __del__(self):
 #        pass
 
-    def __error__(self, errh, err_str, err_cde, elem_val):
+    def _error(self, errh, err_str, err_cde, elem_val):
         """
         Forward the error to an error_handler
         """
         errh.ele_error(err_cde, err_str, elem_val) #, pos=self.seq, data_ele=self.data_ele)
         
-    def __valid_code__(self, code):
+    def _valid_code(self, code):
         """
         Verify the x12 element value is in the given list of valid codes
         @return: True if found, else False
@@ -1010,7 +1062,7 @@ class element_if(xpyx12.x12_node12_node):
         if elem and elem.is_composite():
             err_str = 'Data element "%s" (%s) is an invalid composite' % \
                 (self.name, self.refdes)
-            self.__error__(errh, err_str, '6', elem.__repr__())
+            self._error(errh, err_str, '6', elem.__repr__())
             return False
 
         if elem is None or elem.get_value() == '':
@@ -1019,13 +1071,13 @@ class element_if(xpyx12.x12_node12_node):
             elif self.usage == 'R':
                 if self.seq != 1 or not self.parent.is_composite() or self.parent.usage == 'R':
                     err_str = 'Mandatory data element "%s" (%s) is missing' % (self.name, self.refdes)
-                    self.__error__(errh, err_str, '1', None)
+                    self._error(errh, err_str, '1', None)
                     return False
                 else:
                     return True
         if self.usage == 'N' and elem.get_value() != '':
             err_str = 'Data element "%s" (%s) is marked as Not Used' % (self.name, self.refdes)
-            self.__error__(errh, err_str, '5', None)
+            self._error(errh, err_str, '5', None)
             return False
 
         elem_val = elem.get_value()
@@ -1035,54 +1087,57 @@ class element_if(xpyx12.x12_node12_node):
             if len(elem_strip) < int(self.min_len):
                 err_str = 'Data element "%s" (%s) is too short: "%s" should be at least %i characters' % \
                     (self.name, self.refdes, elem_val, int(self.min_len))
-                self.__error__(errh, err_str, '4', elem_val)
+                self._error(errh, err_str, '4', elem_val)
                 valid = False
             if len(elem_strip) > int(self.max_len):
                 err_str = 'Element "%s" (%s) is too long: "%s" should only be %i characters' % \
                     (self.name, self.refdes, elem_val, int(self.max_len))
-                self.__error__(errh, err_str, '5', elem_val)
+                self._error(errh, err_str, '5', elem_val)
                 valid = False
         else:
             if len(elem_val) < int(self.min_len):
                 err_str = 'Data element "%s" (%s) is too short: "%s" should be at least %i characters' % \
                     (self.name, self.refdes, elem_val, int(self.min_len))
-                self.__error__(errh, err_str, '4', elem_val)
+                self._error(errh, err_str, '4', elem_val)
                 valid = False
             if len(elem_val) > int(self.max_len):
                 err_str = 'Element "%s" (%s) is too long: "%s" should only be %i characters' % \
                     (self.name, self.refdes, elem_val, int(self.max_len))
-                self.__error__(errh, err_str, '5', elem_val)
+                self._error(errh, err_str, '5', elem_val)
                 valid = False
 
         if self.data_type in ['AN', 'ID'] and elem_val[-1] == ' ':
             if len(elem_val.rstrip()) >= int(self.min_len):
                 err_str = 'Element "%s" (%s) has unnecessary trailing spaces. (%s)' % \
                     (self.name, self.refdes, elem_val)
-                self.__error__(errh, err_str, '6', elem_val)
+                self._error(errh, err_str, '6', elem_val)
                 valid = False
             
-        if not self.__is_valid_code__(elem_val, errh, check_dte):
+        if not self._is_valid_code(elem_val, errh, check_dte):
             valid = False
            
         if not IsValidDataType(elem_val, self.data_type, self.root.param.get('charset')):
             if self.data_type == 'DT':
                 err_str = 'Data element "%s" (%s) contains an invalid date (%s)' % \
                     (self.name, self.refdes, elem_val)
-                self.__error__(errh, err_str, '8', elem_val)
+                self._error(errh, err_str, '8', elem_val)
                 valid = False
             elif self.data_type == 'TM':
                 err_str = 'Data element "%s" (%s) contains an invalid time (%s)' % \
                     (self.name, self.refdes, elem_val)
-                self.__error__(errh, err_str, '9', elem_val)
+                self._error(errh, err_str, '9', elem_val)
                 valid = False
             else:
                 err_str = 'Data element "%s" (%s) is type %s, contains an invalid character(%s)' % \
                     (self.name, self.refdes, self.data_type, elem_val)
-                self.__error__(errh, err_str, '6', elem_val)
+                self._error(errh, err_str, '6', elem_val)
                 valid = False
         return valid
 
-    def __is_valid_code__(self, elem_val, errh, check_dte=None):
+    def _is_valid_code(self, elem_val, errh, check_dte=None):
+        """
+        @rtype: boolean
+        """
         bValidCode = False
         if len(self.valid_codes) == 0 and self.external_codes is None:
             bValidCode = True
@@ -1093,11 +1148,10 @@ class element_if(xpyx12.x12_node12_node):
             bValidCode = True
         if not bValidCode:
             err_str = '(%s) is not a valid code for %s (%s)' % (elem_val, self.name, self.refdes)
-            self.__error__(errh, err_str, '7', elem_val)
+            self._error(errh, err_str, '7', elem_val)
             return False
         return True
         
-
 
     def get_seg_count(self):
         """
@@ -1105,6 +1159,9 @@ class element_if(xpyx12.x12_node12_node):
         pass
 
     def is_element(self):
+        """
+        @rtype: boolean
+        """
         return True
 
 
@@ -1196,7 +1253,7 @@ class composite_if(x12_node):
             elif ret == 0:
                 raise errors.XML_Reader_Error, 'End of Map File'
                 
-    def __error__(self, errh, err_str, err_cde, elem_val):
+    def _error(self, errh, err_str, err_cde, elem_val):
         """
         Forward the error to an error_handler
         """
@@ -1210,6 +1267,7 @@ class composite_if(x12_node):
 
     def __repr__(self):
         """
+        @rtype: string
         """
         out = '%s%s "%s"' % (str(' '*self.base_level), \
             self.id, self.name)
@@ -1236,7 +1294,6 @@ class composite_if(x12_node):
         Validates the composite
         @param comp_data: data composite instance, has multiple values
         @param errh: instance of error_handler
-        @return:    boolean
         @rtype: boolean
         """
         valid = True
@@ -1289,6 +1346,9 @@ class composite_if(x12_node):
 #        return None
            
     def is_composite(self):
+        """
+        @rtype: boolean
+        """
         return True
 
 class Pickle_Errors(Exception):
@@ -1310,9 +1370,9 @@ def load_map_file(map_file, param):
     map_full = os.path.join(map_path, map_file)
     try:
         if os.stat(map_full)[ST_MTIME] < os.stat(pickle_file)[ST_MTIME]:
-            map = cPickle.load(open(pickle_file))
-            if map.cur_path != '/transaction' or len(map.children) == 0 \
-                or map.src_version != '$Revision$':
+            imap = cPickle.load(open(pickle_file))
+            if imap.cur_path != '/transaction' or len(imap.children) == 0 \
+                or imap.src_version != '$Revision$':
                 raise Pickle_Errors, "reload map"
             logger.debug('Map %s loaded from pickle %s' % (map_full, pickle_file))
         else:
@@ -1320,7 +1380,7 @@ def load_map_file(map_file, param):
     except:
         try:
             logger.debug('Create map from %s' % (map_full))
-            map = map_if(map_file, param)
+            imap = map_if(map_file, param)
         except:
             raise errors.EngineError, 'Load of map file failed: %s%s' % \
                 (param.get('map_path'), map_file)
@@ -1331,7 +1391,7 @@ def load_map_file(map_file, param):
         #    logger.debug('Pickle of map %s failed' % (map_file))
             #os.remove(pickle_file)
             #raise
-    return map
+    return imap
 
 def is_syntax_valid(seg_data, syn):
     """
@@ -1420,20 +1480,26 @@ def is_syntax_valid(seg_data, syn):
     return (False, 'Syntax Type %s Not Found' % (syntax_str(syn)))
         
 def syntax_str(syntax):
-    str = syntax[0]
+    """
+    @rtype: string
+    """
+    output = syntax[0]
     for i in syntax[1:]:
-        str += '%02i' % (i)
-    return str
+        output += '%02i' % (i)
+    return output
 
 def syntax_ele_id_str(seg_id, ele_pos_list):
-    str = ''
-    str += '%s%02i' % (seg_id, ele_pos_list[0])
+    """
+    @rtype: string
+    """
+    output = ''
+    output += '%s%02i' % (seg_id, ele_pos_list[0])
     for i in range(len(ele_pos_list)-1):
         if i == len(ele_pos_list)-2:    
-            str += ' or %s%02i' % (seg_id, ele_pos_list[i+1])
+            output += ' or %s%02i' % (seg_id, ele_pos_list[i+1])
         else:
-            str += ', %s%02i' % (seg_id, ele_pos_list[i+1])
-    return str
+            output += ', %s%02i' % (seg_id, ele_pos_list[i+1])
+    return output
         
     
 
