@@ -133,7 +133,7 @@ class x12file:
             raise StopIteration
 
         try:
-            #for i in xrange(len(seg)):
+            #for i in xrange(1, len(seg)+1):
             #    if seg[i].find(self.subele_term) != -1:
             #        seg[i] = seg[i].split(self.subele_term) # Split composite
             if seg.get_seg_id() == 'ISA': 

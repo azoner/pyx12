@@ -99,7 +99,7 @@ class x12xml_simple(x12xml):
                 self.writer.push(u"loop", {u'id': cur_path[i]})
             
         self.writer.push(u"seg", {u'id': seg_node.id})
-        for i in range(1, len(seg)):
+        for i in range(1, len(seg)+1):
             child_node = seg_node.get_child_node_by_idx(i-1)
             if child_node.is_composite():
                 self.writer.push(u"comp", {u'id': seg_node.id})

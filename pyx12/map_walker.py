@@ -67,7 +67,7 @@ class walk_tree:
         Handle found segment = Not used
         """
 
-        if len(seg) == 0:
+        if not seg.get_seg_id():
             err_str = 'Segment identifier is blank'
             errh.seg_error('1', err_str)
             return None

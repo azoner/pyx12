@@ -123,8 +123,9 @@ class error_html:
             for ele in err_node.elements:
                 ele_pos_map[ele.ele_pos] = ele.subele_pos
 
-        t_seg = []
-        for i in range(len(seg)):
+        t_seg = [] #list of formatted elements
+        seg.format_ele_list(self, t_seg) 
+        for i in range(1, len(seg)+1):
             if type(seg[i]) is ListType: # Composite
                 t_seg.append([])
                 for j in range(len(seg[i])):

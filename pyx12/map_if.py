@@ -754,19 +754,20 @@ class segment_if(x12_node):
         """
         valid = True
         child_count = self.get_child_count()
-        if (len(seg)-1) > child_count:
+        if len(seg) > child_count:
             child_node = self.get_child_node_by_idx(child_count+1)
             err_str = 'Too many elements in segment %s. Has %i, should have %i' % \
-                (seg.get_seg_id(), len(seg)-1, child_count)
+                (seg.get_seg_id(), len(seg), child_count)
             #self.logger.error(err_str)
             err_value = seg[child_count+1]
             errh.seg_error('3', err_str, err_value)
             valid = False
 
         for i in xrange(self.get_child_count()):
-            #self.logger.debug('i=%i, len(seg)-1=%i / child_count=%i' % (i, len(seg)-1, self.get_child_count()))
+            #self.logger.debug('i=%i, len(seg)=%i / child_count=%i' % \
+            #   (i, len(seg), self.get_child_count()))
             child_node = self.get_child_node_by_idx(i)
-            if i < len(seg)-1:
+            if i < len(seg):
                 #if type(seg[i+1]) is ListType: # composite
                 #self.logger.debug('i=%i, elem=%s, id=%s' % (i, seg[i+1], child_node.id))
                 if child_node.is_composite():
@@ -1382,7 +1383,7 @@ def is_syntax_valid(seg, syn):
     if syn[0] == 'P':
         count = 0
         for s in syn[1:]:
-            if len(seg) > s and seg[s] != '':
+            if len(seg) >= s and seg[s] != '':
                 count += 1
         if count != 0 and count != len(syn)-1:
             err_str = 'Syntax Error (%s): If any of %s is present, then all are required'\
@@ -1393,7 +1394,7 @@ def is_syntax_valid(seg, syn):
     elif syn[0] == 'R':
         count = 0
         for s in syn[1:]:
-            if len(seg) > s and seg[s] != '':
+            if len(seg) >= s and seg[s] != '':
                 count += 1
         if count == 0:
             err_str = 'Syntax Error (%s): At least one element is required' % \
@@ -1404,7 +1405,7 @@ def is_syntax_valid(seg, syn):
     elif syn[0] == 'E':
         count = 0
         for s in syn[1:]:
-            if len(seg) > s and seg[s] != '':
+            if len(seg) >= s and seg[s] != '':
                 count += 1
         if count > 1:
             err_str = 'Syntax Error (%s): At most one of %s may be present'\
@@ -1414,10 +1415,10 @@ def is_syntax_valid(seg, syn):
             return (True, None)
     elif syn[0] == 'C':
         # If the first is present, then all others are required
-        if len(seg) > syn[1] and seg[syn[1]] != '':
+        if len(seg) >= syn[1] and seg[syn[1]] != '':
             count = 0
             for s in syn[2:]:
-                if len(seg) > s and seg[s] != '':
+                if len(seg) >= s and seg[s] != '':
                     count += 1
             if count != len(syn)-2:
                 if len(syn[2:]) > 1: verb = 'are'
@@ -1433,7 +1434,7 @@ def is_syntax_valid(seg, syn):
         if seg[syn[1]] != '':
             count = 0
             for s in syn[2:]:
-                if len(seg) > s and seg[s] != '':
+                if len(seg) >= s and seg[s] != '':
                     count += 1
             if count == 0:
                 err_str = 'Syntax Error (%s): If %s%02i is present, then at least one of '\

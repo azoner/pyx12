@@ -84,7 +84,7 @@ class composite(base_element):
         """
         return '%s' % (string.join(self.elements, self.subele_term))
 
-    def format(self, subele_term):
+    def format(self, subele_term=':'):
         return '%s' % (string.join(self.elements, subele_term))
 
     def set_subele_term(self, subele_term):
@@ -140,12 +140,14 @@ class segment:
         self.seg_term_orig = seg_term
         self.ele_term = ele_term
         self.ele_term_orig = ele_term
-        if seg_str[-1] == seg_term:
+        self.seg_id = None
+        if seg_str and seg_str[-1] == seg_term:
             elems = string.split(seg_str[:-1], self.ele_term)
         else:
             elems = string.split(seg_str, self.ele_term)
         self.elements = []
-        self.seg_id = elems[0]
+        if elems:
+            self.seg_id = elems[0]
         for ele in elems[1:]:
             if ele.find(subele_term) != -1: # Split composite
                 self.elements.append(composite(ele, subele_term))
@@ -206,3 +208,7 @@ class segment:
         return '%s%s%s%s%s' % (self.seg_id, ele_term, \
             string.join(str_elems, ele_term), \
             seg_term, eol)
+
+    def format_ele_list(self, str_elems=[], subele_term=':'):
+        for ele in self.elements:
+            str_elems.append(ele.format(subele_term))
