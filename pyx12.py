@@ -70,19 +70,27 @@ def x12n_document():
         src = x12file.x12file(sys.stdin) 
 
         #Get Map of Control Segments
-        control = map_if.map_if('map/map.x12.control.00401.xml')
+        control_map = map_if.map_if('map/map.x12.control.00401.xml')
         
         #Determine which map to use for this transaction
-        for line in src:
-            if line[0] == 'ISA':
-                isa_seg = segment(control.getnodebypath('/ISA'), line)
-                isa_seg.validate()
-                icvn = isa_seg.GetElementValue('ISA12')
-            elif line[0] == 'GS':
-                gs_seg = segment(control.getnodebypath('/GS'), line)
-                gs_seg.validate()
-                fic = gs_seg.GetElementValue('GS01')
-                vriic = gs_seg.GetElementValue('GS08')
+        for seg in src:
+            if seg[0] == 'ISA':
+                map_node = walk_tree(control_map, seg)
+                map_node.is_valid(seg)
+                #map_node = control_map
+                icvn = map_node.get_elemval_by_id(seg, 'ISA12')
+                #isa_seg = segment(control_map.getnodebypath('/ISA'), seg)
+                #isa_seg.validate()
+                #icvn = isa_seg.GetElementValue('ISA12')
+            elif seg[0] == 'GS':
+                map_node = walk_tree(control_map, seg)
+                map_node.is_valid(seg)
+                fic = map_node.get_elemval_by_id(seg, 'GS01')
+                vriic = map_node.get_elemval_by_id(seg, 'GS08')
+                #gs_seg = segment(control_map.getnodebypath('/GS'), seg)
+                #gs_seg.validate()
+                #fic = gs_seg.GetElementValue('GS01')
+                #vriic = gs_seg.GetElementValue('GS08')
 
                 #Get map for this GS loop
                 map_index_if = map_index.map_index('map/maps.xml')
@@ -123,7 +131,7 @@ def x12n_document():
 #############################################################################
 class segment:
     """
-    Parse and validate a segment data line.
+    Parse and validate a segment
     Takes a map_py node of the segment and the parsed segment line as a list
     """
     def __init__(self, node, seg):
@@ -137,6 +145,8 @@ class segment:
 
         if node == None: raise x12Error
         self.node = node
+        self.seg = seg
+
         #self.id = GetChildElementText(node, 'id')
         #self.name = GetChildElementText(node, 'name')
         #self.end_tag = GetChildElementText(node, 'end_tag')
@@ -186,9 +196,24 @@ class segment:
         Params:  
         Returns: 
         """
-        for elem in self.element_list:
-            elem.validate()
-            
+        
+        #for elem in self.element_list:
+        #    elem.validate()
+        if len(self.seg) > self.node.get_child_count(): 
+            raise x12Error, 'Too many elements in segment %s' % (self.seg[0])
+        for i in xrange(self.node.get_child_count()):
+            # Validate Elements
+            if i < len(self.seg):
+                if type(self.seg[i]) is ListType: # composite
+                    # Validate composite
+                    comp_node = self.node.get_child_node_by_idx(i)
+                    if len(self.seg) > self.node.get_child_count():
+                        raise x12Error, 'Too many elements in segment %s' % (self.seg[0])
+                else: # element
+                    self.node.get_child_node_by_idx(i).is_valid(self.seg[i])
+            else: #missing required elements
+                self.node.get_child_node_by_idx(i).is_valid(None)
+
     
     def GetElementValue(self, refdes):
         """
@@ -197,9 +222,22 @@ class segment:
         Params:  refdes - the X12 element Reference Identifier
         Returns: Value of the element, or None if not found
         """
-        for elem in self.element_list:
-            if elem.refdes == refdes:
-                return elem.x12_elem
+        #for elem in self.element_list:
+        #    if elem.refdes == refdes:
+        #        return elem.x12_elem
+        for i in xrange(self.node.get_child_count()):
+            # Validate Elements
+            if i < len(self.seg):
+                if type(self.seg[i]) is ListType: # composite
+                    # Validate composite
+                    comp_node = self.node.get_child_node_by_idx(i)
+                    if len(self.seg) > self.node.get_child_count():
+                        raise x12Error, 'Too many elements in segment %s' % (self.seg[0])
+                else: # element
+                    pass
+                    #if self.node.
+            else: #missing required elements
+                self.node.get_child_node_by_idx(i).is_valid(None)
         return None
         
 

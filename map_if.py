@@ -44,6 +44,7 @@ import string
 #import time
 #import pdb
 import libxml2
+from types import *
 
 # Intrapackage imports
 import errors
@@ -96,10 +97,6 @@ class x12_node:
             return None
         else:
             return self.children[idx]
-
-    def is_match(self):
-        # match also by ID
-        pass
 
     def walk_tree(self, seg):
         pass
@@ -362,7 +359,11 @@ class loop_if(x12_node):
         pass
 
     def get_seg_count(self):
-        pass
+        i = 0
+        for child in self.children:
+            if child.is_segment():
+                i += 1
+        return i
 
     def is_loop(self):
         return True
@@ -375,6 +376,7 @@ class segment_if(x12_node):
     """
     def __init__(self, parent):
         """
+        Class: segment_if
         Name:    __init__
         Desc:    
         Params: parent - parent node 
@@ -457,6 +459,9 @@ class segment_if(x12_node):
         
 
     def debug_print(self):
+        """
+        Class: segment_if
+        """
         sys.stdout.write('%s%s %s %s %s\n' % (str(' '*self.base_level), self.base_name, self.base_level, self.id, self.name))
         if self.id: sys.stdout.write('%sid %s\n' % (str(' '*(self.base_level+1)), self.id))
         if self.name: sys.stdout.write('%sname %s\n' % (str(' '*(self.base_level+1)), self.name))
@@ -466,11 +471,9 @@ class segment_if(x12_node):
         for node in self.children:
             node.debug_print()
 
-    def __del__(self):
-        pass
-
     def get_path(self):
         """
+        Class: segment_if
         Name:    
         Desc:    
         Params:  
@@ -478,9 +481,31 @@ class segment_if(x12_node):
         Returns: string of path - XPath style
         """
         return self.path
+
+    def get_elemval_by_id(self, seg, id):
+        """
+        Class: segment_if
+        Name:  get_elemval_by_id  
+        Desc:  Return the value of an element or sub-element identified by the id
+        Params: seg - segment list to search
+                id - string 
+        Returns: value of the element
+        """
+        for child in self.children:
+            if child.is_element():
+                if child.id == id:
+                    return seg[child.seq]
+            elif child.is_composite():
+                for child in self.children:
+                    if child.is_element():
+                        if child.id == id:
+                            return seg[child.seq]
+        return None
+
     
     def get_parent(self):
         """
+        Class: segment_if
         Name:    
         Desc:    
         Params:  
@@ -489,8 +514,20 @@ class segment_if(x12_node):
         """
         return self.parent
 
+    def get_seg_count(self):
+        """
+        Class: segment_if
+        Name:    
+        Desc:    
+        Params:  
+                 
+        Returns: 
+        """
+        pass
+
     def is_match(self, seg):
         """
+        Class: segment_if
         Name: is_match
         Desc: is segment given a match to this node?
         Params:  seg - list of element values
@@ -503,8 +540,11 @@ class segment_if(x12_node):
         else:
             return False
 
+    def is_segment(self): return True
+
     def is_valid(self, seg):
         """
+        Class: segment_if
         Name:   
         Desc:    
         Params:  
@@ -512,10 +552,24 @@ class segment_if(x12_node):
         Returns: boolean
         """
         # handle intra-segment dependancies
-        pass
+        if len(seg) > self.get_child_count(): 
+            raise errors.WEDI1Error, 'Too many elements in segment %s' % (seg[0])
+        for i in xrange(self.get_child_count()):
+            # Validate Elements
+            if i < len(seg):
+                self.get_child_node_by_idx(i).is_valid(seg[i])
+#                if type(seg[i]) is ListType: # composite
+                    # Validate composite
+#                    comp = seg[i]
+#                    node.get_child_node_by_idx(i).is_valid(comp)
+#                else: # element
+#                    self.get_child_node_by_idx(i).is_valid(seg[i])
+            else: #missing required elements
+                self.get_child_node_by_idx(i).is_valid(None)
 
     def parse(self):
         """
+        Class: segment_if
         Name:    
         Desc:    
         Params:  
@@ -524,17 +578,6 @@ class segment_if(x12_node):
         """
         pass
 
-    def get_seg_count(self):
-        """
-        Name:    
-        Desc:    
-        Params:  
-                 
-        Returns: 
-        """
-        pass
-
-    def is_segment(self): return True
         
 
 ############################################################
@@ -543,6 +586,7 @@ class segment_if(x12_node):
 class element_if(x12_node):
     def __init__(self, parent):
         """
+        Class: element_if
         Name:    __init__
         Desc:    
         Params: parent - parent node 
@@ -631,7 +675,7 @@ class element_if(x12_node):
                 elif cur_name == 'usage':
                     self.usage = reader.Value()
                 elif cur_name == 'seq':
-                    self.seq = reader.Value()
+                    self.seq = int(reader.Value())
                 #elif cur_name == 'pos':
                 #    self.pos = reader.Value()
                 elif cur_name == 'refdes':
@@ -658,6 +702,9 @@ class element_if(x12_node):
         
 
     def debug_print(self):
+        """
+        Class: element_if
+        """
         sys.stdout.write('%s%s %s %s\n' % (str(' '*self.base_level), self.base_name, self.base_level, self.name))
 #        sys.stdout.write('%sid %s\n' % (str(' '*(self.base_level+1)), self.id))
         if self.data_ele: sys.stdout.write('%sdata_ele %s\n' % (str(' '*(self.base_level+1)), self.data_ele))
@@ -682,6 +729,7 @@ class element_if(x12_node):
 
     def __valid_code__(self, code):
         """
+        Class: element_if
         Name:    __valid_code__
         Desc:    Verify the x12 element value is in the given list of valid codes
         Params:  
@@ -695,6 +743,7 @@ class element_if(x12_node):
 
     def get_path(self):
         """
+        Class: element_if
         Name:    
         Desc:    
         Params:  
@@ -705,6 +754,7 @@ class element_if(x12_node):
 
     def get_parent(self):
         """
+        Class: element_if
         Name:    
         Desc:    
         Params:  
@@ -715,6 +765,7 @@ class element_if(x12_node):
 
     def is_match(self):
         """
+        Class: element_if
         Name:    
         Desc:    
         Params:  
@@ -726,7 +777,8 @@ class element_if(x12_node):
 
     def is_valid(self, elem_val):
         """
-        Name:   
+        Class:  element_if
+        Name:   is_valid 
         Desc:    
         Params:  
             elem_val - value of element data
@@ -734,7 +786,6 @@ class element_if(x12_node):
         Returns: boolean
         """
         # handle intra-segment dependancies
-        pass
         global codes
         if elem_val == '' or elem_val is None:
             if self.usage == 'N':
@@ -768,6 +819,7 @@ class element_if(x12_node):
 
     def parse(self):
         """
+        Class: element_if
         Name:    
         Desc:    
         Params:  
@@ -778,6 +830,7 @@ class element_if(x12_node):
 
     def get_seg_count(self):
         """
+        Class: element_if
         Name:    
         Desc:    
         Params:  
@@ -796,6 +849,7 @@ class element_if(x12_node):
 class composite_if(x12_node):
     def __init__(self, parent):
         """
+        Class: composite_if
         Name:    __init__
         Desc:    Get the values for this composite
         Params:         parent - parent node 
@@ -870,6 +924,9 @@ class composite_if(x12_node):
         
 
     def debug_print(self):
+        """
+        Class: composite_if
+        """
         sys.stdout.write('%s%s %s %s %s\n' % (str(' '*self.base_level), self.base_name, self.base_level, self.id, self.name))
         if self.name: sys.stdout.write('%sname %s\n' % (str(' '*(self.base_level+1)), self.name))
         if self.usage: sys.stdout.write('%susage %s\n' % (str(' '*(self.base_level+1)), self.usage))
@@ -881,6 +938,7 @@ class composite_if(x12_node):
 
     def xml(self):
         """
+        Class: composite_if
         Name:    xml
         Desc:    Sends an xml representation of the composite to stdout
         Params:  
@@ -891,23 +949,41 @@ class composite_if(x12_node):
             sub_elem.xml()
         sys.stdout.write('</composite>\n')
 
-    def validate(self, code):
+    def is_valid(self, comp):
         """
+        Class: composite_if
         Name:    validate
         Desc:    Validates the composite
         Params:  
-        Returns: 1 on success
+        Returns: True on success
         """
-        if code == '' or code is None:
+
+        if not type(comp) is ListType: # composite
+            comp = [comp] 
+
+        if len(comp) > self.get_child_count():
+            raise errors.WEDI1Error, 'Too many sub-elements in composite %s' % (self.refdes)
+        if len(comp) == 0 or comp is None:
             if self.usage == 'N':
-                return 1
+                return True
             elif self.usage == 'R':
                 raise errors.WEDI1Error, 'Composite "%s" is required' % (self.name)
-        for sub_elem in self.children:
-            sub_elem.validate()
-        return 1
+
+        for i in xrange(len(comp)):
+            if i < len(comp):
+                self.get_child_node_by_idx(i).is_valid(comp[i])
+            else: #missing required elements
+                self.get_child_node_by_idx(i).is_valid(None)
+        return True
 
     def getnodebypath(self, path):
+        """
+        Class:  composite_if
+        Name:    
+        Desc:    
+        Params:  
+        Returns: 
+        """
         pathl = path.split('/')
         #if len(pathl) <= 1: return None
         #if self.id == pathl[1]:
@@ -923,39 +999,4 @@ class composite_if(x12_node):
     def is_composite(self):
         return True
 
-######################################################################
-
-#AttributeCount: provides the number of attributes of the current node. 
-#BaseUri: the base URI of the node. See the XML Base W3C specification. 
-#Depth: the depth of the node in the tree, starts at 0 for the root node. 
-#HasAttributes: whether the node has attributes. 
-#HasValue: whether the node can have a text value. 
-#IsDefault: whether an Attribute node was generated from the default value 
-#        defined in the DTD or schema (unsupported yet). 
-#IsEmptyElement: check if the current node is empty, this is a bit bizarre 
-#        in the sense that <a/> will be considered empty while <a></a> will not. 
-#LocalName: the local name of the node. 
-#Name: the qualified name of the node, equal to (Prefix:)LocalName. 
-#NamespaceUri: the URI defining the namespace associated with the node. 
-#Prefix: a shorthand reference to the namespace associated with the node. 
-#Value: provides the text value of the node if present. 
-#XmlLang: the xml:lang scope within which the node resides. 
-
-#GetAttributeNo(no): provides the value of the attribute with the specified 
-#        index no relative to the containing element. 
-#GetAttribute(name): provides the value of the attribute with the specified qualified name. 
-#GetAttributeNs(localName, namespaceURI): provides the value of the attribute 
-#        with the specified local name and namespace URI. 
-#MoveToAttributeNo(no): moves the position of the current instance to the attribute 
-#        with the specified index relative to the containing element. 
-#MoveToAttribute(name): moves the position of the current instance to the attribute 
-#        with the specified qualified name. 
-#MoveToAttributeNs(localName, namespaceURI): moves the position of the current 
-#        instance to the attribute with the specified local name and namespace URI. 
-#MoveToFirstAttribute: moves the position of the current instance to the first 
-#        attribute associated with the current node. 
-#MoveToNextAttribute: moves the position of the current instance to the next 
-#        attribute associated with the current node. 
-#MoveToElement: moves the position of the current instance to the node that contains 
-#        the current Attribute node. 
 
