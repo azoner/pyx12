@@ -2,8 +2,11 @@ Write Errors in html output
   Match current segment to error
   Mark invalid elements in segment
   Informational lines
-    loops
+    Explicit loops
 
+Restructure maps
+  Add loop wrappers to ISA/GS/ST
+  Mod map_if to match
 
 Handle intra-segment dependancies
 
