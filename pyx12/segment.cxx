@@ -39,6 +39,7 @@
 #include <vector>
 #include <iostream>
 #include <algorithm>
+#include <stdlib.h>
 
 #include "segment.hxx"
 #include "errors.hxx"
@@ -55,48 +56,48 @@
 
 using namespace std;
 
-element::element(const string& ele_str)
+Pyx12::element::element(const string& ele_str)
 {
     value = ele_str;
 }
 
-size_t element::length()
+size_t Pyx12::element::length()
 {
     return 1;
 }
 
-ostream& element::operator<<(ostream& os)
+ostream& Pyx12::element::operator<<(ostream& os)
 {
     os << value;
     return os;
 }
 
-string element::format()
+string Pyx12::element::format()
 {
     return value;
 }
 
-string element::get_value()
+string Pyx12::element::get_value()
 {
     return value;
 }
 
-void element::set_value(string ele_str)
+void Pyx12::element::set_value(string ele_str)
 {
     value = ele_str;
 }
 
-bool element::is_composite()
+bool Pyx12::element::is_composite()
 {
     return false;
 }
 
-bool element::is_element()
+bool Pyx12::element::is_element()
 {
     return true;
 }
 
-bool element::is_empty()
+bool Pyx12::element::is_empty()
 {
     if(value.length() != 0)
         return true;
@@ -105,7 +106,7 @@ bool element::is_empty()
 }
 
 
-composite::composite(const string& ele_str, const string& subele_term_)
+Pyx12::composite::composite(const string& ele_str, const string& subele_term_)
 {
     typedef vector<string>::const_iterator iter;
     subele_term = subele_term_;
@@ -118,7 +119,7 @@ composite::composite(const string& ele_str, const string& subele_term_)
 }
 
 /*
-bool composite::not_delim(char c)
+bool Pyx12::composite::not_delim(char c)
 {
     if(c != subele_term[0])
         return true;
@@ -126,7 +127,7 @@ bool composite::not_delim(char c)
         return false;
 }
 
-bool composite::delim(char c)
+bool Pyx12::composite::delim(char c)
 {
     if(c == subele_term[0])
         return true;
@@ -135,7 +136,7 @@ bool composite::delim(char c)
 }
 */
 
-vector<string> composite::split(const string& ele_str)
+vector<string> Pyx12::composite::split(const string& ele_str)
 {
     typedef string::const_iterator iter;
     vector<string> ret;
@@ -143,12 +144,12 @@ vector<string> composite::split(const string& ele_str)
     iter i = ele_str.begin();
     iter j;
     while(i != ele_str.end()) {
-        //i = find_if(i, ele_str.end(), composite::not_delim);
+        //i = find_if(i, ele_str.end(), Pyx12::composite::not_delim);
         while(i != ele_str.end())
             if((*i) != subele_term[0])
                 break;
         j = find(i, ele_str.end(), subele_term[0]);
-        //j = find_if(i, ele_str.end(), composite::delim);
+        //j = find_if(i, ele_str.end(), Pyx12::composite::delim);
         if(i != ele_str.end())
             ret.push_back(string(i, j));
         i = j;
@@ -156,12 +157,12 @@ vector<string> composite::split(const string& ele_str)
     return ret;
 }
 
-size_t composite::length()
+size_t Pyx12::composite::length()
 {
     return elements.size();
 }
 
-ostream& composite::operator<<(ostream& os)
+ostream& Pyx12::composite::operator<<(ostream& os)
 {
     vector<element>::iterator i = elements.begin();
     while(i != elements.end()) {
@@ -171,19 +172,19 @@ ostream& composite::operator<<(ostream& os)
     return os;
 }
 
-string composite::format()
+string Pyx12::composite::format()
 {
     return format(subele_term);
 }
 
-string composite::format(const string& subele_term_)
+string Pyx12::composite::format(const string& subele_term_)
 {
     typedef vector<element>::iterator iter;
     string term;
     string ret;
     term = subele_term_;
     if(!elements.empty())
-        ret.append(elements[0].format());
+        ret += elements[0].format();
     iter i = elements.begin() + 1;
     while(i != elements.end()) {
         ret += term;
@@ -192,36 +193,44 @@ string composite::format(const string& subele_term_)
     return ret;
 }
 
-string composite::get_value()
+string Pyx12::composite::get_value()
 {
     if(elements.size() == 1)
         return elements[0].get_value();
     else
-        throw Pyx12Errors::EngineError("value of composite is undefined");
+        throw Pyx12::EngineError("value of composite is undefined");
 }
 
-void composite::set_subele_term(const string& subele_term_)
+void Pyx12::composite::set_subele_term(const string& subele_term_)
 {
     subele_term = subele_term_;
 }
 
-bool composite::is_composite()
+bool Pyx12::composite::is_composite()
 {
     return true;
 }
 
-bool composite::is_element()
+bool Pyx12::composite::is_element()
 {
     return false;
 }
 
-bool composite::is_empty()
+bool Pyx12::composite::is_empty()
 {
     return elements.empty();
 }
 
+Pyx12::element& Pyx12::composite::operator[](size_t i) { 
+    return elements[i];
+}
 
-segment::segment(const string& seg_str, const string& seg_term_,
+const Pyx12::element& Pyx12::composite::operator[](size_t i) const { 
+    return elements[i]; 
+}
+
+
+Pyx12::segment::segment(const string& seg_str, const string& seg_term_,
         const string& ele_term_, const string& subele_term_)
 {
     typedef vector<string>::const_iterator iter;
@@ -234,7 +243,7 @@ segment::segment(const string& seg_str, const string& seg_term_,
     subele_term_orig = subele_term_;
     //seg_id = '';
     if(seg_str.empty())
-        throw Pyx12Errors::EngineError("seg_str should not be empty");
+        throw Pyx12::EngineError("seg_str should not be empty");
     if(seg_str.substr(seg_str.length()-1) == seg_term)
         //elems = split(seg_str.substr(seg_str.begin(), seg_str.end()-1));
         elems = split(seg_str.substr(0, seg_str.length()-1));
@@ -251,7 +260,7 @@ segment::segment(const string& seg_str, const string& seg_term_,
     }
 }
 /*
-bool segment::not_delim(char c)
+bool Pyx12::segment::not_delim(char c)
 {
     if(c != ele_term[0])
         return true;
@@ -259,7 +268,7 @@ bool segment::not_delim(char c)
         return false;
 }
 
-bool segment::delim(char c)
+bool Pyx12::segment::delim(char c)
 {
     if(c == ele_term[0])
         return true;
@@ -267,7 +276,7 @@ bool segment::delim(char c)
         return false;
 }
 */
-vector<string> segment::split(const string& seg_str)
+vector<string> Pyx12::segment::split(const string& seg_str)
 {
     typedef string::const_iterator iter;
     vector<string> ret;
@@ -275,8 +284,8 @@ vector<string> segment::split(const string& seg_str)
     iter i = seg_str.begin();
     iter j;
     while(i != seg_str.end()) {
-        //i = find_if(i, seg_str.end(), segment::not_delim);
-        //j = find_if(i, seg_str.end(), segment::delim);
+        //i = find_if(i, seg_str.end(), Pyx12::segment::not_delim);
+        //j = find_if(i, seg_str.end(), Pyx12::segment::delim);
         while(i != seg_str.end())
             if((*i) != ele_term[0])
                 break;
@@ -288,7 +297,7 @@ vector<string> segment::split(const string& seg_str)
     return ret;
 }
 
-ostream& segment::operator<<(ostream& os)
+ostream& Pyx12::segment::operator<<(ostream& os)
 {
     vector<composite>::iterator i = elements.begin();
     while(i != elements.end()) {
@@ -298,63 +307,58 @@ ostream& segment::operator<<(ostream& os)
     return os;
 }
 
-bool segment::is_empty()
-{
+bool Pyx12::segment::is_empty() {
     return elements.empty();
 }
 
-size_t segment::length()
-{
+size_t Pyx12::segment::length() {
     return elements.size();
 }
 
-void segment::append(const string& ele_str)
-{
+void Pyx12::segment::append(const string& ele_str) {
     elements.push_back(composite(ele_str, subele_term));
 }
 
-string get_seg_id()
-{
+string Pyx12::segment::get_seg_id() {
     return seg_id;
 }
 
-string get_value_by_ref_des(const string& ref_des)
-{
+string Pyx12::segment::get_value_by_ref_des(const string& ref_des) {
     typedef string::const_iterator iter;
     int ele_idx, comp_idx;
 
-    if(ref_des.substr(0, seg_id.size()) != seg_id):
-        throw Pyx12Errors::EngineError("Invalid ref_des: " + ref_des + ", seg_id: " + seg_id);
-    string rest = ref_des.substr(seg_id.length(), ref_des.size()-seg_id.length());
-    size_t dash = find(ref_des.begin(), ref_des.end(), '-');
-    if(dash == -1) {
-        ele_idx = int(rest) -1;
+    if(ref_des.substr(0, seg_id.size()) != seg_id)
+        throw Pyx12::EngineError("Invalid ref_des: " + ref_des + ", seg_id: " + seg_id);
+    string rest(ref_des, seg_id.length(), ref_des.size()-seg_id.length());
+    string::size_type dash = ref_des.find('-');
+    if(dash == string::npos) {
+        ele_idx = atoi(rest.c_str()) - 1;
         comp_idx = 0;
     }
     else {
-        ele_idx = int(rest.substr(0, dash)) -1;
-        comp_idx = int(rest.substr(dash, rest.size()-dash)) -1;
+        ele_idx = atoi(rest.substr(0, dash).c_str()) - 1;
+        comp_idx = atoi(rest.substr(dash, rest.size()-dash).c_str()) - 1;
     }
     return elements[ele_idx][comp_idx].get_value();
 }
 
-void set_seg_term(const string& seg_term_) {
+void Pyx12::segment::set_seg_term(const string& seg_term_) {
     seg_term = seg_term_;
 }
 
-void set_ele_term(const string& ele_term_) {
+void Pyx12::segment::set_ele_term(const string& ele_term_) {
     ele_term = ele_term_;
 }
 
-void set_subele_term(const string& subele_term_) {
+void Pyx12::segment::set_subele_term(const string& subele_term_) {
     subele_term = subele_term_;
 }
 
-string format() {
-    format(seg_term, ele_term, subele_term);
+string Pyx12::segment::format() {
+    return format(seg_term, ele_term, subele_term);
 }
 
-string format(const string& seg_term_, const string& ele_term_, const string& subele_term_) {
+string Pyx12::segment::format(const string& seg_term_, const string& ele_term_, const string& subele_term_) {
     string ret;
     vector<composite>::iterator i = elements.begin();
     while(i != elements.end()) {
@@ -365,12 +369,32 @@ string format(const string& seg_term_, const string& ele_term_, const string& su
     return ret;
 }
 
-vector<string> format_ele_list(vector<string> str_elems, const string& subele_term_) {
+vector<string> Pyx12::segment::format_ele_list(vector<string> str_elems, const string& subele_term_) {
     vector<string> ret;
     vector<composite>::iterator i = elements.begin();
     while(i != elements.end()) {
-        ret.append(i->format(subele_term_) + ele_term_);
+        ret.push_back(i->format(subele_term_));
         ++i;
     }
     return ret;
+}
+
+Pyx12::composite& Pyx12::segment::operator[](size_t i) { 
+    return elements[i]; 
+}
+
+const Pyx12::composite& Pyx12::segment::operator[](size_t i) const { 
+    return elements[i]; 
+}
+
+Pyx12::composite& Pyx12::segment::get_item(size_t i) { 
+    return elements[i]; 
+}
+
+const Pyx12::composite& Pyx12::segment::get_item(size_t i) const { 
+    return elements[i];
+}
+
+void Pyx12::segment::set_item(size_t i, string val) { 
+    elements[i] = composite(val, subele_term);
 }
