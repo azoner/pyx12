@@ -46,7 +46,7 @@ class Delimiters(unittest.TestCase):
         str = str.replace('&', chr(0x1C))
         str = str.replace('+', chr(0x1D))
         str = str.replace('!', chr(0x1E))
-        print str
+        #print str
         fd = tempfile.NamedTemporaryFile()
         fd.write(str)
         fd.seek(0)
