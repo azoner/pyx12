@@ -318,6 +318,70 @@ class Counting(unittest.TestCase):
         node = self.walker.walk(node, seg_data, self.errh, 5, 4, None)
         self.assertEqual(self.errh.err_cde, '5', self.errh.err_str)
 
+
+class CountOrdinal(unittest.TestCase):
+
+    def setUp(self):
+        self.walker = walk_tree()
+        param = params()
+        param.set('map_path', os.path.expanduser('~/src/pyx12/map/'))
+        param.set('pickle_path', os.path.expanduser('~/src/pyx12/map/'))
+        self.map = pyx12.map_if.load_map_file('834.4010.X095.A1.xml', param)
+        self.errh = pyx12.error_handler.errh_null()
+        #self.node = self.map.getnodebypath('/2000A/2000B/2100B/N4')
+        self.node = self.map.getnodebypath('/2000/INS')
+        self.assertNotEqual(self.node, None)
+        self.node.cur_count = 1
+
+    def test_ord_ok1(self):
+        node = self.node
+        seg_data = pyx12.segment.segment('REF*0F*1234~', '~', '*', ':')
+        node = self.walker.walk(node, seg_data, self.errh, 5, 4, None)
+        self.assertNotEqual(node, None)
+        self.assertEqual(self.errh.err_cde, None, self.errh.err_str)
+        seg_data = pyx12.segment.segment('REF*1L*91234~', '~', '*', ':')
+        node = self.walker.walk(node, seg_data, self.errh, 5, 4, None)
+        self.assertNotEqual(node, None)
+        self.assertEqual(self.errh.err_cde, None, self.errh.err_str)
+
+    def test_ord_ok2(self):
+        node = self.node
+        seg_data = pyx12.segment.segment('REF*0F*1234~', '~', '*', ':')
+        node = self.walker.walk(node, seg_data, self.errh, 5, 4, None)
+        self.assertNotEqual(node, None)
+        self.assertEqual(self.errh.err_cde, None, self.errh.err_str)
+        seg_data = pyx12.segment.segment('REF*17*A232~', '~', '*', ':')
+        node = self.walker.walk(node, seg_data, self.errh, 5, 4, None)
+        self.assertNotEqual(node, None)
+        self.assertEqual(self.errh.err_cde, None, self.errh.err_str)
+
+    def test_ord_ok3(self):
+        node = self.node
+        seg_data = pyx12.segment.segment('REF*17*1234~', '~', '*', ':')
+        node = self.walker.walk(node, seg_data, self.errh, 5, 4, None)
+        self.assertNotEqual(node, None)
+        self.assertEqual(self.errh.err_cde, None, self.errh.err_str)
+        seg_data = pyx12.segment.segment('REF*0F*A232~', '~', '*', ':')
+        node = self.walker.walk(node, seg_data, self.errh, 5, 4, None)
+        self.assertNotEqual(node, None)
+        self.assertEqual(self.errh.err_cde, None, self.errh.err_str)
+
+    def test_ord_bad1(self):
+        node = self.node
+        seg_data = pyx12.segment.segment('REF*0F*1234~', '~', '*', ':')
+        node = self.walker.walk(node, seg_data, self.errh, 5, 4, None)
+        self.assertNotEqual(node, None)
+        self.assertEqual(self.errh.err_cde, None, self.errh.err_str)
+        seg_data = pyx12.segment.segment('DTP*297*D8*20040101~', '~', '*', ':')
+        node = self.walker.walk(node, seg_data, self.errh, 5, 4, None)
+        self.assertNotEqual(node, None)
+        self.assertEqual(self.errh.err_cde, None, self.errh.err_str)
+        seg_data = pyx12.segment.segment('REF*17*A232~', '~', '*', ':')
+        node = self.walker.walk(node, seg_data, self.errh, 5, 4, None)
+        self.assertEqual(self.errh.err_cde, '1', self.errh.err_str)
+
+
+
 def suite():
     suite = unittest.TestSuite()
     suite.addTest(unittest.makeSuite(Explicit_Loops))
@@ -325,6 +389,7 @@ def suite():
     suite.addTest(unittest.makeSuite(SegmentWalk))
     suite.addTest(unittest.makeSuite(Segment_ID_Checks))
     suite.addTest(unittest.makeSuite(Counting))
+    suite.addTest(unittest.makeSuite(CountOrdinal))
     return suite
 
 #if __name__ == "__main__":
