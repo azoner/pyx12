@@ -43,7 +43,6 @@ class error_html:
         @type term: tuple(string, string, string, string)
 
         @bug: GS errors are re-printing at the GE level
-        @bug: Explicit loop trailers missing errors not shown
         """
         self.errh = errh
         self.fd = fd
@@ -71,20 +70,23 @@ class error_html:
 
     def footer(self):
         err_st = self.errh.cur_st_node
-        for (err_cde, err_str) in err_st.errors:
-            if err_cde == '2':
-                self.fd.write('<span class="error">&nbsp;%s (Segment Error Code: %s)</span><br>\n' % \
-                    (err_str, err_cde))
+        if not err_st.is_closed():
+            for (err_cde, err_str) in err_st.errors:
+                if err_cde == '2':
+                    self.fd.write('<span class="error">&nbsp;%s (Segment Error Code: %s)</span><br>\n' % \
+                        (err_str, err_cde))
         err_gs = self.errh.cur_gs_node
-        for (err_cde, err_str) in err_gs.errors:
-            if err_cde == '3':
-                self.fd.write('<span class="error">&nbsp;%s (Segment Error Code: %s)</span><br>\n' % \
-                    (err_str, err_cde))
+        if not err_gs.is_closed():
+            for (err_cde, err_str) in err_gs.errors:
+                if err_cde == '3':
+                    self.fd.write('<span class="error">&nbsp;%s (Segment Error Code: %s)</span><br>\n' % \
+                        (err_str, err_cde))
         err_isa = self.errh.cur_isa_node
-        for (err_cde, err_str) in err_isa.errors:
-            if err_cde == '023':
-                self.fd.write('<span class="error">&nbsp;%s (Segment Error Code: %s)</span><br>\n' % \
-                    (err_str, err_cde))
+        if not err_isa.is_closed():
+            for (err_cde, err_str) in err_isa.errors:
+                if err_cde == '023':
+                    self.fd.write('<span class="error">&nbsp;%s (Segment Error Code: %s)</span><br>\n' % \
+                        (err_str, err_cde))
         self.fd.write('</div>\n')
         self.fd.write('<p>\n<a href="http://sourceforge.net/projects/pyx12/">pyx12 Validator</a>\n</p>\n')
         self.fd.write('</body>\n</html>\n')

@@ -94,26 +94,6 @@ class error_997_visitor(error_visitor.error_visitor):
         self.isa_seg = isa_seg
         self.gs_loop_count = 0
 
-        #TA1 segment
-        err_isa = errh.cur_isa_node
-        if err_isa.ta1_req == '1':
-            #seg = ['TA1', err_isa.isa_trn_set_id, err_isa.orig_date, \
-            #    err_isa.orig_time]
-            ta1_seg = pyx12.segment.segment('TA1', '~', '*', ':')
-            ta1_seg.append(err_isa.isa_trn_set_id)
-            ta1_seg.append(err_isa.orig_date)
-            ta1_seg.append(err_isa.orig_time)
-            if err_isa.errors:
-                (err_cde, err_str) = err_isa.errors[0]
-                #seg.extend(['R', err_cde])
-                ta1_seg.append('R')
-                ta1_seg.append(err_cde)
-            else:
-                #seg.extend(['A', '000'])
-                ta1_seg.append('A')
-                ta1_seg.append('000')
-            self._write(ta1_seg)
-
         # GS*FA*ENCOUNTER*00GR*20030425*150153*653500001*X*004010
         seg = errh.cur_gs_node.seg_data
         gs_seg = pyx12.segment.segment('GS', '~', '*', ':')
@@ -145,6 +125,28 @@ class error_997_visitor(error_visitor.error_visitor):
             self.gs_seg[5].get_value()), '~', '*', ':'))
         #self._write(['GE', '%i' % self.st_loop_count, self.gs_seg[6]])
         self.gs_loop_count = 1
+
+        #pdb.set_trace()
+        #TA1 segment
+        err_isa = errh.cur_isa_node
+        if err_isa.ta1_req == '1':
+            #seg = ['TA1', err_isa.isa_trn_set_id, err_isa.orig_date, \
+            #    err_isa.orig_time]
+            ta1_seg = pyx12.segment.segment('TA1', '~', '*', ':')
+            ta1_seg.append(err_isa.isa_trn_set_id)
+            ta1_seg.append(err_isa.orig_date)
+            ta1_seg.append(err_isa.orig_time)
+            if err_isa.errors:
+                (err_cde, err_str) = err_isa.errors[0]
+                #seg.extend(['R', err_cde])
+                ta1_seg.append('R')
+                ta1_seg.append(err_cde)
+            else:
+                #seg.extend(['A', '000'])
+                ta1_seg.append('A')
+                ta1_seg.append('000')
+            self._write(ta1_seg)
+        
         self._write(pyx12.segment.segment('IEA*%i*%s' % \
             (self.gs_loop_count, self.isa_control_num), '~', '*', ':'))
         #self._write(['IEA', '%i' % self.gs_loop_count, self.isa_control_num]) # isa_seg[13]])
@@ -190,7 +192,13 @@ class error_997_visitor(error_visitor.error_visitor):
         """
         if not (err_gs.ack_code and err_gs.st_count_orig and \
             err_gs.st_count_recv):
-            raise EngineError, 'err_gs variables not set'
+            #raise EngineError, 'err_gs variables not set'
+            if not err_gs.ack_code:
+                err_gs.ack_code = 'R'
+            if not err_gs.st_count_orig:
+                err_gs.st_count_orig = 0
+            if not err_gs.st_count_recv:
+                err_gs.st_count_recv = 0
         #.st_count_orig = None # AK902
         #.st_count_recv = None # AK903
         #.st_count_accept = None # AK904
@@ -209,7 +217,8 @@ class error_997_visitor(error_visitor.error_visitor):
         seg_data.append(err_gs.ack_code)
         seg_data.append('%i' % err_gs.st_count_orig)
         seg_data.append('%i' % err_gs.st_count_recv)
-        seg_data.append('%i' % (err_gs.st_count_recv - err_gs.count_failed_st()))
+        count_ok = max(err_gs.st_count_recv - err_gs.count_failed_st(), 0)
+        seg_data.append('%i' % (count_ok))
         #seg = ['AK9', err_gs.ack_code, '%i' % err_gs.st_count_orig, \
         #    '%i' % err_gs.st_count_recv, \
         #    '%i' % (err_gs.st_count_recv - err_gs.count_failed_st())]

@@ -255,15 +255,15 @@ class x12file:
                 if seg == 'ST':
                     err_str = 'Mandatory segment "Transaction Set Trailer" (SE=%s) missing' % (id1)
                     self.errh.st_error('2', err_str)
-                    self.errh.close_st_loop(None, None, self)
+                    #self.errh.close_st_loop(None, None, self)
                 elif seg == 'GS':
                     err_str = 'Mandatory segment "Functional Group Trailer" (GE=%s) missing' % (id1)
                     self.errh.gs_error('3', err_str)
-                    self.errh.close_gs_loop(None, None, self)
+                    #self.errh.close_gs_loop(None, None, self)
                 elif seg == 'ISA':
                     err_str = 'Mandatory segment "Interchange Control Trailer" (IEA=%s) missing' % (id1)
                     self.errh.isa_error('023', err_str)
-                    self.errh.close_isa_loop(None, None, self)
+                    #self.errh.close_isa_loop(None, None, self)
                 #elif self.loops[-1][0] == 'LS':
                 #    err_str = 'LS id=%s was not closed with a LE' % (id1, self.loops[-1][1])
                 #    self.errh.ls_error('3', err_str)
