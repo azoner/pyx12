@@ -20,16 +20,16 @@ class ArbitraryDelimiters(unittest.TestCase):
         self.assertEqual(len(self.seg), 3)
 
     def test_getitem3(self):
-        self.assertEqual(self.seg[3], 'ZZ')
+        self.assertEqual(self.seg[3].__repr__(), 'ZZ')
                     
     def test_getitem_0(self):
         self.failUnlessRaises(IndexError, self.seg.__getitem__, 0)
                     
     def test_getitem1(self):
-        self.assertEqual(self.seg[1], 'AA!1!1')
+        self.assertEqual(self.seg[1].__repr__(), 'AA!1!1')
                     
     def test_getitem_minus_1(self):
-        self.assertEqual(self.seg[-1], 'ZZ')
+        self.assertEqual(self.seg[-1].__repr__(), 'ZZ')
                     
     def test_other_terms(self):
         self.assertEqual(self.seg.format('~', '*', ':', ''), 'TST*AA:1:1*BB:5*ZZ~')
@@ -64,11 +64,31 @@ class Alter(unittest.TestCase):
         seg[3] = 'YY'
         self.assertEqual(seg.__repr__(), 'TST*AA:1:1*BB:5*YY~')
 
+class Composite(unittest.TestCase):
+
+    def setUp(self):
+        seg_str = 'TST*AA:1:Y*BB:5*ZZ'
+        self.seg = pyx12.segment.segment(seg_str, '~', '*', ':')
+
+    def test_composite_is_a(self):
+        self.failUnless(self.seg[1].is_composite())
+        
+    def test_composite_len(self):
+        self.assertEqual(len(self.seg[1]), 3)
+
+    def test_composite_indexing(self):
+        self.assertEqual(self.seg[1][0], 'AA')
+        self.assertEqual(self.seg[1][2], 'Y')
+        self.assertEqual(self.seg[1][-1], 'Y')
+        self.failUnlessRaises(IndexError, lambda x: self.seg[1][x], 3)
+
+
 def suite():
     suite = unittest.TestSuite()
     suite.addTest(unittest.makeSuite(ArbitraryDelimiters))
     suite.addTest(unittest.makeSuite(Identity))
     suite.addTest(unittest.makeSuite(Alter))
+    suite.addTest(unittest.makeSuite(Composite))
     return suite
 
 #if __name__ == "__main__":

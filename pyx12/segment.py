@@ -54,10 +54,17 @@ class base_element:
 
     def format(self, subele_term=None):
         raise NotImplementedError()
+
+    def is_composite(self):
+        return False
     
+    def is_element(self):
+        return False
 
 class composite(base_element):
     """Class composite
+
+        INDEXING IS 0 BASED
     """
     def __init__(self, ele_str, subele_term):
         """function composite
@@ -70,6 +77,18 @@ class composite(base_element):
         self.subele_term_orig = subele_term
         self.elements = ele_str.split(self.subele_term)
     
+    def __getitem__(self, idx):
+        """function operator[]
+        returns element
+        """
+        return self.elements[idx]
+
+    def __setitem__(self, idx, val):
+        """function operator[]
+        returns element
+        """
+        self.elements[idx] = val
+
     def __len__(self):
         """function length
         
@@ -90,6 +109,8 @@ class composite(base_element):
     def set_subele_term(self, subele_term):
         self.subele_term = subele_term
 
+    def is_composite(self):
+        return True
 
 class element(base_element):
     """Class element
@@ -124,9 +145,13 @@ class element(base_element):
     def format(self, subele_term=None):
         return self.ele_val
 
+    def is_element(self):
+        return True
 
 class segment:
     """Class segment
+
+        INDEXING IS 1 BASED
     """
     # Attributes:
     
@@ -177,9 +202,9 @@ class segment:
         if idx == 0:
             raise IndexError, 'list index out of range'
         elif idx < 0:
-            return self.elements[idx].__repr__()    
+            return self.elements[idx]
         else:
-            return self.elements[idx-1].__repr__()
+            return self.elements[idx-1]
 
     def __setitem__(self, idx, val):
         """function operator[]

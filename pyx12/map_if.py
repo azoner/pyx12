@@ -763,7 +763,7 @@ class segment_if(x12_node):
             errh.seg_error('3', err_str, err_value)
             valid = False
 
-        for i in xrange(self.get_child_count()):
+        for i in xrange(len(seg)):
             #self.logger.debug('i=%i, len(seg)=%i / child_count=%i' % \
             #   (i, len(seg), self.get_child_count()))
             child_node = self.get_child_node_by_idx(i)
@@ -777,15 +777,15 @@ class segment_if(x12_node):
                     if len(comp) > subele_count:
                         subele_node = child_node.get_child_node_by_idx(subele_count+1)
                         err_str = 'Too many sub-elements in composite %s' % (subele_node.refdes)
-                        err_value = comp[subele_count+1]
+                        err_value = comp[subele_count]
                         errh.seg_error('3', err_str, err_value)
                     valid &= child_node.is_valid(seg[i+1], errh, self.check_dte)
                 elif child_node.is_element():
                     # Validate Element
                     valid &= child_node.is_valid(seg[i+1], errh, self.check_dte)
-            else: #missing required elements
-                #self.logger.debug('id=%s, name=%s' % (child_node.id, child_node.base_name))
-                valid &= child_node.is_valid(None, errh)
+        for i in xrange(len(seg), self.get_child_count()):
+            #missing required elements
+            valid &= child_node.is_valid(None, errh)
                 
         for syn in self.syntax:
             (bResult, err_str) = is_syntax_valid(seg, syn)
@@ -1301,10 +1301,9 @@ class composite_if(x12_node):
             errh.ele_error('3', err_str, None)
             valid = False
         for i in xrange(len(comp)):
-            if i < len(comp):
-                valid &= self.get_child_node_by_idx(i).is_valid(comp[i], errh, check_dte)
-            else: #missing required elements
-                valid &= self.get_child_node_by_idx(i).is_valid(None, errh)
+            valid &= self.get_child_node_by_idx(i).is_valid(comp[i], errh, check_dte)
+        for i in xrange(len(comp), self.get_child_count()): #Check missing required elements
+            valid &= self.get_child_node_by_idx(i).is_valid(None, errh)
         return valid
 
 #    def getnodebypath(self, path):
