@@ -3510,7 +3510,7 @@
                   <name>Total Claim Charge Amount</name>
                   <usage>R</usage>
                   <seq>2</seq>
-                  <refdes>CLM2</refdes>
+                  <refdes>CLM02</refdes>
                   <data_type>R</data_type>
                   <min_len>1</min_len>
                   <max_len>18</max_len>
@@ -3918,7 +3918,7 @@
                   <name>Initial Treatment Date</name>
                   <usage>R</usage>
                   <seq>3</seq>
-                  <refdes>DTP3</refdes>
+                  <refdes>DTP03</refdes>
                   <data_type>AN</data_type>
                   <min_len>1</min_len>
                   <max_len>35</max_len>
@@ -7132,7 +7132,7 @@
                   <name>Repriced Approved Ambulatory Patient Group Amount</name>
                   <usage>S</usage>
                   <seq>7</seq>
-                  <refdes>HCP7</refdes>
+                  <refdes>HCP07</refdes>
                   <data_type>R</data_type>
                   <min_len>1</min_len>
                   <max_len>18</max_len>
@@ -9528,7 +9528,7 @@
                      <name>Citizenship Status Code</name>
                      <usage>N</usage>
                      <seq>6</seq>
-                     <refdes>DMG6</refdes>
+                     <refdes>DMG06</refdes>
                      <data_type>ID</data_type>
                      <min_len>1</min_len>
                      <max_len>2</max_len>
@@ -15008,7 +15008,7 @@
                      <name>Repriced Approved Ambulatory Patient Group Amount</name>
                      <usage>S</usage>
                      <seq>7</seq>
-                     <refdes>HCP7</refdes>
+                     <refdes>HCP07</refdes>
                      <data_type>R</data_type>
                      <min_len>1</min_len>
                      <max_len>18</max_len>
@@ -18805,7 +18805,7 @@
                      <name>Total Claim Charge Amount</name>
                      <usage>R</usage>
                      <seq>2</seq>
-                     <refdes>CLM2</refdes>
+                     <refdes>CLM02</refdes>
                      <data_type>R</data_type>
                      <min_len>1</min_len>
                      <max_len>18</max_len>
@@ -19213,7 +19213,7 @@
                      <name>Initial Treatment Date</name>
                      <usage>R</usage>
                      <seq>3</seq>
-                     <refdes>DTP3</refdes>
+                     <refdes>DTP03</refdes>
                      <data_type>AN</data_type>
                      <min_len>1</min_len>
                      <max_len>35</max_len>
@@ -22427,7 +22427,7 @@
                      <name>Repriced Approved Ambulatory Patient Group Amount</name>
                      <usage>S</usage>
                      <seq>7</seq>
-                     <refdes>HCP7</refdes>
+                     <refdes>HCP07</refdes>
                      <data_type>R</data_type>
                      <min_len>1</min_len>
                      <max_len>18</max_len>
@@ -24824,7 +24824,7 @@
                         <name>Citizenship Status Code</name>
                         <usage>N</usage>
                         <seq>6</seq>
-                        <refdes>DMG6</refdes>
+                        <refdes>DMG06</refdes>
                         <data_type>ID</data_type>
                         <min_len>1</min_len>
                         <max_len>2</max_len>
@@ -30303,7 +30303,7 @@
                         <name>Repriced Approved Ambulatory Patient Group Amount</name>
                         <usage>S</usage>
                         <seq>7</seq>
-                        <refdes>HCP7</refdes>
+                        <refdes>HCP07</refdes>
                         <data_type>R</data_type>
                         <min_len>1</min_len>
                         <max_len>18</max_len>
