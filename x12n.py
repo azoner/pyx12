@@ -230,20 +230,108 @@ class ExternalCodes:
     	#check the code against the list indexed by key
 	return 1
 
-def IsValidDataType(str, data_type):
+def IsValidDataType(str, data_type, charset = 'D'):
+    """
+    Name:    IsValidDataType
+    Params:  str (input string), 
+             data_type (data element identifier), 
+             charset [optional] ('D' for default, 'E' for extended)
+    Returns: 1 if str is valid, 0 if not
+    """
     import re
-    if data_type == 'ID': 
-	#pID = re.compile(r"^(?P<if>ex0):.+?^\s+inet\s(?P<ip>\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})\snetmask\s(?P<net>0x[0-9a-fA-F]{8,8})", re.M|re.S)
-	pID = re.compile(r"[0-9a-zA-Z!\"&'()*+,-.\/:;?=a-z].+", re.M|re.S)
-	m = pID.search(str)
-	if m != None:
-	    if_new  = m.group('if')
-    elif data_type == 'AN': pass
-    elif data_type == 'DT': pass
-    elif data_type == 'TM': pass
-    elif data_type[0] == 'N': pass
-    elif data_type == 'R': pass
+    if data_type[0] == 'N':
+        m = re.compile("^-?[0-9]+", re.S).search(str)
+        if not m:
+            # print 'nothing matched'
+            return 0  # nothing matched
+        if m.group(0) != str:  # matched substring != original, bad
+            # print m.group(0)
+            return 0
+    elif data_type == 'R':
+        m = re.compile("^-?[0-9]*(\.[0-9]+)?", re.S).search(str)
+        if not m: return 0  # nothing matched
+        if m.group(0) != str:  # matched substring != original, bad
+            # print m.group(0)
+            return 0
+    elif data_type in ('ID', 'AN'):
+        if charset == 'E':  # extended charset
+            m = re.compile("[^A-Z0-9!\"&'()*+,\-\\\./:;?=\sa-z%~@\[\]_{}\\\|<>#$\s]", re.S).search(str)
+            if m and m.group(0):
+                # print "'" + m.group(0) + "'"
+                return 0
+	else:
+            m = re.compile("[^A-Z0-9!\"&'()*+,\-\\\./:;?=\s]", re.S).search(str)
+            if m and m.group(0):  # invalid string found
+           	#print "'" + m.group(0) + "'"
+                return 0
+    elif data_type == 'DT':
+        m = re.compile("[^0-9]+", re.S).search(str)  # first test date for non-numeric chars
+        if m:  # invalid string found
+            # print 'invalid str, ' + m.group(0)
+            return 0
+        # else...
+        if 8 == len(str) or 6 == len(str): # valid lengths for date
+            if 6 == len(str):  # if 2 digit year, add CC
+                if str[0:2] < 50:
+                    str = '20' + str
+                else: str = '19' + str
+            s = str[4:6]  # check month
+            if s < '01' or s > '12':
+                # print str + ", " + s
+                return 0
+            s2 = str[6:8]  # check day
+            if s in ('01', '03', '05', '07', '08', '10', '12'):  # 31 day month
+                if s2 < '01' or s2 > '31':
+                    # print str + ", " + s2
+                    return 0
+            elif s in ('04', '06', '09', '11'):  # 30 day month
+                if s2 < '01' or s2 > '30':
+                    # print str + ", " + s2
+                    return 0
+            else: # else 28 day
+                s3 = str[0:4]  # get year
+                # print s3
+                if not (int(s3) % 4) and ((int(s3) % 100) or (not (int(s3) % 400)) ):  # leap year
+                    if s2 < '01' or s2 > '29':
+                        # print str + ", " + s3 + ', ' + s2
+                        return 0
+                elif s2 < '01' or s2 > '28':
+                    # print str + ", " + s2
+                    return 0
+        else:
+            # print 'invalid length, ' + str
+            return 0
+    elif data_type == 'TM':
+        m = re.compile("[^0-9]+", re.S).search(str)  # first test time for non-numeric chars
+        if m:  # invalid string found
+            # print m.group(0)
+            return 0
+        s = str[0:2]  # check hour segment
+        if s > '23': 
+            # print s
+            return 0
+        s = str[2:4]  # check minute segment
+        if s > '59':
+            # print s
+            return 0
+        if len(str) > 4:  # time contains seconds
+            if len(str) < 6:  # length is munted
+                # print 'length munted, ' + str
+                return 0
+            s = str[4:6]
+            if s > '59':  # check seconds
+                # print s
+                return 0
+            # check decimal seconds here in the future
+            if len(str) > 8:
+                # print 'unhandled decimal seconds encountered'
+                return 0
+    elif data_type == 'B': pass
+    else:  
+        # print 'data_type parameter is not valid, abort'
+        return 0
     return 1
+
 
 def GetChildElementText(node, elem_name):
     """
@@ -299,3 +387,4 @@ codes = ExternalCodes()
 
 if __name__ == '__main__':
     sys.exit(not main())
+
