@@ -58,6 +58,20 @@ class IsValidSyntaxP(unittest.TestCase):
         (result, err_str) = pyx12.map_if.is_syntax_valid(seg, syntax)
         self.failUnless(result, err_str)
 
+    def test_P_ok_len(self):
+        seg1 = ['NM1', '41', '1', 'Smith', 'Sam']
+        seg = pyx12.segment.segment(string.join(seg1, '*'), '~', '*', ':')
+        syntax = ['P', 8, 9]
+        (result, err_str) = pyx12.map_if.is_syntax_valid(seg, syntax)
+        self.failUnless(result, err_str)
+
+    def test_P_bad_len(self):
+        seg1 = ['NM1', '41', '1', 'Smith', 'Sam', '', '', '', '46']
+        seg = pyx12.segment.segment(string.join(seg1, '*'), '~', '*', ':')
+        syntax = ['P', 8, 9]
+        (result, err_str) = pyx12.map_if.is_syntax_valid(seg, syntax)
+        self.failIf(result, err_str)
+
 
 class IsValidSyntaxR(unittest.TestCase):
     """
@@ -134,6 +148,12 @@ class IsValidSyntaxC(unittest.TestCase):
         (result, err_str) = pyx12.map_if.is_syntax_valid(seg, syntax)
         self.failIf(result, err_str)
 
+    def test_C_fail2(self):
+        seg1 = ['NM1', '41', '1', 'Smith', 'Sam', '', '', '', '46']
+        seg = pyx12.segment.segment(string.join(seg1, '*'), '~', '*', ':')
+        syntax = ['C', 8, 9]
+        (result, err_str) = pyx12.map_if.is_syntax_valid(seg, syntax)
+
     def test_C_ok1(self):
         seg1 = ['NM1', '41', '1', 'Smith', 'Sam', '', '', '', '', 'AAAA']
         seg = pyx12.segment.segment(string.join(seg1, '*'), '~', '*', ':')
@@ -181,8 +201,22 @@ class IsValidSyntaxL(unittest.TestCase):
         (result, err_str) = pyx12.map_if.is_syntax_valid(seg, syntax)
         self.failUnless(result, err_str)
 
+    def test_L_ok2(self):
+        seg1 = ['NM1', '41', '1', 'Smith', 'Sam', '', '', '', '', 'AAAA']
+        seg = pyx12.segment.segment(string.join(seg1, '*'), '~', '*', ':')
+        syntax = ['L', 8, 9, 10]
+        (result, err_str) = pyx12.map_if.is_syntax_valid(seg, syntax)
+        self.failUnless(result, err_str)
+
     def test_L_fail1(self):
         seg1 = ['NM1', '41', '1', 'Smith', 'Sam', '', '', '', '46', '', '']
+        seg = pyx12.segment.segment(string.join(seg1, '*'), '~', '*', ':')
+        syntax = ['L', 8, 9, 10]
+        (result, err_str) = pyx12.map_if.is_syntax_valid(seg, syntax)
+        self.failIf(result, err_str)
+
+    def test_L_fail2(self):
+        seg1 = ['NM1', '41', '1', 'Smith', 'Sam', '', '', '', '46', '']
         seg = pyx12.segment.segment(string.join(seg1, '*'), '~', '*', ':')
         syntax = ['L', 8, 9, 10]
         (result, err_str) = pyx12.map_if.is_syntax_valid(seg, syntax)
@@ -196,6 +230,13 @@ class IsValidSyntaxL(unittest.TestCase):
 
     def test_L_ok_blank(self):
         seg1 = ['NM1', '41', '1', 'Smith', 'Sam', '', '', '', '', '', 'ZZZZ']
+        seg = pyx12.segment.segment(string.join(seg1, '*'), '~', '*', ':')
+        syntax = ['L', 8, 9, 10]
+        (result, err_str) = pyx12.map_if.is_syntax_valid(seg, syntax)
+        self.failUnless(result, err_str)
+
+    def test_L_ok_len(self):
+        seg1 = ['NM1', '41', '1', 'Smith', 'Sam']
         seg = pyx12.segment.segment(string.join(seg1, '*'), '~', '*', ':')
         syntax = ['L', 8, 9, 10]
         (result, err_str) = pyx12.map_if.is_syntax_valid(seg, syntax)
