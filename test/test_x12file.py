@@ -45,7 +45,7 @@ class Delimiters(unittest.TestCase):
         fd.seek(0)
         src = pyx12.x12file.x12file(fd.name, self.errh)
         for seg in src:
-            if seg[0] == 'ZZ':
+            if seg.get_seg_id() == 'ZZ':
                 self.assertEqual(self.errh.err_cde, 'SEG1', self.errh.err_str)
 
                     

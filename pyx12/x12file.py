@@ -6,29 +6,32 @@
 #
 #    All rights reserved.
 #
-#        Redistribution and use in source and binary forms, with or without modification, 
-#        are permitted provided that the following conditions are met:
+#        Redistribution and use in source and binary forms, with or without
+#        modification, are permitted provided that the following conditions are
+#        met:
 #
-#        1. Redistributions of source code must retain the above copyright notice, this list 
-#           of conditions and the following disclaimer. 
+#        1. Redistributions of source code must retain the above copyright
+#        notice, this list of conditions and the following disclaimer. 
 #        
-#        2. Redistributions in binary form must reproduce the above copyright notice, this 
-#           list of conditions and the following disclaimer in the documentation and/or other 
-#           materials provided with the distribution. 
+#        2. Redistributions in binary form must reproduce the above copyright
+#        notice, this list of conditions and the following disclaimer in the
+#        documentation and/or other materials provided with the distribution. 
 #        
-#        3. The name of the author may not be used to endorse or promote products derived 
-#           from this software without specific prior written permission. 
+#        3. The name of the author may not be used to endorse or promote
+#        products derived from this software without specific prior written
+#        permission. 
 #
-#        THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR IMPLIED 
-#        WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF 
-#        MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO 
-#        EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, 
-#        EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT 
-#        OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS 
-#        INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN 
-#        CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) 
-#        ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF 
-#        THE POSSIBILITY OF SUCH DAMAGE.
+#        THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR
+#        IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+#        WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+#        DISCLAIMED. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT,
+#        INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+#        (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+#        SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
+#        HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
+#        STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING
+#        IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+#        POSSIBILITY OF SUCH DAMAGE.
 
 
 """
@@ -49,6 +52,7 @@ import pdb
 
 # Intrapackage imports
 from errors import *
+import pyx12.segment
 
 DEFAULT_BUFSIZE = 8*1024
 
@@ -122,18 +126,20 @@ class x12file:
                 err_str = 'Segment contains trailing element terminators'
                 #self.errors.append(('SEG1', err_str, src_line=self.cur_line+1))
                 self.errh.seg_error('SEG1', err_str, src_line=self.cur_line+1)
-            seg = string.split(line, self.ele_term)
+            #seg = string.split(line, self.ele_term)
+            seg = pyx12.segment.segment(line, self.seg_term, self.ele_term, \
+                self.subele_term)
         except:
             raise StopIteration
 
         try:
-            for i in xrange(len(seg)):
-                if seg[i].find(self.subele_term) != -1:
-                    seg[i] = seg[i].split(self.subele_term) # Split composite
-            if seg[0] == 'ISA': 
-                if len(seg) != 17:
-                    raise x12Error, 'The ISA segement must have 16 elements (%s)' % (seg)
-                seg[-1] = self.subele_term
+            #for i in xrange(len(seg)):
+            #    if seg[i].find(self.subele_term) != -1:
+            #        seg[i] = seg[i].split(self.subele_term) # Split composite
+            if seg.get_seg_id() == 'ISA': 
+                if len(seg) != 16:
+                    raise x12Error, 'The ISA segment must have 16 elements (%s)' % (seg)
+                #seg[-1] = self.subele_term
                 interchange_control_number = seg[13]
                 if interchange_control_number in self.isa_ids:
                     err_str = 'ISA Interchange Control Number %s not unique within file' \
@@ -144,7 +150,7 @@ class x12file:
                 self.gs_count = 0
                 self.gs_ids = []
                 self.isa_usage = seg[15]
-            elif seg[0] == 'IEA': 
+            elif seg.get_seg_id() == 'IEA': 
                 if self.loops[-1][0] != 'ISA':
                     #pdb.set_trace()
                     err_str = 'Unterminated Loop %s' % (self.loops[-1][0])
@@ -157,7 +163,7 @@ class x12file:
                     err_str = 'IEA count for IEA02=%s is wrong' % (seg[2])
                     self.errh.isa_error('021', err_str)
                 del self.loops[-1]
-            elif seg[0] == 'GS': 
+            elif seg.get_seg_id() == 'GS': 
                 group_control_number = seg[6]
                 if group_control_number in self.gs_ids:
                     err_str = 'GS Interchange Control Number %s not unique within file' \
@@ -168,7 +174,7 @@ class x12file:
                 self.loops.append(('GS', group_control_number))
                 self.st_count = 0
                 self.st_ids = []
-            elif seg[0] == 'GE': 
+            elif seg.get_seg_id() == 'GE': 
                 if self.loops[-1][0] != 'GS':
                     err_str = 'Unterminated segment %s' % (self.loops[-1][1])
                     self.errh.gs_error('3', err_str)
@@ -181,7 +187,7 @@ class x12file:
                         % (seg[1], seg[2], self.st_count)
                     self.errh.gs_error('5', err_str)
                 del self.loops[-1]
-            elif seg[0] == 'ST': 
+            elif seg.get_seg_id() == 'ST': 
                 transaction_control_number = seg[2]
                 if transaction_control_number in self.st_ids:
                     err_str = 'ST Interchange Control Number %s not unique within file' \
@@ -192,7 +198,7 @@ class x12file:
                 self.loops.append(('ST', transaction_control_number))
                 self.seg_count = 1 
                 self.hl_count = 0
-            elif seg[0] == 'SE': 
+            elif seg.get_seg_id() == 'SE': 
                 se_trn_control_num = seg[2]
                 if self.loops[-1][0] != 'ST' or self.loops[-1][1] != se_trn_control_num:
                     err_str = 'SE id=%s does not match ST id=%s' % (se_trn_control_num, self.loops[-1][1])
@@ -202,11 +208,11 @@ class x12file:
                         % (seg[1], se_trn_control_num, self.seg_count + 1)
                     self.errh.st_error('4', err_str)
                 del self.loops[-1]
-            elif seg[0] == 'LS': 
+            elif seg.get_seg_id() == 'LS': 
                 self.loops.append(('LS', seg[6]))
-            elif seg[0] == 'LE': 
+            elif seg.get_seg_id() == 'LE': 
                 del self.loops[-1]
-            elif seg[0] == 'HL': 
+            elif seg.get_seg_id() == 'HL': 
                 self.seg_count += 1
                 self.hl_count += 1
                 if self.hl_count != int(seg[1]):
