@@ -87,7 +87,7 @@ def x12n_document(fd):
         if seg[0] == 'ISA':
             #map_node = walker.walk(control_map, seg)
             map_node = control_map.getnodebypath('/ISA')
-            map_node.is_valid(seg)
+            map_node.is_valid(seg, [])
             #map_node = control_map
             icvn = map_node.get_elemval_by_id(seg, 'ISA12')
             #isa_seg = segment(control_map.getnodebypath('/ISA'), seg)
@@ -96,7 +96,7 @@ def x12n_document(fd):
         elif seg[0] == 'GS':
             #map_node = walker.walk(map_node, seg)
             map_node = control_map.getnodebypath('/GS')
-            map_node.is_valid(seg)
+            map_node.is_valid(seg, [])
             fic = map_node.get_elemval_by_id(seg, 'GS01')
             vriic = map_node.get_elemval_by_id(seg, 'GS08')
             
@@ -126,32 +126,11 @@ def x12n_document(fd):
     for seg in src:
         logger.debug(seg)
         #find node
+        ele_err_list = []
+        #e997 = err_997.err_997()
         node = walker.walk(node, seg)
+        node.is_valid(seg, ele_err_list) 
 
-        #validate intra-element dependancies
-
-        if (len(seg) - 1) > node.get_child_count(): 
-            #pdb.set_trace()
-            raise x12Error, 'Too many elements in segment %s. Counted %i, should be %i' \
-                % (seg[0], len(seg)-1, node.get_child_count())
-        for i in xrange(node.get_child_count()):
-            child_node = node.get_child_node_by_idx(i)
-            # Validate Elements
-            if i < len(seg)-1:
-                #logger.debug('i=%i, elem=%s, id=%s' % (i, seg[i+1], child_node.id))
-                #if type(seg[i+1]) is ListType: # composite
-                if child_node.is_composite():
-                    # Validate composite
-                    comp = seg[i+1]
-                    if len(comp) > child_node.get_child_count():
-                        raise x12Error, 'Too many elements in segment %s' % (seg[0])
-                    child_node.is_valid(seg[i+1], check_dte)
-                elif child_node.is_element():
-                    child_node.is_valid(seg[i+1], check_dte)
-            else: #missing required elements
-                #logger.debug('id=%s, name=%s' % (child_node.id, child_node.base_name))
-                child_node.is_valid(None)
-            
         #get special values
         #generate xml
     logger.info('End')
@@ -162,11 +141,12 @@ def main():
     import getopt
     #global logger
     try:
-        opts, args = getopt.getopt(sys.argv[1:], ':')
+        opts, args = getopt.getopt(sys.argv[1:], 'qv:')
 #        opts, args = getopt.getopt(sys.argv[1:], 'lfd:')
     except getopt.error, msg:
-        sys.stderr.write(msg + '\n')
+    #    sys.stderr.write(msg + '\n')
         sys.stdout.write('usage: pyx12.py file\n')
+        raise
         sys.exit(2)
     logger = logging.getLogger('pyx12')
     hdlr = logging.FileHandler('./run.log')

@@ -98,7 +98,7 @@ class ExternalCodes:
             try:
                 reader = libxml2.newTextReaderFilename(code_file)
             except:
-                raise errors.x12Error, 'Code file not found: %s' % (code_file)
+                raise errors.EngineError, 'Code file not found: %s' % (code_file)
             try:
                 ret = reader.Read()
                 if ret == -1:
