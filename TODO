@@ -1,3 +1,5 @@
+BUG: Match any sub-loop of a containing loop.
+
 X070 Map
 
 Base map_if children on map
@@ -19,7 +21,7 @@ For large input files, split html output into parts
 Error Handling
   Stream Errors to XML
   Combine error XML with HTML/XML/997 output
-  Error specifications - XML (seperate tags for ISA/GS/detail errors
+  Error specifications - XML (seperate tags for ISA/GS/detail errors)
 
 Unit Testing
   map_walker
