@@ -20,6 +20,7 @@ vriic - Version / Release / Industry Identifier Code (GS08)
 -->
 <maps>
   <version icvn="00401">
+    <map vriic="004010X070" fic="HN">277U.4010.X070.xml</map>
     <map vriic="004010X093" fic="HR">276.4010.X093.xml</map>
     <map vriic="004010X093" fic="HN">277.4010.X093.xml</map>
     <map vriic="004010X092" fic="HS">270.4010.X092.xml</map>
