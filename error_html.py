@@ -136,29 +136,29 @@ class error_html:
                 t_seg.append(ele_str)
                 
         for err_node in err_node_list:
-            for err_tuple in err_node.errors:
+            #for err_tuple in err_node.errors:
+            for err_tuple in err_node.get_error_list(seg[0], True):
                 err_cde = err_tuple[0]
                 err_str = err_tuple[1]
                 if err_cde == '3':
-                    self.fd.write('<span class="error">&nbsp;%s (Code: %s)</span><br>\n' % \
+                    self.fd.write('<span class="error">&nbsp;%s (Segment Error Code: %s)</span><br>\n' % \
                         (err_str, err_cde))
 
         self.fd.write('<span class="seg">%i: %s</span><br>\n' % \
             (cur_line, self._seg_str(t_seg)))
         for err_node in err_node_list:
-            for err_tuple in err_node.errors:
+            for err_tuple in err_node.get_error_list(seg[0], False):
+            #for err_tuple in err_node.errors:
                 err_cde = err_tuple[0]
                 err_str = err_tuple[1]
                 if err_cde != '3':
-                    self.fd.write('<span class="error">&nbsp;%s (Code: %s)</span><br>\n' % \
+                    self.fd.write('<span class="error">&nbsp;%s (Segment Error Code: %s)</span><br>\n' % \
                         (err_str, err_cde))
             for ele in err_node.elements:
-                for (err_cde, err_str, err_val) in ele.errors:
-                    self.fd.write('<span class="error">&nbsp;%s (Code: %s)</span><br>\n' % \
+                for (err_cde, err_str, err_val) in ele.get_error_list(seg[0], False):
+                #for (err_cde, err_str, err_val) in ele.errors:
+                    self.fd.write('<span class="error">&nbsp;%s (Element Error Code: %s)</span><br>\n' % \
                         (err_str, err_cde))
-            
-        # Show seg and ele errors
-        # Handle ST, ...
         
     def _seg_str(self, seg):
         """

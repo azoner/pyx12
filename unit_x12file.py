@@ -106,7 +106,7 @@ class IEA_Checks(unittest.TestCase):
         src = x12file.x12file(self.fd, self.errh)
         for seg in src:
             pass
-        self.assertEqual(self.errh.err_cde, 'ISA2', self.errh.err_str)
+        self.assertEqual(self.errh.err_cde, 'IEA2', self.errh.err_str)
 
     def test_IEA_count(self):
         seg = None
@@ -118,7 +118,7 @@ class IEA_Checks(unittest.TestCase):
         src = x12file.x12file(self.fd, self.errh)
         for seg in src:
             pass
-        self.assertEqual(self.errh.err_cde, 'ISA3', self.errh.err_str)
+        self.assertEqual(self.errh.err_cde, 'IEA3', self.errh.err_str)
 
     def tearDown(self):
         self.fd.close()
