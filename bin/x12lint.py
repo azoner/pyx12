@@ -75,10 +75,6 @@ def main():
     logger.setLevel(logging.INFO)
     formatter = logging.Formatter('%(asctime)s %(levelname)s %(module)s %(lineno)d %(message)s')
 
-    hdlr = logging.FileHandler('./run.log')
-    hdlr.setFormatter(formatter)
-    logger.addHandler(hdlr) 
-    
     stderr_hdlr = logging.StreamHandler()
     stderr_hdlr.setFormatter(formatter)
     logger.addHandler(stderr_hdlr)
@@ -95,6 +91,13 @@ def main():
         if o == '-q': logger.setLevel(logging.ERROR)
         if o == '-c': param.set_param('charset', a)
         if o == '-H': flag_html = True
+        if o == '-l':
+            try:
+                hdlr = logging.FileHandler(a)
+                hdlr.setFormatter(formatter)
+                logger.addHandler(hdlr) 
+            except IOError:
+                logger.error('Could not open log file: %s' % (a))
         #if o == '-9': target_997 = os.path.splitext(src_filename)[0] + '.997'
 
     for src_filename in args:
