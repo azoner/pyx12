@@ -223,6 +223,9 @@ class segment:
         """
         self.elements[idx] = composite(val, self.subele_term)
 
+    def append(self, val):
+        self.elements.append(composite(val, self.subele_term))
+
     def __len__(self):
         return len(self.elements)
     
