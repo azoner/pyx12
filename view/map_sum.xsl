@@ -63,7 +63,7 @@
     <tr><td colspan="4">
         <table>
             <tr class="loop">
-            <td><xsl:value-of select="pos"/></td>
+            <td><strong><xsl:value-of select="pos"/></strong></td>
             <td></td>
             <td><strong><xsl:value-of select="@xid"/> - <xsl:value-of select="name"/></strong></td>
             <td colspan="2"></td>
