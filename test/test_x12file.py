@@ -60,7 +60,7 @@ class Delimiters(unittest.TestCase):
 
     def test_trailing_ele_delim(self):
         str = 'ISA*00*          *00*          *ZZ*ZZ000          *ZZ*ZZ001          *030828*1128*U*00401*000010121*0*T*:~\n'
-        str += 'ZZ****~\n'
+        str += 'ZZ*1***~\n'
         fd = tempfile.NamedTemporaryFile()
         fd.write(str)
         fd.seek(0)
@@ -422,7 +422,7 @@ class Segment_ID_Checks(unittest.TestCase):
             pass
         self.assertEqual(errh.err_cde, '1', errh.err_str)
 
-    def test_segment_empty(self):
+    def test_segment_id_empty(self):
         errh = pyx12.error_handler.errh_null()
         str = 'ISA*00*          *00*          *ZZ*ZZ000          *ZZ*ZZ001          *030828*1128*U*00401*000010121*0*T*:~\n'
         str += '*1~\n'
@@ -433,6 +433,18 @@ class Segment_ID_Checks(unittest.TestCase):
         for seg in src:
             pass
         self.assertEqual(errh.err_cde, '1', errh.err_str)
+        
+    def test_segment_empty(self):
+        errh = pyx12.error_handler.errh_null()
+        str = 'ISA*00*          *00*          *ZZ*ZZ000          *ZZ*ZZ001          *030828*1128*U*00401*000010121*0*T*:~\n'
+        str += 'TST~\n'
+        fd = tempfile.NamedTemporaryFile()
+        fd.write(str)
+        fd.seek(0)
+        src = pyx12.x12file.x12file(fd.name, errh)
+        for seg in src:
+            pass
+        self.assertEqual(errh.err_cde, '8', errh.err_str)
 
 
 def suite():

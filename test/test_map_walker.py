@@ -135,6 +135,7 @@ class Implicit_Loops(unittest.TestCase):
         param.set('pickle_path', os.path.expanduser('~/src/pyx12/map/'))
         map = pyx12.map_if.load_map_file('841.4010.XXXC.xml', param)
         node = map.getnodebypath('/ISA/GS/ST/DETAIL/1000/2000/2100/SPI')
+        self.assertEqual(node, None)
         seg_data = pyx12.segment.segment('SPI*00', '~', '*', ':')
         node = self.walker.walk(node, seg_data, self.errh, 5, 4, None)
         self.assertEqual(seg_data.get_seg_id(), node.id)
@@ -310,25 +311,25 @@ class Counting(unittest.TestCase):
 
     def test_count_ok1(self):
         node = self.node
-        seg_data = pyx12.segment.segment('PER*IC*Name1*EM*dev@null.com~', '~', '*', ':')
         node.cur_count = 1
+        seg_data = pyx12.segment.segment('PER*IC*Name1*EM*dev@null.com~', '~', '*', ':')
         node = self.walker.walk(node, seg_data, self.errh, 5, 4, None)
         self.assertNotEqual(node, None)
         self.assertEqual(self.errh.err_cde, None, self.errh.err_str)
 
     def test_count_ok2(self):
         node = self.node
-        seg_data = pyx12.segment.segment('PER*IC*Name1*EM*dev@null.com~', '~', '*', ':')
         node.cur_count = 2 
+        seg_data = pyx12.segment.segment('PER*IC*Name1*EM*dev@null.com~', '~', '*', ':')
         node = self.walker.walk(node, seg_data, self.errh, 5, 4, None)
         self.assertNotEqual(node, None)
         self.assertEqual(self.errh.err_cde, None, self.errh.err_str)
 
     def test_count_fail1(self):
         node = self.node
+        node.cur_count = 3 
         seg_data = pyx12.segment.segment('PER*IC*Name1*EM*dev@null.com~', '~', '*', ':')
         self.assertNotEqual(node, None)
-        node.cur_count = 3 
         self.errh.err_cde = None
         self.errh.err_str = None
         node = self.walker.walk(node, seg_data, self.errh, 5, 4, None)
@@ -346,7 +347,7 @@ class Counting(unittest.TestCase):
 
     def test_max_loop_count_fail1(self):
         node = self.map.getnodebypath('/ISA/GS/ST/DETAIL/2000A/2000B/2300/2400/LX')
-        self.assertNotEqual(self.node, None)
+        self.assertNotEqual(node, None)
         node.cur_count = 50
         seg_data = pyx12.segment.segment('LX*51~', '~', '*', ':')
         self.errh.err_cde = None
