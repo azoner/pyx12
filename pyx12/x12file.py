@@ -45,6 +45,7 @@ import string
 from types import *
 #from utils import seg_str
 import logging
+import pdb
 
 # Intrapackage imports
 from errors import *
@@ -144,7 +145,12 @@ class x12file:
                 self.gs_ids = []
                 self.isa_usage = seg[15]
             elif seg[0] == 'IEA': 
-                if self.loops[-1][0] != 'ISA' or self.loops[-1][1] != seg[2]:
+                if self.loops[-1][0] != 'ISA':
+                    #pdb.set_trace()
+                    err_str = 'Unterminated Loop %s' % (self.loops[-1][0])
+                    self.errh.isa_error('024', err_str)
+                    del self.loops[-1]
+                if self.loops[-1][1] != seg[2]:
                     err_str = 'IEA id=%s does not match ISA id=%s' % (seg[2], self.loops[-1][1])
                     self.errh.isa_error('001', err_str)
                 if int(seg[1]) != self.gs_count:
@@ -163,7 +169,11 @@ class x12file:
                 self.st_count = 0
                 self.st_ids = []
             elif seg[0] == 'GE': 
-                if self.loops[-1][0] != 'GS' or self.loops[-1][1] != seg[2]:
+                if self.loops[-1][0] != 'GS':
+                    err_str = 'Unterminated segment %s' % (self.loops[-1][1])
+                    self.errh.gs_error('3', err_str)
+                    del self.loops[-1]
+                if self.loops[-1][1] != seg[2]:
                     err_str = 'GE id=%s does not match GS id=%s' % (seg[2], self.loops[-1][1])
                     self.errh.gs_error('4', err_str)
                 if int(seg[1]) != self.st_count:

@@ -129,6 +129,19 @@ class IEA_Checks(unittest.TestCase):
             pass
         self.assertEqual(self.errh.err_cde, '021', self.errh.err_str)
 
+    def test_missing_IEA(self):
+        seg = None
+        str = 'ISA*00*          *00*          *ZZ*ZZ000          *ZZ*ZZ001          *030828*1128*U*00401*000010121*0*T*:~\n'
+        str += 'GS*HC*ZZ000*ZZ001*20030828*1128*17*X*004010X098~\n'
+        str += 'GE*0*17~\n'
+        fd = tempfile.NamedTemporaryFile()
+        fd.write(str)
+        fd.seek(0)
+        src = pyx12.x12file.x12file(fd.name, self.errh)
+        for seg in src:
+            pass
+        self.assertEqual(self.errh.err_cde, '023', self.errh.err_str)
+
     def tearDown(self):
         pass
 
@@ -178,6 +191,19 @@ class GE_Checks(unittest.TestCase):
         for seg in src:
             pass
         self.assertEqual(self.errh.err_cde, '6', self.errh.err_str)
+
+    def test_missing_GE(self):
+        seg = None
+        str = 'ISA*00*          *00*          *ZZ*ZZ000          *ZZ*ZZ001          *030828*1128*U*00401*000010121*0*T*:~\n'
+        str += 'GS*HC*ZZ000*ZZ001*20030828*1128*17*X*004010X098~\n'
+        str += 'IEA*1*000010121~\n'
+        fd = tempfile.NamedTemporaryFile()
+        fd.write(str)
+        fd.seek(0)
+        src = pyx12.x12file.x12file(fd.name, self.errh)
+        for seg in src:
+            pass
+        self.assertEqual(self.errh.err_cde, '024', self.errh.err_str)
 
     def tearDown(self):
         pass
@@ -235,6 +261,21 @@ class SE_Checks(unittest.TestCase):
         for seg in src:
             pass
         self.assertEqual(self.errh.err_cde, '23', self.errh.err_str)
+
+    def test_missing_SE(self):
+        seg = None
+        str = 'ISA*00*          *00*          *ZZ*ZZ000          *ZZ*ZZ001          *030828*1128*U*00401*000010121*0*T*:~\n'
+        str += 'GS*HC*ZZ000*ZZ001*20030828*1128*17*X*004010X098~\n'
+        str += 'ST*837*11280001~\n'
+        str += 'GE*1*17~\n'
+        str += 'IEA*1*000010121~\n'
+        fd = tempfile.NamedTemporaryFile()
+        fd.write(str)
+        fd.seek(0)
+        src = pyx12.x12file.x12file(fd.name, self.errh)
+        for seg in src:
+            pass
+        self.assertEqual(self.errh.err_cde, '3', self.errh.err_str)
 
     def tearDown(self):
         pass
