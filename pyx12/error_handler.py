@@ -286,7 +286,7 @@ class err_handler:
         """
         sout = ''
         if src_line is not None:
-            sout += '#%s '
+            sout += '#%i ' % (src_line)
         sout += 'seg_error: %s - %s (%s)' % (err_cde, err_str, err_value)
         logger.error(sout)
         self._add_cur_seg()
