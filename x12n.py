@@ -54,6 +54,7 @@ import errors
 import codes
 from utils import *
 
+#Global Variables
 subele_term = None
 
 class x12n_document:
@@ -158,7 +159,6 @@ class GS_loop:
 	#print "--end load whole dom"
 
 	# Loop through ST segments
-	#print gs[1:-1]
 	for loop in GetExplicitLoops(gs[1:-1], 'ST', 'SE', 2, 2):
 	    st = ST_loop(self, isa, loop)
 	
@@ -187,10 +187,31 @@ class ST_loop:
 	bht_seg.validate()
 	bht_seg.xml()
 
+	# Loop through HL delimited Loops
+	for loop in GetHLLoops(st[2:-1]):
+	    hl = HL_loop(self, loop)
+
 	se_seg = segment(se_seg_node, st[-1:][0])
 	se_seg.validate()
 	se_seg.xml()
 	
+
+class HL_loop:
+    """
+    Takes a dom node of the loop and the parsed segment lines as a list
+    """
+    def __init__(self, st, loop):
+        """
+        Name:    __init__
+        Desc:    Handles the parsing of loop started by HL segments 
+        Params:  node - dom node of the loop
+		 loop - parsed segment lines as a list
+        Returns: 
+        """
+	seg_nodes = st.st_seg_node.getElementsByTagName("segment")
+	for seg_node in seg_nodes:
+	    if GetChildElementText(seg_node, 'id') == 'ST':
+	    	st_seg_node = seg_node
     
 class segment:
     """

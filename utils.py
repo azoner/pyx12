@@ -207,19 +207,23 @@ def GetExplicitLoops(lines, start_tag, end_tag, start_idx, end_idx):
                 loops.append(lines[loop_idx:i+1])
 	        loop_idx = i
 		break
-	
-        if lines[-1][0] != end_tag:
-            raise errors.WEDI1Error, 'Last segment should be %s, is "%s"' % (end_tag, lines[-1][0])
+    if lines[-1][0] != end_tag:
+        raise errors.WEDI1Error, 'Last segment should be %s, is "%s"' % (end_tag, lines[-1][0])
+    return loops
 
-	return loops
-#       while idx < len(lines)-1:
-#           if lines[idx][0] == start_tag:
-#               if loop_idx != -1:
-#                   raise errors.WEDI1Error, 'Encountered a %s segment before a required %s segment' % (start_tag, end_tag)
-#               else:
-#                   loop_idx = idx
-#           if lines[idx][0] == end_tag:
-#               loops.append(lines[loop_idx:idx+1])
-#               loop_idx = -1
-#           idx = idx + 1
-
+def GetHLLoops(lines):
+    """
+    Name:    GetExplicitLoops
+    Desc:    Locate the loop blocks for a loop sets delimited by HL segments
+    Params:  lines - a list of lists containing the lines to be split
+    Returns: a list containing segment lists
+    """
+    loops = []
+    loop_idx = 0
+    if lines[loop_idx][0] != 'HL':
+        raise errors.WEDI1Error, 'This segment should be a HL, is %s' % (lines[loop_idx][0])
+    for i in xrange(loop_idx+1, len(lines)):
+        if lines[i][0] == 'HL': 
+            loops.append(lines[loop_idx:i])
+            loop_idx = i
+    return loops
