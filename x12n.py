@@ -70,34 +70,28 @@ __version__ = "0.1.0"
 class x12n_document:
     #dom_codes = xml.dom.minidom.parse('map/codes.xml')
     def __init__(self):
-   	src = x12file.x12file(sys.stdin) 
 	global subele_term
-	subele_term = self.subele_term
+   	src = x12file.x12file(sys.stdin) 
+	subele_term = src.subele_term
+	#self.subele_term = ''
 
 	# get ISA segment map
 #	seg = string.split(line[:-1], self.ele_term)
 	#print seg
 
-	dom_isa = xml.dom.minidom.parse('map/map.x12.control.00401.xml')
-	seg_nodes = dom_isa.getElementsByTagName("segment")
-	for seg_node in seg_nodes:
-	    if GetChildElementText(seg_node, 'id') == 'ISA':
-	    	isa_seg_node = seg_node
-	    if GetChildElementText(seg_node, 'id') == 'IEA':
-	    	iea_seg_node = seg_node
-
+	control = map_if.map_if('map/map.x12.control.00401.xml')
+	
 	for seg in src:
 	    if seg[0] == 'ISA':
-		isa_seg = segment(isa_seg_node, seg)
+	    	#	node = map.getnodebypath('/ISA')
+		isa_seg = segment(control.getnodebypath('/ISA'), seg)
 		isa_seg.validate()
 		self.icvn = isa_seg.GetElementValue('ISA12')
 	    elif seg[0] == 'IEA':
-	    	iea_seg = segment(iea_seg_node, lines[-1])
+	    	iea_seg = segment_if(control.getnodebypath('/IEA'), seg)
 	    	iea_seg.validate()
 	    else:
 	    	pass
-
-	dom_isa.unlink()
 
     def xml(self):
 	# Start XML output
@@ -130,8 +124,8 @@ class GS_loop:
 	    raise errors.WEDI1Error, 'Last segment should be GE, is "%s"' % (gs[-1:][0][0])
 
 	#Get map for this GS loop
-	map_index = map_index('map/maps.xml')
-	self.map_file = map1.get_filename(isa.icvn, self.vriic, self.fic)
+	map_index = map_index.map_index('map/maps.xml')
+	self.map_file = map_index.get_filename(isa.icvn, self.vriic, self.fic)
 	
 	# Get map for this GS loop
 	#print "--load whole dom"
@@ -233,40 +227,42 @@ class HL_loop:
 
 class segment:
     """
-    Takes a dom node of the segment and the parsed segment line as a list
+    Parse and validate a segment data line.
+    Takes a map_py node of the segment and the parsed segment line as a list
     """
     def __init__(self, node, seg):
         """
         Name:    __init__
         Desc:    Sends an xml representation of the segmens to stdout
-        Params:  node - dom node of the segment
+        Params:  node - map_py node of the segment
 		 seg - the parsed segment line as a list
         Returns: 
         """
-    	self.id = GetChildElementText(node, 'id')
-    	self.name = GetChildElementText(node, 'name')
-    	self.end_tag = GetChildElementText(node, 'end_tag')
-    	self.usage = GetChildElementText(node, 'usage')
-    	self.req_des = GetChildElementText(node, 'req_des')
-    	self.pos = GetChildElementText(node, 'pos')
+    	#self.id = GetChildElementText(node, 'id')
+    	#self.name = GetChildElementText(node, 'name')
+    	#self.end_tag = GetChildElementText(node, 'end_tag')
+    	#self.usage = GetChildElementText(node, 'usage')
+    	#self.req_des = GetChildElementText(node, 'req_des')
+    	#self.pos = GetChildElementText(node, 'pos')
 
 	tab.incr()
 	#element_nodes = node.getElementsByTagName('element')
 	i = 1 
 	self.element_list = []
-	for child in node.childNodes:
-	    if child.nodeType == child.ELEMENT_NODE and child.tagName == 'element':
+	# APPLY LIST OF ELEMENTS TO ELEMENTS IN NODE
+	for child in node.children:
+	    if child.base_name == 'element':
 	        if i < len(seg):
 	            self.element_list.append(element(child, seg[i]))
 	        else:
 	            self.element_list.append(element(child, None))
-	        i = i + 1
-	    if child.nodeType == child.ELEMENT_NODE and child.tagName == 'composite':
+	        i += 1
+	    elif child.base_name == 'composite':
 	        if i < len(seg):
 	            self.element_list.append(composite(child, seg[i]))
 	        else:
 	            self.element_list.append(composite(child, None))
-	        i = i + 1
+	        i += 1
 
     def __del__(self):
 	tab.decr()
@@ -312,33 +308,13 @@ class element:
         """
         Name:    __init__
         Desc:    Get the values for this element
-        Params:  node - a dom node of the element
+        Params:  node - a map_if node of the element
 		 x12_elem - the x12 element value 
         Returns: 
         """
 
         self.x12_elem = x12_elem
-    	self.name = GetChildElementText(node, 'name')
-    	self.usage = GetChildElementText(node, 'usage')
-    	self.req_des = GetChildElementText(node, 'req_des')
-    	self.seq = GetChildElementText(node, 'seq')
-    	self.pos = GetChildElementText(node, 'pos')
-    	self.refdes = GetChildElementText(node, 'refdes')
-    	self.data_type = GetChildElementText(node, 'data_type')
-    	self.min_len = GetChildElementText(node, 'min_len')
-    	self.max_len = GetChildElementText(node, 'max_len')
-	self.valid_codes = []
-	self.external_codes = None
-        for child in node.childNodes:
-            if child.nodeType == child.ELEMENT_NODE and child.tagName == 'valid_codes':
-	        self.external_codes = child.getAttribute('external')
-    	        for code in child.childNodes:
-		    if code.nodeType == code.ELEMENT_NODE and code.tagName == 'code':
-    	        	for a in code.childNodes:
-           	    	    if a.nodeType == a.TEXT_NODE:
-		        	a.normalize()
-				self.valid_codes.append(a.data)
-
+	
     def __del__(self):
 	tab.decr()
 
@@ -358,46 +334,8 @@ class element:
         Params:  
         Returns: 
         """
-    	if self.x12_elem == '' or self.x12_elem is None:
-    	    if self.usage == 'N':
-	    	return 1
-    	    elif self.usage == 'R':
-	    	raise errors.WEDI1Error, 'Element %s is required' % (self.refdes)
-    	if (not self.data_type is None) and (self.data_type == 'R' or self.data_type[0] == 'N'):
-	    elem = string.replace(string.replace(self.x12_elem, '-', ''), '.', '')
-	    if len(elem) < int(self.min_len):
-	    	raise errors.WEDI1Error, 'Element %s is too short - "%s" is len=%i' % (self.refdes,
-		    elem, int(self.min_len))
-	    if len(elem) > int(self.max_len):
-	    	raise errors.WEDI1Error, 'Element %s is too short - "%s" is len=%i' % (self.refdes,
-		    elem, int(self.min_len))
-	else:
-	    if len(self.x12_elem) < int(self.min_len):
-	    	raise errors.WEDI1Error, 'Element %s is too short - "%s" is len=%i' % (self.refdes,
-		    self.x12_elem, int(self.min_len))
-	    if len(self.x12_elem) > int(self.max_len):
-	    	raise errors.WEDI1Error, 'Element %s is too short - "%s" is len=%i' % (self.refdes,
-		    self.x12_elem, int(self.min_len))
 
-	if self.x12_elem == None and self.usage == 'R':
-	    raise errors.WEDI3Error
-	if not (self.__valid_code__() or codes.IsValid(self.external_codes, self.x12_elem) ):
-	    raise errors.WEDIError, "Not a valid code for this ID element"
-	if not IsValidDataType(self.x12_elem, self.data_type, 'E'):
-	    raise errors.WEDI1Error, "Invalid X12 datatype: '%s' is not a '%s'" % (self.x12_elem, self.data_type) 
-
-    def __valid_code__(self):
-        """
-        Name:    __valid_code__
-        Desc:    Verify the x12 element value is in the given list of valid codes
-        Params:  
-        Returns: 1 if found, else 0
-        """
-        if not self.valid_codes:
-	    return 1
-	if self.x12_elem in self.valid_codes:
-	    return 1
-	return 0
+	return node.is_valid(self.x12_elem)
 
 
 class composite:

@@ -66,9 +66,25 @@ class x12_node:
     	self.id = None
 	self.name = None
 	self.parent = None
+	self.children = []
 
     def __del__(self):
     	pass
+
+    def getnodebypath(self, path):
+    	#pdb.set_trace()
+    	pathl = path.split('/')
+	if len(pathl) <= 1: return None
+	#print self.base_name, self.id, pathl[1]
+    	if self.id == pathl[1]:
+	    return self
+	if len(pathl) <=2: return None
+        for child in self.children:
+	    node = child.getnodebypath('/' + string.join(pathl[2:],'/'))
+	    if node != None:
+	    	return node
+	return None
+ 
 
 #    def debug_print(self):
 #    	sys.stdout.write('%s%s %s %s %s\n' % (str(' '*self.base_level), self.base_name, self.base_level, self.id, self.name))
@@ -86,13 +102,14 @@ class map_if(x12_node):
 	global reader
 	x12_node.__init__(self)
         self.children = []
-	self.id = None
-	self.name = None
 	cur_name = ''
 	self.cur_path = '/transaction'
 	self.cur_level = -1 
 	self.base_level = 0
 	self.base_name = ''
+
+	self.id = None
+	self.name = None
 
         try:
 	    reader = libxml2.newTextReaderFilename(map_file)
@@ -164,6 +181,17 @@ class map_if(x12_node):
     def __path_parent__(self):
     	return os.path.basename(os.path.dirname(self.cur_path))
 
+    def getnodebypath(self, path):
+    	pathl = path.split('/')
+	if len(pathl) <= 1: return None
+    	if self.id == pathl[1]:
+	    return self
+        for child in self.children:
+	    node = child.getnodebypath('/' + string.join(pathl[1:],'/'))
+	    if node != None:
+	    	return node
+	return None
+   	
 
 
 ############################################################
@@ -316,6 +344,14 @@ class segment_if(x12_node):
 	self.path = ''
         self.base_name = 'segment'
 	self.base_level = reader.Depth()
+
+	self.id = None
+	self.name = None
+	self.usage = None
+	self.req_des = None
+	self.pos = None
+	self.max_use = None
+ 
 #        if parent == None:
 #    	    self.path = id
 #	else:
@@ -401,7 +437,7 @@ class segment_if(x12_node):
         Returns: string of path - XPath style
         """
         return self.path
-
+    
     def get_parent(self):
         """
         Name:    
@@ -478,9 +514,22 @@ class element_if(x12_node):
         self.base_name = 'element'
 	self.base_level = reader.Depth()
 
+	self.id = None
+	self.name = None
+	self.usage = None
+	self.req_des = None
+	self.pos = None
+	self.max_use = None
+	self.data_ele = None
+	self.seq = None
+	self.pos = None
+	self.refdes = None
+	self.data_type = None
+	self.min_len = None
+	self.max_len = None
+
 	self.valid_codes = []
 	self.external_codes = None
-
 
 #	ret = 1 
 #	while ret == 1 and self.cur_level <= reader.Depth():
@@ -547,6 +596,7 @@ class element_if(x12_node):
 		    self.pos = reader.Value()
 		elif cur_name == 'refdes':
 		    self.refdes = reader.Value()
+		    self.id = self.refdes
 		elif cur_name == 'data_type':
 		    self.data_type = reader.Value()
 		elif cur_name == 'min_len':
@@ -635,24 +685,25 @@ class element_if(x12_node):
    	# match also by ID
         pass
 
-    def is_valid(self, code):
+    def is_valid(self, elem_val):
         """
         Name:   
         Desc:    
         Params:  
+	    elem_val - value of element data
 		 
         Returns: boolean
         """
     	# handle intra-segment dependancies
         pass
 	global codes
-    	if code == '' or code is None:
+    	if elem_val == '' or elem_val is None:
     	    if self.usage == 'N':
 	    	return 1
     	    elif self.usage == 'R':
 	    	raise errors.WEDI1Error, 'Element %s is required' % (self.refdes)
     	if (not self.data_type is None) and (self.data_type == 'R' or self.data_type[0] == 'N'):
-	    elem = string.replace(string.replace(code, '-', ''), '.', '')
+	    elem = string.replace(string.replace(elem_val, '-', ''), '.', '')
 	    if len(elem) < int(self.min_len):
 	    	raise errors.WEDI1Error, 'Element %s is too short - "%s" is len=%i' % (self.refdes,
 		    elem, int(self.min_len))
@@ -660,19 +711,19 @@ class element_if(x12_node):
 	    	raise errors.WEDI1Error, 'Element %s is too short - "%s" is len=%i' % (self.refdes,
 		    elem, int(self.min_len))
 	else:
-	    if len(code) < int(self.min_len):
+	    if len(elem_val) < int(self.min_len):
 	    	raise errors.WEDI1Error, 'Element %s is too short - "%s" is len=%i' % (self.refdes,
-		    code, int(self.min_len))
-	    if len(code) > int(self.max_len):
+		    elem_val, int(self.min_len))
+	    if len(elem_val) > int(self.max_len):
 	    	raise errors.WEDI1Error, 'Element %s is too short - "%s" is len=%i' % (self.refdes,
-		    code, int(self.min_len))
+		    elem_val, int(self.min_len))
 
-	if code == None and self.usage == 'R':
+	if elem_val == None and self.usage == 'R':
 	    raise errors.WEDI3Error
-	if not (self.__valid_code__(code) or codes.IsValid(self.external_codes, code) ):
+	if not (self.__valid_code__(elem_val) or codes.IsValid(self.external_codes, elem_val) ):
 	    raise errors.WEDIError, "Not a valid code for this ID element"
-	if not IsValidDataType(code, self.data_type, 'E'):
-	    raise errors.WEDI1Error, "Invalid X12 datatype: '%s' is not a '%s'" % (code, self.data_type) 
+	if not IsValidDataType(elem_val, self.data_type, 'E'):
+	    raise errors.WEDI1Error, "Invalid X12 datatype: '%s' is not a '%s'" % (elem_val, self.data_type) 
 	return 1
 
 
@@ -719,6 +770,13 @@ class composite_if(x12_node):
 	self.path = ''
         self.base_name = 'composite'
 	self.base_level = reader.Depth()
+
+	#self.id = None
+	self.name = None
+	self.usage = None
+	self.req_des = None
+	self.seq= None
+	self.refdes = None
 
 	self.cur_level = reader.Depth()
 	
@@ -813,6 +871,19 @@ class composite_if(x12_node):
     	for sub_elem in self.children:
 	    sub_elem.validate()
 	return 1
+
+    def getnodebypath(self, path):
+    	pathl = path.split('/')
+	#if len(pathl) <= 1: return None
+    	#if self.id == pathl[1]:
+	#    return self
+	#print self.base_name, pathl[2]
+	if len(pathl) <=2: return None
+        for child in self.children:
+	    node = child.getnodebypath(pathl[2:])
+	    if node != None:
+	    	return node
+	return None
     
 
 ######################################################################
