@@ -158,7 +158,7 @@ def main():
         sys.exit(2)
     logger = logging.getLogger('pyx12')
     hdlr = logging.FileHandler('./run.log')
-    formatter = logging.Formatter('%(asctime)s %(levelname)s %(message)s')
+    formatter = logging.Formatter('%(asctime)s %(levelname)s %(filename)s %(module)s %(lineno)d %(message)s')
     hdlr.setFormatter(formatter)
     logger.addHandler(hdlr) 
     logger.setLevel(logging.DEBUG)

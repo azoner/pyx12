@@ -71,10 +71,15 @@ class walk_tree:
 
         if seg[0] == 'NM1':
             pdb.set_trace()
-        if node.is_loop() or node.is_map_root(): 
-            # print node.name, node.id
-            for child in node.children:
+            
+        # match next node in loop
+        if not (node.is_loop() or node.is_map_root()): 
+            node = self.pop_to_parent_loop(node)
+        node_idx = None
+        for child in node.children:
+            if child.index > node_idx:
                 if child.is_segment():
+                    node_idx = node.index
                     #print child.id
                     if child.is_match(seg):
                         if child.usage == 'N':
@@ -82,21 +87,27 @@ class walk_tree:
                         return child
                     elif child.usage == 'R':
                         raise WEDIError, "Required segment %s not found" % (child.id)
+                elif node.is_loop(): 
+                    logger.debug('map_walker: child_node id=%s' % (child.id))
+                    if self.is_first_seg_match(child, seg): 
+                        return child # Return the loop node
+                    else:
+                        logger.debug('map_walker: child_node id=%s is node a match' % (child.id))
      
         # Next segment in loop
-        node_idx = None
-        if node.is_segment(): 
-            node_idx = node.index
-            node = self.pop_to_parent_loop(node)
-            for child in node.children:
-                if child.is_segment() and child.index > node_idx:
-                    #print child.id, child.index, node_idx
-                    if child.is_match(seg):
-                        if child.usage == 'N':
-                            raise WEDIError, "Segment %s found but marked as not used" % (child.id)
-                        return child
-                    elif child.usage == 'R':
-                        raise WEDIError, "Required segment %s not found" % (child.id)
+#        node_idx = None
+#        if node.is_segment(): 
+#            node_idx = node.index
+#            node = self.pop_to_parent_loop(node)
+#            for child in node.children:
+#                if child.is_segment() and child.index > node_idx:
+#                    #print child.id, child.index, node_idx
+#                    if child.is_match(seg):
+#                        if child.usage == 'N':
+#                            raise WEDIError, "Segment %s found but marked as not used" % (child.id)
+#                        return child
+#                    elif child.usage == 'R':
+#                        raise WEDIError, "Required segment %s not found" % (child.id)
             
         # Child loop
         node = orig_node
