@@ -132,7 +132,6 @@ def main():
                     diff_txt = diff(fd_orig.name, fd_new.name)
                     sys.stdout.write('%s ... ' % (os.path.basename(src_filename)))
                     if diff_txt:
-                        print diff_txt
                         sys.stdout.write('FAIL\n')
                         for line in diff_txt.splitlines(True):
                             if '/tmp/' not in line:
