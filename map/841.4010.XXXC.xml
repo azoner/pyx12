@@ -333,33 +333,33 @@
         <usage>R</usage>
         <pos>020</pos>
         <repeat>&gt;1</repeat>
-          <segment xid="ST">
-            <name>Transaction Set Header</name>
+        <segment xid="ST">
+          <name>Transaction Set Header</name>
+          <usage>R</usage>
+          <pos>005</pos>
+          <max_use>1</max_use>
+          <element xid="ST01">
+            <data_ele>143</data_ele>
+            <name>Transaction Set Identifier Code</name>
             <usage>R</usage>
-            <pos>005</pos>
-            <max_use>1</max_use>
-            <element xid="ST01">
-              <data_ele>143</data_ele>
-              <name>Transaction Set Identifier Code</name>
-              <usage>R</usage>
-              <seq>01</seq>
-              <data_type>ID</data_type>
-              <min_len>3</min_len>
-              <max_len>3</max_len>
-              <valid_codes>
-                <code>841</code>
-              </valid_codes>
-            </element>
-            <element xid="ST02">
-              <data_ele>329</data_ele>
-              <name>Transaction Set Control Number</name>
-              <usage>R</usage>
-              <seq>02</seq>
-              <data_type>AN</data_type>
-              <min_len>4</min_len>
-              <max_len>9</max_len>
-            </element>
-          </segment>
+            <seq>01</seq>
+            <data_type>ID</data_type>
+            <min_len>3</min_len>
+            <max_len>3</max_len>
+            <valid_codes>
+              <code>841</code>
+            </valid_codes>
+          </element>
+          <element xid="ST02">
+            <data_ele>329</data_ele>
+            <name>Transaction Set Control Number</name>
+            <usage>R</usage>
+            <seq>02</seq>
+            <data_type>AN</data_type>
+            <min_len>4</min_len>
+            <max_len>9</max_len>
+          </element>
+        </segment>
 <!--End of ST segment-->
         <loop xid="HEADER" type="header">
           <name>Table 1 - Header</name>
@@ -989,30 +989,30 @@
           <repeat>1</repeat>
         </loop>
 <!--End of FOOTER loop-->
-          <segment xid="SE">
-            <name>Transaction Set Trailer</name>
+        <segment xid="SE">
+          <name>Transaction Set Trailer</name>
+          <usage>R</usage>
+          <pos>210</pos>
+          <max_use>1</max_use>
+          <element xid="SE01">
+            <data_ele>96</data_ele>
+            <name>Transaction Segment Count</name>
             <usage>R</usage>
-            <pos>210</pos>
-            <max_use>1</max_use>
-            <element xid="SE01">
-              <data_ele>96</data_ele>
-              <name>Transaction Segment Count</name>
-              <usage>R</usage>
-              <seq>01</seq>
-              <data_type>N0</data_type>
-              <min_len>1</min_len>
-              <max_len>10</max_len>
-            </element>
-            <element xid="SE02">
-              <data_ele>329</data_ele>
-              <name>Transaction Set Control Number</name>
-              <usage>R</usage>
-              <seq>02</seq>
-              <data_type>AN</data_type>
-              <min_len>4</min_len>
-              <max_len>9</max_len>
-            </element>
-          </segment>
+            <seq>01</seq>
+            <data_type>N0</data_type>
+            <min_len>1</min_len>
+            <max_len>10</max_len>
+          </element>
+          <element xid="SE02">
+            <data_ele>329</data_ele>
+            <name>Transaction Set Control Number</name>
+            <usage>R</usage>
+            <seq>02</seq>
+            <data_type>AN</data_type>
+            <min_len>4</min_len>
+            <max_len>9</max_len>
+          </element>
+        </segment>
 <!--End of SE segment-->
       </loop>
 <!--End of ST loop-->
