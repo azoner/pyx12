@@ -224,7 +224,8 @@ class x12file:
 
     def cleanup(self):
         if self.loops:
-            for (seg, id) in self.loops.reverse(): 
+            self.loops.reverse()
+            for (seg, id) in self.loops: 
                 if self.loops[-1][0] == 'ST':
                     err_str = 'ST id=%s was not closed with a SE' % (id)
                     self.errh.st_error('3', err_str)
@@ -240,19 +241,20 @@ class x12file:
                 #elif self.loops[-1][0] == 'LS':
                 #    err_str = 'LS id=%s was not closed with a LE' % (id, self.loops[-1][1])
                 #    self.errh.ls_error('3', err_str)
+            self.loops.reverse()
         
 
-    def get_id(self):
-        isa_id = None
-        gs_id = None
-        st_id = None
-        ls_id = None
-        for loop in self.loops:
-            if loop[0] == 'ISA': isa_id = loop[1]
-            if loop[0] == 'GS': gs_id = loop[1]
-            if loop[0] == 'ST': st_id = loop[1]
-            if loop[0] == 'LS': ls_id = loop[1]
-        return (isa_id, gs_id, st_id, ls_id, self.seg_count, self.cur_line)
+#    def get_id(self):
+#        isa_id = None
+#        gs_id = None
+#        st_id = None
+#        ls_id = None
+#        for loop in self.loops:
+#            if loop[0] == 'ISA': isa_id = loop[1]
+#            if loop[0] == 'GS': gs_id = loop[1]
+#            if loop[0] == 'ST': st_id = loop[1]
+#            if loop[0] == 'LS': ls_id = loop[1]
+#        return (isa_id, gs_id, st_id, ls_id, self.seg_count, self.cur_line)
 
     def get_isa_id(self): 
         isa_id = None
