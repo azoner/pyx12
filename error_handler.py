@@ -66,8 +66,15 @@ class err_handler:
         #self.x12_src = x12_src
         #(isa_id, gs_id, st_id, ls_id, seg_count, cur_line) = x12_src.get_id()
 
+        self.id = 'ROOT'
         #self.isa_loop_count = 0
         self.children = []
+        self.cur_node = self
+        self.cur_isa_node = None
+        self.cur_gs_node = None
+        self.cur_st_node = None
+        self.cur_seg_node = None
+        self.cur_ele_node = None
 
     def accept(self, visitor):
         """
@@ -78,67 +85,92 @@ class err_handler:
         """
         visitor.visit_root(self)
 
-    def add_node(self, obj):
-        if obj['id'] == 'ISA':
-            self.children.append(err_isa(obj))
-        else:
-            if len(self.children) != 0:
-                logger.debug(obj)
-                self.children[-1].add_node(obj)
-            
+    def get_id(self):
+        return self.id
+
     def add_isa_loop(self, seg, src):
-        # Are we on right node
-        node.children.append(err_isa(node, seg, src)
+        self.children.append(err_isa(self, seg, src))
+        self.cur_isa_node = self.children[-1]
         
     def add_gs_loop(self, seg, src):
-        # Are we on right node
-        node.children.append(err_gs(node, seg, src)
+        parent = self.cur_isa_node
+        parent.children.append(err_gs(parent, seg, src))
+        self.cur_gs_node = parent.children[-1]
         
     def add_st_loop(self, seg, src):
-        # Are we on right node
-        node.children.append(err_st(node, seg, src)
+        parent = self.cur_gs_node
+        parent.children.append(err_st(parent, seg, src))
+        self.cur_st_node = parent.children[-1]
         
     def add_seg(self, seg, src):
-        # Are we on right node
-        node.children.append(err_seg(node, seg, src)
+        parent = self.cur_st_node
+        if parent.children[-1].err_count() == 0:
+            del parent.children[-1]
+        parent.children.append(err_seg(parent, seg, src))
+        self.cur_seg_node = parent.children[-1]
         
-    def add_ele(self, seg, src):
-        # Are we on right node
-        node.children.append(err_ele(node, seg, src)
+    def add_ele(self, ele_pos, ele_ref_num, subele_pos=None):
+        parent = self.cur_seg_node
+        if parent.children[-1].err_count() == 0:
+            del parent.children[-1]
+        parent.children.append(err_ele(parent, ele_pos, ele_ref_num, subele_pos))
+        self.cur_ele_node = parent.children[-1]
         
-    def add_error(self, err):
-        self.children[-1].add_error(err)
+    def isa_error(self, err_cde, err_str):
+        self.cur_isa_node.add_error(err_cde, err_str)
+
+    def gs_error(self, err_cde, err_str):
+        self.cur_gs_node.add_error(err_cde, err_str)
+        
+    def st_error(self, err_cde, err_str):
+        self.cur_st_node.add_error(err_cde, err_str)
+        
+    def seg_error(self, err_cde, err_str):
+        self.cur_seg_node.add_error(err_cde, err_str)
+        
+    def ele_error(self, err_cde, err_str):
+        self.cur_ele_node.add_error(err_cde, err_str)
+        
+    def find_node(self, type):
+        """
+        Find the last node of a type
+        """
+        new_node = self.cur_node
+        node_order = {'ROOT': 1, 'ISA': 2, 'GS': 3, 'ST': 4, 'SEG': 5, 'ELE': 6}
+        while node_order[type] > new_node[new_node.get_id()]:
+            new_node = new_node.get_parent()
+        #walk error tree to find place to append
+        #if type == 'ISA':
+        #return node
 
     def update_node(self, obj):
         self.children[-1].update_node(obj)
 
+    def _get_last_child(self):
+        if len(self.children) != 0:
+            #logger.debug(obj)
+            return self.children[-1]
+        else:
+            return None
+    
          
 
 class err_node:
-    def __init__(self, parent, obj): 
+    def __init__(self, parent): 
         #obj = {'id': '', 'seg': seg, 'src_id': src.get_id()}
-        self.seg = obj['seg']
-        self.src_id =  obj['src_id']
-        (isa_id, gs_id, st_id, ls_id, seg_count, cur_line) = self.src_id
-        self.cur_line = cur_line
-        self.isa_id = isa_id
-        self.gs_id = gs_id
-        self.st_id = st_id
-        self.ls_id = ls_id
-        self.seg_count = seg_count
-        self.parent = parent
-        self.children = []
+#        self.seg = obj['seg']
+#        self.src_id =  obj['src_id']
+#        (isa_id, gs_id, st_id, ls_id, seg_count, cur_line) = self.src_id
+#        self.cur_line = cur_line
+#        self.isa_id = isa_id
+#        self.gs_id = gs_id
+#        self.st_id = st_id
+#        self.ls_id = ls_id
+#        self.seg_count = seg_count
         self.id = None
 
     def accept(self, visitor):
         pass
-        
-    def add_node(self, obj):
-        pass
-
-#    def add_seg_error(self):
-#        for child in children
-
         
     def add_error(self, err):
         pass
@@ -149,8 +181,15 @@ class err_node:
     def get_id(self):
         return self.id
 
-    def pop_to_parent(self):
+    def get_parent(self):
         return self.parent
+
+    def _get_last_child(self):
+        if len(self.children) != 0:
+            #logger.debug(obj)
+            return self.children[-1]
+        else:
+            return None
    
 
 class err_isa(err_node):
@@ -159,22 +198,26 @@ class err_isa(err_node):
     Desc:    Holds source ISA loop errors
     """
 
-    def __init__(self, obj):
+    def __init__(self, parent, seg, src):
         """
         Class:      err_isa
         Name:       __init__
         Desc:    
         Params:     x12_src - instance of x12file
         """
-        err_node.__init__(self, obj)
+        #err_node.__init__(self, obj)
 
-        if obj['id'] != 'ISA':
-            raise EngineError, 'err_isa.__init__', obj
+        self.seg = seg
+        (isa_id, gs_id, st_id, ls_id, seg_count, cur_line) = src.get_id()
+        self.isa_id = isa_id
+        self.cur_line = cur_line
         
         self.isa_trn_set_id = self.isa_id
         self.id = 'ISA'
 
-        self.err_cde = []
+        self.parent = parent
+        self.children = []
+        self.errors = []
 
     def accept(self, visitor):
         """
@@ -185,34 +228,14 @@ class err_isa(err_node):
         """
         visitor.visit_isa(self)
 
-    def add_node(self, obj):
-        """
-        Class:      err_isa
-        Name:       add_node
-        Desc:    
-        Params:     obj - map of passed variables
-        """
-        if obj['id'] == 'GS':
-            self.children.append(err_gs(obj))
-        else:
-            if len(self.children) != 0:
-                logger.debug(obj)
-                self.children[-1].add_node(obj)
-                
-
-    def add_error(self, err):
+    def add_error(self, err_cde, err_str):
         """
         Class:      err_isa
         Name:       add_error
         Desc:    
-        Params:     obj - map of passed variables
+        Params:     
         """
-        if err['id'] == 'ISA':
-            err_cde = err['code']
-            err_str = err['str']
-            self.err_cde.append([err_cde, err_str])
-        else:
-            self.children[-1].add_error(err)
+        self.errors.append((err_cde, err_str))
             
     def update_node(self, obj):
         """
@@ -237,19 +260,19 @@ class err_gs(err_node):
     Desc:    Holds source GS loop information
     """
 
-    def __init__(self, obj):
+    def __init__(self, parent, seg, src):
         """
         Class:  err_gs
         Name:   __init__
         Desc:    
         Params: fic - Functional Identifier Code (GS01)
         """
-        err_node.__init__(self, obj)
-
-        if obj['id'] != 'GS':
-            raise EngineError, 'err_gs.__init__', obj
+        self.seg = seg
+        (isa_id, gs_id, st_id, ls_id, seg_count, cur_line) = src.get_id()
+        self.isa_id = isa_id
+        self.cur_line = cur_line
         
-        self.gs_control_num = self.gs_id
+        self.gs_control_num = gs_id
         self.fic = self.seg[1]
         self.id = 'GS'
         
@@ -261,7 +284,9 @@ class err_gs(err_node):
         self.st_count_recv = None # AK903
         self.st_count_accept = None # AK904
 
-        self.gs_errors = [] # AK905-9
+        self.parent = parent
+        self.children = []
+        self.errors = []
 
     def accept(self, visitor):
         """
@@ -272,33 +297,14 @@ class err_gs(err_node):
         """
         visitor.visit_gs(self)
 
-    def add_node(self, obj):
-        """
-        Class:      err_gs
-        Name:       add_node
-        Desc:    
-        Params:     obj - node object information
-        """
-        if obj['id'] == 'ST':
-            self.st_loops.append(err_st(obj))
-        else:
-            if len(self.st_loops) != 0:
-                logger.debug(obj)
-                self.st_loops[-1].add_node(obj)
-
-    def add_error(self, err):
+    def add_error(self, err_cde, err_str):
         """
         Class:      err_gs
         Name:       add_error
         Desc:    
         Params:     err - node error information
         """
-        if err['id'] == 'GS':
-            err_cde = err['code']
-            err_str = err['str']
-            self.gs_errors.append([err_cde, err_str])
-        else:
-            self.st_loops[-1].add_error(err)
+        self.errors.append((err_cde, err_str))
 
     def update_node(self, obj):
         """
@@ -317,12 +323,12 @@ class err_gs(err_node):
             self.ge_cur_line = cur_line
             
             # AK901
-            if '1' in self.gs_errors: self.ack_code = 'R'
-            elif '2' in self.gs_errors: self.ack_code = 'R'
-            elif '3' in self.gs_errors: self.ack_code = 'R'
-            elif '4' in self.gs_errors: self.ack_code = 'R'
-            elif '5' in self.gs_errors: self.ack_code = 'E'
-            elif '6' in self.gs_errors: self.ack_code = 'E'
+            if '1' in self.errors: self.ack_code = 'R'
+            elif '2' in self.errors: self.ack_code = 'R'
+            elif '3' in self.errors: self.ack_code = 'R'
+            elif '4' in self.errors: self.ack_code = 'R'
+            elif '5' in self.errors: self.ack_code = 'E'
+            elif '6' in self.errors: self.ack_code = 'E'
             else: self.ack_code = 'A'
             #if st rejected, set A = P
 
@@ -349,24 +355,21 @@ class err_st(err_node):
         
     """
 
-    def __init__(self, obj):
+    def __init__(self, parent, seg, src):
         """
         Class:  err_st
         Name:   __init__
         Desc:    
         Params: 
         """
-        err_node.__init__(self, obj)
-
-        if obj['id'] != 'ST':
-            raise EngineError, 'err_st.__init__', obj
-        
         self.trn_set_control_num = self.st_id
         self.id = 'ST'
 
         # Must be set before repr
-        self.ack_code = None # AK501
-        self.err_cde = [] # AK502-6
+        self.ack_code = None 
+        self.parent = parent
+        self.children = []
+        self.errors = []
 
 
     def accept(self, visitor):
@@ -378,35 +381,14 @@ class err_st(err_node):
         """
         visitor.visit_st(self)
 
-    def add_node(self, obj):
-        """
-        Class:      err_st
-        Name:       add_node
-        Desc:    
-        Params:     obj - node object information
-        """
-        if self.children:
-            if self.children[-1].err_count() == 0:
-                del self.children[-1]
-        if obj['id'] == 'SEG':
-            self.children.append(err_seg(obj))
-        else:
-            if len(self.children) != 0:
-                logger.debug(obj)
-                self.children[-1].add_node(obj)
-
-    def add_error(self, err):
+    def add_error(self, err_cde, err_str):
         """
         Class:      err_st
         Name:       add_error
         Desc:    
-        Params:     err - node error information
+        Params:     
         """
-        if err['id'] == 'ST':
-            pass
-            #add error info
-        else:
-            self.children[-1].add_error(err)
+        self.errors.append((err_cde, err_str))
  
     def update_node(self, obj):
         """
@@ -426,7 +408,7 @@ class err_seg(err_node):
     Name:    err_seg
     Desc:    Segment Errors
     """
-    def __init__(self, obj):
+    def __init__(self, parent, seg, src):
         """
         Class:  err_seg
         Name:   __init__
@@ -439,20 +421,18 @@ class err_seg(err_node):
             name?
             seg_count - in parent
 
-            st_errors:
+            errors:
                 
         """
-        err_node.__init__(self, obj)
-
-        if obj['id'] != 'SEG':
-            raise EngineError, 'err_seg.__init__', obj
         self.seg_id_code = self.seg[0]
         self.seg_pos = self.seg_count
         self.loop_id = self.ls_id
         self.id = 'SEG'
         #self.seg_error_code = seg_error_code
         
-        self.st_errors = []
+        self.parent = parent
+        self.children = []
+        self.errors = []
 
     def accept(self, visitor):
         """
@@ -463,35 +443,14 @@ class err_seg(err_node):
         """
         visitor.visit_seg(self)
 
-    def add_node(self, obj):
-        """
-        Class:      err_seg
-        Name:       add_node
-        Desc:    
-        Params:     obj - node object information
-        """
-        # If last element added does not have any errors by now, delete
-        if self.children:
-            if self.children[-1].err_count() == 0:
-                del self.children[-1]
-        if obj['id'] == 'ELE':
-            self.children.append(err_ele(obj))
-        else:
-            #self.children[-1].add_node(obj)
-            raise EngineError, 'add_node - unhandled add', obj
-
-    def add_error(self, err):
+    def add_error(self, err_cde, err_str):
         """
         Class:      err_seg
         Name:       add_error
         Desc:    
         Params:     err - node error information
         """
-        if err['id'] == 'SEG':
-            self.st_errors.append((err['code'], err['value'], err['seq'], \
-                err['data_ele'], err['str']))
-        else:
-            self.children[-1].add_error(err)
+        self.errors.append((err_cde, err_str))
         
     def err_count(self):
         """
@@ -505,7 +464,7 @@ class err_seg(err_node):
             if ele.err_count() > 0:
                 ele_err_ct = 1
                 break
-        return len(self.st_errors) + ele_err_ct
+        return len(self.errors) + ele_err_ct
 
 class err_ele(err_node):
     """
@@ -519,31 +478,28 @@ class err_ele(err_node):
             element reference number
             element name?
             
-            self.ele_errors:
+            self.errors:
                 error code
                 error string
                 bad value - if available
             
     """
-    def __init__(self, obj): 
+    def __init__(self, parent, ele_pos, ele_ref_num, subele_pos=None):
         """
         Class:      err_ele
         Name:       __init__
         Desc:    
-        Params:     obj
+        Params:     
         """
-        #err_node.__init__(self, obj)
-
-        if obj['id'] != 'ELE':
-            raise EngineError, 'err_ele.__init__', obj
-
         self.ele_pos = obj['ele_pos']
         self.subele_pos = obj['subele_pos']
         self.ele_ref_num = obj['ele_ref_num']
         #self.bad_val = bad_val
         self.id = 'ELE'
 
-        self.ele_errors = []
+        self.parent = parent
+        self.children = []
+        self.errors = []
 
     def accept(self, visitor):
         """
@@ -554,28 +510,14 @@ class err_ele(err_node):
         """
         visitor.visit_ele(self)
 
-#    def add_node(self, obj):
-#        """
-#        Class:      err_ele
-#        Name:       add_node
-#        Desc:    
-#        Params:     obj - node object information
-#        """
-#        pass
-#        raise EngineError, 'add_node - unhandled add', obj
-        
-    def add_error(self, err):
+    def add_error(self, err_cde, err_str, bad_value):
         """
         Class:      err_ele
         Name:       add_error
         Desc:    
-        Params:     err - node error information
+        Params:     
         """
-        #self.ele_err_code = ele_err_code
-        if err['id'] == 'ELE':
-            self.ele_errors.append((err['code'], err['value'], err['str']))            
-        else:
-            raise EngineError, 'add_error - unhandled error', err
+        self.errors.append((err_cde, err_str, bad_value))
         
     def err_count(self):
-        return len(self.ele_errors)
+        return len(self.errors)
