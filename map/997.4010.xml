@@ -127,9 +127,6 @@
       <data_type>DT</data_type>
       <min_len>6</min_len>
       <max_len>6</max_len>
-      <valid_codes>
-        
-      </valid_codes>
     </element>
     <element>
       <data_ele>I09</data_ele>
@@ -244,6 +241,7 @@
         <code>RA</code>
         <code>HN</code>
         <code>HR</code>
+        <code>FA</code>
       </valid_codes>
     </element>
     <element>
@@ -275,9 +273,6 @@
       <data_type>DT</data_type>
       <min_len>8</min_len>
       <max_len>8</max_len>
-      <valid_codes>
-        
-      </valid_codes>
     </element>
     <element>
       <data_ele>337</data_ele>
@@ -288,9 +283,6 @@
       <data_type>TM</data_type>
       <min_len>4</min_len>
       <max_len>8</max_len>
-      <valid_codes>
-        
-      </valid_codes>
     </element>
     <element>
       <data_ele>28</data_ele>
@@ -325,6 +317,7 @@
       <min_len>1</min_len>
       <max_len>12</max_len>
       <valid_codes>
+        <code>004010</code>
         <code>004010X061</code>
         <code>004010X091</code>
         <code>004010X092</code>
