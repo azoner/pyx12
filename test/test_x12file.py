@@ -349,6 +349,53 @@ class HL_Checks(unittest.TestCase):
         self.assertEqual(self.errh.err_cde, 'HL1', self.errh.err_str)
 
 
+class Formatting(unittest.TestCase):
+
+    def setUp(self):
+        self.errh = pyx12.error_handler.errh_null()
+
+    def test_identity(self):
+        str = 'ISA*00*          *00*          *ZZ*ZZ000          *ZZ*ZZ001          *030828*1128*U*00401*000010121*0*T*:~\n'
+#        str += 'GS*HC*ZZ000*ZZ001*20030828*1128*17*X*004010X098~\n'
+#        str += 'ST*837*11280001~\n'
+#        str += 'HL*1**20*1~\n'
+#        str += 'HL*2*1*22*1~\n'
+#        str += 'HL*3*2*23*1~\n'
+#        str += 'HL*4*1*22*1~\n'
+#        str += 'SE*6*11280001~\n'
+#        str += 'GE*1*17~\n'
+        str += 'IEA*1*000010121~\n'
+        fd = tempfile.NamedTemporaryFile()
+        fd.write(str)
+        fd.seek(0)
+        src = pyx12.x12file.x12file(fd.name, self.errh)
+        str_out = ''
+        for seg in src:
+            str_out += src.format_seg(seg)
+        self.assertEqual(str, str_out)
+
+    def test_strip_eol(self):
+        str = 'ISA*00*          *00*          *ZZ*ZZ000          *ZZ*ZZ001          *030828*1128*U*00401*000010121*0*T*:~\n'
+#        str += 'GS*HC*ZZ000*ZZ001*20030828*1128*17*X*004010X098~\n'
+#        str += 'ST*837*11280001~\n'
+#        str += 'HL*1**20*1~\n'
+#        str += 'HL*2*1*22*1~\n'
+#        str += 'HL*3*2*23*1~\n'
+#        str += 'HL*4*1*22*1~\n'
+#        str += 'SE*6*11280001~\n'
+#        str += 'GE*1*17~\n'
+        str += 'IEA*1*000010121~\n'
+        fd = tempfile.NamedTemporaryFile()
+        fd.write(str)
+        fd.seek(0)
+        src = pyx12.x12file.x12file(fd.name, self.errh)
+        str_out = ''
+        for seg in src:
+            str_out += src.format_seg(seg, eol='')
+        str = str.replace('\n', '')
+        self.assertEqual(str, str_out)
+ 
+
 def suite():
     suite = unittest.TestSuite()
     suite.addTest(unittest.makeSuite(Delimiters))
@@ -357,6 +404,7 @@ def suite():
     suite.addTest(unittest.makeSuite(GE_Checks))
     suite.addTest(unittest.makeSuite(SE_Checks))
     suite.addTest(unittest.makeSuite(HL_Checks))
+    suite.addTest(unittest.makeSuite(Formatting))
     return suite
 
 #if __name__ == "__main__":

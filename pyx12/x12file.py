@@ -307,21 +307,11 @@ class x12file:
 
     def get_cur_line(self): return self.cur_line
 
-    def print_seg(self, seg):
-        sys.stdout.write('%s' % (self.seg_str(seg, self.seg_term, self.ele_term, self.subele_term, '\n')))
-
-    def format_seg(self, seg):
-        return '%s' % (self.seg_str(seg, self.seg_term, self.ele_term, self.subele_term, '\n'))
-
     def get_term(self):
         return (self.seg_term, self.ele_term, self.subele_term, '\n')
 
-    def seg_str(self, seg, seg_term, ele_term, subele_term, eol=''):
-        tmp = []
-        for a in seg:
-            if type(a) is ListType:
-                tmp.append(string.join(a, subele_term))
-            else:
-                tmp.append(a)
-        return '%s%s%s' % (string.join(tmp, ele_term), seg_term, eol)
+    def format_seg(self, seg, eol='\n'):
+        return '%s' % (self.seg_str(seg, self.seg_term, self.ele_term, self.subele_term, eol))
 
+    def seg_str(self, seg, seg_term, ele_term, subele_term, eol=''):
+        return seg.format(seg_term, ele_term, subele_term) + eol
