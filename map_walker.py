@@ -58,6 +58,8 @@ class walk_tree:
         Handle required segment/loop missed (not found in seg)
         Handle found segment = Not used
         """
+
+        logger = logging.getLogger('pyx12')
         orig_node = node
 
         # Repeat of current segment
