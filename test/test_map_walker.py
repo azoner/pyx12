@@ -44,8 +44,10 @@ class Explicit_Loops(unittest.TestCase):
 
     def test_SE_to_GE(self):
         node = self.map.getnodebypath('/SE')
+        node.cur_count = 1 # HACK
         seg = pyx12.segment.segment('GE*1', '~', '*', ':')
         node = self.walker.walk(node, seg, self.errh, 5, 4, None)
+        self.assertNotEqual(node, None)
         self.assertEqual(seg.get_seg_id(), node.id)
 
     def test_GE_to_GS(self):
