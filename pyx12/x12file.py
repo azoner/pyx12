@@ -248,5 +248,8 @@ class x12file:
     def print_seg(self, seg):
         sys.stdout.write('%s' % (seg_str(seg, self.seg_term, self.ele_term, self.subele_term, '\n')))
 
+    def format_seg(self, seg):
+        return '%s' % (seg_str(seg, self.seg_term, self.ele_term, self.subele_term, '\n'))
+
     def get_term(self):
         return (self.seg_term, self.ele_term, self.subele_term, '\n')
