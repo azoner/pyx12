@@ -32,8 +32,8 @@
 
 
 """
-Visitor - Visits an error_handler composite
 Generates a 997 Response
+Visitor - Visits an error_handler composite
 """
 
 #import os
@@ -58,6 +58,7 @@ logger.setLevel(logging.DEBUG)
 
 class error_997_visitor(error_visitor.error_visitor):
     """
+    Visit an error_handler composite.  Generate a 997.
     """
     def __init__(self, fd, term=('~', '*', '~', '\n')): 
         """
@@ -80,7 +81,8 @@ class error_997_visitor(error_visitor.error_visitor):
 
     def visit_root_pre(self, errh):
         """
-        Params:     errh - error_handler instance
+        @param errh: Error handler
+        @type errh: L{error_handler.err_handler}
         """
         #now = time.localtime()
         seg = errh.cur_isa_node.seg_data
@@ -158,7 +160,8 @@ class error_997_visitor(error_visitor.error_visitor):
 
     def visit_root_post(self, errh):
         """
-        Params:     errh - error_handler instance
+        @param errh: Error handler
+        @type errh: L{error_handler.err_handler}
         """
         self._write(pyx12.segment.segment('GE*%i*%s' % (self.st_loop_count, \
             self.gs_seg[5].get_value()), '~', '*', ':'))
@@ -170,17 +173,20 @@ class error_997_visitor(error_visitor.error_visitor):
         
     def visit_isa_pre(self, err_isa):
         """
-        Params:     err_isa - error_isa instance
+        @param err_isa: ISA Loop error handler
+        @type err_isa: L{error_handler.err_isa}
         """
 
     def visit_isa_post(self, err_isa):
         """
-        Params:     err_isa - error_isa instance
+        @param err_isa: ISA Loop error handler
+        @type err_isa: L{error_handler.err_isa}
         """
 
     def visit_gs_pre(self, err_gs): 
         """
-        Params:     err_gs - error_gs instance
+        @param err_gs: GS Loop error handler
+        @type err_gs: L{error_handler.err_gs}
         """
         #ST
         self.st_control_num += 1
@@ -201,7 +207,8 @@ class error_997_visitor(error_visitor.error_visitor):
  
     def visit_gs_post(self, err_gs): 
         """
-        Params:     err_gs - error_gs instance
+        @param err_gs: GS Loop error handler
+        @type err_gs: L{error_handler.err_gs}
         """
         if not (err_gs.ack_code and err_gs.st_count_orig and \
             err_gs.st_count_recv):
@@ -246,7 +253,8 @@ class error_997_visitor(error_visitor.error_visitor):
 
     def visit_st_pre(self, err_st):
         """
-        Params:     err_st - error_st instance
+        @param err_st: ST Loop error handler
+        @type err_st: L{error_handler.err_st}
         """
         seg_data = pyx12.segment.segment('AK2', '~', '*', ':')
         seg_data.append(err_st.trn_set_id)
@@ -255,7 +263,8 @@ class error_997_visitor(error_visitor.error_visitor):
         
     def visit_st_post(self, err_st):
         """
-        Params:     err_st - error_st instance
+        @param err_st: ST Loop error handler
+        @type err_st: L{error_handler.err_st}
         """
         if err_st.ack_code is None:
             raise EngineError, 'err_st.ack_cde variable not set'
@@ -278,7 +287,8 @@ class error_997_visitor(error_visitor.error_visitor):
 
     def visit_seg(self, err_seg):
         """
-        Params:     err_seg - error_seg instance
+        @param err_seg: Segment error handler
+        @type err_seg: L{error_handler.err_seg}
         """
         #logger.debug('visit_deg: AK3 - ')
         #seg_base = ['AK3', err_seg.seg_id, '%i' % err_seg.seg_count]
@@ -301,7 +311,8 @@ class error_997_visitor(error_visitor.error_visitor):
         
     def visit_ele(self, err_ele): 
         """
-        Params:     err_ele - error_ele instance
+        @param err_ele: Segment error handler
+        @type err_ele: L{error_handler.err_ele}
         """
         seg_base = pyx12.segment.segment('AK4', '~', '*', ':')
         if err_ele.subele_pos: 
@@ -322,7 +333,9 @@ class error_997_visitor(error_visitor.error_visitor):
 
     def _write(self, seg_data):
         """
-        Params:     seg_data - data segment instance
+        Params:     seg_data - 
+        @param seg_data: Data segment instance
+        @type seg_data: L{segment.segment}
         """
         self.fd.write('%s\n' % (seg_data.format(self.seg_term, self.ele_term, \
             self.subele_term)))

@@ -59,6 +59,10 @@ logger = logging.getLogger('pyx12.error_handler')
 
 class err_iter:
     def __init__(self, errh):
+        """
+        @param errh: Error_handler instance
+        @type errh: L{error_handler.err_handler}
+        """
         self.errh = errh
         self.cur_node = errh
         #self.done = False
@@ -134,15 +138,9 @@ class err_iter:
 
 class err_handler:
     """
-    Name:   err_handler
-    Desc:   
     """
     def __init__(self):
         """
-        Name:   __init__
-        Desc:    
-        Params: 
-        Note:      
         """
 
         self.id = 'ROOT'
@@ -168,6 +166,8 @@ class err_handler:
 
     def get_cur_line(self):
         """
+        @return: Current file line number
+        @rtype: int
         """
         return self.cur_line
 
@@ -377,6 +377,9 @@ class err_handler:
             yield child
 
     def is_closed(self):
+        """
+        @rtype: boolean
+        """
         return True
             
     def __repr__(self):
@@ -405,6 +408,8 @@ class err_node:
 
     def get_cur_line(self):
         """
+        @return: Current file line number
+        @rtype: int
         """
         return self.cur_line
 
@@ -462,6 +467,7 @@ class err_node:
     
     def is_closed(self):
         """
+        @rtype: boolean
         """
         return True
 
@@ -472,7 +478,10 @@ class err_isa(err_node):
 
     def __init__(self, parent, seg_data, src):
         """
-        Params:     x12_src - instance of x12file
+        @param seg_data: Segment object
+        @type seg_data: L{segment<segment.segment>}
+        @param src: x12file source
+        @type src: L{x12file<x12file.x12file>}
         """
         self.seg_data = seg_data
         self.isa_id = src.get_isa_id()
@@ -491,6 +500,9 @@ class err_isa(err_node):
         self.elements = []
 
     def is_closed(self):
+        """
+        @rtype: boolean
+        """
         if self.cur_line_iea:
             return True
         else:
@@ -515,6 +527,8 @@ class err_isa(err_node):
 
     def get_cur_line(self):
         """
+        @return: Current file line number
+        @rtype: int
         """
         if self.cur_line_iea:
             return self.cur_line_iea
@@ -563,7 +577,11 @@ class err_gs(err_node):
 
     def __init__(self, parent, seg_data, src):
         """
-        Params: fic - Functional Identifier Code (GS01)
+        @param seg_data: Segment object
+        @type seg_data: L{segment<segment.segment>}
+        @param src: x12file source
+        @type src: L{x12file<x12file.x12file>}
+
         """
         self.seg_data = seg_data
         self.isa_id = src.get_isa_id()
@@ -640,6 +658,8 @@ class err_gs(err_node):
 
     def get_cur_line(self):
         """
+        @return: Current file line number
+        @rtype: int
         """
         if self.cur_line_ge:
             return self.cur_line_ge
@@ -665,6 +685,9 @@ class err_gs(err_node):
             return []
    
     def is_closed(self):
+        """
+        @rtype: boolean
+        """
         if self.cur_line_ge:
             return True
         else:
@@ -694,6 +717,10 @@ class err_st(err_node):
 
     def __init__(self, parent, seg_data, src):
         """
+        @param seg_data: Segment object
+        @type seg_data: L{segment<segment.segment>}
+        @param src: x12file source
+        @type src: L{x12file<x12file.x12file>}
         """
         self.seg_data = seg_data
         self.trn_set_control_num = src.get_st_id()
@@ -763,6 +790,8 @@ class err_st(err_node):
        
     def get_cur_line(self):
         """
+        @return: Current file line number
+        @rtype: int
         """
         if self.cur_line_se:
             return self.cur_line_se
@@ -770,6 +799,9 @@ class err_st(err_node):
             return self.cur_line_st
 
     def is_closed(self):
+        """
+        @rtype: boolean
+        """
         if self.cur_line_se:
             return True
         else:
@@ -917,11 +949,10 @@ class ErrorErrhNull(Exception):
 
 class errh_null:
     """
+    A null error object - used for testing.
+    Stores the current error in simple variables.
     """
     def __init__(self):
-        """
-        """
-
         self.id = 'ROOT'
         #self.children = []
         self.cur_node = self
@@ -937,11 +968,15 @@ class errh_null:
 
     def get_cur_line(self):
         """
+        @return: Current file line number
+        @rtype: int
         """
         return self.cur_line
 
     def get_id(self):
         """
+        @return: Error node type
+        @rtype: string
         """
         return self.id
 
@@ -1047,6 +1082,7 @@ class errh_null:
 
     def is_closed(self):
         """
+        @rtype: boolean
         """
         return True
             

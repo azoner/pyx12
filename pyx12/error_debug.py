@@ -35,6 +35,7 @@
 
 
 """
+Generates error debug output
 Visitor - Visits an error_handler composite
 """
 
@@ -50,19 +51,14 @@ from errors import *
 from utils import seg_str
 from error_visitor import error_visitor
 
-__author__  = "John Holland <jholland@kazoocmh.org> <john@zoner.org>"
-
 class error_debug_visitor(error_visitor):
     """
-    Class:      error_debug_visitor
-    Desc:    
+    
     """
     def __init__(self, fd):
         """
-        Class:      error_debug_visitor
-        Name:       __init__
-        Desc:    
-        Params:     self.fd - target file
+        @param fd: target file
+        @type fd: file descriptor
         """
         self.fd = fd
         self.seg_count = 0
@@ -70,28 +66,22 @@ class error_debug_visitor(error_visitor):
 
     def visit_root_pre(self, errh):
         """
-        Class:      error_debug_visitor 
-        Name:       visit_root_pre
-        Desc:    
-        Params:     errh - error_handler instance
+        @param errh: Error_handler instance
+        @type errh: L{error_handler.err_handler}
         """
         self.fd.write('%s\n' % errh.id)
         
     def visit_root_post(self, errh):
         """
-        Class:      error_debug_visitor 
-        Name:       visit_root_post
-        Desc:    
-        Params:     errh - error_handler instance
+        @param errh: Error_handler instance
+        @type errh: L{error_handler.err_handler}
         """
         pass
         
     def visit_isa_pre(self, err_isa):
         """
-        Class:      error_debug_visitor
-        Name:       visit_isa_pre
-        Desc:    
-        Params:     err_isa - error_isa instance
+        @param err_isa: ISA Loop error handler
+        @type err_isa: L{error_handler.err_isa}
         """
         self.fd.write('%s\n' % err_isa.id)
         self.fd.write('-- ISA errors --\n')
@@ -103,19 +93,15 @@ class error_debug_visitor(error_visitor):
 
     def visit_isa_post(self, err_isa):
         """
-        Class:      error_debug_visitor
-        Name:       visit_isa_post
-        Desc:    
-        Params:     err_isa - error_isa instance
+        @param err_isa: ISA Loop error handler
+        @type err_isa: L{error_handler.err_isa}
         """
         pass
 
     def visit_gs_pre(self, err_gs): 
         """
-        Class:      error_debug_visitor 
-        Name:       visit_gs_pre
-        Desc:    
-        Params:     err_gs - error_gs instance
+        @param err_gs: GS Loop error handler
+        @type err_gs: L{error_handler.err_gs}
         """
         self.fd.write('%s\n' % err_gs.id)
         self.fd.write('-- GS errors --\n')
@@ -126,10 +112,8 @@ class error_debug_visitor(error_visitor):
 
     def visit_gs_post(self, err_gs): 
         """
-        Class:      error_debug_visitor 
-        Name:       visit_gs_post
-        Desc:    
-        Params:     err_gs - error_gs instance
+        @param err_gs: GS Loop error handler
+        @type err_gs: L{error_handler.err_gs}
         """
 
         self.fd.write('%s POST\n' % err_gs.id)
@@ -143,10 +127,8 @@ class error_debug_visitor(error_visitor):
 
     def visit_st_pre(self, err_st):
         """
-        Class:      error_debug_visitor
-        Name:       visit_st_pre
-        Desc:    
-        Params:     err_st - error_st instance
+        @param err_st: ST Loop error handler
+        @type err_st: L{error_handler.err_st}
         """
         self.fd.write('%s\n' % err_st.id)
         self.fd.write('-- ST errors --\n')
@@ -157,19 +139,15 @@ class error_debug_visitor(error_visitor):
         
     def visit_st_post(self, err_st):
         """
-        Class:      error_debug_visitor
-        Name:       visit_st_post
-        Desc:    
-        Params:     err_st - error_st instance
+        @param err_st: ST Loop error handler
+        @type err_st: L{error_handler.err_st}
         """
         pass
 
     def visit_seg(self, err_seg):
         """
-        Class:      error_debug_visitor
-        Name:       visit_seg
-        Desc:    
-        Params:     err_seg - error_seg instance
+        @param err_seg: Segment error handler
+        @type err_seg: L{error_handler.err_seg}
         """
         #pdb.set_trace()
         self.fd.write('%s %s %s %s\n' % (err_seg.id, err_seg.name, err_seg.get_cur_line(), err_seg.seg_id))
@@ -180,10 +158,9 @@ class error_debug_visitor(error_visitor):
 
     def visit_ele(self, err_ele): 
         """
-        Class:      error_debug_visitor
-        Name:       visit_ele
-        Desc:    
         Params:     err_ele - error_ele instance
+        @param err_ele: Element error handler
+        @type err_ele: L{error_handler.err_ele}
         """
         self.fd.write('  %s %s\n' % (err_ele.id, err_ele.name))
         for err in err_ele.errors:

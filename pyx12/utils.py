@@ -40,20 +40,6 @@ import pdb
 # Intrapackage imports
 import errors
 
-
-class Indent:
-    def __init__(self):
-        self.tab = 2 # number of spaces in a tab
-        self.tabs = 0 # current tabs
-    def incr(self):
-        self.tabs = self.tabs + 1
-    def decr(self):
-        self.tabs = max(self.tabs - 1, 0)
-
-    def indent(self):
-        print ' ' * (self.tab * self.tabs)
-        return ' ' * (self.tab * self.tabs)
-
 class IsValidError(Exception): pass
 
 
@@ -165,6 +151,21 @@ def IsValidDataType(str_val, data_type, charset = 'B'):
     return True
 
 def seg_str(seg, seg_term, ele_term, subele_term, eol=''):
+    """
+    Join a list of elements
+    @param seg: List of elements
+    @type seg_term: list[string|list[string]]
+    @param seg_term: Segment terminator character
+    @type seg_term: string
+    @param ele_term: Element terminator character
+    @type ele_term: string
+    @param subele_term: Sub-element terminator character
+    @type subele_term: string
+    @param eol: End of line character
+    @type eol: string
+    @return: formatted segment
+    @rtype: string
+    """
     #if None in seg:
     #    logger.debug(seg)
     tmp = []
@@ -176,6 +177,12 @@ def seg_str(seg, seg_term, ele_term, subele_term, eol=''):
     return '%s%s%s' % (string.join(tmp, ele_term), seg_term, eol)
 
 def escape_html_chars(str_val):
+    """
+    Escape special HTML characters (& <>)
+    @type str_val: string
+    @return: formatted string
+    @rtype: string
+    """
     if str_val is None: 
         return None
     output = str_val
