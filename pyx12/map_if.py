@@ -1276,13 +1276,14 @@ def load_map_file(map_file, param):
             logger.debug('Create map from %s' % (map_full))
             map = map_if(map_file, param)
         except:
-            raise errors.EngineError, 'Load of map file failed: %s' % (map_file)
-        try:
+            raise errors.EngineError, 'Load of map file failed: %s%s' % \
+                (param.get_param('map_path'), map_file)
+        #try:
             #pdb.set_trace()
-            cPickle.dump(map, open(pickle_file,'w'))
-        except:
-            logger.debug('Pickle of map %s failed' % (map_file))
-            os.remove(pickle_file)
+        #    cPickle.dump(map, open(pickle_file,'w'))
+        #except:
+        #    logger.debug('Pickle of map %s failed' % (map_file))
+            #os.remove(pickle_file)
             #raise
     return map
 
