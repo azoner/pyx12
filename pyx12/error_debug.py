@@ -16,11 +16,11 @@ Visitor - Visits an error_handler composite
 """
 
 #import os
-import sys
-import string
+#import sys
+#import string
 from types import *
 #import time
-import pdb
+#import pdb
 
 # Intrapackage imports
 from errors import *
