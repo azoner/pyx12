@@ -661,6 +661,11 @@ class segment_if(x12_node):
                 #logger.debug('is_match: %s %s' % (seg[0], seg[1]), self.children[0].valid_codes)
                 #pdb.set_trace()
                 return False
+            elif self.children[0].is_composite() \
+                and self.children[0].children[0].data_type == 'ID' \
+                and len(self.children[0].children[0].valid_codes) > 0 \
+                and seg[1][0] not in self.children[0].children[0].valid_codes:
+                return False
             elif seg[0] == 'HL' and self.children[2].is_element() \
                 and len(self.children[2].valid_codes) > 0 \
                 and seg[3] not in self.children[2].valid_codes:
