@@ -110,8 +110,6 @@ def main():
             head, tail = name[:-4], name[-4:]
             if tail == '.txt':
                 try:
-                    sys.stdout.write('\n' + ('=' * 60))
-                    sys.stdout.write('\nChecking: %s\n' % (os.path.basename(src_filename)))
                     if flag_997:
                         if os.path.splitext(src_filename)[1] == '.997':
                             target_997 = src_filename + '.997'
@@ -153,6 +151,8 @@ def main():
 
                     diff_txt = diff(fd_orig.name, fd_new.name)
                     if diff:
+                        sys.stdout.write('\n' + ('=' * 10))
+                        sys.stdout.write(' Checking: %s\n' % (os.path.basename(src_filename)))
                         for line in diff_txt.splitlines(True):
                             if '/tmp/' not in line:
                                 sys.stdout.write(line)
