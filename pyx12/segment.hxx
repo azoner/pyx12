@@ -36,13 +36,13 @@ namespace Pyx12 {
     public:
         element(const string& ele_str);
         size_t length();
-        ostream& operator<<(ostream&);
         string format();
         string get_value();
         void set_value(string ele_str);
         bool is_composite();
         bool is_element();
         bool is_empty();
+        friend ostream & operator << (ostream & out, Pyx12::element & e);
     };
 
 
@@ -57,7 +57,6 @@ namespace Pyx12 {
         element& operator[](size_t);
         const element& operator[](size_t) const;
         size_t length();
-        ostream& operator<<(ostream&);
         string format();
         string format(const string& subele_term_);
         string get_value();
@@ -65,8 +64,9 @@ namespace Pyx12 {
         bool is_composite();
         bool is_element();
         bool is_empty();
-        bool not_delim(char c);
-        bool delim(char c);
+        friend ostream & operator << (ostream & out, Pyx12::composite & c);
+//        bool not_delim(char c);
+//        bool delim(char c);
     };
 
 
@@ -98,10 +98,23 @@ namespace Pyx12 {
         string format(const string& seg_term_, const string& ele_term_, const string& subele_term_);
         vector<string> format_ele_list(vector<string> str_elems, const string& subele_term_);
         bool is_empty();
-        bool not_delim(char c);
-        bool delim(char c);
+//        bool not_delim(char c);
+//        bool delim(char c);
 
-        ostream& operator<<(ostream&);
+        friend ostream & operator << (ostream & os, Pyx12::segment & seg);
     };
+
+/*
+    class IsDelim {
+    private:
+        char seg_term;
+
+    public:
+        IsDelim(const char c = '*') : seg_term(c) {}
+
+        bool operator() (const char c)
+            return (seg_term == c);
+    };
+*/
 }
 #endif // PYX12_SEGMENT_HXX_

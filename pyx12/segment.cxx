@@ -43,12 +43,6 @@ size_t Pyx12::element::length()
     return 1;
 }
 
-ostream& Pyx12::element::operator<<(ostream& os)
-{
-    os << value;
-    return os;
-}
-
 string Pyx12::element::format()
 {
     return value;
@@ -92,9 +86,11 @@ Pyx12::composite::composite(const string& ele_str, const string& subele_term_)
     iter i = elems.begin();
     while(i != elems.end()) {
         elements.push_back(element((*i)));
+        ++i;
     }
 }
 
+/*
 bool Pyx12::composite::not_delim(char c)
 {
     if(c != subele_term[0])
@@ -110,6 +106,7 @@ bool Pyx12::composite::delim(char c)
     else
         return false;
 }
+*/
 
 vector<string> Pyx12::composite::split(const string& ele_str)
 {
@@ -119,12 +116,12 @@ vector<string> Pyx12::composite::split(const string& ele_str)
     iter i = ele_str.begin();
     iter j;
     while(i != ele_str.end()) {
-        //i = find_if(i, ele_str.end(), Pyx12::composite::not_delim);
-        while(i != ele_str.end())
+        while(i != ele_str.end()) {
             if((*i) != subele_term[0])
                 break;
+            ++i;
+        }
         j = find(i, ele_str.end(), subele_term[0]);
-        //j = find_if(i, ele_str.end(), Pyx12::composite::delim);
         if(i != ele_str.end())
             ret.push_back(string(i, j));
         i = j;
@@ -135,16 +132,6 @@ vector<string> Pyx12::composite::split(const string& ele_str)
 size_t Pyx12::composite::length()
 {
     return elements.size();
-}
-
-ostream& Pyx12::composite::operator<<(ostream& os)
-{
-    vector<element>::iterator i = elements.begin();
-    while(i != elements.end()) {
-        os << i->format();
-        ++i;
-    }
-    return os;
 }
 
 string Pyx12::composite::format()
@@ -164,6 +151,7 @@ string Pyx12::composite::format(const string& subele_term_)
     while(i != elements.end()) {
         ret += term;
         ret += i->format();
+        ++i;
     }
     return ret;
 }
@@ -207,28 +195,25 @@ const Pyx12::element& Pyx12::composite::operator[](size_t i) const {
 ///////////////////////////////////////////////////////////////////////////
 //  SEGMENT CLASS
 ///////////////////////////////////////////////////////////////////////////
-Pyx12::segment::segment(const string& seg_str, const string& seg_term_,
-        const string& ele_term_, const string& subele_term_)
+Pyx12::segment::segment(const string& seg_str, const string& seg_term_ = "~",
+        const string& ele_term_ = "*", const string& subele_term_ = ":")
 {
     typedef vector<string>::const_iterator iter;
     vector<string> elems;
     seg_term = seg_term_;
-    seg_term_orig = subele_term_;
+    seg_term_orig = seg_term_;
     ele_term = ele_term_;
     ele_term_orig = ele_term_;
     subele_term = subele_term_;
     subele_term_orig = subele_term_;
     //seg_id = '';
-    cerr << "A1" << endl;;
     if(seg_str.empty())
         throw Pyx12::EngineError("seg_str should not be empty");
-    cerr << "A2" << endl;;
     if(seg_str.substr(seg_str.length()-1) == seg_term)
         //elems = split(seg_str.substr(seg_str.begin(), seg_str.end()-1));
         elems = split(seg_str.substr(0, seg_str.length()-1));
     else
         elems = split(seg_str);
-    cerr << "A3" << endl;;
     seg_id = elems.front();
 
     iter i = elems.begin();
@@ -241,6 +226,7 @@ Pyx12::segment::segment(const string& seg_str, const string& seg_term_,
     }
 }
 
+/*
 bool Pyx12::segment::not_delim(char c)
 {
     if(c != ele_term[0])
@@ -256,6 +242,7 @@ bool Pyx12::segment::delim(char c)
     else
         return false;
 }
+*/
 
 vector<string> Pyx12::segment::split(const string& seg_str)
 {
@@ -265,30 +252,17 @@ vector<string> Pyx12::segment::split(const string& seg_str)
     iter i = seg_str.begin();
     iter j;
     while(i != seg_str.end()) {
-        cerr << "B1" << endl;
-        i = find_if(i, seg_str.end(), Pyx12::segment::not_delim);
-        //j = find_if(i, seg_str.end(), Pyx12::segment::delim);
-        while(i != seg_str.end())
-            if((*i++) != ele_term[0])
+        while(i != seg_str.end()) {
+            if((*i) != ele_term[0])
                 break;
+            ++i;
+        }
         j = find(i, seg_str.end(), ele_term[0]);
         if(i != seg_str.end())
             ret.push_back(string(i, j));
-        cerr << string(i, j) << endl;
         i = j;
     }
-    cerr << "B2" << endl;
     return ret;
-}
-
-ostream& Pyx12::segment::operator<<(ostream& os)
-{
-    vector<composite>::iterator i = elements.begin();
-    while(i != elements.end()) {
-        os << i->format(); // XXXXXXXXXXXX
-        ++i;
-    }
-    return os;
 }
 
 bool Pyx12::segment::is_empty() {
@@ -339,17 +313,22 @@ void Pyx12::segment::set_subele_term(const string& subele_term_) {
 }
 
 string Pyx12::segment::format() {
-    return format(seg_term, ele_term, subele_term);
+    return format(this->seg_term, this->ele_term, this->subele_term);
 }
 
 string Pyx12::segment::format(const string& seg_term_, const string& ele_term_, const string& subele_term_) {
     string ret;
     vector<composite>::iterator i = elements.begin();
-    while(i != elements.end()) {
+    if (i != elements.end()) {
         ret += i->format(subele_term_);
-        ret += ele_term_;
         ++i;
     }
+    while(i != elements.end()) {
+        ret += ele_term_;
+        ret += i->format(subele_term_);
+        ++i;
+    }
+    ret += seg_term_;
     return ret;
 }
 
@@ -382,3 +361,35 @@ const Pyx12::composite& Pyx12::segment::get_item(size_t i) const {
 void Pyx12::segment::set_item(size_t i, string val) { 
     elements[i] = composite(val, subele_term);
 }
+
+
+
+
+
+ostream & Pyx12::operator << (ostream & out, Pyx12::element & e)
+{
+    out << e.value;
+    return out;
+}
+
+ostream & Pyx12::operator << (ostream & out, Pyx12::composite & c)
+{
+    vector<element>::iterator i = c.elements.begin();
+    while(i != c.elements.end()) {
+        out << i->format();
+        ++i;
+    }
+    return out;
+}
+
+ostream & Pyx12::operator << (ostream & out, Pyx12::segment & seg)
+{
+    out << seg.format();
+    //vector<composite>::iterator i = seg.elements.begin();
+    //while(i != seg.elements.end()) {
+    //    out << i->format(); // XXXXXXXXXXXX
+    //    ++i;
+    //}
+    return out;
+}
+
