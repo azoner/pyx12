@@ -61,7 +61,7 @@ class ExternalCodes:
     Desc:    Validates an ID against an external list of codes
     """
 
-    def __init__(self, base_path, exclude):
+    def __init__(self, base_path, exclude=None):
         """
         Name:    __init__
         Desc:    Initialize the external list of codes
