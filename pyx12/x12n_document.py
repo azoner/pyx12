@@ -206,6 +206,8 @@ def x12n_document(param, fd_src, fd_997, fd_html, fd_xmldoc=None):
         if fd_xmldoc:
             xmldoc.seg(node, seg)
 
+    src.cleanup()
+
     if fd_html:
         html.footer()
 

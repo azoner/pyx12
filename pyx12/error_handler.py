@@ -679,7 +679,10 @@ class err_gs(err_node):
         else: self.ack_code = 'A'
 
 
-        self.st_count_orig = int(seg[1]) # AK902
+        if seg is None:
+            self.st_count_orig = 0
+        else:
+            self.st_count_orig = int(seg[1]) # AK902
         self.st_count_recv = src.st_count # AK903
         #self.st_count_accept = self.st_count_recv - len(self.children) # AK904
 

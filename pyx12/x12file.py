@@ -211,6 +211,25 @@ class x12file:
         self.cur_line += 1
         return seg
 
+    def cleanup(self):
+        for (seg, id) in self.loops.reverse(): 
+            if self.loops[-1][0] == 'ST':
+                err_str = 'ST id=%s was not closed with a SE' % (id, self.loops[-1][1])
+                self.errh.st_error('3', err_str)
+                errh.close_st_loop(None, None, self)
+            elif self.loops[-1][0] == 'GS':
+                err_str = 'GS id=%s was not closed with a GE' % (id, self.loops[-1][1])
+                self.errh.gs_error('3', err_str)
+                errh.close_gs_loop(None, None, self)
+            elif self.loops[-1][0] == 'ISA':
+                err_str = 'ISA id=%s was not closed with a IEA' % (id, self.loops[-1][1])
+                self.errh.isa_error('3', err_str)
+                errh.close_isa_loop(None, None, self)
+            #elif self.loops[-1][0] == 'LS':
+            #    err_str = 'LS id=%s was not closed with a LE' % (id, self.loops[-1][1])
+            #    self.errh.ls_error('3', err_str)
+        
+
     def get_id(self):
         isa_id = None
         gs_id = None
