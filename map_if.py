@@ -613,6 +613,7 @@ class segment_if(x12_node):
             ele_err_list.append(seq, None, data_ele, '3', seg[child_count+1], err_str)
         valid = True
         for i in xrange(self.get_child_count()):
+            self.logger.debug('i=%i, len(seg)-1 = %i' % (i, len(seg)-1))
             if i < len(seg)-1:
                 #if type(seg[i+1]) is ListType: # composite
                 child_node = self.get_child_node_by_idx(i)
