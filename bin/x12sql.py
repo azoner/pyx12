@@ -59,11 +59,11 @@ class SQL_Error(Exception):
     """Class for SQL errors."""
 
 class table:
-    def __init__(self, node_id, node_name, path, parent=None):
+    def __init__(self, node_id, node_name, path, parent=None, type='loop'):
         self.parent = parent
         if self.parent:
             self.root = self.parent.root
-        self.name = self.root.unique_tablename(node_id, node_name, path)
+        self.name = self.root.unique_tablename(node_id, node_name, path, type)
         self.pk = '%s_%s_num' % (self.root.prefix, node_id)
         self.path = path
         self.field_prefix = ''
@@ -145,15 +145,36 @@ class root_table(table):
         self.table_list = []
         self.fk_list = []
         self.prefix = prefix
-        table.__init__(self, node_id, node_name, path, parent)
+       # table.__init__(self, node_id, node_name, path, parent)
         
-    def unique_tablename(self, node_id, node_name, path): 
+        self.parent = None
+        self.name = 'x12_st_loop'
+        self.pk = 'st_num'
+        self.path = '/'
+        self.field_prefix = ''
+        self.fk_name = None
+        self.fields = [] # (name, type)
+        self.sub_tables = []
+        self.root.table_list.append(self.name)
+        
+    def generate(self):
+        str1 = ''
+        for table1 in self.sub_tables:
+            str1 += table1.generate()
+        return str1
+
+    def unique_tablename(self, node_id, node_name, path, type='loop'): 
         clean_name = self.format_name(node_name)
-        table_name = ('%s_%s_%s' % (self.prefix, node_id, clean_name))[:120]
-        parents = path.split('/')
+        parents = path[1:].split('/')
+        if type == 'loop' or len(parents) <= 2:
+            table_name = ('%s_%s_%s' % (self.prefix, node_id, clean_name))[:120]
+        else:
+            table_name = ('%s_%s_%s_%s' % (self.prefix, parents[-2], node_id, clean_name))[:120]
+            del parents[-1]
+            del parents[-1]
         i = 1
         while table_name in self.table_list:
-            table_name = ('%s_%s%s_%s' % (self.prefix, string.join(parents[:-i], '_'), \
+            table_name = ('%s_%s_%s_%s' % (self.prefix, string.join(parents[:-i], '_'), \
                 node_id, clean_name))[:120]
             i += 1
             #pdb.set_trace()
@@ -237,7 +258,7 @@ def gen_sql(map_root, prefix):
             if node.get_max_repeat() != 1: # Create sub table
                 # who is parent
                 parent_id = parent.split('/')[-1]
-                cur_table.sub_tables.append(table(node.id, node.name, path, cur_table))
+                cur_table.sub_tables.append(table(node.id, node.name, path, cur_table, 'segment'))
                 cur_table = cur_table.sub_tables[-1]
         elif node.is_element():
             if node.usage == 'N':
