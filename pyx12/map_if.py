@@ -1277,6 +1277,7 @@ def load_map_file(map_file, param):
             raise Pickle_Errors, "reload map"
     except:
         try:
+            logger.debug('Create map from %s' % (map_full))
             map = map_if(map_file, param)
         except:
             raise errors.EngineError, 'Load of map file failed: %s' % (map_file)
