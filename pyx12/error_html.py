@@ -20,7 +20,7 @@ import string
 from types import *
 import time
 import logging
-import pdb
+#import pdb
 
 # Intrapackage imports
 from errors import *
@@ -119,16 +119,18 @@ class error_html:
         t_seg = [] #list of formatted elements
         #seg_data.format_ele_list(t_seg) 
         for i in range(len(seg_data)):
-            if seg_data.is_composite('%s%02i' % (seg_data.get_seg_id(), i)):
+            if seg_data.is_composite(ref_des = '%02i' % (i)):
                 #if seg_data.get_seg_id()=='CLM': pdb.set_trace()
                 t_seg.append([])
-                for j in range(len(seg_data[i])):
-                    ele_str = escape_html_chars(seg_data[i][j].get_value())
+                for j in range(seg_data.ele_len('%02i' % (i))):
+                    ref_des = '%02i-%i' % (i, j)
+                    ele_str = escape_html_chars(seg_data.get(ref_des))
                     if i+1 in ele_pos_map.keys() and ele_pos_map[i+1] == j+1:
                         ele_str = self._wrap_ele_error(ele_str)
                     t_seg[-1].append(ele_str)
             else:
-                ele_str = escape_html_chars(seg_data[i].get_value())
+                ref_des = '%02i' % (i)
+                ele_str = escape_html_chars(seg_data.get(ref_des))
                 if i+1 in ele_pos_map.keys():
                     ele_str = self._wrap_ele_error(ele_str)
                 t_seg.append(ele_str)

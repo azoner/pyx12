@@ -326,6 +326,16 @@ class segment:
         (ele_idx, comp_idx) = self._parse_refdes(ref_des)
         return self.elements[ele_idx].is_composite()
 
+    def ele_len(self, ref_des):
+        """
+        @param ref_des: X12 Reference Designator
+        @type ref_des: string
+        @return: number of sub-elements in an element or composite
+        @rtype: int
+        """
+        (ele_idx, comp_idx) = self._parse_refdes(ref_des)
+        return len(self.elements[ele_idx])
+
     def set_seg_term(self, seg_term):
         self.seg_term = seg_term
 

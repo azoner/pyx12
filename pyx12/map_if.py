@@ -767,7 +767,7 @@ class segment_if(x12_node):
             if self.children[0].is_element() \
                 and self.children[0].data_type == 'ID' \
                 and len(self.children[0].valid_codes) > 0 \
-                and seg[0].get_value() not in self.children[0].valid_codes:
+                and seg.get('01') not in self.children[0].valid_codes:
                 #logger.debug('is_match: %s %s' % (seg.get_seg_id(), seg[1]), self.children[0].valid_codes)
                 return False
             # Special Case for 820
@@ -775,17 +775,17 @@ class segment_if(x12_node):
                 and self.children[1].is_element() \
                 and self.children[1].data_type == 'ID' \
                 and len(self.children[1].valid_codes) > 0 \
-                and seg[1].get_value() not in self.children[1].valid_codes:
+                and seg.get('01') not in self.children[1].valid_codes:
                 #logger.debug('is_match: %s %s' % (seg.get_seg_id(), seg[1]), self.children[0].valid_codes)
                 return False
             elif self.children[0].is_composite() \
                 and self.children[0].children[0].data_type == 'ID' \
                 and len(self.children[0].children[0].valid_codes) > 0 \
-                and seg[0][0].get_value() not in self.children[0].children[0].valid_codes:
+                and seg.get('01-1') not in self.children[0].children[0].valid_codes:
                 return False
             elif seg.get_seg_id() == 'HL' and self.children[2].is_element() \
                 and len(self.children[2].valid_codes) > 0 \
-                and seg[2].get_value() not in self.children[2].valid_codes:
+                and seg.get('03') not in self.children[2].valid_codes:
                 return False
             return True
         else:
@@ -822,13 +822,14 @@ class segment_if(x12_node):
             child_node = self.get_child_node_by_idx(i)
             if child_node.is_composite():
                 # Validate composite
+                ref_des = '%02i' % (i)
                 comp_data = seg_data[i]
                 subele_count = child_node.get_child_count()
-                if len(comp_data) > subele_count and child_node.usage != 'N':
+                if seg_data.ele_len(ref_des) > subele_count and child_node.usage != 'N':
                     subele_node = child_node.get_child_node_by_idx(subele_count+1)
                     err_str = 'Too many sub-elements in composite "%s" (%s)' % \
                         (subele_node.name, subele_node.refdes)
-                    err_value = comp_data[subele_count].get_value()
+                    err_value = seg_data.get(ref_des)
                     errh.ele_error('3', err_str, err_value)
                 valid &= child_node.is_valid(comp_data, errh, self.check_dte)
             elif child_node.is_element():
@@ -1084,7 +1085,7 @@ class element_if(x12_node):
         Is this a valid element?
 
         @param elem: element instance
-        @type elem: pyx12.element
+        @type elem: L{segment<segment.element>}
         @param errh: instance of error_handler
         @param check_dte: date string to check against (YYYYMMDD)
         @param type_list: Optional data/time type list
@@ -1512,10 +1513,10 @@ def is_syntax_valid(seg_data, syn):
         else:
             return (True, None)
     elif syn_code == 'L':
-        if len(seg_data) > syn_idx[0]-1 and seg_data[syn_idx[0]-1].get_value() != '':
+        if len(seg_data) > syn_idx[0]-1 and seg_data.get('%02i' % (syn_idx[0])) != '':
             count = 0
             for s in syn_idx[1:]:
-                if len(seg_data) >= s and seg_data[s-1].get_value() != '':
+                if len(seg_data) >= s and seg_data.get'%02i' % (s)() != '':
                     count += 1
             if count == 0:
                 err_str = 'Syntax Error (%s): If %s%02i is present, then at least one of '\
