@@ -1,7 +1,7 @@
 #    $Id$
 #    This file is part of the pyX12 project.
 #
-#    Copyright (c) 2001, 2002 Kalamazoo Community Mental Health Services,
+#    Copyright (c) 2001-2004 Kalamazoo Community Mental Health Services,
 #               John Holland <jholland@kazoocmh.org> <john@zoner.org>
 #
 #    All rights reserved.

@@ -33,8 +33,6 @@
 
 """
 Interface to X12 Errors
-Generates a 997 Response
-Generates an annotated X12 source file
 """
 
 #import os
@@ -51,10 +49,7 @@ __author__  = "John Holland <jholland@kazoocmh.org> <john@zoner.org>"
 class err_root:
     """
     Name:   err_root
-    Desc:   Interface to an X12 997 Response
-            Everytime we hit a GS loop in the source, create a new instance of
-            this class.
-            Holds instances of source GS loops
+    Desc:   
     """
     def __init__(self, x12_src, st_control_num):
         """
@@ -113,7 +108,6 @@ class err_gs:
         Name:   __init__
         Desc:    
         Params: fic - Functional Identifier Code (GS01)
-                root - root 997 node
         """
         
         self.fic = fic
@@ -126,44 +120,6 @@ class err_gs:
         self.st_count_recv = None # AK903
         self.st_count_accept = None # AK904
         self.err_cde = [] # AK905-9
-
-        
-    def __repr__(self):
-        """
-        Class:  err_gs
-        Name:   __repr__
-        Desc:   Creates 997 data
-        Params: 
-        Note:   Must set variables before print
-        """
-        x12src = self.root.x12_src
-        eol = self.root.eol
-        if not (self.ack_code and self.st_count_orig and self.st_count_recv \
-            and self.st_count_accept):
-            raise EngineError, 'err_gs variables not set'
-        #ST
-        seg = ['ST', '997', '%i'%st_control_num]
-        str = x12src.seg_str(seg, eol)
-
-        #AK1
-        str += x12src.seg_str(['AK1', self.fic, self.cur_gs_id], eol)
-        
-        #Loop AK2
-        for st_loop in self.st_loops:
-            str += st_loop.__repr__()
-        
-        #AK9
-        seg = ['AK9', self.ack_code, '%i'%self.st_count_orig, \
-            '%i'%self.st_count_recv, '%i'%self.st_count_accept]
-        for code in self.err_cde:
-            seg.append('%s' % code)
-        str += x12src.seg_str(seg, eol)
-        
-        #SE
-        seg_count = str.count(x12src.seg_term+self.eol) + 1
-        seg = ['SE', '%i'%seg_count, '%i'%st_control_num]
-        str = x12src.seg_str(seg, eol)
-        return str
 
 #    def add_seg_error(self, seg_id_code, seg_error_code):
 #        self.errors.append(err_seg_err(seg_id_code, seg_error_code, self.x12_src))
@@ -204,27 +160,6 @@ class err_st:
         self.seg_errors = [] # err_seg instances
 
         
-    def __repr__(self):
-        """
-        Class:  err_st
-        Name:   __repr__
-        Desc:   Creates 997 data
-        Params: 
-        Note:   Must set variables before print
-        """
-        x12src = self.root.x12_src
-        eol = self.root.eol
-        str = x12src.seg_str(['AK2', self.trn_set_id_code, self.cur_st_id], eol) 
-        for seg_err in self.seg_errors:
-            str += seg_err.__repr__()
-        seg = ['AK5']
-        if len(self.seg_errors) > 0:
-            seg.append('R')
-        else:
-            seg.append('A')
-        str += x12src.seg_str(seg, eol) 
-        return str
-
 #    def add_seg_error(self, seg_id_code, seg_error_code):
 #        self.errors.append(err_seg_err(seg_id_code, seg_error_code, self.x12_src))
         
@@ -255,31 +190,9 @@ class err_seg:
         
         self.elems = []
         
-    def __repr__(self):
-        x12src = self.root.x12_src
-        eol = self.root.eol
-        seg = ['AK3', self.seg_id_code, '%i'%self.seg_pos]
-        if self.loop_id:
-            seg.append(self.loop_id)
-        else:
-            seg.append('')
-        if self.seg_error_code:
-            seg.append(self.seg_error_code)
-        str = x12src.seg_str(seg, eol) 
-        for ele in self.elems:
-            str += ele.__repr__()
-        return str
-
 #    def add_ele_error(self, ele_pos, subele_pos=None, ele_ref_num=None, \
 #        ele_err_code, bad_val=None): 
 #        self.elems.append(err_ele_err(ele_pos, subele_pos, ele_ref_num, ele_err_code, bad_val))
-
-    def is_match(self, seg_id_code, seg_error_code):
-        (isa_id, gs_id, st_id, ls_id, seg_count, cur_line) = self.root.x12_src.get_id()
-        if seg_id_code == self.seg_id_code and seg_error_code == self.seg_error_code \
-            and seg_count == self.seg_pos and ls_id == self.loop_id:
-            return True
-        return False
 
 class err_ele:
     """
@@ -297,19 +210,3 @@ class err_ele:
         self.ele_err_code = ele_err_code
         self.bad_val = bad_val
         
-    def __repr__(self):
-        x12src = self.root.x12_src
-        eol = self.root.eol
-        seg = ['AK4']
-        if self.subele_pos: 
-            seg.append(['%i' % (self.ele_pos), '%i' % self.subele_pos])
-        else:
-            seg.append('%i' % (self.ele_pos))
-        if self.ele_ref_num:
-            seg.append(self.ele_ref_num)
-        else:
-            seg.append('')
-        seg.append(self.ele_err_code)
-        if self.bad_val:
-            seg.append(self.bad_val)
-        return x12src.seg_str(seg, eol)
