@@ -35,7 +35,7 @@
 <transaction>
   <id>841</id>
   <name>HIPAA Related Code Lists</name>
-  <loop xid="ISA" type="explicit">
+  <loop xid="ISA_LOOP" type="explicit">
     <name>Interchange Control Header</name>
     <usage>R</usage>
     <pos>001</pos>
@@ -235,7 +235,7 @@
       </element>
     </segment>
 <!--End of ISA segment-->
-    <loop xid="GS" type="explicit">
+    <loop xid="GS_LOOP" type="explicit">
       <name>Functional Group Header</name>
       <usage>R</usage>
       <pos>020</pos>
@@ -328,7 +328,7 @@
         </element>
       </segment>
 <!--End of GS segment-->
-      <loop xid="ST" type="explicit">
+      <loop xid="ST_LOOP" type="explicit">
         <name>Transaction Set Header</name>
         <usage>R</usage>
         <pos>020</pos>
@@ -361,7 +361,7 @@
           </element>
         </segment>
 <!--End of ST segment-->
-        <loop xid="HEADER" type="header">
+        <loop xid="HEADER" type="wrapper">
           <name>Table 1 - Header</name>
           <usage>R</usage>
           <pos>010</pos>
@@ -728,261 +728,261 @@
 <!--End of 1000 loop-->
         </loop>
 <!--End of HEADER loop-->
-          <loop xid="DETAIL" type="detail">
-            <name>Table 2 - Detail</name>
-            <usage>S</usage>
-            <pos>020</pos>
-            <repeat>&gt;1</repeat>
-            <loop xid="2000">
+        <loop xid="DETAIL" type="wrapper">
+          <name>Table 2 - Detail</name>
+          <usage>S</usage>
+          <pos>020</pos>
+          <repeat>&gt;1</repeat>
+          <loop xid="2000">
+            <name>Code List Header</name>
+            <usage>R</usage>
+            <pos>010</pos>
+            <count>&gt;1</count>
+            <segment xid="HL">
               <name>Code List Header</name>
               <usage>R</usage>
               <pos>010</pos>
-              <count>&gt;1</count>
-              <segment xid="HL">
-                <name>Code List Header</name>
+              <max_use>1</max_use>
+              <element xid="HL01">
+                <data_ele>628</data_ele>
+                <name>Hierarchical ID Number</name>
                 <usage>R</usage>
-                <pos>010</pos>
+                <seq>01</seq>
+                <data_type>AN</data_type>
+                <min_len>1</min_len>
+                <max_len>12</max_len>
+                <valid_codes>
+                  <code>1</code>
+                </valid_codes>
+              </element>
+              <element xid="HL02">
+                <data_ele>734</data_ele>
+                <name>Hierarchical Parent ID Number</name>
+                <usage>N</usage>
+                <seq>02</seq>
+                <data_type>AN</data_type>
+                <min_len>1</min_len>
+                <max_len>12</max_len>
+              </element>
+              <element xid="HL03">
+                <data_ele>735</data_ele>
+                <name>Hierarchical Level Code</name>
+                <usage>R</usage>
+                <seq>03</seq>
+                <data_type>ID</data_type>
+                <min_len>1</min_len>
+                <max_len>2</max_len>
+                <valid_codes>
+                  <code>I</code>
+                </valid_codes>
+              </element>
+              <element xid="HL04">
+                <data_ele>736</data_ele>
+                <name>Hierarchical Child Code</name>
+                <usage>N</usage>
+                <seq>04</seq>
+                <data_type>ID</data_type>
+                <min_len>1</min_len>
+                <max_len>1</max_len>
+              </element>
+            </segment>
+<!--End of HL segment-->
+            <loop xid="2100">
+              <name>Code List Value and Definition</name>
+              <usage>R</usage>
+              <pos>010</pos>
+              <count>&gt;1</count>
+              <segment xid="SPI">
+                <name>Code List Value and Definition</name>
+                <usage>R</usage>
+                <pos>020</pos>
                 <max_use>1</max_use>
-                <element xid="HL01">
-                  <data_ele>628</data_ele>
-                  <name>Hierarchical ID Number</name>
+                <syntax>P0203</syntax>
+                <element xid="SPI01">
+                  <data_ele>786</data_ele>
+                  <name>Security Level Code</name>
                   <usage>R</usage>
                   <seq>01</seq>
-                  <data_type>AN</data_type>
-                  <min_len>1</min_len>
-                  <max_len>12</max_len>
-                  <valid_codes>
-                    <code>1</code>
-                  </valid_codes>
-                </element>
-                <element xid="HL02">
-                  <data_ele>734</data_ele>
-                  <name>Hierarchical Parent ID Number</name>
-                  <usage>N</usage>
-                  <seq>02</seq>
-                  <data_type>AN</data_type>
-                  <min_len>1</min_len>
-                  <max_len>12</max_len>
-                </element>
-                <element xid="HL03">
-                  <data_ele>735</data_ele>
-                  <name>Hierarchical Level Code</name>
-                  <usage>R</usage>
-                  <seq>03</seq>
                   <data_type>ID</data_type>
-                  <min_len>1</min_len>
+                  <min_len>2</min_len>
                   <max_len>2</max_len>
                   <valid_codes>
-                    <code>I</code>
+                    <code>00</code>
                   </valid_codes>
                 </element>
-                <element xid="HL04">
-                  <data_ele>736</data_ele>
-                  <name>Hierarchical Child Code</name>
-                  <usage>N</usage>
+                <element xid="SPI02">
+                  <data_ele>128</data_ele>
+                  <name>Reference Identification Qualifier</name>
+                  <usage>R</usage>
+                  <seq>02</seq>
+                  <data_type>ID</data_type>
+                  <min_len>2</min_len>
+                  <max_len>3</max_len>
+                  <valid_codes>
+                    <code>ZZ</code>
+                  </valid_codes>
+                </element>
+                <element xid="SPI03">
+                  <data_ele>127</data_ele>
+                  <name>Reference Identification</name>
+                  <usage>R</usage>
+                  <seq>03</seq>
+                  <data_type>AN</data_type>
+                  <min_len>1</min_len>
+                  <max_len>30</max_len>
+                </element>
+                <element xid="SPI04">
+                  <data_ele>790</data_ele>
+                  <name>Entity Title</name>
+                  <usage>R</usage>
                   <seq>04</seq>
+                  <data_type>AN</data_type>
+                  <min_len>1</min_len>
+                  <max_len>132</max_len>
+                </element>
+                <element xid="SPI05">
+                  <data_ele>791</data_ele>
+                  <name>Entity Purpose</name>
+                  <usage>N</usage>
+                  <seq>05</seq>
+                  <data_type>AN</data_type>
+                  <min_len>1</min_len>
+                  <max_len>80</max_len>
+                </element>
+                <element xid="SPI06">
+                  <data_ele>792</data_ele>
+                  <name>Entity Status Code</name>
+                  <usage>N</usage>
+                  <seq>06</seq>
                   <data_type>ID</data_type>
                   <min_len>1</min_len>
                   <max_len>1</max_len>
                 </element>
+                <element xid="SPI07">
+                  <data_ele>353</data_ele>
+                  <name>Transaction Set Purpose Code</name>
+                  <usage>N</usage>
+                  <seq>07</seq>
+                  <data_type>ID</data_type>
+                  <min_len>2</min_len>
+                  <max_len>2</max_len>
+                </element>
+                <element xid="SPI08">
+                  <data_ele>755</data_ele>
+                  <name>Report Type Code</name>
+                  <usage>N</usage>
+                  <seq>08</seq>
+                  <data_type>ID</data_type>
+                  <min_len>2</min_len>
+                  <max_len>2</max_len>
+                </element>
+                <element xid="SPI09">
+                  <data_ele>786</data_ele>
+                  <name>Security Level Code</name>
+                  <usage>N</usage>
+                  <seq>09</seq>
+                  <data_type>ID</data_type>
+                  <min_len>2</min_len>
+                  <max_len>2</max_len>
+                </element>
+                <element xid="SPI10">
+                  <data_ele>559</data_ele>
+                  <name>Agency Qualifier Code</name>
+                  <usage>N</usage>
+                  <seq>10</seq>
+                  <data_type>ID</data_type>
+                  <min_len>2</min_len>
+                  <max_len>2</max_len>
+                </element>
+                <element xid="SPI11">
+                  <data_ele>822</data_ele>
+                  <name>Source Subqualifier</name>
+                  <usage>N</usage>
+                  <seq>11</seq>
+                  <data_type>AN</data_type>
+                  <min_len>1</min_len>
+                  <max_len>15</max_len>
+                </element>
+                <element xid="SPI12">
+                  <data_ele>554</data_ele>
+                  <name>Assigned Number</name>
+                  <usage>N</usage>
+                  <seq>12</seq>
+                  <data_type>N0</data_type>
+                  <min_len>1</min_len>
+                  <max_len>6</max_len>
+                </element>
+                <element xid="SPI13">
+                  <data_ele>1322</data_ele>
+                  <name>Certification Type Code</name>
+                  <usage>N</usage>
+                  <seq>13</seq>
+                  <data_type>ID</data_type>
+                  <min_len>1</min_len>
+                  <max_len>1</max_len>
+                </element>
+                <element xid="SPI14">
+                  <data_ele>1401</data_ele>
+                  <name>Proposal Data Detail Identifier Code</name>
+                  <usage>N</usage>
+                  <seq>14</seq>
+                  <data_type>ID</data_type>
+                  <min_len>1</min_len>
+                  <max_len>3</max_len>
+                </element>
+                <element xid="SPI15">
+                  <data_ele>1005</data_ele>
+                  <name>Heirarchal Structure Code</name>
+                  <usage>N</usage>
+                  <seq>15</seq>
+                  <data_type>ID</data_type>
+                  <min_len>4</min_len>
+                  <max_len>4</max_len>
+                </element>
               </segment>
-<!--End of HL segment-->
-              <loop xid="2100">
-                <name>Code List Value and Definition</name>
-                <usage>R</usage>
-                <pos>010</pos>
-                <count>&gt;1</count>
-                <segment xid="SPI">
-                  <name>Code List Value and Definition</name>
-                  <usage>R</usage>
-                  <pos>020</pos>
-                  <max_use>1</max_use>
-                  <syntax>P0203</syntax>
-                  <element xid="SPI01">
-                    <data_ele>786</data_ele>
-                    <name>Security Level Code</name>
-                    <usage>R</usage>
-                    <seq>01</seq>
-                    <data_type>ID</data_type>
-                    <min_len>2</min_len>
-                    <max_len>2</max_len>
-                    <valid_codes>
-                      <code>00</code>
-                    </valid_codes>
-                  </element>
-                  <element xid="SPI02">
-                    <data_ele>128</data_ele>
-                    <name>Reference Identification Qualifier</name>
-                    <usage>R</usage>
-                    <seq>02</seq>
-                    <data_type>ID</data_type>
-                    <min_len>2</min_len>
-                    <max_len>3</max_len>
-                    <valid_codes>
-                      <code>ZZ</code>
-                    </valid_codes>
-                  </element>
-                  <element xid="SPI03">
-                    <data_ele>127</data_ele>
-                    <name>Reference Identification</name>
-                    <usage>R</usage>
-                    <seq>03</seq>
-                    <data_type>AN</data_type>
-                    <min_len>1</min_len>
-                    <max_len>30</max_len>
-                  </element>
-                  <element xid="SPI04">
-                    <data_ele>790</data_ele>
-                    <name>Entity Title</name>
-                    <usage>R</usage>
-                    <seq>04</seq>
-                    <data_type>AN</data_type>
-                    <min_len>1</min_len>
-                    <max_len>132</max_len>
-                  </element>
-                  <element xid="SPI05">
-                    <data_ele>791</data_ele>
-                    <name>Entity Purpose</name>
-                    <usage>N</usage>
-                    <seq>05</seq>
-                    <data_type>AN</data_type>
-                    <min_len>1</min_len>
-                    <max_len>80</max_len>
-                  </element>
-                  <element xid="SPI06">
-                    <data_ele>792</data_ele>
-                    <name>Entity Status Code</name>
-                    <usage>N</usage>
-                    <seq>06</seq>
-                    <data_type>ID</data_type>
-                    <min_len>1</min_len>
-                    <max_len>1</max_len>
-                  </element>
-                  <element xid="SPI07">
-                    <data_ele>353</data_ele>
-                    <name>Transaction Set Purpose Code</name>
-                    <usage>N</usage>
-                    <seq>07</seq>
-                    <data_type>ID</data_type>
-                    <min_len>2</min_len>
-                    <max_len>2</max_len>
-                  </element>
-                  <element xid="SPI08">
-                    <data_ele>755</data_ele>
-                    <name>Report Type Code</name>
-                    <usage>N</usage>
-                    <seq>08</seq>
-                    <data_type>ID</data_type>
-                    <min_len>2</min_len>
-                    <max_len>2</max_len>
-                  </element>
-                  <element xid="SPI09">
-                    <data_ele>786</data_ele>
-                    <name>Security Level Code</name>
-                    <usage>N</usage>
-                    <seq>09</seq>
-                    <data_type>ID</data_type>
-                    <min_len>2</min_len>
-                    <max_len>2</max_len>
-                  </element>
-                  <element xid="SPI10">
-                    <data_ele>559</data_ele>
-                    <name>Agency Qualifier Code</name>
-                    <usage>N</usage>
-                    <seq>10</seq>
-                    <data_type>ID</data_type>
-                    <min_len>2</min_len>
-                    <max_len>2</max_len>
-                  </element>
-                  <element xid="SPI11">
-                    <data_ele>822</data_ele>
-                    <name>Source Subqualifier</name>
-                    <usage>N</usage>
-                    <seq>11</seq>
-                    <data_type>AN</data_type>
-                    <min_len>1</min_len>
-                    <max_len>15</max_len>
-                  </element>
-                  <element xid="SPI12">
-                    <data_ele>554</data_ele>
-                    <name>Assigned Number</name>
-                    <usage>N</usage>
-                    <seq>12</seq>
-                    <data_type>N0</data_type>
-                    <min_len>1</min_len>
-                    <max_len>6</max_len>
-                  </element>
-                  <element xid="SPI13">
-                    <data_ele>1322</data_ele>
-                    <name>Certification Type Code</name>
-                    <usage>N</usage>
-                    <seq>13</seq>
-                    <data_type>ID</data_type>
-                    <min_len>1</min_len>
-                    <max_len>1</max_len>
-                  </element>
-                  <element xid="SPI14">
-                    <data_ele>1401</data_ele>
-                    <name>Proposal Data Detail Identifier Code</name>
-                    <usage>N</usage>
-                    <seq>14</seq>
-                    <data_type>ID</data_type>
-                    <min_len>1</min_len>
-                    <max_len>3</max_len>
-                  </element>
-                  <element xid="SPI15">
-                    <data_ele>1005</data_ele>
-                    <name>Heirarchal Structure Code</name>
-                    <usage>N</usage>
-                    <seq>15</seq>
-                    <data_type>ID</data_type>
-                    <min_len>4</min_len>
-                    <max_len>4</max_len>
-                  </element>
-                </segment>
 <!--End of SPI segment-->
-                <segment xid="MSG">
-                  <name>Additional Text</name>
-                  <usage>S</usage>
-                  <pos>050</pos>
-                  <max_use>&gt;1</max_use>
-                  <syntax>C0302</syntax>
-                  <element xid="MSG01">
-                    <data_ele>933</data_ele>
-                    <name>Free-Form Text Message</name>
-                    <usage>R</usage>
-                    <seq>01</seq>
-                    <data_type>AN</data_type>
-                    <min_len>1</min_len>
-                    <max_len>264</max_len>
-                  </element>
-                  <element xid="MSG02">
-                    <data_ele>934</data_ele>
-                    <name>Printer Carriage Control Code</name>
-                    <usage>N</usage>
-                    <seq>02</seq>
-                    <data_type>ID</data_type>
-                    <min_len>2</min_len>
-                    <max_len>2</max_len>
-                  </element>
-                  <element xid="MSG03">
-                    <data_ele>1470</data_ele>
-                    <name>Number</name>
-                    <usage>N</usage>
-                    <seq>03</seq>
-                    <data_type>N0</data_type>
-                    <min_len>1</min_len>
-                    <max_len>9</max_len>
-                  </element>
-                </segment>
+              <segment xid="MSG">
+                <name>Additional Text</name>
+                <usage>S</usage>
+                <pos>050</pos>
+                <max_use>&gt;1</max_use>
+                <syntax>C0302</syntax>
+                <element xid="MSG01">
+                  <data_ele>933</data_ele>
+                  <name>Free-Form Text Message</name>
+                  <usage>R</usage>
+                  <seq>01</seq>
+                  <data_type>AN</data_type>
+                  <min_len>1</min_len>
+                  <max_len>264</max_len>
+                </element>
+                <element xid="MSG02">
+                  <data_ele>934</data_ele>
+                  <name>Printer Carriage Control Code</name>
+                  <usage>N</usage>
+                  <seq>02</seq>
+                  <data_type>ID</data_type>
+                  <min_len>2</min_len>
+                  <max_len>2</max_len>
+                </element>
+                <element xid="MSG03">
+                  <data_ele>1470</data_ele>
+                  <name>Number</name>
+                  <usage>N</usage>
+                  <seq>03</seq>
+                  <data_type>N0</data_type>
+                  <min_len>1</min_len>
+                  <max_len>9</max_len>
+                </element>
+              </segment>
 <!--End of MSG segment-->
-              </loop>
-<!--End of 2100 loop-->
             </loop>
-<!--End of 2000 loop-->
+<!--End of 2100 loop-->
           </loop>
+<!--End of 2000 loop-->
+        </loop>
 <!--End of DETAIL loop-->
-        <loop xid="FOOTER" type="footer">
+        <loop xid="FOOTER" type="wrapper">
           <name>Table 3 - Footer</name>
           <usage>N</usage>
           <pos>030</pos>

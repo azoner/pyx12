@@ -35,7 +35,7 @@
 <transaction>
   <id>834</id>
   <name>HIPAA Benefit Enrollment and Maintenance X095A1-834</name>
-  <loop xid="ISA" type="explicit">
+  <loop xid="ISA_LOOP" type="explicit">
     <name>Interchange Control Header</name>
     <usage>R</usage>
     <pos>001</pos>
@@ -239,7 +239,7 @@
       </element>
     </segment>
 <!--End of ISA segment-->
-    <loop xid="GS" type="explicit">
+    <loop xid="GS_LOOP" type="explicit">
       <name>Functional Group Header</name>
       <usage>R</usage>
       <pos>020</pos>
@@ -336,7 +336,7 @@
         </element>
       </segment>
 <!--End of GS segment-->
-      <loop xid="ST" type="explicit">
+      <loop xid="ST_LOOP" type="explicit">
         <name>Transaction Set Header</name>
         <usage>R</usage>
         <pos>020</pos>
@@ -369,7 +369,7 @@
           </element>
         </segment>
 <!--End of ST segment-->
-        <loop xid="HEADER" type="header">
+        <loop xid="HEADER" type="wrapper">
           <name>Table 1 - Header</name>
           <usage>R</usage>
           <pos>010</pos>
@@ -945,7 +945,7 @@
 <!--End of 1000C loop-->
         </loop>
 <!--End of HEADER loop-->
-        <loop xid="DETAIL" type="detail">
+        <loop xid="DETAIL" type="wrapper">
           <name>Table 2 - Detail</name>
           <usage>S</usage>
           <pos>020</pos>
@@ -5079,7 +5079,7 @@
 <!--End of 2000 loop-->
         </loop>
 <!--End of DETAIL loop-->
-        <loop xid="FOOTER" type="footer">
+        <loop xid="FOOTER" type="wrapper">
           <name>Table 3 - Footer</name>
           <usage>N</usage>
           <pos>030</pos>

@@ -35,7 +35,7 @@
 <map>
   <subcommittee>X12N</subcommittee>
   <version>00401</version>
-  <loop xid="ISA" type="explicit">
+  <loop xid="ISA_LOOP" type="explicit">
     <name>Interchange Control Header</name>
     <usage>R</usage>
     <pos>001</pos>
@@ -237,7 +237,7 @@
       </element>
     </segment>
 <!--End of ISA segment-->
-    <loop xid="GS" type="explicit">
+    <loop xid="GS_LOOP" type="explicit">
       <name>Functional Group Header</name>
       <usage>R</usage>
       <pos>020</pos>
