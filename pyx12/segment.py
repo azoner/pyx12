@@ -299,6 +299,22 @@ class segment:
         else:
             self.elements[ele_idx][comp_idx] = element(val)
 
+    def is_element(self, ref_des):
+        """
+        @param ref_des: X12 Reference Designator
+        @type ref_des: string
+        """
+        (ele_idx, comp_idx) = self._parse_refdes(ref_des)
+        return self.elements[ele_idx].is_element()
+
+    def is_composite(self, ref_des):
+        """
+        @param ref_des: X12 Reference Designator
+        @type ref_des: string
+        """
+        (ele_idx, comp_idx) = self._parse_refdes(ref_des)
+        return self.elements[ele_idx].is_composite()
+
     def set_seg_term(self, seg_term):
         self.seg_term = seg_term
 

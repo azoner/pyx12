@@ -74,8 +74,8 @@ class Composite(unittest.TestCase):
         self.seg = pyx12.segment.segment(seg_str, '~', '*', ':')
 
     def test_composite_is_a(self):
-        self.failUnless(self.seg[0].is_composite())
-        self.failIf(self.seg[0].is_element())
+        self.failUnless(self.seg.is_composite('TST01'))
+        self.failIf(self.seg.is_element('TST01'))
         
     def test_composite_len(self):
         self.assertEqual(len(self.seg[0]), 3)
@@ -94,8 +94,8 @@ class Simple(unittest.TestCase):
         self.seg = pyx12.segment.segment(seg_str, '~', '*', ':')
 
     def test_simple_is_a(self):
-        self.failUnless(self.seg[0].is_element())
-        self.failIf(self.seg[0].is_composite())
+        self.failUnless(self.seg.is_element('TST01'))
+        self.failIf(self.seg.is_composite('TST01'))
         
     def test_simple_len(self):
         self.assertEqual(len(self.seg[0]), 1)

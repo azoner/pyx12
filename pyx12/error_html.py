@@ -119,7 +119,7 @@ class error_html:
         t_seg = [] #list of formatted elements
         #seg_data.format_ele_list(t_seg) 
         for i in range(len(seg_data)):
-            if seg_data[i].is_composite():
+            if seg_data.is_composite('%s%02i' % (seg_data.get_seg_id(), i)):
                 #if seg_data.get_seg_id()=='CLM': pdb.set_trace()
                 t_seg.append([])
                 for j in range(len(seg_data[i])):
