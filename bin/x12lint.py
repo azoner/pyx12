@@ -48,16 +48,18 @@ import pdb
 
 # Intrapackage imports
 #sys.path.append('/usr/home/sniper/src')
+import pyx12
 import pyx12.x12n_document
 import pyx12.params
 
-__author__  = "John Holland <jholland@kazoocmh.org> <john@zoner.org>"
-__status__  = "beta"
-__version__ = "0.3.0.0"
-__date__    = "10/1/2003"
+__author__  = pyx12.__author__
+__status__  = pyx12.__status__
+__version__ = pyx12.__version__
+__date__    = pyx12.__date__
 
 def usage():
     sys.stdout.write('usage: x12lint source_files\n')
+    sys.stdout.write('\t-H\n')
     
 def main():
     """
@@ -66,7 +68,7 @@ def main():
     import getopt
     param = pyx12.params.params()
     try:
-        opts, args = getopt.getopt(sys.argv[1:], '9c:qvHl:x:')
+        opts, args = getopt.getopt(sys.argv[1:], '9c:fl:m:p:qvx:H')
     except getopt.error, msg:
         usage()
         raise
@@ -92,6 +94,9 @@ def main():
         if o == '-q': logger.setLevel(logging.ERROR)
         if o == '-c': param.set_param('charset', a)
         if o == '-x': param.set_param('exclude_external_codes', a)
+        if o == '-f': param.set_param('force_map_load', True)
+        if o == '-m': param.set_param('map_path', a)
+        if o == '-p': param.set_param('pickle_path', a)
         if o == '-H': flag_html = True
         if o == '-l':
             try:

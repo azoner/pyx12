@@ -52,11 +52,6 @@ import codes
 from utils import *
 
 #Global Variables
-#subele_term = None
-__version__ = "0.1.0"
-
-#codes = None
-
 NodeType = {'element_start': 1, 'element_end': 15, 'attrib': 2, 'text': 3, 'CData': 4, 'entity_ref': 5, 'entity_decl':6, 'pi': 7, 'comment': 8, 'doc': 9, 'dtd': 10, 'doc_frag': 11, 'notation': 12}
 
 MAXINT = 2147483647
@@ -190,7 +185,8 @@ class map_if(x12_node):
 
         self.param = param
         #global codes
-        self.ext_codes = codes.ExternalCodes(param.get_param('map_path'))
+        self.ext_codes = codes.ExternalCodes(param.get_param('map_path'), \
+            param.get_param('exclude_external_codes'))
         try:
             map_path = param.get_param('map_path')
             self.reader = libxml2.newTextReaderFilename(os.path.join(map_path, \
@@ -1039,9 +1035,8 @@ class element_if(x12_node):
             bValidCode = True
         if elem_val in self.valid_codes:
             bValidCode = True
-        exclude = self.root.param.get_param('exclude_external_codes').split(',')
         if self.external_codes is not None and \
-            self.root.ext_codes.IsValid(self.external_codes, elem_val, check_dte, exclude):
+            self.root.ext_codes.IsValid(self.external_codes, elem_val, check_dte):
             bValidCode = True
         if not bValidCode:
             err_str = '(%s) is not a valid code for %s (%s)' % (elem_val, self.name, self.refdes)

@@ -48,13 +48,14 @@ from types import *
 
 # Intrapackage imports
 #sys.path.append('/usr/home/sniper/src')
+import pyx12
 import pyx12.x12n_document
 import pyx12.params
 
-__author__  = "John Holland <jholland@kazoocmh.org> <john@zoner.org>"
-__status__  = "beta"
-__version__ = "0.3.0.0"
-__date__    = "10/1/2003"
+__author__  = pyx12.__author__
+__status__  = pyx12.__status__
+__version__ = pyx12.__version__
+__date__    = pyx12.__date__
 
 def usage():
     sys.stdout.write('usage: x12html source_file\n')
