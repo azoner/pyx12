@@ -1,15 +1,15 @@
 .\" Process this file with
-.\" groff -man -Tascii x12lint.1
+.\" groff -man -Tascii x12valid.1
 .\"
 .TH X12LINT 1 "DECEMBER 2004" FreeBSD "User Manuals"
 .SH NAME
-x12lint \- validate a HIPAA X12 document
+x12valid \- validate a HIPAA X12 document
 .SH SYNOPSIS
-.B x12lint [options]
+.B x12valid [options]
 .I files
 .B ...
 .SH DESCRIPTION
-.B x12lint
+.B x12valid
 Validate a HIPAA X12 document.  Generate a 997 response.
 .SH OPTIONS
 .IP -c <file>
@@ -37,13 +37,13 @@ Verbose output
 .IP -x <tag>
 Exclude external code from code checks
 .SH FILES
-.I /etc/x12lint.conf
+.I /usr/local/etc/pyx12.conf.xml
 .RS
 The system wide configuration file. See
-.BR x12lint (5)
+.BR x12valid (5)
 for further details.
 .RE
-.I ~/.x12lintrc
+.I ~/.pyx12.conf.xml
 .RS
 Per user configuration file. See
 .BR x12conf (5)
