@@ -168,7 +168,8 @@ class ExternalCodes:
 
         #if not given a key, do not flag an error
         if not key:
-            return True
+            raise errors.EngineError, 'bad key %s' % (key)
+            #return True
         #check the code against the list indexed by key
         else:
             if not self.codes.has_key(key):

@@ -929,8 +929,8 @@ class element_if(x12_node):
         Params:  
         Returns: True if found, else False
         """
-        if not self.valid_codes:
-            return True
+        #if not self.valid_codes:
+        #    return True
         if code in self.valid_codes:
             return True
         return False
@@ -1024,12 +1024,21 @@ class element_if(x12_node):
                 self.__error__(errh, err_str, '6', elem_val)
                 valid = False
             
+        #if self.external_codes == 'states':
         #pdb.set_trace()
-        if not (self.__valid_code__(elem_val) or \
-            self.root.ext_codes.IsValid(self.external_codes, elem_val, check_dte) ):
+        bValidCode = False
+        if len(self.valid_codes) == 0 and self.external_codes is None:
+            bValidCode = True
+        if elem_val in self.valid_codes:
+            bValidCode = True
+        if self.external_codes is not None and \
+            self.root.ext_codes.IsValid(self.external_codes, elem_val, check_dte):
+            bValidCode = True
+        if not bValidCode:
             err_str = '(%s) is not a valid code for data element %s' % (elem_val, self.refdes)
             self.__error__(errh, err_str, '7', elem_val)
             valid = False
+           
         if not IsValidDataType(elem_val, self.data_type, self.root.param.get_param('charset')):
             if self.data_type == 'DT':
                 err_str = 'Data element %s contains an invalid date (%s)' % \
