@@ -255,9 +255,19 @@ class IsValidSyntaxE(unittest.TestCase):
         self.failUnless(result, err_str)
 
 def suite():
-    suite = unittest.makeSuite((IsValidSyntaxP, IsValidSyntaxR, IsValidSyntaxC, \
+    suite = unittest.makeSuite((Test_getnodebypath, IsValidSyntax, \
+        IsValidSyntaxP, IsValidSyntaxR, IsValidSyntaxC, \
         IsValidSyntaxE, IsValidSyntaxL))
     return suite
                 
-if __name__ == "__main__":
-    unittest.main()   
+#if __name__ == "__main__":
+#    unittest.main()   
+suite = unittest.TestSuite()
+suite.addTest(unittest.makeSuite(Test_getnodebypath))
+suite.addTest(unittest.makeSuite(IsValidSyntax))
+suite.addTest(unittest.makeSuite(IsValidSyntaxP))
+suite.addTest(unittest.makeSuite(IsValidSyntaxR))
+suite.addTest(unittest.makeSuite(IsValidSyntaxC))
+suite.addTest(unittest.makeSuite(IsValidSyntaxE))
+suite.addTest(unittest.makeSuite(IsValidSyntaxL))
+unittest.TextTestRunner(verbosity=2).run(suite)
