@@ -130,6 +130,22 @@ class Implicit_Loops(unittest.TestCase):
         node = self.walker.walk(node, seg, self.errh, 5, 4, None)
         self.assertEqual(seg.get_seg_id(), node.id)
 
+    def test_segment_required_fail1(self):
+        """
+        Test for skipped /2000A/2010AA/NM1 segment
+        """
+        node = self.map.getnodebypath('/2000A/HL')
+        self.assertNotEqual(node, None)
+        self.assertEqual(node.base_name, 'segment')
+        seg_data = pyx12.segment.segment('HL*1**20*1~', '~', '*', ':')
+        result = node.is_valid(seg_data, self.errh)
+        seg_data = pyx12.segment.segment('HL*2*1*22*0~', '~', '*', ':')
+        errh = pyx12.error_handler.errh_null()
+        node = self.walker.walk(node, seg_data, errh, 5, 4, None)
+        #result = node.is_valid(seg_data, self.errh)
+        #self.failIf(result)
+        self.assertEqual(errh.err_cde, '3', errh.err_str)
+
     def tearDown(self):
         del self.errh
         del self.map

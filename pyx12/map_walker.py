@@ -41,7 +41,7 @@ If seg indicates a segment has been entered, returns the segment node
 """
 
 import logging
-#import pdb
+import pdb
 #import string
 
 # Intrapackage imports
@@ -101,6 +101,8 @@ class walk_tree:
         #    pdb.set_trace()
         if not (node.is_loop() or node.is_map_root()): 
             node = self.pop_to_parent_loop(node) # Get enclosing loop
+        #if seg_data.get_seg_id() == 'HL' and seg_data[2].get_value() == '22':
+        #    pdb.set_trace()
         while 1:
             #if seg_data.get_seg_id() == 'HL':
             #    print seg_data
@@ -119,34 +121,35 @@ class walk_tree:
                             if child.usage == 'N':
                                 err_str = "Segment %s found but marked as not used" % (child.id)
                                 errh.seg_error('2', err_str, None)
-                            if child is orig_node:
-                                #logger.debug('child %s IS orig_node %s' % (child.id, orig_node.id))
-                                child.cur_count += 1
-                            else:
-                                if orig_node.is_segment():
-                                    orig_node.cur_count = 0
-                                    #logger.debug('Set orig_node %s cur_count = 0' % (orig_node.id))
-                                child.cur_count = 1
-                                #logger.debug('Set child %s cur_count = 1' % (orig_node.id))
-                            if child.cur_count > child.get_max_repeat():  # handle seg repeat count
-                                if self.is_first_seg_match(node, seg_data):
-                                    # Handle special case with single segment in loop
-                                    # where loop repeats
-                                    node.cur_count += 1
-                                    node.reset_cur_count()
-                                    seg_node = node.children[0]
-                                    seg_node.cur_count = 1
-                                    #logger.debug('MATCH Loop %s / Segment %s (%s*%s)' \
-                                    #    % (node.id, seg_node.id, seg.get_seg_id(), seg[1]))
-                                    for (seg_id, err_cde, err_str) in mandatory_segs_missing:
-                                        errh.seg_error(err_cde, err_str, None)
-                                    return seg_node # Return the first segment in node
+                            else: # Usage is R or S
+                                if child is orig_node:
+                                    #logger.debug('child %s IS orig_node %s' % (child.id, orig_node.id))
+                                    child.cur_count += 1
                                 else:
-                                    err_str = "Segment %s exceeded max count.  Found %i, should have %i" \
-                                        % (seg_data.get_seg_id(), child.cur_count, child.get_max_repeat())
-                                    #seg_max_count_err.append((seg_data.get_seg_id(), '5', err_str))
-                                    #continue # Try to find another match
-                                    errh.seg_error('5', err_str, None)
+                                    if orig_node.is_segment():
+                                        orig_node.cur_count = 0
+                                        #logger.debug('Set orig_node %s cur_count = 0' % (orig_node.id))
+                                    child.cur_count = 1
+                                    #logger.debug('Set child %s cur_count = 1' % (orig_node.id))
+                                if child.cur_count > child.get_max_repeat():  # handle seg repeat count
+                                    if self.is_first_seg_match(node, seg_data):
+                                        # Handle special case with single segment in loop
+                                        # where loop repeats
+                                        node.cur_count += 1
+                                        node.reset_cur_count()
+                                        seg_node = node.children[0]
+                                        seg_node.cur_count = 1
+                                        #logger.debug('MATCH Loop %s / Segment %s (%s*%s)' \
+                                        #    % (node.id, seg_node.id, seg.get_seg_id(), seg[1]))
+                                        for (seg_id, err_cde, err_str) in mandatory_segs_missing:
+                                            errh.seg_error(err_cde, err_str, None)
+                                        return seg_node # Return the first segment in node
+                                    else:
+                                        err_str = "Segment %s exceeded max count.  Found %i, should have %i" \
+                                            % (seg_data.get_seg_id(), child.cur_count, child.get_max_repeat())
+                                        #seg_max_count_err.append((seg_data.get_seg_id(), '5', err_str))
+                                        #continue # Try to find another match
+                                        errh.seg_error('5', err_str, None)
                             for (seg_id, err_cde, err_str) in mandatory_segs_missing:
                                 errh.seg_error(err_cde, err_str, None)
                             return child
@@ -164,16 +167,27 @@ class walk_tree:
                             #   (child.id, seg_data.get_seg_id(), seg_data[0].get_value()))
                     elif child.is_loop(): 
                         #logger.debug('child_node id=%s' % (child.id))
+                        first_child_node = child.get_child_node_by_idx(0)
                         if self.is_first_seg_match(child, seg_data): 
-                            child.cur_count += 1
-                            child.reset_cur_count()
-                            node = child.children[0]
-                            node.cur_count = 1
-                            #logger.debug('MATCH Loop %s / Segment %s (%s*%s)' \
-                            #    % (child.id, node.id, seg_data.get_seg_id(), seg[0].get_value()))
+                            #node = child.children[0]
+                            if child.usage == 'N':
+                                err_str = "Loop %s found but marked as not used" % (child.id)
+                                errh.seg_error('2', err_str, None)
+                            else:
+                                child.cur_count += 1
+                                child.reset_cur_count()
+                                first_child_node.cur_count = 1
+                                #logger.debug('MATCH Loop %s / Segment %s (%s*%s)' \
+                                #    % (child.id, first_child_node.id, seg_data.get_seg_id(), seg[0].get_value()))
                             for (seg_id, err_cde, err_str) in mandatory_segs_missing:
                                 errh.seg_error(err_cde, err_str, None)
-                            return node # Return the first segment in node
+                            return first_child_node # Return the first segment in node
+                        elif child.usage == 'R' and child.cur_count < 1:
+                            fake_seg = pyx12.segment.segment('%s' % \
+                                (first_child_node.id), '~', '*', ':')
+                            errh.add_seg(first_child_node, fake_seg, seg_count, cur_line, ls_id)
+                            err_str = "Mandatory segment %s missing" % (first_child_node.id)
+                            mandatory_segs_missing.append((seg_data.get_seg_id(), '3', err_str))
                         #else:
                             #logger.debug('Loop id=%s is not a match for (%s*%s)' % \
                             #    (child.id, seg_data.get_seg_id(), seg[0].get_value()))
@@ -228,10 +242,10 @@ class walk_tree:
         """
         if not node.is_loop(): raise EngineError, \
             "Call to first_seg_match failed, node is not a loop"
-        for child in node.children:
-            if child.is_segment():
-                if child.is_match(seg_data):
-                    return True
-                else:
-                    return False # seg does not match the first segment in loop, so not valid
+        child = node.get_child_node_by_idx(0)
+        if child.is_segment():
+            if child.is_match(seg_data):
+                return True
+            else:
+                return False # seg does not match the first segment in loop, so not valid
         return False

@@ -781,7 +781,8 @@ class segment_if(x12_node):
                 # Validate Element
                 valid &= child_node.is_valid(seg_data[i][0], errh, self.check_dte)
         for i in xrange(len(seg_data), self.get_child_count()):
-            #missing required elements
+            #missing required elements?
+            child_node = self.get_child_node_by_idx(i)
             valid &= child_node.is_valid(None, errh)
                 
         for syn in self.syntax:
@@ -1278,7 +1279,7 @@ class composite_if(x12_node):
         Returns:    True on success
         """
         valid = True
-        if (comp_data is None or comp_data.is_empty()) and self.usage == 'N':
+        if comp_data is None or comp_data.is_empty() and self.usage == 'N':
             return True
 
         if self.usage == 'R':
@@ -1292,6 +1293,10 @@ class composite_if(x12_node):
                 errh.ele_error('2', err_str, None)
                 return False
 
+        #try:
+        #    a = len(comp_data)
+        #except:
+        #    pdb.set_trace()
         if len(comp_data) > self.get_child_count():
             err_str = 'Too many sub-elements in composite %s' % (self.refdes)
             errh.ele_error('3', err_str, None)
