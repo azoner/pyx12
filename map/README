@@ -13,3 +13,4 @@ ref_des: reference designator
 data_ele: Data Element
 ref_des: Reference Designator
 valid_codes: list of valid codes for the element or a pointer to the list
+syntax: STD syntax dependency string, optional
