@@ -199,10 +199,10 @@ class map_if(x12_node):
 
         self.param = param
         #global codes
-        self.ext_codes = codes.ExternalCodes(param.get_param('map_path'), \
-            param.get_param('exclude_external_codes'))
+        self.ext_codes = codes.ExternalCodes(param.get('map_path'), \
+            param.get('exclude_external_codes'))
         try:
-            map_path = param.get_param('map_path')
+            map_path = param.get('map_path')
             self.reader = libxml2.newTextReaderFilename(os.path.join(map_path, \
                 map_file))
         except:
@@ -1086,7 +1086,7 @@ class element_if(x12_node):
         if not self.__is_valid_code__(elem_val, errh, check_dte):
             valid = False
            
-        if not IsValidDataType(elem_val, self.data_type, self.root.param.get_param('charset')):
+        if not IsValidDataType(elem_val, self.data_type, self.root.param.get('charset')):
             if self.data_type == 'DT':
                 err_str = 'Data element %s contains an invalid date (%s)' % \
                     (self.refdes, elem_val)
@@ -1335,8 +1335,8 @@ def load_map_file(map_file, param):
     map_file - absolute path for file
     """
     logger = logging.getLogger('pyx12.pickler')
-    map_path = param.get_param('map_path')
-    pickle_path = param.get_param('pickle_path')
+    map_path = param.get('map_path')
+    pickle_path = param.get('pickle_path')
     pickle_file = '%s.%s' % (os.path.splitext(os.path.join(pickle_path, \
         map_file))[0], 'pkl')
     map_full = os.path.join(map_path, map_file)
@@ -1355,7 +1355,7 @@ def load_map_file(map_file, param):
             map = map_if(map_file, param)
         except:
             raise errors.EngineError, 'Load of map file failed: %s%s' % \
-                (param.get_param('map_path'), map_file)
+                (param.get('map_path'), map_file)
         #try:
             #pdb.set_trace()
         #    cPickle.dump(map, open(pickle_file,'w'))

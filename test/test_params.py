@@ -11,24 +11,25 @@ class Default(unittest.TestCase):
         self.param = pyx12.params.params()
 
     def test_valid1(self):
-        self.assertEqual(self.param.get_param('charset'), 'E')
+        self.assertEqual(self.param.get('charset'), 'E')
 
     def test_valid2(self):
-        self.assertEqual(self.param.get_param('skip_997'), False)
+        self.assertEqual(self.param.get('skip_997'), False)
+
 
 class SetParamOverride(unittest.TestCase):
     def setUp(self):
         self.param = pyx12.params.params()
 
     def test_valid1(self):
-        self.param.set_param('ignore_syntax', False)
-        self.assertEqual(self.param.get_param('ignore_syntax'), False)
-        self.param.set_param('ignore_syntax', True)
-        self.assertEqual(self.param.get_param('ignore_syntax'), True)
+        self.param.set('ignore_syntax', False)
+        self.assertEqual(self.param.get('ignore_syntax'), False)
+        self.param.set('ignore_syntax', True)
+        self.assertEqual(self.param.get('ignore_syntax'), True)
 
     def test_valid2(self):
-        self.param.set_param('exclude_external_codes', 'states,diagnosis')
-        self.assertEqual(self.param.get_param('exclude_external_codes'), 'states,diagnosis')
+        self.param.set('exclude_external_codes', 'states,diagnosis')
+        self.assertEqual(self.param.get('exclude_external_codes'), 'states,diagnosis')
 
 
 def suite():

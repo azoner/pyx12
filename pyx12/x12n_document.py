@@ -75,11 +75,11 @@ from params import params
 #logger = None
 
 def x12n_document(param, src_file, fd_997, fd_html, fd_xmldoc=None):
-    map_path = param.get_param('map_path')
+    map_path = param.get('map_path')
     logger = logging.getLogger('pyx12')
     errh = error_handler.err_handler()
     #errh.register()
-    #param.set_param('checkdate', None)
+    #param.set('checkdate', None)
     
     # Get X12 DATA file
     try:
@@ -139,8 +139,8 @@ def x12n_document(param, src_file, fd_997, fd_html, fd_xmldoc=None):
         html.header()
         err_iter = error_handler.err_iter(errh)
     if fd_xmldoc:
-        #xmldoc = x12xml_simple.x12xml_simple(fd_xmldoc)
-        xmldoc = x12xml_idtag.x12xml_idtag(fd_xmldoc)
+        #xmldoc = x12xml_simple.x12xml_simple(fd_xmldoc, param.get('simple_dtd'))
+        xmldoc = x12xml_idtag.x12xml_idtag(fd_xmldoc, param.get('idtag_dtd'))
 
     for seg in src:
         #logger.debug(seg)

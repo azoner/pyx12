@@ -53,13 +53,12 @@ logger.setLevel(logging.DEBUG)
 #logger.setLevel(logging.ERROR)
 
 class x12xml_simple(x12xml):
-    def __init__(self, fd):
+    def __init__(self, fd, dtd_urn):
         x12xml.__init__(self)
         self.writer = XMLWriter(fd)
         self.writer.doctype(
             u"x12doc", u"-//J Holland//DTD XML X12 Document Conversion1.0//EN//XML",
-            u"http://www.kazoocmh.org/x12simple.dtd")
-
+            u"%s" % (dtd_urn))
         self.writer.push(u"x12doc")
         self.path = '/'
 

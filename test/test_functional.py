@@ -78,7 +78,7 @@ def main():
     flag_997 = True
     profile = False
     debug = False
-    param.set_param('map_path', os.path.abspath('../map'))
+    param.set('map_path', os.path.abspath('../map'))
     if not debug:
         try:
             import psyco

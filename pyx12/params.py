@@ -44,63 +44,61 @@ Order of precedence:
 """
 import os.path
 import ConfigParser
+import StringIO
 
 class params:
-    def __init__(self):
-        self.params = {
-            'charset': 'E', 
-            'checkdate': None, 
-            'ignore_codes': False,
-            'ignore_ext_codes': False, 
-            'skip_html': False, 
-            'skip_997': False,
-            'ignore_syntax': False,
-            'map_path': '/usr/local/share/pyx12/map',
-            'exclude_external_codes': ''
-            }
-        self.params['pickle_path'] = self.params['map_path']
+    def __init__(self, config_file=None):
+        default = """
+[Main]
+map_path=/usr/local/share/pyx12/map
+pickle_path=%(map_path)s
+exclude_external_codes=
+[Validation]
+ignore_syntax=False
+charset=E
+ignore_codes=False
+ignore_ext_codes=False
+[Output]
+skip_html=False
+skip_997=False
+simple_dtd=http://www.kazoocmh.org/x12simple.dtd
+idtag_dtd=http://www.kazoocmh.org/x12idtag.dtd
+"""
         self.cfg = ConfigParser.SafeConfigParser()
-        self.cfg.read(['/usr/local/etc/pyx12.conf', os.path.expanduser('~/.pyx12rc')])
-
-        self._set_cfg_option('Main', 'map_path')
-        self._set_cfg_option('Main', 'pickle_path')
-        self._set_cfg_option('Main', 'exclude_external_codes')
-        self._set_cfg_option('Validation', 'charset')
-        self._set_cfg_option_boolean('Validation', 'ignore_syntax')
-        self._set_cfg_option_boolean('Validation', 'ignore_codes')
-        self._set_cfg_option_boolean('Validation', 'ignore_ext_codes')
-        self._set_cfg_option_boolean('Output', 'skip_html')
-        self._set_cfg_option_boolean('Output', 'skip_997')
-        self._set_cfg_option('Output', 'simple_dtd')
-        self._set_cfg_option('Output', 'idtag_dtd')
-       
-    def _set_cfg_option(self, section, option):
-        if self.cfg.has_section(section):
-            if self.cfg.has_option(section, option):
-                try:
-                    self.params[option] = self.cfg.get(section, option)
-                except:
-                    pass
-        
-    def _set_cfg_option_boolean(self, section, option):
-        if self.cfg.has_section(section):
-            if self.cfg.has_option(section, option):
-                try:
-                    self.params[option] = self.cfg.getboolean(section, option)
-                except:
-                    pass
-
-    def get_param(self, param_str):
-        if param_str in self.params.keys():
-            return self.params[param_str]
+        self.cfg.readfp(StringIO.StringIO(default))
+        if config_file:
+            self.cfg.read(['/usr/local/etc/pyx12.conf', \
+                os.path.expanduser('~/.pyx12rc'), config_file])
         else:
-            return None
+            self.cfg.read(['/usr/local/etc/pyx12.conf', \
+                os.path.expanduser('~/.pyx12rc')])
 
-    def set_param(self, param_str, value):
-        self.params[param_str] = value
+    def get(self, option):
+        for section in self.cfg.sections():
+            if self.cfg.has_option(section, option):
+                try:
+                    return self.cfg.getboolean(section, option)
+                except ValueError:
+                    try:
+                        return self.cfg.get(section, option)
+                    except ValueError:
+                        pass
+        return None
+
+    def set(self, option, value):
+        for section in self.cfg.sections():
+            if self.cfg.has_option(section, option):
+                try:
+                    if value is False:
+                        self.cfg.set(section, option, 'False')
+                    elif value is True:
+                        self.cfg.set(section, option, 'True')
+                    else:
+                        self.cfg.set(section, option, value)
+                except:
+                    pass
 
     def __repr__(self):
-        res = ''
-        for key in self.params.keys():
-            res += '%s=%s\n' % (key, self.params[key])
-        return res
+        fd_out = StringIO.StringIO() 
+        self.cfg.write(fd_out)
+        return fd_out.getvalue()
