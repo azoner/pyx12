@@ -102,7 +102,8 @@ class x12n_document:
 	else:
 	    raise errors.WEDI1Error, 'Last segment should be IEA, is "%s"' % (lines[-1][0])
 
-	for loop in GetLoops(lines[:-1], 'GS', 'GE'):
+	# Loop through GS segments
+	for loop in GetLoops(lines[:-1], 'GS', 'GE', 6, 2):
 	    gs = GS_loop(self, loop)
 
 	iea_seg.xml()
@@ -132,8 +133,8 @@ class GS_loop:
 	    raise errors.WEDI1Error, 'Last segment should be GE, is "%s"' % (gs[-1:][0][0])
 
 	#Get map for this GS loop
-        dom_map = xml.dom.minidom.parse('map/maps.xml')
-    	vers = dom_map.getElementsByTagName("version")
+        dom_maps = xml.dom.minidom.parse('map/maps.xml')
+    	vers = dom_maps.getElementsByTagName("version")
 	for ver in vers:
 	    if ver.getAttribute('icvn') == isa.icvn:
 	        maps = ver.getElementsByTagName("map")
@@ -146,27 +147,17 @@ class GS_loop:
                         self.map_file = node.data
 	if not self.map_file:
 	    raise errors.GSError, 'Map file not found, icvn=%s, fic=%s, vriic=%s' % (isa.icvn,self.fic,self.vriic)
-	dom_map.unlink()
+	dom_maps.unlink()
+
+	# Get map for this GS loop
+	print "--load whole dom"
+	self.dom_map = xml.dom.minidom.parse('map/' + self.map_file)
+	print "--end load whole dom"
 
 	# Loop through ST segments
-	idx = 0
-	st_idx = 0
-	st_loops = []
-	while idx < len(gs)-1:
-	    if gs[idx][0] == 'ST': 
-	    	if st_idx != 0:
-		    raise errors.WEDI1Error, 'Encountered a ST segment before a required SE segment'
-		else:
-	    	    st_idx = idx
-	    if gs[idx][0] == 'SE':
-	        st_loops.append(gs[st_idx:idx+1])
-		st_idx = 0
-	    idx = idx + 1
-
-	for loop in st_loops:
-	    #print loop
+	#print gs[1:-1]
+	for loop in GetLoops(gs[1:-1], 'ST', 'SE', 2, 2):
 	    st = ST_loop(self, isa, loop)
-
 	
 	ge_seg.xml()
 	dom_gs.unlink()
@@ -176,8 +167,27 @@ class GS_loop:
 
 class ST_loop:
     def __init__(self, gs, isa, st):
-        print st[0]
-	pass
+	seg_nodes = gs.dom_map.getElementsByTagName("segment")
+	for seg_node in seg_nodes:
+	    if GetChildElementText(seg_node, 'id') == 'ST':
+	    	st_seg_node = seg_node
+	    if GetChildElementText(seg_node, 'id') == 'SE':
+	    	se_seg_node = seg_node
+	    if GetChildElementText(seg_node, 'id') == 'BHT':
+	    	bht_seg_node = seg_node
+
+	st_seg = segment(st_seg_node, st[0])
+	st_seg.validate()
+	st_seg.xml()
+
+	bht_seg = segment(bht_seg_node, st[1])
+	bht_seg.validate()
+	bht_seg.xml()
+
+	se_seg = segment(se_seg_node, st[-1:][0])
+	se_seg.validate()
+	se_seg.xml()
+	
     
 class segment:
     """
@@ -260,17 +270,25 @@ class element:
 	sys.stdout.write('<elem code="%s">%s</elem>\n' % (self.refdes, self.x12_elem))
     
     def validate(self):
+    	if self.usage == 'N' and (self.x12_elem == '' or self.x12_elem is None):
+	    return 1
+    	if self.usage == 'R' and (self.x12_elem == '' or self.x12_elem is None):
+	    raise errors.WEDI1Error, 'Element %s is required' % (self.refdes)
     	if (not self.data_type is None) and (self.data_type == 'R' or self.data_type[0] == 'N'):
 	    elem = string.replace(string.replace(self.x12_elem, '-', ''), '.', '')
 	    if len(elem) < int(self.min_len):
-	    	raise errors.WEDI1Error, 'too short %s len=%i' % (elem, int(self.min_len))
+	    	raise errors.WEDI1Error, 'Element %s is too short - "%s" is len=%i' % (self.refdes,
+		    elem, int(self.min_len))
 	    if len(elem) > int(self.max_len):
-	    	raise errors.WEDI1Error, 'too long: %s len=%i' % (elem, int(self.max_len))
+	    	raise errors.WEDI1Error, 'Element %s is too short - "%s" is len=%i' % (self.refdes,
+		    elem, int(self.min_len))
 	else:
 	    if len(self.x12_elem) < int(self.min_len):
-	    	raise errors.WEDI1Error, 'too short %s len=%i' % (self.x12_elem, int(self.min_len))
+	    	raise errors.WEDI1Error, 'Element %s is too short - "%s" is len=%i' % (self.refdes,
+		    self.x12_elem, int(self.min_len))
 	    if len(self.x12_elem) > int(self.max_len):
-	    	raise errors.WEDI1Error, 'too long: %s len=%i' % (self.x12_elem, int(self.max_len))
+	    	raise errors.WEDI1Error, 'Element %s is too short - "%s" is len=%i' % (self.refdes,
+		    self.x12_elem, int(self.min_len))
 
 	if self.x12_elem == None and self.usage == 'R':
 	    raise errors.WEDI3Error
