@@ -1,0 +1,5 @@
+This package requires libxml2 to build and run.
+
+To install:
+
+python setup.py install
