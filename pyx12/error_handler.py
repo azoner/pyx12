@@ -309,7 +309,7 @@ class err_handler:
         sout += 'Line:%i ' % (self.cur_seg_node.get_cur_line())
         sout += 'ELE:%s - %s' % (err_cde, err_str)
         if bad_value:
-            logger.error(' (%s)' % (bad_value))
+            sout += ' (%s)' % (bad_value)
         logger.error(sout)
         #print self.cur_ele_node.errors
 
