@@ -60,6 +60,7 @@ class WEDI3Error(WEDIError): pass
 class WEDI4Error(WEDIError): pass
 class WEDI5Error(WEDIError): pass
 class WEDI6Error(WEDIError): pass
+class EngineError(Exception): pass
 
 
 class x12n_document:
@@ -330,8 +331,21 @@ class ExternalCodes:
     	Desc:    Initialize the external list of codes
     	Params:  
     	"""
+	self.codes = {}
     	# init a map of codes from codes.xml
-	pass
+	dom_codes = xml.dom.minidom.parse('map/codes.xml')
+	codeset_nodes = dom_codes.getElementsByTagName("codeset")
+	for codeset_node in codeset_nodes:
+	    id = GetChildElementText(codeset_node, 'id')
+	    code_list = []
+            for code in codeset_node.childNodes:
+	        if code.nodeType == code.ELEMENT_NODE and code.tagName == 'code':
+        	    for a in code.childNodes:
+       	    	        if a.nodeType == a.TEXT_NODE:
+	        	    a.normalize()
+			    code_list.append(a.data)
+	    self.codes[id] = code_list
+	print self.codes.keys()
 
     def IsValid(self, key, code):
     	"""
@@ -346,6 +360,11 @@ class ExternalCodes:
     	if not key:
 	    return 1
     	#check the code against the list indexed by key
+	else:
+	    if not key in self.codes.keys():
+	    	raise EngineError, 'Enternel Code %s is not defined' % (key)
+	    if not code in self.codes[key]:
+	        return 0
 	return 1
 
 def IsValidDataType(str, data_type, charset = 'D'):
