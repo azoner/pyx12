@@ -71,7 +71,7 @@ def main():
     return True
 
 if __name__ == '__main__':
-    #if sys.argv[0] == 'x12lintp':
+    #if sys.argv[0] == 'x12normp':
     #    import profile
     #    profile.run('pyx12.x12n_document(src_filename)', 'pyx12.prof')
     #else:
