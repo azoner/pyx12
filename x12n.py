@@ -89,12 +89,9 @@ class x12n_document:
 	isa_seg = segment(isa_seg_node, seg)
 	isa_seg.validate()
 	isa_seg.xml()
-
+	self.icvn = isa_seg.GetElementValue('ISA12')
 	
-	# parse ISA
-	# print ISA
 	# loop through GS loops
-	self.icvn = '00401'
 	#gs = GS_loop(self)
 
 	# get IEA segment map
@@ -161,6 +158,13 @@ class segment:
     def validate(self):
     	for elem in self.element_list:
 	    elem.validate()
+	    
+    def GetElementValue(refdes):
+    	for elem in self.element_list:
+	    if elem.refdes == refdes:
+	        return elem.x12_elem
+	return None
+    	
 
 class element:
     def __init__(self, node, x12_elem):
@@ -200,6 +204,8 @@ class element:
 	    raise WEDI3Error
 	if not (self.__valid_code__() or codes.IsValid(self.external_codes, self.x12_elem) ):
 	    raise WEDIError, "Not a valid code for this ID element"
+	if not IsValidDataType(self.x12_elem, self.data_type):
+	    raise WEDI1Error, "Invalid X12 datatype: '$s' is not a '%s'" % (self.x12_elem, self.data_type) 
 
     def __valid_code__(self):
         if not self.valid_codes:
