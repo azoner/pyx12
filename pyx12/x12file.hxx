@@ -20,7 +20,7 @@ $Id$
 #include <stack>
 #include <iostream>
 #include <fstream>
-#include <ostream>
+//#include <ostream>
 
 #define BUFSIZE 8*1024
 #define ISA_LEN 106
