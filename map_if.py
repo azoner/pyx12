@@ -472,7 +472,7 @@ class segment_if(x12_node):
                 elif cur_name == 'pos' and self.base_name == 'segment':
                     self.pos = int(reader.Value())
                 elif cur_name == 'max_use' and self.base_name == 'segment':
-                    self.max_use = reader.Value()
+                    self.max_use = int(reader.Value())
 
             ret = reader.Read()
             if ret == -1:
