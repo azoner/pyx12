@@ -48,12 +48,12 @@ class Indent:
         print ' ' * (self.tab * self.tabs)
     	return ' ' * (self.tab * self.tabs)
 
-def IsValidDataType(str, data_type, charset = 'D'):
+def IsValidDataType(str, data_type, charset = 'B'):
     """
     Name:    IsValidDataType
     Params:  str (input string), 
              data_type (data element identifier), 
-             charset [optional] ('D' for default, 'E' for extended)
+             charset [optional] ('B' for Basic, 'E' for extended)
     Returns: 1 if str is valid, 0 if not
     """
     import re
