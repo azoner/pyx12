@@ -48,62 +48,76 @@ import string
 from pyx12.errors import *
 
 class element:
-    """Class element
+    """
     """
 
     def __init__(self, ele_str):
-        """function element
+        """
+        @param ele_str: 1::2
+        @type ele_str: string
         
-        ele_str: string
         """
         self.value = ele_str
         
     def __len__(self):
+        """
+        @rtype: int
+        """
         return 1
 
     def __repr__(self):
-        """function __repr__
-        
-        returns string
+        """
+        @rtype: string
         """
         return self.value
 
     def format(self):
+        """
+        @rtype: string
+        """
         return self.value
 
     def get_value(self):
+        """
+        @rtype: string
+        """
         return self.value
 
     def set_value(self, elem_str):
         self.value = elem_str
 
     def is_composite(self):
+        """
+        @rtype: boolean
+        """
         return False
  
     def is_element(self):
+        """
+        @rtype: boolean
+        """
         return True
 
     def is_empty(self):
+        """
+        @rtype: boolean
+        """
         if self.value and self.value.strip() != '':
             return False
         else:
             return True
 
 class composite:
-    """Class element
-
-       Can be a simple element or a composite
-       A simple element is treated as a composite element with one sub-element.
+    """
+    Can be a simple element or a composite
+    A simple element is treated as a composite element with one sub-element.
     """
     # Attributes:
     
     # Operations
     def __init__(self, ele_str, subele_term=None):
-        """function element
-        
-        ele_str: string
-        
-        returns void
+        """
+        @type ele_str: string
         """
         self.subele_term = subele_term
         self.subele_term_orig = subele_term
@@ -113,13 +127,13 @@ class composite:
             self.elements.append(element(elem))
         
     def __getitem__(self, idx):
-        """function operator[]
+        """
         returns element instance for idx
         """
         return self.elements[idx]
 
     def __setitem__(self, idx, val):
-        """function operator[]=
+        """
         1 based index
         [0] throws exception
         sets element value for idx
@@ -127,16 +141,14 @@ class composite:
         self.elements[idx] = val
 
     def __len__(self):
-        """function length
-        
-        returns int
+        """
+        @rtype: int
         """
         return len(self.elements)
 
     def __repr__(self):
-        """function __repr__
-        
-        returns string
+        """
+        @rtype: string
         """
         return self.format(self.subele_term)
 
@@ -155,18 +167,27 @@ class composite:
         self.subele_term = subele_term
   
     def is_composite(self):
+        """
+        @rtype: boolean
+        """
         if len(self.elements) > 1:
             return True
         else:
             return False
  
     def is_element(self):
+        """
+        @rtype: boolean
+        """
         if len(self.elements) == 1:
             return True
         else:
             return False
 
     def is_empty(self):
+        """
+        @rtype: boolean
+        """
         for ele in self.elements:
             if not ele.is_empty():
                 return False
@@ -174,16 +195,13 @@ class composite:
 
 
 class segment:
-    """Class segment
-
+    """
     """
     # Attributes:
     
     # Operations
     def __init__(self, seg_str, seg_term, ele_term, subele_term):
-        """function segment
-        
-        returns void
+        """
         """
         self.seg_term = seg_term
         self.seg_term_orig = seg_term
@@ -208,18 +226,19 @@ class segment:
                 self.elements.append(composite(ele, subele_term))
     
     def __repr__(self):
-        """function __repr__
+        """
+        @rtype: string
         """
         return self.format(self.seg_term, self.ele_term, self.subele_term)
     
     def __getitem__(self, idx):
-        """function operator[]
+        """
         returns element instance
         """
         return self.elements[idx]
 
     def __setitem__(self, idx, val):
-        """function operator[]
+        """
         """
         self.elements[idx] = composite(val, self.subele_term)
 
@@ -230,9 +249,8 @@ class segment:
         return len(self.elements)
     
     def get_seg_id(self):
-        """function get_seg_id
-        
-        returns string
+        """
+        @rtype: string
         """
         return self.seg_id
 
@@ -262,6 +280,9 @@ class segment:
 #        self.eol = eol
 
     def format(self, seg_term=None, ele_term=None, subele_term=None):
+        """
+        @rtype: string
+        """
         if seg_term is None:
             seg_term = self.seg_term
         if ele_term is None:
@@ -282,6 +303,9 @@ class segment:
             str_elems.append(ele.format(subele_term))
 
     def is_empty(self):
+        """
+        @rtype: boolean
+        """
         for ele in self.elements:
             if not ele.is_empty():
                 return False
