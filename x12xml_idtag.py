@@ -108,7 +108,8 @@ class x12xml_idtag(x12xml):
                 self.writer.pop() #comp
             elif child_node.is_element():
                 if seg[i] == '':
-                    self.writer.empty(child_node.id)
+                    pass
+                    #self.writer.empty(child_node.id)
                 else:
                     self.writer.elem(child_node.id, seg[i])
             else:

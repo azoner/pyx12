@@ -107,7 +107,8 @@ class x12xml_simple(x12xml):
                 self.writer.pop() #comp
             elif child_node.is_element():
                 if seg[i] == '':
-                    self.writer.empty(u"ele", attrs={u'id': child_node.id})
+                    pass
+                    #self.writer.empty(u"ele", attrs={u'id': child_node.id})
                 else:
                     self.writer.elem(u'ele', seg[i], attrs={u'id': child_node.id})
             else:
