@@ -1,6 +1,7 @@
 <?xml version="1.0"?>
 <!-- 
-	This file is part of the pyX12 project.
+    $Id$
+    This file is part of the pyX12 project.
 
     Copyright (c) 2001, 2002 Kalamazoo Community Mental Health Services,
 		John Holland <jholland@kazoocmh.org> <john@zoner.org>
