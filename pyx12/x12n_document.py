@@ -125,7 +125,7 @@ def x12n_document(param, fd_src, fd_997, fd_html, fd_xmldoc=None):
         raise EngineError, "Map not found.  icvn=%s, fic=%s, vriic=%s" % \
             (icvn, fic, vriic)
     #map = map_if.map_if(os.path.join('map', map_file), param)
-    map = map_if.load_map_file(os.path.join(map_path, map_file), param)
+    map = map_if.load_map_file(map_file, param)
     logger.debug('Map file: %s' % (map_file))
     node = map.getnodebypath('/ISA')
     logger.debug('Map file loaded')
@@ -177,7 +177,7 @@ def x12n_document(param, fd_src, fd_997, fd_html, fd_xmldoc=None):
                         raise EngineError, "Map not found.  icvn=%s, fic=%s, vriic=%s" % \
                             (icvn, fic, vriic)
                     #map = map_if.map_if(os.path.join('map', map_file), param)
-                    map = map_if.load_map_file(os.path.join(map_path, map_file), param)
+                    map = map_if.load_map_file(map_file, param)
                     logger.debug('Map file: %s' % (map_file))
                     node = map.getnodebypath('/GS')
                 errh.add_gs_loop(seg, src)

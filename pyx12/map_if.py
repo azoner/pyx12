@@ -192,7 +192,9 @@ class map_if(x12_node):
         #global codes
         self.ext_codes = codes.ExternalCodes(param.get_param('map_path'))
         try:
-            self.reader = libxml2.newTextReaderFilename(map_file)
+            map_path = param.get_param('map_path')
+            self.reader = libxml2.newTextReaderFilename(os.path.join(map_path, \
+                map_file))
         except:
             raise errors.GSError, 'Map file not found: %s' % (map_file)
         try:    
@@ -1264,8 +1266,13 @@ class Pickle_Errors(Exception):
 
 
 def load_map_file(map_file, param):
+    """
+    map_file - absolute path for file
+    """
     logger = logging.getLogger('pyx12.pickler')
-    pickle_file = '%s.%s' % (os.path.splitext(map_file)[0], 'pkl')
+    map_path = param.get_param('map_path')
+    pickle_file = '%s.%s' % (os.path.splitext(os.path.join(map_path, \
+        map_file))[0], 'pkl')
     try:
         if os.stat(map_file)[ST_MTIME] < os.stat(pickle_file)[ST_MTIME]:
             map = cPickle.load(open(pickle_file))
@@ -1275,7 +1282,10 @@ def load_map_file(map_file, param):
         else:
             raise Pickle_Errors, "reload map"
     except:
-        map = map_if(map_file, param)
+        try:
+            map = map_if(map_file, param)
+        except:
+            raise errors.EngineError, 'Load of map file failed: %s' % (map_file)
         try:
             #pdb.set_trace()
             cPickle.dump(map, open(pickle_file,'w'))
