@@ -520,6 +520,12 @@ class IsValidSyntaxL(unittest.TestCase):
         (result, err_str) = pyx12.map_if.is_syntax_valid(seg, syntax)
         self.failIf(result, err_str)
 
+    def test_L_missing_element_ok(self):
+        seg = pyx12.segment.segment('CAS*PR*42*75.00**1*25.00**2*75.00~', '~', '*', ':')
+        syntax = ['L', 8, 9, 10]
+        (result, err_str) = pyx12.map_if.is_syntax_valid(seg, syntax)
+        self.failUnless(result, err_str)
+
     def test_L_ok_blank(self):
         seg1 = ['NM1', '41', '1', 'Smith', 'Sam', '', '', '', '', '', 'ZZZZ']
         seg = pyx12.segment.segment(string.join(seg1, '*'), '~', '*', ':')
