@@ -245,7 +245,7 @@ class error_997_visitor(error_visitor.error_visitor):
         """
         seg_data = pyx12.segment.segment('AK2', '~', '*', ':')
         seg_data.append(err_st.trn_set_id)
-        seg_data.append(err_st.trn_set_control_num)
+        seg_data.append(err_st.trn_set_control_num.strip())
         self._write(seg_data)
         
     def visit_st_post(self, err_st):

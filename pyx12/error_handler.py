@@ -556,6 +556,8 @@ class err_isa(err_node):
         """
         """
         count = 0
+        for ele in self.elements:
+            count += ele.get_error_count()
         for child in self.children:
             count += child.get_error_count()
         return count + len(self.errors)
@@ -690,6 +692,8 @@ class err_gs(err_node):
         """
         """
         count = 0
+        for ele in self.elements:
+            count += ele.get_error_count()
         for child in self.children:
             count += child.get_error_count()
         return count + len(self.errors)

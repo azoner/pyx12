@@ -96,7 +96,7 @@ class error_debug_visitor(error_visitor):
         #seg = ['AK9', err_gs.ack_code, '%i' % err_gs.st_count_orig, \
         #    '%i' % err_gs.st_count_recv, '%i' % (err_gs.st_count_recv - err_gs.count_failed_st())]
         self.fd.write(' GS Ack Code%s\n' % err_gs.ack_code)
-        self.fd.write(' GS st_count_orig%i\n' % err_gs.st_count_orig)
+        self.fd.write(' GS st_count_orig%s\n' % err_gs.st_count_orig)
         self.fd.write(' GS st_count_recv%i\n' % err_gs.st_count_recv)
         self.fd.write(' GS st_count_accept%i\n' % (err_gs.st_count_recv - err_gs.count_failed_st()))
 

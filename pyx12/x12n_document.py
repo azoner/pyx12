@@ -128,6 +128,7 @@ def x12n_document(param, src_file, fd_997, fd_html, fd_xmldoc=None):
         #xmldoc = x12xml_simple.x12xml_simple(fd_xmldoc, param.get('simple_dtd'))
         xmldoc = x12xml_idtag.x12xml_idtag(fd_xmldoc, param.get('idtag_dtd'))
 
+    valid = True
     for seg in src:
         #logger.debug(seg)
         #find node
@@ -181,7 +182,7 @@ def x12n_document(param, src_file, fd_997, fd_html, fd_xmldoc=None):
             else:
                 errh.add_seg(node, seg, src.get_seg_count(), src.get_cur_line(), src.get_ls_id())
 
-            node.is_valid(seg, errh)
+            valid &= node.is_valid(seg, errh)
 
         if fd_html:
             if node is not None and node.is_first_seg_in_loop():
@@ -209,8 +210,8 @@ def x12n_document(param, src_file, fd_997, fd_html, fd_xmldoc=None):
     if fd_xmldoc:
         del xmldoc
 
-    visit_debug = error_debug.error_debug_visitor(sys.stdout)
-    errh.accept(visit_debug)
+    #visit_debug = error_debug.error_debug_visitor(sys.stdout)
+    #errh.accept(visit_debug)
 
     #If this transaction is not a 997, generate one.
     if not (vriic=='004010' and fic=='FA'):
@@ -225,7 +226,7 @@ def x12n_document(param, src_file, fd_997, fd_html, fd_xmldoc=None):
     del control_map
     del cur_map
     try:
-        if errh.get_error_count() > 0:
+        if not valid or errh.get_error_count() > 0:
             return False
         else:
             return True
