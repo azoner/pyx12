@@ -56,6 +56,7 @@ class map_index:
         for a in self.maps:
             if a[0] == icvn and a[1] == vriic and a[2] == fic:
                 return a[3]
+        return None
 
     def print_all(self):
         for a in self.maps:

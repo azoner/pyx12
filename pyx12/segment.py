@@ -210,7 +210,7 @@ class segment:
     def __repr__(self):
         """function __repr__
         """
-        return self.format(self.seg_term, self.ele_term, self.subele_term, '')
+        return self.format(self.seg_term, self.ele_term, self.subele_term)
     
     def __getitem__(self, idx):
         """function operator[]
@@ -258,10 +258,10 @@ class segment:
     def set_subele_term(self, subele_term):
         self.subele_term = subele_term
 
-    def set_eol(self, eol):
-        self.eol = eol
+#    def set_eol(self, eol):
+#        self.eol = eol
 
-    def format(self, seg_term=None, ele_term=None, subele_term=None, eol='\n'):
+    def format(self, seg_term=None, ele_term=None, subele_term=None):
         if seg_term is None:
             seg_term = self.seg_term
         if ele_term is None:
@@ -271,9 +271,9 @@ class segment:
         str_elems = []
         for ele in self.elements:
             str_elems.append(ele.format(subele_term))
-        return '%s%s%s%s%s' % (self.seg_id, ele_term, \
+        return '%s%s%s%s' % (self.seg_id, ele_term, \
             string.join(str_elems, ele_term), \
-            seg_term, eol)
+            seg_term)
 
     def format_ele_list(self, str_elems, subele_term=':'):
         for ele in self.elements:

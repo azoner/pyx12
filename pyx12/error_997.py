@@ -77,7 +77,7 @@ class error_997_visitor(error_visitor.error_visitor):
         #self.ele_term = term[1]
         #self.subele_term = term[2]
         #self.eol = term[3]
-        self.eol = '\r\n'
+        self.eol = '\n'
         self.seg_count = 0
         self.st_control_num = 0
 
@@ -361,5 +361,5 @@ class error_997_visitor(error_visitor.error_visitor):
         Params:     seg_data - data segment instance
         """
         self.fd.write(seg_data.format(self.seg_term, self.ele_term, \
-            self.subele_term, self.eol))
+            self.subele_term))
         self.seg_count += 1
