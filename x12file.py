@@ -69,8 +69,6 @@ class x12file:
         self.st_count = 0
         self.hl_count = 0
         self.seg_count = 0
-        self.gs_errors = []
-        self.st_info = {}
         self.cur_line = 0
         self.buffer = None
         self.fd = fd
