@@ -159,5 +159,11 @@ if __name__ == '__main__':
     #    import profile
     #    profile.run('pyx12.x12n_document(src_filename)', 'pyx12.prof')
     #else:
+    try:
+        import psyco
+        psyco.full()
+    except ImportError:
+        pass
+
     sys.exit(not main())
 
