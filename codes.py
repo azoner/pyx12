@@ -83,7 +83,7 @@ class ExternalCodes:
     	#check the code against the list indexed by key
 	else:
 	    if not key in self.codes.keys():
-	    	raise EngineError, 'Enternel Code %s is not defined' % (key)
+	    	raise errors.EngineError, 'Enternel Code %s is not defined' % (key)
 	    if not code in self.codes[key]:
 	        return 0
 	return 1
