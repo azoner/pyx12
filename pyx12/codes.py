@@ -156,14 +156,14 @@ class ExternalCodes:
             pass
 
 
-    def IsValid(self, key, code, check_dte):
+    def IsValid(self, key, code, check_dte=None):
         """
         Name:    IsValid
         Desc:    Initialize the external list of codes
         Params:  key - the external codeset identifier
                  code - code to be verified
                  check_dte - YYYYMMDD - Date on which to check code validity. eg 20040514
-        Returns: 1 if code is valid, 0 if not
+        Returns: True if code is valid, False if not
         """
 
         #if not given a key, do not flag an error
@@ -171,31 +171,36 @@ class ExternalCodes:
             return True
         #check the code against the list indexed by key
         else:
-            if len(check_dte) != 8: 
-                raise errors.EngineError, 'Bad check date %s' & (check_dte)
-            dt_check_dte = datetime.date(int(check_dte[:4]), int(check_dte[4:6]), int(check_dte[-2:]))
             if not self.codes.has_key(key):
-                raise errors.EngineError, 'Enternel Code %s is not defined' % (key)
-            eff_dte = self.codes[key][0]
-            exp_dte = self.codes[key][1]
-            code_list = self.codes[key][2]
-            #print eff_dte, exp_dte
-            #pdb.set_trace()
-            if eff_dte != None:
-                dt_eff_dte = datetime.date(int(eff_dte[:4]), \
-                    int(eff_dte[4:6]), int(eff_dte[-2:]))
-            else: 
-                dt_eff_dte = dt_check_dte.min
-            if exp_dte != None:
-                dt_exp_dte = datetime.date(int(exp_dte[:4]), \
-                    int(exp_dte[4:6]), int(exp_dte[-2:]))
-            else: 
-                dt_exp_dte= dt_check_dte.max
-            if dt_check_dte >= dt_eff_dte and dt_check_dte <= dt_exp_dte:
+                raise errors.EngineError, 'Externel Code "%s" is not defined' % (key)
+                
+            if check_dte is None:
+                code_list = self.codes[key][2]
                 if code in code_list:
                     return True
+            else:
+                if len(check_dte) != 8: 
+                    raise errors.EngineError, 'Bad check date %s' & (check_dte)
+                dt_check_dte = datetime.date(int(check_dte[:4]), int(check_dte[4:6]), int(check_dte[-2:]))
+                eff_dte = self.codes[key][0]
+                exp_dte = self.codes[key][1]
+                code_list = self.codes[key][2]
+                #print eff_dte, exp_dte
+                #pdb.set_trace()
+                if eff_dte != None:
+                    dt_eff_dte = datetime.date(int(eff_dte[:4]), \
+                        int(eff_dte[4:6]), int(eff_dte[-2:]))
+                else: 
+                    dt_eff_dte = dt_check_dte.min
+                if exp_dte != None:
+                    dt_exp_dte = datetime.date(int(exp_dte[:4]), \
+                        int(exp_dte[4:6]), int(exp_dte[-2:]))
+                else: 
+                    dt_exp_dte = dt_check_dte.max
+                if dt_check_dte >= dt_eff_dte and dt_check_dte <= dt_exp_dte:
+                    if code in code_list:
+                        return True
         return False
-        return True
 
     def debug_print(self):
         for key in self.codes.keys():
