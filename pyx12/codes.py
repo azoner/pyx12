@@ -69,7 +69,7 @@ class ExternalCodes:
         Name:    __init__
         Desc:    Initialize the external list of codes
         Params:  
-                 exclude - string of external codes to ignore
+                 exclude - comma separated string of external codes to ignore
 
         self.codes
             <codeset>

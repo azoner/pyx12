@@ -14,7 +14,6 @@ from pyx12.params import params
 
 class TestExternal(unittest.TestCase):
     """
-    FAIL - no end tag for explicit loop
     """
     def setUp(self):
         param = params()
@@ -30,6 +29,22 @@ class TestExternal(unittest.TestCase):
 
     def test_invalid_state1(self):
         self.failIf(self.ext_codes.IsValid('states', 'AN', '20031001'))
+
+    def test_exclude_state_code(self):
+        param = params()
+        param.set_param('map_path', os.path.expanduser('~/src/pyx12/map/'))
+        param.set_param('exclude_external_codes', 'states')
+        ext_codes = pyx12.codes.ExternalCodes(param.get_param('map_path'), \
+            param.get_param('exclude_external_codes'))
+        self.failUnless(ext_codes.IsValid('states', 'ZZ'))
+
+    def test_noexclude_state_code(self):
+        param = params()
+        param.set_param('map_path', os.path.expanduser('~/src/pyx12/map/'))
+        ext_codes = pyx12.codes.ExternalCodes(param.get_param('map_path'), \
+            param.get_param('exclude_external_codes'))
+        self.failIf(ext_codes.IsValid('states', 'ZZ'))
+
 
 def suite():
     suite = unittest.TestSuite()
