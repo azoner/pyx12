@@ -22,8 +22,8 @@ class x12Error(Exception):
 #class ISAError(x12Error):
 #    """Errors in the ISA or IEA segements."""
 
-#class GSError(x12Error):
-#    """Errors in the GS or GE segements."""
+class GSError(x12Error):
+    """Errors in the GS or GE segements."""
 
 #class STError(x12Error):
 #    """Errors in the ST or SE segements."""
