@@ -320,11 +320,11 @@ class error_997_visitor(error_visitor.error_visitor):
             seg_base.append('')
         seg_str = seg_base.format('~', '*', ':')
         for (err_cde, err_str, err_value) in err_seg.errors:
-            seg_data = pyx12.segment.segment(seg_str)
+            seg_data = pyx12.segment.segment(seg_str, '~', '*', ':')
             seg_data.append(err_cde)
             self._write(seg_data)
         if err_seg.child_err_count() > 0:
-            seg_data = pyx12.segment.segment(seg_str)
+            seg_data = pyx12.segment.segment(seg_str, '~', '*', ':')
             seg_data.append('8')
             self._write(seg_data)
         
