@@ -69,8 +69,8 @@ from params import params
 #Global Variables
 __author__  = "John Holland <jholland@kazoocmh.org> <john@zoner.org>"
 __status__  = "beta"
-__version__ = "0.3.0.0"
-__date__    = "10/1/2003"
+__version__ = "1.0.1b1"
+__date__    = "1/1/2004"
 
 #logger = None
 
