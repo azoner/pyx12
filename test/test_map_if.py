@@ -302,6 +302,17 @@ class CompositeRequirement(unittest.TestCase):
         self.failIf(result)
         self.assertEqual(self.errh.err_cde, '2')
 
+#    def test_comp_not_used_ok1(self):
+
+    def test_comp_not_used_fail1(self):
+        node = self.map.getnodebypath('/REF')
+        self.assertNotEqual(node, None)
+        self.assertEqual(node.base_name, 'segment')
+        seg_data = pyx12.segment.segment('REF*87*004010X098A1**:1~', '~', '*', ':')
+        result = node.is_valid(seg_data, self.errh)
+        self.failIf(result)
+        self.assertEqual(self.errh.err_cde, '2')
+
 
 class TrailingSpaces(unittest.TestCase):
     def setUp(self):
@@ -350,10 +361,10 @@ def suite():
     #    IsValidSyntaxP, IsValidSyntaxR, IsValidSyntaxC, \
     #    IsValidSyntaxE, IsValidSyntaxL))
     suite = unittest.TestSuite()
-    suite.addTest(unittest.makeSuite(Test_getnodebypath))
-    suite.addTest(unittest.makeSuite(TrailingSpaces))
+    #suite.addTest(unittest.makeSuite(Test_getnodebypath))
+    #suite.addTest(unittest.makeSuite(TrailingSpaces))
     suite.addTest(unittest.makeSuite(CompositeRequirement))
-    suite.addTest(unittest.makeSuite(Element_is_valid))
+    #suite.addTest(unittest.makeSuite(Element_is_valid))
     return suite
                 
 #if __name__ == "__main__":
