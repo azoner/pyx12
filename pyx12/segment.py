@@ -200,7 +200,12 @@ class segment:
         if elems:
             self.seg_id = elems[0]
         for ele in elems[1:]:
-            self.elements.append(composite(ele, subele_term))
+            if self.seg_id == 'ISA':
+                #Special handling for ISA segment
+                #guarantee subele_term will not be matched
+                self.elements.append(composite(ele, ele_term))
+            else:
+                self.elements.append(composite(ele, subele_term))
     
     def __repr__(self):
         """function __repr__
