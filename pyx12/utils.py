@@ -154,7 +154,7 @@ def seg_str(seg, seg_term, ele_term, subele_term, eol=''):
     """
     Join a list of elements
     @param seg: List of elements
-    @type seg_term: list[string|list[string]]
+    @type seg: list[string|list[string]]
     @param seg_term: Segment terminator character
     @type seg_term: string
     @param ele_term: Element terminator character

@@ -3,6 +3,7 @@ CFLAGS=-Wall  # c++ compiler flags
 #LDFLAGS=-Wall   # linker flags
 LDFLAGS = -lm -Wall
 #-I /usr/local/include -L /usr/local/lib 
+DOCTARGET = /usr/www/sa/doc/pyx12-epydoc
 
 all:
 	test_csegment
@@ -25,3 +26,6 @@ test1.o: test1.cxx segment.hxx
 
 clean:
 	rm -f *.o *.core
+
+doc:
+	epydoc --html --name Pyx12 --no-frames -o $(DOCTARGET) .
