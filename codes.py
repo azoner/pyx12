@@ -118,6 +118,11 @@ class ExternalCodes:
                     	raise errors.XML_Reader_Error, 'End of Map File'
             except errors.XML_Reader_Error:
 	    	pass
+        try:
+            cPickle.dump(self.codes,open(pickle_file,'w'))
+        except:
+            pass
+
 
     def IsValid(self, key, code):
     	"""
