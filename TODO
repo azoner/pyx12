@@ -9,12 +9,14 @@ Restructure maps
 HTML output
   Informational lines
     Explicit loops
+  Mandatory segment %s missing (Code: 3) should print before the next found segment
+  GS errors are re-printing at the GE level
+  
 
 Unit Testing
   map_walker
   x12file - HL
   map_if
-  syntax examples
   codes
 
 Functional Testing
