@@ -36,9 +36,6 @@ map_files = [
     'map/997.4010.xml',
     'map/x12.control.00401.xml' 
 ]
-#pickle_files = []
-#for file in map_files:
-#    pickle_files.append('%s.%s' % (os.path.splitext(file)[0], 'pkl'))
 
 kw = {  
     'name': "pyx12",
@@ -53,7 +50,6 @@ kw = {
         'bin/x12_build_pkl.py', 'bin/x12norm.py'],
     'data_files': [
         (map_dir, map_files),
-#        (map_dir, pickle_files),
         (map_dir, ['map/README', 'map/codes.xml', 'map/codes.xsd',
         'map/comp_test.xml', 'map/map.xsd', 'map/maps.xml']),
         ('share/doc/pyx12', ['README.txt']),
@@ -78,12 +74,6 @@ if (hasattr(core, 'setup_keywords') and
 param = pyx12.params.params()
 for file in map_files:
     param.set_param('map_path', 'map')
-    #param.set_param('pickle_path', 'map')
     map_file = os.path.basename(file)
-    #pickle_file = '%s.%s' % (os.path.splitext(map_file)[0], 'pkl')
-    #if os.path.exists(map_file) and not os.path.exists(pickle_file):
-    #    print 'Pickling map file %s' % (file)
-    #    map = pyx12.map_if.map_if(map_file, param)
-    #    cPickle.dump(map, open(os.path.join('map', pickle_file),'w'))
 
 core.setup(**kw)
