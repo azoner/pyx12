@@ -116,7 +116,9 @@ def main():
                 else:
                     target_997 = os.path.splitext(src_filename)[0] + '.997'
                 #fd_997 = open(target_997, 'w')
-                fd_997 = tempfile.mkstemp(text=True)
+                #(fd_997, temp_997) = tempfile.mkstemp(text=True)
+                fd_997 = tempfile.TemporaryFile()
+                #O_EXCL
             if flag_html:
                 target_html = os.path.splitext(src_filename)[0] + '.html'
                 fd_html = open(target_html, 'w')
