@@ -34,7 +34,6 @@ class Explicit_Loops(unittest.TestCase):
     def test_GS_to_ST(self):
         node = self.map.getnodebypath('/GS')
         seg = pyx12.segment.segment('ST*837', '~', '*', ':')
-        pdb.set_trace()
         node = self.walker.walk(node, seg, self.errh, 5, 4, None)
         self.assertNotEqual(node, None)
         self.assertEqual(seg.get_seg_id(), node.id)
@@ -217,9 +216,9 @@ class Segment_ID_Checks(unittest.TestCase):
 def suite():
     suite = unittest.TestSuite()
     suite.addTest(unittest.makeSuite(Explicit_Loops))
-    #suite.addTest(unittest.makeSuite(Implicit_Loops))
-    #suite.addTest(unittest.makeSuite(SegmentWalk))
-    #suite.addTest(unittest.makeSuite(Segment_ID_Checks))
+    suite.addTest(unittest.makeSuite(Implicit_Loops))
+    suite.addTest(unittest.makeSuite(SegmentWalk))
+    suite.addTest(unittest.makeSuite(Segment_ID_Checks))
     return suite
 
 #if __name__ == "__main__":
