@@ -1,5 +1,7 @@
 This package requires libxml2 to build and run.
 
+psyco will be used if present. It gives a ~40% decrease in runtime.
+
 To install:
 
 python setup.py install
