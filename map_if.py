@@ -608,14 +608,8 @@ class segment_if(x12_node):
             err_str = 'Too many elements in segment %s. Has %i, should have %i' % \
                 (seg[0], len(seg)-1, child_count)
             self.logger.error(err_str)
-            err = {}
-            err['id'] = 'SEG'
-            err['seq'] = child_node.seq
-            err['str'] = err_str
-            err['code'] = '3'
-            err['data_ele'] = child_node.data_ele
-            err['value'] = seg[child_count+1]
-            errh.add_error(err)
+            err_value = seg[child_count+1]
+            errh.seg_error('3', err_str, err_value)
         valid = True
 #        if seg[0] == 'BGN':
 #            pdb.set_trace()
@@ -631,14 +625,9 @@ class segment_if(x12_node):
                     subele_count = child_node.get_child_count()
                     if len(comp) > subele_count:
                         subele_node = child_node.get_child_node_by_idx(subele_count+1)
-                        err = {}
-                        err['id'] = 'SEG'
-                        err['seq'] = subele_node.seq
-                        err['str'] = 'Too many sub-elements in composite %s' % (subele_node.refdes)
-                        err['code'] = '3'
-                        err['data_ele'] = subele_node.data_ele
-                        err['value'] = comp[subele_count+1]
-                        errh.add_error(err)
+                        err_str = 'Too many sub-elements in composite %s' % (subele_node.refdes)
+                        err_value = comp[subele_count+1]
+                        errh.seg_error(err_cde='3', err_str, err_value)
                     valid &= child_node.is_valid(seg[i+1], errh, self.check_dte)
                 elif child_node.is_element():
                     # Validate Element
@@ -881,9 +870,10 @@ class element_if(x12_node):
         """
         global codes
         if self.parent.is_composite():
-            errh.add_ele(self.parent.seq, self.data_ele, self.seq)
+            errh.add_ele(self.id, self.name, self.parent.seq, self.data_ele, \
+                self.seq)
         else:
-            errh.add_ele(self.seq, self.data_ele)
+            errh.add_ele(self.id, self.name, self.seq, self.data_ele)
         if elem_val == '' or elem_val is None:
             if self.usage == 'N':
                 return True
