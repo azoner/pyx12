@@ -39,8 +39,9 @@ Tracks segment/line/loop counts
 """
 
 #import os
-#import sys
+import sys
 import string
+from types import *
 
 # Intrapackage imports
 from errors import *
@@ -57,10 +58,9 @@ class x12file:
         """
         Name:    __init__
         Desc:    Initialize the file
-        Params:  fd - file descriptor
+        Params:  fd - source file descriptor
         """
         
-        #self.lines = []
         self.loops = []
         self.hl_stack = []
         self.gs_count = 0
@@ -68,14 +68,13 @@ class x12file:
         self.hl_count = 0
         self.seg_count = 0
         self.cur_line = 0
-        #os.linesep = self.seg_term
         self.buffer = None
         self.fd = fd
 
         ISA_len = 106
         line = fd.read(ISA_len)
-        #.seek(0)
-        if line[:3] != 'ISA': raise WEDI1_Error, "First line does not begin with 'ISA': %s" % line[:3]
+        if line[:3] != 'ISA': 
+            raise WEDI1Error, "First line does not begin with 'ISA': %s" % line[:3]
         assert (len(line) == ISA_len), "ISA line is only %i characters" % len(line)
         self.seg_term = line[-1]
         self.ele_term = line[3]
@@ -85,24 +84,27 @@ class x12file:
         self.lines.append(line[:-1])
         self.buffer = line
         self.buffer += self.fd.read(DEFAULT_BUFSIZE)
-        #for line in string.split(fd.read(), self.seg_term):
-        #    if string.strip(line) != '':
-        #        self.lines.append(string.strip(line).replace('\n','').replace('\r',''))
         
     def __iter__(self):
         return self
 
     def next(self):
-        i = buffer.find(self.seg_term)
-        if i == -1: 
-            self.buffer += self.fd.read(DEFAULT_BUFSIZE)
-            #raise StopIteration
-        line = buffer[:i].strip().replace('\n','').replace('\r','')
-        buffer = buffer[i:]
-        seg = string.split(line, self.ele_term)
+        try:
+            if self.buffer.find(self.seg_term) == -1: # Need more data
+                self.buffer += self.fd.read(DEFAULT_BUFSIZE)
+            while 1:
+                # Get first segment in buffer
+                (line, self.buffer) = self.buffer.split(self.seg_term, 1) 
+                line = line.strip().replace('\n','').replace('\r','')
+                if line != '':
+                    break
+            seg = string.split(line, self.ele_term)
+        except:
+            raise StopIteration
+
         for i in xrange(len(seg)):
             if seg[i].find(self.subele_term) != -1:
-                seg[i] = seg[i].split(self.subele_term)
+                seg[i] = seg[i].split(self.subele_term) # Split composite
         if seg[0] == 'ISA': 
             self.loops.append(('ISA', seg[13]))
             self.gs_count = 0
@@ -120,7 +122,8 @@ class x12file:
             if self.loops[-1][0] != 'GS' or self.loops[-1][1] != seg[2]:
                 raise GSError, 'GE does not match GS id'
             if int(seg[1]) != self.st_count:
-                raise GSError, 'GE count for GE02=%s is wrong. I count %i' % (seg[2], self.st_count)
+                raise GSError, 'GE count for GE02=%s is wrong. I count %i' \
+                    % (seg[2], self.st_count)
             del self.loops[-1]
         elif seg[0] == 'ST': 
             self.st_count += 1
@@ -130,7 +133,8 @@ class x12file:
             if self.loops[-1][0] != 'ST' or self.loops[-1][1] != seg[2]:
                 raise STError, 'SE does not match ST id'
             if int(seg[1]) != self.seg_count + 1:
-                raise STError, 'SE count of %s for SE02=%s is wrong. I count %i' % (seg[1], seg[2], self.seg_count + 1)
+                raise STError, 'SE count of %s for SE02=%s is wrong. I count %i' \
+                    % (seg[1], seg[2], self.seg_count + 1)
             del self.loops[-1]
         elif seg[0] == 'LS': 
             self.loops.append(('LS', seg[6]))
@@ -140,7 +144,8 @@ class x12file:
             self.seg_count += 1
             self.hl_count += 1
             if self.hl_count != int(seg[1]):
-                raise x12Error, 'My HL count %i does not match your HL count %s' % (self.hl_count, seg[1])
+                raise x12Error, 'My HL count %i does not match your HL count %s' \
+                    % (self.hl_count, seg[1])
             if seg[2] != '':
                 parent = int(seg[2])
                 if parent not in self.hl_stack:
@@ -165,12 +170,12 @@ class x12file:
         return (isa_id, gs_id, st_id, self.seg_count, self.cur_line)
 
 
-    def print(self):
-        sys.stdout.write('\n')
+    def print_seg(self, seg):
+        tmp = []
+        for a in seg:
+            if type(a) is ListType:
+                tmp.append(string.join(a, self.subele_term))
+            else:
+                tmp.append(a)
+        sys.stdout.write('%s~\n' % (string.join(tmp, self.ele_term)))
 
-#    def close(self):
-#        """Free the memory buffer.
-#        """
-#        if not self.closed:
-#            self.closed = 1
-#            del self.buf, self.pos
