@@ -33,6 +33,9 @@
 """pyx12 package exception classes.
 """
 
+class XML_Reader_Error(Exception):
+    """Class for XML Reader errors."""
+
 class x12Error(Exception):
     """Base class for X12N format errors."""
 
