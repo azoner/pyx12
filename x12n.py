@@ -84,7 +84,7 @@ class x12n_document:
 	    	iea_seg_node = seg_node
 
 	# Start XML output
-	sys.stdout.write('<?xml version="1.0" encoding="UTF-8"?>\n')
+	sys.stdout.write('<?xml version="1.0" encoding="UTF-8"?>\n<transaction>\n')
 	tab.incr()
 	# ISA Segment	
 	isa_seg = segment(isa_seg_node, seg)
@@ -108,12 +108,10 @@ class x12n_document:
 
 	# Loop through GS segments
 	for loop in GetExplicitLoops(lines[:-1], 'GS', 'GE', 6, 2):
-	    print loop[0]
-	    print loop[-1]
 	    gs = GS_loop(self, loop)
 
 	iea_seg.xml()
-	sys.stdout.write('</xml>\n')
+	sys.stdout.write('</transaction>\n')
 	dom_isa.unlink()
 
     
@@ -157,12 +155,12 @@ class GS_loop:
 
 	# Get map for this GS loop
 	#print "--load whole dom"
-	#self.dom_map = xml.dom.minidom.parse('map/' + self.map_file)
+	self.dom_map = xml.dom.minidom.parse('map/' + self.map_file)
 	#print "--end load whole dom"
 
 	# Loop through ST segments
-	#for loop in GetExplicitLoops(gs[1:-1], 'ST', 'SE', 2, 2):
-	#    st = ST_loop(self, isa, loop)
+	for loop in GetExplicitLoops(gs[1:-1], 'ST', 'SE', 2, 2):
+	    st = ST_loop(self, isa, loop)
 	
 	ge_seg.xml()
 	dom_gs.unlink()
@@ -343,7 +341,7 @@ class element:
         Params:  
         Returns: 
         """
-	sys.stdout.write('<elem code="%s">%s</elem>\n' % (self.refdes, self.x12_elem))
+	sys.stdout.write('<element code="%s">%s</element>\n' % (self.refdes, self.x12_elem))
     
     def validate(self):
         """
