@@ -64,6 +64,14 @@ class x12file
     x12file(fd_source) //, errh)
     {
         fd = fd;
+        /*
+         * tring file_name; 
+         *   cin >> file_name;
+         *     ifstream ifs(file_name.c_str());
+         *       if (!ifs.is_open()) {
+         *           cout << "Eh?  Could not open file named " << file_name 
+         *                    << endl;
+         *                    */
         //errh = errh
         loops = []
         hl_stack = []
@@ -104,6 +112,17 @@ class x12file
         string err_str;
         string group_control_number;
         string::size_type pos;
+        /*
+         * void get_chunk(istream& in, string& s, char terminator = '\t')
+         * {
+         *   s.erase(s.begin(), s.end());
+         *     s.reserve(20);
+         *       string::value_type ch;
+         *         while (in.get(ch) && ch != terminator)
+         *             s.insert(s.end(), ch);
+         *             }
+         *             
+         */
         try {
             if(buffer.find(seg_term) == -1)
                 buffer += fd.read(DEFAULT_BUFSIZE);
