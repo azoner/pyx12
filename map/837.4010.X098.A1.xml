@@ -35,7 +35,7 @@
 <transaction>
   <id>837</id>
   <name>HIPAA Health Care Claim: Professional X098A1-837</name>
-  <loop>
+  <loop type="explicit">
     <id>ISA</id>
     <name>Interchange Control Header</name>
     <usage>R</usage>
@@ -254,7 +254,7 @@
         <max_len>1</max_len>
       </element>
     </segment>
-    <loop>
+    <loop type="explicit">
       <id>GS</id>
       <name>Functional Group Header</name>
       <usage>R</usage>
@@ -358,7 +358,7 @@
           </valid_codes>
         </element>
       </segment>
-      <loop>
+      <loop type="explicit">
         <id>ST</id>
         <name>Transaction Set Header</name>
         <usage>R</usage>
@@ -33633,6 +33633,101 @@
         </element>
       </segment>
     </loop>
+    <segment>
+      <id>TA1</id>
+      <name>Interchange Achnowledgement</name>
+      <usage>S</usage>
+      <pos>2</pos>
+      <element>
+        <data_ele>I12</data_ele>
+        <name>Interchange Control Number</name>
+        <usage>R</usage>
+        <seq>01</seq>
+        <refdes>TA101</refdes>
+        <data_type>N0</data_type>
+        <min_len>9</min_len>
+        <max_len>9</max_len>
+      </element>
+      <element>
+        <data_ele>I08</data_ele>
+        <name>Interchange Date</name>
+        <usage>R</usage>
+        <seq>02</seq>
+        <refdes>TA102</refdes>
+        <data_type>DT</data_type>
+        <min_len>6</min_len>
+        <max_len>6</max_len>
+      </element>
+      <element>
+        <data_ele>I09</data_ele>
+        <name>Interchange Time</name>
+        <usage>R</usage>
+        <seq>03</seq>
+        <refdes>TA103</refdes>
+        <data_type>TM</data_type>
+        <min_len>4</min_len>
+        <max_len>4</max_len>
+      </element>
+      <element>
+        <data_ele>I17</data_ele>
+        <name>Interchange Achnowledgement Code</name>
+        <usage>R</usage>
+        <seq>04</seq>
+        <refdes>TA104</refdes>
+        <data_type>ID</data_type>
+        <min_len>1</min_len>
+        <max_len>1</max_len>
+        <valid_codes>
+          <code>A</code>
+          <code>E</code>
+          <code>R</code>
+        </valid_codes>
+      </element>
+      <element>
+        <data_ele>I18</data_ele>
+        <name>Interchange Note Code</name>
+        <usage>R</usage>
+        <seq>05</seq>
+        <refdes>TA105</refdes>
+        <data_type>ID</data_type>
+        <min_len>3</min_len>
+        <max_len>3</max_len>
+        <valid_codes>
+          <code>000</code>
+          <code>001</code>
+          <code>002</code>
+          <code>003</code>
+          <code>004</code>
+          <code>005</code>
+          <code>006</code>
+          <code>007</code>
+          <code>008</code>
+          <code>009</code>
+          <code>010</code>
+          <code>011</code>
+          <code>012</code>
+          <code>013</code>
+          <code>014</code>
+          <code>015</code>
+          <code>016</code>
+          <code>017</code>
+          <code>018</code>
+          <code>019</code>
+          <code>020</code>
+          <code>021</code>
+          <code>022</code>
+          <code>023</code>
+          <code>024</code>
+          <code>025</code>
+          <code>026</code>
+          <code>027</code>
+          <code>028</code>
+          <code>029</code>
+          <code>030</code>
+          <code>031</code>
+        </valid_codes>
+      </element>
+    </segment>
     <segment>
       <id>IEA</id>
       <name>Interchange Control Trailer</name>
