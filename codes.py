@@ -61,10 +61,10 @@ class ExternalCodes:
 	
 	self.codes = {}
 	
-    	# init the map of codes from the pickled file codes.pic
+    	# init the map of codes from the pickled file codes.pkl
 	try:
-	    if os.stat('map/codes.xml')[ST_MTIME] < os.stat('map/codes.pic')[ST_MTIME]:
-		self.codes = cPickle.load(open('map/codes.pic'))
+	    if os.stat('map/codes.xml')[ST_MTIME] < os.stat('map/codes.pkl')[ST_MTIME]:
+		self.codes = cPickle.load(open('map/codes.pkl'))
 	    else: 
 	        raise "reload codes"
 	except:
@@ -82,7 +82,7 @@ class ExternalCodes:
 			        code_list.append(a.data)
 	        self.codes[id] = code_list
 	    try:
-	        cPickle.dump(self.codes,open('map/codes.pic','w'))
+	        cPickle.dump(self.codes,open('map/codes.pkl','w'))
 	    except:
 	        pass
 	#print self.codes.keys()
