@@ -121,6 +121,7 @@
 	<tr>
 	<td colspan="3"></td>
 	<td class="code">
+	<xsl:apply-templates select="@external"/>
         <xsl:for-each select="code">
 	    <xsl:value-of select="."/><xsl:text> </xsl:text> 
         </xsl:for-each>
@@ -129,17 +130,9 @@
 	</tr>
     </xsl:template>
 
-    <xsl:template match="valid_codes/external">
-	<tr class="codes">
-	<td colspan="3"></td>
-	<td>
-	    <xsl:text>Enternal Source:</xsl:text><xsl:value-of select="@id"/>
-	</td>
-	<td colspan="3"></td>
-	</tr>
+    <xsl:template match="@external">
+	<xsl:text>External Source: </xsl:text><xsl:value-of select="."/><xsl:text> </xsl:text>
     </xsl:template>
-
-
 
     <xsl:template match="text()|@*"/>
 
