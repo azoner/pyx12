@@ -12,4 +12,5 @@ int main()
     cout << seg_str << endl;
     Pyx12::segment seg_data(seg_str, "~", "*", ":");
 //    cout << seg_data << endl;
+    return 1;
 }

@@ -206,7 +206,9 @@ const Pyx12::element& Pyx12::composite::operator[](size_t i) const {
     return elements[i]; 
 }
 
-
+///////////////////////////////////////////////////////////////////////////
+//  SEGMENT CLASS
+///////////////////////////////////////////////////////////////////////////
 Pyx12::segment::segment(const string& seg_str, const string& seg_term_,
         const string& ele_term_, const string& subele_term_)
 {
@@ -219,13 +221,16 @@ Pyx12::segment::segment(const string& seg_str, const string& seg_term_,
     subele_term = subele_term_;
     subele_term_orig = subele_term_;
     //seg_id = '';
+    cerr << "A1" << endl;;
     if(seg_str.empty())
         throw Pyx12::EngineError("seg_str should not be empty");
+    cerr << "A2" << endl;;
     if(seg_str.substr(seg_str.length()-1) == seg_term)
         //elems = split(seg_str.substr(seg_str.begin(), seg_str.end()-1));
         elems = split(seg_str.substr(0, seg_str.length()-1));
     else
         elems = split(seg_str);
+    cerr << "A3" << endl;;
     seg_id = elems.front();
 
     iter i = elems.begin();
@@ -234,6 +239,7 @@ Pyx12::segment::segment(const string& seg_str, const string& seg_term_,
             elements.push_back(composite((*i), ele_term));
         else
             elements.push_back(composite((*i), subele_term));
+        i++;
     }
 }
 /*
@@ -261,16 +267,19 @@ vector<string> Pyx12::segment::split(const string& seg_str)
     iter i = seg_str.begin();
     iter j;
     while(i != seg_str.end()) {
+        cerr << "B1" << endl;
         //i = find_if(i, seg_str.end(), Pyx12::segment::not_delim);
         //j = find_if(i, seg_str.end(), Pyx12::segment::delim);
         while(i != seg_str.end())
-            if((*i) != ele_term[0])
+            if((*i++) != ele_term[0])
                 break;
         j = find(i, seg_str.end(), ele_term[0]);
         if(i != seg_str.end())
             ret.push_back(string(i, j));
+        cerr << string(i, j) << endl;
         i = j;
     }
+    cerr << "B2" << endl;
     return ret;
 }
 
