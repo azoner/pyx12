@@ -55,6 +55,9 @@ class base_element:
     def format(self, subele_term=None):
         raise NotImplementedError()
 
+    def get_value(self, subele_term=None):
+        raise NotImplementedError()
+
     def is_composite(self):
         return False
     
@@ -143,6 +146,9 @@ class element(base_element):
         return self.ele_val
     
     def format(self, subele_term=None):
+        return self.ele_val
+
+    def get_value(self):
         return self.ele_val
 
     def is_element(self):

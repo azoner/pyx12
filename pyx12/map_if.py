@@ -664,14 +664,14 @@ class segment_if(x12_node):
         Class: segment_if
         Name:  get_elemval_by_id  
         Desc:  Return the value of an element or sub-element identified by the id
-        Params: seg - segment list to search
+        Params: seg - segment object to search
                 id - string 
         Returns: value of the element
         """
         for child in self.children:
             if child.is_element():
                 if child.id == id:
-                    return seg[child.seq]
+                    return seg[child.seq].get_value()
             elif child.is_composite():
                 for child in self.children:
                     if child.is_element():
@@ -1380,9 +1380,10 @@ def is_syntax_valid(seg, syn):
         return (False, err_str)
 
     if syn[0] == 'P':
+        #pdb.set_trace()
         count = 0
         for s in syn[1:]:
-            if len(seg) >= s and seg[s] != '':
+            if len(seg) >= s and seg[s].get_value() != '':
                 count += 1
         if count != 0 and count != len(syn)-1:
             err_str = 'Syntax Error (%s): If any of %s is present, then all are required'\
@@ -1393,7 +1394,7 @@ def is_syntax_valid(seg, syn):
     elif syn[0] == 'R':
         count = 0
         for s in syn[1:]:
-            if len(seg) >= s and seg[s] != '':
+            if len(seg) >= s and seg[s].get_value() != '':
                 count += 1
         if count == 0:
             err_str = 'Syntax Error (%s): At least one element is required' % \
@@ -1404,7 +1405,7 @@ def is_syntax_valid(seg, syn):
     elif syn[0] == 'E':
         count = 0
         for s in syn[1:]:
-            if len(seg) >= s and seg[s] != '':
+            if len(seg) >= s and seg[s].get_value() != '':
                 count += 1
         if count > 1:
             err_str = 'Syntax Error (%s): At most one of %s may be present'\
@@ -1414,10 +1415,10 @@ def is_syntax_valid(seg, syn):
             return (True, None)
     elif syn[0] == 'C':
         # If the first is present, then all others are required
-        if len(seg) >= syn[1] and seg[syn[1]] != '':
+        if len(seg) >= syn[1] and seg[syn[1]].get_value() != '':
             count = 0
             for s in syn[2:]:
-                if len(seg) >= s and seg[s] != '':
+                if len(seg) >= s and seg[s].get_value() != '':
                     count += 1
             if count != len(syn)-2:
                 if len(syn[2:]) > 1: verb = 'are'
@@ -1430,10 +1431,10 @@ def is_syntax_valid(seg, syn):
         else:
             return (True, None)
     elif syn[0] == 'L':
-        if seg[syn[1]] != '':
+        if seg[syn[1]].get_value() != '':
             count = 0
             for s in syn[2:]:
-                if len(seg) >= s and seg[s] != '':
+                if len(seg) >= s and seg[s].get_value() != '':
                     count += 1
             if count == 0:
                 err_str = 'Syntax Error (%s): If %s%02i is present, then at least one of '\
