@@ -76,7 +76,7 @@ def x12n_document(fd):
     #Get Map of Control Segments
     control_map = map_if.map_if('map/map.x12.control.00401.xml')
     
-    logger.info('Run started')
+    logger.info('Start')
     walker = walk_tree()
     #Determine which map to use for this transaction
     for seg in src:
@@ -150,6 +150,7 @@ def x12n_document(fd):
             
         #get special values
         #generate xml
+    logger.info('End')
 
    
 def main():
@@ -171,7 +172,7 @@ def main():
     stderr_hdlr.setFormatter(formatter)
     logger.addHandler(hdlr) 
     logger.addHandler(stderr_hdlr)
-    logger.setLevel(logging.DEBUG)
+    logger.setLevel(logging.INFO)
 
     for o, a in opts:
         if o == '-v': logger.setLevel(logging.DEBUG)
