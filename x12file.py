@@ -180,3 +180,11 @@ class x12file:
                 tmp.append(a)
         sys.stdout.write('%s~\n' % (string.join(tmp, self.ele_term)))
 
+    def seg_str(self, seg):
+        tmp = []
+        for a in seg:
+            if type(a) is ListType:
+                tmp.append(string.join(a, self.subele_term))
+            else:
+                tmp.append(a)
+        return '%s~' % (string.join(tmp, self.ele_term))
