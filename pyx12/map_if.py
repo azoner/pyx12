@@ -805,7 +805,8 @@ class segment_if(x12_node):
             errh.ele_error('3', err_str, err_value)
             valid = False
 
-        type = None
+        dtype = []
+        type_list = []
         for i in xrange(min(len(seg_data), child_count)):
             #self.logger.debug('i=%i, len(seg_data)=%i / child_count=%i' % \
             #   (i, len(seg_data), self.get_child_count()))
@@ -825,9 +826,13 @@ class segment_if(x12_node):
                 # Validate Element
                 if i == 1 and seg_data.get_seg_id() == 'DTP' \
                         and seg_data[1].format() in ('RD8', 'D8', 'D6', 'DT', 'TM'):
-                    type = seg_data[1].format()
+                    dtype = [seg_data[1].format()]
+                if child_node.data_ele == '1250':
+                    type_list.extend(child_node.valid_codes)
                 if i == 2 and seg_data.get_seg_id() == 'DTP':
-                    valid &= child_node.is_valid(seg_data[i][0], errh, self.check_dte, type)
+                    valid &= child_node.is_valid(seg_data[i][0], errh, self.check_dte, dtype)
+                elif child_node.data_ele == '1251' and len(type_list) > 0:
+                    valid &= child_node.is_valid(seg_data[i][0], errh, self.check_dte, type_list)
                 else:
                     valid &= child_node.is_valid(seg_data[i][0], errh, self.check_dte)
 
@@ -1062,13 +1067,15 @@ class element_if(x12_node):
         # match also by ID
         pass
 
-    def is_valid(self, elem, errh, check_dte=None, type=None):
+    def is_valid(self, elem, errh, check_dte=None, type_list=[]):
         """
         Is this a valid element
         @param elem: element instance
         @type elem: pyx12.element
         @param errh: instance of error_handler
         @param check_dte: date string to check against (YYYYMMDD)
+        @param type: Optional data/time type list
+        @type type: list[string]
         @return: True if valid
         @rtype: boolean
         """
@@ -1136,7 +1143,7 @@ class element_if(x12_node):
                     (self.name, self.refdes, elem_val)
                 self._error(errh, err_str, '8', elem_val)
                 valid = False
-            elif type == 'TM':
+            elif self.data_type == 'TM':
                 err_str = 'Data element "%s" (%s) contains an invalid time (%s)' % \
                     (self.name, self.refdes, elem_val)
                 self._error(errh, err_str, '9', elem_val)
@@ -1146,16 +1153,19 @@ class element_if(x12_node):
                     (self.name, self.refdes, self.data_type, elem_val)
                 self._error(errh, err_str, '6', elem_val)
                 valid = False
-        if type is not None and not IsValidDataType(elem_val, type, self.root.param.get('charset')):
-            if type in ('RD8', 'DT', 'D8', 'D6'):
-                err_str = 'Data element "%s" (%s) contains an invalid date (%s)' % \
-                    (self.name, self.refdes, elem_val)
-                self._error(errh, err_str, '8', elem_val)
-                valid = False
-            elif type == 'TM':
-                err_str = 'Data element "%s" (%s) contains an invalid time (%s)' % \
-                    (self.name, self.refdes, elem_val)
-                self._error(errh, err_str, '9', elem_val)
+        if len(type_list) > 0:
+            valid_type = False
+            for dtype in type_list:
+                valid_type |= IsValidDataType(elem_val, dtype, self.root.param.get('charset'))
+            if not valid_type:
+                if 'TM' in type_list:
+                    err_str = 'Data element "%s" (%s) contains an invalid time (%s)' % \
+                        (self.name, self.refdes, elem_val)
+                    self._error(errh, err_str, '9', elem_val)
+                elif 'RD8' in type_list or 'DT' in type_list or 'D8' in type_list or 'D6' in type_list:
+                    err_str = 'Data element "%s" (%s) contains an invalid date (%s)' % \
+                        (self.name, self.refdes, elem_val)
+                    self._error(errh, err_str, '8', elem_val)
                 valid = False
         return valid
 
@@ -1571,8 +1581,11 @@ def IsValidDataType(str_val, data_type, charset = 'B'):
                 if m and m.group(0):  # invalid string found
                     raise IsValidError 
         elif data_type == 'RD8':
-            (start, end) = str_val.split('-')
-            return IsValidDataType(start, 'D8', charset) and IsValidDataType(end, 'D8', charset) 
+            if '-' in str_val:
+                (start, end) = str_val.split('-')
+                return IsValidDataType(start, 'D8', charset) and IsValidDataType(end, 'D8', charset) 
+            else:
+                return False
         elif data_type in ('DT', 'D8', 'D6'):
             if data_type == 'D8' and len(str_val) != 8:
                 raise IsValidError

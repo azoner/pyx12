@@ -55,6 +55,42 @@ class ElementIsValidDate(unittest.TestCase):
         self.failUnless(result)
         self.assertEqual(self.errh.err_cde, None)
 
+    def test_date_1251_ok1(self):
+        self.errh.err_cde = None
+        seg_data = pyx12.segment.segment('DMG*D8*20040110*M~', '~', '*', ':')
+        node = self.map.getnodebypath('/ISA_LOOP/GS_LOOP/ST_LOOP/DETAIL/2000A/2000B/2010BA/DMG')
+        self.assertNotEqual(node, None)
+        result = node.is_valid(seg_data, self.errh)
+        self.failUnless(result)
+        self.assertEqual(self.errh.err_cde, None)
+
+    def test_date_1251_bad1(self):
+        self.errh.err_cde = None
+        seg_data = pyx12.segment.segment('DMG*D8*20042110*M~', '~', '*', ':')
+        node = self.map.getnodebypath('/ISA_LOOP/GS_LOOP/ST_LOOP/DETAIL/2000A/2000B/2010BA/DMG')
+        self.assertNotEqual(node, None)
+        result = node.is_valid(seg_data, self.errh)
+        self.failIf(result)
+        self.assertEqual(self.errh.err_cde, '8')
+
+    def test_date_1251_bad2(self):
+        self.errh.err_cde = None
+        seg_data = pyx12.segment.segment('DMG*D8*20040109-20040110*M~', '~', '*', ':')
+        node = self.map.getnodebypath('/ISA_LOOP/GS_LOOP/ST_LOOP/DETAIL/2000A/2000B/2010BA/DMG')
+        self.assertNotEqual(node, None)
+        result = node.is_valid(seg_data, self.errh)
+        self.failIf(result)
+        self.assertEqual(self.errh.err_cde, '8')
+
+    def test_date_1251_ok2(self):
+        self.errh.err_cde = None
+        seg_data = pyx12.segment.segment('CR6*4*20050204*RD8*20050101-20050220*20050104*N*N*I*********D~', '~', '*', ':')
+        node = self.map.getnodebypath('/ISA_LOOP/GS_LOOP/ST_LOOP/DETAIL/2000A/2000B/2300/CR6')
+        self.assertNotEqual(node, None)
+        result = node.is_valid(seg_data, self.errh)
+        self.failUnless(result, self.errh.err_str)
+        self.assertEqual(self.errh.err_cde, None, self.errh.err_str)
+
 
 class SegmentIsValid(unittest.TestCase):
     """
