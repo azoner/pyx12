@@ -995,7 +995,7 @@ class element_if(x12_node):
                 valid = False
         else:
             if len(elem_val) < int(self.min_len):
-                err_str = 'Data element %s is too short: "%s" should only be %i characters' % \
+                err_str = 'Data element %s is too short: "%s" should be at least %i characters' % \
                     (self.refdes, elem_val, int(self.min_len))
                 self.__error__(errh, err_str, '4', elem_val)
                 valid = False
