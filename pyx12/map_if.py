@@ -527,6 +527,18 @@ class loop_if(x12_node):
     def is_loop(self):
         return True
 
+    def is_match(seg_data):
+        child = self.get_child_node_by_idx(0)
+        if child.is_loop():
+            return child.is_match(seg_data)
+        elif child.is_segment():
+            if child.is_match(seg_data):
+                return True
+            else:
+                return False # seg does not match the first segment in loop, so not valid
+        else:
+            return False
+
     def reset_cur_count(self):
         for child in self.children:
             #if child.is_loop():
