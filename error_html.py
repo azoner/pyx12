@@ -75,15 +75,16 @@ class error_html:
 
     def header(self):
         self.fd.write('<html>\n<head>\n')
-        self.fd.write('<title>pyx12 Error Analysis</title>\n')
+        self.fd.write('<title>X12N Error Analysis</title>\n')
         self.fd.write('<style type="text/css">\n<!--\n')
         self.fd.write('  span.seg { color: black; font-style: normal; }\n')
         self.fd.write('  span.error { background-color: #CCCCFF; color: red; font-style: normal; }\n')
-        self.fd.write('  span.info { background-color: #CCCCCC; color: blue; font-style: normal; }\n')
+        self.fd.write('  span.info { color: blue; font-style: normal; }\n')
         self.fd.write('  span.ele_err { background-color: yellow; color: red; font-style: normal; }\n')
-        self.fd.write('-->\n</style>\n')
+        self.fd.write('  -->\n</style>\n')
+        self.fd.write('  <link rel="stylesheet" href="errors.css" type="text/css">\n')
         self.fd.write('</head>\n<body>\n')
-        self.fd.write('<h1>pyx12 Error Analysis</h1>\n<h3>Analysis Date: %s</h3><p>\n' % \
+        self.fd.write('<h1>X12N Error Analysis</h1>\n<h3>Analysis Date: %s</h3><p>\n' % \
             (time.strftime('%m/%d/%Y %H:%M:%S')))
         self.fd.write('<div class="segs" style="">\n')
 
