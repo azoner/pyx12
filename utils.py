@@ -175,3 +175,49 @@ def getfirstfield(seg_list, segment_name, field_idx):
 	    return seg[field_idx]
 	else:
 	    return None
+
+
+def GetLoops(lines, start_tag, end_tag):
+    """
+    Name:    GetLoops
+    Desc:    Locate the loop blocks for a loop sets with explicit start and end tags
+    Params:  lines - a list of lists containing the lines to be split
+             start_tag - the loop start tag (ISA, GS, ST)
+             end_tag - the loop end tag (IEA, GE, SE)
+    Returns: a list containing segment lists
+    """
+    loops = []
+    loop_idx = 0
+    if lines[loop_idx][0] != start_tag:
+        raise errors.WEDI1Error, 'This segment should be a %s, is %s' % (start_tag, lines[loop_idx][0])
+    control_num = lines[loop_idx][6]
+    while loop_idx < len(lines):
+        for i in xrange(loop_idx+1, len(lines)):
+            if lines[i][0] == end_tag and control_num == lines[i][2]:
+	        # found correct end tag
+	        for j in xrange(loop_idx+1, i-1):
+                    if lines[j][0] == start_tag:
+        	        raise errors.WEDI1Error, 'A %s(%s) segment was found within another %s loop' % (start_tag, 
+		    	    control_num, start_tag)
+                    if lines[j][0] == end_tag:
+        	        raise errors.WEDI1Error, 'A %s(%s) segment was found within another %s loop' % (end_tag, 
+		    	    control_num, start_tag)
+                loops.append(lines[loop_idx:i+1])
+	        loop_idx = i
+		break
+	
+        if lines[-1][0] != end_tag:
+            raise errors.WEDI1Error, 'Last segment should be %s, is "%s"' % (end_tag, lines[-1][0])
+
+	return loops
+#       while idx < len(lines)-1:
+#           if lines[idx][0] == start_tag:
+#               if loop_idx != -1:
+#                   raise errors.WEDI1Error, 'Encountered a %s segment before a required %s segment' % (start_tag, end_tag)
+#               else:
+#                   loop_idx = idx
+#           if lines[idx][0] == end_tag:
+#               loops.append(lines[loop_idx:idx+1])
+#               loop_idx = -1
+#           idx = idx + 1
+
