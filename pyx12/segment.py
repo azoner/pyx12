@@ -235,16 +235,27 @@ class segment:
 
     def _parse_refdes(self, ref_des):
         """
+        Format of ref_des:
+            - a simple element: TST02
+            - a composite: TST03 where TST03 is a composite
+            - a sub-element: TST03-2
+            - or any of the above with the segment ID omitted (02, 03, 03-1)
+
         @param ref_des: X12 Reference Designator
         @type ref_des: string
         @rtype: tuple(ele_idx, subele_idx)
         @raise EngineError: If the given ref_des does not match the segment ID
             or if the indexes are not valid integers
         """
-        if ref_des[:len(self.seg_id)] != self.seg_id:
-            raise EngineError, 'Invalid Reference Designator: %s, seg_id: %s' \
-                % (ref_des, self.seg_id)
-        rest = ref_des[len(self.seg_id):]
+        if ref_des is None or ref_des == '':
+            raise EngineError, 'Blank Reference Designator'
+        if ref_des[0].isalpha():
+            if ref_des[:len(self.seg_id)] != self.seg_id:
+                raise EngineError, 'Invalid Reference Designator: %s, seg_id: %s' \
+                    % (ref_des, self.seg_id)
+            rest = ref_des[len(self.seg_id):]
+        else:
+            rest = ref_des
         dash = rest.find('-')
         try:
             if dash == -1:

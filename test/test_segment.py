@@ -117,24 +117,36 @@ class RefDes(unittest.TestCase):
 
     def test_simple1(self):
         self.assertEqual(self.seg.get('TST01'), 'AA')
+        self.assertEqual(self.seg.get('01'), 'AA')
 
     def test_fail_seg_id(self):
         self.failUnlessRaises(EngineError, self.seg.get, 'XXX01')
 
     def test_simple2(self):
         self.assertEqual(self.seg.get('TST02'), '1')
+        self.assertEqual(self.seg.get('02'), '1')
 
     def test_composite1(self):
         self.assertEqual(self.seg.get('TST04-2'), '5')
+        self.assertEqual(self.seg.get('04-2'), '5')
 
     def test_composite2(self):
         self.assertEqual(self.seg.get('TST04-1'), 'BB')
+        self.assertEqual(self.seg.get('04-1'), 'BB')
 
     def test_composite3(self):
         self.assertEqual(self.seg.get('TST04'), 'BB:5')
+        self.assertEqual(self.seg.get('04'), 'BB:5')
 
     def test_get_value_by_ref_des(self):
         self.assertEqual(self.seg.get_value_by_ref_des('TST02'), '1')
+        self.assertEqual(self.seg.get_value_by_ref_des('02'), '1')
+
+    def test_none(self):
+        self.assertEqual(self.seg.get('TST15'), None)
+        self.assertEqual(self.seg.get('15'), None)
+        self.assertEqual(self.seg.get('TST15-2'), None)
+        self.assertEqual(self.seg.get('15-2'), None)
 
 
 class IsEmpty(unittest.TestCase):
