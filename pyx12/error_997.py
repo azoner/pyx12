@@ -47,6 +47,7 @@ import logging
 from errors import *
 from utils import seg_str
 import error_visitor
+import pyx12.segment
 
 __author__  = "John Holland <jholland@kazoocmh.org> <john@zoner.org>"
 
@@ -87,16 +88,29 @@ class error_997_visitor(error_visitor.error_visitor):
         Params:     errh - error_handler instance
         """
         #now = time.localtime()
-        seg = errh.cur_isa_node.seg
+        seg = errh.cur_isa_node.seg_data
         #ISA*00*          *00*          *ZZ*ENCOUNTER      *ZZ*00GR           *030425*1501*U*00401*000065350*0*T*:~
-        isa_seg = ['ISA','00','          ','00','          ']
-        isa_seg.extend([seg[7],seg[8],seg[5],seg[6]])
+        #isa_seg = ['ISA','00','          ','00','          ']
+        #isa_seg.extend([seg[7],seg[8],seg[5],seg[6]])
+        #isa_seg.append(time.strftime('%y%m%d')) # Date
+        #isa_seg.append(time.strftime('%H%M')) # Time
+        #isa_seg.extend([seg[11],seg[12]])
+        self.isa_control_num = ('%s%s'%(time.strftime('%y%m%d'), time.strftime('%H%M')))[1:]
+        #isa_seg.append(self.isa_control_num) # ISA Interchange Control Number
+        #isa_seg.extend([seg[14],seg[15]])
+        #isa_seg.append(self.subele_term)
+        isa_seg = pyx12.segment.segment('ISA*00*          *00*          ', '~', '*', ':')
+        isa_seg.append(seg[6].getvalue())
+        isa_seg.append(seg[7].getvalue())
+        isa_seg.append(seg[4].getvalue())
+        isa_seg.append(seg[5].getvalue())
         isa_seg.append(time.strftime('%y%m%d')) # Date
         isa_seg.append(time.strftime('%H%M')) # Time
-        isa_seg.extend([seg[11],seg[12]])
-        self.isa_control_num = ('%s%s'%(time.strftime('%y%m%d'), time.strftime('%H%M')))[1:]
+        isa_seg.append(seg[10].getvalue())
+        isa_seg.append(seg[11].getvalue())
         isa_seg.append(self.isa_control_num) # ISA Interchange Control Number
-        isa_seg.extend([seg[14],seg[15]])
+        isa_seg.append(seg[13].get_value())
+        isa_seg.append(seg[14].get_value())
         isa_seg.append(self.subele_term)
         self._write(isa_seg)
         self.isa_seg = isa_seg
@@ -105,21 +119,41 @@ class error_997_visitor(error_visitor.error_visitor):
         #TA1 segment
         err_isa = errh.cur_isa_node
         if err_isa.ta1_req == '1':
-            seg = ['TA1', err_isa.isa_trn_set_id, err_isa.orig_date, \
-                err_isa.orig_time]
+            #seg = ['TA1', err_isa.isa_trn_set_id, err_isa.orig_date, \
+            #    err_isa.orig_time]
+            ta1_seg = pyx12.segment.segment('TA1', '~', '*', ':')
+            ta1_seg.append(err_isa.isa_trn_set_id)
+            ta1_seg.append(err_isa.orig_date)
+            ta1_seg.append(err_isa.orig_time)
             if err_isa.errors:
                 (err_cde, err_str) = err_isa.errors[0]
-                seg.extend(['R', err_cde])
+                #seg.extend(['R', err_cde])
+                ta1_seg.append('R')
+                ta1_seg.append(err_cde)
             else:
-                seg.extend(['A', '000'])
-            self._write(seg)
+                #seg.extend(['A', '000'])
+                ta1_seg.append('A')
+                ta1_seg.append('000')
+            self._write(ta1_seg)
 
         # GS*FA*ENCOUNTER*00GR*20030425*150153*653500001*X*004010
         seg = errh.cur_gs_node.seg
-        gs_seg = [seg.get_seg_id(), 'FA', seg[3], seg[2], time.strftime('%Y%m%d'), time.strftime('%H%M%S')]
-        gs_seg.extend([seg[6], seg[7], '004010'])
+        gs_seg = pyx12.segment.segment('GS', '~', '*', ':')
+        gs_seg.append('FA')
+        gs_seg.append(seg[2].get_value())
+        gs_seg.append(seg[1].get_value())
+        gs_seg.append(time.strftime('%Y%m%d'))
+        gs_seg.append(time.strftime('%H%M%S'))
+        gs_seg.append(seg[5].get_value())
+        gs_seg.append(seg[6].get_value())
+        gs_seg.append('004010')
+        #gs_str = '%s*%s*%s*%s' % (seg.get_seg_id(), 'FA', seg[2].get_value(), seg[1].get_value()) 
+        #gs_str += '*%s*%s' % (time.strftime('%Y%m%d'), time.strftime('%H%M%S'))
+        #gs_str += '*%s*%s*%s' % (seg[5].get_value(), seg[6].get_value(), '004010')
+        #gs_str += '~'
         self._write(gs_seg)
         self.gs_seg = gs_seg
+        self.gs_id = seg[5].get_value()
         #self.gs_997_count = 0
         self.st_loop_count = 0
         self.gs_loop_count += 1
@@ -131,9 +165,13 @@ class error_997_visitor(error_visitor.error_visitor):
         Desc:    
         Params:     errh - error_handler instance
         """
-        self._write(['GE', '%i' % self.st_loop_count, self.gs_seg[6]])
-        gs_loop_count = 1
-        self._write(['IEA', '%i' % self.gs_loop_count, self.isa_control_num]) # isa_seg[13]])
+        self._write(pyx12.segment.segment('GE*%i*%s' % (self.st_loop_count, \
+            self.gs_seg[5].get_value()), '~', '*', ':'))
+        #self._write(['GE', '%i' % self.st_loop_count, self.gs_seg[6]])
+        self.gs_loop_count = 1
+        self._write(pyx12.segment.segment('IEA*%i*%s' % \
+            (self.gs_loop_count, self.isa_control_num), '~', '*', ':'))
+        #self._write(['IEA', '%i' % self.gs_loop_count, self.isa_control_num]) # isa_seg[13]])
         
     def visit_isa_pre(self, err_isa):
         """
@@ -160,14 +198,18 @@ class error_997_visitor(error_visitor.error_visitor):
         """
         #ST
         self.st_control_num += 1
-        seg = ['ST', '997', '%04i' % self.st_control_num]
+        #seg = ['ST', '997', '%04i' % self.st_control_num]
+        #self._write(seg)
+        self._write(pyx12.segment.segment('ST*997*%04i' % \
+            (self.st_control_num), '~', '*', ':'))
         self.seg_count = 0
-        self._write(seg)
         self.st_loop_count += 1
 
         #AK1
-        seg = ['AK1', err_gs.fic, err_gs.gs_control_num]
-        self._write(seg)
+        #seg = ['AK1', err_gs.fic, err_gs.gs_control_num]
+        #self._write(seg)
+        self._write(pyx12.segment.segment('AK1*%s*%s' % \
+            (err_gs.fic, err_gs.gs_control_num), '~', '*', ':'))
         
  
     def visit_gs_post(self, err_gs): 
@@ -194,20 +236,29 @@ class error_997_visitor(error_visitor.error_visitor):
 #        elif '6' in err_gs.errors: ack_code = 'E'
 #        else: ack_code = 'A'
 
-        seg = ['AK9', err_gs.ack_code, '%i' % err_gs.st_count_orig, \
-            '%i' % err_gs.st_count_recv, \
-            '%i' % (err_gs.st_count_recv - err_gs.count_failed_st())]
+        seg_data = pyx12.segment.segment('AK9', '~', '*', ':')
+        seg_data.append(err_gs.ack_code)
+        seg_data.append('%i' % err_gs.st_count_orig)
+        seg_data.append('%i' % err_gs.st_count_recv)
+        seg_data.append('%i' % (err_gs.st_count_recv - err_gs.count_failed_st()))
+        #seg = ['AK9', err_gs.ack_code, '%i' % err_gs.st_count_orig, \
+        #    '%i' % err_gs.st_count_recv, \
+        #    '%i' % (err_gs.st_count_recv - err_gs.count_failed_st())]
         for (err_cde, err_str) in err_gs.errors:
-            seg.append('%s' % err_cde)
-        self._write(seg)
+            seg_data.append('%s' % err_cde)
+            #seg.append('%s' % err_cde)
+        self._write(seg_data)
         #for child in err_gs.children:
             #print child.cur_line, child.seg
         #logger.info('err_gs has %i children' % len(self.children))
         
         #SE
         seg_count = self.seg_count + 1
-        seg = ['SE', '%i' % seg_count, '%04i' % self.st_control_num]
-        self._write(seg)
+        seg_data = pyx12.segment.segment('SE', '~', '*', ':')
+        seg_data.append('%i' % seg_count)
+        seg_data.append('%04i' % self.st_control_num)
+        #seg = ['SE', '%i' % seg_count, '%04i' % self.st_control_num]
+        self._write(seg_data)
 
     def visit_st_pre(self, err_st):
         """
@@ -216,8 +267,10 @@ class error_997_visitor(error_visitor.error_visitor):
         Desc:    
         Params:     err_st - error_st instance
         """
-        seg = ['AK2', err_st.trn_set_id , err_st.trn_set_control_num]
-        self._write(seg)
+        seg_data = pyx12.segment.segment('AK2', '~', '*', ':')
+        seg_data.append(err_st.trn_set_id)
+        seg_data.append(err_st.trn_set_control_num)
+        self._write(seg_data)
         
     def visit_st_post(self, err_st):
         """
@@ -229,18 +282,21 @@ class error_997_visitor(error_visitor.error_visitor):
         if err_st.ack_code is None:
             raise EngineError, 'err_st.ack_cde variable not set'
 #        self.ack_code = None # AK501
-        seg = ['AK5']
+        seg_data = pyx12.segment.segment('AK5', '~', '*', ':')
+        #seg = ['AK5']
 #        self.err_cde = [] # AK502-6
         err_codes = []
         if err_st.child_err_count() > 0:
             err_codes.append('5')
         for (err_cde, err_str) in err_st.errors:
             err_codes.append(err_cde)
-        seg.append(err_st.ack_code)
+        #seg.append(err_st.ack_code)
+        seg_data.append(err_st.ack_code)
         err_codes.sort()
         for i in range(min(len(err_codes),5)):
-            seg.append(err_codes[i])
-        self._write(seg)
+            seg_data.append(err_codes[i])
+            #seg.append(err_codes[i])
+        self._write(seg_data)
 
     def visit_seg(self, err_seg):
         """
@@ -250,19 +306,23 @@ class error_997_visitor(error_visitor.error_visitor):
         Params:     err_seg - error_seg instance
         """
         #logger.debug('visit_deg: AK3 - ')
-        seg_base = ['AK3', err_seg.seg_id, '%i' % err_seg.seg_count]
+        #seg_base = ['AK3', err_seg.seg_id, '%i' % err_seg.seg_count]
+        seg_base = pyx12.segment.segment('AK3', '~', '*', ':')
+        seg_base.append(err_seg.seg_id)
+        seg_base.append('%i' % err_seg.seg_count)
         if err_seg.ls_id:
             seg_base.append(err_seg.ls_id)
         else:
             seg_base.append('')
+        seg_str = seg_base.format('~', '*', ':')
         for (err_cde, err_str, err_value) in err_seg.errors:
-            seg = seg_base
-            seg.append(err_cde)
-            self._write(seg)
+            seg_data = pyx12.segment.segment(seg_str)
+            seg_data.append(err_cde)
+            self._write(seg_data)
         if err_seg.child_err_count() > 0:
-            seg = seg_base
-            seg.append('8')
-            self._write(seg)
+            seg_data = pyx12.segment.segment(seg_str)
+            seg_data.append('8')
+            self._write(seg_data)
         
     def visit_ele(self, err_ele): 
         """
@@ -272,28 +332,30 @@ class error_997_visitor(error_visitor.error_visitor):
         Params:     err_ele - error_ele instance
         """
         seg_base = ['AK4']
+        seg_base = pyx12.segment.segment('AK4', '~', '*', ':')
         if err_ele.subele_pos: 
-            seg_base.append(['%i' % (err_ele.ele_pos), '%i' % err_ele.subele_pos])
+            seg_base.append('%i:%i' % (err_ele.ele_pos, err_ele.subele_pos))
         else:
             seg_base.append('%i' % (err_ele.ele_pos))
         if err_ele.ele_ref_num:
             seg_base.append(err_ele.ele_ref_num)
         else:
             seg_base.append('')
+        seg_str = seg_base.format('~', '*', ':')
         for (err_cde, err_str, bad_value) in err_ele.errors:
-            seg = seg_base
-            seg.append(err_cde)
+            seg_data = pyx12.segment.segment(seg_str, '~', '*', ':')
+            seg_data.append(err_cde)
             if bad_value:
-                seg.append(bad_value)
-            self._write(seg)
+                seg_data.append(bad_value)
+            self._write(seg_data)
 
-    def _write(self, seg):
+    def _write(self, seg_data):
         """
         Class:      error_997_visitor
         Name:       _write
         Desc:    
-        Params:     seg - list of elements
+        Params:     seg_data - data segment instance
         """
-        self.fd.write(seg_str(seg, self.seg_term, self.ele_term, \
+        self.fd.write(seg_data.format(self.seg_term, self.ele_term, \
             self.subele_term, self.eol))
         self.seg_count += 1
