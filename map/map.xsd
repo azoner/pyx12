@@ -2,7 +2,7 @@
 <!-- 
 	This file is part of the pyX12 project.
 
-    Copyright (c) 2001, 2002 Kalamazoo Community Mental Health Services,
+    Copyright (c) 2001-2004 Kalamazoo Community Mental Health Services,
 		John Holland <jholland@kazoocmh.org> <john@zoner.org>
 
     All rights reserved.
@@ -36,12 +36,15 @@
 
 <xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema">
   <xsd:element name="map" type="maptype"/>
+
   <xsd:complexType name="LoopType">
     <xsd:sequence>
       <xsd:element name="segment" type="SegmentType"/>
     </xsd:sequence>
   </xsd:complexType>
+  
   <xsd:complexType name="ValidCodesType"/>
+
   <xsd:complexType name="SegmentType">
     <xsd:sequence>
       <xsd:element name="id" type="xsd:normalizedString"/>
@@ -51,8 +54,20 @@
       <xsd:element name="pos" type="xsd:nonNegativeInteger"/>
       <xsd:element name="syntax" type="xsd:normalizedString" minOccurs="0"/>
       <xsd:element name="element" type="ElementType" maxOccurs="Unbounded"/>
+      <xsd:element name="composite" type="CompositeType" maxOccurs="Unbounded"/>
     </xsd:sequence>
   </xsd:complexType>
+
+  <xsd:complexType name="CompositeType">
+    <xsd:sequence>
+      <xsd:element name="data_ele" type="xsd:normalizedString"/>
+      <xsd:element name="name" type="xsd:normalizedString"/>
+      <xsd:element name="usage" type="xsd:normalizedString"/>
+      <xsd:element name="seq" type="xsd:nonNegativeInteger"/>
+      <xsd:element name="element" type="ElementType" maxOccurs="Unbounded"/>
+    </xsd:sequence>
+  </xsd:complexType>
+
   <xsd:complexType name="ElementType">
     <xsd:sequence>
       <xsd:element name="data_ele" type="xsd:normalizedString"/>
@@ -72,6 +87,7 @@
       <xsd:element name="format" type="formatType"/>
     </xsd:sequence>
   </xsd:complexType>
+  
   <xsd:simpleType name="formatType">
     <xsd:restriction base="xsd:normalizedString">
       <xsd:enumeration value="D8"/> <!-- Date CCYYMMDD -->
@@ -80,6 +96,7 @@
       <xsd:enumeration value="TM"/> <!-- Time HHMM -->
     </xsd:restriction>
   </xsd:simpleType>
+  
   <xsd:simpleType name="usageType">
     <xsd:restriction base="xsd:normalizedString">
       <xsd:enumeration value="R"/> <!-- Required -->
@@ -87,13 +104,7 @@
       <xsd:enumeration value="N"/> <!-- Not Used -->
     </xsd:restriction>
   </xsd:simpleType>
-  <xsd:simpleType name="ref_desType">
-    <xsd:restriction base="xsd:normalizedString">
-      <xsd:enumeration value="M"/> <!-- Mandatory -->
-      <xsd:enumeration value="O"/> <!-- Optional -->
-      <xsd:enumeration value="X"/> <!-- Situational -->
-    </xsd:restriction>
-  </xsd:simpleType>
+  
   <xsd:simpleType name="dataType">
     <xsd:restriction base="xsd:normalizedString">
       <xsd:enumeration value="N"/>
@@ -115,4 +126,5 @@
       <xsd:enumeration value="B"/>
     </xsd:restriction>
   </xsd:simpleType>
+
 </xsd:schema>
