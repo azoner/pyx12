@@ -44,7 +44,7 @@ import logging
 
 # Intrapackage imports
 from errors import *
-from x12file import seg_str
+from utils import seg_str, escape_html_chars
 
 __author__  = "John Holland <jholland@kazoocmh.org> <john@zoner.org>"
 
@@ -90,7 +90,7 @@ class error_html:
         self.fd.write('<p>\n<a href="http://sourceforge.net/projects/pyx12/">pyx12 project page</a>\n</p>\n')
         self.fd.write('</body>\n</html>\n')
 
-    def print_seg(self, seg, src):
+    def gen_seg(self, seg, src, err_node_list):
         """
         Class:      error_html 
         Name:       visit_root_pre
@@ -104,7 +104,19 @@ class error_html:
         #   Find any skipped error values
         # ID pos of bad value
         #while errh
-        self.fd.write('<span class="seg">%s</span><br>\n' % (self._seg_str(seg)))
+        for i in range(len(seg)):
+            seg[i] = escape_html_chars(seg[i])
+        self.fd.write('<span class="seg">%i: %s</span><br>\n' % \
+            (cur_line, self._seg_str(seg)))
+        for err_node in err_node_list:
+            for (err_cde, err_str) in err_node.errors:
+                self.fd.write('<span class="error">&nbsp;%s (Code: %s)</span><br>\n' % \
+                    (err_str, err_cde))
+            for ele in err_node.elements:
+                for (err_cde, err_str) in ele.errors:
+                    self.fd.write('<span class="error">&nbsp;%s (Code: %s)</span><br>\n' % \
+                        (err_str, err_cde))
+            
         # Show seg and ele errors
         # Handle ST, ...
         
@@ -115,6 +127,6 @@ class error_html:
         Desc:    
         Params:     seg - list of elements
         """
-        # Handle ><&
-        return seg_str(seg, self.seg_term, self.ele_term, self.subele_term, \
-            self.eol).replace(' ', '&nbsp;')
+        return seg_str(seg, self.seg_term, self.ele_term, \
+            self.subele_term, self.eol)
+        
