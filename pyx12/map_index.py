@@ -1,20 +1,41 @@
+######################################################################
+# Copyright (c) 2001-2004 Kalamazoo Community Mental Health Services,
+#   John Holland <jholland@kazoocmh.org> <john@zoner.org>
+# All rights reserved.
+#
+# This software is licensed as described in the file LICENSE.txt, which
+# you should have received as part of this distribution.
+#
+######################################################################
+
+#    $Id$
+
+"""
+Locate the correct xml map file given:
+    - Interchange Control Version Number (ISA12)
+    - Functional Identifier Code (GS01)
+    - Version / Release / Industry Identifier Code (GS08)
+"""
+
 import libxml2
 import errors
 
 NodeType = {'element_start': 1, 'element_end': 15, 'attrib': 2, 'text': 3, 'CData': 4, 'entity_ref': 5, 'entity_decl':6, 'pi': 7, 'comment': 8, 'doc': 9, 'dtd': 10, 'doc_frag': 11, 'notation': 12}
 
-"""
-    if not self.map_file:
-        raise errors.GSError, 'Map file not found, icvn=%s, fic=%s, vriic=%s' % (isa.icvn,self.fic,self.vriic)
-"""
-
 class map_index:
-    def __init__(self, map_file):
+    """
+    Interface to the maps.xml file
+    """
+    def __init__(self, map_index_file):
+        """
+        @param map_index_file: Absolute path of maps.xml
+        @type map_index_file: string
+        """
         self.maps = []
         try:
-            reader = libxml2.newTextReaderFilename(map_file)
+            reader = libxml2.newTextReaderFilename(map_index_file)
         except:
-            raise errors.EngineError, 'Map file not found: %s' % (map_file)
+            raise errors.EngineError, 'Map file not found: %s' % (map_index_file)
                     
         while reader.Read():
             #processNode(reader)
@@ -46,13 +67,14 @@ class map_index:
     
     def add_map(self, icvn, vriic, fic, map_file):
         self.maps.append((icvn, vriic, fic, map_file))
-        #self.icvn = icvn
-        #self.vriic = vriic
-        #self.fic = fic
-        #self.map_file = map_file
     
     def get_filename(self, icvn, vriic, fic):
+        """
+        @rtype: string
+        """
         #print 'get_filename', icvn, vriic, fic
+        #if not self.map_index_file:
+        #    raise errors.GSError, 'Map file not found, icvn=%s, fic=%s, vriic=%s' % (isa.icvn,self.fic,self.vriic)
         for a in self.maps:
             if a[0] == icvn and a[1] == vriic and a[2] == fic:
                 return a[3]
