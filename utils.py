@@ -177,23 +177,25 @@ def getfirstfield(seg_list, segment_name, field_idx):
 	    return None
 
 
-def GetLoops(lines, start_tag, end_tag):
+def GetLoops(lines, start_tag, end_tag, start_idx, end_idx):
     """
     Name:    GetLoops
     Desc:    Locate the loop blocks for a loop sets with explicit start and end tags
     Params:  lines - a list of lists containing the lines to be split
              start_tag - the loop start tag (ISA, GS, ST)
              end_tag - the loop end tag (IEA, GE, SE)
+	     start_idx - the index in the segment containing the control number
+	     end_idx - the index in the segment containing the control number
     Returns: a list containing segment lists
     """
     loops = []
     loop_idx = 0
     if lines[loop_idx][0] != start_tag:
         raise errors.WEDI1Error, 'This segment should be a %s, is %s' % (start_tag, lines[loop_idx][0])
-    control_num = lines[loop_idx][6]
+    control_num = lines[loop_idx][start_idx]
     while loop_idx < len(lines):
         for i in xrange(loop_idx+1, len(lines)):
-            if lines[i][0] == end_tag and control_num == lines[i][2]:
+            if lines[i][0] == end_tag and control_num == lines[i][end_idx]:
 	        # found correct end tag
 	        for j in xrange(loop_idx+1, i-1):
                     if lines[j][0] == start_tag:
