@@ -100,14 +100,17 @@ def x12n_document(param, src_file, fd_997, fd_html, fd_xmldoc=None):
             errh.add_isa_loop(seg, src)
             map_node.is_valid(seg, errh)
             #map_node = control_map
-            icvn = map_node.get_elemval_by_id(seg, 'ISA12')
+            #icvn = map_node.get_elemval_by_id(seg, 'ISA12')
+            icvn = seg.get_value_by_ref_des('ISA12')
         elif seg.get_seg_id() == 'GS':
             #map_node = walker.walk(map_node, seg)
             map_node = control_map.getnodebypath('/GS')
             errh.add_gs_loop(seg, src)
             map_node.is_valid(seg, errh)
-            fic = map_node.get_elemval_by_id(seg, 'GS01')
-            vriic = map_node.get_elemval_by_id(seg, 'GS08')
+            #fic = map_node.get_elemval_by_id(seg, 'GS01')
+            #vriic = map_node.get_elemval_by_id(seg, 'GS08')
+            fic = seg.get_value_by_ref_des('GS01')
+            vriic = seg.get_value_by_ref_des('GS08')
             
             #Get map for this GS loop
             #logger.debug('icvn=%s fic=%s vriic=%s' % (icvn, fic, vriic))
@@ -164,8 +167,10 @@ def x12n_document(param, src_file, fd_997, fd_html, fd_xmldoc=None):
                 # Generate 997
                 #XXX Generate TA1 if needed.
             elif seg.get_seg_id() == 'GS':
-                fic = map_node.get_elemval_by_id(seg, 'GS01')
-                vriic = map_node.get_elemval_by_id(seg, 'GS08')
+                #fic = map_node.get_elemval_by_id(seg, 'GS01')
+                #vriic = map_node.get_elemval_by_id(seg, 'GS08')
+                fic = seg.get_value_by_ref_des('GS01')
+                vriic = seg.get_value_by_ref_des('GS08')
                 #map_node = control_map.getnodebypath('/GS')
                 #map_node.is_valid(seg, errh)
                 map_file_new = map_index_if.get_filename(icvn, vriic, fic)
