@@ -97,7 +97,7 @@ class walk_tree:
         @return: The matching x12_node
         @rtype: L{node<map_if.x12_node>}
 
-        @todo: bug - segments with same pos occur out of order
+        @bug: segments with same position occur out of order
             and first node is required
         """
 
