@@ -14,12 +14,13 @@ $Id$
 
 /* pyx12 package exception classes */
 #include <string>
+#include <exception>
 
 namespace Pyx12 {
     /* Class for XML Reader errors */
-    class XML_Reader_Error {
+    class XML_Reader_Error : std::exception {
     public:
-        XML_Reader_Error();
+        XML_Reader_Error(whatString) {};
     };
 
     /* Base class for X12N format errors*/

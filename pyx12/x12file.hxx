@@ -35,7 +35,7 @@ using namespace std;
 namespace Pyx12 {
     class x12file {
     private:
-        list<pair<string, string>> loops;
+        list<pair<string, string> > loops;
         stack<int> hl_stack;
         int gs_count;
         int st_count;
@@ -49,7 +49,7 @@ namespace Pyx12 {
         char ele_term;
         char subele_term;
         ifstream src_fs;
-        get_id(string id) const;
+        string get_id(string id) const;
         string read_seg();
 
     public:
@@ -67,8 +67,9 @@ namespace Pyx12 {
         
     //    ostream& operator<<(ostream&, x12file&);
     };
-
-    //class x12fileIter : public iterator <forward_iterator_tag, pyx12::x12file> {
-    
+/*
+    class x12fileIter : public iterator <forward_iterator_tag, pyx12::x12file> {
+    }
+*/  
 };
 #endif // PYX12_X12FILE_H_
