@@ -71,13 +71,13 @@ def main():
     Set up environment for processing
     """
     param = pyx12.params.params()
-    #logger = logging.getLogger('test_functional')
-    #logger.setLevel(logging.INFO)
-    #formatter = logging.Formatter('%(asctime)s %(levelname)s %(module)s %(lineno)d %(message)s')
+    logger = logging.getLogger('pyx12')
+    logger.setLevel(logging.INFO)
+    formatter = logging.Formatter('%(asctime)s %(levelname)s %(module)s %(lineno)d %(message)s')
 
-    #stderr_hdlr = logging.StreamHandler()
-    #stderr_hdlr.setFormatter(formatter)
-    #logger.addHandler(stderr_hdlr)
+    stderr_hdlr = logging.StreamHandler()
+    stderr_hdlr.setFormatter(formatter)
+    logger.addHandler(stderr_hdlr)
 
     fd_src = None
     fd_997 = None
@@ -112,20 +112,24 @@ def main():
                 try:
                     if flag_997:
                         if os.path.splitext(src_filename)[1] == '.997':
-                            target_997 = src_filename + '.997'
+                            #target_997 = src_filename + '.997'
                             base_997 = src_filename + '.997.base'
                         else:
-                            target_997 = os.path.splitext(src_filename)[0] + '.997'
+                            #target_997 = os.path.splitext(src_filename)[0] + '.997'
                             base_997 = os.path.splitext(src_filename)[0] + '.997.base'
-                        fd_997 = tempfile.TemporaryFile()
-                    if flag_html:
-                        target_html = os.path.splitext(src_filename)[0] + '.html'
-                        fd_html = open(target_html, 'w')
+                        fd_997 = tempfile.NamedTemporaryFile()
+                        target_997 = fd_997.name
+                    if not os.path.isfile(base_997):
+                        logger.error('Base 997 not found: %s' % (base_997))
+                        continue
+                    #if flag_html:
+                    #    target_html = os.path.splitext(src_filename)[0] + '.html'
+                    #    fd_html = open(target_html, 'w')
 
                     pyx12.x12n_document.x12n_document(param, src_filename, fd_997, fd_html)
                     fd_997.seek(0)
-                    open(target_997, 'w').write(fd_997.read())
-                    fd_997.close()
+                    #open(target_997, 'w').write(fd_997.read())
+                    #fd_997.close()
 
                     diff_txt = diff(base_997, target_997)
                     if diff:
