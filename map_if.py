@@ -42,7 +42,7 @@ import os.path
 import sys
 import string
 #import time
-#import pdb
+import pdb
 import libxml2
 from types import *
 
@@ -581,7 +581,9 @@ class segment_if(x12_node):
         Returns: boolean
         """
         if seg[0] == self.id:
-            if self.children[1].data_type == 'ID' and seg[1] not in self.children[1].valid_codes:
+            if self.children[0].data_type == 'ID' and seg[1] not in self.children[0].valid_codes:
+                #logger.debug('is_match: %s %s' % (seg[0], seg[1]), self.children[0].valid_codes)
+                #pdb.set_trace()
                 return False
             return True
         else:
