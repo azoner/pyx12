@@ -49,18 +49,10 @@ import xml.dom.minidom
 #from xml.xpath import Compile
 #from xml.xpath.Context import Context
 
-class x12Error(Exception): pass
-class ISAError(x12Error): pass
-class GSError(x12Error): pass
-class STError(x12Error): pass
-class WEDIError(Exception): pass
-class WEDI1Error(WEDIError): pass
-class WEDI2Error(WEDIError): pass
-class WEDI3Error(WEDIError): pass
-class WEDI4Error(WEDIError): pass
-class WEDI5Error(WEDIError): pass
-class WEDI6Error(WEDIError): pass
-class EngineError(Exception): pass
+# Intrapackage imports
+import errors
+import codes
+from utils import *
 
 
 class x12n_document:
@@ -108,7 +100,7 @@ class x12n_document:
 	    iea_seg = segment(iea_seg_node, lines[-1:][0])
 	    iea_seg.validate()
 	else:
-	    raise WEDI1Error, 'Last segment should be IEA, is "%s"' % (lines[-1:][0][0])
+	    raise errors.WEDI1Error, 'Last segment should be IEA, is "%s"' % (lines[-1:][0][0])
 	
 	idx = 0
 	gs_idx = 0
@@ -116,7 +108,7 @@ class x12n_document:
 	while idx < len(lines)-1:
 	    if lines[idx][0] == 'GS': 
 	    	if gs_idx != 0:
-		    raise WEDI1Error, 'Encountered a GS segment before a required GE segment'
+		    raise errors.WEDI1Error, 'Encountered a GS segment before a required GE segment'
 		else:
 	    	    gs_idx = idx
 	    if lines[idx][0] == 'GE':
@@ -152,7 +144,7 @@ class GS_loop:
 	    ge_seg = segment(ge_seg_node, gs[-1:][0])
 	    ge_seg.validate()
 	else:
-	    raise WEDI1Error, 'Last segment should be GE, is "%s"' % (gs[-1:][0][0])
+	    raise errors.WEDI1Error, 'Last segment should be GE, is "%s"' % (gs[-1:][0][0])
 
 	#Get map for this GS loop
         dom_map = xml.dom.minidom.parse('map/maps.xml')
@@ -168,7 +160,7 @@ class GS_loop:
 		        node.normalize()
                         self.map_file = node.data
 	if not self.map_file:
-	    raise GSError, 'Map file not found, icvn=%s, fic=%s, vriic=%s' % (isa.icvn,self.fic,self.vriic)
+	    raise errors.GSError, 'Map file not found, icvn=%s, fic=%s, vriic=%s' % (isa.icvn,self.fic,self.vriic)
 	dom_map.unlink()
 
 	# Loop through ST segments
@@ -178,7 +170,7 @@ class GS_loop:
 	while idx < len(gs)-1:
 	    if gs[idx][0] == 'ST': 
 	    	if st_idx != 0:
-		    raise WEDI1Error, 'Encountered a ST segment before a required SE segment'
+		    raise errors.WEDI1Error, 'Encountered a ST segment before a required SE segment'
 		else:
 	    	    st_idx = idx
 	    if gs[idx][0] == 'SE':
@@ -284,15 +276,15 @@ class element:
     
     def validate(self):
 	if len(self.x12_elem) < int(self.min_len):
-	    raise WEDI1Error, 'too short %s len=%i' % (self.x12_elem, int(self.min_len))
+	    raise errors.WEDI1Error, 'too short %s len=%i' % (self.x12_elem, int(self.min_len))
 	if len(self.x12_elem) > int(self.max_len):
-	    raise WEDI1Error, 'too long: %s len=%i' % (self.x12_elem, int(self.max_len))
+	    raise errors.WEDI1Error, 'too long: %s len=%i' % (self.x12_elem, int(self.max_len))
 	if self.x12_elem == None and self.usage == 'R':
-	    raise WEDI3Error
+	    raise errors.WEDI3Error
 	if not (self.__valid_code__() or codes.IsValid(self.external_codes, self.x12_elem) ):
-	    raise WEDIError, "Not a valid code for this ID element"
+	    raise errors.WEDIError, "Not a valid code for this ID element"
 	if not IsValidDataType(self.x12_elem, self.data_type, 'E'):
-	    raise WEDI1Error, "Invalid X12 datatype: '%s' is not a '%s'" % (self.x12_elem, self.data_type) 
+	    raise errors.WEDI1Error, "Invalid X12 datatype: '%s' is not a '%s'" % (self.x12_elem, self.data_type) 
 
     def __valid_code__(self):
         if not self.valid_codes:
@@ -306,195 +298,6 @@ class composite(element):
     def __init__(self, node, x12_elem):
         self.node = node
 	self.x12_elem = x12_elem
-
-class Indent:
-    def __init__(self):
-	self.tab = 2 # number of spaces in a tab
-	self.tabs = 0 # current tabs
-    def incr(self):
-    	self.tabs = self.tabs + 1
-    def decr(self):
-    	self.tabs = max(self.tabs - 1, 0)
-    def indent(self):
-        print ' ' * (self.tab * self.tabs)
-    	return ' ' * (self.tab * self.tabs)
-
-class ExternalCodes:
-    """
-    Name:    ExternalCodes
-    Desc:    Validates an ID against an external list of codes
-    """
-
-    def __init__(self):
-    	"""
-    	Name:    __init__
-    	Desc:    Initialize the external list of codes
-    	Params:  
-    	"""
-	self.codes = {}
-    	# init a map of codes from codes.xml
-	dom_codes = xml.dom.minidom.parse('map/codes.xml')
-	codeset_nodes = dom_codes.getElementsByTagName("codeset")
-	for codeset_node in codeset_nodes:
-	    id = GetChildElementText(codeset_node, 'id')
-	    code_list = []
-            for code in codeset_node.childNodes:
-	        if code.nodeType == code.ELEMENT_NODE and code.tagName == 'code':
-        	    for a in code.childNodes:
-       	    	        if a.nodeType == a.TEXT_NODE:
-	        	    a.normalize()
-			    code_list.append(a.data)
-	    self.codes[id] = code_list
-	print self.codes.keys()
-
-    def IsValid(self, key, code):
-    	"""
-    	Name:    IsValid
-    	Desc:    Initialize the external list of codes
-    	Params:  key - the external codeset identifier
-		 code - code to be verified
-    	Returns: 1 if code is valid, 0 if not
-    	"""
-
-	#if not given a key, do not flag an error
-    	if not key:
-	    return 1
-    	#check the code against the list indexed by key
-	else:
-	    if not key in self.codes.keys():
-	    	raise EngineError, 'Enternel Code %s is not defined' % (key)
-	    if not code in self.codes[key]:
-	        return 0
-	return 1
-
-def IsValidDataType(str, data_type, charset = 'D'):
-    """
-    Name:    IsValidDataType
-    Params:  str (input string), 
-             data_type (data element identifier), 
-             charset [optional] ('D' for default, 'E' for extended)
-    Returns: 1 if str is valid, 0 if not
-    """
-    import re
-    #print str, data_type, charset
-    if not data_type: return 1
-    if data_type[0] == 'N':
-        m = re.compile("^-?[0-9]+", re.S).search(str)
-        if not m:
-            # print 'nothing matched'
-            return 0  # nothing matched
-        if m.group(0) != str:  # matched substring != original, bad
-            # print m.group(0)
-            return 0
-    elif data_type == 'R':
-        m = re.compile("^-?[0-9]*(\.[0-9]+)?", re.S).search(str)
-        if not m: return 0  # nothing matched
-        if m.group(0) != str:  # matched substring != original, bad
-            # print m.group(0)
-            return 0
-    elif data_type in ('ID', 'AN'):
-        if charset == 'E':  # extended charset
-            m = re.compile("[^A-Z0-9!\"&'()*+,\-\\\./:;?=\sa-z%~@\[\]_{}\\\|<>#$\s]", re.S).search(str)
-            if m and m.group(0):
-                # print "'" + m.group(0) + "'"
-                return 0
-	else:
-            m = re.compile("[^A-Z0-9!\"&'()*+,\-\\\./:;?=\s]", re.S).search(str)
-            if m and m.group(0):  # invalid string found
-           	#print "'" + m.group(0) + "'"
-                return 0
-    elif data_type == 'DT':
-        m = re.compile("[^0-9]+", re.S).search(str)  # first test date for non-numeric chars
-        if m:  # invalid string found
-            # print 'invalid str, ' + m.group(0)
-            return 0
-        # else...
-        if 8 == len(str) or 6 == len(str): # valid lengths for date
-            if 6 == len(str):  # if 2 digit year, add CC
-                if str[0:2] < 50:
-                    str = '20' + str
-                else: str = '19' + str
-            s = str[4:6]  # check month
-            if s < '01' or s > '12':
-                # print str + ", " + s
-                return 0
-            s2 = str[6:8]  # check day
-            if s in ('01', '03', '05', '07', '08', '10', '12'):  # 31 day month
-                if s2 < '01' or s2 > '31':
-                    # print str + ", " + s2
-                    return 0
-            elif s in ('04', '06', '09', '11'):  # 30 day month
-                if s2 < '01' or s2 > '30':
-                    # print str + ", " + s2
-                    return 0
-            else: # else 28 day
-                s3 = str[0:4]  # get year
-                # print s3
-                if not (int(s3) % 4) and ((int(s3) % 100) or (not (int(s3) % 400)) ):  # leap year
-                    if s2 < '01' or s2 > '29':
-                        # print str + ", " + s3 + ', ' + s2
-                        return 0
-                elif s2 < '01' or s2 > '28':
-                    # print str + ", " + s2
-                    return 0
-        else:
-            # print 'invalid length, ' + str
-            return 0
-    elif data_type == 'TM':
-        m = re.compile("[^0-9]+", re.S).search(str)  # first test time for non-numeric chars
-        if m:  # invalid string found
-            # print m.group(0)
-            return 0
-        s = str[0:2]  # check hour segment
-        if s > '23': 
-            # print s
-            return 0
-        s = str[2:4]  # check minute segment
-        if s > '59':
-            # print s
-            return 0
-        if len(str) > 4:  # time contains seconds
-            if len(str) < 6:  # length is munted
-                # print 'length munted, ' + str
-                return 0
-            s = str[4:6]
-            if s > '59':  # check seconds
-                # print s
-                return 0
-            # check decimal seconds here in the future
-            if len(str) > 8:
-                # print 'unhandled decimal seconds encountered'
-                return 0
-    elif data_type == 'B': pass
-    else:  
-        # print 'data_type parameter is not valid, abort'
-        return 1
-    return 1
-
-
-def GetChildElementText(node, elem_name):
-    """
-    Returns the text value of the first child element matching the element name
-    """
-    for child in node.childNodes:
-        if child.nodeType == child.ELEMENT_NODE and child.tagName == elem_name:
-    	    for a in child.childNodes:
-           	if a.nodeType == a.TEXT_NODE:
-		    a.normalize()
-		    return a.data
-    return
-    
-
-def getfirstfield(seg_list, segment_name, field_idx):
-    """
-    Finds the indexed field in the first matching element
-    """
-    for seg in seg_list:
-    	if seg[0] == segment_name:
-	    return seg[field_idx]
-	else:
-	    return None
-    
 
 def main():
     """Script main program."""
@@ -522,7 +325,7 @@ def main():
 #        success = 0
 #    return success
 
-codes = ExternalCodes()
+codes = codes.ExternalCodes()
 tab = Indent()
 
 if __name__ == '__main__':
