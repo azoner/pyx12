@@ -40,6 +40,8 @@
     <head>
     <title><xsl:value-of select="/map/transaction/name"/></title>
     <link rel="stylesheet" type="text/css" href="sum.css" title="stylebasic"/>
+    <link rel="alternate stylesheet" href="plain.css" title="Plain" />
+    <link rel="alternate stylesheet" href="none.css" title="No Style" />
     </head>
     <body>
     <xsl:apply-templates/>

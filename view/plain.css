@@ -1,0 +1,30 @@
+body
+{
+}
+
+table
+{
+	width: 100%; 
+	border:1px solid;
+    margin-left: 10px;
+}
+
+tr.loop
+{
+    color: black;
+    font-style: normal;
+    height: 20px;
+    text-align: center;
+    vertical-align: top;
+    width: 17%;
+}
+
+tr.segment
+{
+    color: black;
+    font-style: normal;
+    height: 20px;
+    text-align: left;
+    vertical-align: top;
+    width: 17%;
+}
