@@ -59,6 +59,9 @@ class Test_getnodebypath(unittest.TestCase):
         self.assertEqual(node.id, 'CLM')
         self.assertEqual(node.base_name, 'segment')
 
+    def tearDown(self):
+        del self.map
+        
 class IsValidSyntax(unittest.TestCase):
     def test_fail_bad_syntax(self):
         seg = ['MEA', 'OG', 'HT', '', '', '', '', '', '']

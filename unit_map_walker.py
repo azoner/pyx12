@@ -66,11 +66,17 @@ class Explicit_Loops(unittest.TestCase):
         node = self.walker.walk(node, seg, self.errh, 5, 4, None)
         self.assertEqual(seg[0], node.id)
 
-#    def test_ST_to_BHT_fail(self):
-#        node = self.map.getnodebypath('/ST')
-#        seg = ['ZZZ', '0019']
-#        node = self.walker.walk(node, seg, self.errh, 5, 4, None)
-#        self.assertNotEqual(seg[0], node.id)
+    def test_ST_to_BHT_fail(self):
+        node = self.map.getnodebypath('/ST')
+        seg = ['ZZZ', '0019']
+        node = self.walker.walk(node, seg, self.errh, 5, 4, None)
+        self.assertEqual(node, None)
+
+    def tearDown(self):
+        del self.errh
+        del self.map
+        del self.walker
+        
 
 class Implicit_Loops(unittest.TestCase):
     """
@@ -117,6 +123,11 @@ class Implicit_Loops(unittest.TestCase):
         node = self.walker.walk(node, seg, self.errh, 5, 4, None)
         self.assertEqual(seg[0], node.id)
 
+    def tearDown(self):
+        del self.errh
+        del self.map
+        del self.walker
+        
 class SegmentWalk(unittest.TestCase):
     """
     FAIL - segment repeat exceeds max count
@@ -155,6 +166,11 @@ class SegmentWalk(unittest.TestCase):
 #        node = self.walker.walk(node, seg, self.errh, 5, 4, None)
 #        self.assertNotEqual(seg[0], node.id)
     
+    def tearDown(self):
+        del self.errh
+        del self.map
+        del self.walker
+        
 def suite():
     suite = unittest.TestSuite()
     suite.addTest(unittest.makeSuite(Explicit_Loops))
