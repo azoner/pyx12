@@ -9,7 +9,6 @@
 TRANS=/usr/local/bin/xmllint
 
 all: 
-	${TRANS} --format -o 
 	${TRANS} --format -o 270.4010.X092.A1.xml 270.4010.X092.A1.xml
 	${TRANS} --format -o 270.4010.X092.xml 270.4010.X092.xml
 	${TRANS} --format -o 271.4010.X092.A1.xml 271.4010.X092.A1.xml 
