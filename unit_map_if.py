@@ -3,7 +3,7 @@
 import unittest
 import pdb
 
-#import error_handler
+import error_handler
 from errors import *
 import map_if
 from params import params
@@ -62,6 +62,43 @@ class Test_getnodebypath(unittest.TestCase):
     def tearDown(self):
         del self.map
         
+class TrailingSpaces(unittest.TestCase):
+    def setUp(self):
+        param = params()
+        self.map = map_if.load_map_file('map/837.4010.X098.A1.xml', param)
+        self.errh = error_handler.errh_null()
+
+    def test_trailing_ID_ok(self):
+        node = self.map.getnodebypath('/ISA')
+        node = node.get_child_node_by_idx(5)
+        self.assertNotEqual(node, None)
+        self.assertEqual(node.id, 'ISA06')
+        self.assertEqual(node.base_name, 'element')
+        result = node.is_valid('TEST           ', self.errh)
+        self.failUnless(result)
+        self.assertEqual(self.errh.err_cde, None)
+
+    def test_no_trailing_AN_ok(self):
+        node = self.map.getnodebypath('/2000A/2000B/2300/CLM')
+        node = node.get_child_node_by_idx(0)
+        self.assertNotEqual(node, None)
+        self.assertEqual(node.id, 'CLM01')
+        self.assertEqual(node.base_name, 'element')
+        result = node.is_valid('TEST', self.errh)
+        self.failUnless(result)
+        self.assertEqual(self.errh.err_cde, None)
+
+    def test_trailing_AN_bad(self):
+        node = self.map.getnodebypath('/2000A/2000B/2300/CLM')
+        node = node.get_child_node_by_idx(0)
+        self.assertNotEqual(node, None)
+        self.assertEqual(node.id, 'CLM01')
+        self.assertEqual(node.base_name, 'element')
+        result = node.is_valid('TEST     ', self.errh)
+        self.failIf(result)
+        self.assertEqual(self.errh.err_cde, '6', self.errh.err_str)
+
+
 class IsValidSyntax(unittest.TestCase):
     def test_fail_bad_syntax(self):
         seg = ['MEA', 'OG', 'HT', '', '', '', '', '', '']
@@ -265,6 +302,7 @@ def suite():
     #    IsValidSyntaxE, IsValidSyntaxL))
     suite = unittest.TestSuite()
     suite.addTest(unittest.makeSuite(Test_getnodebypath))
+    suite.addTest(unittest.makeSuite(TrailingSpaces))
     suite.addTest(unittest.makeSuite(IsValidSyntax))
     suite.addTest(unittest.makeSuite(IsValidSyntaxP))
     suite.addTest(unittest.makeSuite(IsValidSyntaxR))
