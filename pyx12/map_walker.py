@@ -84,24 +84,24 @@ class walk_tree:
         orig_node = node
 
         # Special Handlers for ISA, GS, ST
-        while not node.is_map_root():
-            node = self.pop_to_parent_loop(node) # Get root node
-        if orig_node.id == 'SE' and seg_data.get_seg_id() == 'ST':
-            return node.getnodebypath('/ST')
-        if orig_node.id == 'GE' and seg_data.get_seg_id() == 'GS':
-            return node.getnodebypath('/GS')
-        if orig_node.id == 'IEA' and seg_data.get_seg_id() == 'ISA':
-            return node.getnodebypath('/ISA')
+#        while not node.is_map_root():
+#            node = self.pop_to_parent_loop(node) # Get root node
+#        if orig_node.id == 'SE' and seg_data.get_seg_id() == 'ST':
+#            return node.getnodebypath('/ST')
+#        if orig_node.id == 'GE' and seg_data.get_seg_id() == 'GS':
+#            return node.getnodebypath('/GS')
+#        if orig_node.id == 'IEA' and seg_data.get_seg_id() == 'ISA':
+#            return node.getnodebypath('/ISA')
 
-        if orig_node.id in ['ST']: #, 'GS', 'ISA']:
-            orig_node.cur_count = 1
+#        if orig_node.id in ['ST']: #, 'GS', 'ISA']:
+#            orig_node.cur_count = 1
             # UGLY HACK.  Reset counts of sibling nodes to zero
-            node_idx = orig_node.index
-            for child in self.pop_to_parent_loop(orig_node).children:
-                if child.is_segment() and child.index > node_idx:
-                    child.cur_count = 0
+#            node_idx = orig_node.index
+#            for child in self.pop_to_parent_loop(orig_node).children:
+#                if child.is_segment() and child.index > node_idx:
+#                    child.cur_count = 0
+#        node = orig_node
 
-        node = orig_node
         self.mandatory_segs_missing = []
         node_idx = node.index # Get original index of starting node
         if node.is_segment():
