@@ -658,14 +658,7 @@ class err_gs(err_node):
         # From GE loop
         self.cur_line_ge = src.get_cur_line()
 
-        if '1' in self.errors: self.ack_code = 'R'
-        elif '2' in self.errors: self.ack_code = 'R'
-        elif '3' in self.errors: self.ack_code = 'R'
-        elif '4' in self.errors: self.ack_code = 'R'
-        elif '5' in self.errors: self.ack_code = 'E'
-        elif '6' in self.errors: self.ack_code = 'E'
-        else: self.ack_code = 'A'
-
+        self.ack_code = self._get_ack_code()
 
         if seg_data is None:
             self.st_count_orig = 0
@@ -674,6 +667,21 @@ class err_gs(err_node):
         self.st_count_recv = src.st_count # AK903
         #self.st_count_accept = self.st_count_recv - len(self.children) # AK904
 
+    def _get_ack_code(self):
+        for child in self.children:
+            if child.get_error_count() > 0:
+                return 'R'
+        #err_codes = map(lambda x:x[0], self.errors)
+        #if '1' in err_codes: return 'R'
+        #elif '2' in err_codes: return 'R'
+        #elif '3' in err_codes: return 'R'
+        #elif '4' in err_codes: return 'R'
+        #elif '5' in err_codes: return 'E'
+        #elif '6' in err_codes: return 'E'
+        if len(self.errors) > 0:
+            return 'R'
+        return 'A'
+       
     def count_failed_st(self):
         ct = 0
         for child in self.children:

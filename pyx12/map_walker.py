@@ -60,8 +60,9 @@ logger = logging.getLogger('pyx12.walk_tree')
 class walk_tree:
     def __init__(self):
 #        end_tag_stack = []
-        self.cur_seg_count = 0
-        self.mandatory_segs_missing = []  # Store errors until we know we have an error
+        #self.cur_seg_count = 0
+        #self.mandatory_segs_missing = []  # Store errors until we know we have an error
+        pass
 
     def walk(self, node, seg_data, errh, seg_count, cur_line, ls_id):
         """
@@ -69,6 +70,7 @@ class walk_tree:
         Handle found segment = Not used
         """
 
+        #logger.info('%s seg_count=%i / cur_line=%i' % (node.id, seg_count, cur_line))
         if not seg_data.get_seg_id():
             err_str = 'Segment identifier is blank'
             errh.seg_error('1', err_str)
@@ -95,7 +97,7 @@ class walk_tree:
             orig_node.cur_count = 1
 
         node = orig_node
-        self.mandatory_segs_missing = []
+        #self.mandatory_segs_missing = []
         node_idx = node.index # Get original index of starting node
         if not (node.is_loop() or node.is_map_root()): 
             node = self.pop_to_parent_loop(node) # Get enclosing loop
@@ -133,13 +135,14 @@ class walk_tree:
                                         errh.seg_error('5', err_str, None)
                             else:
                                 raise EngineError, 'Usage must be R, S, or N'
-                            self._flush_mandatory_segs(errh)
+                            #self._flush_mandatory_segs(errh)
                             return child
                         elif child.usage == 'R' and child.cur_count < 1:
                             fake_seg = pyx12.segment.segment('%s'% (child.id), '~', '*', ':')
                             errh.add_seg(child, fake_seg, seg_count, cur_line, ls_id)
                             err_str = "Mandatory segment %s missing" % (child.id)
-                            self.mandatory_segs_missing.append((seg_data.get_seg_id(), '3', err_str))
+                            #self.mandatory_segs_missing.append((seg_data.get_seg_id(), '3', err_str))
+                            errh.seg_error('3', err_str, None)
                         #else:
                             #logger.debug('Segment %s is not a match for (%s*%s)' % \
                             #   (child.id, seg_data.get_seg_id(), seg_data[0].get_value()))
@@ -217,10 +220,10 @@ class walk_tree:
         return False
 
 
-    def _flush_mandatory_segs(self, errh):
-        for (seg_id, err_cde, err_str) in self.mandatory_segs_missing:
-            errh.seg_error(err_cde, err_str, None)
-        self.mandatory_segs_missing = []
+    #def _flush_mandatory_segs(self, errh):
+    #    for (seg_id, err_cde, err_str) in self.mandatory_segs_missing:
+    #        errh.seg_error(err_cde, err_str, None)
+    #    self.mandatory_segs_missing = []
 
     def _is_loop_match(self, loop_node, seg_data, errh, seg_count, cur_line, ls_id):
         """
@@ -244,12 +247,13 @@ class walk_tree:
                 #    % (child.id, first_child_node.id, seg_data.get_seg_id(), seg[0].get_value()))
             else:
                 raise EngineError, 'Usage must be R, S, or N'
-            self._flush_mandatory_segs(errh)
+            #self._flush_mandatory_segs(errh)
             return True
         elif loop_node.usage == 'R' and loop_node.cur_count < 1:
             fake_seg = pyx12.segment.segment('%s' % \
                 (first_child_node.id), '~', '*', ':')
             errh.add_seg(first_child_node, fake_seg, seg_count, cur_line, ls_id)
             err_str = "Mandatory segment %s missing" % (first_child_node.id)
-            self.mandatory_segs_missing.append((seg_data.get_seg_id(), '3', err_str))
+            #self.mandatory_segs_missing.append((seg_data.get_seg_id(), '3', err_str))
+            errh.seg_error('3', err_str, None)
         return False
