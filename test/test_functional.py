@@ -62,7 +62,7 @@ def main():
     Set up environment for processing
     """
     param = pyx12.params.params()
-    logger = logging.getLogger('pyx12')
+    logger = logging.getLogger('test_functional')
     logger.setLevel(logging.INFO)
     formatter = logging.Formatter('%(asctime)s %(levelname)s %(module)s %(lineno)d %(message)s')
 
@@ -78,7 +78,7 @@ def main():
     flag_997 = True
     profile = False
     debug = False
-    param.set_param('map_path', os.path.abspath('../pyx12/map'))
+    param.set_param('map_path', os.path.abspath('../map'))
     if not debug:
         try:
             import psyco
