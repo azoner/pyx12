@@ -81,6 +81,7 @@ class x12file:
         self.isa_ids = []
         self.gs_ids = []
         self.st_ids = []
+        self.isa_usage = None
 
         #self.logger = logging.getLogger('pyx12')
 
@@ -138,6 +139,7 @@ class x12file:
             self.isa_ids.append(interchange_control_number)
             self.gs_count = 0
             self.gs_ids = []
+            self.isa_usage = seg[15]
         elif seg[0] == 'IEA': 
             if self.loops[-1][0] != 'ISA' or self.loops[-1][1] != seg[2]:
                 err_str = 'IEA id=%s does not match ISA id=%s' % (seg[2], self.loops[-1][1])
