@@ -11,7 +11,8 @@ kw = {
     'author_email': "jholland@kazoocmh.org",
     'url': "http://www.sourceforge.net/pyx12/",
     'packages': ['pyx12'],
-    'scripts': [ 'bin/x12lint.py', 'bin/x12html.py', 'bin/x12xml.py'],
+    'scripts': [ 'bin/x12lint.py', 'bin/x12html.py', 'bin/x12xml.py',
+        'sbin/x12_build_pkl.py', 'bin/x12norm.py'],
     'data_files': [
         (map_dir, ['map/270.4010.X092.A1.xml']),
         (map_dir, ['map/270.4010.X092.xml']),
@@ -42,11 +43,8 @@ kw = {
         (map_dir, ['map/codes.xml']),
         (map_dir, ['map/codes.xsd']),
         (map_dir, ['map/comp_test.xml']),
-        (map_dir, ['map/find_composites.xsl']),
-        (map_dir, ['map/map.997.4010.xml']),
         (map_dir, ['map/map.xsd']),
         (map_dir, ['map/maps.xml']),
-        (map_dir, ['map/test.xml']),
         (map_dir, ['map/x12.control.00401.xml'])
    ],
       #package_dir = {'': ''},
