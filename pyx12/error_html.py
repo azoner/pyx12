@@ -23,7 +23,7 @@ import logging
 
 # Intrapackage imports
 from errors import *
-from utils import seg_str, escape_html_chars
+#from utils import seg_str, escape_html_chars
 
 __author__  = "John Holland <jholland@kazoocmh.org> <john@zoner.org>"
 
@@ -132,10 +132,57 @@ class error_html:
         
     def _seg_str(self, seg_id, ele_list):
         """
-        Params:     ele_list - list of formatted elements
+        @param ele_list: list of formatted elements
+        @rtype: string
         """
         return seg_id + self.ele_term + seg_str(ele_list, self.seg_term, self.ele_term, \
             self.subele_term, self.eol)
         
-    def _wrap_ele_error(self, str):
-        return '<span class="ele_err">%s</span>' % (str)
+    def _wrap_ele_error(self, str1):
+        """
+        @rtype: string
+        """
+        return '<span class="ele_err">%s</span>' % (str1)
+
+
+def seg_str(seg, seg_term, ele_term, subele_term, eol=''):
+    """
+    Join a list of elements
+    @param seg: List of elements
+    @type seg: list[string|list[string]]
+    @param seg_term: Segment terminator character
+    @type seg_term: string
+    @param ele_term: Element terminator character
+    @type ele_term: string
+    @param subele_term: Sub-element terminator character
+    @type subele_term: string
+    @param eol: End of line character
+    @type eol: string
+    @return: formatted segment
+    @rtype: string
+    """
+    #if None in seg:
+    #    logger.debug(seg)
+    tmp = []
+    for a in seg:
+        if type(a) is ListType:
+            tmp.append(string.join(a, subele_term))
+        else:
+            tmp.append(a)
+    return '%s%s%s' % (string.join(tmp, ele_term), seg_term, eol)
+
+def escape_html_chars(str_val):
+    """
+    Escape special HTML characters (& <>)
+    @type str_val: string
+    @return: formatted string
+    @rtype: string
+    """
+    if str_val is None: 
+        return None
+    output = str_val
+    output = output.replace('&', '&amp;')
+    output = output.replace(' ', '&nbsp;')
+    output = output.replace('>', '&gt;')
+    output = output.replace('<', '&lt;')
+    return output
