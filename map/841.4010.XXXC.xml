@@ -1035,7 +1035,7 @@
                   <element>
                      <data_ele>791</data_ele>
                      <name>Entity Purpose</name>
-                     <usage>R</usage>
+                     <usage>N</usage>
                      <req_des>O</req_des>
                      <seq>05</seq>
                      <refdes>SPI05</refdes>
@@ -1171,7 +1171,7 @@
                   <usage>S</usage>
                   <req_des>O</req_des>
                   <pos>050</pos>
-                  <max_use>1</max_use>
+                  <max_use>&gt;1</max_use>
                   <syntax>C0302</syntax>
                   <element>
                      <data_ele>933</data_ele>
