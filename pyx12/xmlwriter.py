@@ -12,32 +12,33 @@ from utils import escape_html_chars
 
 class XMLWriter:
     """
-    from xmlwriter import XMLWriter
+    Doctest:
 
-    writer = XMLWriter()
-    writer.doctype(
-        u"xsa", u"-//LM Garshol//DTD XML Software Autoupdate 1.0//EN//XML",
-        u"http://www.garshol.priv.no/download/xsa/xsa.dtd")
-    #Notice: there is no error checking to ensure that the root element
-    #specified in the doctype matches the top-level element generated
-    writer.push(u"xsa")
-    #Another element with child elements
-    writer.push(u"vendor")
-    #Element with simple text (#PCDATA) content
-    writer.elem(u"name", u"Centigrade systems")
-    writer.elem(u"email", u"info@centigrade.bogus")
-    writer.elem(u"vendor", u"Centigrade systems")
-    #Close currently open element ("vendor)
-    writer.pop()
-    #Element with an attribute
-    writer.push(u"product", {u"id": u"100\u00B0"})
-    writer.elem(u"name", u"100\u00B0 Server")
-    writer.elem(u"version", u"1.0")
-    writer.elem(u"last-release", u"20030401")
-    #Empty element
-    writer.empty(u"changes")
-    writer.pop()
-    writer.pop()
+        >>>from xmlwriter import XMLWriter
+        >>>writer = XMLWriter()
+        >>>writer.doctype(
+        ... u"xsa", u"-//LM Garshol//DTD XML Software Autoupdate 1.0//EN//XML",
+        ... u"http://www.garshol.priv.no/download/xsa/xsa.dtd")
+        >>>#Notice: there is no error checking to ensure that the root element
+        >>>#specified in the doctype matches the top-level element generated
+        >>>writer.push(u"xsa")
+        >>>#Another element with child elements
+        >>>writer.push(u"vendor")
+        >>>#Element with simple text (#PCDATA) content
+        >>>writer.elem(u"name", u"Centigrade systems")
+        >>>writer.elem(u"email", u"info@centigrade.bogus")
+        >>>writer.elem(u"vendor", u"Centigrade systems")
+        >>>#Close currently open element ("vendor)
+        >>>writer.pop()
+        >>>#Element with an attribute
+        >>>writer.push(u"product", {u"id": u"100\u00B0"})
+        >>>writer.elem(u"name", u"100\u00B0 Server")
+        >>>writer.elem(u"version", u"1.0")
+        >>>writer.elem(u"last-release", u"20030401")
+        >>>#Empty element
+        >>>writer.empty(u"changes")
+        >>>writer.pop()
+        >>>writer.pop()
 
     startElement
     endElement
@@ -48,8 +49,6 @@ class XMLWriter:
     indentation
     close
     flush
-
-
     """
 
     def __init__(self, out=sys.stdout, encoding="utf-8", indent=u" "):

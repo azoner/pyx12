@@ -44,7 +44,7 @@ class x12file:
 
         @param src_file: absolute path of source file 
         @type src_file: string
-        @param errh: reference to error handler
+        @param errh: L{error_handler.err_handler}
         """
         self.fd = open(src_file, 'U')
         self.errh = errh
@@ -269,6 +269,8 @@ class x12file:
 
     def get_isa_id(self): 
         """
+        Get the current ISA identifier
+
         @rtype: string
         """
         isa_id = None
@@ -278,6 +280,8 @@ class x12file:
 
     def get_gs_id(self): 
         """
+        Get the current GS identifier
+
         @rtype: string
         """
         gs_id = None
@@ -287,6 +291,8 @@ class x12file:
 
     def get_st_id(self): 
         """
+        Get the current ST identifier
+
         @rtype: string
         """
         st_id = None
@@ -296,6 +302,8 @@ class x12file:
 
     def get_ls_id(self): 
         """
+        Get the current LS identifier
+
         @rtype: string
         """
         ls_id = None
@@ -305,17 +313,26 @@ class x12file:
 
     def get_seg_count(self): 
         """
+        Get the current segment count
+
         @rtype: int
         """
         return self.seg_count
 
     def get_cur_line(self):
         """
+        Get the current line
+
         @rtype: int
         """
         return self.cur_line
 
     def get_term(self):
+        """
+        Get the original terminators
+
+        @rtype: tuple(string, string, string, string)
+        """
         return (self.seg_term, self.ele_term, self.subele_term, '\n')
 
     def format_seg(self, seg, eol='\n'):
@@ -323,7 +340,7 @@ class x12file:
         Format an original representation of the segment
 
         @param seg: Segment object
-        @type seg: pyx12.segment
+        @type seg: L{segment<segment.segment>}
         @rtype: string
         """
         return '%s' % (self.seg_str(seg, self.seg_term, self.ele_term, self.subele_term, eol))
@@ -333,7 +350,7 @@ class x12file:
         Format a representation of the segment
 
         @param seg: Segment object
-        @type seg: pyx12.segment
+        @type seg: L{segment<segment.segment>}
         @param seg_term: Segment terminator
         @type seg_term: string
         @param ele_term: Element terminator

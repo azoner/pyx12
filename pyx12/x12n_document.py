@@ -75,6 +75,19 @@ from params import params
 #logger = None
 
 def x12n_document(param, src_file, fd_997, fd_html, fd_xmldoc=None):
+    """
+    Primary X12 validation function
+    @param param: pyx12.param instance
+    @param src_file: Source document
+    @type src_file: string
+    @param fd_997: 997 output document
+    @type fd_997: file descriptor
+    @param fd_html: HTML output document
+    @type fd_html: file descriptor
+    @param fd_xmldoc: XML output document
+    @type fd_xmldoc: file descriptor
+    @rtype: boolean
+    """
     map_path = param.get('map_path')
     logger = logging.getLogger('pyx12')
     errh = error_handler.err_handler()
@@ -128,9 +141,9 @@ def x12n_document(param, src_file, fd_997, fd_html, fd_xmldoc=None):
         raise EngineError, "Map not found.  icvn=%s, fic=%s, vriic=%s" % \
             (icvn, fic, vriic)
     #map = map_if.map_if(os.path.join('map', map_file), param)
-    map = map_if.load_map_file(map_file, param)
+    cur_map = map_if.load_map_file(map_file, param)
     logger.debug('Map file: %s' % (map_file))
-    node = map.getnodebypath('/ISA')
+    node = cur_map.getnodebypath('/ISA')
     logger.debug('Map file loaded')
 
     src = x12file.x12file(src_file, errh) 
@@ -147,11 +160,6 @@ def x12n_document(param, src_file, fd_997, fd_html, fd_xmldoc=None):
         #find node
         orig_node = node
         try:
-            if not seg.is_seg_id_valid():
-                err_str = 'Segment identifier %s is invalid' % (seg_data.get_seg_id())
-                errh.seg_error('1', err_str)
-                continue
-                    
             node = walker.walk(node, seg, errh, src.get_seg_count(), \
                 src.get_cur_line(), src.get_ls_id())
         except EngineError:
@@ -185,9 +193,9 @@ def x12n_document(param, src_file, fd_997, fd_html, fd_xmldoc=None):
                         raise EngineError, "Map not found.  icvn=%s, fic=%s, vriic=%s" % \
                             (icvn, fic, vriic)
                     #map = map_if.map_if(os.path.join('map', map_file), param)
-                    map = map_if.load_map_file(map_file, param)
+                    cur_map = map_if.load_map_file(map_file, param)
                     logger.debug('Map file: %s' % (map_file))
-                    node = map.getnodebypath('/GS')
+                    node = cur_map.getnodebypath('/GS')
                     node.cur_count = 1
                 errh.add_gs_loop(seg, src)
             elif seg.get_seg_id() == 'GE':
@@ -241,7 +249,7 @@ def x12n_document(param, src_file, fd_997, fd_html, fd_xmldoc=None):
     del node
     del src
     del control_map
-    del map
+    del cur_map
     try:
         if errh.get_error_count() > 0:
             del errh

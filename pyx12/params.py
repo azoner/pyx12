@@ -37,10 +37,10 @@
 """
 Holds Run-time Parameters
 Order of precedence:
- set(param) - Command line parameters
- '~/.pyx12rc' - User's directory
- '/usr/local/etc/pyx12.conf' - Site default
- self.params - Defaults
+ 1. set(param) - Command line parameters
+ 2. '~/.pyx12rc' - User's directory
+ 3. '/usr/local/etc/pyx12.conf' - Site default
+ 4. self.params - Defaults
 """
 import os.path
 import ConfigParser
@@ -74,6 +74,11 @@ idtag_dtd=http://www.kazoocmh.org/x12idtag.dtd
                 os.path.expanduser('~/.pyx12rc')])
 
     def get(self, option):
+        """
+        Get the value of the parameter specified by option
+        @param option: Option name
+        @type option: string
+        """
         for section in self.cfg.sections():
             if self.cfg.has_option(section, option):
                 try:
@@ -86,6 +91,13 @@ idtag_dtd=http://www.kazoocmh.org/x12idtag.dtd
         return None
 
     def set(self, option, value):
+        """
+        Set the value of the parameter specified by option
+        @param option: Option name
+        @type option: string
+        @param value: Parameter value
+        @type value: string
+        """
         for section in self.cfg.sections():
             if self.cfg.has_option(section, option):
                 try:

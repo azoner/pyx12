@@ -57,16 +57,13 @@ logger.setLevel(logging.DEBUG)
 
 class error_html:
     """
-    Class:      error_html
-    Desc:    
     """
     def __init__(self, errh, fd, term=('~', '*', '~', '\n')): 
         """
-        Class:      error_html
-        Name:       __init__
-        Desc:    
-        Params:     fd - target file
-                    term - tuple of x12 terminators used
+        @param fd: target file
+        @type fd: file descriptor
+        @param term: tuple of x12 terminators used
+        @type term: tuple(string, string, string, string)
         """
         self.errh = errh
         self.fd = fd
@@ -98,18 +95,11 @@ class error_html:
 
     def gen_info(self, info_str):
         """
-        Class:      error_html 
-        Name:       gen_info
-        Desc:    
-        Params:     
         """
         self.fd.write('<span class="info">&nbsp;&nbsp;%s</span><br>\n' % (info_str))
         
     def gen_seg(self, seg_data, src, err_node_list):
         """
-        Class:      error_html 
-        Name:       gen_seg
-        Desc:    
         Params:     seg_data - data segment instance
         """
         cur_line = src.cur_line
@@ -166,9 +156,6 @@ class error_html:
         
     def _seg_str(self, seg_id, ele_list):
         """
-        Class:      error_html
-        Name:       _seg_str
-        Desc:    
         Params:     ele_list - list of formatted elements
         """
         return seg_id + self.ele_term + seg_str(ele_list, self.seg_term, self.ele_term, \

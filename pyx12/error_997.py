@@ -58,16 +58,13 @@ logger.setLevel(logging.DEBUG)
 
 class error_997_visitor(error_visitor.error_visitor):
     """
-    Class:      error_997_visitor
-    Desc:    
     """
     def __init__(self, fd, term=('~', '*', '~', '\n')): 
         """
-        Class:      error_997_visitor
-        Name:       __init__
-        Desc:    
-        Params:     fd - target file
-                    term - tuple of x12 terminators used
+        @param fd: target file
+        @type fd: file descriptor
+        @param term: tuple of x12 terminators used
+        @type term: tuple(string, string, string, string)
         """
         self.fd = fd
         self.seg_term = '~'
@@ -83,9 +80,6 @@ class error_997_visitor(error_visitor.error_visitor):
 
     def visit_root_pre(self, errh):
         """
-        Class:      error_997_visitor 
-        Name:       visit_root_pre
-        Desc:    
         Params:     errh - error_handler instance
         """
         #now = time.localtime()
@@ -164,9 +158,6 @@ class error_997_visitor(error_visitor.error_visitor):
 
     def visit_root_post(self, errh):
         """
-        Class:      error_997_visitor 
-        Name:       visit_root_post
-        Desc:    
         Params:     errh - error_handler instance
         """
         self._write(pyx12.segment.segment('GE*%i*%s' % (self.st_loop_count, \
@@ -179,25 +170,16 @@ class error_997_visitor(error_visitor.error_visitor):
         
     def visit_isa_pre(self, err_isa):
         """
-        Class:      error_997_visitor
-        Name:       visit_isa_pre
-        Desc:    
         Params:     err_isa - error_isa instance
         """
 
     def visit_isa_post(self, err_isa):
         """
-        Class:      error_997_visitor
-        Name:       visit_isa_post
-        Desc:    
         Params:     err_isa - error_isa instance
         """
 
     def visit_gs_pre(self, err_gs): 
         """
-        Class:      error_997_visitor 
-        Name:       visit_gs_pre
-        Desc:    
         Params:     err_gs - error_gs instance
         """
         #ST
@@ -219,9 +201,6 @@ class error_997_visitor(error_visitor.error_visitor):
  
     def visit_gs_post(self, err_gs): 
         """
-        Class:      error_997_visitor 
-        Name:       visit_gs_post
-        Desc:    
         Params:     err_gs - error_gs instance
         """
         if not (err_gs.ack_code and err_gs.st_count_orig and \
@@ -267,9 +246,6 @@ class error_997_visitor(error_visitor.error_visitor):
 
     def visit_st_pre(self, err_st):
         """
-        Class:      error_997_visitor
-        Name:       visit_st_pre
-        Desc:    
         Params:     err_st - error_st instance
         """
         seg_data = pyx12.segment.segment('AK2', '~', '*', ':')
@@ -279,9 +255,6 @@ class error_997_visitor(error_visitor.error_visitor):
         
     def visit_st_post(self, err_st):
         """
-        Class:      error_997_visitor
-        Name:       visit_st_post
-        Desc:    
         Params:     err_st - error_st instance
         """
         if err_st.ack_code is None:
@@ -305,9 +278,6 @@ class error_997_visitor(error_visitor.error_visitor):
 
     def visit_seg(self, err_seg):
         """
-        Class:      error_997_visitor
-        Name:       visit_seg
-        Desc:    
         Params:     err_seg - error_seg instance
         """
         #logger.debug('visit_deg: AK3 - ')
@@ -331,9 +301,6 @@ class error_997_visitor(error_visitor.error_visitor):
         
     def visit_ele(self, err_ele): 
         """
-        Class:      error_997_visitor
-        Name:       visit_ele
-        Desc:    
         Params:     err_ele - error_ele instance
         """
         seg_base = pyx12.segment.segment('AK4', '~', '*', ':')
@@ -355,9 +322,6 @@ class error_997_visitor(error_visitor.error_visitor):
 
     def _write(self, seg_data):
         """
-        Class:      error_997_visitor
-        Name:       _write
-        Desc:    
         Params:     seg_data - data segment instance
         """
         self.fd.write('%s\n' % (seg_data.format(self.seg_term, self.ele_term, \
