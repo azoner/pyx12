@@ -184,7 +184,7 @@ class ExternalCodes:
             if key in self.exclude_list:
                 return True
             if not self.codes.has_key(key):
-                raise errors.EngineError, 'Externel Code "%s" is not defined' % (key)
+                raise errors.EngineError, 'External Code "%s" is not defined' % (key)
                 
             if check_dte is None:
                 code_list = self.codes[key][2]
