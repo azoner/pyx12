@@ -1039,8 +1039,9 @@ class element_if(x12_node):
             bValidCode = True
         if elem_val in self.valid_codes:
             bValidCode = True
+        exclude = self.root.param.get_param('exclude_external_codes').split(',')
         if self.external_codes is not None and \
-            self.root.ext_codes.IsValid(self.external_codes, elem_val, check_dte):
+            self.root.ext_codes.IsValid(self.external_codes, elem_val, check_dte, exclude):
             bValidCode = True
         if not bValidCode:
             err_str = '(%s) is not a valid code for %s (%s)' % (elem_val, self.name, self.refdes)

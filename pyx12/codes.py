@@ -156,13 +156,14 @@ class ExternalCodes:
             pass
 
 
-    def IsValid(self, key, code, check_dte=None):
+    def IsValid(self, key, code, check_dte=None, exclude=None):
         """
         Name:    IsValid
         Desc:    Initialize the external list of codes
         Params:  key - the external codeset identifier
                  code - code to be verified
                  check_dte - YYYYMMDD - Date on which to check code validity. eg 20040514
+                 exclude - list of external codes to ignore
         Returns: True if code is valid, False if not
         """
 
@@ -172,7 +173,7 @@ class ExternalCodes:
             #return True
         #check the code against the list indexed by key
         else:
-            if key in param.get_param('exclude_external_codes').split(','):
+            if key in exclude:
                 return True
             if not self.codes.has_key(key):
                 raise errors.EngineError, 'Externel Code "%s" is not defined' % (key)
