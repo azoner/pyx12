@@ -21,7 +21,7 @@ Tracks segment/line/loop counts.
 #import string
 from types import *
 import logging
-import pdb
+#import pdb
 
 # Intrapackage imports
 from errors import *
@@ -216,13 +216,10 @@ class x12file:
                         % (self.hl_count, hl_count)
                     self.errh.seg_error('HL1', err_str)
                 if seg.get_value_by_ref_des('HL02') != '':
-                    parent = self._int(seg.get_value_by_ref_des('HL02'))
-                    if parent not in self.hl_stack:
-                        self.hl_stack.append(parent)
-                    else:
-                        if self.hl_stack:
-                            while self.hl_stack[-1] != parent:
-                                del self.hl_stack[-1]
+                    hl_parent = self._int(seg.get_value_by_ref_des('HL02'))
+                    while self.hl_stack and hl_parent != self.hl_stack[-1]:
+                        del self.hl_stack[-1]
+                self.hl_stack.append(self.hl_count)
             else:
                 self.seg_count += 1
         except IndexError:
@@ -344,18 +341,18 @@ class x12file:
 #        """
 #        return '%s' % (self.seg_str(seg, self.seg_term, self.ele_term, self.subele_term, eol))
 
-    def seg_str(self, seg, seg_term=None, ele_term=None, subele_term=None, eol=''):
-        """
-        Format a representation of the segment
-
-        @param seg: Segment object
-        @type seg: L{segment<segment.segment>}
-        @param seg_term: Segment terminator
-        @type seg_term: string
-        @param ele_term: Element terminator
-        @type ele_term: string
-        @param subele_term: Sub-element terminator
-        @type subele_term: string
-        @return: string
-        """
-        return seg.format(seg_term, ele_term, subele_term) + eol
+#    def seg_str(self, seg, seg_term=None, ele_term=None, subele_term=None, eol=''):
+#        """
+#        Format a representation of the segment
+#
+#        @param seg: Segment object
+#        @type seg: L{segment<segment.segment>}
+#        @param seg_term: Segment terminator
+#        @type seg_term: string
+#        @param ele_term: Element terminator
+#        @type ele_term: string
+#        @param subele_term: Sub-element terminator
+#        @type subele_term: string
+#        @return: string
+#        """
+#        return seg.format(seg_term, ele_term, subele_term) + eol
