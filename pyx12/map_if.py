@@ -539,6 +539,7 @@ class loop_if(x12_node):
             return False
 
     def reset_cur_count(self):
+        self.cur_count = 0
         for child in self.children:
             #if child.is_loop():
             child.reset_cur_count()
