@@ -29,58 +29,10 @@ namespace Pyx12 {
         x12Error();
     };
 
-    /* Errors in the ISA or IEA segments */
-    class ISAError: public x12Error {
-    public:
-        ISAError();
-    };
-
     /* Errors in the GS or GE segments */
     class GSError: public x12Error {
     public:
         GSError();
-    };
-
-    /* Errors in the ST or SE segments */
-    class STError: public x12Error {
-    public:
-        STError();
-    };
-
-    /* Base class for WEDI errors in this module*/
-    class WEDIError {
-    public:
-        WEDIError();
-    };
-
-    class WEDI1Error: public WEDIError {
-    public:
-        WEDI1Error();
-    };
-
-    class WEDI2Error: public WEDIError {
-    public:
-        WEDI2Error();
-    };
-
-    class WEDI3Error: public WEDIError {
-    public:
-        WEDI3Error();
-    };
-
-    class WEDI4Error: public WEDIError {
-    public:
-        WEDI4Error();
-    };
-
-    class WEDI5Error: public WEDIError {
-    public:
-        WEDI5Error();
-    };
-
-    class WEDI6Error: public WEDIError {
-    public:
-        WEDI6Error();
     };
 
     /* Base class for translation engine errors */
@@ -91,12 +43,6 @@ namespace Pyx12 {
         std::string err_str;
     };
 
-    /* Pop a HL level */
-    class HL_Loop_Pop: public EngineError {
-    public:
-        HL_Loop_Pop();
-    };
-
     /* Iterator is out of bounds*/
     class IterOutOfBounds {
     public:
@@ -104,7 +50,7 @@ namespace Pyx12 {
     };
 
     /* Iterator is Complete */
-    class IterDone{
+    class IterDone {
     public:
         IterDone();
     };
