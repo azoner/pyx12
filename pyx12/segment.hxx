@@ -113,6 +113,7 @@ public:
     void set_ele_term(const string& ele_term_);
     void set_subele_term(const string& subele_term_);
     string format();
+    string format(const string& seg_term_, const string& ele_term_, const string& subele_term_);
     vector<string> format_ele_list(vector<string> str_elems, const string& subele_term_);
     bool is_empty();
     //bool not_delim(char c);

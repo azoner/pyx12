@@ -338,17 +338,39 @@ string get_value_by_ref_des(const string& ref_des)
     return elements[ele_idx][comp_idx].get_value();
 }
 
-/*
-class segment {
-    vector<string> elements;
+void set_seg_term(const string& seg_term_) {
+    seg_term = seg_term_;
+}
 
-public:
-    void set_seg_term(const string& seg_term);
-    void set_ele_term(const string& ele_term);
-    void set_subele_term(const string& subele_term);
-    string format();
-    vector<string> format_ele_list(vector<string> str_elems, const string& subele_term);
-};
-*/
+void set_ele_term(const string& ele_term_) {
+    ele_term = ele_term_;
+}
 
+void set_subele_term(const string& subele_term_) {
+    subele_term = subele_term_;
+}
 
+string format() {
+    format(seg_term, ele_term, subele_term);
+}
+
+string format(const string& seg_term_, const string& ele_term_, const string& subele_term_) {
+    string ret;
+    vector<composite>::iterator i = elements.begin();
+    while(i != elements.end()) {
+        ret += i->format(subele_term_);
+        ret += ele_term_;
+        ++i;
+    }
+    return ret;
+}
+
+vector<string> format_ele_list(vector<string> str_elems, const string& subele_term_) {
+    vector<string> ret;
+    vector<composite>::iterator i = elements.begin();
+    while(i != elements.end()) {
+        ret.append(i->format(subele_term_) + ele_term_);
+        ++i;
+    }
+    return ret;
+}
