@@ -105,7 +105,8 @@ def IsValidDataType(str, data_type, charset = 'B'):
                             raise IsValidError
                     else: # else 28 day
                         year = int(str[0:4])  # get year
-                        if not (year % 4) and ((year % 100) or (not (year % 400)) ):  # leap year
+                        if not year%4 and not (not year%100 and year%400):
+                        #if not (year % 4) and ((year % 100) or (not (year % 400)) ):  # leap year
                             if day < 1 or day > 29:
                                 raise IsValidError
                         elif day < 1 or day > 28:
