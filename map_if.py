@@ -97,6 +97,17 @@ class x12_node:
 	else:
     	    return self.children[idx]
 
+    def is_map_root(self): return False
+
+    def is_loop(self): return False
+    
+    def is_segment(self): return False
+    
+    def is_element(self): return False
+    
+    def is_composite(self): return False
+
+
 #    def debug_print(self):
 #    	sys.stdout.write('%s%s %s %s %s\n' % (str(' '*self.base_level), self.base_name, self.base_level, self.id, self.name))
 #	for node in self.children:
@@ -203,7 +214,7 @@ class map_if(x12_node):
 	    	return node
 	return None
    	
-
+    def is_map_root(self): return True
 
 ############################################################
 # Loop Interface
@@ -332,6 +343,7 @@ class loop_if(x12_node):
     def get_seg_count(self):
         pass
 
+    def is_loop(self): return True
 
 ############################################################
 # Segment Interface
@@ -501,7 +513,7 @@ class segment_if(x12_node):
         """
         pass
 
-
+    def is_segment(self): return True
    	
 
 ############################################################
@@ -758,6 +770,7 @@ class element_if(x12_node):
         """
         pass
 
+    def is_element(self): return True
 
 
 ############################################################
@@ -894,6 +907,7 @@ class composite_if(x12_node):
 	    	return node
 	return None
     
+    def is_composite(self): return True
 
 ######################################################################
 
