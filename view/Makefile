@@ -8,7 +8,7 @@
 
 TRANS=/usr/local/bin/xsltproc
 MAPDIR=../map
-MAPS=270 271 276 277 278 820 835 837D 837I 837P
+MAPS=270 271 276 277 278 820 835 837D 837I 837P 841
 
 all: ${MAPS} codes
 
@@ -33,6 +33,8 @@ all: ${MAPS} codes
 837D: 837.X097.sum.html 837.X097.seg.html 837.X097.loop.html
 
 837P: 837.X098.sum.html 837.X098.seg.html 837.X098.loop.html
+
+841: 841.XXXC.sum.html 841.XXXC.seg.html 841.XXXC.loop.html
 
 codes: codes.html 
 
@@ -74,6 +76,9 @@ codes.html: codes.xsl
 837.X098.sum.html: ${MAPDIR}/map.837.4010.X098.xml
 	${TRANS} -o 837.X098.sum.html map_sum.xsl ${MAPDIR}/map.837.4010.X098.xml
 
+841.XXXC.sum.html: ${MAPDIR}/map.841.4010.XXXC.xml
+	${TRANS} -o 841.XXXC.sum.html map_sum.xsl ${MAPDIR}/map.841.4010.XXXC.xml
+
 270.seg.html: ${MAPDIR}/map.270.4010.X092.xml
 	${TRANS} -o 270.seg.html map_seg.xsl ${MAPDIR}/map.270.4010.X092.xml
 
@@ -106,6 +111,9 @@ codes.html: codes.xsl
 
 837.X098.seg.html: ${MAPDIR}/map.837.4010.X098.xml
 	${TRANS} -o 837.X098.seg.html map_seg.xsl ${MAPDIR}/map.837.4010.X098.xml
+
+841.XXXC.seg.html: ${MAPDIR}/map.841.4010.XXXC.xml
+	${TRANS} -o 841.XXXC.seg.html map_seg.xsl ${MAPDIR}/map.841.4010.XXXC.xml
 
 270.loop.html: ${MAPDIR}/map.270.4010.X092.xml
 	${TRANS} -o 270.loop.html loop.xsl ${MAPDIR}/map.270.4010.X092.xml
@@ -140,9 +148,11 @@ codes.html: codes.xsl
 837.X098.loop.html: ${MAPDIR}/map.837.4010.X098.xml
 	${TRANS} -o 837.X098.loop.html loop.xsl ${MAPDIR}/map.837.4010.X098.xml
 
+841.XXXC.loop.html: ${MAPDIR}/map.841.4010.XXXC.xml
+	${TRANS} -o 841.XXXC.loop.html loop.xsl ${MAPDIR}/map.841.4010.XXXC.xml
 
-270.seg.html 271.seg.html 276.seg.html 277.seg.html 278.seg.27.html 278.seg.html 820.seg.html 835.seg.html 837.X096.seg.html 837.X097.seg.html 837.X098.seg.html: map_seg.xsl
+270.seg.html 271.seg.html 276.seg.html 277.seg.html 278.seg.27.html 278.seg.html 820.seg.html 835.seg.html 837.X096.seg.html 837.X097.seg.html 837.X098.seg.html 841.XXXC.seg.html: map_seg.xsl
 
-270.sum.html 271.sum.html 276.sum.html 277.sum.html 278.sum.27.html 278.sum.html 820.sum.html 835.sum.html 837.X096.sum.html 837.X097.sum.html 837.X098.sum.html: map_sum.xsl
+270.sum.html 271.sum.html 276.sum.html 277.sum.html 278.sum.27.html 278.sum.html 820.sum.html 835.sum.html 837.X096.sum.html 837.X097.sum.html 837.X098.sum.html 841.XXXC.sum.html: map_sum.xsl
 
-270.loop.html 271.loop.html 276.loop.html 277.loop.html 278.loop.27.html 278.loop.html 820.loop.html 835.loop.html 837.X096.loop.html 837.X097.loop.html 837.X098.loop.html: loop.xsl
+270.loop.html 271.loop.html 276.loop.html 277.loop.html 278.loop.27.html 278.loop.html 820.loop.html 835.loop.html 837.X096.loop.html 837.X097.loop.html 837.X098.loop.html 841.XXXC.loop.html: loop.xsl
