@@ -3,7 +3,7 @@ CFLAGS=-Wall  # c++ compiler flags
 #LDFLAGS=-Wall   # linker flags
 LDFLAGS = -lm -Wall
 #-I /usr/local/include -L /usr/local/lib 
-DOCTARGET = /usr/www/sa/doc/pyx12-epydoc
+DOCTARGET = ../doc/epydoc
 
 all:
 	test_csegment
