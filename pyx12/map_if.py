@@ -756,8 +756,8 @@ class segment_if(x12_node):
         child_count = self.get_child_count()
         if len(seg_data) > child_count:
             child_node = self.get_child_node_by_idx(child_count+1)
-            err_str = 'Too many elements in segment %s. Has %i, should have %i' % \
-                (seg_data.get_seg_id(), len(seg_data), child_count)
+            err_str = 'Too many elements in segment "%s" (%s). Has %i, should have %i' % \
+                (self.name, seg_data.get_seg_id(), len(seg_data), child_count)
             #self.logger.error(err_str)
             err_value = seg_data[child_count+1].format()
             errh.ele_error('3', err_str, err_value)
@@ -773,7 +773,8 @@ class segment_if(x12_node):
                 subele_count = child_node.get_child_count()
                 if len(comp_data) > subele_count and child_node.usage != 'N':
                     subele_node = child_node.get_child_node_by_idx(subele_count+1)
-                    err_str = 'Too many sub-elements in composite %s' % (subele_node.refdes)
+                    err_str = 'Too many sub-elements in composite "%s" (%s)' % \
+                        (subele_node.name, subele_node.refdes)
                     err_value = comp_data[subele_count].get_value()
                     errh.ele_error('3', err_str, err_value)
                 valid &= child_node.is_valid(comp_data, errh, self.check_dte)
@@ -1035,7 +1036,8 @@ class element_if(x12_node):
         errh.add_ele(self)
 
         if elem and elem.is_composite():
-            err_str = 'Data element %s is an invalid composite' % (self.refdes)
+            err_str = 'Data element "%s" (%s) is an invalid composite' % \
+                (self.name, self.refdes)
             self.__error__(errh, err_str, '6', elem.__repr__())
             return False
 
@@ -1059,31 +1061,31 @@ class element_if(x12_node):
         if (not self.data_type is None) and (self.data_type == 'R' or self.data_type[0] == 'N'):
             elem_strip = string.replace(string.replace(elem_val, '-', ''), '.', '')
             if len(elem_strip) < int(self.min_len):
-                err_str = 'Data element %s is too short: "%s" should be at least %i characters' % \
-                    (self.refdes, elem_val, int(self.min_len))
+                err_str = 'Data element "%s" (%s) is too short: "%s" should be at least %i characters' % \
+                    (self.name, self.refdes, elem_val, int(self.min_len))
                 self.__error__(errh, err_str, '4', elem_val)
                 valid = False
             if len(elem_strip) > int(self.max_len):
-                err_str = 'Element %s is too long: "%s" should only be %i characters' % (self.refdes,\
-                    elem_val, int(self.max_len))
+                err_str = 'Element "%s" (%s) is too long: "%s" should only be %i characters' % \
+                    (self.name, self.refdes, elem_val, int(self.max_len))
                 self.__error__(errh, err_str, '5', elem_val)
                 valid = False
         else:
             if len(elem_val) < int(self.min_len):
-                err_str = 'Data element %s is too short: "%s" should be at least %i characters' % \
-                    (self.refdes, elem_val, int(self.min_len))
+                err_str = 'Data element "%s" (%s) is too short: "%s" should be at least %i characters' % \
+                    (self.name, self.refdes, elem_val, int(self.min_len))
                 self.__error__(errh, err_str, '4', elem_val)
                 valid = False
             if len(elem_val) > int(self.max_len):
-                err_str = 'Element %s is too long: "%s" should only be %i characters' % (self.refdes,\
-                    elem_val, int(self.max_len))
+                err_str = 'Element "%s" (%s) is too long: "%s" should only be %i characters' % \
+                    (self.name, self.refdes, elem_val, int(self.max_len))
                 self.__error__(errh, err_str, '5', elem_val)
                 valid = False
 
         if self.data_type in ['AN', 'ID'] and elem_val[-1] == ' ':
             if len(elem_val.rstrip()) >= int(self.min_len):
-                err_str = 'Element %s has unnecessary trailing spaces. (%s)' % \
-                    (self.refdes, elem_val)
+                err_str = 'Element "%s" (%s) has unnecessary trailing spaces. (%s)' % \
+                    (self.name, self.refdes, elem_val)
                 self.__error__(errh, err_str, '6', elem_val)
                 valid = False
             
@@ -1092,18 +1094,18 @@ class element_if(x12_node):
            
         if not IsValidDataType(elem_val, self.data_type, self.root.param.get('charset')):
             if self.data_type == 'DT':
-                err_str = 'Data element %s contains an invalid date (%s)' % \
-                    (self.refdes, elem_val)
+                err_str = 'Data element "%s" (%s) contains an invalid date (%s)' % \
+                    (self.name, self.refdes, elem_val)
                 self.__error__(errh, err_str, '8', elem_val)
                 valid = False
             elif self.data_type == 'TM':
-                err_str = 'Data element %s contains an invalid time (%s)' % \
-                    (self.refdes, elem_val)
+                err_str = 'Data element "%s" (%s) contains an invalid time (%s)' % \
+                    (self.name, self.refdes, elem_val)
                 self.__error__(errh, err_str, '9', elem_val)
                 valid = False
             else:
-                err_str = 'Data element %s is type %s, contains an invalid character(%s)' % \
-                    (self.refdes, self.data_type, elem_val)
+                err_str = 'Data element "%s" (%s) is type %s, contains an invalid character(%s)' % \
+                    (self.name, self.refdes, self.data_type, elem_val)
                 self.__error__(errh, err_str, '6', elem_val)
                 valid = False
         return valid
@@ -1293,12 +1295,13 @@ class composite_if(x12_node):
                     good_flag = True
                     break
             if not good_flag:
-                err_str = 'At least one component of composite "%s" is required' % (self.name)
+                err_str = 'At least one component of composite "%s" (%s) is required' % \
+                    (self.name, self.refdes)
                 errh.ele_error('2', err_str, None)
                 return False
 
         if self.usage == 'N' and not comp_data.is_empty():
-            err_str = 'Composite "%s" is marked as Not Used' % (self.name) #, self.refdes)
+            err_str = 'Composite "%s" (%s) is marked as Not Used' % (self.name, self.refdes)
             errh.ele_error('5', err_str, None)
             return False
 
@@ -1307,7 +1310,7 @@ class composite_if(x12_node):
         #except:
         #    pdb.set_trace()
         if len(comp_data) > self.get_child_count():
-            err_str = 'Too many sub-elements in composite %s' % (self.refdes)
+            err_str = 'Too many sub-elements in composite "%s" (%s)' % (self.name, self.refdes)
             errh.ele_error('3', err_str, None)
             valid = False
         for i in xrange(min(len(comp_data), self.get_child_count())):
