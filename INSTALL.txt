@@ -1,12 +1,13 @@
-This package requires libxml2 with python bindings to build and run.
+This package requires python 2.4 or higher and libxml2 with python bindings to
+build and run.
 
 psyco will be used if present. It gives a ~40% decrease in runtime.
 
 To install:
 
-python setup.py install
+    python setup.py install
 
 Optionally, you may pickle the maps.  This gives a substantial decrease in
 startup time.  After installation:
 
-x12_build_pkl <path to map files>
+    x12_build_pkl <path to map files>
