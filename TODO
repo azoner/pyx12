@@ -2,6 +2,8 @@
 
 Path/property local overrides
 
+Config files
+
 Filtering/cleanup
 
 Handle loop/segment counting as a data structure in map_walker, not as member
@@ -19,7 +21,7 @@ Error Handling
 
 Restructure maps
   Add loop wrappers to ISA/GS/ST
-  Mod map_if to match
+  Mod map_if and map_walker to match
 
 HTML output
   Informational lines
