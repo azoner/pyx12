@@ -3,8 +3,9 @@ import cPickle
 import os.path
 import sys
 
-import pyx12.x12n_document
+import pyx12
 import pyx12.map_if
+import pyx12.params
 
 map_dir = 'share/pyx12/map'
 map_files = [
@@ -41,8 +42,8 @@ for file in map_files:
 
 kw = {  
     'name': "pyx12",
-    'version': pyx12.x12n_document.__version__,
-    'description': pyx12.x12n_document.__doc__,
+    'version': pyx12.__version__,
+    'description': pyx12.__doc__,
     #'description': "A X12 validator and converter",
     'author': "John Holland",
     'author_email': "jholland@kazoocmh.org",
@@ -72,9 +73,10 @@ for file in map_files:
     param.set_param('map_path', 'map')
     #param.set_param('pickle_path', 'map')
     map_file = os.path.basename(file)
-    print 'Pickling map file %s' % (file)
     pickle_file = '%s.%s' % (os.path.splitext(map_file)[0], 'pkl')
-    map = pyx12.map_if.map_if(map_file, param)
-    cPickle.dump(map, open(os.path.join('map', pickle_file),'w'))
+    if os.path.exists(map_file) and not os.path.exists(pickle_file):
+        print 'Pickling map file %s' % (file)
+        map = pyx12.map_if.map_if(map_file, param)
+        cPickle.dump(map, open(os.path.join('map', pickle_file),'w'))
 
 core.setup(**kw)
