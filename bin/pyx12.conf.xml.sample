@@ -70,4 +70,8 @@ or can be passed on the command line using the -c option
         <value>http://www.kazoocmh.org/x12idtag.dtd</value>
         <comment></comment>
     </param>
+    <param name="xlmout">
+        <value>simple</value>
+        <comment>Style of XML output</comment>
+    </param>
 </params>
