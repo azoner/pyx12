@@ -34,6 +34,7 @@ namespace Pyx12 {
         string value;
         
     public:
+        element();
         element(const string& ele_str);
         size_t length();
         string format();
@@ -53,6 +54,7 @@ namespace Pyx12 {
         vector<string> split(const string& ele_str);
 
     public:
+        composite();
         composite(const string& ele_str, const char subele_term_);
         element& operator[](size_t);
         const element& operator[](size_t) const;
@@ -80,6 +82,7 @@ namespace Pyx12 {
         vector<string> split(const string& ele_str);
 
     public:
+        segment();
         segment(const string& seg_str, const char seg_term_, 
             const char ele_term_, const char subele_term_);
         composite& operator[](size_t i);
@@ -107,26 +110,27 @@ namespace Pyx12 {
 
     class IsDelim {
     private:
-        char seg_term;
+        char term;
 
     public:
-        IsDelim(const char c) : seg_term(c) {}
+        IsDelim(const char c) : term(c) {}
 
-        bool operator() (const char c)
-            return (seg_term == c);
+        bool operator() (const char c) {
+            return (term == c);
+        };
     };
+
 
     class IsNotDelim {
     private:
-        char seg_term;
+        char term;
 
     public:
-        IsDelim(const char c) : seg_term(c) {}
+        IsNotDelim(const char c) : term(c) {}
 
-        bool operator() (const char c)
-            return (seg_term != c);
+        bool operator() (const char c) {
+            return (term != c);
+        }
     };
-
-
 }
 #endif // PYX12_SEGMENT_HXX_

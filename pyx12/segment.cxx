@@ -33,6 +33,8 @@ $Id$
 
 using namespace std;
 
+Pyx12::element::element() {}
+
 Pyx12::element::element(const string& ele_str)
 {
     value = ele_str;
@@ -76,6 +78,7 @@ bool Pyx12::element::is_empty()
         return false;
 }
 
+Pyx12::composite::composite() {}
 
 Pyx12::composite::composite(const string& ele_str, const char subele_term_)
 {
@@ -117,7 +120,7 @@ vector<string> Pyx12::composite::split(const string& ele_str)
     while(i != ele_str.end()) {
         i = find_if(i, ele_str.end(), Pyx12::IsNotDelim(subele_term));
         iter j = find_if(i, ele_str.end(), Pyx12::IsDelim(subele_term));
-        if i != ele_str.end()
+        if(i != ele_str.end())
             ret.push_back(string(i, j));
         i = j;
     };
@@ -137,9 +140,8 @@ string Pyx12::composite::format()
 string Pyx12::composite::format(const char subele_term_)
 {
     typedef vector<element>::iterator iter;
-    char term;
     string ret;
-    char = subele_term_;
+    char term = subele_term_;
     if(!elements.empty())
         ret += elements[0].format();
     iter i = elements.begin() + 1;
@@ -191,6 +193,8 @@ const Pyx12::element& Pyx12::composite::operator[](size_t i) const {
 ///////////////////////////////////////////////////////////////////////////
 //  SEGMENT CLASS
 ///////////////////////////////////////////////////////////////////////////
+Pyx12::segment::segment() {}
+
 Pyx12::segment::segment(const string& seg_str, const char seg_term_ = '~',
         const char ele_term_ = '*', const char subele_term_ = ':')
 {
@@ -205,7 +209,7 @@ Pyx12::segment::segment(const string& seg_str, const char seg_term_ = '~',
     //seg_id = '';
     if(seg_str.empty())
         throw Pyx12::EngineError("seg_str should not be empty");
-    if(seg_str.substr(seg_str.length()-1) == seg_term)
+    if(seg_str.substr(seg_str.length()-1) == string(1, seg_term))
         //elems = split(seg_str.substr(seg_str.begin(), seg_str.end()-1));
         elems = split(seg_str.substr(0, seg_str.length()-1));
     else
@@ -249,7 +253,7 @@ vector<string> Pyx12::segment::split(const string& seg_str)
     while(i != seg_str.end()) {
         i = find_if(i, seg_str.end(), Pyx12::IsNotDelim(ele_term));
         iter j = find_if(i, seg_str.end(), Pyx12::IsDelim(ele_term));
-        if i != seg_str.end()
+        if(i != seg_str.end())
             ret.push_back(string(i, j));
         i = j;
     };
