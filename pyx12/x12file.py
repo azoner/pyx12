@@ -125,93 +125,100 @@ class x12file:
         except:
             raise StopIteration
 
-        for i in xrange(len(seg)):
-            if seg[i].find(self.subele_term) != -1:
-                seg[i] = seg[i].split(self.subele_term) # Split composite
-        if seg[0] == 'ISA': 
-            seg[-1] = self.subele_term
-            interchange_control_number = seg[13]
-            if interchange_control_number in self.isa_ids:
-                err_str = 'ISA Interchange Control Number %s not unique within file' \
-                    % (interchange_control_number)
-                self.errh.isa_error('025', err_str)
-            self.loops.append(('ISA', interchange_control_number))
-            self.isa_ids.append(interchange_control_number)
-            self.gs_count = 0
-            self.gs_ids = []
-            self.isa_usage = seg[15]
-        elif seg[0] == 'IEA': 
-            if self.loops[-1][0] != 'ISA' or self.loops[-1][1] != seg[2]:
-                err_str = 'IEA id=%s does not match ISA id=%s' % (seg[2], self.loops[-1][1])
-                self.errh.isa_error('001', err_str)
-            if int(seg[1]) != self.gs_count:
-                err_str = 'IEA count for IEA02=%s is wrong' % (seg[2])
-                self.errh.isa_error('021', err_str)
-            del self.loops[-1]
-        elif seg[0] == 'GS': 
-            group_control_number = seg[6]
-            if group_control_number in self.gs_ids:
-                err_str = 'GS Interchange Control Number %s not unique within file' \
-                    % (group_control_number)
-                self.errh.gs_error('6', err_str)
-            self.gs_count += 1
-            self.gs_ids.append(group_control_number)
-            self.loops.append(('GS', group_control_number))
-            self.st_count = 0
-            self.st_ids = []
-        elif seg[0] == 'GE': 
-            if self.loops[-1][0] != 'GS' or self.loops[-1][1] != seg[2]:
-                err_str = 'GE id=%s does not match GS id=%s' % (seg[2], self.loops[-1][1])
-                self.errh.gs_error('4', err_str)
-            if int(seg[1]) != self.st_count:
-                err_str = 'GE count of %s for GE02=%s is wrong. I count %i' \
-                    % (seg[1], seg[2], self.st_count)
-                self.errh.gs_error('5', err_str)
-            del self.loops[-1]
-        elif seg[0] == 'ST': 
-            transaction_control_number = seg[2]
-            if transaction_control_number in self.st_ids:
-                err_str = 'ST Interchange Control Number %s not unique within file' \
-                    % (transaction_control_number)
-                self.errh.st_error('23', err_str)
-            self.st_count += 1
-            self.st_ids.append(transaction_control_number)
-            self.loops.append(('ST', transaction_control_number))
-            self.seg_count = 1 
-            self.hl_count = 0
-        elif seg[0] == 'SE': 
-            se_trn_control_num = seg[2]
-            if self.loops[-1][0] != 'ST' or self.loops[-1][1] != se_trn_control_num:
-                err_str = 'SE id=%s does not match ST id=%s' % (se_trn_control_num, self.loops[-1][1])
-                self.errh.st_error('3', err_str)
-            if int(seg[1]) != self.seg_count + 1:
-                err_str = 'SE count of %s for SE02=%s is wrong. I count %i' \
-                    % (seg[1], se_trn_control_num, self.seg_count + 1)
-                self.errh.st_error('4', err_str)
-            del self.loops[-1]
-        elif seg[0] == 'LS': 
-            self.loops.append(('LS', seg[6]))
-        elif seg[0] == 'LE': 
-            del self.loops[-1]
-        elif seg[0] == 'HL': 
-            self.seg_count += 1
-            self.hl_count += 1
-            if self.hl_count != int(seg[1]):
-                #raise x12Error, 'My HL count %i does not match your HL count %s' \
-                #    % (self.hl_count, seg[1])
-                err_str = 'My HL count %i does not match your HL count %s' \
-                    % (self.hl_count, seg[1])
-                self.errh.seg_error('HL1', err_str)
-            if seg[2] != '':
-                parent = int(seg[2])
-                if parent not in self.hl_stack:
-                    self.hl_stack.append(parent)
-                else:
-                    if self.hl_stack:
-                        while self.hl_stack[-1] != parent:
-                            del self.hl_stack[-1]
-        else:
-            self.seg_count += 1
+        try:
+            for i in xrange(len(seg)):
+                if seg[i].find(self.subele_term) != -1:
+                    seg[i] = seg[i].split(self.subele_term) # Split composite
+            if seg[0] == 'ISA': 
+                if len(seg) != 17:
+                    raise x12Error, 'The ISA segement must have 16 elements (%s)' % (seg)
+                seg[-1] = self.subele_term
+                interchange_control_number = seg[13]
+                if interchange_control_number in self.isa_ids:
+                    err_str = 'ISA Interchange Control Number %s not unique within file' \
+                        % (interchange_control_number)
+                    self.errh.isa_error('025', err_str)
+                self.loops.append(('ISA', interchange_control_number))
+                self.isa_ids.append(interchange_control_number)
+                self.gs_count = 0
+                self.gs_ids = []
+                self.isa_usage = seg[15]
+            elif seg[0] == 'IEA': 
+                if self.loops[-1][0] != 'ISA' or self.loops[-1][1] != seg[2]:
+                    err_str = 'IEA id=%s does not match ISA id=%s' % (seg[2], self.loops[-1][1])
+                    self.errh.isa_error('001', err_str)
+                if int(seg[1]) != self.gs_count:
+                    err_str = 'IEA count for IEA02=%s is wrong' % (seg[2])
+                    self.errh.isa_error('021', err_str)
+                del self.loops[-1]
+            elif seg[0] == 'GS': 
+                group_control_number = seg[6]
+                if group_control_number in self.gs_ids:
+                    err_str = 'GS Interchange Control Number %s not unique within file' \
+                        % (group_control_number)
+                    self.errh.gs_error('6', err_str)
+                self.gs_count += 1
+                self.gs_ids.append(group_control_number)
+                self.loops.append(('GS', group_control_number))
+                self.st_count = 0
+                self.st_ids = []
+            elif seg[0] == 'GE': 
+                if self.loops[-1][0] != 'GS' or self.loops[-1][1] != seg[2]:
+                    err_str = 'GE id=%s does not match GS id=%s' % (seg[2], self.loops[-1][1])
+                    self.errh.gs_error('4', err_str)
+                if int(seg[1]) != self.st_count:
+                    err_str = 'GE count of %s for GE02=%s is wrong. I count %i' \
+                        % (seg[1], seg[2], self.st_count)
+                    self.errh.gs_error('5', err_str)
+                del self.loops[-1]
+            elif seg[0] == 'ST': 
+                transaction_control_number = seg[2]
+                if transaction_control_number in self.st_ids:
+                    err_str = 'ST Interchange Control Number %s not unique within file' \
+                        % (transaction_control_number)
+                    self.errh.st_error('23', err_str)
+                self.st_count += 1
+                self.st_ids.append(transaction_control_number)
+                self.loops.append(('ST', transaction_control_number))
+                self.seg_count = 1 
+                self.hl_count = 0
+            elif seg[0] == 'SE': 
+                se_trn_control_num = seg[2]
+                if self.loops[-1][0] != 'ST' or self.loops[-1][1] != se_trn_control_num:
+                    err_str = 'SE id=%s does not match ST id=%s' % (se_trn_control_num, self.loops[-1][1])
+                    self.errh.st_error('3', err_str)
+                if int(seg[1]) != self.seg_count + 1:
+                    err_str = 'SE count of %s for SE02=%s is wrong. I count %i' \
+                        % (seg[1], se_trn_control_num, self.seg_count + 1)
+                    self.errh.st_error('4', err_str)
+                del self.loops[-1]
+            elif seg[0] == 'LS': 
+                self.loops.append(('LS', seg[6]))
+            elif seg[0] == 'LE': 
+                del self.loops[-1]
+            elif seg[0] == 'HL': 
+                self.seg_count += 1
+                self.hl_count += 1
+                if self.hl_count != int(seg[1]):
+                    #raise x12Error, 'My HL count %i does not match your HL count %s' \
+                    #    % (self.hl_count, seg[1])
+                    err_str = 'My HL count %i does not match your HL count %s' \
+                        % (self.hl_count, seg[1])
+                    self.errh.seg_error('HL1', err_str)
+                if seg[2] != '':
+                    parent = int(seg[2])
+                    if parent not in self.hl_stack:
+                        self.hl_stack.append(parent)
+                    else:
+                        if self.hl_stack:
+                            while self.hl_stack[-1] != parent:
+                                del self.hl_stack[-1]
+            else:
+                self.seg_count += 1
+        except IndexError:
+            err_str = "Expected element not found': %s" % seg
+            raise x12Error, err_str
+
         self.cur_line += 1
         return seg
 
