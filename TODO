@@ -1,3 +1,5 @@
+BUG:  Composite is Situational, sub-ele is required is throwing an invalid error.
+
 Path/property local overrides
 
 Filtering/cleanup???
