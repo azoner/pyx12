@@ -71,7 +71,7 @@ def is_first_seg_match2(child, seg_data):
 def goto_seg_match(loop_node, seg_data): #, errh, seg_count, cur_line, ls_id):
     """
     A child loop has matched the segment.  Return that segment node.
-    Validatio, checking has already occured.
+    Validation, checking has already occured.
 
     @return: The matching segment node
     """
