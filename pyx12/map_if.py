@@ -776,10 +776,10 @@ class segment_if(x12_node):
                     err_str = 'Too many sub-elements in composite %s' % (subele_node.refdes)
                     err_value = comp[subele_count]
                     errh.seg_error('3', err_str, err_value)
-                valid &= child_node.is_valid(seg[i], errh, self.check_dte)
+                valid &= child_node.is_valid(comp, errh, self.check_dte)
             elif child_node.is_element():
                 # Validate Element
-                valid &= child_node.is_valid(seg[i], errh, self.check_dte)
+                valid &= child_node.is_valid(seg[i][0], errh, self.check_dte)
         for i in xrange(len(seg), self.get_child_count()):
             #missing required elements
             valid &= child_node.is_valid(None, errh)
@@ -1037,7 +1037,7 @@ class element_if(x12_node):
             err_str = 'Data element %s is an invalid composite' % (self.refdes)
             self.__error__(errh, err_str, '6', elem.__repr__())
 
-        if elem is None or len(elem) == 0 or elem[0] == '':
+        if elem is None or len(elem) == 0 or elem.get_value() == '':
             if self.usage in ('N', 'S'):
                 return True
             elif self.usage == 'R':
@@ -1048,7 +1048,7 @@ class element_if(x12_node):
                 else:
                     return True
                 
-        elem_val = elem[0]
+        elem_val = elem.get_value()
         valid = True
         if (not self.data_type is None) and (self.data_type == 'R' or self.data_type[0] == 'N'):
             elem_strip = string.replace(string.replace(elem_val, '-', ''), '.', '')
@@ -1272,7 +1272,7 @@ class composite_if(x12_node):
         Class:      composite_if
         Name:       validate
         Desc:       Validates the composite
-        Params:     comp - element instance, has multiple values
+        Params:     comp - composite instance, has multiple values
                     errh - instance of error_handler
         Returns:    True on success
         """
@@ -1283,7 +1283,7 @@ class composite_if(x12_node):
         if self.usage == 'R':
             good_flag = False
             for sub_ele in comp:
-                if sub_ele is not None and len(sub_ele) > 0:
+                if sub_ele is not None and len(sub_ele.get_value()) > 0:
                     good_flag = True
                     break
             if not good_flag:
@@ -1363,7 +1363,7 @@ def is_syntax_valid(seg, syn):
     """
     Name:       is_syntax_valid
     Desc:       Verifies the syntax 
-    Params:     seg - data segment list 
+    Params:     seg - data segment instance
                 syn - list containing the syntax type, 
                     and the indices of elements
     Returns: (boolean, error string)
@@ -1378,7 +1378,7 @@ def is_syntax_valid(seg, syn):
         #pdb.set_trace()
         count = 0
         for s in syn[1:]:
-            if len(seg) >= s and seg[s].get_value() != '':
+            if len(seg) >= s and seg[s-1].get_value() != '':
                 count += 1
         if count != 0 and count != len(syn)-1:
             err_str = 'Syntax Error (%s): If any of %s is present, then all are required'\
@@ -1389,7 +1389,7 @@ def is_syntax_valid(seg, syn):
     elif syn[0] == 'R':
         count = 0
         for s in syn[1:]:
-            if len(seg) >= s and seg[s].get_value() != '':
+            if len(seg) >= s and seg[s-1].get_value() != '':
                 count += 1
         if count == 0:
             err_str = 'Syntax Error (%s): At least one element is required' % \
@@ -1400,7 +1400,7 @@ def is_syntax_valid(seg, syn):
     elif syn[0] == 'E':
         count = 0
         for s in syn[1:]:
-            if len(seg) >= s and seg[s].get_value() != '':
+            if len(seg) >= s and seg[s-1].get_value() != '':
                 count += 1
         if count > 1:
             err_str = 'Syntax Error (%s): At most one of %s may be present'\
@@ -1410,10 +1410,10 @@ def is_syntax_valid(seg, syn):
             return (True, None)
     elif syn[0] == 'C':
         # If the first is present, then all others are required
-        if len(seg) >= syn[1] and seg[syn[1]].get_value() != '':
+        if len(seg) >= syn[1] and seg[syn[1]-1].get_value() != '':
             count = 0
             for s in syn[2:]:
-                if len(seg) >= s and seg[s].get_value() != '':
+                if len(seg) >= s and seg[s-1].get_value() != '':
                     count += 1
             if count != len(syn)-2:
                 if len(syn[2:]) > 1: verb = 'are'
@@ -1426,10 +1426,10 @@ def is_syntax_valid(seg, syn):
         else:
             return (True, None)
     elif syn[0] == 'L':
-        if seg[syn[1]].get_value() != '':
+        if seg[syn[1]-1].get_value() != '':
             count = 0
             for s in syn[2:]:
-                if len(seg) >= s and seg[s].get_value() != '':
+                if len(seg) >= s and seg[s-1].get_value() != '':
                     count += 1
             if count == 0:
                 err_str = 'Syntax Error (%s): If %s%02i is present, then at least one of '\

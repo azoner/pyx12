@@ -55,11 +55,12 @@ class element:
         """function element
         
         ele_str: string
-        
-        returns void
         """
         self.value = ele_str
         
+    def __len__(self):
+        return 1
+
     def __repr__(self):
         """function __repr__
         
@@ -126,9 +127,11 @@ class composite:
         
         returns string
         """
-        return '%s' % (string.join(map(element.__repr__, self.elements), self.subele_term))
+        return self.format(self.subele_term)
 
-    def format(self, subele_term=':'):
+    def format(self, subele_term=None):
+        if subele_term is None:
+            subele_term = self.subele_term
         return '%s' % (string.join(map(element.__repr__, self.elements), subele_term))
 
     def get_value(self):
@@ -184,12 +187,7 @@ class segment:
     def __repr__(self):
         """function __repr__
         """
-        str_elems = []
-        for ele in self.elements:
-            str_elems.append(ele.__repr__())
-        return '%s%s%s%s' % (self.seg_id, self.ele_term, \
-            string.join(str_elems, self.ele_term), \
-            self.seg_term)
+        return self.format(self.seg_term, self.ele_term, self.subele_term, '')
     
     def __getitem__(self, idx):
         """function operator[]
@@ -237,7 +235,13 @@ class segment:
     def set_eol(self, eol):
         self.eol = eol
 
-    def format(self, seg_term, ele_term, subele_term, eol='\n'):
+    def format(self, seg_term=None, ele_term=None, subele_term=None, eol='\n'):
+        if seg_term is None:
+            seg_term = self.seg_term
+        if ele_term is None:
+            ele_term = self.ele_term
+        if subele_term is None:
+            subele_term = self.subele_term
         str_elems = []
         for ele in self.elements:
             str_elems.append(ele.format(subele_term))
