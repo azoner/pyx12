@@ -7094,7 +7094,7 @@
                     </element>
                     <element xid="HI07-05">
                       <data_ele>782</data_ele>
-                      <name>t</name>
+                      <name>Monetary Amount</name>
                       <usage>N</usage>
                       <seq>05</seq>
                       <data_type>R</data_type>
@@ -30135,7 +30135,7 @@
                       </element>
                       <element xid="HI07-05">
                         <data_ele>782</data_ele>
-                        <name>t</name>
+                        <name>Monetary Amount</name>
                         <usage>N</usage>
                         <seq>05</seq>
                         <data_type>R</data_type>

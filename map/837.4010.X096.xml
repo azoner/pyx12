@@ -7527,7 +7527,7 @@
                     </element>
                     <element xid="HI07-05">
                       <data_ele>782</data_ele>
-                      <name>t</name>
+                      <name>Monetary Amount</name>
                       <usage>N</usage>
                       <seq>05</seq>
                       <data_type>R</data_type>
@@ -7885,7 +7885,7 @@
                       <max_len>30</max_len>
                     </element>
                     <element xid="HI12-03">
-                      <data_ele>250</data_ele>
+                      <data_ele>1250</data_ele>
                       <name>Date Time Period Format Qualifier</name>
                       <usage>S</usage>
                       <seq>03</seq>
@@ -24037,7 +24037,7 @@
                       </element>
                       <element xid="HI07-05">
                         <data_ele>782</data_ele>
-                        <name>t</name>
+                        <name>Monetary Amount</name>
                         <usage>N</usage>
                         <seq>05</seq>
                         <data_type>R</data_type>
@@ -24395,7 +24395,7 @@
                         <max_len>30</max_len>
                       </element>
                       <element xid="HI12-03">
-                        <data_ele>250</data_ele>
+                        <data_ele>1250</data_ele>
                         <name>Date Time Period Format Qualifier</name>
                         <usage>S</usage>
                         <seq>03</seq>
