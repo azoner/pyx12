@@ -355,7 +355,6 @@ class loop_if(x12_node):
         return self.parent
 
     def is_match(self):
-        # match also by ID
         pass
 
     def is_valid(self, seg):
@@ -496,16 +495,19 @@ class segment_if(x12_node):
         """
         return self.parent
 
-    def is_match(self):
+    def is_match(self, seg):
         """
-        Name:    
-        Desc:    
-        Params:  
-                 
+        Name: is_match
+        Desc: is segment given a match to this node?
+        Params:  seg - list of element values
         Returns: boolean
         """
-        # match also by ID
-        pass
+        if seg[0] == self.id:
+            if self.children[1].data_type == 'ID' and self.children[1].value != seg[1]:
+                return False
+            return True
+        else:
+            return False
 
     def is_valid(self, seg):
         """
