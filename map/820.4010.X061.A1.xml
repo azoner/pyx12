@@ -2496,455 +2496,455 @@
 <!--End of 2320A loop-->
             </loop>
 <!--End of 2300A loop-->
-            <loop xid="2000B">
+          </loop>
+<!--End of 2000A loop-->
+          <loop xid="2000B">
+            <name>Individual Remittance</name>
+            <usage>S</usage>
+            <pos>160</pos>
+            <repeat>&gt;1</repeat>
+            <segment xid="ENT">
               <name>Individual Remittance</name>
-              <usage>S</usage>
-              <pos>160</pos>
-              <repeat>&gt;1</repeat>
-              <segment xid="ENT">
-                <name>Individual Remittance</name>
+              <usage>R</usage>
+              <pos>010</pos>
+              <max_use>1</max_use>
+              <element xid="ENT01">
+                <data_ele>554</data_ele>
+                <name>Assigned Number</name>
                 <usage>R</usage>
-                <pos>010</pos>
+                <seq>01</seq>
+                <data_type>N0</data_type>
+                <min_len>1</min_len>
+                <max_len>6</max_len>
+              </element>
+              <element xid="ENT02">
+                <data_ele>98</data_ele>
+                <name>Entity Identifier Code</name>
+                <usage>R</usage>
+                <seq>02</seq>
+                <data_type>ID</data_type>
+                <min_len>2</min_len>
+                <max_len>3</max_len>
+                <valid_codes>
+                  <code>2J</code>
+                </valid_codes>
+              </element>
+              <element xid="ENT03">
+                <data_ele>66</data_ele>
+                <name>Identification Code Qualifier</name>
+                <usage>R</usage>
+                <seq>03</seq>
+                <data_type>ID</data_type>
+                <min_len>1</min_len>
+                <max_len>2</max_len>
+                <valid_codes>
+                  <code>34</code>
+                  <code>EI</code>
+                  <code>ZZ</code>
+                </valid_codes>
+              </element>
+              <element xid="ENT04">
+                <data_ele>67</data_ele>
+                <name>Receiver's Individual Identifier</name>
+                <usage>R</usage>
+                <seq>04</seq>
+                <data_type>AN</data_type>
+                <min_len>2</min_len>
+                <max_len>80</max_len>
+              </element>
+              <element xid="ENT05">
+                <data_ele>98</data_ele>
+                <name>Entity Identifier Code</name>
+                <usage>N</usage>
+                <seq>05</seq>
+                <data_type>ID</data_type>
+                <min_len>2</min_len>
+                <max_len>3</max_len>
+              </element>
+              <element xid="ENT06">
+                <data_ele>66</data_ele>
+                <name>Identification Code Qualifier</name>
+                <usage>N</usage>
+                <seq>06</seq>
+                <data_type>ID</data_type>
+                <min_len>1</min_len>
+                <max_len>2</max_len>
+              </element>
+              <element xid="ENT07">
+                <data_ele>67</data_ele>
+                <name>Identification Code</name>
+                <usage>N</usage>
+                <seq>07</seq>
+                <data_type>AN</data_type>
+                <min_len>2</min_len>
+                <max_len>80</max_len>
+              </element>
+              <element xid="ENT08">
+                <data_ele>128</data_ele>
+                <name>Reference Identification Qualifier</name>
+                <usage>N</usage>
+                <seq>08</seq>
+                <data_type>ID</data_type>
+                <min_len>2</min_len>
+                <max_len>3</max_len>
+              </element>
+              <element xid="ENT09">
+                <data_ele>127</data_ele>
+                <name>Reference Identification</name>
+                <usage>N</usage>
+                <seq>09</seq>
+                <data_type>AN</data_type>
+                <min_len>1</min_len>
+                <max_len>30</max_len>
+              </element>
+            </segment>
+<!--End of ENT segment-->
+            <loop xid="2100B">
+              <name>Individual Name</name>
+              <usage>S</usage>
+              <pos>020</pos>
+              <repeat>&gt;1</repeat>
+              <segment xid="NM1">
+                <name>Individual Name</name>
+                <usage>R</usage>
+                <pos>020</pos>
                 <max_use>1</max_use>
-                <element xid="ENT01">
-                  <data_ele>554</data_ele>
-                  <name>Assigned Number</name>
-                  <usage>R</usage>
-                  <seq>01</seq>
-                  <data_type>N0</data_type>
-                  <min_len>1</min_len>
-                  <max_len>6</max_len>
-                </element>
-                <element xid="ENT02">
+                <element xid="NM101">
                   <data_ele>98</data_ele>
                   <name>Entity Identifier Code</name>
                   <usage>R</usage>
-                  <seq>02</seq>
+                  <seq>01</seq>
                   <data_type>ID</data_type>
                   <min_len>2</min_len>
                   <max_len>3</max_len>
                   <valid_codes>
-                    <code>2J</code>
+                    <code>EY</code>
+                    <code>QE</code>
                   </valid_codes>
                 </element>
-                <element xid="ENT03">
+                <element xid="NM102">
+                  <data_ele>1065</data_ele>
+                  <name>Entity Type Qualifier</name>
+                  <usage>R</usage>
+                  <seq>02</seq>
+                  <data_type>ID</data_type>
+                  <min_len>1</min_len>
+                  <max_len>1</max_len>
+                  <valid_codes>
+                    <code>1</code>
+                  </valid_codes>
+                </element>
+                <element xid="NM103">
+                  <data_ele>1035</data_ele>
+                  <name>Individual Last Name</name>
+                  <usage>S</usage>
+                  <seq>03</seq>
+                  <data_type>AN</data_type>
+                  <min_len>1</min_len>
+                  <max_len>35</max_len>
+                </element>
+                <element xid="NM104">
+                  <data_ele>1036</data_ele>
+                  <name>Individual First Name</name>
+                  <usage>S</usage>
+                  <seq>04</seq>
+                  <data_type>AN</data_type>
+                  <min_len>1</min_len>
+                  <max_len>25</max_len>
+                </element>
+                <element xid="NM105">
+                  <data_ele>1037</data_ele>
+                  <name>Individual Middle Name</name>
+                  <usage>S</usage>
+                  <seq>05</seq>
+                  <data_type>AN</data_type>
+                  <min_len>1</min_len>
+                  <max_len>25</max_len>
+                </element>
+                <element xid="NM106">
+                  <data_ele>1038</data_ele>
+                  <name>Individual Name Prefix</name>
+                  <usage>S</usage>
+                  <seq>06</seq>
+                  <data_type>AN</data_type>
+                  <min_len>1</min_len>
+                  <max_len>10</max_len>
+                </element>
+                <element xid="NM107">
+                  <data_ele>1039</data_ele>
+                  <name>Individual Name Suffix</name>
+                  <usage>S</usage>
+                  <seq>07</seq>
+                  <data_type>AN</data_type>
+                  <min_len>1</min_len>
+                  <max_len>10</max_len>
+                </element>
+                <element xid="NM108">
                   <data_ele>66</data_ele>
                   <name>Identification Code Qualifier</name>
-                  <usage>R</usage>
-                  <seq>03</seq>
+                  <usage>S</usage>
+                  <seq>08</seq>
                   <data_type>ID</data_type>
                   <min_len>1</min_len>
                   <max_len>2</max_len>
                   <valid_codes>
                     <code>34</code>
                     <code>EI</code>
-                    <code>ZZ</code>
+                    <code>N</code>
                   </valid_codes>
                 </element>
-                <element xid="ENT04">
+                <element xid="NM109">
                   <data_ele>67</data_ele>
-                  <name>Receiver's Individual Identifier</name>
-                  <usage>R</usage>
-                  <seq>04</seq>
+                  <name>Individual Identifier</name>
+                  <usage>S</usage>
+                  <seq>09</seq>
                   <data_type>AN</data_type>
                   <min_len>2</min_len>
                   <max_len>80</max_len>
                 </element>
-                <element xid="ENT05">
+                <element xid="NM110">
+                  <data_ele>706</data_ele>
+                  <name>Entity Relationship Code</name>
+                  <usage>N</usage>
+                  <seq>10</seq>
+                  <data_type>ID</data_type>
+                  <min_len>2</min_len>
+                  <max_len>2</max_len>
+                </element>
+                <element xid="NM111">
                   <data_ele>98</data_ele>
                   <name>Entity Identifier Code</name>
                   <usage>N</usage>
-                  <seq>05</seq>
+                  <seq>11</seq>
                   <data_type>ID</data_type>
                   <min_len>2</min_len>
                   <max_len>3</max_len>
                 </element>
-                <element xid="ENT06">
-                  <data_ele>66</data_ele>
-                  <name>Identification Code Qualifier</name>
-                  <usage>N</usage>
-                  <seq>06</seq>
-                  <data_type>ID</data_type>
-                  <min_len>1</min_len>
-                  <max_len>2</max_len>
-                </element>
-                <element xid="ENT07">
-                  <data_ele>67</data_ele>
-                  <name>Identification Code</name>
-                  <usage>N</usage>
-                  <seq>07</seq>
-                  <data_type>AN</data_type>
-                  <min_len>2</min_len>
-                  <max_len>80</max_len>
-                </element>
-                <element xid="ENT08">
+              </segment>
+<!--End of NM1 segment-->
+            </loop>
+<!--End of 2100B loop-->
+            <loop xid="2300B">
+              <name>Individual Premium Remittance Detail</name>
+              <usage>S</usage>
+              <pos>150</pos>
+              <repeat>&gt;1</repeat>
+              <segment xid="RMR">
+                <name>Individual Premium Remittance Detail</name>
+                <usage>R</usage>
+                <pos>150</pos>
+                <max_use>1</max_use>
+                <element xid="RMR01">
                   <data_ele>128</data_ele>
                   <name>Reference Identification Qualifier</name>
-                  <usage>N</usage>
-                  <seq>08</seq>
+                  <usage>R</usage>
+                  <seq>01</seq>
                   <data_type>ID</data_type>
                   <min_len>2</min_len>
                   <max_len>3</max_len>
+                  <valid_codes>
+                    <code>11</code>
+                    <code>9J</code>
+                    <code>AZ</code>
+                    <code>B7</code>
+                    <code>CT</code>
+                    <code>ID</code>
+                    <code>IG</code>
+                    <code>IK</code>
+                    <code>KW</code>
+                  </valid_codes>
                 </element>
-                <element xid="ENT09">
+                <element xid="RMR02">
                   <data_ele>127</data_ele>
-                  <name>Reference Identification</name>
-                  <usage>N</usage>
-                  <seq>09</seq>
+                  <name>Insurance Remittance Reference Number</name>
+                  <usage>R</usage>
+                  <seq>02</seq>
                   <data_type>AN</data_type>
                   <min_len>1</min_len>
                   <max_len>30</max_len>
                 </element>
-              </segment>
-<!--End of ENT segment-->
-              <loop xid="2100B">
-                <name>Individual Name</name>
-                <usage>S</usage>
-                <pos>020</pos>
-                <repeat>&gt;1</repeat>
-                <segment xid="NM1">
-                  <name>Individual Name</name>
+                <element xid="RMR03">
+                  <data_ele>482</data_ele>
+                  <name>Payment Action Code</name>
+                  <usage>S</usage>
+                  <seq>03</seq>
+                  <data_type>ID</data_type>
+                  <min_len>2</min_len>
+                  <max_len>2</max_len>
+                  <valid_codes>
+                    <code>PI</code>
+                    <code>PP</code>
+                  </valid_codes>
+                </element>
+                <element xid="RMR04">
+                  <data_ele>782</data_ele>
+                  <name>Detail Premium Payment Amount</name>
                   <usage>R</usage>
-                  <pos>020</pos>
+                  <seq>04</seq>
+                  <data_type>R</data_type>
+                  <min_len>1</min_len>
+                  <max_len>18</max_len>
+                </element>
+                <element xid="RMR05">
+                  <data_ele>782</data_ele>
+                  <name>Billed Premium Amount</name>
+                  <usage>S</usage>
+                  <seq>05</seq>
+                  <data_type>R</data_type>
+                  <min_len>1</min_len>
+                  <max_len>18</max_len>
+                </element>
+                <element xid="RMR06">
+                  <data_ele>782</data_ele>
+                  <name>Monetary Amount</name>
+                  <usage>N</usage>
+                  <seq>06</seq>
+                  <data_type>R</data_type>
+                  <min_len>1</min_len>
+                  <max_len>18</max_len>
+                </element>
+                <element xid="RMR07">
+                  <data_ele>426</data_ele>
+                  <name>Adjustment Reason Code</name>
+                  <usage>N</usage>
+                  <seq>07</seq>
+                  <data_type>ID</data_type>
+                  <min_len>2</min_len>
+                  <max_len>2</max_len>
+                </element>
+                <element xid="RMR08">
+                  <data_ele>782</data_ele>
+                  <name>Monetary Amount</name>
+                  <usage>N</usage>
+                  <seq>08</seq>
+                  <data_type>R</data_type>
+                  <min_len>1</min_len>
+                  <max_len>18</max_len>
+                </element>
+              </segment>
+<!--End of RMR segment-->
+              <segment xid="DTM">
+                <name>Individual Coverage Period</name>
+                <usage>S</usage>
+                <pos>180</pos>
+                <max_use>1</max_use>
+                <element xid="DTM01">
+                  <data_ele>374</data_ele>
+                  <name>Date Time Qualifier</name>
+                  <usage>R</usage>
+                  <seq>01</seq>
+                  <data_type>ID</data_type>
+                  <min_len>3</min_len>
+                  <max_len>3</max_len>
+                  <valid_codes>
+                    <code>582</code>
+                  </valid_codes>
+                </element>
+                <element xid="DTM02">
+                  <data_ele>373</data_ele>
+                  <name>Date</name>
+                  <usage>N</usage>
+                  <seq>02</seq>
+                  <data_type>DT</data_type>
+                  <min_len>8</min_len>
+                  <max_len>8</max_len>
+                </element>
+                <element xid="DTM03">
+                  <data_ele>337</data_ele>
+                  <name>Time</name>
+                  <usage>N</usage>
+                  <seq>03</seq>
+                  <data_type>TM</data_type>
+                  <min_len>4</min_len>
+                  <max_len>8</max_len>
+                </element>
+                <element xid="DTM04">
+                  <data_ele>623</data_ele>
+                  <name>Time Code</name>
+                  <usage>N</usage>
+                  <seq>04</seq>
+                  <data_type>ID</data_type>
+                  <min_len>2</min_len>
+                  <max_len>2</max_len>
+                </element>
+                <element xid="DTM05">
+                  <data_ele>1250</data_ele>
+                  <name>Date Time Period Format Qualifier</name>
+                  <usage>R</usage>
+                  <seq>05</seq>
+                  <data_type>ID</data_type>
+                  <min_len>2</min_len>
+                  <max_len>3</max_len>
+                  <valid_codes>
+                    <code>RD8</code>
+                  </valid_codes>
+                </element>
+                <element xid="DTM06">
+                  <data_ele>1251</data_ele>
+                  <name>Coverage Period</name>
+                  <usage>R</usage>
+                  <seq>06</seq>
+                  <data_type>AN</data_type>
+                  <min_len>1</min_len>
+                  <max_len>35</max_len>
+                </element>
+              </segment>
+<!--End of DTM segment-->
+              <loop xid="2320B">
+                <name>Individual Premium Adjustment</name>
+                <usage>S</usage>
+                <pos>210</pos>
+                <repeat>&gt;1</repeat>
+                <segment xid="ADX">
+                  <name>Individual Premium Adjustment</name>
+                  <usage>R</usage>
+                  <pos>210</pos>
                   <max_use>1</max_use>
-                  <element xid="NM101">
-                    <data_ele>98</data_ele>
-                    <name>Entity Identifier Code</name>
+                  <element xid="ADX01">
+                    <data_ele>782</data_ele>
+                    <name>Adjustment Amount</name>
                     <usage>R</usage>
                     <seq>01</seq>
-                    <data_type>ID</data_type>
-                    <min_len>2</min_len>
-                    <max_len>3</max_len>
-                    <valid_codes>
-                      <code>EY</code>
-                      <code>QE</code>
-                    </valid_codes>
+                    <data_type>R</data_type>
+                    <min_len>1</min_len>
+                    <max_len>18</max_len>
                   </element>
-                  <element xid="NM102">
-                    <data_ele>1065</data_ele>
-                    <name>Entity Type Qualifier</name>
+                  <element xid="ADX02">
+                    <data_ele>426</data_ele>
+                    <name>Adjustment Reason Code</name>
                     <usage>R</usage>
                     <seq>02</seq>
                     <data_type>ID</data_type>
-                    <min_len>1</min_len>
-                    <max_len>1</max_len>
-                    <valid_codes>
-                      <code>1</code>
-                    </valid_codes>
-                  </element>
-                  <element xid="NM103">
-                    <data_ele>1035</data_ele>
-                    <name>Individual Last Name</name>
-                    <usage>S</usage>
-                    <seq>03</seq>
-                    <data_type>AN</data_type>
-                    <min_len>1</min_len>
-                    <max_len>35</max_len>
-                  </element>
-                  <element xid="NM104">
-                    <data_ele>1036</data_ele>
-                    <name>Individual First Name</name>
-                    <usage>S</usage>
-                    <seq>04</seq>
-                    <data_type>AN</data_type>
-                    <min_len>1</min_len>
-                    <max_len>25</max_len>
-                  </element>
-                  <element xid="NM105">
-                    <data_ele>1037</data_ele>
-                    <name>Individual Middle Name</name>
-                    <usage>S</usage>
-                    <seq>05</seq>
-                    <data_type>AN</data_type>
-                    <min_len>1</min_len>
-                    <max_len>25</max_len>
-                  </element>
-                  <element xid="NM106">
-                    <data_ele>1038</data_ele>
-                    <name>Individual Name Prefix</name>
-                    <usage>S</usage>
-                    <seq>06</seq>
-                    <data_type>AN</data_type>
-                    <min_len>1</min_len>
-                    <max_len>10</max_len>
-                  </element>
-                  <element xid="NM107">
-                    <data_ele>1039</data_ele>
-                    <name>Individual Name Suffix</name>
-                    <usage>S</usage>
-                    <seq>07</seq>
-                    <data_type>AN</data_type>
-                    <min_len>1</min_len>
-                    <max_len>10</max_len>
-                  </element>
-                  <element xid="NM108">
-                    <data_ele>66</data_ele>
-                    <name>Identification Code Qualifier</name>
-                    <usage>S</usage>
-                    <seq>08</seq>
-                    <data_type>ID</data_type>
-                    <min_len>1</min_len>
-                    <max_len>2</max_len>
-                    <valid_codes>
-                      <code>34</code>
-                      <code>EI</code>
-                      <code>N</code>
-                    </valid_codes>
-                  </element>
-                  <element xid="NM109">
-                    <data_ele>67</data_ele>
-                    <name>Individual Identifier</name>
-                    <usage>S</usage>
-                    <seq>09</seq>
-                    <data_type>AN</data_type>
-                    <min_len>2</min_len>
-                    <max_len>80</max_len>
-                  </element>
-                  <element xid="NM110">
-                    <data_ele>706</data_ele>
-                    <name>Entity Relationship Code</name>
-                    <usage>N</usage>
-                    <seq>10</seq>
-                    <data_type>ID</data_type>
                     <min_len>2</min_len>
                     <max_len>2</max_len>
+                    <valid_codes external="adjustment_reason"/>
                   </element>
-                  <element xid="NM111">
-                    <data_ele>98</data_ele>
-                    <name>Entity Identifier Code</name>
-                    <usage>N</usage>
-                    <seq>11</seq>
-                    <data_type>ID</data_type>
-                    <min_len>2</min_len>
-                    <max_len>3</max_len>
-                  </element>
-                </segment>
-<!--End of NM1 segment-->
-              </loop>
-<!--End of 2100B loop-->
-              <loop xid="2300B">
-                <name>Individual Premium Remittance Detail</name>
-                <usage>S</usage>
-                <pos>150</pos>
-                <repeat>&gt;1</repeat>
-                <segment xid="RMR">
-                  <name>Individual Premium Remittance Detail</name>
-                  <usage>R</usage>
-                  <pos>150</pos>
-                  <max_use>1</max_use>
-                  <element xid="RMR01">
+                  <element xid="ADX03">
                     <data_ele>128</data_ele>
                     <name>Reference Identification Qualifier</name>
-                    <usage>R</usage>
-                    <seq>01</seq>
+                    <usage>N</usage>
+                    <seq>03</seq>
                     <data_type>ID</data_type>
                     <min_len>2</min_len>
                     <max_len>3</max_len>
-                    <valid_codes>
-                      <code>11</code>
-                      <code>9J</code>
-                      <code>AZ</code>
-                      <code>B7</code>
-                      <code>CT</code>
-                      <code>ID</code>
-                      <code>IG</code>
-                      <code>IK</code>
-                      <code>KW</code>
-                    </valid_codes>
                   </element>
-                  <element xid="RMR02">
+                  <element xid="ADX04">
                     <data_ele>127</data_ele>
-                    <name>Insurance Remittance Reference Number</name>
-                    <usage>R</usage>
-                    <seq>02</seq>
+                    <name>Reference Identification</name>
+                    <usage>N</usage>
+                    <seq>04</seq>
                     <data_type>AN</data_type>
                     <min_len>1</min_len>
                     <max_len>30</max_len>
                   </element>
-                  <element xid="RMR03">
-                    <data_ele>482</data_ele>
-                    <name>Payment Action Code</name>
-                    <usage>S</usage>
-                    <seq>03</seq>
-                    <data_type>ID</data_type>
-                    <min_len>2</min_len>
-                    <max_len>2</max_len>
-                    <valid_codes>
-                      <code>PI</code>
-                      <code>PP</code>
-                    </valid_codes>
-                  </element>
-                  <element xid="RMR04">
-                    <data_ele>782</data_ele>
-                    <name>Detail Premium Payment Amount</name>
-                    <usage>R</usage>
-                    <seq>04</seq>
-                    <data_type>R</data_type>
-                    <min_len>1</min_len>
-                    <max_len>18</max_len>
-                  </element>
-                  <element xid="RMR05">
-                    <data_ele>782</data_ele>
-                    <name>Billed Premium Amount</name>
-                    <usage>S</usage>
-                    <seq>05</seq>
-                    <data_type>R</data_type>
-                    <min_len>1</min_len>
-                    <max_len>18</max_len>
-                  </element>
-                  <element xid="RMR06">
-                    <data_ele>782</data_ele>
-                    <name>Monetary Amount</name>
-                    <usage>N</usage>
-                    <seq>06</seq>
-                    <data_type>R</data_type>
-                    <min_len>1</min_len>
-                    <max_len>18</max_len>
-                  </element>
-                  <element xid="RMR07">
-                    <data_ele>426</data_ele>
-                    <name>Adjustment Reason Code</name>
-                    <usage>N</usage>
-                    <seq>07</seq>
-                    <data_type>ID</data_type>
-                    <min_len>2</min_len>
-                    <max_len>2</max_len>
-                  </element>
-                  <element xid="RMR08">
-                    <data_ele>782</data_ele>
-                    <name>Monetary Amount</name>
-                    <usage>N</usage>
-                    <seq>08</seq>
-                    <data_type>R</data_type>
-                    <min_len>1</min_len>
-                    <max_len>18</max_len>
-                  </element>
                 </segment>
-<!--End of RMR segment-->
-                <segment xid="DTM">
-                  <name>Individual Coverage Period</name>
-                  <usage>S</usage>
-                  <pos>180</pos>
-                  <max_use>1</max_use>
-                  <element xid="DTM01">
-                    <data_ele>374</data_ele>
-                    <name>Date Time Qualifier</name>
-                    <usage>R</usage>
-                    <seq>01</seq>
-                    <data_type>ID</data_type>
-                    <min_len>3</min_len>
-                    <max_len>3</max_len>
-                    <valid_codes>
-                      <code>582</code>
-                    </valid_codes>
-                  </element>
-                  <element xid="DTM02">
-                    <data_ele>373</data_ele>
-                    <name>Date</name>
-                    <usage>N</usage>
-                    <seq>02</seq>
-                    <data_type>DT</data_type>
-                    <min_len>8</min_len>
-                    <max_len>8</max_len>
-                  </element>
-                  <element xid="DTM03">
-                    <data_ele>337</data_ele>
-                    <name>Time</name>
-                    <usage>N</usage>
-                    <seq>03</seq>
-                    <data_type>TM</data_type>
-                    <min_len>4</min_len>
-                    <max_len>8</max_len>
-                  </element>
-                  <element xid="DTM04">
-                    <data_ele>623</data_ele>
-                    <name>Time Code</name>
-                    <usage>N</usage>
-                    <seq>04</seq>
-                    <data_type>ID</data_type>
-                    <min_len>2</min_len>
-                    <max_len>2</max_len>
-                  </element>
-                  <element xid="DTM05">
-                    <data_ele>1250</data_ele>
-                    <name>Date Time Period Format Qualifier</name>
-                    <usage>R</usage>
-                    <seq>05</seq>
-                    <data_type>ID</data_type>
-                    <min_len>2</min_len>
-                    <max_len>3</max_len>
-                    <valid_codes>
-                      <code>RD8</code>
-                    </valid_codes>
-                  </element>
-                  <element xid="DTM06">
-                    <data_ele>1251</data_ele>
-                    <name>Coverage Period</name>
-                    <usage>R</usage>
-                    <seq>06</seq>
-                    <data_type>AN</data_type>
-                    <min_len>1</min_len>
-                    <max_len>35</max_len>
-                  </element>
-                </segment>
-<!--End of DTM segment-->
-                <loop xid="2320B">
-                  <name>Individual Premium Adjustment</name>
-                  <usage>S</usage>
-                  <pos>210</pos>
-                  <repeat>&gt;1</repeat>
-                  <segment xid="ADX">
-                    <name>Individual Premium Adjustment</name>
-                    <usage>R</usage>
-                    <pos>210</pos>
-                    <max_use>1</max_use>
-                    <element xid="ADX01">
-                      <data_ele>782</data_ele>
-                      <name>Adjustment Amount</name>
-                      <usage>R</usage>
-                      <seq>01</seq>
-                      <data_type>R</data_type>
-                      <min_len>1</min_len>
-                      <max_len>18</max_len>
-                    </element>
-                    <element xid="ADX02">
-                      <data_ele>426</data_ele>
-                      <name>Adjustment Reason Code</name>
-                      <usage>R</usage>
-                      <seq>02</seq>
-                      <data_type>ID</data_type>
-                      <min_len>2</min_len>
-                      <max_len>2</max_len>
-                      <valid_codes external="adjustment_reason"/>
-                    </element>
-                    <element xid="ADX03">
-                      <data_ele>128</data_ele>
-                      <name>Reference Identification Qualifier</name>
-                      <usage>N</usage>
-                      <seq>03</seq>
-                      <data_type>ID</data_type>
-                      <min_len>2</min_len>
-                      <max_len>3</max_len>
-                    </element>
-                    <element xid="ADX04">
-                      <data_ele>127</data_ele>
-                      <name>Reference Identification</name>
-                      <usage>N</usage>
-                      <seq>04</seq>
-                      <data_type>AN</data_type>
-                      <min_len>1</min_len>
-                      <max_len>30</max_len>
-                    </element>
-                  </segment>
 <!--End of ADX segment-->
-                </loop>
-<!--End of 2320B loop-->
               </loop>
-<!--End of 2300B loop-->
+<!--End of 2320B loop-->
             </loop>
-<!--End of 2000B loop-->
+<!--End of 2300B loop-->
           </loop>
-<!--End of 2000A loop-->
+<!--End of 2000B loop-->
         </loop>
 <!--End of DETAIL loop-->
         <loop xid="FOOTER" type="footer">
