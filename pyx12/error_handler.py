@@ -310,7 +310,7 @@ class err_handler:
         self._add_cur_ele()
         self.cur_ele_node.add_error(err_cde, err_str, bad_value) #, pos, data_ele)
         sout = ''
-        sout += '#%i ' % (self.cur_ele_node.get_cur_line())
+        sout += '#%i ' % (self.cur_seg_node.get_cur_line())
         sout += 'ELE:%s - %s' % (err_cde, err_str)
         if bad_value:
             logger.error(' (%s)' % (bad_value))
