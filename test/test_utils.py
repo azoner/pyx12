@@ -177,6 +177,8 @@ class ExtendedDate(unittest.TestCase):
         self.failIf(IsValidDataType('2002041a', 'D8', 'E'))
         self.failIf(IsValidDataType('19000229', 'D8', 'E'))
         self.failIf(IsValidDataType('20030229', 'D8', 'E'))
+        self.failIf(IsValidDataType('55555555', 'D8', 'E'))
+        self.failIf(IsValidDataType('55555555', 'D8', 'B'))
         self.failIf(IsValidDataType('200402024 00', 'D8', 'B'))
 
 
