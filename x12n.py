@@ -1,38 +1,37 @@
 #! /usr/bin/env /usr/local/bin/python
 # script to convert a X12N batch transaction set into an XML document
-    """ 
-    $Id$
-    This file is part of the pyX12 project.
-
-    Copyright (c) 2001, 2002 Kalamazoo Community Mental Health Services,
-		John Holland <jholland@kazoocmh.org> <john@zoner.org>
-
-    All rights reserved.
-
-	Redistribution and use in source and binary forms, with or without modification, 
-	are permitted provided that the following conditions are met:
-
-	1. Redistributions of source code must retain the above copyright notice, this list 
-	   of conditions and the following disclaimer. 
-	
-	2. Redistributions in binary form must reproduce the above copyright notice, this 
-	   list of conditions and the following disclaimer in the documentation and/or other 
-	   materials provided with the distribution. 
-	
-	3. The name of the author may not be used to endorse or promote products derived 
-	   from this software without specific prior written permission. 
-
-	THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR IMPLIED 
-	WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF 
-	MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO 
-	EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, 
-	EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT 
-	OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS 
-	INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN 
-	CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) 
-	ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF 
-	THE POSSIBILITY OF SUCH DAMAGE.
-    """
+#
+#    $Id$
+#    This file is part of the pyX12 project.
+#
+#    Copyright (c) 2001, 2002 Kalamazoo Community Mental Health Services,
+#		John Holland <jholland@kazoocmh.org> <john@zoner.org>
+#
+#    All rights reserved.
+#
+#	Redistribution and use in source and binary forms, with or without modification, 
+#	are permitted provided that the following conditions are met:
+#
+#	1. Redistributions of source code must retain the above copyright notice, this list 
+#	   of conditions and the following disclaimer. 
+#	
+#	2. Redistributions in binary form must reproduce the above copyright notice, this 
+#	   list of conditions and the following disclaimer in the documentation and/or other 
+#	   materials provided with the distribution. 
+#	
+#	3. The name of the author may not be used to endorse or promote products derived 
+#	   from this software without specific prior written permission. 
+#
+#	THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR IMPLIED 
+#	WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF 
+#	MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO 
+#	EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, 
+#	EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT 
+#	OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS 
+#	INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN 
+#	CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) 
+#	ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF 
+#	THE POSSIBILITY OF SUCH DAMAGE.
 
 # THIS IS PRE-ALPHA CODE.  IT DOES NOT WORK. 
 
@@ -110,7 +109,7 @@ class GS_loop:
 	for map in maps:
 	    if map.getAttribute('fic') == 'HR' and map.getAttribute('vriic') == '004010X093':
                 for node in map.childNodes:
-           	    if node.nodeType == a.TEXT_NODE:
+           	    if node.nodeType == node.TEXT_NODE:
 		        node.normalize()
                         self.map_file = node.data
 	dom_map.unlink()
@@ -159,7 +158,7 @@ class segment:
     	for elem in self.element_list:
 	    elem.validate()
 	    
-    def GetElementValue(refdes):
+    def GetElementValue(self, refdes):
     	for elem in self.element_list:
 	    if elem.refdes == refdes:
 	        return elem.x12_elem
@@ -205,7 +204,7 @@ class element:
 	if not (self.__valid_code__() or codes.IsValid(self.external_codes, self.x12_elem) ):
 	    raise WEDIError, "Not a valid code for this ID element"
 	if not IsValidDataType(self.x12_elem, self.data_type):
-	    raise WEDI1Error, "Invalid X12 datatype: '$s' is not a '%s'" % (self.x12_elem, self.data_type) 
+	    raise WEDI1Error, "Invalid X12 datatype: '%s' is not a '%s'" % (self.x12_elem, self.data_type) 
 
     def __valid_code__(self):
         if not self.valid_codes:
