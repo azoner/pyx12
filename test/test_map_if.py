@@ -187,9 +187,6 @@ class Element_is_valid(unittest.TestCase):
         self.assertEqual(self.errh.err_cde, '1')
         
 
-       
-
-
 class Test_getnodebypath(unittest.TestCase):
     """
     """
