@@ -144,7 +144,7 @@ class error_debug_visitor(error_visitor):
         """
         self.fd.write('%s\n' % err_st.id)
         for err in err_st.errors:
-            self.fd.write('  %s %s\n' % err)
+            self.fd.write('  ERR %s %s\n' % err)
         for ele in err_st.elements:
             self.fd.write('  %s %s\n' % (ele.id, ele.name))
         
@@ -166,7 +166,7 @@ class error_debug_visitor(error_visitor):
         """
         self.fd.write('%s\n' % err_seg.id)
         for err in err_seg.errors:
-            self.fd.write('  %s %s\n' % err)
+            self.fd.write('  ERR %s %s\n' % err)
         for ele in err_seg.children:
             self.fd.write('  %s %s\n' % (ele.id, ele.name))
 
@@ -177,4 +177,6 @@ class error_debug_visitor(error_visitor):
         Desc:    
         Params:     err_ele - error_ele instance
         """
-        pass
+        self.fd.write('%s %s\n' % (err_ele.id, err_ele.name))
+        for err in err_ele.errors:
+            self.fd.write('  ELE ERR %s %s (%s)\n' % err)
