@@ -82,7 +82,10 @@ class x12file:
         self.buffer += self.fd.read(DEFAULT_BUFSIZE)
         
     def __del__(self):
-        self.fd.close()
+        try:
+            self.fd.close()
+        except:
+            pass
 
     def __iter__(self):
         return self
