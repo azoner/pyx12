@@ -264,42 +264,57 @@ class err_handler:
         """
         Class:      err_handler
         """
-        logger.error('isa_error: %s - %s' % (err_cde, err_str))
+        sout = ''
+        sout += '#%i ' % (self.cur_isa_node.get_cur_line())
+        sout += 'ISA:%s - %s' % (err_cde, err_str)
+        logger.error(sout)
         self.cur_isa_node.add_error(err_cde, err_str)
 
     def gs_error(self, err_cde, err_str):
         """
         Class:      err_handler
         """
-        logger.error('gs_error: %s - %s' % (err_cde, err_str))
+        sout = ''
+        sout += '#%i ' % (self.cur_gs_node.get_cur_line())
+        sout += 'GS:%s - %s' % (err_cde, err_str)
+        logger.error(sout)
         self.cur_gs_node.add_error(err_cde, err_str)
         
     def st_error(self, err_cde, err_str):
         """
         Class:      err_handler
         """
-        logger.error('st_error: %s - %s' % (err_cde, err_str))
+        sout = ''
+        sout += '#%i ' % (self.cur_st_node.get_cur_line())
+        sout += 'ST:%s - %s' % (err_cde, err_str)
+        logger.error(sout)
         self.cur_st_node.add_error(err_cde, err_str)
         
     def seg_error(self, err_cde, err_str, err_value=None, src_line=None):
         """
         Class:      err_handler
         """
-        sout = ''
-        if src_line is not None:
-            sout += '#%i ' % (src_line)
-        sout += 'seg_error: %s - %s (%s)' % (err_cde, err_str, err_value)
-        logger.error(sout)
         self._add_cur_seg()
         self.cur_seg_node.add_error(err_cde, err_str, err_value)
+        sout = ''
+        sout += '#%i ' % (self.cur_seg_node.get_cur_line())
+        sout += 'SEG:%s - %s' % (err_cde, err_str)
+        if err_value:
+            sout += ' (%s)' % err_value
+        logger.error(sout)
         
     def ele_error(self, err_cde, err_str, bad_value):
         """
         Class:      err_handler
         """
-        logger.error('element_error: %s - %s (%s)' % (err_cde, err_str, bad_value))
         self._add_cur_ele()
         self.cur_ele_node.add_error(err_cde, err_str, bad_value) #, pos, data_ele)
+        sout = ''
+        sout += '#%i ' % (self.cur_ele_node.get_cur_line())
+        sout += 'ELE:%s - %s' % (err_cde, err_str)
+        if bad_value:
+            logger.error(' (%s)' % (bad_value))
+        logger.error(sout)
         #print self.cur_ele_node.errors
 
     def close_isa_loop(self, node, seg, src):

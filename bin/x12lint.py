@@ -85,7 +85,8 @@ def main():
         sys.exit(2)
     logger = logging.getLogger('pyx12')
     logger.setLevel(logging.INFO)
-    formatter = logging.Formatter('%(asctime)s %(levelname)s %(module)s %(lineno)d %(message)s')
+    #formatter = logging.Formatter('%(asctime)s %(levelname)s %(module)s %(lineno)d %(message)s')
+    formatter = logging.Formatter('%(asctime)s %(levelname)s %(message)s')
 
     stderr_hdlr = logging.StreamHandler()
     stderr_hdlr.setFormatter(formatter)
