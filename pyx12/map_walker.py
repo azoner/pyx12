@@ -60,6 +60,8 @@ class walk_tree:
         @type ls_id: string
         @return: The matching x12_node
         @rtype: L{node<map_if.x12_node>}
+
+        @todo: Handle maximum loop count exceeded
         """
 
         orig_node = node
