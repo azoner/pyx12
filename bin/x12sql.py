@@ -54,20 +54,24 @@ __version__ = pyx12.__version__
 __date__    = pyx12.__date__
 
 TRANS_PRE = 't_'
-tbl_stack = []
-fk_list = []
+tbl_stack = [] # tuple(table_name, pk, path)
+fk_list = [] # tuple(((parent table, child table, pk of parent))
+pk_list = [] # tuple(((table, pk))
 
 def format_name(name):
     return name.replace(' ', '_')
     
-def create_table(table_name, pk, path, fk=None): 
+def create_table(table_name, pk, path, fk=None, parent_table=None): 
     global tbl_stack
     global fk_list
+    global pk_list
     sys.stdout.write('CREATE TABLE [%s] ( -- %s\n' % (table_name, path))
     tbl_stack.append((table_name, pk, path))
+    pk_list.append((table_name, pk))
     sys.stdout.write('\t[%s] [int] IDENTITY (1, 1) NOT NULL\n' % (pk))
     if fk:
         sys.stdout.write(',\t[%s] [int] NOT NULL\n' % (fk))
+        fk_list.append((parent_table, table_name, fk))
 
 def gen_sql(map_root):
     """
@@ -76,6 +80,7 @@ def gen_sql(map_root):
     fd = sys.stdout
     global tbl_stack
     global fk_list
+    global pk_list
     for node in map_root:
         if node.id is None:
             continue
@@ -86,38 +91,49 @@ def gen_sql(map_root):
         if node.is_map_root():
             continue
         if node.is_loop():
-            if node.get_max_repeat() != 1 or not tbl_stack: # Create new table
-                # close existing table
-                fd.write(') ON [PRIMARY]\nGO\n\n')
-                
-                # who is parent
-                # same level, then pop to parent and create sub-table
-                if os.path.dirname(node.get_path()) == os.path.dirname(tbl_stack[-1][2]):
-                    table_name = '%s%s_%s' % (TRANS_PRE, node.id, format_name(node.name))
-                    pk = '%s_num' % (node.id)
-                    fk = tbl_stack[-1][1]
-                    create_table(table_name, pk, node.get_path(), fk)
-
-                # cur loop node is child of table
-                elif os.path.dirname(node.get_path()) == tbl_stack[-1][2]:
-                    table_name = '%s%s_%s' % (TRANS_PRE, node.id, format_name(node.name))
-                    pk = '%s_num' % (node.id)
-                    fk = tbl_stack[-1][1]
-                    create_table(table_name, pk, node.get_path(), fk)
-                
-                # cur loop node is up at least one level
-                elif :
-                # pop stack to parent
-                # create new table
             if tbl_stack:
-                fd.write(') ON [PRIMARY]\nGO\n\n')
-                del tbl_stack[-1]
-            table_name = '%sloop_%s_%s' % (TRANS_PRE, node.id, format_name(node.name))
-            pk = '%s_num' % (node.id)
-            create_table(table_name, pk, node.get_path(), fk=)
-            #fd.write('CREATE TABLE [%s] ( -- %s\n' % (table_name, node.get_path()))
-            #tbl_stack.append((table_name, pk, node.get_path()))
-            #fd.write('\t[%s] [int] IDENTITY (1, 1) NOT NULL\n' % (pk))
+                if node.get_max_repeat() != 1: # Create new table
+                    # close existing table
+                    fd.write(') ON [PRIMARY]\nGO\n\n')
+                    
+                    # who is parent
+                    # same level, then pop to parent and create sub-table
+                    if os.path.dirname(node.get_path()) == os.path.dirname(tbl_stack[-1][2]):
+                        del tbl_stack[-1]
+                        table_name = '%s%s_%s' % (TRANS_PRE, node.id, format_name(node.name))
+                        pk = '%s_num' % (node.id)
+                        fk = tbl_stack[-1][1]
+                        create_table(table_name, pk, node.get_path(), fk, tbl_stack[-1][0])
+
+                    # cur loop node is child of table
+                    elif os.path.dirname(node.get_path()) == tbl_stack[-1][2]:
+                        table_name = '%s%s_%s' % (TRANS_PRE, node.id, format_name(node.name))
+                        pk = '%s_num' % (node.id)
+                        fk = tbl_stack[-1][1]
+                        create_table(table_name, pk, node.get_path(), fk, tbl_stack[-1][0])
+                    
+                    # cur loop node is up at least one level
+                    else:
+                        # pop stack to parent
+                        while tbl_stack and \
+                            os.path.dirname(node.get_path()) != tbl_stack[-1][2]:
+                            del tbl_stack[-1]
+                    table_name = '%s%s_%s' % (TRANS_PRE, node.id, format_name(node.name))
+                    pk = '%s_num' % (node.id)
+                    if tbl_stack:
+                        fk = tbl_stack[-1][1]
+                        parent_table = tbl_stack[-1][0]
+                    else:
+                        fk = None
+                        parent_table = None
+                    create_table(table_name, pk, node.get_path(), fk, parent_table)
+            else:
+                table_name = '%s%s_%s' % (TRANS_PRE, node.id, format_name(node.name))
+                pk = '%s_num' % (node.id)
+                fk = tbl_stack[-1][1]
+                parent_table = tbl_stack[-1][0]
+                create_table(table_name, pk, node.get_path(), fk, parent_table)
+                
         elif node.is_segment():
             if tbl_stack and tbl_stack[-1][2] == node.get_path(): #Repeat of segment
                 continue
@@ -126,22 +142,19 @@ def gen_sql(map_root):
                 fd.write(') ON [PRIMARY]\nGO\n\n')
                 
                 # who is parent
-                if os.path.dirname(node.get_path()) == os.path.dirname(tbl_stack[-1][2]):
+                if tbl_stack and \
+                    os.path.dirname(node.get_path()) == os.path.dirname(tbl_stack[-1][2]):
                     # same level, then create sub-table
                     table_name = '%s%s_%s' % (TRANS_PRE, node.id, format_name(node.name))
                     pk = '%s_num' % (node.id)
                   
-               # elif :
-                  # cur loop node is child of table
-                  # cur loop node is up at least one level
-                # pop stack to parent
-                # create new table
-                
                 table_name = '%s%s_%s' % (TRANS_PRE, node.id, format_name(node.name))
                 pk = '%s_num' % (node.id)
-                fd.write('CREATE TABLE [%s] ( -- %s\n' % (table_name, node.get_path()))
-                tbl_stack.append((table_name, pk, node.get_path()))
-                fd.write('\t[%s] [int] IDENTITY (1, 1) NOT NULL\n' % (pk))
+                create_table(table_name, pk, node.get_path())
+                #fd.write('CREATE TABLE [%s] ( -- %s\n' % (table_name, node.get_path()))
+                #tbl_stack.append((table_name, pk, node.get_path()))
+                #pk_list.append((table_name, pk))
+                #fd.write('\t[%s] [int] IDENTITY (1, 1) NOT NULL\n' % (pk))
         elif node.is_element():
             fd.write(',\t[%s_%s]' % (node.id, format_name(node.name)))
             if node.data_type in ('DT', 'TM'):
@@ -160,7 +173,20 @@ def gen_sql(map_root):
             fd.write('\n')
         elif node.is_composite():
             pass
+    for (table, pk) in pk_list:
+        fd.write('ALTER TABLE [%s] WITH NOCHECK ADD\n' % (table))
+        fd.write('\tCONSTRAINT [PK_%s] PRIMARY KEY CLUSTERED\n\t(\n\t\t[%s]\n' % (table, pk))
+        fd.write('\t)  ON [PRIMARY]\nGO\n\n')
+
+    for (parent_table, child_table, pk_parent) in fk_list:
+        fd.write('ALTER TABLE [%s] ADD\n' % (child_table))
+        fd.write('\tCONSTRAINT [FK_%s_%s] FOREIGN KEY\n' % (child_table, parent_table))
+        fd.write('\t( [%s] )\n' % (pk_parent))
+        fd.write('\tREFERENCES [%s] ([%s])\nGO\n' % (parent_table, pk_parent))
+
     return None
+
+
 
    
 def usage():
