@@ -76,6 +76,7 @@ class BasicDate(unittest.TestCase):
         self.failIf(IsValidDataType('19000229', 'DT', 'B'))
         self.failIf(IsValidDataType('19992377', 'DT', 'B'))
         self.failIf(IsValidDataType('19991277', 'DT', 'B'))
+        self.failIf(IsValidDataType('19991301', 'DT', 'B'))
         self.failIf(IsValidDataType('200204a', 'DT', 'B'))
         self.failIf(IsValidDataType('2002041a', 'DT', 'B'))
         self.failIf(IsValidDataType('030732', 'DT', 'B'))
