@@ -79,6 +79,7 @@ class error_html:
         self.fd.write('<style type="text/css">\n<!--\n')
         self.fd.write('  span.seg { color: black; font-style: normal; }\n')
         self.fd.write('  span.error { background-color: #CCCCFF; color: red; font-style: normal; }\n')
+        self.fd.write('  span.info { background-color: #CCCCCC; color: blue; font-style: normal; }\n')
         self.fd.write('-->\n</style>\n')
         self.fd.write('</head>\n<body>\n')
         self.fd.write('<h1>pyx12 Error Analysis</h1>\n<h3>Analysis Date: %s</h3><p>\n' % \
@@ -90,10 +91,19 @@ class error_html:
         self.fd.write('<p>\n<a href="http://sourceforge.net/projects/pyx12/">pyx12 project page</a>\n</p>\n')
         self.fd.write('</body>\n</html>\n')
 
+    def gen_info(self, info_str):
+        """
+        Class:      error_html 
+        Name:       gen_info
+        Desc:    
+        Params:     
+        """
+        self.fd.write('<span class="info">&nbsp;&nbsp;%s</span><br>\n' % (info_str))
+        
     def gen_seg(self, seg, src, err_node_list):
         """
         Class:      error_html 
-        Name:       visit_root_pre
+        Name:       gen_seg
         Desc:    
         Params:     seg - list of elements
         """
@@ -105,7 +115,11 @@ class error_html:
         # ID pos of bad value
         #while errh
         for i in range(len(seg)):
-            seg[i] = escape_html_chars(seg[i])
+            if type(seg[i]) is ListType: # Composite
+                for j in range(len(seg[i])):
+                    seg[i][j] = escape_html_chars(seg[i][j])
+            else:
+                seg[i] = escape_html_chars(seg[i])
         self.fd.write('<span class="seg">%i: %s</span><br>\n' % \
             (cur_line, self._seg_str(seg)))
         for err_node in err_node_list:
