@@ -240,6 +240,7 @@ class map_if(x12_node):
     def is_map_root(self):
         return True
 
+
 ############################################################
 # Loop Interface
 ############################################################
@@ -267,7 +268,7 @@ class loop_if(x12_node):
         self.usage = None
         self.req_des = None
         self.seq = None
-        self.count = None
+        self.repeat = None
 
         self.base_level = reader.Depth()
 #        if parent == None:
@@ -325,8 +326,8 @@ class loop_if(x12_node):
                     self.req_des = reader.Value()
                 elif cur_name == 'seq' and self.base_name == 'loop':
                     self.seq = reader.Value()
-                elif cur_name == 'count' and self.base_name == 'loop':
-                    self.count = reader.Value()
+                elif cur_name == 'repeat' and self.base_name == 'loop':
+                    self.repeat = reader.Value()
 
 
             ret = reader.Read()
@@ -343,7 +344,7 @@ class loop_if(x12_node):
         if self.usage: sys.stdout.write('%susage %s\n' % (str(' '*(self.base_level+1)), self.usage))
         if self.req_des: sys.stdout.write('%sreq_des %s\n' % (str(' '*(self.base_level+1)), self.req_des))
         if self.seq: sys.stdout.write('%sseq %s\n' % (str(' '*(self.base_level+1)), self.seq))
-        if self.count: sys.stdout.write('%scount %s\n' % (str(' '*(self.base_level+1)), self.count))
+        if self.repeat: sys.stdout.write('%srepeat%s\n' % (str(' '*(self.base_level+1)), self.repeat))
         for node in self.children:
             node.debug_print()
 

@@ -49,14 +49,17 @@ from errors import *
 #from utils import *
 
 def walk_tree(node, seg):
+    """
+    Handle required segment/loop missed (not found in seg)
+    Handle found segment = Not used
+    """
     orig_node = node
-
 
     # Repeat of current segment
     if node.is_segment():
         if node.is_match(seg):
             return node
-    #handle seg repeat
+    #handle seg repeat count
 
     # Next segment in loop
     node_idx = None
@@ -66,8 +69,10 @@ def walk_tree(node, seg):
         for child in node.children:
             if child.is_segment() and child.index >= node_idx:
                 if child.is_match(seg):
+                    if child.usage= 'N':
+                        raise WEDIError, "Segment %s found but marked as not used" % (child.id)
                     return child
-                elif child.reqdes = 'R':
+                elif child.usage= 'R':
                     raise WEDIError, "Required segment %s not found" % (child.id)
         
     # Repeat loop
@@ -107,9 +112,10 @@ def walk_tree(node, seg):
 
 def pop_to_parent_loop(node):
     node = node.parent
-    while not node.is_loop(): 
+    while not (node.is_loop() or node.is_map_root()): 
         node = node.parent
-    if not node.is_loop(): raise EngineError, "Called pop_to_parent_loop, can't find parent loop"
+    if not (node.is_loop() or node.is_map_root()):
+        raise EngineError, "Called pop_to_parent_loop, can't find parent loop"
     return node
     
 
