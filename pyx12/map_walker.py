@@ -101,6 +101,8 @@ class walk_tree:
             and first node is required
         """
 
+        #if seg_data.get_seg_id() == 'LX':
+        #    pdb.set_trace()
         #logger.debug('start walk %s' % (node))
         orig_node = node
         #logger.info('%s seg_count=%i / cur_line=%i' % (node.id, seg_count, cur_line))
@@ -181,6 +183,8 @@ class walk_tree:
 
     def _seg_not_found(self, orig_node, seg_data, errh):
         """
+        Create error for not found segments
+
         @param orig_node: Original starting node
         @type orig_node: L{node<map_if.x12_node>}
         @param seg_data: Segment object
@@ -215,6 +219,7 @@ class walk_tree:
     def _flush_mandatory_segs(self, errh):
         """
         Handle error reporting for any outstanding missing mandatory segments
+
         @param errh: Error handler
         @type errh: L{error_handler.err_handler}
         """
@@ -232,6 +237,7 @@ class walk_tree:
         Try to match the current loop to the segment
         Handle loop and segment counting.
         Check for used/missing
+
         @param loop_node: Loop Node
         @type loop_node: L{node<map_if.loop_if>}
         @param seg_data: Segment object
@@ -242,7 +248,6 @@ class walk_tree:
         @return: Does the segment match the first segment node in the loop?
         @rtype: boolean
 
-        @todo: Match a child of wrapping loops
         @todo: loop counting checks
         """
         #if seg_data.get_seg_id() == 'HL':
@@ -271,6 +276,8 @@ class walk_tree:
     def _goto_seg_match(self, loop_node, seg_data, errh, seg_count, cur_line, ls_id):
         """
         A child loop has matched the segment.  Return that segment node.
+        Handle loop counting and requirement errors.
+        
         @param loop_node: The starting loop node. 
         @type loop_node: L{node<map_if.loop_if>}
         @param seg_data: Segment object
