@@ -1,8 +1,9 @@
 table
 {
-    width: 100%; 
+    width: 99%; 
     border:1px solid white;
     background-color: #0000CC;
+    padding: 10;
 }
 
 tr.loop
