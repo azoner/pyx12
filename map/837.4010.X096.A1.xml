@@ -12981,6 +12981,71 @@
                     </element>
                   </segment>
 <!--End of NM1 segment-->
+                  <segment xid="PRV">
+                    <name>Operating Physician Specialty Information</name>
+                    <usage>S</usage>
+                    <pos>255</pos>
+                    <max_use>1</max_use>
+                    <element xid="PRV01">
+                      <data_ele>1221</data_ele>
+                      <name>Provider Code</name>
+                      <usage>R</usage>
+                      <seq>01</seq>
+                      <data_type>ID</data_type>
+                      <min_len>1</min_len>
+                      <max_len>3</max_len>
+                      <valid_codes>
+                        <code>OP</code>
+                      </valid_codes>
+                    </element>
+                    <element xid="PRV02">
+                      <data_ele>128</data_ele>
+                      <name>Reference Identification Qualifier</name>
+                      <usage>R</usage>
+                      <seq>02</seq>
+                      <data_type>ID</data_type>
+                      <min_len>2</min_len>
+                      <max_len>3</max_len>
+                      <valid_codes>
+                        <code>ZZ</code>
+                      </valid_codes>
+                    </element>
+                    <element xid="PRV03">
+                      <data_ele>127</data_ele>
+                      <name>Provider Taxonomy Code</name>
+                      <usage>R</usage>
+                      <seq>03</seq>
+                      <data_type>AN</data_type>
+                      <min_len>1</min_len>
+                      <max_len>30</max_len>
+<!--<valid_codes external="prov_taxonomy"/>-->
+                    </element>
+                    <element xid="PRV04">
+                      <data_ele>156</data_ele>
+                      <name>State or Province Code</name>
+                      <usage>N</usage>
+                      <seq>04</seq>
+                      <data_type>ID</data_type>
+                      <min_len>2</min_len>
+                      <max_len>2</max_len>
+                    </element>
+                    <composite>
+                      <data_ele>C035</data_ele>
+                      <name>Provider Specialty Information</name>
+                      <usage>N</usage>
+                      <seq>05</seq>
+                    </composite>
+                    <element xid="PRV06">
+                      <data_ele>1223</data_ele>
+                      <name>Provider Organization Code</name>
+                      <usage>N</usage>
+                      <seq>06</seq>
+                      <data_type>ID</data_type>
+                      <min_len>3</min_len>
+                      <max_len>3</max_len>
+                    </element>
+                  </segment>
+<!--End of PRV segment-->
                   <segment xid="REF">
                     <name>Operating Physician Secondary Identification</name>
                     <usage>S</usage>
@@ -13161,6 +13226,72 @@
                     </element>
                   </segment>
 <!--End of NM1 segment-->
+                  <segment xid="PRV">
+                    <name>Other Provider Specialty Information</name>
+                    <usage>S</usage>
+                    <pos>255</pos>
+                    <max_use>1</max_use>
+                    <element xid="PRV01">
+                      <data_ele>1221</data_ele>
+                      <name>Provider Code</name>
+                      <usage>R</usage>
+                      <seq>01</seq>
+                      <data_type>ID</data_type>
+                      <min_len>1</min_len>
+                      <max_len>3</max_len>
+                      <valid_codes>
+                        <code>OT</code>
+                        <code>PE</code>
+                      </valid_codes>
+                    </element>
+                    <element xid="PRV02">
+                      <data_ele>128</data_ele>
+                      <name>Reference Identification Qualifier</name>
+                      <usage>R</usage>
+                      <seq>02</seq>
+                      <data_type>ID</data_type>
+                      <min_len>2</min_len>
+                      <max_len>3</max_len>
+                      <valid_codes>
+                        <code>ZZ</code>
+                      </valid_codes>
+                    </element>
+                    <element xid="PRV03">
+                      <data_ele>127</data_ele>
+                      <name>Provider Taxonomy Code</name>
+                      <usage>R</usage>
+                      <seq>03</seq>
+                      <data_type>AN</data_type>
+                      <min_len>1</min_len>
+                      <max_len>30</max_len>
+<!--<valid_codes external="prov_taxonomy"/>-->
+                    </element>
+                    <element xid="PRV04">
+                      <data_ele>156</data_ele>
+                      <name>State or Province Code</name>
+                      <usage>N</usage>
+                      <seq>04</seq>
+                      <data_type>ID</data_type>
+                      <min_len>2</min_len>
+                      <max_len>2</max_len>
+                    </element>
+                    <composite>
+                      <data_ele>C035</data_ele>
+                      <name>Provider Specialty Information</name>
+                      <usage>N</usage>
+                      <seq>05</seq>
+                    </composite>
+                    <element xid="PRV06">
+                      <data_ele>1223</data_ele>
+                      <name>Provider Organization Code</name>
+                      <usage>N</usage>
+                      <seq>06</seq>
+                      <data_type>ID</data_type>
+                      <min_len>3</min_len>
+                      <max_len>3</max_len>
+                    </element>
+                  </segment>
+<!--End of PRV segment-->
                   <segment xid="REF">
                     <name>Other Provider Secondary Identification</name>
                     <usage>S</usage>
@@ -13340,6 +13471,71 @@
                     </element>
                   </segment>
 <!--End of NM1 segment-->
+                  <segment xid="PRV">
+                    <name>Service Facility Specialty Information</name>
+                    <usage>S</usage>
+                    <pos>255</pos>
+                    <max_use>1</max_use>
+                    <element xid="PRV01">
+                      <data_ele>1221</data_ele>
+                      <name>Provider Code</name>
+                      <usage>R</usage>
+                      <seq>01</seq>
+                      <data_type>ID</data_type>
+                      <min_len>1</min_len>
+                      <max_len>3</max_len>
+                      <valid_codes>
+                        <code>RP</code>
+                      </valid_codes>
+                    </element>
+                    <element xid="PRV02">
+                      <data_ele>128</data_ele>
+                      <name>Reference Identification Qualifier</name>
+                      <usage>R</usage>
+                      <seq>02</seq>
+                      <data_type>ID</data_type>
+                      <min_len>2</min_len>
+                      <max_len>3</max_len>
+                      <valid_codes>
+                        <code>ZZ</code>
+                      </valid_codes>
+                    </element>
+                    <element xid="PRV03">
+                      <data_ele>127</data_ele>
+                      <name>Provider Taxonomy Code</name>
+                      <usage>R</usage>
+                      <seq>03</seq>
+                      <data_type>AN</data_type>
+                      <min_len>1</min_len>
+                      <max_len>30</max_len>
+<!--<valid_codes external="prov_taxonomy"/>-->
+                    </element>
+                    <element xid="PRV04">
+                      <data_ele>156</data_ele>
+                      <name>State or Province Code</name>
+                      <usage>N</usage>
+                      <seq>04</seq>
+                      <data_type>ID</data_type>
+                      <min_len>2</min_len>
+                      <max_len>2</max_len>
+                    </element>
+                    <composite>
+                      <data_ele>C035</data_ele>
+                      <name>Provider Specialty Information</name>
+                      <usage>N</usage>
+                      <seq>05</seq>
+                    </composite>
+                    <element xid="PRV06">
+                      <data_ele>1223</data_ele>
+                      <name>Provider Organization Code</name>
+                      <usage>N</usage>
+                      <seq>06</seq>
+                      <data_type>ID</data_type>
+                      <min_len>3</min_len>
+                      <max_len>3</max_len>
+                    </element>
+                  </segment>
+<!--End of PRV segment-->
                   <segment xid="N3">
                     <name>Service Facility Address</name>
                     <usage>R</usage>
@@ -22215,6 +22411,9 @@
                     <name>Line Pricing/Repricing Information</name>
                     <usage>S</usage>
                     <pos>492</pos>
+                    <syntax>R0113</syntax>
+                    <syntax>P0910</syntax>
+                    <syntax>P1112</syntax>
                     <max_use>1</max_use>
                     <element xid="HCP01">
                       <data_ele>1473</data_ele>
@@ -22410,6 +22609,20 @@
                       <usage>S</usage>
                       <pos>494</pos>
                       <max_use>1</max_use>
+                      <syntax>P0405</syntax>
+                      <syntax>P0607</syntax>
+                      <syntax>P0809</syntax>
+                      <syntax>P1011</syntax>
+                      <syntax>P1213</syntax>
+                      <syntax>P1415</syntax>
+                      <syntax>P1617</syntax>
+                      <syntax>P1819</syntax>
+                      <syntax>P2021</syntax>
+                      <syntax>P2223</syntax>
+                      <syntax>P2425</syntax>
+                      <syntax>P2627</syntax>
+                      <syntax>P2829</syntax>
+                      <syntax>P3031</syntax>
                       <element xid="LIN01">
                         <data_ele>350</data_ele>
                         <name>Assigned Identification</name>
@@ -22736,21 +22949,296 @@
                       </element>
                     </segment>
 <!--End of LIN segment-->
-                    <segment xid="CTP"><name>Drug Pricing</name>
-                     
-                  
-                        O
-                        
-                  
-                     <pos>495</pos><max_use>1</max_use><element xid="CTP01"><data_ele>687</data_ele><name>Class of Trade Code</name><usage>N</usage><seq>01</seq><data_type>ID</data_type><min_len>2</min_len><max_len>2</max_len></element><element xid="CTP02"><data_ele>236</data_ele><name>Price Identifier Code</name><usage>N</usage><seq>02</seq><data_type>ID</data_type><min_len>3</min_len><max_len>3</max_len></element><element xid="CTP03"><data_ele>212</data_ele><name>Unit Price</name><usage>R</usage><seq>03</seq><data_type>R</data_type><min_len>1</min_len><max_len>17</max_len></element><element xid="CTP04"><data_ele>380</data_ele><name>Quantity</name><usage>R</usage><seq>04</seq><data_type>R</data_type><min_len>1</min_len><max_len>15</max_len></element><composite><data_ele>C001</data_ele><name>Composite Unit of Measure</name><usage>R</usage><seq>05</seq><element xid="CTP05-01"><data_ele>355</data_ele><name>Unit or Basis for Measurement Code</name><usage>R</usage><seq>01</seq><data_type>ID</data_type><min_len>2</min_len><max_len>2</max_len><valid_codes><code>F2</code><code>GR</code><code>ML</code><code>UN</code></valid_codes></element><element xid="CTP05-02"><data_ele>1018</data_ele><name>Exponent</name><usage>N</usage><seq>02</seq><data_type>R</data_type><min_len>1</min_len><max_len>15</max_len></element><element xid="CTP05-03"><data_ele>649</data_ele><name>Multiplier</name><usage>N</usage><seq>03</seq><data_type>R</data_type><min_len>1</min_len><max_len>10</max_len></element><element xid="CTP05-04"><data_ele>355</data_ele><name>Unit or Basis for Measurement Code</name><usage>N</usage><seq>04</seq><data_type>ID</data_type><min_len>2</min_len><max_len>2</max_len></element><element xid="CTP05-05"><data_ele>1018</data_ele><name>Exponent</name><usage>N</usage><seq>05</seq><data_type>R</data_type><min_len>1</min_len><max_len>15</max_len></element><element xid="CTP05-06"><data_ele>649</data_ele><name>Multiplier</name><usage>N</usage><seq>06</seq><data_type>R</data_type><min_len>1</min_len><max_len>10</max_len></element><element xid="CTP05-07"><data_ele>355</data_ele><name>Unit or Basis for Measurement Code</name><usage>N</usage><seq>07</seq><data_type>ID</data_type><min_len>2</min_len><max_len>2</max_len></element><element xid="CTP05-08"><data_ele>1018</data_ele><name>Exponent</name><usage>N</usage><seq>08</seq><data_type>R</data_type><min_len>1</min_len><max_len>15</max_len></element><element xid="CTP05-09"><data_ele>649</data_ele><name>Multiplier</name><usage>N</usage><seq>09</seq><data_type>R</data_type><min_len>1</min_len><max_len>10</max_len></element><element xid="CTP05-10"><data_ele>355</data_ele><name>Unit or Basis for Measurement Code</name><usage>N</usage><seq>10</seq><data_type>ID</data_type><min_len>2</min_len><max_len>2</max_len></element><element xid="CTP05-11"><data_ele>1018</data_ele><name>Exponent</name><usage>N</usage><seq>11</seq><data_type>R</data_type><min_len>1</min_len><max_len>15</max_len></element><element xid="CTP05-12"><data_ele>649</data_ele><name>Multiplier</name><usage>N</usage><seq>12</seq><data_type>R</data_type><min_len>1</min_len><max_len>10</max_len></element><element xid="CTP05-13"><data_ele>355</data_ele><name>Unit or Basis for Measurement Code</name><usage>N</usage><seq>13</seq><data_type>ID</data_type><min_len>2</min_len><max_len>2</max_len></element><element xid="CTP05-14"><data_ele>1018</data_ele><name>Exponent</name><usage>N</usage><seq>14</seq><data_type>R</data_type><min_len>1</min_len><max_len>15</max_len></element><element xid="CTP05-15"><data_ele>649</data_ele><name>Multiplier</name><usage>N</usage><seq>15</seq><data_type>R</data_type><min_len>1</min_len><max_len>10</max_len></element></composite><element xid="CTP06"><data_ele>648</data_ele><name>Price Multiplier Qualifier</name><usage>N</usage><seq>06</seq><data_type>ID</data_type><min_len>3</min_len><max_len>3</max_len></element><element xid="CTP07"><data_ele>649</data_ele><name>Multiplier</name><usage>N</usage><seq>07</seq><data_type>R</data_type><min_len>1</min_len><max_len>10</max_len></element><element xid="CTP08"><data_ele>782</data_ele><name>Monetary Amount</name><usage>N</usage><seq>08</seq><data_type>R</data_type><min_len>1</min_len><max_len>18</max_len></element><element xid="CTP09"><data_ele>639</data_ele><name>Basis of Unit Price Code</name><usage>N</usage><seq>09</seq><data_type>ID</data_type><min_len>2</min_len><max_len>2</max_len></element><element xid="CTP10"><data_ele>499</data_ele><name>Condition Value</name><usage>N</usage><seq>10</seq><data_type>AN</data_type><min_len>1</min_len><max_len>10</max_len></element><element xid="CTP11"><data_ele>289</data_ele><name>Multiple Price Quantity</name><usage>N</usage><seq>11</seq><data_type>N0</data_type><min_len>1</min_len><max_len>2</max_len></element></segment>
+                    <segment xid="CTP">
+                      <name>Drug Pricing</name>
+                      <usage>S</usage>
+                      <pos>495</pos>
+                      <max_use>1</max_use>
+                      <syntax>P0405</syntax>
+                      <syntax>C0607</syntax>
+                      <syntax>C0902</syntax>
+                      <syntax>C1002</syntax>
+                      <syntax>C1103</syntax>
+                      <element xid="CTP01">
+                        <data_ele>687</data_ele>
+                        <name>Class of Trade Code</name>
+                        <usage>N</usage>
+                        <seq>01</seq>
+                        <data_type>ID</data_type>
+                        <min_len>2</min_len>
+                        <max_len>2</max_len>
+                      </element>
+                      <element xid="CTP02">
+                        <data_ele>236</data_ele>
+                        <name>Price Identifier Code</name>
+                        <usage>N</usage>
+                        <seq>02</seq>
+                        <data_type>ID</data_type>
+                        <min_len>3</min_len>
+                        <max_len>3</max_len>
+                      </element>
+                      <element xid="CTP03">
+                        <data_ele>212</data_ele>
+                        <name>Unit Price</name>
+                        <usage>R</usage>
+                        <seq>03</seq>
+                        <data_type>R</data_type>
+                        <min_len>1</min_len>
+                        <max_len>17</max_len>
+                      </element>
+                      <element xid="CTP04">
+                        <data_ele>380</data_ele>
+                        <name>Quantity</name>
+                        <usage>R</usage>
+                        <seq>04</seq>
+                        <data_type>R</data_type>
+                        <min_len>1</min_len>
+                        <max_len>15</max_len>
+                      </element>
+                      <composite>
+                        <data_ele>C001</data_ele>
+                        <name>Composite Unit of Measure</name>
+                        <usage>R</usage>
+                        <seq>05</seq>
+                        <element xid="CTP05-01">
+                          <data_ele>355</data_ele>
+                          <name>Unit or Basis for Measurement Code</name>
+                          <usage>R</usage>
+                          <seq>01</seq>
+                          <data_type>ID</data_type>
+                          <min_len>2</min_len>
+                          <max_len>2</max_len>
+                          <valid_codes>
+                            <code>F2</code>
+                            <code>GR</code>
+                            <code>ML</code>
+                            <code>UN</code>
+                          </valid_codes>
+                        </element>
+                        <element xid="CTP05-02">
+                          <data_ele>1018</data_ele>
+                          <name>Exponent</name>
+                          <usage>N</usage>
+                          <seq>02</seq>
+                          <data_type>R</data_type>
+                          <min_len>1</min_len>
+                          <max_len>15</max_len>
+                        </element>
+                        <element xid="CTP05-03">
+                          <data_ele>649</data_ele>
+                          <name>Multiplier</name>
+                          <usage>N</usage>
+                          <seq>03</seq>
+                          <data_type>R</data_type>
+                          <min_len>1</min_len>
+                          <max_len>10</max_len>
+                        </element>
+                        <element xid="CTP05-04">
+                          <data_ele>355</data_ele>
+                          <name>Unit or Basis for Measurement Code</name>
+                          <usage>N</usage>
+                          <seq>04</seq>
+                          <data_type>ID</data_type>
+                          <min_len>2</min_len>
+                          <max_len>2</max_len>
+                        </element>
+                        <element xid="CTP05-05">
+                          <data_ele>1018</data_ele>
+                          <name>Exponent</name>
+                          <usage>N</usage>
+                          <seq>05</seq>
+                          <data_type>R</data_type>
+                          <min_len>1</min_len>
+                          <max_len>15</max_len>
+                        </element>
+                        <element xid="CTP05-06">
+                          <data_ele>649</data_ele>
+                          <name>Multiplier</name>
+                          <usage>N</usage>
+                          <seq>06</seq>
+                          <data_type>R</data_type>
+                          <min_len>1</min_len>
+                          <max_len>10</max_len>
+                        </element>
+                        <element xid="CTP05-07">
+                          <data_ele>355</data_ele>
+                          <name>Unit or Basis for Measurement Code</name>
+                          <usage>N</usage>
+                          <seq>07</seq>
+                          <data_type>ID</data_type>
+                          <min_len>2</min_len>
+                          <max_len>2</max_len>
+                        </element>
+                        <element xid="CTP05-08">
+                          <data_ele>1018</data_ele>
+                          <name>Exponent</name>
+                          <usage>N</usage>
+                          <seq>08</seq>
+                          <data_type>R</data_type>
+                          <min_len>1</min_len>
+                          <max_len>15</max_len>
+                        </element>
+                        <element xid="CTP05-09">
+                          <data_ele>649</data_ele>
+                          <name>Multiplier</name>
+                          <usage>N</usage>
+                          <seq>09</seq>
+                          <data_type>R</data_type>
+                          <min_len>1</min_len>
+                          <max_len>10</max_len>
+                        </element>
+                        <element xid="CTP05-10">
+                          <data_ele>355</data_ele>
+                          <name>Unit or Basis for Measurement Code</name>
+                          <usage>N</usage>
+                          <seq>10</seq>
+                          <data_type>ID</data_type>
+                          <min_len>2</min_len>
+                          <max_len>2</max_len>
+                        </element>
+                        <element xid="CTP05-11">
+                          <data_ele>1018</data_ele>
+                          <name>Exponent</name>
+                          <usage>N</usage>
+                          <seq>11</seq>
+                          <data_type>R</data_type>
+                          <min_len>1</min_len>
+                          <max_len>15</max_len>
+                        </element>
+                        <element xid="CTP05-12">
+                          <data_ele>649</data_ele>
+                          <name>Multiplier</name>
+                          <usage>N</usage>
+                          <seq>12</seq>
+                          <data_type>R</data_type>
+                          <min_len>1</min_len>
+                          <max_len>10</max_len>
+                        </element>
+                        <element xid="CTP05-13">
+                          <data_ele>355</data_ele>
+                          <name>Unit or Basis for Measurement Code</name>
+                          <usage>N</usage>
+                          <seq>13</seq>
+                          <data_type>ID</data_type>
+                          <min_len>2</min_len>
+                          <max_len>2</max_len>
+                        </element>
+                        <element xid="CTP05-14">
+                          <data_ele>1018</data_ele>
+                          <name>Exponent</name>
+                          <usage>N</usage>
+                          <seq>14</seq>
+                          <data_type>R</data_type>
+                          <min_len>1</min_len>
+                          <max_len>15</max_len>
+                        </element>
+                        <element xid="CTP05-15">
+                          <data_ele>649</data_ele>
+                          <name>Multiplier</name>
+                          <usage>N</usage>
+                          <seq>15</seq>
+                          <data_type>R</data_type>
+                          <min_len>1</min_len>
+                          <max_len>10</max_len>
+                        </element>
+                      </composite>
+                      <element xid="CTP06">
+                        <data_ele>648</data_ele>
+                        <name>Price Multiplier Qualifier</name>
+                        <usage>N</usage>
+                        <seq>06</seq>
+                        <data_type>ID</data_type>
+                        <min_len>3</min_len>
+                        <max_len>3</max_len>
+                      </element>
+                      <element xid="CTP07">
+                        <data_ele>649</data_ele>
+                        <name>Multiplier</name>
+                        <usage>N</usage>
+                        <seq>07</seq>
+                        <data_type>R</data_type>
+                        <min_len>1</min_len>
+                        <max_len>10</max_len>
+                      </element>
+                      <element xid="CTP08">
+                        <data_ele>782</data_ele>
+                        <name>Monetary Amount</name>
+                        <usage>N</usage>
+                        <seq>08</seq>
+                        <data_type>R</data_type>
+                        <min_len>1</min_len>
+                        <max_len>18</max_len>
+                      </element>
+                      <element xid="CTP09">
+                        <data_ele>639</data_ele>
+                        <name>Basis of Unit Price Code</name>
+                        <usage>N</usage>
+                        <seq>09</seq>
+                        <data_type>ID</data_type>
+                        <min_len>2</min_len>
+                        <max_len>2</max_len>
+                      </element>
+                      <element xid="CTP10">
+                        <data_ele>499</data_ele>
+                        <name>Condition Value</name>
+                        <usage>N</usage>
+                        <seq>10</seq>
+                        <data_type>AN</data_type>
+                        <min_len>1</min_len>
+                        <max_len>10</max_len>
+                      </element>
+                      <element xid="CTP11">
+                        <data_ele>289</data_ele>
+                        <name>Multiple Price Quantity</name>
+                        <usage>N</usage>
+                        <seq>11</seq>
+                        <data_type>N0</data_type>
+                        <min_len>1</min_len>
+                        <max_len>2</max_len>
+                      </element>
+                    </segment>
 <!--End of CTP segment-->
-                    <segment xid="REF"><name>Prescription Number</name>
-                     
-                  
-                        O
-                        
-                  
-                     <pos>496</pos><max_use>1</max_use><element xid="REF01"><data_ele>128</data_ele><name>Reference Identification Qualifier</name><usage>R</usage><seq>01</seq><data_type>ID</data_type><min_len>2</min_len><max_len>3</max_len><valid_codes><code>XZ</code></valid_codes></element><element xid="REF02"><data_ele>127</data_ele><name>Reference Identification</name><usage>R</usage><seq>02</seq><data_type>AN</data_type><min_len>1</min_len><max_len>30</max_len></element><element xid="REF03"><data_ele>352</data_ele><name>Description</name><usage>N</usage><seq>03</seq><data_type>AN</data_type><min_len>1</min_len><max_len>80</max_len></element><composite><data_ele>C040</data_ele><name>Reference Identifier</name><usage>N</usage><seq>04</seq></composite></segment>
+                    <segment xid="REF">
+                      <name>Prescription Number</name>
+                      <pos>496</pos>
+                      <max_use>1</max_use>
+                      <element xid="REF01">
+                        <data_ele>128</data_ele>
+                        <name>Reference Identification Qualifier</name>
+                        <usage>R</usage>
+                        <seq>01</seq>
+                        <data_type>ID</data_type>
+                        <min_len>2</min_len>
+                        <max_len>3</max_len>
+                        <valid_codes>
+                          <code>XZ</code>
+                        </valid_codes>
+                      </element>
+                      <element xid="REF02">
+                        <data_ele>127</data_ele>
+                        <name>Reference Identification</name>
+                        <usage>R</usage>
+                        <seq>02</seq>
+                        <data_type>AN</data_type>
+                        <min_len>1</min_len>
+                        <max_len>30</max_len>
+                      </element>
+                      <element xid="REF03">
+                        <data_ele>352</data_ele>
+                        <name>Description</name>
+                        <usage>N</usage>
+                        <seq>03</seq>
+                        <data_type>AN</data_type>
+                        <min_len>1</min_len>
+                        <max_len>80</max_len>
+                      </element>
+                      <composite>
+                        <data_ele>C040</data_ele>
+                        <name>Reference Identifier</name>
+                        <usage>N</usage>
+                        <seq>04</seq>
+                      </composite>
+                    </segment>
 <!--End of REF segment-->
                   </loop>
 <!--End of 2410 loop-->
@@ -22877,6 +23365,71 @@
                       </element>
                     </segment>
 <!--End of NM1 segment-->
+                    <segment xid="PRV">
+                      <name>Attending Physician Specialty Information</name>
+                      <usage>S</usage>
+                      <pos>255</pos>
+                      <max_use>1</max_use>
+                      <element xid="PRV01">
+                        <data_ele>1221</data_ele>
+                        <name>Provider Code</name>
+                        <usage>R</usage>
+                        <seq>01</seq>
+                        <data_type>ID</data_type>
+                        <min_len>1</min_len>
+                        <max_len>3</max_len>
+                        <valid_codes>
+                          <code>AT</code>
+                        </valid_codes>
+                      </element>
+                      <element xid="PRV02">
+                        <data_ele>128</data_ele>
+                        <name>Reference Identification Qualifier</name>
+                        <usage>R</usage>
+                        <seq>02</seq>
+                        <data_type>ID</data_type>
+                        <min_len>2</min_len>
+                        <max_len>3</max_len>
+                        <valid_codes>
+                          <code>ZZ</code>
+                        </valid_codes>
+                      </element>
+                      <element xid="PRV03">
+                        <data_ele>127</data_ele>
+                        <name>Provider Taxonomy Code</name>
+                        <usage>R</usage>
+                        <seq>03</seq>
+                        <data_type>AN</data_type>
+                        <min_len>1</min_len>
+                        <max_len>30</max_len>
+<!--<valid_codes external="prov_taxonomy"/>-->
+                      </element>
+                      <element xid="PRV04">
+                        <data_ele>156</data_ele>
+                        <name>State or Province Code</name>
+                        <usage>N</usage>
+                        <seq>04</seq>
+                        <data_type>ID</data_type>
+                        <min_len>2</min_len>
+                        <max_len>2</max_len>
+                      </element>
+                      <composite>
+                        <data_ele>C035</data_ele>
+                        <name>Provider Specialty Information</name>
+                        <usage>N</usage>
+                        <seq>05</seq>
+                      </composite>
+                      <element xid="PRV06">
+                        <data_ele>1223</data_ele>
+                        <name>Provider Organization Code</name>
+                        <usage>N</usage>
+                        <seq>06</seq>
+                        <data_type>ID</data_type>
+                        <min_len>3</min_len>
+                        <max_len>3</max_len>
+                      </element>
+                    </segment>
+<!--End of PRV segment-->
                     <segment xid="REF">
                       <name>Attending Physician Secondary Identification</name>
                       <usage>S</usage>
@@ -23056,6 +23609,71 @@
                       </element>
                     </segment>
 <!--End of NM1 segment-->
+                    <segment xid="PRV">
+                      <name>Operating Physician Specialty Information</name>
+                      <usage>S</usage>
+                      <pos>255</pos>
+                      <max_use>1</max_use>
+                      <element xid="PRV01">
+                        <data_ele>1221</data_ele>
+                        <name>Provider Code</name>
+                        <usage>R</usage>
+                        <seq>01</seq>
+                        <data_type>ID</data_type>
+                        <min_len>1</min_len>
+                        <max_len>3</max_len>
+                        <valid_codes>
+                          <code>OP</code>
+                        </valid_codes>
+                      </element>
+                      <element xid="PRV02">
+                        <data_ele>128</data_ele>
+                        <name>Reference Identification Qualifier</name>
+                        <usage>R</usage>
+                        <seq>02</seq>
+                        <data_type>ID</data_type>
+                        <min_len>2</min_len>
+                        <max_len>3</max_len>
+                        <valid_codes>
+                          <code>ZZ</code>
+                        </valid_codes>
+                      </element>
+                      <element xid="PRV03">
+                        <data_ele>127</data_ele>
+                        <name>Provider Taxonomy Code</name>
+                        <usage>R</usage>
+                        <seq>03</seq>
+                        <data_type>AN</data_type>
+                        <min_len>1</min_len>
+                        <max_len>30</max_len>
+<!--<valid_codes external="prov_taxonomy"/>-->
+                      </element>
+                      <element xid="PRV04">
+                        <data_ele>156</data_ele>
+                        <name>State or Province Code</name>
+                        <usage>N</usage>
+                        <seq>04</seq>
+                        <data_type>ID</data_type>
+                        <min_len>2</min_len>
+                        <max_len>2</max_len>
+                      </element>
+                      <composite>
+                        <data_ele>C035</data_ele>
+                        <name>Provider Specialty Information</name>
+                        <usage>N</usage>
+                        <seq>05</seq>
+                      </composite>
+                      <element xid="PRV06">
+                        <data_ele>1223</data_ele>
+                        <name>Provider Organization Code</name>
+                        <usage>N</usage>
+                        <seq>06</seq>
+                        <data_type>ID</data_type>
+                        <min_len>3</min_len>
+                        <max_len>3</max_len>
+                      </element>
+                    </segment>
+<!--End of PRV segment-->
                     <segment xid="REF">
                       <name>Operating Physician Secondary Identification</name>
                       <usage>S</usage>
@@ -23236,6 +23854,72 @@
                       </element>
                     </segment>
 <!--End of NM1 segment-->
+                    <segment xid="PRV">
+                      <name>Other Provider Specialty Information</name>
+                      <usage>S</usage>
+                      <pos>255</pos>
+                      <max_use>1</max_use>
+                      <element xid="PRV01">
+                        <data_ele>1221</data_ele>
+                        <name>Provider Code</name>
+                        <usage>R</usage>
+                        <seq>01</seq>
+                        <data_type>ID</data_type>
+                        <min_len>1</min_len>
+                        <max_len>3</max_len>
+                        <valid_codes>
+                          <code>OT</code>
+                          <code>PE</code>
+                        </valid_codes>
+                      </element>
+                      <element xid="PRV02">
+                        <data_ele>128</data_ele>
+                        <name>Reference Identification Qualifier</name>
+                        <usage>R</usage>
+                        <seq>02</seq>
+                        <data_type>ID</data_type>
+                        <min_len>2</min_len>
+                        <max_len>3</max_len>
+                        <valid_codes>
+                          <code>ZZ</code>
+                        </valid_codes>
+                      </element>
+                      <element xid="PRV03">
+                        <data_ele>127</data_ele>
+                        <name>Provider Taxonomy Code</name>
+                        <usage>R</usage>
+                        <seq>03</seq>
+                        <data_type>AN</data_type>
+                        <min_len>1</min_len>
+                        <max_len>30</max_len>
+<!--<valid_codes external="prov_taxonomy"/>-->
+                      </element>
+                      <element xid="PRV04">
+                        <data_ele>156</data_ele>
+                        <name>State or Province Code</name>
+                        <usage>N</usage>
+                        <seq>04</seq>
+                        <data_type>ID</data_type>
+                        <min_len>2</min_len>
+                        <max_len>2</max_len>
+                      </element>
+                      <composite>
+                        <data_ele>C035</data_ele>
+                        <name>Provider Specialty Information</name>
+                        <usage>N</usage>
+                        <seq>05</seq>
+                      </composite>
+                      <element xid="PRV06">
+                        <data_ele>1223</data_ele>
+                        <name>Provider Organization Code</name>
+                        <usage>N</usage>
+                        <seq>06</seq>
+                        <data_type>ID</data_type>
+                        <min_len>3</min_len>
+                        <max_len>3</max_len>
+                      </element>
+                    </segment>
+<!--End of PRV segment-->
                     <segment xid="REF">
                       <name>Other Provider Secondary Identification</name>
                       <usage>S</usage>
@@ -35338,6 +36022,71 @@
                       </element>
                     </segment>
 <!--End of NM1 segment-->
+                    <segment xid="PRV">
+                      <name>Operating Physician Specialty Information</name>
+                      <usage>S</usage>
+                      <pos>255</pos>
+                      <max_use>1</max_use>
+                      <element xid="PRV01">
+                        <data_ele>1221</data_ele>
+                        <name>Provider Code</name>
+                        <usage>R</usage>
+                        <seq>01</seq>
+                        <data_type>ID</data_type>
+                        <min_len>1</min_len>
+                        <max_len>3</max_len>
+                        <valid_codes>
+                          <code>OP</code>
+                        </valid_codes>
+                      </element>
+                      <element xid="PRV02">
+                        <data_ele>128</data_ele>
+                        <name>Reference Identification Qualifier</name>
+                        <usage>R</usage>
+                        <seq>02</seq>
+                        <data_type>ID</data_type>
+                        <min_len>2</min_len>
+                        <max_len>3</max_len>
+                        <valid_codes>
+                          <code>ZZ</code>
+                        </valid_codes>
+                      </element>
+                      <element xid="PRV03">
+                        <data_ele>127</data_ele>
+                        <name>Provider Taxonomy Code</name>
+                        <usage>R</usage>
+                        <seq>03</seq>
+                        <data_type>AN</data_type>
+                        <min_len>1</min_len>
+                        <max_len>30</max_len>
+<!--<valid_codes external="prov_taxonomy"/>-->
+                      </element>
+                      <element xid="PRV04">
+                        <data_ele>156</data_ele>
+                        <name>State or Province Code</name>
+                        <usage>N</usage>
+                        <seq>04</seq>
+                        <data_type>ID</data_type>
+                        <min_len>2</min_len>
+                        <max_len>2</max_len>
+                      </element>
+                      <composite>
+                        <data_ele>C035</data_ele>
+                        <name>Provider Specialty Information</name>
+                        <usage>N</usage>
+                        <seq>05</seq>
+                      </composite>
+                      <element xid="PRV06">
+                        <data_ele>1223</data_ele>
+                        <name>Provider Organization Code</name>
+                        <usage>N</usage>
+                        <seq>06</seq>
+                        <data_type>ID</data_type>
+                        <min_len>3</min_len>
+                        <max_len>3</max_len>
+                      </element>
+                    </segment>
+<!--End of PRV segment-->
                     <segment xid="REF">
                       <name>Operating Physician Secondary Identification</name>
                       <usage>S</usage>
@@ -35518,6 +36267,72 @@
                       </element>
                     </segment>
 <!--End of NM1 segment-->
+                    <segment xid="PRV">
+                      <name>Other Provider Specialty Information</name>
+                      <usage>S</usage>
+                      <pos>255</pos>
+                      <max_use>1</max_use>
+                      <element xid="PRV01">
+                        <data_ele>1221</data_ele>
+                        <name>Provider Code</name>
+                        <usage>R</usage>
+                        <seq>01</seq>
+                        <data_type>ID</data_type>
+                        <min_len>1</min_len>
+                        <max_len>3</max_len>
+                        <valid_codes>
+                          <code>OT</code>
+                          <code>PE</code>
+                        </valid_codes>
+                      </element>
+                      <element xid="PRV02">
+                        <data_ele>128</data_ele>
+                        <name>Reference Identification Qualifier</name>
+                        <usage>R</usage>
+                        <seq>02</seq>
+                        <data_type>ID</data_type>
+                        <min_len>2</min_len>
+                        <max_len>3</max_len>
+                        <valid_codes>
+                          <code>ZZ</code>
+                        </valid_codes>
+                      </element>
+                      <element xid="PRV03">
+                        <data_ele>127</data_ele>
+                        <name>Provider Taxonomy Code</name>
+                        <usage>R</usage>
+                        <seq>03</seq>
+                        <data_type>AN</data_type>
+                        <min_len>1</min_len>
+                        <max_len>30</max_len>
+<!--<valid_codes external="prov_taxonomy"/>-->
+                      </element>
+                      <element xid="PRV04">
+                        <data_ele>156</data_ele>
+                        <name>State or Province Code</name>
+                        <usage>N</usage>
+                        <seq>04</seq>
+                        <data_type>ID</data_type>
+                        <min_len>2</min_len>
+                        <max_len>2</max_len>
+                      </element>
+                      <composite>
+                        <data_ele>C035</data_ele>
+                        <name>Provider Specialty Information</name>
+                        <usage>N</usage>
+                        <seq>05</seq>
+                      </composite>
+                      <element xid="PRV06">
+                        <data_ele>1223</data_ele>
+                        <name>Provider Organization Code</name>
+                        <usage>N</usage>
+                        <seq>06</seq>
+                        <data_type>ID</data_type>
+                        <min_len>3</min_len>
+                        <max_len>3</max_len>
+                      </element>
+                    </segment>
+<!--End of PRV segment-->
                     <segment xid="REF">
                       <name>Other Provider Secondary Identification</name>
                       <usage>S</usage>
@@ -35697,6 +36512,71 @@
                       </element>
                     </segment>
 <!--End of NM1 segment-->
+                    <segment xid="PRV">
+                      <name>Service Facility Specialty Information</name>
+                      <usage>S</usage>
+                      <pos>255</pos>
+                      <max_use>1</max_use>
+                      <element xid="PRV01">
+                        <data_ele>1221</data_ele>
+                        <name>Provider Code</name>
+                        <usage>R</usage>
+                        <seq>01</seq>
+                        <data_type>ID</data_type>
+                        <min_len>1</min_len>
+                        <max_len>3</max_len>
+                        <valid_codes>
+                          <code>RP</code>
+                        </valid_codes>
+                      </element>
+                      <element xid="PRV02">
+                        <data_ele>128</data_ele>
+                        <name>Reference Identification Qualifier</name>
+                        <usage>R</usage>
+                        <seq>02</seq>
+                        <data_type>ID</data_type>
+                        <min_len>2</min_len>
+                        <max_len>3</max_len>
+                        <valid_codes>
+                          <code>ZZ</code>
+                        </valid_codes>
+                      </element>
+                      <element xid="PRV03">
+                        <data_ele>127</data_ele>
+                        <name>Provider Taxonomy Code</name>
+                        <usage>R</usage>
+                        <seq>03</seq>
+                        <data_type>AN</data_type>
+                        <min_len>1</min_len>
+                        <max_len>30</max_len>
+<!--<valid_codes external="prov_taxonomy"/>-->
+                      </element>
+                      <element xid="PRV04">
+                        <data_ele>156</data_ele>
+                        <name>State or Province Code</name>
+                        <usage>N</usage>
+                        <seq>04</seq>
+                        <data_type>ID</data_type>
+                        <min_len>2</min_len>
+                        <max_len>2</max_len>
+                      </element>
+                      <composite>
+                        <data_ele>C035</data_ele>
+                        <name>Provider Specialty Information</name>
+                        <usage>N</usage>
+                        <seq>05</seq>
+                      </composite>
+                      <element xid="PRV06">
+                        <data_ele>1223</data_ele>
+                        <name>Provider Organization Code</name>
+                        <usage>N</usage>
+                        <seq>06</seq>
+                        <data_type>ID</data_type>
+                        <min_len>3</min_len>
+                        <max_len>3</max_len>
+                      </element>
+                    </segment>
+<!--End of PRV segment-->
                     <segment xid="N3">
                       <name>Service Facility Address</name>
                       <usage>R</usage>
@@ -44572,6 +45452,9 @@
                       <name>Line Pricing/Repricing Information</name>
                       <usage>S</usage>
                       <pos>492</pos>
+                      <syntax>R0113</syntax>
+                      <syntax>P0910</syntax>
+                      <syntax>P1112</syntax>
                       <max_use>1</max_use>
                       <element xid="HCP01">
                         <data_ele>1473</data_ele>
@@ -44761,6 +45644,20 @@
                       <name>Drug Identification</name>
                       <usage>S</usage>
                       <pos>494</pos>
+                      <syntax>P0405</syntax>
+                      <syntax>P0607</syntax>
+                      <syntax>P0809</syntax>
+                      <syntax>P1011</syntax>
+                      <syntax>P1213</syntax>
+                      <syntax>P1415</syntax>
+                      <syntax>P1617</syntax>
+                      <syntax>P1819</syntax>
+                      <syntax>P2021</syntax>
+                      <syntax>P2223</syntax>
+                      <syntax>P2425</syntax>
+                      <syntax>P2627</syntax>
+                      <syntax>P2829</syntax>
+                      <syntax>P3031</syntax>
                       <repeat>25</repeat>
                       <segment xid="LIN">
                         <name>Drug Identification</name>
@@ -45093,21 +45990,254 @@
                         </element>
                       </segment>
 <!--End of LIN segment-->
-                      <segment xid="CTP"><name>Drug Pricing</name>
-                        
-                     
-                        O
-                        
-                     
-                        <pos>495</pos><max_use>1</max_use><element xid="CTP01"><data_ele>687</data_ele><name>Class of Trade Code</name><usage>N</usage><seq>01</seq><data_type>ID</data_type><min_len>2</min_len><max_len>2</max_len></element><element xid="CTP02"><data_ele>236</data_ele><name>Price Identifier Code</name><usage>N</usage><seq>02</seq><data_type>ID</data_type><min_len>3</min_len><max_len>3</max_len></element><element xid="CTP03"><data_ele>212</data_ele><name>Unit Price</name><usage>R</usage><seq>03</seq><data_type>R</data_type><min_len>1</min_len><max_len>17</max_len></element><element xid="CTP04"><data_ele>380</data_ele><name>Quantity</name><usage>R</usage><seq>04</seq><data_type>R</data_type><min_len>1</min_len><max_len>15</max_len></element><composite><data_ele>C001</data_ele><name>Composite Unit of Measure</name><usage>R</usage><seq>05</seq><element xid="CTP05-01"><data_ele>355</data_ele><name>Unit or Basis for Measurement Code</name><usage>R</usage><seq>01</seq><data_type>ID</data_type><min_len>2</min_len><max_len>2</max_len><valid_codes><code>F2</code><code>GR</code><code>ML</code><code>UN</code></valid_codes></element><element xid="CTP05-02"><data_ele>1018</data_ele><name>Exponent</name><usage>N</usage><seq>02</seq><data_type>R</data_type><min_len>1</min_len><max_len>15</max_len></element><element xid="CTP05-03"><data_ele>649</data_ele><name>Multiplier</name><usage>N</usage><seq>03</seq><data_type>R</data_type><min_len>1</min_len><max_len>10</max_len></element><element xid="CTP05-04"><data_ele>355</data_ele><name>Unit or Basis for Measurement Code</name><usage>N</usage><seq>04</seq><data_type>ID</data_type><min_len>2</min_len><max_len>2</max_len></element><element xid="CTP05-05"><data_ele>1018</data_ele><name>Exponent</name><usage>N</usage><seq>05</seq><data_type>R</data_type><min_len>1</min_len><max_len>15</max_len></element><element xid="CTP05-06"><data_ele>649</data_ele><name>Multiplier</name><usage>N</usage><seq>06</seq><data_type>R</data_type><min_len>1</min_len><max_len>10</max_len></element><element xid="CTP05-07"><data_ele>355</data_ele><name>Unit or Basis for Measurement Code</name><usage>N</usage><seq>07</seq><data_type>ID</data_type><min_len>2</min_len><max_len>2</max_len></element><element xid="CTP05-08"><data_ele>1018</data_ele><name>Exponent</name><usage>N</usage><seq>08</seq><data_type>R</data_type><min_len>1</min_len><max_len>15</max_len></element><element xid="CTP05-09"><data_ele>649</data_ele><name>Multiplier</name><usage>N</usage><seq>09</seq><data_type>R</data_type><min_len>1</min_len><max_len>10</max_len></element><element xid="CTP05-10"><data_ele>355</data_ele><name>Unit or Basis for Measurement Code</name><usage>N</usage><seq>10</seq><data_type>ID</data_type><min_len>2</min_len><max_len>2</max_len></element><element xid="CTP05-11"><data_ele>1018</data_ele><name>Exponent</name><usage>N</usage><seq>11</seq><data_type>R</data_type><min_len>1</min_len><max_len>15</max_len></element><element xid="CTP05-12"><data_ele>649</data_ele><name>Multiplier</name><usage>N</usage><seq>12</seq><data_type>R</data_type><min_len>1</min_len><max_len>10</max_len></element><element xid="CTP05-13"><data_ele>355</data_ele><name>Unit or Basis for Measurement Code</name><usage>N</usage><seq>13</seq><data_type>ID</data_type><min_len>2</min_len><max_len>2</max_len></element><element xid="CTP05-14"><data_ele>1018</data_ele><name>Exponent</name><usage>N</usage><seq>14</seq><data_type>R</data_type><min_len>1</min_len><max_len>15</max_len></element><element xid="CTP05-15"><data_ele>649</data_ele><name>Multiplier</name><usage>N</usage><seq>15</seq><data_type>R</data_type><min_len>1</min_len><max_len>10</max_len></element></composite><element xid="CTP06"><data_ele>648</data_ele><name>Price Multiplier Qualifier</name><usage>N</usage><seq>06</seq><data_type>ID</data_type><min_len>3</min_len><max_len>3</max_len></element><element xid="CTP07"><data_ele>649</data_ele><name>Multiplier</name><usage>N</usage><seq>07</seq><data_type>R</data_type><min_len>1</min_len><max_len>10</max_len></element><element xid="CTP08"><data_ele>782</data_ele><name>Monetary Amount</name><usage>N</usage><seq>08</seq><data_type>R</data_type><min_len>1</min_len><max_len>18</max_len></element><element xid="CTP09"><data_ele>639</data_ele><name>Basis of Unit Price Code</name><usage>N</usage><seq>09</seq><data_type>ID</data_type><min_len>2</min_len><max_len>2</max_len></element><element xid="CTP10"><data_ele>499</data_ele><name>Condition Value</name><usage>N</usage><seq>10</seq><data_type>AN</data_type><min_len>1</min_len><max_len>10</max_len></element><element xid="CTP11"><data_ele>289</data_ele><name>Multiple Price Quantity</name><usage>N</usage><seq>11</seq><data_type>N0</data_type><min_len>1</min_len><max_len>2</max_len></element></segment>
+                      <segment xid="CTP">
+                        <name>Drug Pricing</name>
+                        <pos>495</pos>
+                        <max_use>1</max_use>
+                        <syntax>P0405</syntax>
+                        <syntax>C0607</syntax>
+                        <syntax>C0902</syntax>
+                        <syntax>C1002</syntax>
+                        <syntax>C1103</syntax>
+                        <element xid="CTP01">
+                          <data_ele>687</data_ele>
+                          <name>Class of Trade Code</name>
+                          <usage>N</usage>
+                          <seq>01</seq>
+                          <data_type>ID</data_type>
+                          <min_len>2</min_len>
+                          <max_len>2</max_len>
+                        </element>
+                        <element xid="CTP02">
+                          <data_ele>236</data_ele>
+                          <name>Price Identifier Code</name>
+                          <usage>N</usage>
+                          <seq>02</seq>
+                          <data_type>ID</data_type>
+                          <min_len>3</min_len>
+                          <max_len>3</max_len>
+                        </element>
+                        <element xid="CTP03">
+                          <data_ele>212</data_ele>
+                          <name>Unit Price</name>
+                          <usage>R</usage>
+                          <seq>03</seq>
+                          <data_type>R</data_type>
+                          <min_len>1</min_len>
+                          <max_len>17</max_len>
+                        </element>
+                        <element xid="CTP04">
+                          <data_ele>380</data_ele>
+                          <name>Quantity</name>
+                          <usage>R</usage>
+                          <seq>04</seq>
+                          <data_type>R</data_type>
+                          <min_len>1</min_len>
+                          <max_len>15</max_len>
+                        </element>
+                        <composite>
+                          <data_ele>C001</data_ele>
+                          <name>Composite Unit of Measure</name>
+                          <usage>R</usage>
+                          <seq>05</seq>
+                          <element xid="CTP05-01">
+                            <data_ele>355</data_ele>
+                            <name>Unit or Basis for Measurement Code</name>
+                            <usage>R</usage>
+                            <seq>01</seq>
+                            <data_type>ID</data_type>
+                            <min_len>2</min_len>
+                            <max_len>2</max_len>
+                            <valid_codes>
+                              <code>F2</code>
+                              <code>GR</code>
+                              <code>ML</code>
+                              <code>UN</code>
+                            </valid_codes>
+                          </element>
+                          <element xid="CTP05-02">
+                            <data_ele>1018</data_ele>
+                            <name>Exponent</name>
+                            <usage>N</usage>
+                            <seq>02</seq>
+                            <data_type>R</data_type>
+                            <min_len>1</min_len>
+                            <max_len>15</max_len>
+                          </element>
+                          <element xid="CTP05-03">
+                            <data_ele>649</data_ele>
+                            <name>Multiplier</name>
+                            <usage>N</usage>
+                            <seq>03</seq>
+                            <data_type>R</data_type>
+                            <min_len>1</min_len>
+                            <max_len>10</max_len>
+                          </element>
+                          <element xid="CTP05-04">
+                            <data_ele>355</data_ele>
+                            <name>Unit or Basis for Measurement Code</name>
+                            <usage>N</usage>
+                            <seq>04</seq>
+                            <data_type>ID</data_type>
+                            <min_len>2</min_len>
+                            <max_len>2</max_len>
+                          </element>
+                          <element xid="CTP05-05">
+                            <data_ele>1018</data_ele>
+                            <name>Exponent</name>
+                            <usage>N</usage>
+                            <seq>05</seq>
+                            <data_type>R</data_type>
+                            <min_len>1</min_len>
+                            <max_len>15</max_len>
+                          </element>
+                          <element xid="CTP05-06">
+                            <data_ele>649</data_ele>
+                            <name>Multiplier</name>
+                            <usage>N</usage>
+                            <seq>06</seq>
+                            <data_type>R</data_type>
+                            <min_len>1</min_len>
+                            <max_len>10</max_len>
+                          </element>
+                          <element xid="CTP05-07">
+                            <data_ele>355</data_ele>
+                            <name>Unit or Basis for Measurement Code</name>
+                            <usage>N</usage>
+                            <seq>07</seq>
+                            <data_type>ID</data_type>
+                            <min_len>2</min_len>
+                            <max_len>2</max_len>
+                          </element>
+                          <element xid="CTP05-08">
+                            <data_ele>1018</data_ele>
+                            <name>Exponent</name>
+                            <usage>N</usage>
+                            <seq>08</seq>
+                            <data_type>R</data_type>
+                            <min_len>1</min_len>
+                            <max_len>15</max_len>
+                          </element>
+                          <element xid="CTP05-09">
+                            <data_ele>649</data_ele>
+                            <name>Multiplier</name>
+                            <usage>N</usage>
+                            <seq>09</seq>
+                            <data_type>R</data_type>
+                            <min_len>1</min_len>
+                            <max_len>10</max_len>
+                          </element>
+                          <element xid="CTP05-10">
+                            <data_ele>355</data_ele>
+                            <name>Unit or Basis for Measurement Code</name>
+                            <usage>N</usage>
+                            <seq>10</seq>
+                            <data_type>ID</data_type>
+                            <min_len>2</min_len>
+                            <max_len>2</max_len>
+                          </element>
+                          <element xid="CTP05-11">
+                            <data_ele>1018</data_ele>
+                            <name>Exponent</name>
+                            <usage>N</usage>
+                            <seq>11</seq>
+                            <data_type>R</data_type>
+                            <min_len>1</min_len>
+                            <max_len>15</max_len>
+                          </element>
+                          <element xid="CTP05-12">
+                            <data_ele>649</data_ele>
+                            <name>Multiplier</name>
+                            <usage>N</usage>
+                            <seq>12</seq>
+                            <data_type>R</data_type>
+                            <min_len>1</min_len>
+                            <max_len>10</max_len>
+                          </element>
+                          <element xid="CTP05-13">
+                            <data_ele>355</data_ele>
+                            <name>Unit or Basis for Measurement Code</name>
+                            <usage>N</usage>
+                            <seq>13</seq>
+                            <data_type>ID</data_type>
+                            <min_len>2</min_len>
+                            <max_len>2</max_len>
+                          </element>
+                          <element xid="CTP05-14">
+                            <data_ele>1018</data_ele>
+                            <name>Exponent</name>
+                            <usage>N</usage>
+                            <seq>14</seq>
+                            <data_type>R</data_type>
+                            <min_len>1</min_len>
+                            <max_len>15</max_len>
+                          </element>
+                          <element xid="CTP05-15">
+                            <data_ele>649</data_ele>
+                            <name>Multiplier</name>
+                            <usage>N</usage>
+                            <seq>15</seq>
+                            <data_type>R</data_type>
+                            <min_len>1</min_len>
+                            <max_len>10</max_len>
+                          </element>
+                        </composite>
+                        <element xid="CTP06">
+                          <data_ele>648</data_ele>
+                          <name>Price Multiplier Qualifier</name>
+                          <usage>N</usage>
+                          <seq>06</seq>
+                          <data_type>ID</data_type>
+                          <min_len>3</min_len>
+                          <max_len>3</max_len>
+                        </element>
+                        <element xid="CTP07">
+                          <data_ele>649</data_ele>
+                          <name>Multiplier</name>
+                          <usage>N</usage>
+                          <seq>07</seq>
+                          <data_type>R</data_type>
+                          <min_len>1</min_len>
+                          <max_len>10</max_len>
+                        </element>
+                        <element xid="CTP08">
+                          <data_ele>782</data_ele>
+                          <name>Monetary Amount</name>
+                          <usage>N</usage>
+                          <seq>08</seq>
+                          <data_type>R</data_type>
+                          <min_len>1</min_len>
+                          <max_len>18</max_len>
+                        </element>
+                        <element xid="CTP09">
+                          <data_ele>639</data_ele>
+                          <name>Basis of Unit Price Code</name>
+                          <usage>N</usage>
+                          <seq>09</seq>
+                          <data_type>ID</data_type>
+                          <min_len>2</min_len>
+                          <max_len>2</max_len>
+                        </element>
+                        <element xid="CTP10">
+                          <data_ele>499</data_ele>
+                          <name>Condition Value</name>
+                          <usage>N</usage>
+                          <seq>10</seq>
+                          <data_type>AN</data_type>
+                          <min_len>1</min_len>
+                          <max_len>10</max_len>
+                        </element>
+                        <element xid="CTP11">
+                          <data_ele>289</data_ele>
+                          <name>Multiple Price Quantity</name>
+                          <usage>N</usage>
+                          <seq>11</seq>
+                          <data_type>N0</data_type>
+                          <min_len>1</min_len>
+                          <max_len>2</max_len>
+                        </element>
+                      </segment>
 <!--End of CTP segment-->
-                      <segment xid="REF"><name>Prescription Number</name>
-                        
-                     
-                        O
-                        
-                     
-                        <pos>496</pos><max_use>1</max_use><element xid="REF01"><data_ele>128</data_ele><name>Reference Identification Qualifier</name><usage>R</usage><seq>01</seq><data_type>ID</data_type><min_len>2</min_len><max_len>3</max_len><valid_codes><code>XZ</code></valid_codes></element><element xid="REF02"><data_ele>127</data_ele><name>Reference Identification</name><usage>R</usage><seq>02</seq><data_type>AN</data_type><min_len>1</min_len><max_len>30</max_len></element><element xid="REF03"><data_ele>352</data_ele><name>Description</name><usage>N</usage><seq>03</seq><data_type>AN</data_type><min_len>1</min_len><max_len>80</max_len></element><composite><data_ele>C040</data_ele><name>Reference Identifier</name><usage>N</usage><seq>04</seq></composite></segment>
 <!--End of REF segment-->
                     </loop>
 <!--End of 2410 loop-->
@@ -45234,6 +46364,71 @@
                         </element>
                       </segment>
 <!--End of NM1 segment-->
+                      <segment xid="PRV">
+                        <name>Attending Physician Specialty Information</name>
+                        <usage>S</usage>
+                        <pos>255</pos>
+                        <max_use>1</max_use>
+                        <element xid="PRV01">
+                          <data_ele>1221</data_ele>
+                          <name>Provider Code</name>
+                          <usage>R</usage>
+                          <seq>01</seq>
+                          <data_type>ID</data_type>
+                          <min_len>1</min_len>
+                          <max_len>3</max_len>
+                          <valid_codes>
+                            <code>AT</code>
+                          </valid_codes>
+                        </element>
+                        <element xid="PRV02">
+                          <data_ele>128</data_ele>
+                          <name>Reference Identification Qualifier</name>
+                          <usage>R</usage>
+                          <seq>02</seq>
+                          <data_type>ID</data_type>
+                          <min_len>2</min_len>
+                          <max_len>3</max_len>
+                          <valid_codes>
+                            <code>ZZ</code>
+                          </valid_codes>
+                        </element>
+                        <element xid="PRV03">
+                          <data_ele>127</data_ele>
+                          <name>Provider Taxonomy Code</name>
+                          <usage>R</usage>
+                          <seq>03</seq>
+                          <data_type>AN</data_type>
+                          <min_len>1</min_len>
+                          <max_len>30</max_len>
+<!--<valid_codes external="prov_taxonomy"/>-->
+                        </element>
+                        <element xid="PRV04">
+                          <data_ele>156</data_ele>
+                          <name>State or Province Code</name>
+                          <usage>N</usage>
+                          <seq>04</seq>
+                          <data_type>ID</data_type>
+                          <min_len>2</min_len>
+                          <max_len>2</max_len>
+                        </element>
+                        <composite>
+                          <data_ele>C035</data_ele>
+                          <name>Provider Specialty Information</name>
+                          <usage>N</usage>
+                          <seq>05</seq>
+                        </composite>
+                        <element xid="PRV06">
+                          <data_ele>1223</data_ele>
+                          <name>Provider Organization Code</name>
+                          <usage>N</usage>
+                          <seq>06</seq>
+                          <data_type>ID</data_type>
+                          <min_len>3</min_len>
+                          <max_len>3</max_len>
+                        </element>
+                      </segment>
+<!--End of PRV segment-->
                       <segment xid="REF">
                         <name>Attending Physician Secondary Identification</name>
                         <usage>S</usage>
@@ -45413,6 +46608,71 @@
                         </element>
                       </segment>
 <!--End of NM1 segment-->
+                      <segment xid="PRV">
+                        <name>Operating Physician Specialty Information</name>
+                        <usage>S</usage>
+                        <pos>255</pos>
+                        <max_use>1</max_use>
+                        <element xid="PRV01">
+                          <data_ele>1221</data_ele>
+                          <name>Provider Code</name>
+                          <usage>R</usage>
+                          <seq>01</seq>
+                          <data_type>ID</data_type>
+                          <min_len>1</min_len>
+                          <max_len>3</max_len>
+                          <valid_codes>
+                            <code>OP</code>
+                          </valid_codes>
+                        </element>
+                        <element xid="PRV02">
+                          <data_ele>128</data_ele>
+                          <name>Reference Identification Qualifier</name>
+                          <usage>R</usage>
+                          <seq>02</seq>
+                          <data_type>ID</data_type>
+                          <min_len>2</min_len>
+                          <max_len>3</max_len>
+                          <valid_codes>
+                            <code>ZZ</code>
+                          </valid_codes>
+                        </element>
+                        <element xid="PRV03">
+                          <data_ele>127</data_ele>
+                          <name>Provider Taxonomy Code</name>
+                          <usage>R</usage>
+                          <seq>03</seq>
+                          <data_type>AN</data_type>
+                          <min_len>1</min_len>
+                          <max_len>30</max_len>
+<!--<valid_codes external="prov_taxonomy"/>-->
+                        </element>
+                        <element xid="PRV04">
+                          <data_ele>156</data_ele>
+                          <name>State or Province Code</name>
+                          <usage>N</usage>
+                          <seq>04</seq>
+                          <data_type>ID</data_type>
+                          <min_len>2</min_len>
+                          <max_len>2</max_len>
+                        </element>
+                        <composite>
+                          <data_ele>C035</data_ele>
+                          <name>Provider Specialty Information</name>
+                          <usage>N</usage>
+                          <seq>05</seq>
+                        </composite>
+                        <element xid="PRV06">
+                          <data_ele>1223</data_ele>
+                          <name>Provider Organization Code</name>
+                          <usage>N</usage>
+                          <seq>06</seq>
+                          <data_type>ID</data_type>
+                          <min_len>3</min_len>
+                          <max_len>3</max_len>
+                        </element>
+                      </segment>
+<!--End of PRV segment-->
                       <segment xid="REF">
                         <name>Operating Physician Secondary Identification</name>
                         <usage>S</usage>
@@ -45593,6 +46853,72 @@
                         </element>
                       </segment>
 <!--End of NM1 segment-->
+                      <segment xid="PRV">
+                        <name>Other Provider Specialty Information</name>
+                        <usage>S</usage>
+                        <pos>255</pos>
+                        <max_use>1</max_use>
+                        <element xid="PRV01">
+                          <data_ele>1221</data_ele>
+                          <name>Provider Code</name>
+                          <usage>R</usage>
+                          <seq>01</seq>
+                          <data_type>ID</data_type>
+                          <min_len>1</min_len>
+                          <max_len>3</max_len>
+                          <valid_codes>
+                            <code>OT</code>
+                            <code>PE</code>
+                          </valid_codes>
+                        </element>
+                        <element xid="PRV02">
+                          <data_ele>128</data_ele>
+                          <name>Reference Identification Qualifier</name>
+                          <usage>R</usage>
+                          <seq>02</seq>
+                          <data_type>ID</data_type>
+                          <min_len>2</min_len>
+                          <max_len>3</max_len>
+                          <valid_codes>
+                            <code>ZZ</code>
+                          </valid_codes>
+                        </element>
+                        <element xid="PRV03">
+                          <data_ele>127</data_ele>
+                          <name>Provider Taxonomy Code</name>
+                          <usage>R</usage>
+                          <seq>03</seq>
+                          <data_type>AN</data_type>
+                          <min_len>1</min_len>
+                          <max_len>30</max_len>
+<!--<valid_codes external="prov_taxonomy"/>-->
+                        </element>
+                        <element xid="PRV04">
+                          <data_ele>156</data_ele>
+                          <name>State or Province Code</name>
+                          <usage>N</usage>
+                          <seq>04</seq>
+                          <data_type>ID</data_type>
+                          <min_len>2</min_len>
+                          <max_len>2</max_len>
+                        </element>
+                        <composite>
+                          <data_ele>C035</data_ele>
+                          <name>Provider Specialty Information</name>
+                          <usage>N</usage>
+                          <seq>05</seq>
+                        </composite>
+                        <element xid="PRV06">
+                          <data_ele>1223</data_ele>
+                          <name>Provider Organization Code</name>
+                          <usage>N</usage>
+                          <seq>06</seq>
+                          <data_type>ID</data_type>
+                          <min_len>3</min_len>
+                          <max_len>3</max_len>
+                        </element>
+                      </segment>
+<!--End of PRV segment-->
                       <segment xid="REF">
                         <name>Other Provider Secondary Identification</name>
                         <usage>S</usage>
