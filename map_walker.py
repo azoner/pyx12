@@ -69,18 +69,12 @@ def walk_tree(node, seg):
         for child in node.children:
             if child.is_segment() and child.index >= node_idx:
                 if child.is_match(seg):
-                    if child.usage= 'N':
+                    if child.usage == 'N':
                         raise WEDIError, "Segment %s found but marked as not used" % (child.id)
                     return child
-                elif child.usage= 'R':
+                elif child.usage == 'R':
                     raise WEDIError, "Required segment %s not found" % (child.id)
         
-    # Repeat loop
-    node = orig_node
-    node = pop_to_parent_loop(node) # We are in a segment
-    if is_first_seg_match(node, seg): 
-        return node # Return the loop node
-
     # Child loop
     node = orig_node
     node = pop_to_parent_loop(node)
@@ -88,7 +82,14 @@ def walk_tree(node, seg):
         if child.is_loop():
             if is_first_seg_match(child, seg): 
                 return child # Return the loop node
-                               
+                
+    # Repeat loop
+    node = orig_node
+    node = pop_to_parent_loop(node) # We are in a segment
+    if is_first_seg_match(node, seg): 
+        return node # Return the loop node
+
+                              
     # Sibling Loop
     node = orig_node
     node_idx = None

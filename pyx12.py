@@ -44,7 +44,7 @@ Create a XML document based on the data file
 import os, os.path
 #import stat
 import sys
-import string
+#import string
 from types import *
 #import StringIO
 #import tempfile
@@ -58,6 +58,7 @@ import codes
 import map_index
 import map_if
 import x12file
+from map_walker import walk_tree
 from utils import *
 
 #Global Variables
@@ -84,8 +85,8 @@ def x12n_document():
                 vriic = gs_seg.GetElementValue('GS08')
 
                 #Get map for this GS loop
-                map_index = map_index.map_index('map/maps.xml')
-                map_file = map_index.get_filename(icvn, vriic, fic)
+                map_index_if = map_index.map_index('map/maps.xml')
+                map_file = map_index_if.get_filename(icvn, vriic, fic)
                 #print map_file
             else:
                 break        
@@ -96,35 +97,19 @@ def x12n_document():
 
         for seg in src:
             #find node
-            # repeat of seg
-            # next seg in loop
-            # repeat of loop
-            # child loop
-            # sibling loop 
-            # parent loop
-            # - first id element ==
+            node = walk_tree(node, seg)
 
             #validate intra-element dependancies
-            
+
             if len(seg) > node.get_child_count(): raise x12Error, 'Too many elements in segment %s' % (seg[0])
             for i in xrange(node.get_child_count()):
                 # Validate Elements
                 if i < len(seg):
-                    if type(ele) is ListType: # composite
+                    if type(seg[i]) is ListType: # composite
                         # Validate composite
                         comp_node = node.get_child_node_by_idx(i)
                         if len(seg) > node.get_child_count():
                             raise x12Error, 'Too many elements in segment %s' % (seg[0])
-                        for i in xrange(node.get_child_count()):
-                            # Validate Elements
-                            if i < len(seg):
-                                if type(ele) is ListType:
-                                    # Validate composite
-                                    comp_node = node.get_child_node_by_idx(i)
-                                else:
-                                    node.get_child_node_by_idx(i).is_valid(seg[i])
-                            else:
-                                node.get_child_node_by_idx(i).is_valid(None)
                     else: # element
                         node.get_child_node_by_idx(i).is_valid(seg[i])
                 else: #missing required elements
@@ -189,7 +174,7 @@ class segment:
         Returns: 
         """
 
-        sys.stdout.write('<segment code="%s">\n' % (node.id))
+        sys.stdout.write('<segment code="%s">\n' % (self.node.id))
         for elem in self.element_list:
             elem.xml()
         sys.stdout.write('</segment>\n') # % (tab.indent()))

@@ -754,8 +754,8 @@ class element_if(x12_node):
                 raise errors.WEDI1Error, 'Element %s is too short - "%s" is len=%i' % (self.refdes,
                     elem_val, int(self.min_len))
             if len(elem_val) > int(self.max_len):
-                raise errors.WEDI1Error, 'Element %s is too short - "%s" is len=%i' % (self.refdes,
-                    elem_val, int(self.min_len))
+                raise errors.WEDI1Error, 'Element %s is too short: "%s" is %i characters, \
+                    should be %i' % (self.refdes, elem_val, len(elem_val), int(self.min_len))
 
         if elem_val == None and self.usage == 'R':
             raise errors.WEDI3Error

@@ -106,6 +106,7 @@ class x12file:
             if seg[i].find(self.subele_term) != -1:
                 seg[i] = seg[i].split(self.subele_term) # Split composite
         if seg[0] == 'ISA': 
+            seg[-1] = self.subele_term
             self.loops.append(('ISA', seg[13]))
             self.gs_count = 0
         elif seg[0] == 'IEA': 
