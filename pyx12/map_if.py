@@ -51,6 +51,9 @@ class x12_node:
 #    def __del__(self):
 #        pass
 
+    def __len__(self):
+        return len(self.children)
+
     def __repr__(self):
         """
         @rtype: string

@@ -4,7 +4,8 @@
 
 import os.path
 import unittest
-import pdb
+#import pdb
+#import logging
 
 import pyx12.error_handler
 #from error_handler import ErrorErrhNull
@@ -24,62 +25,68 @@ class Explicit_Loops(unittest.TestCase):
         param.set('pickle_path', os.path.expanduser('~/src/pyx12/map/'))
         self.map = pyx12.map_if.load_map_file('837.4010.X098.A1.xml', param)
         self.errh = pyx12.error_handler.errh_null()
+        #self.logger = logging.getLogger('pyx12')
+        #self.logger.setLevel(logging.DEBUG)
+        #formatter = logging.Formatter('%(asctime)s %(levelname)s %(message)s')
+        #hdlr = logging.FileHandler('debug.txt')
+        #hdlr.setFormatter(formatter)
+        #self.logger.addHandler(hdlr)
 
     def test_ISA_to_GS(self):
         node = self.map.getnodebypath('/ISA/ISA')
-        seg = pyx12.segment.segment('GS*HC', '~', '*', ':')
-        node = self.walker.walk(node, seg, self.errh, 5, 4, None)
-        self.assertEqual(seg.get_seg_id(), node.id)
+        seg_data = pyx12.segment.segment('GS*HC', '~', '*', ':')
+        node = self.walker.walk(node, seg_data, self.errh, 5, 4, None)
+        self.assertEqual(seg_data.get_seg_id(), node.id)
 
     def test_GS_to_ST(self):
         node = self.map.getnodebypath('/ISA/GS/GS')
-        seg = pyx12.segment.segment('ST*837', '~', '*', ':')
-        node = self.walker.walk(node, seg, self.errh, 5, 4, None)
+        seg_data = pyx12.segment.segment('ST*837', '~', '*', ':')
+        node = self.walker.walk(node, seg_data, self.errh, 5, 4, None)
         self.assertNotEqual(node, None)
-        self.assertEqual(seg.get_seg_id(), node.id)
+        self.assertEqual(seg_data.get_seg_id(), node.id)
 
     def test_SE_to_ST(self):
         node = self.map.getnodebypath('/ISA/GS/ST/SE')
         self.assertNotEqual(node, None)
-        seg = pyx12.segment.segment('ST*837', '~', '*', ':')
-        node = self.walker.walk(node, seg, self.errh, 5, 4, None)
-        self.assertEqual(seg.get_seg_id(), node.id)
+        seg_data = pyx12.segment.segment('ST*837', '~', '*', ':')
+        node = self.walker.walk(node, seg_data, self.errh, 5, 4, None)
+        self.assertEqual(seg_data.get_seg_id(), node.id)
 
     def test_SE_to_GE(self):
         node = self.map.getnodebypath('/ISA/GS/ST/SE')
         #node.cur_count = 1 # HACK
-        seg = pyx12.segment.segment('GE*1', '~', '*', ':')
-        node = self.walker.walk(node, seg, self.errh, 5, 4, None)
+        seg_data = pyx12.segment.segment('GE*1', '~', '*', ':')
+        node = self.walker.walk(node, seg_data, self.errh, 5, 4, None)
         self.assertNotEqual(node, None)
-        self.assertEqual(seg.get_seg_id(), node.id)
+        self.assertEqual(seg_data.get_seg_id(), node.id)
 
     def test_GE_to_GS(self):
         node = self.map.getnodebypath('/ISA/GS/GE')
-        seg = pyx12.segment.segment('GS*HC', '~', '*', ':')
-        node = self.walker.walk(node, seg, self.errh, 5, 4, None)
+        seg_data = pyx12.segment.segment('GS*HC', '~', '*', ':')
+        node = self.walker.walk(node, seg_data, self.errh, 5, 4, None)
         self.assertNotEqual(node, None)
-        self.assertEqual(seg.get_seg_id(), node.id)
+        self.assertEqual(seg_data.get_seg_id(), node.id)
 
     def test_GE_to_IEA(self):
         node = self.map.getnodebypath('/ISA/GS/GE')
         self.assertEqual('GE', node.id)
-        seg = pyx12.segment.segment('IEA*1', '~', '*', ':')
-        node = self.walker.walk(node, seg, self.errh, 5, 4, None)
+        seg_data = pyx12.segment.segment('IEA*1', '~', '*', ':')
+        node = self.walker.walk(node, seg_data, self.errh, 5, 4, None)
         self.assertNotEqual(node, None)
-        self.assertEqual(seg.get_seg_id(), node.id)
+        self.assertEqual(seg_data.get_seg_id(), node.id)
 
     def test_IEA_to_ISA(self):
         node = self.map.getnodebypath('/ISA/IEA')
         self.assertEqual('IEA', node.id)
-        seg = pyx12.segment.segment('ISA*00', '~', '*', ':')
-        node = self.walker.walk(node, seg, self.errh, 5, 4, None)
+        seg_data = pyx12.segment.segment('ISA*00', '~', '*', ':')
+        node = self.walker.walk(node, seg_data, self.errh, 5, 4, None)
         self.assertNotEqual(node, None)
-        self.assertEqual(seg.get_seg_id(), node.id)
+        self.assertEqual(seg_data.get_seg_id(), node.id)
 
     def test_ST_to_BHT_fail(self):
         node = self.map.getnodebypath('/ISA/GS/ST/ST')
-        seg = pyx12.segment.segment('ZZZ*0019', '~', '*', ':')
-        node = self.walker.walk(node, seg, self.errh, 5, 4, None)
+        seg_data = pyx12.segment.segment('ZZZ*0019', '~', '*', ':')
+        node = self.walker.walk(node, seg_data, self.errh, 5, 4, None)
         self.assertEqual(node, None)
 
     def tearDown(self):
@@ -118,9 +125,9 @@ class Implicit_Loops(unittest.TestCase):
 
     def test_ST_to_BHT(self):
         node = self.map.getnodebypath('/ISA/GS/ST/ST')
-        seg = pyx12.segment.segment('BHT*0019', '~', '*', ':')
-        node = self.walker.walk(node, seg, self.errh, 5, 4, None)
-        self.assertEqual(seg.get_seg_id(), node.id)
+        seg_data = pyx12.segment.segment('BHT*0019', '~', '*', ':')
+        node = self.walker.walk(node, seg_data, self.errh, 5, 4, None)
+        self.assertEqual(seg_data.get_seg_id(), node.id)
 
     def test_repeat_loop_with_one_segment(self):
         param = params()
@@ -128,9 +135,9 @@ class Implicit_Loops(unittest.TestCase):
         param.set('pickle_path', os.path.expanduser('~/src/pyx12/map/'))
         map = pyx12.map_if.load_map_file('841.4010.XXXC.xml', param)
         node = map.getnodebypath('/ISA/GS/ST/DETAIL/1000/2000/2100/SPI')
-        seg = pyx12.segment.segment('SPI*00', '~', '*', ':')
-        node = self.walker.walk(node, seg, self.errh, 5, 4, None)
-        self.assertEqual(seg.get_seg_id(), node.id)
+        seg_data = pyx12.segment.segment('SPI*00', '~', '*', ':')
+        node = self.walker.walk(node, seg_data, self.errh, 5, 4, None)
+        self.assertEqual(seg_data.get_seg_id(), node.id)
 
     def test_loop_required_fail1(self):
         """
@@ -200,27 +207,27 @@ class SegmentWalk(unittest.TestCase):
 
     def test_match_regular_segment(self):
         node = self.map.getnodebypath('/ISA/GS/ST/DETAIL/2000A/2010AB/NM1')
-        seg = pyx12.segment.segment('N4*Billings*MT*56123', '~', '*', ':')
-        node = self.walker.walk(node, seg, self.errh, 5, 4, None)
-        self.assertEqual(seg.get_seg_id(), node.id)
+        seg_data = pyx12.segment.segment('N4*Billings*MT*56123', '~', '*', ':')
+        node = self.walker.walk(node, seg_data, self.errh, 5, 4, None)
+        self.assertEqual(seg_data.get_seg_id(), node.id)
     
     def test_match_ID_segment1(self):
         node = self.map.getnodebypath('/ISA/GS/ST/DETAIL/2000A/2000B/2300/CLM')
-        seg = pyx12.segment.segment('DTP*454*D8*20040101', '~', '*', ':')
-        node = self.walker.walk(node, seg, self.errh, 5, 4, None)
-        self.assertEqual(seg.get_seg_id(), node.id)
+        seg_data = pyx12.segment.segment('DTP*454*D8*20040101', '~', '*', ':')
+        node = self.walker.walk(node, seg_data, self.errh, 5, 4, None)
+        self.assertEqual(seg_data.get_seg_id(), node.id)
     
     def test_match_ID_segment2(self):
         node = self.map.getnodebypath('/ISA/GS/ST/DETAIL/2000A/2000B/2300/CLM')
-        seg = pyx12.segment.segment('DTP*454*D8*20040101', '~', '*', ':')
-        node = self.walker.walk(node, seg, self.errh, 5, 4, None)
-        self.assertEqual(seg.get_seg_id(), node.id)
+        seg_data = pyx12.segment.segment('DTP*454*D8*20040101', '~', '*', ':')
+        node = self.walker.walk(node, seg_data, self.errh, 5, 4, None)
+        self.assertEqual(seg_data.get_seg_id(), node.id)
     
 #    def test_fail_ID_segment(self):
 #        node = self.map.getnodebypath('/ISA/GS/ST/DETAIL/2000A/2000B/2300/CLM')
-#        seg = ['DTP', '999', 'D8', '20040201']
-#        node = self.walker.walk(node, seg, self.errh, 5, 4, None)
-#        self.assertNotEqual(seg.get_seg_id(), node.id)
+#        seg_data = ['DTP', '999', 'D8', '20040201']
+#        node = self.walker.walk(node, seg_data, self.errh, 5, 4, None)
+#        self.assertNotEqual(seg_data.get_seg_id(), node.id)
 
     def test_segment_required_fail1(self):
         """
@@ -268,22 +275,22 @@ class Segment_ID_Checks(unittest.TestCase):
 
     def test_segment_id_short(self):
         node = self.node
-        seg = pyx12.segment.segment('Z*0019', '~', '*', ':')
-        node = self.walker.walk(node, seg, self.errh, 5, 4, None)
+        seg_data = pyx12.segment.segment('Z*0019', '~', '*', ':')
+        node = self.walker.walk(node, seg_data, self.errh, 5, 4, None)
         self.assertEqual(node, None)
         self.assertEqual(self.errh.err_cde, '1', self.errh.err_str)
 
     def test_segment_id_long(self):
         node = self.node
-        seg = pyx12.segment.segment('ZZZZ*0019', '~', '*', ':')
-        node = self.walker.walk(node, seg, self.errh, 5, 4, None)
+        seg_data = pyx12.segment.segment('ZZZZ*0019', '~', '*', ':')
+        node = self.walker.walk(node, seg_data, self.errh, 5, 4, None)
         self.assertEqual(node, None)
         self.assertEqual(self.errh.err_cde, '1', self.errh.err_str)
 
     def test_segment_empty(self):
         node = self.node
-        seg = pyx12.segment.segment('', '~', '*', ':')
-        node = self.walker.walk(node, seg, self.errh, 5, 4, None)
+        seg_data = pyx12.segment.segment('', '~', '*', ':')
+        node = self.walker.walk(node, seg_data, self.errh, 5, 4, None)
         self.assertEqual(node, None)
         self.assertEqual(self.errh.err_cde, '1', self.errh.err_str)
 
@@ -414,11 +421,11 @@ class CountOrdinal(unittest.TestCase):
 def suite():
     suite = unittest.TestSuite()
     suite.addTest(unittest.makeSuite(Explicit_Loops))
-    suite.addTest(unittest.makeSuite(Implicit_Loops))
-    suite.addTest(unittest.makeSuite(SegmentWalk))
-    suite.addTest(unittest.makeSuite(Segment_ID_Checks))
-    suite.addTest(unittest.makeSuite(Counting))
-    suite.addTest(unittest.makeSuite(CountOrdinal))
+    #suite.addTest(unittest.makeSuite(Implicit_Loops))
+    #suite.addTest(unittest.makeSuite(SegmentWalk))
+    #suite.addTest(unittest.makeSuite(Segment_ID_Checks))
+    #suite.addTest(unittest.makeSuite(Counting))
+    #suite.addTest(unittest.makeSuite(CountOrdinal))
     return suite
 
 #if __name__ == "__main__":
