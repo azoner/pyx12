@@ -76,7 +76,7 @@
 	<div class="segment">
         <xsl:value-of select="id"/>-
         <xsl:value-of select="name"/><xsl:text>    </xsl:text>
-        <xsl:for-each select="syntax"><xsl:value-of select="."/><xsl:text> </xsl:text></xsl:for-each>
+        <span class="syntax"><xsl:for-each select="syntax"><xsl:value-of select="."/><xsl:text> </xsl:text></xsl:for-each></span>
 	</div>
 	<table>
 	<xsl:apply-templates/>
@@ -125,6 +125,7 @@
 	<td class="code">
 	<xsl:apply-templates select="@external"/>
         <xsl:for-each select="code">
+	    <!-- <xsl:sort select="code" lang="en" order="ascending" case-order="upper-first"/> -->
 	    <xsl:value-of select="."/><xsl:text> </xsl:text> 
         </xsl:for-each>
 	</td>
