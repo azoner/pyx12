@@ -37,6 +37,7 @@ Generate SQL DDL for a table structure fitting a map
 """
 
 import os, os.path
+import string
 import sys
 import logging
 import pdb
@@ -65,10 +66,19 @@ class table:
         self.path = path
         self.parent = parent
         self.field_prefix = ''
+        self.fk_name = ''
         self.fields = [] # (name, type)
         self.sub_tables = []
 
     def __repr__(self):
+        str1 = ''
+        if self.fk_name:
+            str1 += '%s\n' % (self.fk_name)
+        for table1 in self.sub_tables:
+            str1 += table1.__repr__()
+        return str1
+
+    def generate(self):
         str1 = 'CREATE TABLE [%s] ( -- %s\n' % (self.name, self.path)
         str1 += '\t[%s] [int] IDENTITY (1, 1) NOT NULL\n' % (self.pk)
         if self.parent and self.parent.get_pk():
@@ -84,15 +94,18 @@ class table:
         
         #foreign keys
         if self.parent and self.parent.get_pk():
+            if self.fk_name == '':
+                raise SQL_Error, 'Bad FK string %s' % (self.name)
             parent_table = self.parent.name
             pk_parent = self.parent.get_pk()
             str1 += 'ALTER TABLE [%s] ADD\n' % (self.name)
-            str1 += '\tCONSTRAINT [FK_%s_%s] FOREIGN KEY\n' % (self.name, parent_table)
+            #str1 += '\tCONSTRAINT [FK_%s_%s] FOREIGN KEY\n' % (self.name, parent_table)
+            str1 += '\tCONSTRAINT [FK_%s_%s] FOREIGN KEY\n' % (TRANS_PRE, self.fk_name)
             str1 += '\t( [%s] )\n' % (pk_parent)
             str1 += '\tREFERENCES [%s] ([%s])\nGO\n\n' % (parent_table, pk_parent)
 
         for table1 in self.sub_tables:
-            str1 += table1.__repr__()
+            str1 += table1.generate()
         
         return str1
         
@@ -108,17 +121,50 @@ class table:
         else:
             return path == '/'
 
+    def _get_unique_field_name(self, id, name):
+        field_list = map(lambda x: x[0], self.fields)
+        field_name = '%s_%s' % (id, format_name(name))
+        if field_name not in field_list:
+            return field_name
+        field_name = '%s_%s_%s' % (id, self.field_prefix, name)
+        idx = 'A'
+        while field_name in field_list:
+            field_name = '%s_%s_%s' % (id, idx, name)
+            idx = chr(ord(idx)+1)
+        return field_name
         
+
 def format_name(name):
     return name.replace(' ', '_').replace("'", '')
-    
-def gen_sql(map_root, pre):
+
+def unique_tablename(suffix, path, table_list): 
+    table_name = ('%s%s' % (TRANS_PRE, suffix))[:120]
+    parents = path.split('/')
+    i = 1
+    while table_name in table_list:
+        table_name = ('%s_%s%s' % (TRANS_PRE, string.join(parents[:-1], '_'), suffix))[:120]
+        #pdb.set_trace()
+        #raise SQL_Error, 'Duplicate Table Name %s' % (table_name)
+    return table_name
+
+def unique_fk_name(fk_list, fk):
+    fk1 = fk
+    idx = 'A'
+    while fk1 in fk_list:
+        fk1 = fk + '_' + idx
+        idx = chr(ord(idx)+1)
+    fk_list.append(fk1)
+    return fk1
+
+def gen_sql(map_root, prefix):
     """
     iterate through map, generate sql
     """
     global TRANS_PRE
-    TRANS_PRE = pre + '_'
+    TRANS_PRE = prefix + '_'
     st_loop = table('%sST' % (TRANS_PRE), '%sST_num' % (TRANS_PRE), '/', None)
+    table_list = ['%sST' % (TRANS_PRE)]
+    fk_list = []
     cur_table = st_loop
 
     for node in map_root:
@@ -140,17 +186,27 @@ def gen_sql(map_root, pre):
                 # same level, then pop to parent and create sub-table
                 if cur_table.is_match_parent(parent):
                     cur_table = cur_table.parent
-                    table_name = '%s%s_%s' % (TRANS_PRE, node.id, format_name(node.name))
+                    #table_name = '%s%s_%s' % (TRANS_PRE, node.id, format_name(node.name))
+                    table_name = unique_tablename('%s_%s' % (node.id, format_name(node.name)), \
+                        parent, table_list)
                     pk = '%s_num' % (node.id)
                     cur_table.sub_tables.append(table(table_name, pk, path, cur_table))
+                    table_list.append(table_name)
                     cur_table = cur_table.sub_tables[-1]
+                    cur_table.fk_name = unique_fk_name(fk_list, \
+                        string.join(path.split('/'), '_'))
 
                 # cur loop node is child of table
                 elif cur_table.is_match(parent):
-                    table_name = '%s%s_%s' % (TRANS_PRE, node.id, format_name(node.name))
+                    #table_name = '%s%s_%s' % (TRANS_PRE, node.id, format_name(node.name))
+                    table_name = unique_tablename('%s_%s' % (node.id, format_name(node.name)), \
+                        parent, table_list)
                     pk = '%s_num' % (node.id)
                     cur_table.sub_tables.append(table(table_name, pk, path, cur_table))
+                    table_list.append(table_name)
                     cur_table = cur_table.sub_tables[-1]
+                    cur_table.fk_name = unique_fk_name(fk_list, \
+                        string.join(path.split('/'), '_'))
                 
                 # cur loop node is up at least one level
                 else:
@@ -158,20 +214,31 @@ def gen_sql(map_root, pre):
                     while cur_table.parent and not cur_table.is_match_parent(parent):
                         cur_table = cur_table.parent
                     
-                    table_name = '%s%s_%s' % (TRANS_PRE, node.id, format_name(node.name))
+                    #table_name = '%s%s_%s' % (TRANS_PRE, node.id, format_name(node.name))
+                    table_name = unique_tablename('%s_%s' % (node.id, format_name(node.name)), \
+                        parent, table_list)
                     pk = '%s_num' % (node.id)
                     cur_table.sub_tables.append(table(table_name, pk, path, cur_table))
+                    table_list.append(table_name)
                     cur_table = cur_table.sub_tables[-1]
+                    cur_table.fk_name = unique_fk_name(fk_list, \
+                        string.join(path.split('/'), '_'))
             else:
-                table_name = '%s%s_%s' % (TRANS_PRE, node.id, format_name(node.name))
+                #table_name = '%s%s_%s' % (TRANS_PRE, node.id, format_name(node.name))
+                table_name = unique_tablename('%s_%s' % (node.id, format_name(node.name)), \
+                    parent, table_list)
                 pk = '%s_num' % (node.id)
                 cur_table.sub_tables.append(table(table_name, pk, path, cur_table))
+                table_list.append(table_name)
                 cur_table = cur_table.sub_tables[-1]
+                cur_table.fk_name = unique_fk_name(fk_list, \
+                    string.join(path.split('/'), '_'))
                 
         elif node.is_segment():
             cur_table.field_prefix = '' #%s' % (node.id)
             if node.children[0].is_element() \
-                and node.children[0].data_type == 'ID':
+                and node.children[0].data_type == 'ID' \
+                and node.children[0].valid_codes:
                 cur_table.field_prefix = '%s' % (node.children[0].valid_codes[0])
             # Find parent loop
             #pdb.set_trace()
@@ -182,14 +249,20 @@ def gen_sql(map_root, pre):
             #    continue
             if node.get_max_repeat() != 1: # Create sub table
                 # who is parent
-                table_name = '%s%s_%s' % (TRANS_PRE, node.id, format_name(node.name))
+                parent_id = parent.split('/')[-1]
+                #table_name = '%s%s_%s_%s' % (TRANS_PRE, parent_id, node.id, format_name(node.name))
+                table_name = unique_tablename('%s_%s' % (node.id, format_name(node.name)), \
+                    parent, table_list)
                 pk = '%s_num' % (node.id)
                 cur_table.sub_tables.append(table(table_name, pk, path, cur_table))
+                table_list.append(table_name)
                 cur_table = cur_table.sub_tables[-1]
+                cur_table.fk_name = unique_fk_name(fk_list, \
+                    string.join(path.split('/'), '_'))
         elif node.is_element():
             if node.usage == 'N':
                 continue
-            field_name = '%s_%s_%s' % (node.id, cur_table.field_prefix, format_name(node.name))
+            #field_name = '%s_%s_%s' % (node.id, cur_table.field_prefix, format_name(node.name))
             type = ''
             if node.data_type in ('DT', 'TM'):
                 type = ' [datetime]'
@@ -206,13 +279,12 @@ def gen_sql(map_root, pre):
                 raise SQL_Error, 'bad type %s' % (node.data_type)
             type += ' NULL'
             type += '  -- %s(%s, %s)' % (node.data_type, node.min_len, node.max_len)
+            field_name = cur_table._get_unique_field_name(node.id, \
+                format_name(node.name))
             cur_table.fields.append((field_name, type))
         elif node.is_composite():
             pass
-
     return st_loop
-
-
 
    
 def usage():
@@ -231,7 +303,7 @@ def main():
     import getopt
     param = pyx12.params.params()
     try:
-        opts, args = getopt.getopt(sys.argv[1:], 'c:fm:p:qv')
+        opts, args = getopt.getopt(sys.argv[1:], 'c:f:m:p:qv')
     except getopt.error, msg:
         usage()
         sys.exit(2)
@@ -243,14 +315,15 @@ def main():
     stderr_hdlr.setFormatter(formatter)
     logger.addHandler(stderr_hdlr)
 
+    prefix = None
     #param.set_param('map_path', os.path.expanduser('/usr/local/share/pyx12/map'))
     #param.set_param('pickle_path', os.path.expanduser('/tmp'))
     for o, a in opts:
         if o == '-v': logger.setLevel(logging.DEBUG)
         if o == '-q': logger.setLevel(logging.ERROR)
-        if o == '-f': param.set_param('force_map_load', True)
         if o == '-m': param.set_param('map_path', a)
         if o == '-p': param.set_param('pickle_path', a)
+        if o == '-f': prefix = a
         if o == '-l':
             try:
                 hdlr = logging.FileHandler(a)
@@ -263,9 +336,11 @@ def main():
 
     for map_filename in args:
         try:
-            pre = map_filename.split('.')[0]
-            sql = gen_sql(pyx12.map_if.map_if(os.path.join(map_path, map_filename), param), pre)
-            print sql
+            if not prefix:
+                prefix = map_filename.split('.')[0]
+            sql = gen_sql(pyx12.map_if.map_if(os.path.join(map_path, map_filename), param), prefix)
+            print sql.generate()
+            #print sql
         except IOError:
             logger.error('Could not open files')
             usage()
@@ -278,17 +353,4 @@ def main():
 #profile.run('x12n_document(src_filename)', 'pyx12.prof')
 if __name__ == '__main__':
     sys.exit(not main())
-
-    def pop_to_parent_loop(self, node):
-        if node.is_map_root():
-            return node
-        map_node = node.parent
-        if map_node is None:
-            raise EngineError, "Node is None: %s" % (node.name)
-        while not (map_node.is_loop() or map_node.is_map_root()): 
-            map_node = map_node.parent
-        if not (map_node.is_loop() or map_node.is_map_root()):
-            raise EngineError, "Called pop_to_parent_loop, can't find parent loop"
-        return map_node
-        
 
