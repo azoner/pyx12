@@ -46,7 +46,7 @@ def usage():
     sys.stdout.write('%s %s (%s)\n' % (pgm_nme, __version__, __date__))
     sys.stdout.write('usage: %s [options] source_file\n' % (pgm_nme))
     sys.stdout.write('\noptions:\n')
-    sys.stdout.write('  -c <b|e>   Specify X12 character set: b=basic, e=extended\n')
+    sys.stdout.write('  -c <file>  XML configuration file\n')
     sys.stdout.write('  -f         Force map load.  Do not use the map pickle file\n')
     sys.stdout.write('  -H         Create HTML output file\n')
     sys.stdout.write('  -l <file>  Output log\n')
@@ -54,15 +54,15 @@ def usage():
     sys.stdout.write('  -o <file>  Output file\n')
     sys.stdout.write('  -p <path>  Path to to pickle files\n')
     sys.stdout.write('  -q         Quiet output\n')
+    sys.stdout.write('  -s <b|e>   Specify X12 character set: b=basic, e=extended\n')
     sys.stdout.write('  -v         Verbose output\n')
     sys.stdout.write('  -x <tag>   Exclude external code\n')
 
 def main():
     """Script main program."""
     import getopt
-    param = pyx12.params.params()
     try:
-        opts, args = getopt.getopt(sys.argv[1:], 'c:fl:m:o:p:qvx:Hh')
+        opts, args = getopt.getopt(sys.argv[1:], 'c:fl:m:o:p:qs:vx:Hh')
     except getopt.error, msg:
         usage()
         raise
@@ -77,6 +77,17 @@ def main():
     logger.addHandler(stderr_hdlr)
     logger.setLevel(logging.INFO)
     target_xml = None
+    for o, a in opts:
+        if o == '-c':
+            configfile = a
+    if configfile:
+        param = pyx12.params.params('/usr/local/etc/pyx12.conf.xml',\
+            os.path.expanduser('~/.pyx12.conf.xml'), \
+            configfile)
+    else:
+        param = pyx12.params.params('/usr/local/etc/pyx12.conf.xml',\
+            os.path.expanduser('~/.pyx12.conf.xml'))
+
     #param.set('map_path', os.path.expanduser('~/src/pyx12/map/'))
     for o, a in opts:
         if o == '-h':
@@ -84,12 +95,12 @@ def main():
             return True
         if o == '-v': logger.setLevel(logging.DEBUG)
         if o == '-q': logger.setLevel(logging.ERROR)
-        if o == '-c': param.set('charset', a)
         if o == '-x': param.set('exclude_external_codes', a)
         if o == '-f': param.set('force_map_load', True)
         if o == '-m': param.set('map_path', a)
         if o == '-o': target_xml = a
         if o == '-p': param.set('pickle_path', a)
+        if o == '-s': param.set('charset', a)
         if o == '-H': flag_html = True
         if o == '-l':
             try:

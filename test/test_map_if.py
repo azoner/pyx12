@@ -8,14 +8,14 @@ import unittest
 import pyx12.error_handler
 from pyx12.errors import *
 import pyx12.map_if
-from pyx12.params import params
+import pyx12.params 
 import pyx12.segment
 
 class ElementIsValidDate(unittest.TestCase):
     """
     """
     def setUp(self):
-        param = params()
+        param = pyx12.params.params('pyx12.conf.xml')
         param.set('map_path', os.path.expanduser('~/src/pyx12/map/'))
         param.set('pickle_path', os.path.expanduser('~/src/pyx12/map/'))
         self.map = pyx12.map_if.load_map_file('837.4010.X096.A1.xml', param)
@@ -96,7 +96,7 @@ class SegmentIsValid(unittest.TestCase):
     """
     """
     def setUp(self):
-        param = params()
+        param = pyx12.params.params('pyx12.conf.xml')
         param.set('map_path', os.path.expanduser('~/src/pyx12/map/'))
         param.set('pickle_path', os.path.expanduser('~/src/pyx12/map/'))
         self.map = pyx12.map_if.load_map_file('837.4010.X096.A1.xml', param)
@@ -116,7 +116,7 @@ class Element_is_valid(unittest.TestCase):
     """
     """
     def setUp(self):
-        param = params()
+        param = pyx12.params.params('pyx12.conf.xml')
         param.set('map_path', os.path.expanduser('~/src/pyx12/map/'))
         param.set('pickle_path', os.path.expanduser('~/src/pyx12/map/'))
         self.map = pyx12.map_if.load_map_file('837.4010.X098.A1.xml', param)
@@ -324,7 +324,7 @@ class Test_getnodebypath(unittest.TestCase):
     """
     """
     def setUp(self):
-        param = params()
+        param = pyx12.params.params('pyx12.conf.xml')
         param.set('map_path', os.path.expanduser('~/src/pyx12/map/'))
         param.set('pickle_path', os.path.expanduser('~/src/pyx12/map/'))
         self.map = pyx12.map_if.load_map_file('837.4010.X098.A1.xml', param)
@@ -399,7 +399,7 @@ class Test_getnodebypath(unittest.TestCase):
 
     def test_get_TST(self):
         path = '/TST'
-        param = params()
+        param = pyx12.params.params('pyx12.conf.xml')
         param.set('map_path', os.path.expanduser('~/src/pyx12/map/'))
         param.set('pickle_path', os.path.expanduser('~/src/pyx12/map/'))
         map = pyx12.map_if.load_map_file('comp_test.xml', param)
@@ -414,7 +414,7 @@ class Test_getnodebypath(unittest.TestCase):
 
 class CompositeRequirement(unittest.TestCase):
     def setUp(self):
-        param = params()
+        param = pyx12.params.params('pyx12.conf.xml')
         param.set('map_path', os.path.expanduser('~/src/pyx12/map/'))
         param.set('pickle_path', os.path.expanduser('~/src/pyx12/map/'))
         self.map = pyx12.map_if.load_map_file('837.4010.X098.A1.xml', param)
@@ -434,7 +434,7 @@ class CompositeRequirement(unittest.TestCase):
 
     def test_comp_required_ok2(self):
         self.errh.err_cde = None
-        param = params()
+        param = pyx12.params.params('pyx12.conf.xml')
         param.set('map_path', os.path.expanduser('~/src/pyx12/map/'))
         param.set('pickle_path', os.path.expanduser('~/src/pyx12/map/'))
         map = pyx12.map_if.load_map_file('comp_test.xml', param)
@@ -450,7 +450,7 @@ class CompositeRequirement(unittest.TestCase):
 
     def test_comp_S_sub_R_ok3(self):
         self.errh.err_cde = None
-        param = params()
+        param = pyx12.params.params('pyx12.conf.xml')
         param.set('map_path', os.path.expanduser('~/src/pyx12/map/'))
         param.set('pickle_path', os.path.expanduser('~/src/pyx12/map/'))
         map = pyx12.map_if.load_map_file('837.4010.X096.xml', param)
@@ -492,7 +492,7 @@ class CompositeRequirement(unittest.TestCase):
 
 class TrailingSpaces(unittest.TestCase):
     def setUp(self):
-        param = params()
+        param = pyx12.params.params('pyx12.conf.xml')
         param.set('map_path', os.path.expanduser('~/src/pyx12/map/'))
         param.set('pickle_path', os.path.expanduser('~/src/pyx12/map/'))
         self.map = pyx12.map_if.load_map_file('837.4010.X098.A1.xml', param)
@@ -537,7 +537,7 @@ class TrailingSpaces(unittest.TestCase):
 
 class ElementRequirement(unittest.TestCase):
     def setUp(self):
-        param = params()
+        param = pyx12.params.params('pyx12.conf.xml')
         param.set('map_path', os.path.expanduser('~/src/pyx12/map/'))
         param.set('pickle_path', os.path.expanduser('~/src/pyx12/map/'))
         self.map = pyx12.map_if.load_map_file('837.4010.X098.A1.xml', param)

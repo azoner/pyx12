@@ -38,16 +38,16 @@ class SQL_Error(Exception):
     """Class for SQL errors."""
 
 class table:
-    def __init__(self, node_id, node_name, path, parent=None, type='loop'):
+    def __init__(self, node_id, node_name, path, parent=None, etype='loop'):
         self.parent = parent
         if self.parent:
             self.root = self.parent.root
-        self.name = self.root.unique_tablename(node_id, node_name, path, type)
+        self.name = self.root.unique_tablename(node_id, node_name, path, etype)
         self.pk = '%s_%s_num' % (self.root.prefix, node_id)
         self.path = path
         self.field_prefix = ''
         self.fk_name = self.root.unique_fk_name(path)
-        self.fields = [] # (name, type)
+        self.fields = [] # (name, etype)
         self.sub_tables = []
         self.root.table_list.append(self.name)
 
@@ -142,10 +142,10 @@ class root_table(table):
             str1 += table1.generate()
         return str1
 
-    def unique_tablename(self, node_id, node_name, path, type='loop'): 
+    def unique_tablename(self, node_id, node_name, path, etype='loop'): 
         clean_name = self.format_name(node_name)
         parents = path[1:].split('/')
-        if type == 'loop' or len(parents) <= 2:
+        if etype == 'loop' or len(parents) <= 2:
             table_name = ('%s_%s_%s' % (self.prefix, node_id, clean_name))[:120]
         else:
             table_name = ('%s_%s_%s_%s' % (self.prefix, parents[-2], node_id, clean_name))[:120]
@@ -187,9 +187,8 @@ def gen_sql(map_root, prefix):
         
         if node.id is None:
             continue
-        id = node.id
-        if id[:3] in ('ISA', 'IEA', 'TA1') or \
-            id[:2] in ('GS', 'GE', 'ST', 'SE'):
+        if node.id[:3] in ('ISA', 'IEA', 'TA1') or \
+            node.id[:2] in ('GS', 'GE', 'ST', 'SE'):
             continue
         if node.is_map_root():
             continue
@@ -244,25 +243,25 @@ def gen_sql(map_root, prefix):
             if node.usage == 'N':
                 continue
             #field_name = '%s_%s_%s' % (node.id, cur_table.field_prefix, format_name(node.name))
-            type = ''
+            vtype = ''
             if node.data_type in ('DT', 'TM'):
-                type = ' [datetime]'
+                vtype = ' [datetime]'
             elif node.data_type in ('AN', 'ID'):
                 if node.min_len == node.max_len:
-                    type = ' [char] (%s)' % (node.max_len)
+                    vtype = ' [char] (%s)' % (node.max_len)
                 else:
-                    type = ' [varchar] (%s)' % (node.max_len)
+                    vtype = ' [varchar] (%s)' % (node.max_len)
             elif node.data_type == 'N0':
-                type = ' [int]'
+                vtype = ' [int]'
             elif node.data_type == 'R' or node.data_type[0] == 'N':
-                type = ' [float]'
-            if type is None:
+                vtype = ' [float]'
+            if vtype is None:
                 raise SQL_Error, 'bad type %s' % (node.data_type)
-            type += ' NULL'
-            type += '  -- %s(%s, %s)' % (node.data_type, node.min_len, node.max_len)
+            vtype += ' NULL'
+            vtype += '  -- %s(%s, %s)' % (node.data_type, node.min_len, node.max_len)
             field_name = cur_table._get_unique_field_name(node.id, \
                 format_name(node.name))
-            cur_table.fields.append((field_name, type))
+            cur_table.fields.append((field_name, vtype))
         elif node.is_composite():
             pass
     return st_loop

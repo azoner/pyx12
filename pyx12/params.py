@@ -15,17 +15,21 @@ Holds Run-time Parameters
 
 Order of precedence:
  1. set(param) - Command line parameters
- 2. Config file given on command line using -c
- 3. '~/.pyx12rc' - User's directory
- 4. '/usr/local/etc/pyx12.conf' - Site default
- 5. self.params - Defaults
+ 2. Config files as constructor parameters
+ 3. self.params - Defaults
 """
 import os.path
 #import StringIO
 import libxml2
+import logging
+
+NodeType = {'element_start': 1, 'element_end': 15, 'attrib': 2, 'text': 3,
+    'CData': 4, 'entity_ref': 5, 'entity_decl':6, 'pi': 7, 'comment': 8,
+    'doc': 9, 'dtd': 10, 'doc_frag': 11, 'notation': 12}
 
 class params:
-    def __init__(self, config_file=None):
+    def __init__(self, *config_files):
+        self.logger = logging.getLogger('pyx12.params')
         self.params = {}
         self.params['map_path'] = '/usr/local/share/pyx12/map'
         self.params['pickle_path'] = '/usr/local/share/pyx12/map'
@@ -39,36 +43,55 @@ class params:
         self.params['simple_dtd'] = 'http://www.kazoocmh.org/x12simple.dtd'
         self.params['idtag_dtd'] = 'http://www.kazoocmh.org/x12idtag.dtd'
         
-        self._get_config_file('/usr/local/etc/pyx12.conf')
-        self._get_config_file(os.path.expanduser('~/.pyx12rc'))
-        if config_file:
-            self._get_config_file(config_file)
+        for filename in config_files:
+            self._read_config_file(filename)
+        #self._read_config_file('/usr/local/etc/pyx12.conf.xml')
+        #self._read_config_file(os.path.expanduser('~/.pyx12.conf.xml'))
+        #if config_file:
+        #    self._read_config_file(config_file)
 
-    def _get_config_file(self, filename):
-        if os.path.isfile(filename):
-            reader = libxml2.newTextReaderFilename(filename)
-            ret = self.reader.Read()
-            while ret == 1:
-                tmpNodeType = self.reader.NodeType()
-                if tmpNodeType == NodeType['element_start']:
-                    option = None
-                    value = None
-                    cur_name = self.reader.Name()
-                    if cur_name == 'transaction':
-                        base_name = 'transaction'
-                    elif cur_name == 'param':
-                        base_name = 'param'
-                        option = @name
-                    elif cur_name == 'type':
-                        base_name = 'type'
-                elif tmpNodeType == NodeType['element_end']:
-                    if option and value is not None:
-                        self.params[option] = value
-                elif tmpNodeType == NodeType['text']:
-                    if cur_name == 'id' and self.base_name == 'transaction':
-                        value = self.reader.Value()
-                        self.id = self.reader.Value()
-                ret = self.reader.Read()
+    def _read_config_file(self, filename):
+        """
+        Read program configuration from an XML file
+
+        @param filename: XML file
+        @type filename: string
+        @return: None
+        """
+        try:
+            if os.path.isfile(filename):
+                reader = libxml2.newTextReaderFilename(filename)
+                ret = reader.Read()
+                while ret == 1:
+                    tmpNodeType = reader.NodeType()
+                    if tmpNodeType == NodeType['element_start']:
+                        cur_name = reader.Name()
+                        if cur_name == 'param':
+                            option = None
+                            value = None
+                            valtype = None
+                            while reader.MoveToNextAttribute():
+                                if reader.Name() == 'name':
+                                    option = reader.Value()
+                    elif tmpNodeType == NodeType['element_end']:
+                        if option is not None and value is not None:
+                            if valtype == 'boolean':
+                                if value in ('False', 'F'):
+                                    self.params[option] = False
+                                else:
+                                    self.params[option] = True
+                            else:
+                                self.params[option] = value
+                            self.logger.debug('Params: option "%s": "%s"' % (option, self.params[option]))
+                    elif tmpNodeType == NodeType['text']:
+                        if cur_name == 'value':
+                            value = reader.Value()
+                        elif cur_name == 'type':
+                            valtype = reader.Value()
+                    ret = reader.Read()
+        except:
+            self.logger.error('Read of configuration file "%s" failed' % (filename))
+            raise
 
     def get(self, option):
         """

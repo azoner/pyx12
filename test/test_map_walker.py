@@ -13,7 +13,7 @@ import pyx12.error_handler
 from pyx12.errors import *
 from pyx12.map_walker import walk_tree
 import pyx12.map_if
-from pyx12.params import params
+import pyx12.params 
 import pyx12.segment
 
 
@@ -21,7 +21,7 @@ class Explicit_Loops(unittest.TestCase):
 
     def setUp(self):
         self.walker = walk_tree()
-        param = params()
+        param = pyx12.params.params('pyx12.conf.xml')
         param.set('map_path', os.path.expanduser('~/src/pyx12/map/'))
         param.set('pickle_path', os.path.expanduser('~/src/pyx12/map/'))
         self.map = pyx12.map_if.load_map_file('837.4010.X098.A1.xml', param)
@@ -118,10 +118,10 @@ class Implicit_Loops(unittest.TestCase):
 
     def setUp(self):
         self.walker = walk_tree()
-        param = params()
-        param.set('map_path', os.path.expanduser('~/src/pyx12/map/'))
-        param.set('pickle_path', os.path.expanduser('~/src/pyx12/map/'))
-        self.map = pyx12.map_if.load_map_file('837.4010.X098.A1.xml', param)
+        self.param = pyx12.params.params('pyx12.conf.xml')
+        self.param.set('map_path', os.path.expanduser('~/src/pyx12/map/'))
+        self.param.set('pickle_path', os.path.expanduser('~/src/pyx12/map/'))
+        self.map = pyx12.map_if.load_map_file('837.4010.X098.A1.xml', self.param)
         self.errh = pyx12.error_handler.errh_null()
 
     def test_ST_to_BHT(self):
@@ -131,10 +131,7 @@ class Implicit_Loops(unittest.TestCase):
         self.assertEqual(seg_data.get_seg_id(), node.id)
 
     def test_repeat_loop_with_one_segment(self):
-        param = params()
-        param.set('map_path', os.path.expanduser('~/src/pyx12/map/'))
-        param.set('pickle_path', os.path.expanduser('~/src/pyx12/map/'))
-        map = pyx12.map_if.load_map_file('841.4010.XXXC.xml', param)
+        map = pyx12.map_if.load_map_file('841.4010.XXXC.xml', self.param)
         node = map.getnodebypath('/ISA_LOOP/GS_LOOP/ST_LOOP/DETAIL/2000/2100/SPI')
         self.assertNotEqual(node, None, 'Node not found')
         seg_data = pyx12.segment.segment('SPI*00', '~', '*', ':')
@@ -202,10 +199,10 @@ class SegmentWalk(unittest.TestCase):
 
     def setUp(self):
         self.walker = walk_tree()
-        param = params()
-        param.set('map_path', os.path.expanduser('~/src/pyx12/map/'))
-        param.set('pickle_path', os.path.expanduser('~/src/pyx12/map/'))
-        self.map = pyx12.map_if.load_map_file('837.4010.X098.A1.xml', param)
+        self.param = pyx12.params.params('pyx12.conf.xml')
+        self.param.set('map_path', os.path.expanduser('~/src/pyx12/map/'))
+        self.param.set('pickle_path', os.path.expanduser('~/src/pyx12/map/'))
+        self.map = pyx12.map_if.load_map_file('837.4010.X098.A1.xml', self.param)
         self.errh = pyx12.error_handler.errh_null()
 
     def test_match_regular_segment(self):
@@ -245,10 +242,7 @@ class SegmentWalk(unittest.TestCase):
         self.assertEqual(errh.err_cde, '3', errh.err_str)
    
     def test_found_unused_segment1(self):
-        param = params()
-        param.set('map_path', os.path.expanduser('~/src/pyx12/map/'))
-        param.set('pickle_path', os.path.expanduser('~/src/pyx12/map/'))
-        map = pyx12.map_if.load_map_file('comp_test.xml', param)
+        map = pyx12.map_if.load_map_file('comp_test.xml', self.param)
         node = map.getnodebypath('/TST')
         self.assertNotEqual(node, None)
         self.assertEqual(node.base_name, 'segment')
@@ -269,7 +263,7 @@ class Segment_ID_Checks(unittest.TestCase):
 
     def setUp(self):
         self.walker = walk_tree()
-        param = params()
+        param = pyx12.params.params('pyx12.conf.xml')
         param.set('map_path', os.path.expanduser('~/src/pyx12/map/'))
         param.set('pickle_path', os.path.expanduser('~/src/pyx12/map/'))
         self.map = pyx12.map_if.load_map_file('837.4010.X098.A1.xml', param)
@@ -295,7 +289,7 @@ class Counting(unittest.TestCase):
 
     def setUp(self):
         self.walker = walk_tree()
-        param = params()
+        param = pyx12.params.params('pyx12.conf.xml')
         param.set('map_path', os.path.expanduser('~/src/pyx12/map/'))
         param.set('pickle_path', os.path.expanduser('~/src/pyx12/map/'))
         self.map = pyx12.map_if.load_map_file('270.4010.X092.A1.xml', param)
@@ -338,7 +332,7 @@ class LoopCounting(unittest.TestCase):
 
     def setUp(self):
         self.walker = walk_tree()
-        param = params()
+        param = pyx12.params.params('pyx12.conf.xml')
         param.set('map_path', os.path.expanduser('~/src/pyx12/map/'))
         param.set('pickle_path', os.path.expanduser('~/src/pyx12/map/'))
         self.map = pyx12.map_if.load_map_file('837.4010.X098.A1.xml', param)
@@ -369,7 +363,7 @@ class CountOrdinal(unittest.TestCase):
 
     def setUp(self):
         self.walker = walk_tree()
-        param = params()
+        param = pyx12.params.params('pyx12.conf.xml')
         param.set('map_path', os.path.expanduser('~/src/pyx12/map/'))
         param.set('pickle_path', os.path.expanduser('~/src/pyx12/map/'))
         self.map = pyx12.map_if.load_map_file('834.4010.X095.A1.xml', param)

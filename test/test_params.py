@@ -32,10 +32,26 @@ class SetParamOverride(unittest.TestCase):
         self.assertEqual(self.param.get('exclude_external_codes'), 'states,diagnosis')
 
 
+class ReadConfigFile(unittest.TestCase):
+    def setUp(self):
+        self.param = pyx12.params.params('pyx12test.conf.xml')
+
+    def test_changed(self):
+        self.assertEqual(self.param.get('map_path'), '/opt1/local/share/pyx12/map')
+        self.assertEqual(self.param.get('exclude_external_codes'), 'taxonomy,states')
+        self.assertEqual(self.param.get('ignore_syntax'), True)
+        self.assertEqual(self.param.get('charset'), 'B')
+
+    def test_unchanged(self):
+        self.assertEqual(self.param.get('pickle_path'), '/usr/local/share/pyx12/map')
+        self.assertEqual(self.param.get('ignore_codes'), False)
+        self.assertEqual(self.param.get('skip_html'), False)
+
 def suite():
     suite = unittest.TestSuite()
     suite.addTest(unittest.makeSuite(Default))
     suite.addTest(unittest.makeSuite(SetParamOverride))
+    suite.addTest(unittest.makeSuite(ReadConfigFile))
     return suite
 
 #if __name__ == "__main__":

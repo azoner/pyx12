@@ -1,5 +1,6 @@
 #! /usr/bin/env /usr/local/bin/python
 
+import pyx12
 import pyx12.x12file
 import pyx12.error_handler
 import sys
@@ -11,6 +12,11 @@ Format a X12 document.  If the option -e is used, it adds newlines.
 If no source file is given, read from stdin.
 If no ouput filename is given with -o,  write to stdout.
 """
+
+__author__  = pyx12.__author__
+__status__  = pyx12.__status__
+__version__ = pyx12.__version__
+__date__    = pyx12.__date__
 
 def usage():
     pgm_nme = os.path.basename(sys.argv[0])

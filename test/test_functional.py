@@ -50,7 +50,7 @@ def main():
     """
     Set up environment for processing
     """
-    param = pyx12.params.params()
+    param = pyx12.params.params('pyx12.conf.xml')
     logger = logging.getLogger('pyx12')
     logger.setLevel(logging.CRITICAL)
     formatter = logging.Formatter('%(asctime)s %(levelname)s %(module)s %(lineno)d %(message)s')

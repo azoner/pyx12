@@ -39,15 +39,17 @@ def usage():
     sys.stdout.write('%s %s (%s)\n' % (pgm_nme, __version__, __date__))
     sys.stdout.write('usage: %s [options] source_files\n' % (pgm_nme))
     sys.stdout.write('\noptions:\n')
-    sys.stdout.write('  -c <b|e>   Specify X12 character set: b=basic, e=extended\n')
+    sys.stdout.write('  -c <file>  XML configuration file\n')
     sys.stdout.write('  -d         Debug Mode.  Implies verbose output\n')
     sys.stdout.write('  -f         Force map load.  Do not use the map pickle file\n')
     sys.stdout.write('  -H         Create HTML output file\n')
     sys.stdout.write('  -l <file>  Output log\n')
     sys.stdout.write('  -m <path>  Path to map files\n')
+    #sys.stdout.write('  -o <file>  Override file\n')
     sys.stdout.write('  -p <path>  Path to to pickle files\n')
     sys.stdout.write('  -P         Profile script\n')
     sys.stdout.write('  -q         Quiet output\n')
+    sys.stdout.write('  -s <b|e>   Specify X12 character set: b=basic, e=extended\n')
     sys.stdout.write('  -v         Verbose output\n')
     sys.stdout.write('  -x <tag>   Exclude external code\n')
     
@@ -56,9 +58,8 @@ def main():
     Set up environment for processing
     """
     import getopt
-    param = pyx12.params.params()
     try:
-        opts, args = getopt.getopt(sys.argv[1:], 'c:dfl:m:p:qvx:HP')
+        opts, args = getopt.getopt(sys.argv[1:], 'c:dfl:m:p:qs:vx:HP')
     except getopt.error, msg:
         usage()
         return False
@@ -79,12 +80,21 @@ def main():
     flag_997 = True
     profile = False
     debug = False
-    #param.set('map_path', os.path.expanduser('/usr/local/share/pyx12/map'))
-    #param.set('pickle_path', os.path.expanduser('/tmp'))
+    configfile = None
+    for o, a in opts:
+        if o == '-c':
+            configfile = a
+    if configfile:
+        param = pyx12.params.params('/usr/local/etc/pyx12.conf.xml',\
+            os.path.expanduser('~/.pyx12.conf.xml'), \
+            configfile)
+    else:
+        param = pyx12.params.params('/usr/local/etc/pyx12.conf.xml',\
+            os.path.expanduser('~/.pyx12.conf.xml'))
+
     for o, a in opts:
         if o == '-v': logger.setLevel(logging.DEBUG)
         if o == '-q': logger.setLevel(logging.ERROR)
-        if o == '-c': param.set('charset', a)
         if o == '-d': 
             param.set('debug', True)
             debug = True
@@ -93,6 +103,7 @@ def main():
         if o == '-m': param.set('map_path', a)
         if o == '-p': param.set('pickle_path', a)
         if o == '-P': profile = True
+        if o == '-s': param.set('charset', a)
         if o == '-H': flag_html = True
         if o == '-l':
             try:

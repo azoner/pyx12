@@ -9,14 +9,14 @@ import pyx12.error_handler
 #from error_handler import ErrorErrhNull
 from pyx12.errors import *
 import pyx12.map_if
-from pyx12.params import params
+import pyx12.params
 
 
 class TestExternal(unittest.TestCase):
     """
     """
     def setUp(self):
-        param = params()
+        param = pyx12.params.params('pyx12.conf.xml')
         param.set('map_path', os.path.expanduser('~/src/pyx12/map/'))
         self.ext_codes = pyx12.codes.ExternalCodes(param.get('map_path'), \
             param.get('exclude_external_codes'))
@@ -31,7 +31,7 @@ class TestExternal(unittest.TestCase):
         self.failIf(self.ext_codes.IsValid('states', 'AN', '20031001'))
 
     def test_exclude_state_code(self):
-        param = params()
+        param = pyx12.params.params('pyx12.conf.xml')
         param.set('map_path', os.path.expanduser('~/src/pyx12/map/'))
         param.set('exclude_external_codes', 'states')
         ext_codes = pyx12.codes.ExternalCodes(param.get('map_path'), \
@@ -39,7 +39,7 @@ class TestExternal(unittest.TestCase):
         self.failUnless(ext_codes.IsValid('states', 'ZZ'))
 
     def test_noexclude_state_code(self):
-        param = params()
+        param = pyx12.params.params('pyx12.conf.xml')
         param.set('map_path', os.path.expanduser('~/src/pyx12/map/'))
         ext_codes = pyx12.codes.ExternalCodes(param.get('map_path'), \
             param.get('exclude_external_codes'))

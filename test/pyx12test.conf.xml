@@ -13,33 +13,24 @@
 #    $Id$
 -->
 
-<!-- pyx12 configuration file
-This file can be copied to the system-wide configuration directory
-(/usr/local/etc), to a user's home directory as ~/.pyx12.conf.xml,
-or can be passed on the command line using the -c option
--->
+<!-- pyx12 configuration file -->
 
 <params version="1.0">
     <param name="map_path">
-        <value>/usr/local/share/pyx12/map</value>
+        <value>/opt1/local/share/pyx12/map</value>
         <comment>Where to find the xml maps</comment>
     </param>
-    <param name="pickle_path">
-        <value>/usr/local/share/pyx12/map</value>
-        <comment>Where to find the serialized versions of the xml maps, if compiled</comment>
-    </param>
     <param name="exclude_external_codes">
-        <!--<value>states</value>-->
-        <value></value>
+        <value>taxonomy,states</value>
         <comment>Comma separated list of external_codes to exclude</comment>
     </param>
     <param name="ignore_syntax">
         <type>boolean</type>
-        <value>False</value>
+        <value>True</value>
         <comment>Ignore syntax validation</comment>
     </param>
     <param name="charset">
-        <value>E</value>
+        <value>B</value>
         <comment>E = extended, B = Basic</comment>
     </param>
     <param name="ignore_codes">

@@ -57,8 +57,8 @@ def main():
 
         # init the map from the pickled file
         try:
-            map = pyx12.map_if.map_if(map_file, param)
-            cPickle.dump(map, open(os.path.join(pickle_dir, pickle_file),'w'))
+            map1 = pyx12.map_if.map_if(map_file, param)
+            cPickle.dump(map1, open(os.path.join(pickle_dir, pickle_file),'w'))
         except:
             print 'Pickle failed for %s' % (map_file)
 
