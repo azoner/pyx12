@@ -192,6 +192,9 @@ class walk_tree:
 
         @return: Does the segment match the first segment node in the loop?
         @rtype: boolean
+
+        @todo: Match a child of wrapping loops
+        @todo: loop counting checks
         """
         if not loop_node.is_loop(): raise EngineError, \
             "Call to first_seg_match failed, node %s is not a loop. seg %s" \
@@ -202,7 +205,7 @@ class walk_tree:
             if loop_node.usage == 'N':
                 err_str = "Loop %s found but marked as not used" % (loop_node.id)
                 errh.seg_error('2', err_str, None)
-            elif loop_node.usage == 'R' or loop_node.usage == 'S':
+            elif loop_node.usage in ('R', 'S'):
                 loop_node.cur_count += 1
                 loop_node.reset_cur_count()
                 first_child_node.cur_count = 1
