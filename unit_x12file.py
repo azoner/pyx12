@@ -12,6 +12,39 @@ import error_handler
 from errors import *
 import x12file
 
+class Delimiters(unittest.TestCase):
+
+    def setUp(self):
+        self.fd = None
+        self.errh = error_handler.errh_null()
+
+    def test_delimiters(self):
+        str = 'ISA&00&          &00&          &ZZ&ZZ000          &ZZ&ZZ001          &030828&1128&U&00401&000010121&0&T&!+\n'
+        str += 'GS&HC&ZZ000&ZZ001&20030828&1128&17&X&004010X098+\n'
+        str += 'ST&837&11280001+\n'
+        str += 'TST&AA!1!1&BB!5+\n'
+        str += 'SE&3&11280001+\n'
+        str += 'GE&1&17+\n'
+        str += 'IEA&1&000010121+\n'
+        self.fd = StringIO.StringIO(str)
+        src = x12file.x12file(self.fd, self.errh)
+        for seg in src:
+            pass
+        self.assertEqual(self.errh.err_cde, None)
+        self.assertEqual(src.subele_term, '!')
+        self.assertEqual(src.ele_term, '&')
+        self.assertEqual(src.seg_term, '+')
+
+    def test_trailing_ele_delim(self):
+        str = 'ISA*00*          *00*          *ZZ*ZZ000          *ZZ*ZZ001          *030828*1128*U*00401*000010121*0*T*:~\n'
+        str += 'ZZ****~\n'
+        self.fd = StringIO.StringIO(str)
+        src = x12file.x12file(self.fd, self.errh)
+        for seg in src:
+            pass
+        self.assertEqual(self.errh.err_cde, 'SEG1', self.errh.err_str)
+
+                    
 class ISA_header(unittest.TestCase):
 
     def setUp(self):
@@ -109,7 +142,6 @@ class GE_Checks(unittest.TestCase):
         self.assertEqual(self.errh.err_cde, '4', self.errh.err_str)
 
     def test_GE_count(self):
-        seg = None
         str = 'ISA*00*          *00*          *ZZ*ZZ000          *ZZ*ZZ001          *030828*1128*U*00401*000010121*0*T*:~\n'
         str += 'GS*HC*ZZ000*ZZ001*20030828*1128*17*X*004010X098~\n'
         str += 'GE*999*17~\n'
@@ -121,7 +153,6 @@ class GE_Checks(unittest.TestCase):
         self.assertEqual(self.errh.err_cde, '5', self.errh.err_str)
 
     def test_Unique_Functional_Group_ID(self):
-        seg = None
         str = 'ISA*00*          *00*          *ZZ*ZZ000          *ZZ*ZZ001          *030828*1128*U*00401*000010121*0*T*:~\n'
         str += 'GS*HC*ZZ000*ZZ001*20030828*1128*17*X*004010X098~\n'
         str += 'GE*0*17~\n'
@@ -212,7 +243,7 @@ class HL_Checks(unittest.TestCase):
             pass
         self.assertEqual(self.errh.err_cde, None, self.errh.err_str)
 
-    def test_HL_increment_good(self):
+    def test_HL_increment_bad(self):
         seg = None
         str = 'ISA*00*          *00*          *ZZ*ZZ000          *ZZ*ZZ001          *030828*1128*U*00401*000010121*0*T*:~\n'
         str += 'GS*HC*ZZ000*ZZ001*20030828*1128*17*X*004010X098~\n'
@@ -233,6 +264,7 @@ class HL_Checks(unittest.TestCase):
 
 def suite():
     suite = unittest.TestSuite()
+    suite.addTest(unittest.makeSuite(Delimiters))
     suite.addTest(unittest.makeSuite(ISA_header))
     suite.addTest(unittest.makeSuite(IEA_Checks))
     suite.addTest(unittest.makeSuite(GE_Checks))

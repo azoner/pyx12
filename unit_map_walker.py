@@ -56,12 +56,14 @@ class Explicit_Loops(unittest.TestCase):
 
     def test_GE_to_IEA(self):
         node = self.map.getnodebypath('/GE')
+        self.assertEqual('GE', node.id)
         seg = ['IEA', '1']
         node = self.walker.walk(node, seg, self.errh, 5, 4, None)
         self.assertEqual(seg[0], node.id)
 
     def test_IEA_to_ISA(self):
         node = self.map.getnodebypath('/IEA')
+        self.assertEqual('IEA', node.id)
         seg = ['ISA', '1']
         node = self.walker.walk(node, seg, self.errh, 5, 4, None)
         self.assertEqual(seg[0], node.id)
@@ -171,11 +173,43 @@ class SegmentWalk(unittest.TestCase):
         del self.map
         del self.walker
         
+class Segment_ID_Checks(unittest.TestCase):
+
+    def setUp(self):
+        self.walker = walk_tree()
+        param = params()
+        self.map = map_if.load_map_file('map/837.4010.X098.A1.xml', param)
+        self.errh = error_handler.errh_null()
+        self.node = self.map.getnodebypath('/ST')
+
+    def test_segment_id_short(self):
+        node = self.node
+        seg = ['Z', '0019']
+        node = self.walker.walk(node, seg, self.errh, 5, 4, None)
+        self.assertEqual(node, None)
+        self.assertEqual(self.errh.err_cde, '1', self.errh.err_str)
+
+    def test_segment_id_long(self):
+        node = self.node
+        seg = ['ZZZZ', '0019']
+        node = self.walker.walk(node, seg, self.errh, 5, 4, None)
+        self.assertEqual(node, None)
+        self.assertEqual(self.errh.err_cde, '1', self.errh.err_str)
+
+    def test_segment_empty(self):
+        node = self.node
+        seg = []
+        node = self.walker.walk(node, seg, self.errh, 5, 4, None)
+        self.assertEqual(node, None)
+        self.assertEqual(self.errh.err_cde, '1', self.errh.err_str)
+
+
 def suite():
     suite = unittest.TestSuite()
     suite.addTest(unittest.makeSuite(Explicit_Loops))
     suite.addTest(unittest.makeSuite(Implicit_Loops))
     suite.addTest(unittest.makeSuite(SegmentWalk))
+    suite.addTest(unittest.makeSuite(Segment_ID_Checks))
     return suite
 
 #if __name__ == "__main__":
