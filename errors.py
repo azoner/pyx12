@@ -55,5 +55,4 @@ class WEDI4Error(WEDIError): pass
 class WEDI5Error(WEDIError): pass
 class WEDI6Error(WEDIError): pass
 class EngineError(Exception): 
-    """Base class for errors in this module."""
-
+    """Base class for translation engine errors."""
