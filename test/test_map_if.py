@@ -29,10 +29,12 @@ class Element_is_valid(unittest.TestCase):
         self.failIf(result)
         self.assertEqual(self.errh.err_cde, '4')
 
+        self.errh.err_cde = None
         result = node.is_valid('AA', self.errh)
         self.failUnless(result)
         self.assertEqual(self.errh.err_cde, None)
 
+        self.errh.err_cde = None
         result = node.is_valid('AAAAAA', self.errh)
         self.failIf(result)
         self.assertEqual(self.errh.err_cde, '5')
