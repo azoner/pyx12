@@ -27,7 +27,6 @@ from errors import *
 #import map_index
 #import map_if
 #import x12file
-#from utils import *
 import pyx12.segment
 
 logger = logging.getLogger('pyx12.walk_tree')

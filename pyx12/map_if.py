@@ -27,7 +27,6 @@ from stat import ST_SIZE
 # Intrapackage imports
 import errors
 import codes
-from utils import *
 
 #Global Variables
 NodeType = {'element_start': 1, 'element_end': 15, 'attrib': 2, 'text': 3, 

@@ -25,7 +25,6 @@ import pdb
 
 # Intrapackage imports
 from errors import *
-from utils import seg_str
 import error_visitor
 import pyx12.segment
 

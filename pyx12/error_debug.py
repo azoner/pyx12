@@ -24,7 +24,6 @@ import pdb
 
 # Intrapackage imports
 from errors import *
-from utils import seg_str
 from error_visitor import error_visitor
 
 class error_debug_visitor(error_visitor):

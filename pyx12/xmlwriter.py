@@ -8,7 +8,6 @@
 
 import sys
 import codecs
-from utils import escape_html_chars
 
 class XMLWriter:
     """

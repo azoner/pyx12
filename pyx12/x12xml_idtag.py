@@ -22,7 +22,6 @@ import pdb
 
 # Intrapackage imports
 from errors import *
-#from utils import *
 from x12xml import x12xml
 from xmlwriter import XMLWriter
 from map_walker import pop_to_parent_loop

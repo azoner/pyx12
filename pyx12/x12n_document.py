@@ -40,7 +40,6 @@ import map_index
 import map_if
 import x12file
 from map_walker import walk_tree
-from utils import *
 import x12xml_simple
 import x12xml_idtag
 from params import params
