@@ -119,10 +119,10 @@ class walk_tree:
                             elif child.usage == 'R' or child.usage == 'S':
                                 if child is orig_node:
                                     #logger.debug('child %s IS orig_node %s' % (child.id, orig_node.id))
-                                    child.cur_count += 1
+                                    child.cur_count += 1 # Repeat of segment
                                 else:
                                     if orig_node.is_segment():
-                                        orig_node.cur_count = 0
+                                        orig_node.cur_count = 0 # Reset count of original node
                                         #logger.debug('Set orig_node %s cur_count = 0' % (orig_node.id))
                                     child.cur_count = 1
                                     #logger.debug('Set child %s cur_count = 1' % (orig_node.id))
