@@ -1012,7 +1012,7 @@
             <data_type>ID</data_type>
             <min_len>2</min_len>
             <max_len>2</max_len>
-            <valid_codes external="state"/>
+            <valid_codes external="states"/>
          </element>
          <composite>
             <data_ele>C035</data_ele>
@@ -7624,7 +7624,7 @@
                      <data_type>ID</data_type>
                      <min_len>2</min_len>
                      <max_len>2</max_len>
-                     <valid_codes external="state"/>
+                     <valid_codes external="states"/>
                   </element>
                   <composite>
                      <data_ele>C035</data_ele>
@@ -7891,7 +7891,7 @@
                      <data_type>ID</data_type>
                      <min_len>2</min_len>
                      <max_len>2</max_len>
-                     <valid_codes external="state"/>
+                     <valid_codes external="states"/>
                   </element>
                   <composite>
                      <data_ele>C035</data_ele>
@@ -14773,7 +14773,7 @@
                      <data_type>ID</data_type>
                      <min_len>2</min_len>
                      <max_len>2</max_len>
-                     <valid_codes external="state"/>
+                     <valid_codes external="states"/>
                   </element>
                </segment>
                <segment>
@@ -16000,7 +16000,7 @@
                         <data_type>ID</data_type>
                         <min_len>2</min_len>
                         <max_len>2</max_len>
-                        <valid_codes external="state"/>
+                        <valid_codes external="states"/>
                      </element>
                      <composite>
                         <data_ele>C035</data_ele>
@@ -17368,7 +17368,7 @@
                         <data_type>ID</data_type>
                         <min_len>2</min_len>
                         <max_len>2</max_len>
-                        <valid_codes external="state"/>
+                        <valid_codes external="states"/>
                      </element>
                      <composite>
                         <data_ele>C035</data_ele>
@@ -22919,7 +22919,7 @@
                         <data_type>ID</data_type>
                         <min_len>2</min_len>
                         <max_len>2</max_len>
-                        <valid_codes external="state"/>
+                        <valid_codes external="states"/>
                      </element>
                      <composite>
                         <data_ele>C035</data_ele>
@@ -23186,7 +23186,7 @@
                         <data_type>ID</data_type>
                         <min_len>2</min_len>
                         <max_len>2</max_len>
-                        <valid_codes external="state"/>
+                        <valid_codes external="states"/>
                      </element>
                      <composite>
                         <data_ele>C035</data_ele>
@@ -30068,7 +30068,7 @@
                         <data_type>ID</data_type>
                         <min_len>2</min_len>
                         <max_len>2</max_len>
-                        <valid_codes external="state"/>
+                        <valid_codes external="states"/>
                      </element>
                   </segment>
                   <segment>
@@ -31295,7 +31295,7 @@
                            <data_type>ID</data_type>
                            <min_len>2</min_len>
                            <max_len>2</max_len>
-                           <valid_codes external="state"/>
+                           <valid_codes external="states"/>
                         </element>
                         <composite>
                            <data_ele>C035</data_ele>
@@ -32663,7 +32663,7 @@
                            <data_type>ID</data_type>
                            <min_len>2</min_len>
                            <max_len>2</max_len>
-                           <valid_codes external="state"/>
+                           <valid_codes external="states"/>
                         </element>
                         <composite>
                            <data_ele>C035</data_ele>
