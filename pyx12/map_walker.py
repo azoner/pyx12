@@ -95,6 +95,11 @@ class walk_tree:
 
         if orig_node.id in ['ST']: #, 'GS', 'ISA']:
             orig_node.cur_count = 1
+            # UGLY HACK.  Reset counts of sibling nodes to zero
+            node_idx = orig_node.index
+            for child in self.pop_to_parent_loop(orig_node).children:
+                if child.is_segment() and child.index > node_idx:
+                    child.cur_count = 0
 
         node = orig_node
         self.mandatory_segs_missing = []
@@ -111,6 +116,7 @@ class walk_tree:
                 #if child.pos >= node_pos:
                     #logger.debug('id=%s cur_count=%i max_repeat=%i' \
                     #    % (child.id, child.cur_count, child.get_max_repeat()))
+                    #if seg_data.get_seg_id() == 'BHT': pdb.set_trace()
                     if child.is_segment():
                         if child.is_match(seg_data):
                             child.cur_count += 1
@@ -130,11 +136,14 @@ class walk_tree:
                                 #    child.cur_count = 1
                                 #    #logger.debug('Set child %s cur_count = 1' % (orig_node.id))
                                 if child.cur_count > child.get_max_repeat():  # handle seg repeat count
-                                    if self._is_loop_match(node, seg_data, errh, seg_count, cur_line, ls_id):
+                                    if node.is_loop() \
+                                            and self._is_loop_match(node, seg_data, errh, seg_count, cur_line, ls_id):
                                         return node.get_child_node_by_idx(0)
                                     else:
                                         err_str = "Segment %s exceeded max count.  Found %i, should have %i" \
                                             % (seg_data.get_seg_id(), child.cur_count, child.get_max_repeat())
+                                        errh.add_seg(child, seg_data, seg_count, cur_line, ls_id)
+                                        #pdb.set_trace()
                                         errh.seg_error('5', err_str, None)
                             else:
                                 raise EngineError, 'Usage must be R, S, or N'
@@ -238,7 +247,8 @@ class walk_tree:
         Check for used/missing
         """
         if not loop_node.is_loop(): raise EngineError, \
-            "Call to first_seg_match failed, node is not a loop"
+            "Call to first_seg_match failed, node %s is not a loop. seg %s" \
+            % (loop_node.id, seg_data.get_seg_id())
         first_child_node = loop_node.get_child_node_by_idx(0)
         if self.is_first_seg_match2(first_child_node, seg_data): 
             #node = loop_node.children[0]
