@@ -124,7 +124,7 @@ class error_html:
                 ele_pos_map[ele.ele_pos] = ele.subele_pos
 
         t_seg = [] #list of formatted elements
-        seg_data.format_ele_list(self, t_seg) 
+        seg_data.format_ele_list(t_seg) 
         for i in range(len(seg_data)):
             if seg_data[i].is_composite():
                 t_seg.append([])
