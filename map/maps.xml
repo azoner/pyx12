@@ -68,4 +68,7 @@ vriic - Version / Release / Industry Identifier Code (GS08)
     <map vriic="004010" fic="FA">997.4010.xml</map>
     <map vriic="" fic="">x12.control.00401.xml</map>
   </version>
+  <version icvn="00402">
+    <map vriic="004020X104" fic="HN">277.4020.X104.xml</map>
+  </version>
 </maps>

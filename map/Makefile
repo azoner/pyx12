@@ -32,6 +32,7 @@ all:
 	${TRANS} --format -o 837.4010.X097.xml 837.4010.X097.xml
 	${TRANS} --format -o 837.4010.X098.A1.xml 837.4010.X098.A1.xml
 	${TRANS} --format -o 837.4010.X098.xml 837.4010.X098.xml
+	${TRANS} --format -o 277.4020.X104.xml 277.4020.X104.xml
 	${TRANS} --format -o 841.4010.XXXC.xml 841.4010.XXXC.xml
 	${TRANS} --format -o 997.4010.xml 997.4010.xml
 	${TRANS} --format -o codes.xml codes.xml
