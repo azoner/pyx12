@@ -64,6 +64,7 @@ class table:
         self.pk = pk
         self.path = path
         self.parent = parent
+        self.field_prefix = ''
         self.fields = [] # (name, type)
         self.sub_tables = []
 
@@ -72,12 +73,10 @@ class table:
         str1 += '\t[%s] [int] IDENTITY (1, 1) NOT NULL\n' % (self.pk)
         if self.parent and self.parent.get_pk():
             str1 += ',\t[%s] [int] NOT NULL\n' % (self.parent.get_pk())
-        #for (name, type_str) in self.fields:
-        #    str1 += ',\t[%s] %s\n' % (name, type_str)
-        for table1 in self.sub_tables:
-            str1 += table1.__repr__()
+        for (name, type_str) in self.fields:
+            str1 += ',\t[%s] %s\n' % (name, type_str)
         str1 += ') ON [PRIMARY]\nGO\n\n'   
-        
+
         #primary key
         str1 += 'ALTER TABLE [%s] WITH NOCHECK ADD\n' % (self.name)
         str1 += '\tCONSTRAINT [PK_%s] PRIMARY KEY CLUSTERED\n\t(\n\t\t[%s]\n' % (self.name, self.pk)
@@ -90,7 +89,11 @@ class table:
             str1 += 'ALTER TABLE [%s] ADD\n' % (self.name)
             str1 += '\tCONSTRAINT [FK_%s_%s] FOREIGN KEY\n' % (self.name, parent_table)
             str1 += '\t( [%s] )\n' % (pk_parent)
-            str1 += '\tREFERENCES [%s] ([%s])\nGO\n' % (parent_table, pk_parent)
+            str1 += '\tREFERENCES [%s] ([%s])\nGO\n\n' % (parent_table, pk_parent)
+
+        for table1 in self.sub_tables:
+            str1 += table1.__repr__()
+        
         return str1
         
     def get_pk(self):
@@ -107,7 +110,7 @@ class table:
 
         
 def format_name(name):
-    return name.replace(' ', '_')
+    return name.replace(' ', '_').replace("'", '')
     
 def gen_sql(map_root, pre):
     """
@@ -115,7 +118,7 @@ def gen_sql(map_root, pre):
     """
     global TRANS_PRE
     TRANS_PRE = pre + '_'
-    st_loop = table('%s_ST' % (TRANS_PRE), '%s_ST_num' % (TRANS_PRE), '/', None)
+    st_loop = table('%sST' % (TRANS_PRE), '%sST_num' % (TRANS_PRE), '/', None)
     cur_table = st_loop
 
     for node in map_root:
@@ -166,8 +169,13 @@ def gen_sql(map_root, pre):
                 cur_table = cur_table.sub_tables[-1]
                 
         elif node.is_segment():
+            cur_table.field_prefix = '' #%s' % (node.id)
+            if node.children[0].is_element() \
+                and node.children[0].data_type == 'ID':
+                cur_table.field_prefix = '%s' % (node.children[0].valid_codes[0])
             # Find parent loop
-            while cur_table.parent and not cur_table.is_match_parent(parent):
+            #pdb.set_trace()
+            while cur_table.parent and cur_table.is_match_parent(parent):
                 cur_table = cur_table.parent
 
             #if tbl_stack and tbl_stack[-1][2] == node.get_path(): #Repeat of segment
@@ -179,7 +187,9 @@ def gen_sql(map_root, pre):
                 cur_table.sub_tables.append(table(table_name, pk, path, cur_table))
                 cur_table = cur_table.sub_tables[-1]
         elif node.is_element():
-            field_name = '%s_%s' % (node.id, format_name(node.name))
+            if node.usage == 'N':
+                continue
+            field_name = '%s_%s_%s' % (node.id, cur_table.field_prefix, format_name(node.name))
             type = ''
             if node.data_type in ('DT', 'TM'):
                 type = ' [datetime]'
