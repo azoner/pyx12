@@ -176,7 +176,6 @@ def getfirstfield(seg_list, segment_name, field_idx):
 	else:
 	    return None
 
-
 def GetExplicitLoops(lines, start_tag, end_tag, start_idx, end_idx):
     """
     Name:    GetExplicitLoops
@@ -190,14 +189,17 @@ def GetExplicitLoops(lines, start_tag, end_tag, start_idx, end_idx):
     """
     loops = []
     loop_idx = 0
-    if lines[loop_idx][0] != start_tag:
-        raise errors.WEDI1Error, 'This segment should be a %s, is %s' % (start_tag, lines[loop_idx][0])
-    control_num = lines[loop_idx][start_idx]
-    while loop_idx < len(lines):
-        for i in xrange(loop_idx+1, len(lines)):
-	    #print 'i=', i, start_tag, end_tag, lines[i]
-            if lines[i][0] == end_tag and control_num == lines[i][end_idx]:
-	        # found correct end tag
+    for i in xrange(0, len(lines)):
+    	if i == loop_idx:
+            if lines[loop_idx][0] != start_tag:
+        	raise errors.WEDI1Error, 'This segment should be a %s, is %s' % (start_tag, lines[loop_idx][0])
+    	    else:
+        	control_num = lines[loop_idx][start_idx]
+        if lines[i][0] == end_tag:
+	    if control_num != lines[i][end_idx]:
+        	raise errors.WEDI1Error, 'The control numbers for this %s segment do not match, \
+			should be %s, is %s' % (start_tag, control_num, lines[i][end_idx])
+	    else:
 	        for j in xrange(loop_idx+1, i):
                     if lines[j][0] == start_tag:
         	        raise errors.WEDI1Error, 'A %s(%s) segment was found within another %s loop' % (start_tag, 
@@ -206,13 +208,9 @@ def GetExplicitLoops(lines, start_tag, end_tag, start_idx, end_idx):
         	        raise errors.WEDI1Error, 'A %s(%s) segment was found within another %s loop' % (end_tag, 
 		    	    control_num, start_tag)
                 loops.append(lines[loop_idx:i+1])
-		#print 'loop_idx ', loop_idx, i+1
-	        loop_idx = i + 1
-		break
-	loop_idx = len(lines)
-    if lines[-1][0] != end_tag:
-        raise errors.WEDI1Error, 'Last segment should be %s, is "%s"' % (end_tag, lines[-1][0])
+                loop_idx = i + 1
     return loops
+
 
 def GetHLLoops(lines):
     """
