@@ -32,268 +32,561 @@
 	ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF 
 	THE POSSIBILITY OF SUCH DAMAGE.
 -->
-<map>
-  <subcommittee>X12N</subcommittee>
-  <version>004010XXXC</version>
-  <transaction>
-    <id>841</id>
-    <name>HIPAA Related Code Lists</name>
-    <segment>
-      <id>ISA</id>
-      <name>Interchange Control Header</name>
+<transaction>
+  <id>841</id>
+  <name>HIPAA Related Code Lists</name>
+  <segment>
+    <id>ISA</id>
+    <name>Interchange Control Header</name>
+    <usage>R</usage>
+    <pos>0</pos>
+    <max_use>1</max_use>
+    <element>
+      <data_ele>I01</data_ele>
+      <name>Authorization Information Qualifier</name>
       <usage>R</usage>
-      <pos>0</pos>
+      <seq>01</seq>
+      <refdes>ISA01</refdes>
+      <data_type>ID</data_type>
+      <min_len>2</min_len>
+      <max_len>2</max_len>
+      <valid_codes>
+        <code>00</code>
+        <code>03</code>
+      </valid_codes>
+    </element>
+    <element>
+      <data_ele>I02</data_ele>
+      <name>Authorization Information</name>
+      <usage>R</usage>
+      <seq>02</seq>
+      <refdes>ISA02</refdes>
+      <data_type>AN</data_type>
+      <min_len>10</min_len>
+      <max_len>10</max_len>
+    </element>
+    <element>
+      <data_ele>I03</data_ele>
+      <name>Security Information Qualifier</name>
+      <usage>R</usage>
+      <seq>03</seq>
+      <refdes>ISA03</refdes>
+      <data_type>ID</data_type>
+      <min_len>2</min_len>
+      <max_len>2</max_len>
+      <valid_codes>
+        <code>00</code>
+        <code>01</code>
+      </valid_codes>
+    </element>
+    <element>
+      <data_ele>I04</data_ele>
+      <name>Security Information</name>
+      <usage>R</usage>
+      <seq>04</seq>
+      <refdes>ISA04</refdes>
+      <data_type>AN</data_type>
+      <min_len>10</min_len>
+      <max_len>10</max_len>
+    </element>
+    <element>
+      <data_ele>I05</data_ele>
+      <name>Interchange ID Qualifier</name>
+      <usage>R</usage>
+      <seq>05</seq>
+      <refdes>ISA05</refdes>
+      <data_type>ID</data_type>
+      <min_len>2</min_len>
+      <max_len>2</max_len>
+      <valid_codes>
+        <code>01</code>
+        <code>14</code>
+        <code>20</code>
+        <code>27</code>
+        <code>28</code>
+        <code>29</code>
+        <code>30</code>
+        <code>33</code>
+        <code>ZZ</code>
+      </valid_codes>
+    </element>
+    <element>
+      <data_ele>I06</data_ele>
+      <name>Interchange Sender ID</name>
+      <usage>R</usage>
+      <seq>06</seq>
+      <refdes>ISA06</refdes>
+      <data_type>AN</data_type>
+      <min_len>15</min_len>
+      <max_len>15</max_len>
+    </element>
+    <element>
+      <data_ele>I05</data_ele>
+      <name>Interchange ID Qualifier</name>
+      <usage>R</usage>
+      <seq>07</seq>
+      <refdes>ISA07</refdes>
+      <data_type>ID</data_type>
+      <min_len>2</min_len>
+      <max_len>2</max_len>
+      <valid_codes>
+        <code>01</code>
+        <code>14</code>
+        <code>20</code>
+        <code>27</code>
+        <code>28</code>
+        <code>29</code>
+        <code>30</code>
+        <code>33</code>
+        <code>ZZ</code>
+      </valid_codes>
+    </element>
+    <element>
+      <data_ele>I07</data_ele>
+      <name>Interchange Receiver ID</name>
+      <usage>R</usage>
+      <seq>08</seq>
+      <refdes>ISA08</refdes>
+      <data_type>AN</data_type>
+      <min_len>15</min_len>
+      <max_len>15</max_len>
+    </element>
+    <element>
+      <data_ele>I08</data_ele>
+      <name>Interchange Date</name>
+      <usage>R</usage>
+      <seq>09</seq>
+      <refdes>ISA09</refdes>
+      <data_type>DT</data_type>
+      <min_len>6</min_len>
+      <max_len>6</max_len>
+    </element>
+    <element>
+      <data_ele>I09</data_ele>
+      <name>Interchange Time</name>
+      <usage>R</usage>
+      <seq>10</seq>
+      <refdes>ISA10</refdes>
+      <data_type>TM</data_type>
+      <min_len>4</min_len>
+      <max_len>4</max_len>
+    </element>
+    <element>
+      <data_ele>I10</data_ele>
+      <name>Interchange Control Standards Identifier</name>
+      <usage>R</usage>
+      <seq>11</seq>
+      <refdes>ISA11</refdes>
+      <data_type>ID</data_type>
+      <min_len>1</min_len>
+      <max_len>1</max_len>
+      <valid_codes>
+        <code>U</code>
+      </valid_codes>
+    </element>
+    <element>
+      <data_ele>I11</data_ele>
+      <name>Interchange Control Version Number</name>
+      <usage>R</usage>
+      <seq>12</seq>
+      <refdes>ISA12</refdes>
+      <data_type>ID</data_type>
+      <min_len>5</min_len>
+      <max_len>5</max_len>
+      <valid_codes>
+        <code>00401</code>
+      </valid_codes>
+    </element>
+    <element>
+      <data_ele>I12</data_ele>
+      <name>Interchange Control Number</name>
+      <usage>R</usage>
+      <seq>13</seq>
+      <refdes>ISA13</refdes>
+      <data_type>N0</data_type>
+      <min_len>9</min_len>
+      <max_len>9</max_len>
+    </element>
+    <element>
+      <data_ele>I13</data_ele>
+      <name>Acknowledgment Requested</name>
+      <usage>R</usage>
+      <seq>14</seq>
+      <refdes>ISA14</refdes>
+      <data_type>ID</data_type>
+      <min_len>1</min_len>
+      <max_len>1</max_len>
+      <valid_codes>
+        <code>0</code>
+        <code>1</code>
+      </valid_codes>
+    </element>
+    <element>
+      <data_ele>I14</data_ele>
+      <name>Usage Indicator</name>
+      <usage>R</usage>
+      <seq>15</seq>
+      <refdes>ISA15</refdes>
+      <data_type>ID</data_type>
+      <min_len>1</min_len>
+      <max_len>1</max_len>
+      <valid_codes>
+        <code>P</code>
+        <code>T</code>
+      </valid_codes>
+    </element>
+    <element>
+      <data_ele>I15</data_ele>
+      <name>Component Element Separator</name>
+      <usage>R</usage>
+      <seq>16</seq>
+      <refdes>ISA16</refdes>
+      <data_type>16</data_type>
+      <min_len>1</min_len>
+      <max_len>1</max_len>
+    </element>
+  </segment>
+  <segment>
+    <id>GS</id>
+    <name>Functional Group Header</name>
+    <usage>R</usage>
+    <pos>0</pos>
+    <max_use>1</max_use>
+    <element>
+      <data_ele>479</data_ele>
+      <name>Functional Identifier Code</name>
+      <usage>R</usage>
+      <seq>01</seq>
+      <refdes>GS01</refdes>
+      <data_type>ID</data_type>
+      <min_len>2</min_len>
+      <max_len>2</max_len>
+      <valid_codes>
+        <code>SP</code>
+      </valid_codes>
+    </element>
+    <element>
+      <data_ele>142</data_ele>
+      <name>Application Sender's Code</name>
+      <usage>R</usage>
+      <seq>02</seq>
+      <refdes>GS02</refdes>
+      <data_type>AN</data_type>
+      <min_len>2</min_len>
+      <max_len>15</max_len>
+    </element>
+    <element>
+      <data_ele>124</data_ele>
+      <name>Application Receiver's Code</name>
+      <usage>R</usage>
+      <seq>03</seq>
+      <refdes>GS03</refdes>
+      <data_type>AN</data_type>
+      <min_len>2</min_len>
+      <max_len>15</max_len>
+    </element>
+    <element>
+      <data_ele>373</data_ele>
+      <name>Date</name>
+      <usage>R</usage>
+      <seq>04</seq>
+      <refdes>GS04</refdes>
+      <data_type>DT</data_type>
+      <min_len>8</min_len>
+      <max_len>8</max_len>
+    </element>
+    <element>
+      <data_ele>337</data_ele>
+      <name>Time</name>
+      <usage>R</usage>
+      <seq>05</seq>
+      <refdes>GS05</refdes>
+      <data_type>TM</data_type>
+      <min_len>4</min_len>
+      <max_len>8</max_len>
+    </element>
+    <element>
+      <data_ele>28</data_ele>
+      <name>Group Control Number</name>
+      <usage>R</usage>
+      <seq>06</seq>
+      <refdes>GS06</refdes>
+      <data_type>N0</data_type>
+      <min_len>1</min_len>
+      <max_len>9</max_len>
+    </element>
+    <element>
+      <data_ele>455</data_ele>
+      <name>Responsible Agency Code</name>
+      <usage>R</usage>
+      <seq>07</seq>
+      <refdes>GS07</refdes>
+      <data_type>ID</data_type>
+      <min_len>1</min_len>
+      <max_len>2</max_len>
+      <valid_codes>
+        <code>X</code>
+      </valid_codes>
+    </element>
+    <element>
+      <data_ele>480</data_ele>
+      <name>Version / Release / Industry Identifier Code</name>
+      <usage>R</usage>
+      <seq>08</seq>
+      <refdes>GS08</refdes>
+      <data_type>AN</data_type>
+      <min_len>1</min_len>
+      <max_len>12</max_len>
+      <valid_codes>
+        <code>004010XXXC</code>
+      </valid_codes>
+    </element>
+  </segment>
+  <segment>
+    <id>ST</id>
+    <name>Transaction Set Header</name>
+    <usage>R</usage>
+    <pos>010</pos>
+    <max_use>1</max_use>
+    <element>
+      <data_ele>143</data_ele>
+      <name>Transaction Set Identifier Code</name>
+      <usage>R</usage>
+      <seq>01</seq>
+      <refdes>ST01</refdes>
+      <data_type>ID</data_type>
+      <min_len>3</min_len>
+      <max_len>3</max_len>
+      <valid_codes>
+        <code>841</code>
+      </valid_codes>
+    </element>
+    <element>
+      <data_ele>329</data_ele>
+      <name>Transaction Set Control Number</name>
+      <usage>R</usage>
+      <seq>02</seq>
+      <refdes>ST02</refdes>
+      <data_type>AN</data_type>
+      <min_len>4</min_len>
+      <max_len>9</max_len>
+    </element>
+  </segment>
+  <loop>
+    <id>1000</id>
+    <name>Code List</name>
+    <usage>R</usage>
+    <seq>010</seq>
+    <count>&gt;1</count>
+    <segment>
+      <id>SPI</id>
+      <name>Code List</name>
+      <usage>R</usage>
+      <pos>020</pos>
       <max_use>1</max_use>
+      <syntax>P0203</syntax>
       <element>
-        <data_ele>I01</data_ele>
-        <name>Authorization Information Qualifier</name>
+        <data_ele>786</data_ele>
+        <name>Security Level Code</name>
         <usage>R</usage>
         <seq>01</seq>
-        <refdes>ISA01</refdes>
+        <refdes>SPI01</refdes>
         <data_type>ID</data_type>
         <min_len>2</min_len>
         <max_len>2</max_len>
         <valid_codes>
           <code>00</code>
-          <code>03</code>
         </valid_codes>
       </element>
       <element>
-        <data_ele>I02</data_ele>
-        <name>Authorization Information</name>
-        <usage>R</usage>
+        <data_ele>128</data_ele>
+        <name>Reference Identification Qualifier</name>
+        <usage>N</usage>
         <seq>02</seq>
-        <refdes>ISA02</refdes>
-        <data_type>AN</data_type>
-        <min_len>10</min_len>
-        <max_len>10</max_len>
-      </element>
-      <element>
-        <data_ele>I03</data_ele>
-        <name>Security Information Qualifier</name>
-        <usage>R</usage>
-        <seq>03</seq>
-        <refdes>ISA03</refdes>
+        <refdes>SPI02</refdes>
         <data_type>ID</data_type>
         <min_len>2</min_len>
-        <max_len>2</max_len>
-        <valid_codes>
-          <code>00</code>
-          <code>01</code>
-        </valid_codes>
+        <max_len>3</max_len>
       </element>
       <element>
-        <data_ele>I04</data_ele>
-        <name>Security Information</name>
+        <data_ele>127</data_ele>
+        <name>Reference Identification</name>
+        <usage>N</usage>
+        <seq>03</seq>
+        <refdes>SPI03</refdes>
+        <data_type>AN</data_type>
+        <min_len>1</min_len>
+        <max_len>30</max_len>
+      </element>
+      <element>
+        <data_ele>790</data_ele>
+        <name>Entity Title</name>
         <usage>R</usage>
         <seq>04</seq>
-        <refdes>ISA04</refdes>
+        <refdes>SPI04</refdes>
         <data_type>AN</data_type>
-        <min_len>10</min_len>
-        <max_len>10</max_len>
+        <min_len>1</min_len>
+        <max_len>132</max_len>
       </element>
       <element>
-        <data_ele>I05</data_ele>
-        <name>Interchange ID Qualifier</name>
+        <data_ele>791</data_ele>
+        <name>Entity Purpose</name>
         <usage>R</usage>
         <seq>05</seq>
-        <refdes>ISA05</refdes>
-        <data_type>ID</data_type>
-        <min_len>2</min_len>
-        <max_len>2</max_len>
-        <valid_codes>
-          <code>01</code>
-          <code>14</code>
-          <code>20</code>
-          <code>27</code>
-          <code>28</code>
-          <code>29</code>
-          <code>30</code>
-          <code>33</code>
-          <code>ZZ</code>
-        </valid_codes>
+        <refdes>SPI05</refdes>
+        <data_type>AN</data_type>
+        <min_len>1</min_len>
+        <max_len>80</max_len>
       </element>
       <element>
-        <data_ele>I06</data_ele>
-        <name>Interchange Sender ID</name>
-        <usage>R</usage>
+        <data_ele>792</data_ele>
+        <name>Entity Status Code</name>
+        <usage>N</usage>
         <seq>06</seq>
-        <refdes>ISA06</refdes>
-        <data_type>AN</data_type>
-        <min_len>15</min_len>
-        <max_len>15</max_len>
+        <refdes>SPI06</refdes>
+        <data_type>ID</data_type>
+        <min_len>1</min_len>
+        <max_len>1</max_len>
       </element>
       <element>
-        <data_ele>I05</data_ele>
-        <name>Interchange ID Qualifier</name>
-        <usage>R</usage>
+        <data_ele>353</data_ele>
+        <name>Transaction Set Purpose Code</name>
+        <usage>N</usage>
         <seq>07</seq>
-        <refdes>ISA07</refdes>
+        <refdes>SPI07</refdes>
         <data_type>ID</data_type>
         <min_len>2</min_len>
         <max_len>2</max_len>
-        <valid_codes>
-          <code>01</code>
-          <code>14</code>
-          <code>20</code>
-          <code>27</code>
-          <code>28</code>
-          <code>29</code>
-          <code>30</code>
-          <code>33</code>
-          <code>ZZ</code>
-        </valid_codes>
       </element>
       <element>
-        <data_ele>I07</data_ele>
-        <name>Interchange Receiver ID</name>
-        <usage>R</usage>
+        <data_ele>755</data_ele>
+        <name>Report Type Code</name>
+        <usage>N</usage>
         <seq>08</seq>
-        <refdes>ISA08</refdes>
+        <refdes>SPI08</refdes>
+        <data_type>ID</data_type>
+        <min_len>2</min_len>
+        <max_len>2</max_len>
+      </element>
+      <element>
+        <data_ele>786</data_ele>
+        <name>Security Level Code</name>
+        <usage>N</usage>
+        <seq>09</seq>
+        <refdes>SPI09</refdes>
+        <data_type>ID</data_type>
+        <min_len>2</min_len>
+        <max_len>2</max_len>
+      </element>
+      <element>
+        <data_ele>559</data_ele>
+        <name>Agency Qualifier Code</name>
+        <usage>N</usage>
+        <seq>10</seq>
+        <refdes>SPI10</refdes>
+        <data_type>ID</data_type>
+        <min_len>2</min_len>
+        <max_len>2</max_len>
+      </element>
+      <element>
+        <data_ele>822</data_ele>
+        <name>Source Subqualifier</name>
+        <usage>N</usage>
+        <seq>11</seq>
+        <refdes>SPI11</refdes>
         <data_type>AN</data_type>
-        <min_len>15</min_len>
+        <min_len>1</min_len>
         <max_len>15</max_len>
       </element>
       <element>
-        <data_ele>I08</data_ele>
-        <name>Interchange Date</name>
-        <usage>R</usage>
-        <seq>09</seq>
-        <refdes>ISA09</refdes>
-        <data_type>DT</data_type>
-        <min_len>6</min_len>
+        <data_ele>554</data_ele>
+        <name>Assigned Number</name>
+        <usage>N</usage>
+        <seq>12</seq>
+        <refdes>SPI12</refdes>
+        <data_type>N0</data_type>
+        <min_len>1</min_len>
         <max_len>6</max_len>
       </element>
       <element>
-        <data_ele>I09</data_ele>
-        <name>Interchange Time</name>
-        <usage>R</usage>
-        <seq>10</seq>
-        <refdes>ISA10</refdes>
-        <data_type>TM</data_type>
+        <data_ele>1322</data_ele>
+        <name>Certification Type Code</name>
+        <usage>N</usage>
+        <seq>13</seq>
+        <refdes>SPI13</refdes>
+        <data_type>ID</data_type>
+        <min_len>1</min_len>
+        <max_len>1</max_len>
+      </element>
+      <element>
+        <data_ele>1401</data_ele>
+        <name>Proposal Data Detail Identifier Code</name>
+        <usage>N</usage>
+        <seq>14</seq>
+        <refdes>SPI14</refdes>
+        <data_type>ID</data_type>
+        <min_len>1</min_len>
+        <max_len>3</max_len>
+      </element>
+      <element>
+        <data_ele>1005</data_ele>
+        <name>Heirarchal Structure Code</name>
+        <usage>N</usage>
+        <seq>15</seq>
+        <refdes>SPI15</refdes>
+        <data_type>ID</data_type>
         <min_len>4</min_len>
         <max_len>4</max_len>
       </element>
-      <element>
-        <data_ele>I10</data_ele>
-        <name>Interchange Control Standards Identifier</name>
-        <usage>R</usage>
-        <seq>11</seq>
-        <refdes>ISA11</refdes>
-        <data_type>ID</data_type>
-        <min_len>1</min_len>
-        <max_len>1</max_len>
-        <valid_codes>
-          <code>U</code>
-        </valid_codes>
-      </element>
-      <element>
-        <data_ele>I11</data_ele>
-        <name>Interchange Control Version Number</name>
-        <usage>R</usage>
-        <seq>12</seq>
-        <refdes>ISA12</refdes>
-        <data_type>ID</data_type>
-        <min_len>5</min_len>
-        <max_len>5</max_len>
-        <valid_codes>
-          <code>00401</code>
-        </valid_codes>
-      </element>
-      <element>
-        <data_ele>I12</data_ele>
-        <name>Interchange Control Number</name>
-        <usage>R</usage>
-        <seq>13</seq>
-        <refdes>ISA13</refdes>
-        <data_type>N0</data_type>
-        <min_len>9</min_len>
-        <max_len>9</max_len>
-      </element>
-      <element>
-        <data_ele>I13</data_ele>
-        <name>Acknowledgment Requested</name>
-        <usage>R</usage>
-        <seq>14</seq>
-        <refdes>ISA14</refdes>
-        <data_type>ID</data_type>
-        <min_len>1</min_len>
-        <max_len>1</max_len>
-        <valid_codes>
-          <code>0</code>
-          <code>1</code>
-        </valid_codes>
-      </element>
-      <element>
-        <data_ele>I14</data_ele>
-        <name>Usage Indicator</name>
-        <usage>R</usage>
-        <seq>15</seq>
-        <refdes>ISA15</refdes>
-        <data_type>ID</data_type>
-        <min_len>1</min_len>
-        <max_len>1</max_len>
-        <valid_codes>
-          <code>P</code>
-          <code>T</code>
-        </valid_codes>
-      </element>
-      <element>
-        <data_ele>I15</data_ele>
-        <name>Component Element Separator</name>
-        <usage>R</usage>
-        <seq>16</seq>
-        <refdes>ISA16</refdes>
-        <data_type>16</data_type>
-        <min_len>1</min_len>
-        <max_len>1</max_len>
-      </element>
     </segment>
     <segment>
-      <id>GS</id>
-      <name>Functional Group Header</name>
+      <id>RDT</id>
+      <name>Release Date</name>
       <usage>R</usage>
-      <pos>0</pos>
-      <max_use>1</max_use>
+      <pos>030</pos>
+      <max_use>&gt;1</max_use>
+      <syntax>C0102</syntax>
+      <syntax>L030405</syntax>
+      <syntax>C0605</syntax>
       <element>
-        <data_ele>479</data_ele>
-        <name>Functional Identifier Code</name>
-        <usage>R</usage>
+        <data_ele>795</data_ele>
+        <name>Revision Level Code</name>
+        <usage>N</usage>
         <seq>01</seq>
-        <refdes>GS01</refdes>
+        <refdes>RDT01</refdes>
         <data_type>ID</data_type>
-        <min_len>2</min_len>
-        <max_len>2</max_len>
-        <valid_codes>
-          <code>SP</code>
-        </valid_codes>
+        <min_len>1</min_len>
+        <max_len>1</max_len>
       </element>
       <element>
-        <data_ele>142</data_ele>
-        <name>Application Sender's Code</name>
-        <usage>R</usage>
+        <data_ele>796</data_ele>
+        <name>Revision Value</name>
+        <usage>N</usage>
         <seq>02</seq>
-        <refdes>GS02</refdes>
+        <refdes>RDT02</refdes>
         <data_type>AN</data_type>
-        <min_len>2</min_len>
-        <max_len>15</max_len>
+        <min_len>1</min_len>
+        <max_len>30</max_len>
       </element>
       <element>
-        <data_ele>124</data_ele>
-        <name>Application Receiver's Code</name>
+        <data_ele>374</data_ele>
+        <name>Date/Time Qualifier</name>
         <usage>R</usage>
         <seq>03</seq>
-        <refdes>GS03</refdes>
-        <data_type>AN</data_type>
-        <min_len>2</min_len>
-        <max_len>15</max_len>
+        <refdes>RDT03</refdes>
+        <data_type>ID</data_type>
+        <min_len>3</min_len>
+        <max_len>3</max_len>
+        <valid_codes>
+          <code>171</code>
+        </valid_codes>
       </element>
       <element>
         <data_ele>373</data_ele>
         <name>Date</name>
         <usage>R</usage>
         <seq>04</seq>
-        <refdes>GS04</refdes>
+        <refdes>RDT04</refdes>
         <data_type>DT</data_type>
         <min_len>8</min_len>
         <max_len>8</max_len>
@@ -301,822 +594,525 @@
       <element>
         <data_ele>337</data_ele>
         <name>Time</name>
-        <usage>R</usage>
+        <usage>N</usage>
         <seq>05</seq>
-        <refdes>GS05</refdes>
+        <refdes>RDT05</refdes>
         <data_type>TM</data_type>
         <min_len>4</min_len>
         <max_len>8</max_len>
       </element>
       <element>
-        <data_ele>28</data_ele>
-        <name>Group Control Number</name>
-        <usage>R</usage>
+        <data_ele>623</data_ele>
+        <name>Time Code</name>
+        <usage>N</usage>
         <seq>06</seq>
-        <refdes>GS06</refdes>
-        <data_type>N0</data_type>
-        <min_len>1</min_len>
-        <max_len>9</max_len>
-      </element>
-      <element>
-        <data_ele>455</data_ele>
-        <name>Responsible Agency Code</name>
-        <usage>R</usage>
-        <seq>07</seq>
-        <refdes>GS07</refdes>
+        <refdes>RDT06</refdes>
         <data_type>ID</data_type>
-        <min_len>1</min_len>
+        <min_len>2</min_len>
         <max_len>2</max_len>
-        <valid_codes>
-          <code>X</code>
-        </valid_codes>
-      </element>
-      <element>
-        <data_ele>480</data_ele>
-        <name>Version / Release / Industry Identifier Code</name>
-        <usage>R</usage>
-        <seq>08</seq>
-        <refdes>GS08</refdes>
-        <data_type>AN</data_type>
-        <min_len>1</min_len>
-        <max_len>12</max_len>
-        <valid_codes>
-          <code>004010XXXC</code>
-        </valid_codes>
       </element>
     </segment>
     <segment>
-      <id>ST</id>
-      <name>Transaction Set Header</name>
-      <usage>R</usage>
-      <pos>010</pos>
+      <id>RDT</id>
+      <name>Effective Date</name>
+      <usage>S</usage>
+      <pos>030</pos>
       <max_use>1</max_use>
+      <syntax>C0102</syntax>
+      <syntax>L030405</syntax>
+      <syntax>C0605</syntax>
       <element>
-        <data_ele>143</data_ele>
-        <name>Transaction Set Identifier Code</name>
-        <usage>R</usage>
+        <data_ele>795</data_ele>
+        <name>Revision Level Code</name>
+        <usage>N</usage>
         <seq>01</seq>
-        <refdes>ST01</refdes>
+        <refdes>RDT01</refdes>
+        <data_type>ID</data_type>
+        <min_len>1</min_len>
+        <max_len>1</max_len>
+      </element>
+      <element>
+        <data_ele>796</data_ele>
+        <name>Revision Value</name>
+        <usage>N</usage>
+        <seq>02</seq>
+        <refdes>RDT02</refdes>
+        <data_type>AN</data_type>
+        <min_len>1</min_len>
+        <max_len>30</max_len>
+      </element>
+      <element>
+        <data_ele>374</data_ele>
+        <name>Date/Time Qualifier</name>
+        <usage>R</usage>
+        <seq>03</seq>
+        <refdes>RDT03</refdes>
         <data_type>ID</data_type>
         <min_len>3</min_len>
         <max_len>3</max_len>
         <valid_codes>
-          <code>841</code>
+          <code>007</code>
         </valid_codes>
       </element>
       <element>
-        <data_ele>329</data_ele>
-        <name>Transaction Set Control Number</name>
+        <data_ele>373</data_ele>
+        <name>Date</name>
         <usage>R</usage>
-        <seq>02</seq>
-        <refdes>ST02</refdes>
-        <data_type>AN</data_type>
+        <seq>04</seq>
+        <refdes>RDT04</refdes>
+        <data_type>DT</data_type>
+        <min_len>8</min_len>
+        <max_len>8</max_len>
+      </element>
+      <element>
+        <data_ele>337</data_ele>
+        <name>Time</name>
+        <usage>N</usage>
+        <seq>05</seq>
+        <refdes>RDT05</refdes>
+        <data_type>TM</data_type>
         <min_len>4</min_len>
-        <max_len>9</max_len>
+        <max_len>8</max_len>
+      </element>
+      <element>
+        <data_ele>623</data_ele>
+        <name>Time Code</name>
+        <usage>N</usage>
+        <seq>06</seq>
+        <refdes>RDT06</refdes>
+        <data_type>ID</data_type>
+        <min_len>2</min_len>
+        <max_len>2</max_len>
       </element>
     </segment>
     <loop>
-      <id>1000</id>
-      <name>Code List</name>
+      <id>1100</id>
+      <name>Code List Source</name>
       <usage>R</usage>
       <seq>010</seq>
       <count>&gt;1</count>
       <segment>
-        <id>SPI</id>
-        <name>Code List</name>
-        <usage>R</usage>
-        <pos>020</pos>
+        <id>N1</id>
+        <name>Code List Source</name>
+        <usage>S</usage>
+        <pos>120</pos>
         <max_use>1</max_use>
-        <syntax>P0203</syntax>
+        <syntax>R0203</syntax>
+        <syntax>P0304</syntax>
         <element>
-          <data_ele>786</data_ele>
-          <name>Security Level Code</name>
+          <data_ele>98</data_ele>
+          <name>Entity Identifier Code</name>
           <usage>R</usage>
           <seq>01</seq>
-          <refdes>SPI01</refdes>
-          <data_type>ID</data_type>
-          <min_len>2</min_len>
-          <max_len>2</max_len>
-          <valid_codes>
-            <code>00</code>
-          </valid_codes>
-        </element>
-        <element>
-          <data_ele>128</data_ele>
-          <name>Reference Identification Qualifier</name>
-          <usage>N</usage>
-          <seq>02</seq>
-          <refdes>SPI02</refdes>
+          <refdes>N101</refdes>
           <data_type>ID</data_type>
           <min_len>2</min_len>
           <max_len>3</max_len>
+          <valid_codes>
+            <code>0F</code>
+          </valid_codes>
         </element>
         <element>
-          <data_ele>127</data_ele>
-          <name>Reference Identification</name>
+          <data_ele>93</data_ele>
+          <name>Name</name>
+          <usage>R</usage>
+          <seq>02</seq>
+          <refdes>N102</refdes>
+          <data_type>AN</data_type>
+          <min_len>1</min_len>
+          <max_len>60</max_len>
+        </element>
+        <element>
+          <data_ele>66</data_ele>
+          <name>Identification Code Qualifier</name>
           <usage>N</usage>
           <seq>03</seq>
-          <refdes>SPI03</refdes>
-          <data_type>AN</data_type>
+          <refdes>N103</refdes>
+          <data_type>ID</data_type>
           <min_len>1</min_len>
-          <max_len>30</max_len>
+          <max_len>2</max_len>
         </element>
         <element>
-          <data_ele>790</data_ele>
-          <name>Entity Title</name>
-          <usage>R</usage>
+          <data_ele>67</data_ele>
+          <name>Identification Code</name>
+          <usage>N</usage>
           <seq>04</seq>
-          <refdes>SPI04</refdes>
+          <refdes>N104</refdes>
           <data_type>AN</data_type>
-          <min_len>1</min_len>
-          <max_len>132</max_len>
-        </element>
-        <element>
-          <data_ele>791</data_ele>
-          <name>Entity Purpose</name>
-          <usage>R</usage>
-          <seq>05</seq>
-          <refdes>SPI05</refdes>
-          <data_type>AN</data_type>
-          <min_len>1</min_len>
+          <min_len>2</min_len>
           <max_len>80</max_len>
         </element>
         <element>
-          <data_ele>792</data_ele>
-          <name>Entity Status Code</name>
+          <data_ele>706</data_ele>
+          <name>Entity Relationship Code</name>
+          <usage>N</usage>
+          <seq>05</seq>
+          <refdes>N105</refdes>
+          <data_type>ID</data_type>
+          <min_len>2</min_len>
+          <max_len>2</max_len>
+        </element>
+        <element>
+          <data_ele>98</data_ele>
+          <name>Entity Identifier Code</name>
           <usage>N</usage>
           <seq>06</seq>
-          <refdes>SPI06</refdes>
-          <data_type>ID</data_type>
-          <min_len>1</min_len>
-          <max_len>1</max_len>
-        </element>
-        <element>
-          <data_ele>353</data_ele>
-          <name>Transaction Set Purpose Code</name>
-          <usage>N</usage>
-          <seq>07</seq>
-          <refdes>SPI07</refdes>
+          <refdes>N106</refdes>
           <data_type>ID</data_type>
           <min_len>2</min_len>
-          <max_len>2</max_len>
-        </element>
-        <element>
-          <data_ele>755</data_ele>
-          <name>Report Type Code</name>
-          <usage>N</usage>
-          <seq>08</seq>
-          <refdes>SPI08</refdes>
-          <data_type>ID</data_type>
-          <min_len>2</min_len>
-          <max_len>2</max_len>
-        </element>
-        <element>
-          <data_ele>786</data_ele>
-          <name>Security Level Code</name>
-          <usage>N</usage>
-          <seq>09</seq>
-          <refdes>SPI09</refdes>
-          <data_type>ID</data_type>
-          <min_len>2</min_len>
-          <max_len>2</max_len>
-        </element>
-        <element>
-          <data_ele>559</data_ele>
-          <name>Agency Qualifier Code</name>
-          <usage>N</usage>
-          <seq>10</seq>
-          <refdes>SPI10</refdes>
-          <data_type>ID</data_type>
-          <min_len>2</min_len>
-          <max_len>2</max_len>
-        </element>
-        <element>
-          <data_ele>822</data_ele>
-          <name>Source Subqualifier</name>
-          <usage>N</usage>
-          <seq>11</seq>
-          <refdes>SPI11</refdes>
-          <data_type>AN</data_type>
-          <min_len>1</min_len>
-          <max_len>15</max_len>
-        </element>
-        <element>
-          <data_ele>554</data_ele>
-          <name>Assigned Number</name>
-          <usage>N</usage>
-          <seq>12</seq>
-          <refdes>SPI12</refdes>
-          <data_type>N0</data_type>
-          <min_len>1</min_len>
-          <max_len>6</max_len>
-        </element>
-        <element>
-          <data_ele>1322</data_ele>
-          <name>Certification Type Code</name>
-          <usage>N</usage>
-          <seq>13</seq>
-          <refdes>SPI13</refdes>
-          <data_type>ID</data_type>
-          <min_len>1</min_len>
-          <max_len>1</max_len>
-        </element>
-        <element>
-          <data_ele>1401</data_ele>
-          <name>Proposal Data Detail Identifier Code</name>
-          <usage>N</usage>
-          <seq>14</seq>
-          <refdes>SPI14</refdes>
-          <data_type>ID</data_type>
-          <min_len>1</min_len>
           <max_len>3</max_len>
         </element>
-        <element>
-          <data_ele>1005</data_ele>
-          <name>Heirarchal Structure Code</name>
-          <usage>N</usage>
-          <seq>15</seq>
-          <refdes>SPI15</refdes>
-          <data_type>ID</data_type>
-          <min_len>4</min_len>
-          <max_len>4</max_len>
-        </element>
       </segment>
+    </loop>
+    <loop>
+      <id>2000</id>
+      <name>Code List Header</name>
+      <usage>R</usage>
+      <seq>010</seq>
+      <count>&gt;1</count>
       <segment>
-        <id>RDT</id>
-        <name>Release Date</name>
+        <id>HL</id>
+        <name>Code List Header</name>
         <usage>R</usage>
-        <pos>030</pos>
-        <max_use>&gt;1</max_use>
-        <syntax>C0102</syntax>
-        <syntax>L030405</syntax>
-        <syntax>C0605</syntax>
-        <element>
-          <data_ele>795</data_ele>
-          <name>Revision Level Code</name>
-          <usage>N</usage>
-          <seq>01</seq>
-          <refdes>RDT01</refdes>
-          <data_type>ID</data_type>
-          <min_len>1</min_len>
-          <max_len>1</max_len>
-        </element>
-        <element>
-          <data_ele>796</data_ele>
-          <name>Revision Value</name>
-          <usage>N</usage>
-          <seq>02</seq>
-          <refdes>RDT02</refdes>
-          <data_type>AN</data_type>
-          <min_len>1</min_len>
-          <max_len>30</max_len>
-        </element>
-        <element>
-          <data_ele>374</data_ele>
-          <name>Date/Time Qualifier</name>
-          <usage>R</usage>
-          <seq>03</seq>
-          <refdes>RDT03</refdes>
-          <data_type>ID</data_type>
-          <min_len>3</min_len>
-          <max_len>3</max_len>
-          <valid_codes>
-            <code>171</code>
-          </valid_codes>
-        </element>
-        <element>
-          <data_ele>373</data_ele>
-          <name>Date</name>
-          <usage>R</usage>
-          <seq>04</seq>
-          <refdes>RDT04</refdes>
-          <data_type>DT</data_type>
-          <min_len>8</min_len>
-          <max_len>8</max_len>
-        </element>
-        <element>
-          <data_ele>337</data_ele>
-          <name>Time</name>
-          <usage>N</usage>
-          <seq>05</seq>
-          <refdes>RDT05</refdes>
-          <data_type>TM</data_type>
-          <min_len>4</min_len>
-          <max_len>8</max_len>
-        </element>
-        <element>
-          <data_ele>623</data_ele>
-          <name>Time Code</name>
-          <usage>N</usage>
-          <seq>06</seq>
-          <refdes>RDT06</refdes>
-          <data_type>ID</data_type>
-          <min_len>2</min_len>
-          <max_len>2</max_len>
-        </element>
-      </segment>
-      <segment>
-        <id>RDT</id>
-        <name>Effective Date</name>
-        <usage>S</usage>
-        <pos>030</pos>
+        <pos>010</pos>
         <max_use>1</max_use>
-        <syntax>C0102</syntax>
-        <syntax>L030405</syntax>
-        <syntax>C0605</syntax>
         <element>
-          <data_ele>795</data_ele>
-          <name>Revision Level Code</name>
-          <usage>N</usage>
+          <data_ele>628</data_ele>
+          <name>Hierarchical ID Number</name>
+          <usage>R</usage>
           <seq>01</seq>
-          <refdes>RDT01</refdes>
-          <data_type>ID</data_type>
-          <min_len>1</min_len>
-          <max_len>1</max_len>
-        </element>
-        <element>
-          <data_ele>796</data_ele>
-          <name>Revision Value</name>
-          <usage>N</usage>
-          <seq>02</seq>
-          <refdes>RDT02</refdes>
+          <refdes>HL01</refdes>
           <data_type>AN</data_type>
           <min_len>1</min_len>
-          <max_len>30</max_len>
-        </element>
-        <element>
-          <data_ele>374</data_ele>
-          <name>Date/Time Qualifier</name>
-          <usage>R</usage>
-          <seq>03</seq>
-          <refdes>RDT03</refdes>
-          <data_type>ID</data_type>
-          <min_len>3</min_len>
-          <max_len>3</max_len>
+          <max_len>12</max_len>
           <valid_codes>
-            <code>007</code>
+            <code>1</code>
           </valid_codes>
         </element>
         <element>
-          <data_ele>373</data_ele>
-          <name>Date</name>
+          <data_ele>734</data_ele>
+          <name>Hierarchical Parent ID Number</name>
+          <usage>N</usage>
+          <seq>02</seq>
+          <refdes>HL02</refdes>
+          <data_type>AN</data_type>
+          <min_len>1</min_len>
+          <max_len>12</max_len>
+        </element>
+        <element>
+          <data_ele>735</data_ele>
+          <name>Hierarchical Level Code</name>
           <usage>R</usage>
-          <seq>04</seq>
-          <refdes>RDT04</refdes>
-          <data_type>DT</data_type>
-          <min_len>8</min_len>
-          <max_len>8</max_len>
-        </element>
-        <element>
-          <data_ele>337</data_ele>
-          <name>Time</name>
-          <usage>N</usage>
-          <seq>05</seq>
-          <refdes>RDT05</refdes>
-          <data_type>TM</data_type>
-          <min_len>4</min_len>
-          <max_len>8</max_len>
-        </element>
-        <element>
-          <data_ele>623</data_ele>
-          <name>Time Code</name>
-          <usage>N</usage>
-          <seq>06</seq>
-          <refdes>RDT06</refdes>
+          <seq>03</seq>
+          <refdes>HL03</refdes>
           <data_type>ID</data_type>
-          <min_len>2</min_len>
+          <min_len>1</min_len>
           <max_len>2</max_len>
+          <valid_codes>
+            <code>I</code>
+          </valid_codes>
+        </element>
+        <element>
+          <data_ele>736</data_ele>
+          <name>Hierarchical Child Code</name>
+          <usage>N</usage>
+          <seq>04</seq>
+          <refdes>HL04</refdes>
+          <data_type>ID</data_type>
+          <min_len>1</min_len>
+          <max_len>1</max_len>
         </element>
       </segment>
       <loop>
-        <id>1100</id>
-        <name>Code List Source</name>
+        <id>2100</id>
+        <name>Code List Value and Definition</name>
         <usage>R</usage>
         <seq>010</seq>
         <count>&gt;1</count>
         <segment>
-          <id>N1</id>
-          <name>Code List Source</name>
-          <usage>S</usage>
-          <pos>120</pos>
+          <id>SPI</id>
+          <name>Code List Value and Definition</name>
+          <usage>R</usage>
+          <pos>020</pos>
           <max_use>1</max_use>
-          <syntax>R0203</syntax>
-          <syntax>P0304</syntax>
+          <syntax>P0203</syntax>
           <element>
-            <data_ele>98</data_ele>
-            <name>Entity Identifier Code</name>
+            <data_ele>786</data_ele>
+            <name>Security Level Code</name>
             <usage>R</usage>
             <seq>01</seq>
-            <refdes>N101</refdes>
+            <refdes>SPI01</refdes>
+            <data_type>ID</data_type>
+            <min_len>2</min_len>
+            <max_len>2</max_len>
+            <valid_codes>
+              <code>00</code>
+            </valid_codes>
+          </element>
+          <element>
+            <data_ele>128</data_ele>
+            <name>Reference Identification Qualifier</name>
+            <usage>R</usage>
+            <seq>02</seq>
+            <refdes>SPI02</refdes>
             <data_type>ID</data_type>
             <min_len>2</min_len>
             <max_len>3</max_len>
             <valid_codes>
-              <code>0F</code>
+              <code>ZZ</code>
             </valid_codes>
           </element>
           <element>
-            <data_ele>93</data_ele>
-            <name>Name</name>
+            <data_ele>127</data_ele>
+            <name>Reference Identification</name>
             <usage>R</usage>
-            <seq>02</seq>
-            <refdes>N102</refdes>
-            <data_type>AN</data_type>
-            <min_len>1</min_len>
-            <max_len>60</max_len>
-          </element>
-          <element>
-            <data_ele>66</data_ele>
-            <name>Identification Code Qualifier</name>
-            <usage>N</usage>
             <seq>03</seq>
-            <refdes>N103</refdes>
-            <data_type>ID</data_type>
+            <refdes>SPI03</refdes>
+            <data_type>AN</data_type>
             <min_len>1</min_len>
-            <max_len>2</max_len>
+            <max_len>30</max_len>
           </element>
           <element>
-            <data_ele>67</data_ele>
-            <name>Identification Code</name>
-            <usage>N</usage>
+            <data_ele>790</data_ele>
+            <name>Entity Title</name>
+            <usage>R</usage>
             <seq>04</seq>
-            <refdes>N104</refdes>
+            <refdes>SPI04</refdes>
             <data_type>AN</data_type>
-            <min_len>2</min_len>
+            <min_len>1</min_len>
+            <max_len>132</max_len>
+          </element>
+          <element>
+            <data_ele>791</data_ele>
+            <name>Entity Purpose</name>
+            <usage>N</usage>
+            <seq>05</seq>
+            <refdes>SPI05</refdes>
+            <data_type>AN</data_type>
+            <min_len>1</min_len>
             <max_len>80</max_len>
           </element>
           <element>
-            <data_ele>706</data_ele>
-            <name>Entity Relationship Code</name>
-            <usage>N</usage>
-            <seq>05</seq>
-            <refdes>N105</refdes>
-            <data_type>ID</data_type>
-            <min_len>2</min_len>
-            <max_len>2</max_len>
-          </element>
-          <element>
-            <data_ele>98</data_ele>
-            <name>Entity Identifier Code</name>
+            <data_ele>792</data_ele>
+            <name>Entity Status Code</name>
             <usage>N</usage>
             <seq>06</seq>
-            <refdes>N106</refdes>
-            <data_type>ID</data_type>
-            <min_len>2</min_len>
-            <max_len>3</max_len>
-          </element>
-        </segment>
-      </loop>
-      <loop>
-        <id>2000</id>
-        <name>Code List Header</name>
-        <usage>R</usage>
-        <seq>010</seq>
-        <count>&gt;1</count>
-        <segment>
-          <id>HL</id>
-          <name>Code List Header</name>
-          <usage>R</usage>
-          <pos>010</pos>
-          <max_use>1</max_use>
-          <element>
-            <data_ele>628</data_ele>
-            <name>Hierarchical ID Number</name>
-            <usage>R</usage>
-            <seq>01</seq>
-            <refdes>HL01</refdes>
-            <data_type>AN</data_type>
-            <min_len>1</min_len>
-            <max_len>12</max_len>
-            <valid_codes>
-              <code>1</code>
-            </valid_codes>
-          </element>
-          <element>
-            <data_ele>734</data_ele>
-            <name>Hierarchical Parent ID Number</name>
-            <usage>N</usage>
-            <seq>02</seq>
-            <refdes>HL02</refdes>
-            <data_type>AN</data_type>
-            <min_len>1</min_len>
-            <max_len>12</max_len>
-          </element>
-          <element>
-            <data_ele>735</data_ele>
-            <name>Hierarchical Level Code</name>
-            <usage>R</usage>
-            <seq>03</seq>
-            <refdes>HL03</refdes>
-            <data_type>ID</data_type>
-            <min_len>1</min_len>
-            <max_len>2</max_len>
-            <valid_codes>
-              <code>I</code>
-            </valid_codes>
-          </element>
-          <element>
-            <data_ele>736</data_ele>
-            <name>Hierarchical Child Code</name>
-            <usage>N</usage>
-            <seq>04</seq>
-            <refdes>HL04</refdes>
+            <refdes>SPI06</refdes>
             <data_type>ID</data_type>
             <min_len>1</min_len>
             <max_len>1</max_len>
           </element>
+          <element>
+            <data_ele>353</data_ele>
+            <name>Transaction Set Purpose Code</name>
+            <usage>N</usage>
+            <seq>07</seq>
+            <refdes>SPI07</refdes>
+            <data_type>ID</data_type>
+            <min_len>2</min_len>
+            <max_len>2</max_len>
+          </element>
+          <element>
+            <data_ele>755</data_ele>
+            <name>Report Type Code</name>
+            <usage>N</usage>
+            <seq>08</seq>
+            <refdes>SPI08</refdes>
+            <data_type>ID</data_type>
+            <min_len>2</min_len>
+            <max_len>2</max_len>
+          </element>
+          <element>
+            <data_ele>786</data_ele>
+            <name>Security Level Code</name>
+            <usage>N</usage>
+            <seq>09</seq>
+            <refdes>SPI09</refdes>
+            <data_type>ID</data_type>
+            <min_len>2</min_len>
+            <max_len>2</max_len>
+          </element>
+          <element>
+            <data_ele>559</data_ele>
+            <name>Agency Qualifier Code</name>
+            <usage>N</usage>
+            <seq>10</seq>
+            <refdes>SPI10</refdes>
+            <data_type>ID</data_type>
+            <min_len>2</min_len>
+            <max_len>2</max_len>
+          </element>
+          <element>
+            <data_ele>822</data_ele>
+            <name>Source Subqualifier</name>
+            <usage>N</usage>
+            <seq>11</seq>
+            <refdes>SPI11</refdes>
+            <data_type>AN</data_type>
+            <min_len>1</min_len>
+            <max_len>15</max_len>
+          </element>
+          <element>
+            <data_ele>554</data_ele>
+            <name>Assigned Number</name>
+            <usage>N</usage>
+            <seq>12</seq>
+            <refdes>SPI12</refdes>
+            <data_type>N0</data_type>
+            <min_len>1</min_len>
+            <max_len>6</max_len>
+          </element>
+          <element>
+            <data_ele>1322</data_ele>
+            <name>Certification Type Code</name>
+            <usage>N</usage>
+            <seq>13</seq>
+            <refdes>SPI13</refdes>
+            <data_type>ID</data_type>
+            <min_len>1</min_len>
+            <max_len>1</max_len>
+          </element>
+          <element>
+            <data_ele>1401</data_ele>
+            <name>Proposal Data Detail Identifier Code</name>
+            <usage>N</usage>
+            <seq>14</seq>
+            <refdes>SPI14</refdes>
+            <data_type>ID</data_type>
+            <min_len>1</min_len>
+            <max_len>3</max_len>
+          </element>
+          <element>
+            <data_ele>1005</data_ele>
+            <name>Heirarchal Structure Code</name>
+            <usage>N</usage>
+            <seq>15</seq>
+            <refdes>SPI15</refdes>
+            <data_type>ID</data_type>
+            <min_len>4</min_len>
+            <max_len>4</max_len>
+          </element>
         </segment>
-        <loop>
-          <id>2100</id>
-          <name>Code List Value and Definition</name>
-          <usage>R</usage>
-          <seq>010</seq>
-          <count>&gt;1</count>
-          <segment>
-            <id>SPI</id>
-            <name>Code List Value and Definition</name>
+        <segment>
+          <id>MSG</id>
+          <name>Additional Text</name>
+          <usage>S</usage>
+          <pos>050</pos>
+          <max_use>&gt;1</max_use>
+          <syntax>C0302</syntax>
+          <element>
+            <data_ele>933</data_ele>
+            <name>Free-Form Text Message</name>
             <usage>R</usage>
-            <pos>020</pos>
-            <max_use>1</max_use>
-            <syntax>P0203</syntax>
-            <element>
-              <data_ele>786</data_ele>
-              <name>Security Level Code</name>
-              <usage>R</usage>
-              <seq>01</seq>
-              <refdes>SPI01</refdes>
-              <data_type>ID</data_type>
-              <min_len>2</min_len>
-              <max_len>2</max_len>
-              <valid_codes>
-                <code>00</code>
-              </valid_codes>
-            </element>
-            <element>
-              <data_ele>128</data_ele>
-              <name>Reference Identification Qualifier</name>
-              <usage>R</usage>
-              <seq>02</seq>
-              <refdes>SPI02</refdes>
-              <data_type>ID</data_type>
-              <min_len>2</min_len>
-              <max_len>3</max_len>
-              <valid_codes>
-                <code>ZZ</code>
-              </valid_codes>
-            </element>
-            <element>
-              <data_ele>127</data_ele>
-              <name>Reference Identification</name>
-              <usage>R</usage>
-              <seq>03</seq>
-              <refdes>SPI03</refdes>
-              <data_type>AN</data_type>
-              <min_len>1</min_len>
-              <max_len>30</max_len>
-            </element>
-            <element>
-              <data_ele>790</data_ele>
-              <name>Entity Title</name>
-              <usage>R</usage>
-              <seq>04</seq>
-              <refdes>SPI04</refdes>
-              <data_type>AN</data_type>
-              <min_len>1</min_len>
-              <max_len>132</max_len>
-            </element>
-            <element>
-              <data_ele>791</data_ele>
-              <name>Entity Purpose</name>
-              <usage>N</usage>
-              <seq>05</seq>
-              <refdes>SPI05</refdes>
-              <data_type>AN</data_type>
-              <min_len>1</min_len>
-              <max_len>80</max_len>
-            </element>
-            <element>
-              <data_ele>792</data_ele>
-              <name>Entity Status Code</name>
-              <usage>N</usage>
-              <seq>06</seq>
-              <refdes>SPI06</refdes>
-              <data_type>ID</data_type>
-              <min_len>1</min_len>
-              <max_len>1</max_len>
-            </element>
-            <element>
-              <data_ele>353</data_ele>
-              <name>Transaction Set Purpose Code</name>
-              <usage>N</usage>
-              <seq>07</seq>
-              <refdes>SPI07</refdes>
-              <data_type>ID</data_type>
-              <min_len>2</min_len>
-              <max_len>2</max_len>
-            </element>
-            <element>
-              <data_ele>755</data_ele>
-              <name>Report Type Code</name>
-              <usage>N</usage>
-              <seq>08</seq>
-              <refdes>SPI08</refdes>
-              <data_type>ID</data_type>
-              <min_len>2</min_len>
-              <max_len>2</max_len>
-            </element>
-            <element>
-              <data_ele>786</data_ele>
-              <name>Security Level Code</name>
-              <usage>N</usage>
-              <seq>09</seq>
-              <refdes>SPI09</refdes>
-              <data_type>ID</data_type>
-              <min_len>2</min_len>
-              <max_len>2</max_len>
-            </element>
-            <element>
-              <data_ele>559</data_ele>
-              <name>Agency Qualifier Code</name>
-              <usage>N</usage>
-              <seq>10</seq>
-              <refdes>SPI10</refdes>
-              <data_type>ID</data_type>
-              <min_len>2</min_len>
-              <max_len>2</max_len>
-            </element>
-            <element>
-              <data_ele>822</data_ele>
-              <name>Source Subqualifier</name>
-              <usage>N</usage>
-              <seq>11</seq>
-              <refdes>SPI11</refdes>
-              <data_type>AN</data_type>
-              <min_len>1</min_len>
-              <max_len>15</max_len>
-            </element>
-            <element>
-              <data_ele>554</data_ele>
-              <name>Assigned Number</name>
-              <usage>N</usage>
-              <seq>12</seq>
-              <refdes>SPI12</refdes>
-              <data_type>N0</data_type>
-              <min_len>1</min_len>
-              <max_len>6</max_len>
-            </element>
-            <element>
-              <data_ele>1322</data_ele>
-              <name>Certification Type Code</name>
-              <usage>N</usage>
-              <seq>13</seq>
-              <refdes>SPI13</refdes>
-              <data_type>ID</data_type>
-              <min_len>1</min_len>
-              <max_len>1</max_len>
-            </element>
-            <element>
-              <data_ele>1401</data_ele>
-              <name>Proposal Data Detail Identifier Code</name>
-              <usage>N</usage>
-              <seq>14</seq>
-              <refdes>SPI14</refdes>
-              <data_type>ID</data_type>
-              <min_len>1</min_len>
-              <max_len>3</max_len>
-            </element>
-            <element>
-              <data_ele>1005</data_ele>
-              <name>Heirarchal Structure Code</name>
-              <usage>N</usage>
-              <seq>15</seq>
-              <refdes>SPI15</refdes>
-              <data_type>ID</data_type>
-              <min_len>4</min_len>
-              <max_len>4</max_len>
-            </element>
-          </segment>
-          <segment>
-            <id>MSG</id>
-            <name>Additional Text</name>
-            <usage>S</usage>
-            <pos>050</pos>
-            <max_use>&gt;1</max_use>
-            <syntax>C0302</syntax>
-            <element>
-              <data_ele>933</data_ele>
-              <name>Free-Form Text Message</name>
-              <usage>R</usage>
-              <seq>01</seq>
-              <refdes>MSG01</refdes>
-              <data_type>AN</data_type>
-              <min_len>1</min_len>
-              <max_len>264</max_len>
-            </element>
-            <element>
-              <data_ele>934</data_ele>
-              <name>Printer Carriage Control Code</name>
-              <usage>N</usage>
-              <seq>02</seq>
-              <refdes>MSG02</refdes>
-              <data_type>ID</data_type>
-              <min_len>2</min_len>
-              <max_len>2</max_len>
-            </element>
-            <element>
-              <data_ele>1470</data_ele>
-              <name>Number</name>
-              <usage>N</usage>
-              <seq>03</seq>
-              <refdes>MSG03</refdes>
-              <data_type>N0</data_type>
-              <min_len>1</min_len>
-              <max_len>9</max_len>
-            </element>
-          </segment>
-        </loop>
+            <seq>01</seq>
+            <refdes>MSG01</refdes>
+            <data_type>AN</data_type>
+            <min_len>1</min_len>
+            <max_len>264</max_len>
+          </element>
+          <element>
+            <data_ele>934</data_ele>
+            <name>Printer Carriage Control Code</name>
+            <usage>N</usage>
+            <seq>02</seq>
+            <refdes>MSG02</refdes>
+            <data_type>ID</data_type>
+            <min_len>2</min_len>
+            <max_len>2</max_len>
+          </element>
+          <element>
+            <data_ele>1470</data_ele>
+            <name>Number</name>
+            <usage>N</usage>
+            <seq>03</seq>
+            <refdes>MSG03</refdes>
+            <data_type>N0</data_type>
+            <min_len>1</min_len>
+            <max_len>9</max_len>
+          </element>
+        </segment>
       </loop>
     </loop>
-    <segment>
-      <id>SE</id>
-      <name>Transaction Set Trailer</name>
+  </loop>
+  <segment>
+    <id>SE</id>
+    <name>Transaction Set Trailer</name>
+    <usage>R</usage>
+    <pos>210</pos>
+    <max_use>1</max_use>
+    <element>
+      <data_ele>96</data_ele>
+      <name>Transaction Segment Count</name>
       <usage>R</usage>
-      <pos>210</pos>
-      <max_use>1</max_use>
-      <element>
-        <data_ele>96</data_ele>
-        <name>Transaction Segment Count</name>
-        <usage>R</usage>
-        <seq>01</seq>
-        <refdes>SE01</refdes>
-        <data_type>N0</data_type>
-        <min_len>1</min_len>
-        <max_len>10</max_len>
-      </element>
-      <element>
-        <data_ele>329</data_ele>
-        <name>Transaction Set Control Number</name>
-        <usage>R</usage>
-        <seq>02</seq>
-        <refdes>SE02</refdes>
-        <data_type>AN</data_type>
-        <min_len>4</min_len>
-        <max_len>9</max_len>
-      </element>
-    </segment>
-    <segment>
-      <id>GE</id>
-      <name>Functional Group Trailer</name>
+      <seq>01</seq>
+      <refdes>SE01</refdes>
+      <data_type>N0</data_type>
+      <min_len>1</min_len>
+      <max_len>10</max_len>
+    </element>
+    <element>
+      <data_ele>329</data_ele>
+      <name>Transaction Set Control Number</name>
       <usage>R</usage>
-      <pos>0</pos>
-      <max_use>1</max_use>
-      <element>
-        <data_ele>97</data_ele>
-        <name>Number of Transaction Sets Included</name>
-        <usage>R</usage>
-        <seq>01</seq>
-        <refdes>GE01</refdes>
-        <data_type>N0</data_type>
-        <min_len>1</min_len>
-        <max_len>6</max_len>
-      </element>
-      <element>
-        <data_ele>28</data_ele>
-        <name>Group Control Number</name>
-        <usage>R</usage>
-        <seq>02</seq>
-        <refdes>GE02</refdes>
-        <data_type>N0</data_type>
-        <min_len>1</min_len>
-        <max_len>9</max_len>
-      </element>
-    </segment>
-    <segment>
-      <id>IEA</id>
-      <name>Interchange Control Trailer</name>
+      <seq>02</seq>
+      <refdes>SE02</refdes>
+      <data_type>AN</data_type>
+      <min_len>4</min_len>
+      <max_len>9</max_len>
+    </element>
+  </segment>
+  <segment>
+    <id>GE</id>
+    <name>Functional Group Trailer</name>
+    <usage>R</usage>
+    <pos>0</pos>
+    <max_use>1</max_use>
+    <element>
+      <data_ele>97</data_ele>
+      <name>Number of Transaction Sets Included</name>
       <usage>R</usage>
-      <pos>0</pos>
-      <max_use>1</max_use>
-      <element>
-        <data_ele>I16</data_ele>
-        <name>Number of Included Functional Groups</name>
-        <usage>R</usage>
-        <seq>01</seq>
-        <refdes>IEA01</refdes>
-        <data_type>N0</data_type>
-        <min_len>1</min_len>
-        <max_len>5</max_len>
-      </element>
-      <element>
-        <data_ele>I12</data_ele>
-        <name>Interchange Control Number</name>
-        <usage>R</usage>
-        <seq>02</seq>
-        <refdes>IEA02</refdes>
-        <data_type>N0</data_type>
-        <min_len>9</min_len>
-        <max_len>9</max_len>
-      </element>
-    </segment>
-  </transaction>
-</map>
+      <seq>01</seq>
+      <refdes>GE01</refdes>
+      <data_type>N0</data_type>
+      <min_len>1</min_len>
+      <max_len>6</max_len>
+    </element>
+    <element>
+      <data_ele>28</data_ele>
+      <name>Group Control Number</name>
+      <usage>R</usage>
+      <seq>02</seq>
+      <refdes>GE02</refdes>
+      <data_type>N0</data_type>
+      <min_len>1</min_len>
+      <max_len>9</max_len>
+    </element>
+  </segment>
+  <segment>
+    <id>IEA</id>
+    <name>Interchange Control Trailer</name>
+    <usage>R</usage>
+    <pos>0</pos>
+    <max_use>1</max_use>
+    <element>
+      <data_ele>I16</data_ele>
+      <name>Number of Included Functional Groups</name>
+      <usage>R</usage>
+      <seq>01</seq>
+      <refdes>IEA01</refdes>
+      <data_type>N0</data_type>
+      <min_len>1</min_len>
+      <max_len>5</max_len>
+    </element>
+    <element>
+      <data_ele>I12</data_ele>
+      <name>Interchange Control Number</name>
+      <usage>R</usage>
+      <seq>02</seq>
+      <refdes>IEA02</refdes>
+      <data_type>N0</data_type>
+      <min_len>9</min_len>
+      <max_len>9</max_len>
+    </element>
+  </segment>
+</transaction>
