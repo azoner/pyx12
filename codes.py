@@ -44,7 +44,7 @@ from stat import ST_SIZE
 
 # Intrapackage imports
 import errors
-from utils import *
+from utils import GetChildElementText
 
 class ExternalCodes:
     """
@@ -61,17 +61,14 @@ class ExternalCodes:
 	
 	self.codes = {}
 	
-    	# init a map of codes from the pickled file codes.pic
+    	# init the map of codes from the pickled file codes.pic
 	try:
-            dt1 = os.stat('map/codes.xml')[ST_MTIME]
-	    dt2 = os.stat('map/codes.pic')[ST_MTIME]
-	    if dt1 < dt2:
+	    if os.stat('map/codes.xml')[ST_MTIME] < os.stat('map/codes.pic')[ST_MTIME]:
 		self.codes = cPickle.load(open('map/codes.pic'))
+	    else: 
+	        raise "reload codes"
 	except:
-	    pass
-	
-    	# init a map of codes from codes.xml
-	if len(self.codes) == 0:
+    	    # init the map of codes from codes.xml
 	    dom_codes = xml.dom.minidom.parse('map/codes.xml')
 	    codeset_nodes = dom_codes.getElementsByTagName("codeset")
 	    for codeset_node in codeset_nodes:
