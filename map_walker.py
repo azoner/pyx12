@@ -42,97 +42,128 @@ If seg indicates a segment has been entered, returns the segment node
 
 # Intrapackage imports
 from errors import *
+import pdb
 #import codes
 #import map_index
 #import map_if
 #import x12file
 #from utils import *
 
-def walk_tree(node, seg):
-    """
-    Handle required segment/loop missed (not found in seg)
-    Handle found segment = Not used
-    """
-    orig_node = node
+class walk_tree:
+    def __init__(self):
+        end_tag_stack = []
 
-    # Repeat of current segment
-    if node.is_segment():
-        if node.is_match(seg):
-            return node
-    #handle seg repeat count
+    def walk(self, node, seg):
+        """
+        Handle required segment/loop missed (not found in seg)
+        Handle found segment = Not used
+        """
+        orig_node = node
 
-    # Next segment in loop
-    node_idx = None
-    if node.is_segment(): 
-        node_idx = node.index
-        node = pop_to_parent_loop(node)
+        # Repeat of current segment
+        if node.is_segment():
+            if node.is_match(seg):
+                return node
+        #handle seg repeat count
+
+
+        if seg[0] == 'NM1':
+            pdb.set_trace()
+        if node.is_loop() or node.is_map_root(): 
+            # print node.name, node.id
+            for child in node.children:
+                if child.is_segment():
+                    #print child.id
+                    if child.is_match(seg):
+                        if child.usage == 'N':
+                            raise WEDIError, "Segment %s found but marked as not used" % (child.id)
+                        return child
+                    elif child.usage == 'R':
+                        raise WEDIError, "Required segment %s not found" % (child.id)
+     
+        # Next segment in loop
+        node_idx = None
+        if node.is_segment(): 
+            node_idx = node.index
+            node = self.pop_to_parent_loop(node)
+            for child in node.children:
+                if child.is_segment() and child.index > node_idx:
+                    #print child.id, child.index, node_idx
+                    if child.is_match(seg):
+                        if child.usage == 'N':
+                            raise WEDIError, "Segment %s found but marked as not used" % (child.id)
+                        return child
+                    elif child.usage == 'R':
+                        raise WEDIError, "Required segment %s not found" % (child.id)
+            
+        # Child loop
+        node = orig_node
+        logger.debug('map_walker: orig_node id=%s' % (node.id))
+        node = self.pop_to_parent_loop(node)
+        logger.debug('map_walker: parent_node id=%s' % (node.id))
         for child in node.children:
-            if child.is_segment() and child.index >= node_idx:
-                if child.is_match(seg):
-                    if child.usage == 'N':
-                        raise WEDIError, "Segment %s found but marked as not used" % (child.id)
-                    return child
-                elif child.usage == 'R':
-                    raise WEDIError, "Required segment %s not found" % (child.id)
+            if child.is_loop():
+                logger.debug('map_walker: child_node id=%s' % (child.id))
+                if self.is_first_seg_match(child, seg): 
+                    return child # Return the loop node
+                else:
+                    logger.debug('map_walker: child_node id=%s is node a match' % (child.id))
+                    
+                    
+        # Repeat loop
+        node = orig_node
+        node = self.pop_to_parent_loop(node) # We are in a segment
+        if self.is_first_seg_match(node, seg): 
+            return node # Return the loop node
+
+                                  
+        # Sibling Loop
+        node = orig_node
+        node_idx = None
+        while not node.is_loop(): 
+            node = node.parent
+        if node.is_loop():
+            node_idx = node.index
+        for child in node.children:
+            if child.is_loop() and child.index > node_idx:
+                if self.is_first_seg_match(child, seg): return child
+        node = orig_node
+
+        # Parent Loop
+        node = self.pop_to_parent_loop(node) # Get my loop
+        node = self.pop_to_parent_loop(node) # Then get its loop
+        if self.is_first_seg_match(node, seg): 
+            return node
+
+
+        raise EngineError, "Could not find seg %s*%s.  Started at %s" % (seg[0], seg[1], orig_node.id)
+
+    def pop_to_parent_loop(self, node):
+        if node.is_map_root():
+            return node
+        map_node = node.parent
+        if map_node is None:
+            raise EngineError, "Node is None: %s" % (node.name)
+        while not (map_node.is_loop() or map_node.is_map_root()): 
+            map_node = map_node.parent
+        if not (map_node.is_loop() or map_node.is_map_root()):
+            raise EngineError, "Called pop_to_parent_loop, can't find parent loop"
+        return map_node
         
-    # Child loop
-    node = orig_node
-    node = pop_to_parent_loop(node)
-    for child in node.children:
-        if child.is_loop():
-            if is_first_seg_match(child, seg): 
-                return child # Return the loop node
-                
-    # Repeat loop
-    node = orig_node
-    node = pop_to_parent_loop(node) # We are in a segment
-    if is_first_seg_match(node, seg): 
-        return node # Return the loop node
 
-                              
-    # Sibling Loop
-    node = orig_node
-    node_idx = None
-    while not node.is_loop(): 
-        node = node.parent
-    if node.is_loop():
-        node_idx = node.index
-    for child in node.children:
-        if child.is_loop() and child.index > node_idx:
-            if is_first_seg_match(child, seg): return child
-    node = orig_node
-
-    # Parent Loop
-    node = pop_to_parent_loop(node) # Get my loop
-    node = pop_to_parent_loop(node) # Then get its loop
-    if is_first_seg_match(node, seg): 
-        return node
-
-
-    raise EngineError, "Could not find seg %s*%s.  Started at %s" % (seg[0], seg[1], orig_node.id)
-
-def pop_to_parent_loop(node):
-    node = node.parent
-    while not (node.is_loop() or node.is_map_root()): 
-        node = node.parent
-    if not (node.is_loop() or node.is_map_root()):
-        raise EngineError, "Called pop_to_parent_loop, can't find parent loop"
-    return node
-    
-
-def is_first_seg_match(node, seg):
-    """
-    Find the first segment in loop, verify it matches segment
-    Return: boolean
-    """
-    if not node.is_loop(): raise EngineError, \
-        "Call to first_seg_match failed, node is not a loop"
-    for child in node.children:
-        if child.is_segment():
-            if child.is_match(seg):
-                return True
-            else:
-                return False # seg does not match the first segment in loop, so not valid
-    return False
+    def is_first_seg_match(self, node, seg):
+        """
+        Find the first segment in loop, verify it matches segment
+        Return: boolean
+        """
+        if not node.is_loop(): raise EngineError, \
+            "Call to first_seg_match failed, node is not a loop"
+        for child in node.children:
+            if child.is_segment():
+                if child.is_match(seg):
+                    return True
+                else:
+                    return False # seg does not match the first segment in loop, so not valid
+        return False
 
 

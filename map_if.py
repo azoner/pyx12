@@ -93,13 +93,22 @@ class x12_node:
         return len(self.children)
 
     def get_child_node_by_idx(self, idx):
+        """
+        Name:    get_child_node_by_idx
+        Desc:    
+        Params:  
+ 
+        Returns: 
+
+        Note: idx is zero based
+        """
         if idx >= len(self.children):
             return None
         else:
             return self.children[idx]
 
-    def walk_tree(self, seg):
-        pass
+#    def walk_tree(self, seg):
+#        pass
         # handle loop events, pop, push
         # only concerned with loop and segment nodes
 
@@ -144,6 +153,7 @@ class map_if(x12_node):
         global reader
         x12_node.__init__(self)
         self.children = []
+        index = 0
         cur_name = ''
         self.cur_path = '/transaction'
         self.cur_level = -1 
@@ -175,9 +185,11 @@ class map_if(x12_node):
                         self.base_name = 'transaction'
                         pass
                     elif cur_name == 'segment':
-                        self.children.append(segment_if(self))
+                        self.children.append(segment_if(self, index))
+                        index += 1
                     elif cur_name == 'loop':
-                        self.children.append(loop_if(self))
+                        self.children.append(loop_if(self, index))
+                        index += 1
                     
                     #if self.cur_level < reader.Depth():
                         #    self.cur_path = os.path.join(self.cur_path, cur_name)
@@ -244,7 +256,7 @@ class map_if(x12_node):
 class loop_if(x12_node):
     """
     """
-    def __init__(self, parent): 
+    def __init__(self, parent, index): 
         """
         Name:    __init__
         Desc:    
@@ -257,9 +269,11 @@ class loop_if(x12_node):
         global reader
         x12_node.__init__(self)
         self.children = []
+        index = 0
         self.parent = parent
         self.path = ''
         self.base_name = 'loop'
+        self.index = index
         
         self.id = None
         self.name = None
@@ -286,9 +300,11 @@ class loop_if(x12_node):
                 #    print 'l'*reader.Depth(), reader.Depth(),  self.base_level, reader.NodeType(), reader.Name()
                 cur_name = reader.Name()
                 if cur_name == 'loop' and self.base_level < reader.Depth():
-                    self.children.append(loop_if(self))
+                    self.children.append(loop_if(self, index))
+                    index += 1
                 elif cur_name == 'segment':
-                    self.children.append(segment_if(self))
+                    self.children.append(segment_if(self, index))
+                    index += 1
                 elif cur_name == 'element':
                     self.children.append(element_if(self))
                     
@@ -374,7 +390,7 @@ class loop_if(x12_node):
 class segment_if(x12_node):
     """
     """
-    def __init__(self, parent):
+    def __init__(self, parent, index):
         """
         Class: segment_if
         Name:    __init__
@@ -391,8 +407,11 @@ class segment_if(x12_node):
         self.path = ''
         self.base_name = 'segment'
         self.base_level = reader.Depth()
+        self.index = index
+        self.check_dte = '20030930'
 
         self.id = None
+        self.end_tag = None
         self.name = None
         self.usage = None
         self.pos = None
@@ -418,6 +437,8 @@ class segment_if(x12_node):
                     self.base_name = 'segment'
                 elif cur_name == 'element':
                     self.children.append(element_if(self))
+                elif cur_name == 'composite':
+                    self.children.append(composite_if(self))
                     
                 #if self.cur_level < reader.Depth():
                 #    self.cur_path = os.path.join(self.cur_path, cur_name)
@@ -442,12 +463,14 @@ class segment_if(x12_node):
                 #print cur_name, reader.Value()
                 if cur_name == 'id' and self.base_name == 'segment':
                     self.id = reader.Value()
+                elif cur_name == 'end_tag' and self.base_name == 'segment':
+                    self.end_tag = reader.Value()
                 elif cur_name == 'name' and self.base_name == 'segment':
                     self.name = reader.Value()
                 elif cur_name == 'usage' and self.base_name == 'segment':
                     self.usage = reader.Value()
                 elif cur_name == 'pos' and self.base_name == 'segment':
-                    self.pos = reader.Value()
+                    self.pos = int(reader.Value())
                 elif cur_name == 'max_use' and self.base_name == 'segment':
                     self.max_use = reader.Value()
 
@@ -466,7 +489,7 @@ class segment_if(x12_node):
         if self.id: sys.stdout.write('%sid %s\n' % (str(' '*(self.base_level+1)), self.id))
         if self.name: sys.stdout.write('%sname %s\n' % (str(' '*(self.base_level+1)), self.name))
         if self.usage: sys.stdout.write('%susage %s\n' % (str(' '*(self.base_level+1)), self.usage))
-        if self.pos: sys.stdout.write('%spos %s\n' % (str(' '*(self.base_level+1)), self.pos))
+        if self.pos: sys.stdout.write('%spos %i\n' % (str(' '*(self.base_level+1)), self.pos))
         if self.max_use: sys.stdout.write('%smax_use %s\n' % (str(' '*(self.base_level+1)), self.max_use))
         for node in self.children:
             node.debug_print()
@@ -534,7 +557,7 @@ class segment_if(x12_node):
         Returns: boolean
         """
         if seg[0] == self.id:
-            if self.children[1].data_type == 'ID' and self.children[1].value != seg[1]:
+            if self.children[1].data_type == 'ID' and seg[1] in self.children[1].valid_codes:
                 return False
             return True
         else:
@@ -552,12 +575,14 @@ class segment_if(x12_node):
         Returns: boolean
         """
         # handle intra-segment dependancies
-        if len(seg) > self.get_child_count(): 
-            raise errors.WEDI1Error, 'Too many elements in segment %s' % (seg[0])
+        if len(seg) > self.get_child_count() + 1: 
+            raise errors.WEDI1Error, \
+                'Too many elements in segment %s. Has %i, should have %i' % \
+                (seg[0], len(seg), self.get_child_count())
         for i in xrange(self.get_child_count()):
             # Validate Elements
-            if i < len(seg):
-                self.get_child_node_by_idx(i).is_valid(seg[i])
+            if i < len(seg) - 1:
+                self.get_child_node_by_idx(i).is_valid(seg[i+1], self.check_dte)
 #                if type(seg[i]) is ListType: # composite
                     # Validate composite
 #                    comp = seg[i]
@@ -775,13 +800,14 @@ class element_if(x12_node):
         # match also by ID
         pass
 
-    def is_valid(self, elem_val):
+    def is_valid(self, elem_val, check_dte=None):
         """
         Class:  element_if
         Name:   is_valid 
         Desc:    
         Params:  
             elem_val - value of element data
+            check_dte - date string to check against (YYYYMMDD)
                  
         Returns: boolean
         """
@@ -810,7 +836,7 @@ class element_if(x12_node):
 
         if elem_val == None and self.usage == 'R':
             raise errors.WEDI3Error
-        if not (self.__valid_code__(elem_val) or codes.IsValid(self.external_codes, elem_val) ):
+        if not (self.__valid_code__(elem_val) or codes.IsValid(self.external_codes, elem_val, check_dte) ):
             raise errors.WEDIError, "Not a valid code for this ID element"
         if not IsValidDataType(elem_val, self.data_type, 'E'):
             raise errors.WEDI1Error, "Invalid X12 datatype: '%s' is not a '%s'" % (elem_val, self.data_type) 
@@ -863,6 +889,7 @@ class composite_if(x12_node):
         self.path = ''
         self.base_name = 'composite'
         self.base_level = reader.Depth()
+        self.check_dte = '20030930'
 
         #self.id = None
         self.name = None
@@ -957,21 +984,21 @@ class composite_if(x12_node):
         Params:  
         Returns: True on success
         """
+        
+        if comp is None or len(comp) == 0:
+            if self.usage == 'N':
+                return True
+            elif self.usage == 'R':
+                raise errors.WEDI1Error, 'Composite "%s" is required' % (self.name)
 
         if not type(comp) is ListType: # composite
             comp = [comp] 
 
         if len(comp) > self.get_child_count():
             raise errors.WEDI1Error, 'Too many sub-elements in composite %s' % (self.refdes)
-        if len(comp) == 0 or comp is None:
-            if self.usage == 'N':
-                return True
-            elif self.usage == 'R':
-                raise errors.WEDI1Error, 'Composite "%s" is required' % (self.name)
-
         for i in xrange(len(comp)):
             if i < len(comp):
-                self.get_child_node_by_idx(i).is_valid(comp[i])
+                self.get_child_node_by_idx(i).is_valid(comp[i], self.check_dte)
             else: #missing required elements
                 self.get_child_node_by_idx(i).is_valid(None)
         return True

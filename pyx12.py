@@ -44,6 +44,7 @@ Create a XML document based on the data file
 import os, os.path
 #import stat
 import sys
+import logging
 #import string
 from types import *
 #import StringIO
@@ -63,243 +64,117 @@ from utils import *
 
 #Global Variables
 __version__ = "0.1.0"
+#logger = None
 
-def x12n_document():
+def x12n_document(fd):
 
-        # Get X12 DATA file
-        src = x12file.x12file(sys.stdin) 
+    logger = logging.getLogger('pyx12')
+    check_dte = '20030930'
+    # Get X12 DATA file
+    src = x12file.x12file(fd) 
 
-        #Get Map of Control Segments
-        control_map = map_if.map_if('map/map.x12.control.00401.xml')
-        
-        #Determine which map to use for this transaction
-        for seg in src:
-            if seg[0] == 'ISA':
-                map_node = walk_tree(control_map, seg)
-                map_node.is_valid(seg)
-                #map_node = control_map
-                icvn = map_node.get_elemval_by_id(seg, 'ISA12')
-                #isa_seg = segment(control_map.getnodebypath('/ISA'), seg)
-                #isa_seg.validate()
-                #icvn = isa_seg.GetElementValue('ISA12')
-            elif seg[0] == 'GS':
-                map_node = walk_tree(control_map, seg)
-                map_node.is_valid(seg)
-                fic = map_node.get_elemval_by_id(seg, 'GS01')
-                vriic = map_node.get_elemval_by_id(seg, 'GS08')
-                #gs_seg = segment(control_map.getnodebypath('/GS'), seg)
-                #gs_seg.validate()
-                #fic = gs_seg.GetElementValue('GS01')
-                #vriic = gs_seg.GetElementValue('GS08')
-
-                #Get map for this GS loop
-                map_index_if = map_index.map_index('map/maps.xml')
-                map_file = map_index_if.get_filename(icvn, vriic, fic)
-                #print map_file
-            else:
-                break        
-
-        #Determine which map to use for this transaction
-        map = map_if.map_if(os.path.join('map', map_file))
-        node = map.getnodebypath('/ST')
-
-        for seg in src:
-            #find node
-            node = walk_tree(node, seg)
-
-            #validate intra-element dependancies
-
-            if len(seg) > node.get_child_count(): raise x12Error, 'Too many elements in segment %s' % (seg[0])
-            for i in xrange(node.get_child_count()):
-                # Validate Elements
-                if i < len(seg):
-                    if type(seg[i]) is ListType: # composite
-                        # Validate composite
-                        comp_node = node.get_child_node_by_idx(i)
-                        if len(seg) > node.get_child_count():
-                            raise x12Error, 'Too many elements in segment %s' % (seg[0])
-                    else: # element
-                        node.get_child_node_by_idx(i).is_valid(seg[i])
-                else: #missing required elements
-                    node.get_child_node_by_idx(i).is_valid(None)
-                
-            #get special values
-            #generate xml
-
-#############################################################################
-###  SEGMENT - Link data segment to map
-#############################################################################
-class segment:
-    """
-    Parse and validate a segment
-    Takes a map_py node of the segment and the parsed segment line as a list
-    """
-    def __init__(self, node, seg):
-        """
-        Name:    __init__
-        Desc:    Sends an xml representation of the segmens to stdout
-        Params:  node - map_py node of the segment
-                 seg - the parsed segment line as a list
-        Returns: 
-        """
-
-        if node == None: raise x12Error
-        self.node = node
-        self.seg = seg
-
-        #self.id = GetChildElementText(node, 'id')
-        #self.name = GetChildElementText(node, 'name')
-        #self.end_tag = GetChildElementText(node, 'end_tag')
-        #self.usage = GetChildElementText(node, 'usage')
-        #self.req_des = GetChildElementText(node, 'req_des')
-        #self.pos = GetChildElementText(node, 'pos')
-
-        tab.incr()
-        #element_nodes = node.getElementsByTagName('element')
-        i = 1 
-        self.element_list = []
-        # APPLY LIST OF ELEMENTS TO ELEMENTS IN NODE
-        for child in node.children:
-            if child.base_name == 'element':
-                if i < len(seg):
-                    self.element_list.append(element(child, seg[i]))
-                else:
-                    self.element_list.append(element(child, None))
-                i += 1
-            elif child.base_name == 'composite':
-                if i < len(seg):
-                    self.element_list.append(composite(child, seg[i]))
-                else:
-                    self.element_list.append(composite(child, None))
-                i += 1
-
-    def __del__(self):
-        tab.decr()
-
-    def xml(self):
-        """
-        Name:    xml
-        Desc:    Sends an xml representation of the segment to stdout
-        Params:  
-        Returns: 
-        """
-
-        sys.stdout.write('<segment code="%s">\n' % (self.node.id))
-        for elem in self.element_list:
-            elem.xml()
-        sys.stdout.write('</segment>\n') # % (tab.indent()))
+    #Get Map of Control Segments
+    control_map = map_if.map_if('map/map.x12.control.00401.xml')
     
-    def validate(self):
-        """
-        Name:    validate
-        Desc:    Validate the segment and child elements or composites
-        Params:  
-        Returns: 
-        """
-        
-        #for elem in self.element_list:
-        #    elem.validate()
-        if len(self.seg) > self.node.get_child_count(): 
-            raise x12Error, 'Too many elements in segment %s' % (self.seg[0])
-        for i in xrange(self.node.get_child_count()):
+    logger.info('Run started')
+    walker = walk_tree()
+    #Determine which map to use for this transaction
+    for seg in src:
+        if seg[0] == 'ISA':
+            map_node = walker.walk(control_map, seg)
+            map_node.is_valid(seg)
+            #map_node = control_map
+            icvn = map_node.get_elemval_by_id(seg, 'ISA12')
+            #isa_seg = segment(control_map.getnodebypath('/ISA'), seg)
+            #isa_seg.validate()
+            #icvn = isa_seg.GetElementValue('ISA12')
+        elif seg[0] == 'GS':
+            map_node = walker.walk(map_node, seg)
+            map_node.is_valid(seg)
+            fic = map_node.get_elemval_by_id(seg, 'GS01')
+            vriic = map_node.get_elemval_by_id(seg, 'GS08')
+            
+            #gs_seg = segment(control_map.getnodebypath('/GS'), seg)
+            #gs_seg.validate()
+            #fic = gs_seg.GetElementValue('GS01')
+            #vriic = gs_seg.GetElementValue('GS08')
+
+            #Get map for this GS loop
+            map_index_if = map_index.map_index('map/maps.xml')
+            map_file = map_index_if.get_filename(icvn, vriic, fic)
+        else:
+            break        
+
+    #Determine which map to use for this transaction
+    if map_file is None:
+        raise x12Error, "Map not found.  icvn=%s, fic=%s, vriic=%s" % \
+            (icvn, fic, vriic)
+    map = map_if.map_if(os.path.join('map', map_file))
+    logger.info('Map file: %s' % (map))
+    node = map.getnodebypath('/ST')
+    logger.info('Map file loaded')
+
+    for seg in src:
+        logger.debug(seg)
+        #find node
+        node = walker.walk(node, seg)
+
+        #validate intra-element dependancies
+
+        if len(seg) > node.get_child_count() + 1: 
+            raise x12Error, 'Too many elements in segment %s' % (seg[0])
+        for i in xrange(node.get_child_count()):
+            child_node = node.get_child_node_by_idx(i)
             # Validate Elements
-            if i < len(self.seg):
-                if type(self.seg[i]) is ListType: # composite
+            if i < len(seg)-1:
+                logger.debug('i=%i, elem=%s, id=%s' % (i, seg[i+1], child_node.id))
+                #if type(seg[i+1]) is ListType: # composite
+                if child_node.is_composite():
                     # Validate composite
-                    comp_node = self.node.get_child_node_by_idx(i)
-                    if len(self.seg) > self.node.get_child_count():
-                        raise x12Error, 'Too many elements in segment %s' % (self.seg[0])
-                else: # element
-                    self.node.get_child_node_by_idx(i).is_valid(self.seg[i])
+                    comp = seg[i+1]
+                    if len(comp) > child_node.get_child_count():
+                        raise x12Error, 'Too many elements in segment %s' % (seg[0])
+                    child_node.is_valid(seg[i+1], check_dte)
+                elif child_node.is_element():
+                    child_node.is_valid(seg[i+1], check_dte)
             else: #missing required elements
-                self.node.get_child_node_by_idx(i).is_valid(None)
-
-    
-    def GetElementValue(self, refdes):
-        """
-        Name:    GetElementValue
-        Desc:    Get the value of an X12 element by name
-        Params:  refdes - the X12 element Reference Identifier
-        Returns: Value of the element, or None if not found
-        """
-        #for elem in self.element_list:
-        #    if elem.refdes == refdes:
-        #        return elem.x12_elem
-        for i in xrange(self.node.get_child_count()):
-            # Validate Elements
-            if i < len(self.seg):
-                if type(self.seg[i]) is ListType: # composite
-                    # Validate composite
-                    comp_node = self.node.get_child_node_by_idx(i)
-                    if len(self.seg) > self.node.get_child_count():
-                        raise x12Error, 'Too many elements in segment %s' % (self.seg[0])
-                else: # element
-                    pass
-                    #if self.node.
-            else: #missing required elements
-                self.node.get_child_node_by_idx(i).is_valid(None)
-        return None
-        
-
-#############################################################################
-###  ELEMENT - Link data element to map
-#############################################################################
-class element:
-    def __init__(self, node, x12_elem):
-        """
-        Name:    __init__
-        Desc:    Get the values for this element
-        Params:  node - a map_if node of the element
-                 x12_elem - the x12 element value 
-        Returns: 
-        """
-
-        self.node = node
-        self.x12_elem = x12_elem
-        
-    def __del__(self):
-        tab.decr()
-
-    def xml(self):
-        """
-        Name:    xml
-        Desc:    Sends an xml representation of the element to stdout
-        Params:  
-        Returns: 
-        """
-        sys.stdout.write('<element code="%s">%s</element>\n' % (node.refdes, self.x12_elem))
-        
-    def validate(self):
-        """
-        Name:    xml
-        Desc:    Validates the element
-        Params:  
-        Returns: 
-        """
-
-        return self.node.is_valid(self.x12_elem)
+                logger.debug('id=%s, name=%s' % (child_node.id, child_node.base_name))
+                child_node.is_valid(None)
+            
+        #get special values
+        #generate xml
 
    
 def main():
     """Script main program."""
     import getopt
+    #global logger
     try:
         opts, args = getopt.getopt(sys.argv[1:], ':')
 #        opts, args = getopt.getopt(sys.argv[1:], 'lfd:')
     except getopt.error, msg:
         sys.stderr.write(msg + '\n')
-        sys.stdout.write('usage: x12n.py file\n')
+        sys.stdout.write('usage: pyx12.py file\n')
         sys.exit(2)
-    #for o, a in opts:
-    #    if o == '-d': ddir = a
+    logger = logging.getLogger('pyx12')
+    hdlr = logging.FileHandler('./run.log')
+    formatter = logging.Formatter('%(asctime)s %(levelname)s %(message)s')
+    hdlr.setFormatter(formatter)
+    logger.addHandler(hdlr) 
+    logger.setLevel(logging.DEBUG)
+
+    for o, a in opts:
+        if o == '-v': logger.setLevel(logging.DEBUG)
+        if o == '-q': logger.setLevel(logging.ERROR)
+
 #    try:
     if 1:
         if args:
             for file in args:
-                sys.stdin = open(file, 'r')
-                a = x12n_document()
+                fd = open(file, 'r')
+                a = x12n_document(fd)
         else:
-            a = x12n_document()
+            a = x12n_document(sys.stdin)
 
 #    except KeyboardInterrupt:
 #        print "\n[interrupt]"
