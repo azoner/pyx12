@@ -381,7 +381,7 @@ class loop_if(x12_node):
     def is_match(self):
         pass
 
-    def is_valid(self, seg, err_list):
+    def is_valid(self, seg, errh):
         pass
 
     def parse(self):
@@ -591,13 +591,13 @@ class segment_if(x12_node):
 
     def is_segment(self): return True
 
-    def is_valid(self, seg, ele_err_list):
+    def is_valid(self, seg, errh):
         """
         Class:      segment_if
         Name:       is_valid
         Desc:    
         Params:     seg - data segment list 
-                    ele_err_list - list to fill with element errors
+                    errh - instance of error_handler
         Returns: boolean
         """
         # XXXX handle intra-segment dependancies
@@ -608,9 +608,15 @@ class segment_if(x12_node):
             err_str = 'Too many elements in segment %s. Has %i, should have %i' % \
                 (seg[0], len(seg)-1, child_count)
             self.logger.error(err_str)
-            seq = child_node.seq
-            data_ele = child_node.data_ele
-            ele_err_list.append(seq, None, data_ele, '3', seg[child_count+1], err_str)
+            err = {}
+            err['id'] = 'SEG'
+            err['seq'] = child_node.seq
+            err['str'] = 'Too many elements in segment %s. Has %i, should have %i' % \
+                (seg[0], len(seg)-1, child_count)
+            err['code'] = '3'
+            err['data_ele'] = child_node.data_ele
+            err['value'] = seg[child_count+1]
+            errh.add_error(err)
         valid = True
 #        if seg[0] == 'BGN':
 #            pdb.set_trace()
@@ -626,18 +632,21 @@ class segment_if(x12_node):
                     subele_count = child_node.get_child_count()
                     if len(comp) > subele_count:
                         subele_node = child_node.get_child_node_by_idx(subele_count+1)
-                        seq = subele_node.seq
-                        data_ele = subele_node.data_ele
-                        err_str = 'Too many sub-elements in composite %s' % (subele_node.refdes)
-                        self.logger.error(err_str)
-                        ele_err_list.append(child_node.seq, seq, data_ele, '3', comp[subele_count+1], err_str)
-                    valid &= child_node.is_valid(seg[i+1], ele_err_list, self.check_dte)
+                        err = {}
+                        err['id'] = 'SEG'
+                        err['seq'] = subele_node.seq
+                        err['str'] = 'Too many sub-elements in composite %s' % (subele_node.refdes)
+                        err['code'] = '3'
+                        err['data_ele'] = subele_node.data_ele
+                        err['value'] = comp[subele_count+1]
+                        errh.add_error(err)
+                    valid &= child_node.is_valid(seg[i+1], errh, self.check_dte)
                 elif child_node.is_element():
                     # Validate Element
-                    valid &= child_node.is_valid(seg[i+1], ele_err_list, self.check_dte)
+                    valid &= child_node.is_valid(seg[i+1], errh, self.check_dte)
             else: #missing required elements
                 self.logger.debug('id=%s, name=%s' % (child_node.id, child_node.base_name))
-                valid &= child_node.is_valid(None, ele_err_list)
+                valid &= child_node.is_valid(None, errh)
         return valid
 
     def parse(self):
@@ -802,19 +811,19 @@ class element_if(x12_node):
     def __del__(self):
         pass
 
-    def _err_hdlr(self, err_list, err_str, err_cde, value):
-        """
-        Class:  element_if
-        Name:   __init__
-        Desc:   format 997 element error tuple
-        Params: err_list - list of error tuples
-                err_str - description of error
-                err_cde - AK403 Data element syntax error code
-                value - data value causing the error
-        """
-        self.logger.error(err_str)
-        err_list.append((self.seq, None, self.data_ele, err_cde, value, err_str))
-        #raise errors.WEDI1Error, err_str
+#    def _err_hdlr(self, err_list, err_str, err_cde, value):
+#        """
+#        Class:  element_if
+#        Name:   __init__
+#        Desc:   format 997 element error tuple
+#        Params: err_list - list of error tuples
+#                err_str - description of error
+#                err_cde - AK403 Data element syntax error code
+#                value - data value causing the error
+#        """
+#        self.logger.error(err_str)
+#        err_list.append((self.seq, None, self.data_ele, err_cde, value, err_str))
+#        #raise errors.WEDI1Error, err_str
 
     def __valid_code__(self, code):
         """
@@ -864,67 +873,99 @@ class element_if(x12_node):
         # match also by ID
         pass
 
-    def is_valid(self, elem_val, err_list, check_dte=None):
+    def is_valid(self, elem_val, errh, check_dte=None):
         """
         Class:  element_if
         Name:   is_valid 
         Desc:    
         Params:  
             elem_val - value of element data
-            err_list - list of errors found in this element
-                [elem_pos, comp_pos, ele_ref_num, ele_err_cde, bad_val, err_str]
+            errh - instance of error_handler
             check_dte - date string to check against (YYYYMMDD)
                  
         Returns: boolean
         """
-        if err_list is None: err_list = []
-
         global codes
         if elem_val == '' or elem_val is None:
             if self.usage == 'N':
                 return True
             elif self.usage == 'R':
-                err_str = 'Mandatory data element %s is missing' % (self.refdes)
-                self._err_hdlr(err_list, err_str, '1', '')
+                err = {}
+                err['id'] = 'ELE'
+                err['str'] = 'Mandatory data element %s is missing' % (self.refdes)
+                err['code'] = '1'
+                errh.add_error(err)
                 return False
             elif self.usage == 'S':
                 return True
         if (not self.data_type is None) and (self.data_type == 'R' or self.data_type[0] == 'N'):
             elem = string.replace(string.replace(elem_val, '-', ''), '.', '')
             if len(elem) < int(self.min_len):
-                err_str = 'Data element %s is too short: "%s" is len=%i' % (self.refdes,\
+                err = {}
+                err['id'] = 'ELE'
+                err['str'] = 'Data element %s is too short: "%s" is len=%i' % (self.refdes,\
                     elem_val, int(self.min_len))
-                self._err_hdlr(err_list, err_str, '4', elem_val)
+                err['code'] = '4'
+                err['value'] = elem_val
+                errh.add_error(err)
             if len(elem) > int(self.max_len):
-                err_str = 'Element %s is too long: "%s" is len=%i' % (self.refdes,\
+                err = {}
+                err['id'] = 'ELE'
+                err['str'] = 'Element %s is too long: "%s" is len=%i' % (self.refdes,\
                     elem_val, int(self.max_len))
-                self._err_hdlr(err_list, err_str, '5', elem_val)
+                err['code'] = '5'
+                err['value'] = elem_val
+                errh.add_error(err)
         else:
             if len(elem_val) < int(self.min_len):
-                err_str = 'Data element %s is too short: "%s" is len=%i' % (self.refdes,\
+                err = {}
+                err['id'] = 'ELE'
+                err['str'] = 'Data element %s is too short: "%s" is len=%i' % (self.refdes,\
                     elem_val, int(self.min_len))
-                self._err_hdlr(err_list, err_str, '4', elem_val)
+                err['code'] = '4'
+                err['value'] = elem_val
+                errh.add_error(err)
             if len(elem_val) > int(self.max_len):
-                err_str = 'Element %s is too long: "%s" is len=%i' % (self.refdes,\
+                err = {}
+                err['id'] = 'ELE'
+                err['str'] = 'Element %s is too long: "%s" is len=%i' % (self.refdes,\
                     elem_val, int(self.max_len))
-                self._err_hdlr(err_list, err_str, '5', elem_val)
+                err['code'] = '5'
+                err['value'] = elem_val
+                errh.add_error(err)
 
         if not (self.__valid_code__(elem_val) or codes.IsValid(self.external_codes, elem_val, check_dte) ):
-            err_str = '(%s) is not a valid code for data element %s' % (elem_val, self.refdes)
-            self._err_hdlr(err_list, err_str, '7', elem_val)
+            err = {}
+            err['id'] = 'ELE'
+            err['str'] = '(%s) is not a valid code for data element %s' % (elem_val, self.refdes)
+            err['code'] = '7'
+            err['value'] = elem_val
+            errh.add_error(err)
         if not IsValidDataType(elem_val, self.data_type, 'E'):
             if self.data_type == 'DT':
-                err_str = 'Data element %s contains an invalid date (%s)' % \
+                err = {}
+                err['id'] = 'ELE'
+                err['str'] = 'Data element %s contains an invalid date (%s)' % \
                     (self.refdes, elem_val)
-                self._err_hdlr(err_list, err_str, '8', elem_val)
+                err['code'] = '8'
+                err['value'] = elem_val
+                errh.add_error(err)
             elif self.data_type == 'TM':
-                err_str = 'Data element %s contains an invalid time (%s)' % \
+                err = {}
+                err['id'] = 'ELE'
+                err['str'] = 'Data element %s contains an invalid time (%s)' % \
                     (self.refdes, elem_val)
-                self._err_hdlr(err_list, err_str, '9', elem_val)
+                err['code'] = '9'
+                err['value'] = elem_val
+                errh.add_error(err)
             else:
-                err_str = 'Data element %s is type %s, contains an invalid character(%s)' % \
+                err = {}
+                err['id'] = 'ELE'
+                err['str'] = 'Data element %s is type %s, contains an invalid character(%s)' % \
                     (self.refdes, self.data_type, elem_val)
-                self._err_hdlr(err_list, err_str, '6', elem_val)
+                err['code'] = '6'
+                err['value'] = elem_val
+                errh.add_error(err)
         return True
 
 
@@ -1038,22 +1079,6 @@ class composite_if(x12_node):
             elif ret == 0:
                 raise errors.XML_Reader_Error, 'End of Map File'
         
-    def _err_hdlr(self, err_list, err_str, err_cde, comp):
-        """
-        Class:  composite_if
-        Name:   __init__
-        Desc:   format 997 element error tuple
-        Params: err_list - list of error tuples
-                err_str - description of error
-                err_cde - AK403 Data element syntax error code
-                comp - data value causing the error
-        """
-        self.logger.error(err_str)
-        value = string.join(comp, ':')
-        err_list.append((self.seq, None, self.data_ele, err_cde, value, err_str))
-        #raise errors.WEDI1Error, err_str
-
-
     def debug_print(self):
         """
         Class: composite_if
@@ -1080,34 +1105,41 @@ class composite_if(x12_node):
             sub_elem.xml()
         sys.stdout.write('</composite>\n')
 
-    def is_valid(self, comp, err_list):
+    def is_valid(self, comp, errh):
         """
         Class:      composite_if
         Name:       validate
         Desc:       Validates the composite
         Params:     comp - composite value or list
-                    err_list - list of errors found in this element
-                        [elem_pos, comp_pos, ele_ref_num, ele_err_cde, bad_val, err_str]
+                    errh - instance of error_handler
         Returns:    True on success
         """
         if comp is None or len(comp) == 0:
             if self.usage == 'N':
                 return True
             elif self.usage == 'R':
-                err_str = 'Composite "%s" is required' % (self.name)
-                self._err_hdlr(err_list, err_str, '1', '')
+                err = {}
+                err['id'] = 'ELE' # ??? COMP
+                err['str'] = 'Composite "%s" is required' % (self.name)
+                err['code'] = '1'
+                #err['value'] = elem_val
+                errh.add_error(err)
 
         if not type(comp) is ListType: # composite
             comp = [comp] 
 
         if len(comp) > self.get_child_count():
-            err_str = 'Too many sub-elements in composite %s' % (self.refdes)
-            self._err_hdlr(err_list, err_str, '3', comp)
+            err = {}
+            err['id'] = 'ELE' # ??? COMP
+            err['str'] = 'Too many sub-elements in composite %s' % (self.refdes)
+            err['code'] = '1'
+            #err['value'] = elem_val
+            errh.add_error(err)
         for i in xrange(len(comp)):
             if i < len(comp):
-                self.get_child_node_by_idx(i).is_valid(comp[i], err_list, self.check_dte)
+                self.get_child_node_by_idx(i).is_valid(comp[i], errh, self.check_dte)
             else: #missing required elements
-                self.get_child_node_by_idx(i).is_valid(None, err_list)
+                self.get_child_node_by_idx(i).is_valid(None, errh)
         return True
 
     def getnodebypath(self, path):

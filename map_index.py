@@ -16,7 +16,7 @@ class map_index:
         try:
             reader = libxml2.newTextReaderFilename(map_file)
         except:
-            raise errors.GSError, 'Map file not found: %s' % (map_file)
+            raise errors.EngineError, 'Map file not found: %s' % (map_file)
                     
         while reader.Read():
             #processNode(reader)

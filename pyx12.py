@@ -81,7 +81,7 @@ def x12n_document(fd):
     
     # Get X12 DATA file
     try:
-        src = x12file.x12file(fd) 
+        src = x12file.x12file(fd, errh) 
     except x12Error:
         logger.error('This does not look like a X12 data file')
         sys.exit(2)
@@ -91,23 +91,20 @@ def x12n_document(fd):
     
     logger.info('Start')
     walker = walk_tree()
-    now = time.localtime()
     #Determine which map to use for this transaction
     for seg in src:
         if seg[0] == 'ISA':
             #map_node = walker.walk(control_map, seg)
             map_node = control_map.getnodebypath('/ISA')
-            map_node.is_valid(seg, [])
+            map_node.is_valid(seg, errh)
             #map_node = control_map
             icvn = map_node.get_elemval_by_id(seg, 'ISA12')
-            errh.add_node({'id': 'ISA', 'seg': seg, 'src_id': src.get_id()})
         elif seg[0] == 'GS':
             #map_node = walker.walk(map_node, seg)
             map_node = control_map.getnodebypath('/GS')
-            map_node.is_valid(seg, [])
+            map_node.is_valid(seg, errh)
             fic = map_node.get_elemval_by_id(seg, 'GS01')
             vriic = map_node.get_elemval_by_id(seg, 'GS08')
-            errh.add_node({'id': 'GS', 'seg': seg, 'src_id': src.get_id()})
             
             #Get map for this GS loop
             #logger.debug('icvn=%s fic=%s vriic=%s' % (icvn, fic, vriic))
@@ -126,20 +123,22 @@ def x12n_document(fd):
     #logger.info('Map file loaded')
 
     fd.seek(0)
-    src = x12file.x12file(fd) 
+    src = x12file.x12file(fd, errh) 
 
     for seg in src:
         logger.debug(seg)
         #find node
-        seg_err_codes = []
-        ele_err_list = []
-        node = walker.walk(node, seg, seg_err_codes)
+        node = walker.walk(node, seg, errh)
 
-        if seg[0] == 'GS':
+        if seg[0] == 'ISA':
+            errh.add_node({'id': 'ISA', 'seg': seg, 'src_id': src.get_id()})
+        elif seg[0] == 'IEA':
+            errh.update_node({'id': 'IEA', 'seg': seg, 'src_id': src.get_id()})
+        elif seg[0] == 'GS':
             fic = map_node.get_elemval_by_id(seg, 'GS01')
             vriic = map_node.get_elemval_by_id(seg, 'GS08')
             #map_node = control_map.getnodebypath('/GS')
-            #map_node.is_valid(seg, [])
+            #map_node.is_valid(seg, errh)
             map_file_new = map_index_if.get_filename(icvn, vriic, fic)
             if map_file != map_file_new:
                 map_file = map_file_new
@@ -149,11 +148,18 @@ def x12n_document(fd):
                 map = map_if.map_if(os.path.join('map', map_file))
                 logger.info('Map file: %s' % (map_file))
                 node = map.getnodebypath('/GS')
+            errh.add_node({'id': 'GS', 'seg': seg, 'src_id': src.get_id()})
+        elif seg[0] == 'GE':
+            errh.update_node({'id': 'GE', 'seg': seg, 'src_id': src.get_id()})
         elif seg[0] == 'ST':
-            pass
-        node.is_valid(seg, ele_err_list) 
+            errh.add_node({'id': 'ST', 'seg': seg, 'src_id': src.get_id()})
+        elif seg[0] == 'SE':
+            errh.update_node({'id': 'SE', 'seg': seg, 'src_id': src.get_id()})
+        else:
+            errh.add_node({'id': seg[0], 'seg': seg, 'src_id': src.get_id()})
 
-        #get special values
+        node.is_valid(seg, errh) 
+
         #generate xml
     logger.info('End')
 

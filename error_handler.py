@@ -45,6 +45,8 @@ from errors import *
 
 __author__  = "John Holland <jholland@kazoocmh.org> <john@zoner.org>"
 
+#class error_node:
+#    def __init__(self)
 
 class err_handler:
     """
@@ -64,6 +66,15 @@ class err_handler:
         self.isa_loops = []
         #self.isa_loop_count = 0
 
+    def accept(self, visitor):
+        """
+        Class:      err_root
+        Name:       accept
+        Desc:    
+        Params:     visitor - ref to visitor class
+        """
+        visitor.visit_root(self)
+
     def add_node(self, obj):
         if obj['id'] == 'ISA':
             self.isa_loops.append(err_isa(obj))
@@ -72,6 +83,9 @@ class err_handler:
         
     def add_error(self, err):
         self.isa_loops[-1].add_error(err)
+
+    def update_node(self, obj):
+        self.isa_loops[-1].update_node(obj)
             
 
 class err_isa:
@@ -82,19 +96,32 @@ class err_isa:
 
     def __init__(self, obj):
         """
-        Name:   __init__
+        Class:      err_isa
+        Name:       __init__
         Desc:    
-        Params: x12_src - instance of x12file
+        Params:     x12_src - instance of x12file
         """
         if obj['id'] != 'ISA':
             raise EngineError, 'err_isa.__init__', obj
 
-        #self.x12_src = x12_src
-        #(isa_id, gs_id, st_id, ls_id, seg_count, cur_line) = x12_src.get_id()
+        #obj = {'id': 'ISA', 'seg': seg, 'src_id': src.get_id()}
+        self.seg = obj['seg']
+        self.src_id =  obj['src_id']
+        (isa_id, gs_id, st_id, ls_id, seg_count, cur_line) = self.src_id
+        self.isa_trn_set_id = isa_id
+        self.cur_line = cur_line
 
         self.gs_loops = []
-        #self.gs_loop_count = 0
-        #self.eol = '\n'
+        self.err_cde = []
+
+    def accept(self, visitor):
+        """
+        Class:      err_isa
+        Name:       accept
+        Desc:    
+        Params:     visitor - ref to visitor class
+        """
+        visitor.visit_isa(self)
 
     def add_node(self, obj):
         if obj['id'] == 'GS':
@@ -104,11 +131,24 @@ class err_isa:
 
     def add_error(self, err):
         if err['id'] == 'ISA':
-            pass
-            #add error info
+            err_cde = err['code']
+            err_str = err['str']
+            self.err_cde.append([err_cde, err_str])
         else:
             self.gs_loops[-1].add_error(err)
             
+    def update_node(self, obj):
+        """
+        Class:      err_isa
+        Name:       update_node
+        Desc:    
+        Params:     obj - map of passed variables
+        """
+        if obj['id'] == 'IEA':
+            pass # Handle variables
+        else:
+            self.gs_loops[-1].update_node(obj)
+
 #    def set_st_id(self, st_id, trn_set_id):
 #        self.cur_st_id = st_id
 #        self.cur_trn_set_id = trn_set_id
@@ -120,7 +160,7 @@ class err_gs:
     Desc:    Holds source GS loop information
     """
 
-    def __init__(self, obj): #fic, root):
+    def __init__(self, obj):
         """
         Class:  err_gs
         Name:   __init__
@@ -130,16 +170,32 @@ class err_gs:
         if obj['id'] != 'GS':
             raise EngineError, 'err_gs.__init__', obj
         
-        #self.fic = fic
-        #self.root = root
-        #(isa_id, gs_id, st_id, ls_id, seg_count, cur_line) = root.x12_src.get_id()
+        #obj = {'id': 'ISA', 'seg': seg, 'src_id': src.get_id()}
+        self.seg = obj['seg']
+        self.src_id =  obj['src_id']
+        #(isa_id, gs_id, st_id, ls_id, seg_count, cur_line) = x12_src.get_id()
         #self.cur_gs_id = gs_id
+        
+        #self.fic = fic
         self.st_loops = []
+
+
+        # From GE loop
         self.ack_code = None # AK901
         self.st_count_orig = None # AK902
         self.st_count_recv = None # AK903
         self.st_count_accept = None # AK904
+
         self.err_cde = [] # AK905-9
+
+    def accept(self, visitor):
+        """
+        Class:      err_gs
+        Name:       accept
+        Desc:    
+        Params:     visitor - ref to visitor class
+        """
+        visitor.visit_gs(self)
 
     def add_node(self, obj):
         """
@@ -166,7 +222,26 @@ class err_gs:
             self.err_cde.append([err_cde, err_str])
         else:
             self.st_loops[-1].add_error(err)
- 
+
+    def update_node(self, obj):
+        """
+        Class:      err_gs
+        Name:       update_node
+        Desc:    
+        Params:     obj - map of passed variables
+        """
+        if obj['id'] == 'GE':
+            # From GE loop
+            self.ack_code = None # AK901
+            self.st_count_orig = None # AK902
+            self.st_count_recv = None # AK903
+            self.st_count_accept = None # AK904
+
+           pass # Handle variables
+        else:
+            self.st_loops[-1].update_node(obj)
+
+
        
 class err_st:
     """
@@ -174,17 +249,21 @@ class err_st:
     Desc:    ST loops
     """
 
-    def __init__(self, obj): #trn_set_id_code, root):
+    def __init__(self, obj):
         """
         Class:  err_st
         Name:   __init__
         Desc:    
-        Params: trn_set_id_code - Type of original transaction (837, 278, 835)
-                root - root 997 node
+        Params: 
         """
         if obj['id'] != 'ST':
             raise EngineError, 'err_st.__init__', obj
         
+        #obj = {'id': 'ISA', 'seg': seg, 'src_id': src.get_id()}
+        self.seg = obj['seg']
+        self.src_id =  obj['src_id']
+        #(isa_id, gs_id, st_id, ls_id, seg_count, cur_line) = x12_src.get_id()
+
         #self.trn_set_id_code = trn_set_id_code
         #self.root = root
         #(isa_id, gs_id, st_id, ls_id, seg_count, cur_line) = self.root.x12_src.get_id()
@@ -195,6 +274,15 @@ class err_st:
         self.err_cde = [] # AK502-6
 
         self.segments = [] # err_seg instances
+
+    def accept(self, visitor):
+        """
+        Class:      err_st
+        Name:       accept
+        Desc:    
+        Params:     visitor - ref to visitor class
+        """
+        visitor.visit_st(self)
 
     def add_node(self, obj):
         """
@@ -221,6 +309,17 @@ class err_st:
         else:
             self.segments[-1].add_error(err)
  
+    def update_node(self, obj):
+        """
+        Class:      err_st
+        Name:       update_node
+        Desc:    
+        Params:     obj - map of passed variables
+        """
+        if obj['id'] == 'SE':
+            pass # Handle variables
+        else:
+            raise EngineError, 'err_st.update_node - Unhandled obj', obj
         
 #    def add_seg_error(self, seg_id_code, seg_error_code):
 #        self.errors.append(err_seg_err(seg_id_code, seg_error_code, self.x12_src))
@@ -245,13 +344,25 @@ class err_seg:
 
         if obj['id'] != 'SEG':
             raise EngineError, 'err_seg.__init__', obj
-        #self.root = root
-        #(isa_id, gs_id, st_id, ls_id, seg_count, cur_line) = self.root.x12_src.get_id()
-        #self.seg_id_code = seg_id_code
-        #self.seg_pos = seg_count
-        #self.loop_id = ls_id
+        #obj = {'id': 'ISA', 'seg': seg, 'src_id': src.get_id()}
+        self.seg = obj['seg']
+        self.src_id =  obj['src_id']
+        (isa_id, gs_id, st_id, ls_id, seg_count, cur_line) = self.src_id
+        self.seg_id_code = seg_id_code
+        self.seg_pos = seg_count
+        self.loop_id = ls_id
         #self.seg_error_code = seg_error_code
+        
         self.elems = []
+
+    def accept(self, visitor):
+        """
+        Class:      err_seg
+        Name:       accept
+        Desc:    
+        Params:     visitor - ref to visitor class
+        """
+        visitor.visit_seg(self)
 
     def add_node(self, obj):
         """
@@ -300,6 +411,15 @@ class err_ele:
         #self.ele_ref_num = ele_ref_num
         #self.ele_err_code = ele_err_code
         #self.bad_val = bad_val
+
+    def accept(self, visitor):
+        """
+        Class:      err_ele
+        Name:       accept
+        Desc:    
+        Params:     visitor - ref to visitor class
+        """
+        visitor.visit_ele(self)
 
 #    def add_node(self, obj):
 #        """

@@ -32,20 +32,152 @@
 
 
 """
-Interface to X12 Errors
+Visitor - Visits an error_handler composite
 Generates a 997 Response
-Generates an annotated X12 source file
 """
 
 #import os
 #import sys
 import string
 from types import *
+import time
 
 # Intrapackage imports
 from errors import *
 
 __author__  = "John Holland <jholland@kazoocmh.org> <john@zoner.org>"
+
+
+class error_visitor:
+    """
+    Class:      error_visitor
+    Desc:    
+    """
+
+    def __init__(self, fd): pass
+        """
+        Class:      error_visitor
+        Name:       __init__
+        Desc:    
+        Params:     fd - target file
+        """
+
+    def visit_root(self, err_handler): pass
+        """
+        Class:      error_visitor
+        Name:       visit_root
+        Desc:    
+        Params:     err_handler - error_handler instance
+        """
+
+    def visit_isa(self, err_isa): pass
+        """
+        Class:      error_visitor
+        Name:       visit_isa
+        Desc:    
+        Params:     err_isa - error_isa instance
+        """
+
+    def visit_gs(self, err_gs): pass
+        """
+        Class:      error_visitor
+        Name:       visit_gs
+        Desc:    
+        Params:     err_gs - error_gs instance
+        """
+
+    def visit_st(self, err_st): pass
+        """
+        Class:      error_visitor
+        Name:       visit_st
+        Desc:    
+        Params:     err_st - error_st instance
+        """
+
+    def visit_seg(self, err_seg): pass
+        """
+        Class:      error_visitor
+        Name:       visit_seg
+        Desc:    
+        Params:     err_seg - error_seg instance
+        """
+
+    def visit_ele(self, err_ele): pass
+        """
+        Class:      error_visitor
+        Name:       visit_ele
+        Desc:    
+        Params:     err_ele - error_ele instance
+        """
+
+
+class error_997_visitor(error_visitor):
+    """
+    Class:      error_997_visitor
+    Desc:    
+    """
+    def __init__(self, fd, term): pass
+        """
+        Class:      error_997_visitor
+        Name:       __init__
+        Desc:    
+        Params:     fd - target file
+                    term - tuple of x12 terminators used
+        """
+        self.fd = fd
+        self.seg_term = term[0]
+        self.ele_term = term[1]
+        self.subele_term = term[2]
+
+    def visit_root(self, err_handler): pass
+        """
+        Class:      error_997_visitor 
+        Name:       visit_root
+        Desc:    
+        Params:     err_handler - error_handler instance
+        """
+
+    def visit_isa(self, err_isa): pass
+        """
+        Class:      error_997_visitor
+        Name:       visit_isa
+        Desc:    
+        Params:     err_isa - error_isa instance
+        """
+
+    def visit_gs(self, err_gs): pass
+        """
+        Class:      error_997_visitor 
+        Name:       visit_gs
+        Desc:    
+        Params:     err_gs - error_gs instance
+        """
+
+    def visit_st(self, err_st): pass
+        """
+        Class:      error_997_visitor
+        Name:       visit_st
+        Desc:    
+        Params:     err_st - error_st instance
+        """
+
+    def visit_seg(self, err_seg): pass
+        """
+        Class:      error_997_visitor
+        Name:       visit_seg
+        Desc:    
+        Params:     err_seg - error_seg instance
+        """
+
+    def visit_ele(self, err_ele): pass
+        """
+        Class:      error_997_visitor
+        Name:       visit_ele
+        Desc:    
+        Params:     err_ele - error_ele instance
+        """
+
+
 
 
 class err_root:
@@ -71,6 +203,7 @@ class err_root:
 
         
     def __repr__(self):
+        now = time.localtime()
         x12src = self.x12_src
             #ISA*00*          *00*          *ZZ*ENCOUNTER      *ZZ*00GR           *030425*1501*U*00401*000065350*0*T*:~
             isa_seg = [seg[0],seg[3],seg[4],seg[1],seg[7],seg[8],seg[5],seg[6]]
