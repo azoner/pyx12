@@ -63,7 +63,11 @@ from map_walker import walk_tree
 from utils import *
 
 #Global Variables
-__version__ = "0.1.0"
+__author__  = "John Holland <jholland@kazoocmh.org> <john@zoner.org>"
+__status__  = "beta"
+__version__ = "0.3.0.0"
+__date__    = "10/1/2003"
+
 #logger = None
 
 def x12n_document(fd):
