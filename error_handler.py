@@ -292,6 +292,16 @@ class err_st(err_node):
     """
     Name:    err_st
     Desc:    ST loops
+
+    Needs:
+        Transaction set id code (837, 834)
+        Transaction set control number
+
+        trn set error codes
+        
+    At SE:
+        Determine final ack code
+        
     """
 
     def __init__(self, obj):
@@ -330,6 +340,9 @@ class err_st(err_node):
         Desc:    
         Params:     obj - node object information
         """
+        if self.segments:
+            if self.segments[-1].err_count() == 0:
+                del self.segments[-1]
         if obj['id'] == 'SEG':
             self.segments.append(err_seg(obj))
         else:
@@ -372,6 +385,15 @@ class err_seg(err_node):
         Name:   __init__
         Desc:    
         Params: 
+        Needs:
+            seg_id_code
+            seg_pos - pos in ST loop
+            loop_id - LS loop id
+            name?
+            seg_count - in parent
+
+            st_errors:
+                
         """
         err_node.__init__(self, obj)
 
@@ -401,6 +423,10 @@ class err_seg(err_node):
         Desc:    
         Params:     obj - node object information
         """
+        # If last element added does not have any errors by now, delete
+        if self.elems:
+            if self.elems[-1].err_count() == 0:
+                del self.elems[-1]
         if obj['id'] == 'ELE':
             self.elems.append(err_ele(obj))
         else:
@@ -420,9 +446,19 @@ class err_seg(err_node):
         else:
             self.elems[-1].add_error(err)
         
-#    def add_ele_error(self, ele_pos, subele_pos=None, ele_ref_num=None, \
-#        ele_err_code, bad_val=None): 
-#        self.elems.append(err_ele_err(ele_pos, subele_pos, ele_ref_num, ele_err_code, bad_val))
+    def err_count(self):
+        """
+        Class:      err_seg
+        Name:       err_count
+        Desc:    
+        Returns:    count of errors
+        """
+        ele_err_ct = 0
+        for ele in self.ele_errors:
+            if ele.err_count() > 0:
+                ele_err_ct = 1
+                break
+        return len(self.st_errors) + ele_err_ct
 
 class err_ele(err_node):
     """
@@ -433,10 +469,13 @@ class err_ele(err_node):
     Needs:
             pos in element
             pos in composite
-            error code
-            error string
             element reference number
-            bad value - if available
+            element name?
+            
+            self.ele_errors:
+                error code
+                error string
+                bad value - if available
             
     """
     def __init__(self, obj): 
@@ -490,3 +529,5 @@ class err_ele(err_node):
         else:
             raise EngineError, 'add_error - unhandled error', err
         
+    def err_count(self):
+        return len(self.ele_errors)
