@@ -4,14 +4,14 @@
 #from test_support import TestFailed, have_unicode
 import unittest
 import sys
+import StringIO
 
+import error_handler
 from utils import *
+from errors import *
+import x12file
 
 class pyx12LibraryTests(unittest.TestCase):
-
-#    def setUp(self):
-#        self.debug()
-#        pass
 
     def test_valid_codes_basic_N(self):
         self.failUnless(IsValidDataType('1', 'N', 'B'))
@@ -56,9 +56,8 @@ class pyx12LibraryTests(unittest.TestCase):
         self.failIf(IsValidDataType('19991277', 'DT', 'B'))
         self.failIf(IsValidDataType('200204a', 'DT', 'B'))
         self.failIf(IsValidDataType('2002041a', 'DT', 'B'))
-        self.failUnless(IsValidDataType('20040229', 'DT', 'B'))
         self.failUnless(IsValidDataType('20030429', 'DT', 'B'))
-        self.failUnless(IsValidDataType('19000229', 'DT', 'B'))
+        self.failIf(IsValidDataType('19000229', 'DT', 'B'))
         self.failUnless(IsValidDataType('19040229', 'DT', 'B'))
         self.failUnless(IsValidDataType('20000229', 'DT', 'B'))
         self.failUnless(IsValidDataType('20040229', 'DT', 'B'))
@@ -116,9 +115,8 @@ class pyx12LibraryTests(unittest.TestCase):
         self.failIf(IsValidDataType('19991277', 'DT', 'E'))
         self.failIf(IsValidDataType('200204a', 'DT', 'E'))
         self.failIf(IsValidDataType('2002041a', 'DT', 'E'))
-        self.failUnless(IsValidDataType('20040229', 'DT', 'E'))
         self.failUnless(IsValidDataType('20030429', 'DT', 'E'))
-        self.failUnless(IsValidDataType('19000229', 'DT', 'E'))
+        self.failIf(IsValidDataType('19000229', 'DT', 'E'))
         self.failUnless(IsValidDataType('19040229', 'DT', 'E'))
         self.failUnless(IsValidDataType('20000229', 'DT', 'E'))
         self.failUnless(IsValidDataType('20040229', 'DT', 'E'))
@@ -133,6 +131,15 @@ class pyx12LibraryTests(unittest.TestCase):
         self.failIf(IsValidDataType('07315a', 'TM', 'E'))
         self.failUnless(IsValidDataType('000159', 'TM', 'E'))
 
+
+class x12fileTests(unittest.TestCase):
+
+    def test_x12file_headers(self):
+        fd = StringIO.StringIO(' ISA~')
+        errh = error_handler.err_handler()
+        self.assertRaises(x12Error, x12file.x12file(fd, errh))
+        #self.failUnless(IsValidDataType('1', 'N', 'B'))
+        #self.failIf(IsValidDataType('+10', 'N', 'B'))
 
 #def test_main():
     #loader = unittest.TestLoader()
