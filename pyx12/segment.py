@@ -37,12 +37,6 @@ class base_element:
     """Abstract class base_element
     """
     def __init__(self):
-        """function base_element
-        
-        ele_str: string
-        
-        returns void
-        """
         raise NotImplementedError()
     
     def __len__(self):

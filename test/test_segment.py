@@ -9,10 +9,12 @@ class Identity(unittest.TestCase):
     #def setUp(self):
 
     def test_identity(self):
-        seg_str = 'TST&AA!1!1&BB!5'
+        seg_str = 'TST&AA!1!1&BB!5&ZZ'
         seg = pyx12.segment.segment(seg_str, '+', '&', '!')
         self.assertEqual(seg_str+'+\n', seg.__repr__())
         self.assertEqual(seg.get_seg_id(), 'TST')
+        self.assertEqual(len(seg), 3)
+        self.assertEqual(seg[3], 'ZZ')
                     
 def suite():
     suite = unittest.TestSuite()
