@@ -64,6 +64,8 @@ class x12_node:
         self.id = None
         self.name = None
         self.parent = None
+        #self.prev_node = None
+        self.next_node = None
         self.children = []
         self.path = ''
 
@@ -184,6 +186,8 @@ class map_if(x12_node):
         self.id = None
         self.name = None
 
+        self.cur_iter_node = self
+
         self.param = param
         #global codes
         self.ext_codes = codes.ExternalCodes(param.get_param('map_path'), \
@@ -299,6 +303,45 @@ class map_if(x12_node):
         for child in self.children:
             if child.is_loop():
                 child.reset_cur_count()
+
+    def __iter__(self):
+        return self
+
+    def next(self):
+        pdb.set_trace()
+        if self.cur_iter_node.id == 'IEA':
+            raise StopIteration
+        #first, get first child
+        if self.cur_iter_node.get_child_count() > 0:
+            self.cur_iter_node = self.cur_iter_node.children[0]
+            return self.cur_iter_node
+        #node_idx = self.cur_iter_node.index # Get original index of starting node
+        cur_node = self.cur_iter_node
+        node = self._pop_to_parent(cur_node) 
+        while 1:
+            #second, get siblings
+            found = False
+            for child in node.children:
+                if found:
+                    self.cur_iter_node = child
+                    return self.cur_iter_node
+                if child is cur_node:
+                    found = True
+                #if child.index > node_idx:
+            #last, get siblings of parent
+            node = self._pop_to_parent(node)
+            cur_node = node
+        return None
+
+    def _pop_to_parent(self, node):
+        if node.is_map_root():
+            return node
+        map_node = node.parent
+        if map_node is None:
+            raise errors.EngineError, "Node is None: %s" % (node.name)
+        return map_node
+
+                 
 
 
 ############################################################
