@@ -371,7 +371,7 @@ class Formatting(unittest.TestCase):
         src = pyx12.x12file.x12file(fd.name, self.errh)
         str_out = ''
         for seg in src:
-            str_out += src.format_seg(seg)
+            str_out += src.seg_str(seg, eol='\n')
         self.assertEqual(str, str_out)
 
     def test_strip_eol(self):
@@ -391,7 +391,7 @@ class Formatting(unittest.TestCase):
         src = pyx12.x12file.x12file(fd.name, self.errh)
         str_out = ''
         for seg in src:
-            str_out += src.format_seg(seg, eol='')
+            str_out += src.seg_str(seg, eol='')
         str = str.replace('\n', '')
         self.assertEqual(str, str_out)
  

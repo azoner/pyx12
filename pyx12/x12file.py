@@ -270,29 +270,15 @@ class x12file:
                 #    self.errh.ls_error('3', err_str)
             self.loops.reverse()
         
-
-#    def get_id(self):
-#        isa_id = None
-#        gs_id = None
-#        st_id = None
-#        ls_id = None
-#        for loop in self.loops:
-#            if loop[0] == 'ISA': isa_id = loop[1]
-#            if loop[0] == 'GS': gs_id = loop[1]
-#            if loop[0] == 'ST': st_id = loop[1]
-#            if loop[0] == 'LS': ls_id = loop[1]
-#        return (isa_id, gs_id, st_id, ls_id, self.seg_count, self.cur_line)
-
     def get_isa_id(self): 
         """
         Get the current ISA identifier
 
         @rtype: string
         """
-        isa_id = None
         for loop in self.loops:
-            if loop[0] == 'ISA': isa_id = loop[1]
-        return isa_id
+            if loop[0] == 'ISA': return loop[1]
+        return None
 
     def get_gs_id(self): 
         """
@@ -300,10 +286,9 @@ class x12file:
 
         @rtype: string
         """
-        gs_id = None
         for loop in self.loops:
-            if loop[0] == 'GS': gs_id = loop[1]
-        return gs_id
+            if loop[0] == 'GS': return loop[1]
+        return None
 
     def get_st_id(self): 
         """
@@ -311,10 +296,9 @@ class x12file:
 
         @rtype: string
         """
-        st_id = None
         for loop in self.loops:
-            if loop[0] == 'ST': st_id = loop[1]
-        return st_id
+            if loop[0] == 'ST': return loop[1]
+        return None
 
     def get_ls_id(self): 
         """
@@ -322,10 +306,9 @@ class x12file:
 
         @rtype: string
         """
-        ls_id = None
         for loop in self.loops:
-            if loop[0] == 'LS': ls_id = loop[1]
-        return ls_id
+            if loop[0] == 'LS': return loop[1]
+        return None
 
     def get_seg_count(self): 
         """
@@ -351,17 +334,17 @@ class x12file:
         """
         return (self.seg_term, self.ele_term, self.subele_term, '\n')
 
-    def format_seg(self, seg, eol='\n'):
-        """
-        Format an original representation of the segment
+#    def format_seg(self, seg, eol='\n'):
+#        """
+#        Format an original representation of the segment
+#
+#        @param seg: Segment object
+#        @type seg: L{segment<segment.segment>}
+#        @rtype: string
+#        """
+#        return '%s' % (self.seg_str(seg, self.seg_term, self.ele_term, self.subele_term, eol))
 
-        @param seg: Segment object
-        @type seg: L{segment<segment.segment>}
-        @rtype: string
-        """
-        return '%s' % (self.seg_str(seg, self.seg_term, self.ele_term, self.subele_term, eol))
-
-    def seg_str(self, seg, seg_term, ele_term, subele_term, eol=''):
+    def seg_str(self, seg, seg_term=None, ele_term=None, subele_term=None, eol=''):
         """
         Format a representation of the segment
 
