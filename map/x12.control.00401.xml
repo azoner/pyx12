@@ -44,7 +44,7 @@
       <name>Interchange Control Header</name>
       <end_tag>IEA</end_tag>
       <usage>R</usage>
-      <pos>1</pos>
+      <pos>010</pos>
       <element xid="ISA01">
         <data_ele>I01</data_ele>
         <name>Authorization Information Qualifier</name>
@@ -240,13 +240,13 @@
     <loop xid="GS" type="explicit">
       <name>Functional Group Header</name>
       <usage>R</usage>
-      <pos>001</pos>
+      <pos>020</pos>
       <repeat>&gt;1</repeat>
       <segment xid="GS">
         <name>Functional Group Header</name>
         <end_tag>GE</end_tag>
         <usage>R</usage>
-        <pos>1</pos>
+        <pos>010</pos>
         <element xid="GS01">
           <data_ele>479</data_ele>
           <name>Functional Identifier Code</name>
@@ -361,7 +361,7 @@
       <segment xid="GE">
         <name>Functional Group Trailer</name>
         <usage>R</usage>
-        <pos>4</pos>
+        <pos>030</pos>
         <element xid="GE01">
           <data_ele>97</data_ele>
           <name>Number of Transaction Sets Included</name>
@@ -387,7 +387,7 @@
     <segment xid="TA1">
       <name>Interchange Achnowledgement</name>
       <usage>S</usage>
-      <pos>2</pos>
+      <pos>020</pos>
       <element xid="TA101">
         <data_ele>I12</data_ele>
         <name>Interchange Control Number</name>
@@ -477,7 +477,7 @@
     <segment xid="IEA">
       <name>Interchange Control Trailer</name>
       <usage>R</usage>
-      <pos>3</pos>
+      <pos>030</pos>
       <element xid="IEA01">
         <data_ele>I16</data_ele>
         <name>Number of Included Functional Groups</name>

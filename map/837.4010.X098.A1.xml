@@ -43,7 +43,7 @@
     <segment xid="ISA">
       <name>Interchange Control Header</name>
       <usage>R</usage>
-      <pos>0</pos>
+      <pos>010</pos>
       <max_use>1</max_use>
       <element xid="ISA01">
         <data_ele>I01</data_ele>
@@ -240,12 +240,12 @@
     <loop xid="GS" type="explicit">
       <name>Functional Group Header</name>
       <usage>R</usage>
-      <pos>001</pos>
+      <pos>020</pos>
       <repeat>&gt;1</repeat>
       <segment xid="GS">
         <name>Functional Group Header</name>
         <usage>R</usage>
-        <pos>0</pos>
+        <pos>010</pos>
         <max_use>1</max_use>
         <element xid="GS01">
           <data_ele>479</data_ele>
@@ -335,7 +335,7 @@
       <loop xid="ST" type="explicit">
         <name>Transaction Set Header</name>
         <usage>R</usage>
-        <pos>001</pos>
+        <pos>020</pos>
         <repeat>&gt;1</repeat>
         <loop xid="HEADER" type="header">
           <name>Table 1 - Header</name>
@@ -31201,7 +31201,7 @@
       <segment xid="GE">
         <name>Functional Group Trailer</name>
         <usage>R</usage>
-        <pos>0</pos>
+        <pos>030</pos>
         <max_use>1</max_use>
         <element xid="GE01">
           <data_ele>97</data_ele>
@@ -31228,7 +31228,7 @@
     <segment xid="TA1">
       <name>Interchange Achnowledgement</name>
       <usage>S</usage>
-      <pos>2</pos>
+      <pos>020</pos>
       <element xid="TA101">
         <data_ele>I12</data_ele>
         <name>Interchange Control Number</name>
@@ -31318,7 +31318,7 @@
     <segment xid="IEA">
       <name>Interchange Control Trailer</name>
       <usage>R</usage>
-      <pos>0</pos>
+      <pos>030</pos>
       <max_use>1</max_use>
       <element xid="IEA01">
         <data_ele>I16</data_ele>
