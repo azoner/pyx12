@@ -19,7 +19,8 @@ class TestExternal(unittest.TestCase):
     def setUp(self):
         param = params()
         param.set_param('map_path', os.path.expanduser('~/src/pyx12/map/'))
-        self.ext_codes = pyx12.codes.ExternalCodes(param.get_param('map_path'))
+        self.ext_codes = pyx12.codes.ExternalCodes(param.get_param('map_path'), \
+            param.get_param('exclude_external_codes'))
 
     def test_valid_state1(self):
         self.failUnless(self.ext_codes.IsValid('states', 'MI', '20031001'))

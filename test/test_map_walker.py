@@ -20,6 +20,7 @@ class Explicit_Loops(unittest.TestCase):
         self.walker = walk_tree()
         param = params()
         param.set_param('map_path', os.path.expanduser('~/src/pyx12/map/'))
+        param.set_param('pickle_path', os.path.expanduser('~/src/pyx12/map/'))
         self.map = pyx12.map_if.load_map_file('837.4010.X098.A1.xml', param)
         self.errh = pyx12.error_handler.errh_null()
 
@@ -107,6 +108,7 @@ class Implicit_Loops(unittest.TestCase):
         self.walker = walk_tree()
         param = params()
         param.set_param('map_path', os.path.expanduser('~/src/pyx12/map/'))
+        param.set_param('pickle_path', os.path.expanduser('~/src/pyx12/map/'))
         self.map = pyx12.map_if.load_map_file('837.4010.X098.A1.xml', param)
         self.errh = pyx12.error_handler.errh_null()
 
@@ -119,6 +121,7 @@ class Implicit_Loops(unittest.TestCase):
     def test_repeat_loop_with_one_segment(self):
         param = params()
         param.set_param('map_path', os.path.expanduser('~/src/pyx12/map/'))
+        param.set_param('pickle_path', os.path.expanduser('~/src/pyx12/map/'))
         map = pyx12.map_if.load_map_file('841.4010.XXXC.xml', param)
         node = map.getnodebypath('/1000/2000/2100/SPI')
         seg = ['SPI', '00']
@@ -142,6 +145,7 @@ class SegmentWalk(unittest.TestCase):
         self.walker = walk_tree()
         param = params()
         param.set_param('map_path', os.path.expanduser('~/src/pyx12/map/'))
+        param.set_param('pickle_path', os.path.expanduser('~/src/pyx12/map/'))
         self.map = pyx12.map_if.load_map_file('837.4010.X098.A1.xml', param)
         self.errh = pyx12.error_handler.errh_null()
 
@@ -180,6 +184,7 @@ class Segment_ID_Checks(unittest.TestCase):
         self.walker = walk_tree()
         param = params()
         param.set_param('map_path', os.path.expanduser('~/src/pyx12/map/'))
+        param.set_param('pickle_path', os.path.expanduser('~/src/pyx12/map/'))
         self.map = pyx12.map_if.load_map_file('837.4010.X098.A1.xml', param)
         self.errh = pyx12.error_handler.errh_null()
         self.node = self.map.getnodebypath('/ST')

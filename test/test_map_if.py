@@ -15,6 +15,7 @@ class Element_is_valid(unittest.TestCase):
     def setUp(self):
         param = params()
         param.set_param('map_path', os.path.expanduser('~/src/pyx12/map/'))
+        param.set_param('pickle_path', os.path.expanduser('~/src/pyx12/map/'))
         self.map = pyx12.map_if.load_map_file('837.4010.X098.A1.xml', param)
         self.node = self.map.getnodebypath('/2000A/2000B/2300/CLM')
         self.errh = pyx12.error_handler.errh_null()
@@ -193,6 +194,7 @@ class Test_getnodebypath(unittest.TestCase):
     def setUp(self):
         param = params()
         param.set_param('map_path', os.path.expanduser('~/src/pyx12/map/'))
+        param.set_param('pickle_path', os.path.expanduser('~/src/pyx12/map/'))
         self.map = pyx12.map_if.load_map_file('837.4010.X098.A1.xml', param)
 
     def test_get_ISA(self):
@@ -247,6 +249,7 @@ class CompositeRequirement(unittest.TestCase):
     def setUp(self):
         param = params()
         param.set_param('map_path', os.path.expanduser('~/src/pyx12/map/'))
+        param.set_param('pickle_path', os.path.expanduser('~/src/pyx12/map/'))
         self.map = pyx12.map_if.load_map_file('837.4010.X098.A1.xml', param)
         self.errh = pyx12.error_handler.errh_null()
 
@@ -263,6 +266,7 @@ class CompositeRequirement(unittest.TestCase):
     def test_comp_required_ok2(self):
         param = params()
         param.set_param('map_path', os.path.expanduser('~/src/pyx12/map/'))
+        param.set_param('pickle_path', os.path.expanduser('~/src/pyx12/map/'))
         map = pyx12.map_if.load_map_file('comp_test.xml', param)
         node = map.getnodebypath('/TST')
         node = node.get_child_node_by_idx(0)
@@ -285,6 +289,7 @@ class TrailingSpaces(unittest.TestCase):
     def setUp(self):
         param = params()
         param.set_param('map_path', os.path.expanduser('~/src/pyx12/map/'))
+        param.set_param('pickle_path', os.path.expanduser('~/src/pyx12/map/'))
         self.map = pyx12.map_if.load_map_file('837.4010.X098.A1.xml', param)
         self.errh = pyx12.error_handler.errh_null()
 
