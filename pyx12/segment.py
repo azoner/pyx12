@@ -140,6 +140,8 @@ class segment:
         self.seg_term_orig = seg_term
         self.ele_term = ele_term
         self.ele_term_orig = ele_term
+        self.subele_term = subele_term
+        self.subele_term_orig = subele_term
         self.seg_id = None
         if seg_str and seg_str[-1] == seg_term:
             elems = string.split(seg_str[:-1], self.ele_term)
@@ -179,6 +181,23 @@ class segment:
         else:
             return self.elements[idx-1].__repr__()
 
+    def __setitem__(self, idx, val):
+        """function operator[]
+        1 based index
+        [0] throws exception
+        returns element
+        """
+        if idx == 0:
+            raise IndexError, 'list index out of range'
+        elif idx < 0:
+            i = idx
+        else:
+            i = idx - 1
+        if val.find(self.subele_term) != -1: # Split composite
+            self.elements[i] = composite(val, self.subele_term)
+        else:
+            self.elements[i] = element(val)
+
     def __len__(self):
         return len(self.elements)
     
@@ -209,6 +228,6 @@ class segment:
             string.join(str_elems, ele_term), \
             seg_term, eol)
 
-    def format_ele_list(self, str_elems=[], subele_term=':'):
+    def format_ele_list(self, str_elems, subele_term=':'):
         for ele in self.elements:
             str_elems.append(ele.format(subele_term))

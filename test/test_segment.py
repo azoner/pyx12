@@ -55,10 +55,20 @@ class Identity(unittest.TestCase):
         seg = pyx12.segment.segment(seg_str, '~', '*', ':')
         self.assertEqual(seg.__repr__(), seg_str)
 
+
+class Alter(unittest.TestCase):
+
+    def test_alter_element(self):
+        seg_str = 'TST*AA:1:1*BB:5*ZZ'
+        seg = pyx12.segment.segment(seg_str, '~', '*', ':')
+        seg[3] = 'YY'
+        self.assertEqual(seg.__repr__(), 'TST*AA:1:1*BB:5*YY~')
+
 def suite():
     suite = unittest.TestSuite()
     suite.addTest(unittest.makeSuite(ArbitraryDelimiters))
     suite.addTest(unittest.makeSuite(Identity))
+    suite.addTest(unittest.makeSuite(Alter))
     return suite
 
 #if __name__ == "__main__":
