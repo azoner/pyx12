@@ -56,6 +56,8 @@ __status__  = pyx12.__status__
 __version__ = pyx12.__version__
 __date__    = pyx12.__date__
 
+TRANS_PRE = 't_'
+
 def format_name(name):
     return name.replace(' ', '_')
     
@@ -65,8 +67,7 @@ def gen_sql(map_root):
     """
     fd = sys.stdout
     tbl_stack = []
-    indent = 0
-    indent_str = str(' '*indent*2)
+    in_table = False
     for node in map_root:
         if node.id is None:
             continue
@@ -77,19 +78,29 @@ def gen_sql(map_root):
         if node.is_map_root():
             continue
         if node.is_loop():
-            table_name = 'loop_%s_%s' % (node.id, format_name(node.name))
-            ident = '%s_num' % (table_name)
-            fd.write('%sCREATE TABLE [%s]\n' % (indent_str, table_name))
-            tbl_stack.append((table_name, ident))
-            indent += 1 
-            indent_str = str(' '*indent*2)
+            if in_table:
+                fd.write(') ON [PRIMARY]\nGO\n\n')
+                del tbl_stack[-1]
+            table_name = '%sloop_%s_%s' % (TRANS_PRE, node.id, format_name(node.name))
+            pk = '%s_num' % (node.id)
+            fd.write('CREATE TABLE [%s] ( -- %s\n' % (table_name, node.get_path()))
+            tbl_stack.append((table_name, pk))
+            in_table = True
+            fd.write('\t[%s] [int] IDENTITY (1, 1) NOT NULL\n' % (pk))
         elif node.is_segment():
             #if node.get_max_repeat() != 1:
-            fd.write('%sCREATE TABLE [%s_%s]\n' % (indent_str, node.id, format_name(node.name)))
-            indent += 1 
-            indent_str = str(' '*indent*2)
+            if node.get_max_repeat() != 1 or not in_table:
+                if in_table:
+                    fd.write(') ON [PRIMARY]\nGO\n\n')
+                    del tbl_stack[-1]
+                table_name = '%s%s_%s' % (TRANS_PRE, node.id, format_name(node.name))
+                pk = '%s_num' % (node.id)
+                fd.write('CREATE TABLE [%s] ( -- %s\n' % (table_name, node.get_path()))
+                in_table = True
+                tbl_stack.append((table_name, pk))
+                fd.write('\t[%s] [int] IDENTITY (1, 1) NOT NULL\n' % (pk))
         elif node.is_element():
-            fd.write('%s[%s_%s]' % (indent_str, node.id, format_name(node.name)))
+            fd.write(',\t[%s_%s]' % (node.id, format_name(node.name)))
             if node.data_type in ('DT', 'TM'):
                 fd.write(' [datetime]')
             elif node.data_type in ('AN', 'ID'):
