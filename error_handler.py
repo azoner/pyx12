@@ -124,12 +124,24 @@ class err_isa:
         visitor.visit_isa(self)
 
     def add_node(self, obj):
+        """
+        Class:      err_isa
+        Name:       add_node
+        Desc:    
+        Params:     obj - map of passed variables
+        """
         if obj['id'] == 'GS':
             self.gs_loops.append(err_gs(obj))
         else:
             self.gs_loops[-1].add_node(obj)
 
     def add_error(self, err):
+        """
+        Class:      err_isa
+        Name:       add_error
+        Desc:    
+        Params:     obj - map of passed variables
+        """
         if err['id'] == 'ISA':
             err_cde = err['code']
             err_str = err['str']
