@@ -1,0 +1,118 @@
+<?xml version="1.0"?>
+<!-- 
+	This file is part of the pyX12 project.
+
+    Copyright (c) 2001, 2002 Kalamazoo Community Mental Health Services,
+		John Holland <jholland@kazoocmh.org> <john@zoner.org>
+
+    All rights reserved.
+
+	Redistribution and use in source and binary forms, with or without modification, 
+	are permitted provided that the following conditions are met:
+
+	1. Redistributions of source code must retain the above copyright notice, this list 
+	   of conditions and the following disclaimer. 
+	
+	2. Redistributions in binary form must reproduce the above copyright notice, this 
+	   list of conditions and the following disclaimer in the documentation and/or other 
+	   materials provided with the distribution. 
+	
+	3. The name of the author may not be used to endorse or promote products derived 
+	   from this software without specific prior written permission. 
+
+	THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR IMPLIED 
+	WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF 
+	MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO 
+	EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, 
+	EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT 
+	OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS 
+	INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN 
+	CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) 
+	ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF 
+	THE POSSIBILITY OF SUCH DAMAGE.
+-->
+
+<!-- NOT YET A VALID SCHEMA -->
+
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <xsd:element name="map" type="maptype"/>
+  <xsd:complexType name="LoopType">
+    <xsd:sequence>
+      <xsd:element name="segment" type="SegmentType"/>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="ValidCodesType"/>
+  <xsd:complexType name="SegmentType">
+    <xsd:sequence>
+      <xsd:element name="id" type="xsd:normalizedString"/>
+      <xsd:element name="name" type="xsd:normalizedString"/>
+      <xsd:element name="end_tag" type="xsd:normalizedString" minOccurs="0"/>
+      <xsd:element name="usage" type="xsd:normalizedString"/>
+      <xsd:element name="pos" type="xsd:nonNegativeInteger"/>
+      <xsd:element name="syntax" type="xsd:normalizedString" minOccurs="0"/>
+      <xsd:element name="element" type="ElementType" maxOccurs="Unbounded"/>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="ElementType">
+    <xsd:sequence>
+      <xsd:element name="data_ele" type="xsd:normalizedString"/>
+      <xsd:element name="name" type="xsd:normalizedString"/>
+      <xsd:element name="usage" type="usageType"/> <!-- IG usage, -->
+      <xsd:element name="seq" type="xsd:nonNegativeInteger"/>
+      <xsd:element name="refdes" type="xsd:normalizedString"/>
+      <xsd:element name="data_type" type="dataType"/>
+      <xsd:element name="min_len" type="xsd:nonNegativeInteger"/>
+      <xsd:element name="max_len" type="xsd:nonNegativeInteger"/>
+      <xsd:element name="valid_codes" minOccurs="0">
+        <xsd:complexType>
+          <xsd:element name="code" type="xsd:normalizedString" maxOccurs="unbounded"/>
+          <xsd:attribute name="external" type="xsd:normalizedString"/>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="format" type="formatType"/>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:simpleType name="formatType">
+    <xsd:restriction base="xsd:normalizedString">
+      <xsd:enumeration value="D8"/> <!-- Date CCYYMMDD -->
+      <xsd:enumeration value="D6"/> <!-- Date YYMMDD -->
+      <xsd:enumeration value="RD8"/> <!-- Date Range CCYYMMDD-CCYYMMDD -->
+      <xsd:enumeration value="TM"/> <!-- Time HHMM -->
+    </xsd:restriction>
+  </xsd:simpleType>
+  <xsd:simpleType name="usageType">
+    <xsd:restriction base="xsd:normalizedString">
+      <xsd:enumeration value="R"/> <!-- Required -->
+      <xsd:enumeration value="S"/> <!-- Situational -->
+      <xsd:enumeration value="N"/> <!-- Not Used -->
+    </xsd:restriction>
+  </xsd:simpleType>
+  <xsd:simpleType name="ref_desType">
+    <xsd:restriction base="xsd:normalizedString">
+      <xsd:enumeration value="M"/> <!-- Mandatory -->
+      <xsd:enumeration value="O"/> <!-- Optional -->
+      <xsd:enumeration value="X"/> <!-- Situational -->
+    </xsd:restriction>
+  </xsd:simpleType>
+  <xsd:simpleType name="dataType">
+    <xsd:restriction base="xsd:normalizedString">
+      <xsd:enumeration value="N"/>
+      <xsd:enumeration value="N0"/>
+      <xsd:enumeration value="N1"/>
+      <xsd:enumeration value="N2"/>
+      <xsd:enumeration value="N3"/>
+      <xsd:enumeration value="N4"/>
+      <xsd:enumeration value="N5"/>
+      <xsd:enumeration value="N6"/>
+      <xsd:enumeration value="N7"/>
+      <xsd:enumeration value="N8"/>
+      <xsd:enumeration value="N9"/>
+      <xsd:enumeration value="R"/>
+      <xsd:enumeration value="ID"/>
+      <xsd:enumeration value="AN"/>
+      <xsd:enumeration value="DT"/>
+      <xsd:enumeration value="TM"/>
+      <xsd:enumeration value="B"/>
+    </xsd:restriction>
+  </xsd:simpleType>
+</xsd:schema>

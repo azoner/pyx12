@@ -1,0 +1,46 @@
+table
+{
+    width: 80%; 
+    border:1px solid white;
+    background-color: pink;
+    padding: 4em;
+}
+
+.segment
+{
+    background-color: #CCCCFF;
+    color: black;
+    font-style: normal;
+    height: 20px;
+    vertical-align: top;
+}
+tr.element
+{
+    background-color: lightblue;
+    color: black;
+    font-style: normal;
+    height: 20px;
+    vertical-align: top;
+    padding-left: 4em;
+}
+td.element
+{
+    width: 10%;
+}
+tr.composite
+{
+    background-color: pink;
+    color: black;
+    font-style: normal;
+    height: 20px;
+    text-align: left;
+    vertical-align: top;
+}
+td.composite
+{
+    width: 10%;
+}
+td.code
+{
+    background-color: #CCFFFF;
+}
