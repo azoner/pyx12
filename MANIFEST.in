@@ -1,0 +1,3 @@
+recursive-include bin *.py
+recursive-include map *.xml *.xsd *.xsl
+recursive-include view Makefile *.xsl *.css
