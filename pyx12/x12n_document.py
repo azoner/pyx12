@@ -200,8 +200,8 @@ def x12n_document(param, src_file, fd_997, fd_html, fd_xmldoc=None):
         if fd_xmldoc:
             xmldoc.seg(node, seg)
 
-    src.cleanup()
-
+    src.cleanup() #Catch any skipped loop trailers
+    
     if fd_html:
         html.footer()
         del html
