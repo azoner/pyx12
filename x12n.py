@@ -92,13 +92,9 @@ class x12n_document:
 	    if GetChildElementText(seg_node, 'id') == 'IEA':
 	    	iea_seg_node = seg_node
 
-	# Start XML output
-	sys.stdout.write('<?xml version="1.0" encoding="UTF-8"?>\n<transaction>\n')
-	tab.incr()
 	# ISA Segment	
 	isa_seg = segment(isa_seg_node, seg)
 	isa_seg.validate()
-	isa_seg.xml()
 	self.icvn = isa_seg.GetElementValue('ISA12')
 	
 	lines = []
@@ -119,9 +115,15 @@ class x12n_document:
 	for loop in GetExplicitLoops(lines[:-1], 'GS', 'GE', 6, 2):
 	    gs = GS_loop(self, loop)
 
+	dom_isa.unlink()
+
+    def xml(self):
+	# Start XML output
+	sys.stdout.write('<?xml version="1.0" encoding="UTF-8"?>\n<transaction>\n')
+	tab.incr()
+	isa_seg.xml()
 	iea_seg.xml()
 	sys.stdout.write('</transaction>\n')
-	dom_isa.unlink()
 
     
 class GS_loop:
@@ -163,6 +165,9 @@ class GS_loop:
 
     def getMapFile(self):
     	return self.map_file
+
+    def xml(self):
+    	pass
 
 class ST_loop:
     def __init__(self, gs, isa, st):
