@@ -39,7 +39,8 @@
     <data_ele>127</data_ele>
 
     <version>
-    <eff_dte>20020101</eff_dte>
+    <id>20000101</id>
+    <eff_dte>20000101</eff_dte>
     <exp_dte>20050101</exp_dte>
     <code>101Y00000N</code>
     <code>101YA0400N</code>
@@ -701,6 +702,8 @@
     <name>US State or Province Codes</name>
     <data_ele>156</data_ele>
     <version>
+    <id>20020101</id>
+    <eff_dte>20000101</eff_dte>
     <code>AA</code>
     <code>AB</code>
     <code>AE</code>
@@ -780,6 +783,8 @@
     <name>Country Codes</name>
     <data_ele>26</data_ele>
     <version>
+    <id>20000101</id>
+    <eff_dte>20000101</eff_dte>
     <code>AF</code>
     <code>AL</code>
     <code>DZ</code>
@@ -1026,6 +1031,8 @@
     <name>Currency Code</name>
     <data_ele>100</data_ele>
     <version>
+    <id>20000101</id>
+    <eff_dte>20000101</eff_dte>
     <code>ADP</code>
     <code>AED</code>
     <code>AFA</code>
@@ -1411,6 +1418,8 @@
     <name>Adjustment Reason Code</name>
     <data_ele>1034</data_ele>
     <version>
+    <id>20000101</id>
+    <eff_dte>20000101</eff_dte>
     <code>1</code>
     <code>2</code>
     <code>3</code>
@@ -1610,6 +1619,8 @@
     <name>Remark Code</name>
     <data_ele>127</data_ele>
     <version>
+    <id>20000101</id>
+    <eff_dte>20000101</eff_dte>
     <code>M1</code>
     <code>M2</code>
     <code>M3</code>
@@ -2778,6 +2789,8 @@
     <name>Health Care Claim Status Category Code (Code Source 507)</name>
     <data_ele>1271</data_ele>
     <version>
+    <id>20000101</id>
+    <eff_dte>20000101</eff_dte>
     <code>A0</code>
     <code>A1</code>
     <code>A2</code>
@@ -2813,6 +2826,8 @@
     <name>Health Care Claim Status Code (Code Source 508)</name>
     <data_ele>1271</data_ele>
     <version>
+    <id>20000101</id>
+    <eff_dte>20000101</eff_dte>
     <code>0</code>
     <code>1</code>
     <code>2</code>
