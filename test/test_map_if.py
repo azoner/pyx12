@@ -9,6 +9,105 @@ from pyx12.errors import *
 import pyx12.map_if
 from pyx12.params import params
 
+class Element_is_valid(unittest.TestCase):
+    """
+    """
+    def setUp(self):
+        param = params()
+        param.set_param('map_path', os.path.expanduser('~/src/pyx12/map/'))
+        self.map = pyx12.map_if.load_map_file('837.4010.X098.A1.xml', param)
+        self.node = self.map.getnodebypath('/2000A/2000B/2300/CLM')
+        self.errh = pyx12.error_handler.errh_null()
+
+    def test_valid_codes_ok1(self):
+        #CLM05-01   02 bad, 11 good, no external
+        node = self.node.get_child_node_by_idx(4) #CLM05
+        node = node.get_child_node_by_idx(0) #CLM05-1
+        self.assertNotEqual(node, None)
+        self.assertEqual(node.id, 'CLM05-01')
+        self.assertEqual(node.base_name, 'element')
+        result = node.is_valid('11', self.errh)
+        self.failUnless(result)
+        self.assertEqual(self.errh.err_cde, None)
+        
+    def test_valid_codes_bad1(self):
+        node = self.node.get_child_node_by_idx(4) #CLM05
+        node = node.get_child_node_by_idx(0) #CLM05-1
+        self.assertNotEqual(node, None)
+        self.assertEqual(node.id, 'CLM05-01')
+        self.assertEqual(node.base_name, 'element')
+        result = node.is_valid('02', self.errh)
+        self.failIf(result)
+        self.assertEqual(self.errh.err_cde, '7')
+
+    def test_external_codes_ok1(self):
+        "CLM11-04 external states, no valid_codes"
+        node = self.node.get_child_node_by_idx(10) #CLM11
+        node = node.get_child_node_by_idx(3) #CLM11-4
+        self.assertNotEqual(node, None)
+        self.assertEqual(node.id, 'CLM11-04')
+        self.assertEqual(node.base_name, 'element')
+        result = node.is_valid('MI', self.errh)
+        self.failUnless(result)
+        self.assertEqual(self.errh.err_cde, None)
+        
+    def test_external_codes_bad1(self):
+        node = self.node.get_child_node_by_idx(10) #CLM11
+        node = node.get_child_node_by_idx(3) #CLM11-4
+        self.assertNotEqual(node, None)
+        self.assertEqual(node.id, 'CLM11-04')
+        self.assertEqual(node.base_name, 'element')
+        result = node.is_valid('NA', self.errh)
+        self.failIf(result)
+        self.assertEqual(self.errh.err_cde, '7')
+
+    def test_passed_list_bad(self):
+        node = self.node.get_child_node_by_idx(0)
+        self.assertNotEqual(node, None)
+        self.assertEqual(node.id, 'CLM01')
+        self.assertEqual(node.base_name, 'element')
+        result = node.is_valid(['NA', '', '1'], self.errh)
+        self.failIf(result)
+        self.assertEqual(self.errh.err_cde, '6')
+
+    def test_null_N(self):
+        node = self.node.get_child_node_by_idx(2)
+        self.assertNotEqual(node, None)
+        self.assertEqual(node.id, 'CLM03')
+        self.assertEqual(node.base_name, 'element')
+        result = node.is_valid(None, self.errh)
+        self.failUnless(result)
+        self.assertEqual(self.errh.err_cde, None)
+        
+    def test_blank_N(self):
+        node = self.node.get_child_node_by_idx(2)
+        self.assertNotEqual(node, None)
+        self.assertEqual(node.id, 'CLM03')
+        self.assertEqual(node.base_name, 'element')
+        result = node.is_valid('', self.errh)
+        self.failUnless(result)
+        self.assertEqual(self.errh.err_cde, None)
+        
+    def test_null_S(self):
+        node = self.node.get_child_node_by_idx(9)
+        self.assertNotEqual(node, None)
+        self.assertEqual(node.id, 'CLM10')
+        self.assertEqual(node.base_name, 'element')
+        result = node.is_valid(None, self.errh)
+        self.failUnless(result)
+        self.assertEqual(self.errh.err_cde, None)
+        
+    def test_blank_S(self):
+        node = self.node.get_child_node_by_idx(9)
+        self.assertNotEqual(node, None)
+        self.assertEqual(node.id, 'CLM10')
+        self.assertEqual(node.base_name, 'element')
+        result = node.is_valid('', self.errh)
+        self.failUnless(result)
+        self.assertEqual(self.errh.err_cde, None)
+        
+
+
 class Test_getnodebypath(unittest.TestCase):
     """
     """
@@ -89,7 +188,6 @@ class CompositeRequirement(unittest.TestCase):
         node = map.getnodebypath('/TST')
         node = node.get_child_node_by_idx(0)
         self.assertNotEqual(node, None)
-        #self.assertEqual(node.id, 'CLM05', node.id)
         self.assertEqual(node.base_name, 'composite')
         result = node.is_valid([None, '', '1'], self.errh)
         self.failUnless(result)
@@ -99,7 +197,6 @@ class CompositeRequirement(unittest.TestCase):
         node = self.map.getnodebypath('/2000A/2000B/2300/CLM')
         node = node.get_child_node_by_idx(4)
         self.assertNotEqual(node, None)
-        #self.assertEqual(node.id, 'CLM05', node.id)
         self.assertEqual(node.base_name, 'composite')
         result = node.is_valid([None, '', ''], self.errh)
         self.failIf(result)
@@ -350,7 +447,7 @@ def suite():
     #    IsValidSyntaxP, IsValidSyntaxR, IsValidSyntaxC, \
     #    IsValidSyntaxE, IsValidSyntaxL))
     suite = unittest.TestSuite()
-#    suite.addTest(unittest.makeSuite(Test_getnodebypath))
+    suite.addTest(unittest.makeSuite(Test_getnodebypath))
     suite.addTest(unittest.makeSuite(TrailingSpaces))
     suite.addTest(unittest.makeSuite(CompositeRequirement))
     suite.addTest(unittest.makeSuite(IsValidSyntax))
@@ -359,6 +456,7 @@ def suite():
     suite.addTest(unittest.makeSuite(IsValidSyntaxC))
     suite.addTest(unittest.makeSuite(IsValidSyntaxE))
     suite.addTest(unittest.makeSuite(IsValidSyntaxL))
+    suite.addTest(unittest.makeSuite(Element_is_valid))
     return suite
                 
 #if __name__ == "__main__":
