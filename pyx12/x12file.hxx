@@ -49,6 +49,7 @@ namespace Pyx12 {
         char subele_term;
         ifstream src_fs;
         get_id(string id) const;
+        string read_seg();
 
     public:
         x12file(const string& src_filename); //, errh)
@@ -59,8 +60,8 @@ namespace Pyx12 {
         string get_gs_id() const;
         string get_st_id() const;
         string get_ls_id() const;
-        int get_seg_count() const;
-        int get_cur_line() const;
+        int get_seg_count() const {return seg_count;};
+        int get_cur_line() const {return cur_line;};
         list<string> get_term() const;
         string seg_str(pyx12::segment seg_data, string seg_term, string ele_term, 
             string sub_ele_term, string eol='\n') const;
