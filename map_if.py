@@ -358,7 +358,7 @@ class loop_if(x12_node):
         # match also by ID
         pass
 
-    def is_valid(self):
+    def is_valid(self, seg):
         pass
 
     def parse(self):
@@ -507,7 +507,7 @@ class segment_if(x12_node):
         # match also by ID
         pass
 
-    def is_valid(self):
+    def is_valid(self, seg):
         """
         Name:   
         Desc:    
