@@ -1,5 +1,3 @@
-XML based config files
-
 Base map_if children on map
   get by id quicker
   get by idx slower?
@@ -19,11 +17,11 @@ For large input files, split html output into parts
 Error Handling
   Stream Errors to XML
   Combine error XML with HTML/XML/997 output
-  Error specifications - XML
+  Error specifications - XML (seperate tags for ISA/GS/detail errors
 
 Unit Testing
   map_walker
-  x12file - HL
+  x12file - HL counting?
   map_if
   codes
 
