@@ -290,7 +290,7 @@ class walk_tree:
                 err_str = "Loop %s found but marked as not used" % (loop_node.id)
                 errh.seg_error('2', err_str, None)
             elif loop_node.usage in ('R', 'S'):
-                loop_node.reset_cur_count()
+                loop_node.reset_child_count()
                 loop_node.incr_cur_count()
                 first_child_node.incr_cur_count()
                 if loop_node.get_cur_count() > loop_node.get_max_repeat():
