@@ -17,7 +17,7 @@ Tracks end of explicit loops.
 Tracks segment/line/loop counts.
 """
 
-#import sys
+import sys
 #import string
 from types import *
 import logging
@@ -46,7 +46,10 @@ class x12file:
         @type src_file: string
         @param errh: L{error_handler.err_handler}
         """
-        self.fd = open(src_file, 'U')
+        if src_file == '-':
+            self.fd = sys.stdin
+        else:
+            self.fd = open(src_file, 'U')
         self.errh = errh
         self.loops = []
         self.hl_stack = []
