@@ -68,18 +68,16 @@ class walk_tree:
         orig_node = node
         #logger.info('%s seg_count=%i / cur_line=%i' % (node.id, seg_count, cur_line))
         self.mandatory_segs_missing = []
-        #node_idx = node.index # Get original index of starting node
         node_pos = node.pos # Get original position ordinal of starting node
         if not (node.is_loop() or node.is_map_root()): 
             node = pop_to_parent_loop(node) # Get enclosing loop
         while 1:
             #logger.debug(seg_data.get_seg_id())
             for child in node.children:
-                #logger.debug('id=%s child.index=%i node_idx=%i' % \
-                #    (child.id, child.index, node_idx))
-                if child.is_segment():
-                    #if child.index >= node_idx:
-                    if child.pos >= node_pos:
+                #logger.debug('id=%s child.index=%i node_pos=%i' % \
+                #    (child.id, child.index, node_pos))
+                if child.pos >= node_pos:
+                    if child.is_segment():
                         #logger.debug('id=%s cur_count=%i max_repeat=%i' \
                         #    % (child.id, child.cur_count, child.get_max_repeat()))
                         if child.is_match(seg_data):
@@ -111,19 +109,21 @@ class walk_tree:
                         #else:
                             #logger.debug('Segment %s is not a match for (%s*%s)' % \
                             #   (child.id, seg_data.get_seg_id(), seg_data[0].get_value()))
-                elif child.is_loop(): 
-                    #if child.index >= node_idx:
-                    if child.pos >= node_pos:
+                    elif child.is_loop(): 
                         #logger.debug('child_node id=%s' % (child.id))
                         if self._is_loop_match(child, seg_data, errh, seg_count, cur_line, ls_id):
                             child.reset_cur_count() # Set counts of children to zero
                             node_seg = child.get_child_node_by_idx(0)
                             node_seg.cur_count = 1
                             return node_seg
+                        #if child.get_child_node_by_idx(0).is_loop():
+                        #    node1 = self.walk(child.get_child_node_by_idx(0), \
+                        #        seg_data, errh, seg_count, cur_line, ls_id)
+                        #    if node1:
+                        #        return node1
             if node.is_map_root(): # If at root and we haven't found the segment yet.
                 self._seg_not_found(orig_node, seg_data, errh)
                 return None
-            #node_idx = node.index # Get index of current node in tree
             node_pos = node.pos # Get position ordinal of current node in tree
             node = pop_to_parent_loop(node) # Get enclosing parent loop
 

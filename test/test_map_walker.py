@@ -39,13 +39,14 @@ class Explicit_Loops(unittest.TestCase):
         self.assertEqual(seg.get_seg_id(), node.id)
 
     def test_SE_to_ST(self):
-        node = self.map.getnodebypath('/ISA/GS/ST/FOOTER/SE')
+        node = self.map.getnodebypath('/ISA/GS/ST/SE')
+        self.assertNotEqual(node, None)
         seg = pyx12.segment.segment('ST*837', '~', '*', ':')
         node = self.walker.walk(node, seg, self.errh, 5, 4, None)
         self.assertEqual(seg.get_seg_id(), node.id)
 
     def test_SE_to_GE(self):
-        node = self.map.getnodebypath('/ISA/GS/ST/FOOTER/SE')
+        node = self.map.getnodebypath('/ISA/GS/ST/SE')
         #node.cur_count = 1 # HACK
         seg = pyx12.segment.segment('GE*1', '~', '*', ':')
         node = self.walker.walk(node, seg, self.errh, 5, 4, None)
@@ -76,7 +77,7 @@ class Explicit_Loops(unittest.TestCase):
         self.assertEqual(seg.get_seg_id(), node.id)
 
     def test_ST_to_BHT_fail(self):
-        node = self.map.getnodebypath('/ISA/GS/ST/HEADER/ST')
+        node = self.map.getnodebypath('/ISA/GS/ST/ST')
         seg = pyx12.segment.segment('ZZZ*0019', '~', '*', ':')
         node = self.walker.walk(node, seg, self.errh, 5, 4, None)
         self.assertEqual(node, None)
@@ -116,7 +117,7 @@ class Implicit_Loops(unittest.TestCase):
         self.errh = pyx12.error_handler.errh_null()
 
     def test_ST_to_BHT(self):
-        node = self.map.getnodebypath('/ISA/GS/ST/HEADER/ST')
+        node = self.map.getnodebypath('/ISA/GS/ST/ST')
         seg = pyx12.segment.segment('BHT*0019', '~', '*', ':')
         node = self.walker.walk(node, seg, self.errh, 5, 4, None)
         self.assertEqual(seg.get_seg_id(), node.id)
@@ -263,7 +264,7 @@ class Segment_ID_Checks(unittest.TestCase):
         param.set('pickle_path', os.path.expanduser('~/src/pyx12/map/'))
         self.map = pyx12.map_if.load_map_file('837.4010.X098.A1.xml', param)
         self.errh = pyx12.error_handler.errh_null()
-        self.node = self.map.getnodebypath('/ISA/GS/ST/HEADER/ST')
+        self.node = self.map.getnodebypath('/ISA/GS/ST/ST')
 
     def test_segment_id_short(self):
         node = self.node
