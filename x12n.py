@@ -35,6 +35,12 @@
 
 # THIS IS PRE-ALPHA CODE.  IT DOES NOT WORK. 
 
+"""
+Parse a ANSI X12N data file.
+Validate against a map and codeset values.
+Create a XML document based on the data file
+"""
+
 #import os
 #import stat
 import sys
@@ -53,6 +59,7 @@ import xml.dom.minidom
 import errors
 import codes
 import map_index
+import map_if
 from utils import *
 
 #Global Variables
