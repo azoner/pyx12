@@ -233,22 +233,72 @@ class segment:
         """
         return self.seg_id
 
-    def get_value_by_ref_des(self, ref_des):
+    def _parse_refdes(self, ref_des):
         """
+        @param ref_des: X12 Reference Designator
+        @type ref_des: string
+        @rtype: tuple(ele_idx, subele_idx)
+        @raise EngineError: If the given ref_des does not match the segment ID
+            or if the indexes are not valid integers
         """
         if ref_des[:len(self.seg_id)] != self.seg_id:
-            raise EngineError, 'Invalid ref_des: %s, seg_id: %s' % (ref_des, self.seg_id)
+            raise EngineError, 'Invalid Reference Designator: %s, seg_id: %s' \
+                % (ref_des, self.seg_id)
         rest = ref_des[len(self.seg_id):]
         dash = rest.find('-')
-        if dash == -1:
-            ele_idx = int(rest) - 1
-            #comp_idx = 0
+        try:
+            if dash == -1:
+                ele_idx = int(rest) - 1
+                comp_idx = None
+            else:
+                ele_idx = int(rest[:dash]) - 1
+                comp_idx = int(rest[dash+1:]) - 1
+        except ValueError:
+            raise EngineError, 'Invalid Reference Designator indexes: %s' \
+                % (ref_des)
+        return (ele_idx, comp_idx)
+
+    def get(self, ref_des):
+        """
+        @param ref_des: X12 Reference Designator
+        @type ref_des: string
+        @return: Formatted element or composite
+        @rtype: string
+        """
+        (ele_idx, comp_idx) = self._parse_refdes(ref_des)
+        if ele_idx >= self.__len__():
+            return None
+        if comp_idx is None:
             return self.elements[ele_idx].format()
         else:
-            ele_idx = int(rest[:dash]) - 1
-            comp_idx = int(rest[dash+1:]) - 1
+            if comp_idx >= self.elements[ele_idx].__len__():
+                return None
             return self.elements[ele_idx][comp_idx].get_value()
     
+    def get_value_by_ref_des(self, ref_des):
+        """
+        @param ref_des: X12 Reference Designator
+        @type ref_des: string
+        @attention: Deprecated - use get instead
+        """
+        return self.get(ref_des)
+        
+    def set(self, ref_des, val):
+        """
+        Set the value of an element or subelement identified by the 
+        Reference Designator
+        
+        @param ref_des: X12 Reference Designator
+        @type ref_des: string
+        @param val: New value
+        @type val: string
+        """
+        (ele_idx, comp_idx) = self._parse_refdes(ref_des)
+        if comp_idx is None:
+            self.elements[ele_idx] = composite(val, self.subele_term)
+        else:
+            self.elements[ele_idx][comp_idx] = element(val)
+
     def set_seg_term(self, seg_term):
         self.seg_term = seg_term
 
