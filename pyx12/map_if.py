@@ -654,7 +654,6 @@ class segment_if(x12_node):
             elif ret == 0:
                 raise errors.XML_Reader_Error, 'End of Map File'
         
-
     def debug_print(self):
         sys.stdout.write(self.__repr__())
         for node in self.children:
@@ -712,10 +711,21 @@ class segment_if(x12_node):
         """
         return self.parent
 
-#    def get_seg_count(self):
-#        """
-#        """
-#        pass
+    def get_path(self):
+        """
+        @return: path - XPath style
+        @rtype: string
+        """
+        parent_path = self.parent.get_path()
+        if parent_path == '/':
+            ret = '/' + self.path
+        else:
+            ret = parent_path + '/' + self.path
+        if self.children[0].is_element() \
+            and self.children[0].data_type == 'ID' \
+            and len(self.children[0].valid_codes) > 0:
+            ret += '[%s]' % (self.children[0].valid_codes[0])
+        return ret
 
     def is_first_seg_in_loop(self):
         """
