@@ -83,8 +83,8 @@ public:
     bool is_composite();
     bool is_element();
     bool is_empty();
-    bool not_delim(char c);
-    bool delim(char c);
+    //bool not_delim(char c);
+    //bool delim(char c);
 };
 
 
@@ -115,8 +115,8 @@ public:
     string format();
     vector<string> format_ele_list(vector<string> str_elems, const string& subele_term_);
     bool is_empty();
-    bool not_delim(char c);
-    bool delim(char c);
+    //bool not_delim(char c);
+    //bool delim(char c);
 
     ostream& operator<<(ostream&);
 };

@@ -117,6 +117,7 @@ composite::composite(const string& ele_str, const string& subele_term_)
     }
 }
 
+/*
 bool composite::not_delim(char c)
 {
     if(c != subele_term[0])
@@ -132,6 +133,7 @@ bool composite::delim(char c)
     else
         return false;
 }
+*/
 
 vector<string> composite::split(const string& ele_str)
 {
@@ -141,8 +143,12 @@ vector<string> composite::split(const string& ele_str)
     iter i = ele_str.begin();
     iter j;
     while(i != ele_str.end()) {
-        i = find_if(i, ele_str.end(), composite::not_delim);
-        j = find_if(i, ele_str.end(), composite::delim);
+        //i = find_if(i, ele_str.end(), composite::not_delim);
+        while(i != ele_str.end())
+            if((*i) != subele_term[0])
+                break;
+        j = find(i, ele_str.end(), subele_term[0]);
+        //j = find_if(i, ele_str.end(), composite::delim);
         if(i != ele_str.end())
             ret.push_back(string(i, j));
         i = j;
@@ -214,23 +220,6 @@ bool composite::is_empty()
     return elements.empty();
 }
 
-/*
-class segment {
-    vector<string> elements;
-
-public:
-    void append(string val);
-    size_t length();
-    string get_seg_id();
-    string get_value_by_ref_des(const string& ref_des);
-    void set_seg_term(const string& seg_term);
-    void set_ele_term(const string& ele_term);
-    void set_subele_term(const string& subele_term);
-    string format();
-    vector<string> format_ele_list(vector<string> str_elems, const string& subele_term);
-};
-*/
-
 
 segment::segment(const string& seg_str, const string& seg_term_,
         const string& ele_term_, const string& subele_term_)
@@ -261,7 +250,7 @@ segment::segment(const string& seg_str, const string& seg_term_,
             elements.push_back(composite((*i), subele_term));
     }
 }
-
+/*
 bool segment::not_delim(char c)
 {
     if(c != ele_term[0])
@@ -277,7 +266,7 @@ bool segment::delim(char c)
     else
         return false;
 }
-
+*/
 vector<string> segment::split(const string& seg_str)
 {
     typedef string::const_iterator iter;
@@ -286,8 +275,12 @@ vector<string> segment::split(const string& seg_str)
     iter i = seg_str.begin();
     iter j;
     while(i != seg_str.end()) {
-        i = find_if(i, seg_str.end(), segment::not_delim);
-        j = find_if(i, seg_str.end(), segment::delim);
+        //i = find_if(i, seg_str.end(), segment::not_delim);
+        //j = find_if(i, seg_str.end(), segment::delim);
+        while(i != seg_str.end())
+            if((*i) != ele_term[0])
+                break;
+        j = find(i, seg_str.end(), ele_term[0]);
         if(i != seg_str.end())
             ret.push_back(string(i, j));
         i = j;
@@ -314,3 +307,48 @@ size_t segment::length()
 {
     return elements.size();
 }
+
+void segment::append(const string& ele_str)
+{
+    elements.push_back(composite(ele_str, subele_term));
+}
+
+string get_seg_id()
+{
+    return seg_id;
+}
+
+string get_value_by_ref_des(const string& ref_des)
+{
+    typedef string::const_iterator iter;
+    int ele_idx, comp_idx;
+
+    if(ref_des.substr(0, seg_id.size()) != seg_id):
+        throw Pyx12Errors::EngineError("Invalid ref_des: " + ref_des + ", seg_id: " + seg_id);
+    string rest = ref_des.substr(seg_id.length(), ref_des.size()-seg_id.length());
+    size_t dash = find(ref_des.begin(), ref_des.end(), '-');
+    if(dash == -1) {
+        ele_idx = int(rest) -1;
+        comp_idx = 0;
+    }
+    else {
+        ele_idx = int(rest.substr(0, dash)) -1;
+        comp_idx = int(rest.substr(dash, rest.size()-dash)) -1;
+    }
+    return elements[ele_idx][comp_idx].get_value();
+}
+
+/*
+class segment {
+    vector<string> elements;
+
+public:
+    void set_seg_term(const string& seg_term);
+    void set_ele_term(const string& ele_term);
+    void set_subele_term(const string& subele_term);
+    string format();
+    vector<string> format_ele_list(vector<string> str_elems, const string& subele_term);
+};
+*/
+
+
