@@ -52,6 +52,7 @@ import xml.dom.minidom
 # Intrapackage imports
 import errors
 import codes
+import map_index
 from utils import *
 
 #Global Variables
@@ -138,22 +139,9 @@ class GS_loop:
 	    raise errors.WEDI1Error, 'Last segment should be GE, is "%s"' % (gs[-1:][0][0])
 
 	#Get map for this GS loop
-        dom_maps = xml.dom.minidom.parse('map/maps.xml')
-    	vers = dom_maps.getElementsByTagName("version")
-	for ver in vers:
-	    if ver.getAttribute('icvn') == isa.icvn:
-	        maps = ver.getElementsByTagName("map")
-
-	for map in maps:
-	    if map.getAttribute('fic') == self.fic and map.getAttribute('vriic') == self.vriic:
-                for node in map.childNodes:
-           	    if node.nodeType == node.TEXT_NODE:
-		        node.normalize()
-                        self.map_file = node.data
-	if not self.map_file:
-	    raise errors.GSError, 'Map file not found, icvn=%s, fic=%s, vriic=%s' % (isa.icvn,self.fic,self.vriic)
-	dom_maps.unlink()
-
+	map_index = map_index('map/maps.xml')
+	self.map_file = map1.get_filename(isa.icvn, self.vriic, self.fic)
+	
 	# Get map for this GS loop
 	#print "--load whole dom"
 	self.dom_map = xml.dom.minidom.parse('map/' + self.map_file)
