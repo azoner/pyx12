@@ -177,9 +177,9 @@ def getfirstfield(seg_list, segment_name, field_idx):
 	    return None
 
 
-def GetLoops(lines, start_tag, end_tag, start_idx, end_idx):
+def GetExplicitLoops(lines, start_tag, end_tag, start_idx, end_idx):
     """
-    Name:    GetLoops
+    Name:    GetExplicitLoops
     Desc:    Locate the loop blocks for a loop sets with explicit start and end tags
     Params:  lines - a list of lists containing the lines to be split
              start_tag - the loop start tag (ISA, GS, ST)
