@@ -811,20 +811,22 @@ class element_if(x12_node):
     def __del__(self):
         pass
 
-#    def _err_hdlr(self, err_list, err_str, err_cde, value):
-#        """
-#        Class:  element_if
-#        Name:   __init__
-#        Desc:   format 997 element error tuple
-#        Params: err_list - list of error tuples
-#                err_str - description of error
-#                err_cde - AK403 Data element syntax error code
-#                value - data value causing the error
-#        """
-#        self.logger.error(err_str)
-#        err_list.append((self.seq, None, self.data_ele, err_cde, value, err_str))
-#        #raise errors.WEDI1Error, err_str
-
+    def __error__(self, errh, err_str, err_cde, elem_val):
+        """
+        Class:      element_if
+        Name:       __error__
+        Desc:       Forward the error to an error_handler
+        Params:  
+        """
+        err = {}
+        err['id'] = 'ELE'
+        err['str'] = err_str
+        err['code'] = err_cde
+        err['value'] = elem_val
+        err['pos'] = self.seq
+        err['data_ele'] = self.data_ele
+        errh.add_error(err)
+        
     def __valid_code__(self, code):
         """
         Class:  element_if
@@ -890,82 +892,47 @@ class element_if(x12_node):
             if self.usage == 'N':
                 return True
             elif self.usage == 'R':
-                err = {}
-                err['id'] = 'ELE'
-                err['str'] = 'Mandatory data element %s is missing' % (self.refdes)
-                err['code'] = '1'
-                errh.add_error(err)
+                err_str = 'Mandatory data element %s is missing' % (self.refdes)
+                self.__error__(errh, err_str, '1', None)
                 return False
             elif self.usage == 'S':
                 return True
         if (not self.data_type is None) and (self.data_type == 'R' or self.data_type[0] == 'N'):
             elem = string.replace(string.replace(elem_val, '-', ''), '.', '')
             if len(elem) < int(self.min_len):
-                err = {}
-                err['id'] = 'ELE'
-                err['str'] = 'Data element %s is too short: "%s" is len=%i' % (self.refdes,\
+                err_str = 'Data element %s is too short: "%s" is len=%i' % (self.refdes,\
                     elem_val, int(self.min_len))
-                err['code'] = '4'
-                err['value'] = elem_val
-                errh.add_error(err)
+                self.__error__(errh, err_str, '4', elem_val)
             if len(elem) > int(self.max_len):
-                err = {}
-                err['id'] = 'ELE'
-                err['str'] = 'Element %s is too long: "%s" is len=%i' % (self.refdes,\
+                err_str = 'Element %s is too long: "%s" is len=%i' % (self.refdes,\
                     elem_val, int(self.max_len))
-                err['code'] = '5'
-                err['value'] = elem_val
-                errh.add_error(err)
+                self.__error__(errh, err_str, '5', elem_val)
         else:
             if len(elem_val) < int(self.min_len):
-                err = {}
-                err['id'] = 'ELE'
-                err['str'] = 'Data element %s is too short: "%s" is len=%i' % (self.refdes,\
+                err_str = 'Data element %s is too short: "%s" is len=%i' % (self.refdes,\
                     elem_val, int(self.min_len))
-                err['code'] = '4'
-                err['value'] = elem_val
-                errh.add_error(err)
+                self.__error__(errh, err_str, '4', elem_val)
             if len(elem_val) > int(self.max_len):
-                err = {}
-                err['id'] = 'ELE'
-                err['str'] = 'Element %s is too long: "%s" is len=%i' % (self.refdes,\
+                err_str = 'Element %s is too long: "%s" is len=%i' % (self.refdes,\
                     elem_val, int(self.max_len))
-                err['code'] = '5'
-                err['value'] = elem_val
-                errh.add_error(err)
+                self.__error__(errh, err_str, '5', elem_val)
 
         if not (self.__valid_code__(elem_val) or codes.IsValid(self.external_codes, elem_val, check_dte) ):
-            err = {}
-            err['id'] = 'ELE'
-            err['str'] = '(%s) is not a valid code for data element %s' % (elem_val, self.refdes)
-            err['code'] = '7'
-            err['value'] = elem_val
-            errh.add_error(err)
+            err_str = '(%s) is not a valid code for data element %s' % (elem_val, self.refdes)
+            self.__error__(errh, err_str, '7', elem_val)
         if not IsValidDataType(elem_val, self.data_type, 'E'):
             if self.data_type == 'DT':
-                err = {}
-                err['id'] = 'ELE'
-                err['str'] = 'Data element %s contains an invalid date (%s)' % \
+                err_str = 'Data element %s contains an invalid date (%s)' % \
                     (self.refdes, elem_val)
-                err['code'] = '8'
-                err['value'] = elem_val
-                errh.add_error(err)
+                self.__error__(errh, err_str, '8', elem_val)
             elif self.data_type == 'TM':
-                err = {}
-                err['id'] = 'ELE'
-                err['str'] = 'Data element %s contains an invalid time (%s)' % \
+                err_str = 'Data element %s contains an invalid time (%s)' % \
                     (self.refdes, elem_val)
-                err['code'] = '9'
-                err['value'] = elem_val
-                errh.add_error(err)
+                self.__error__(errh, err_str, '9', elem_val)
             else:
-                err = {}
-                err['id'] = 'ELE'
-                err['str'] = 'Data element %s is type %s, contains an invalid character(%s)' % \
+                err_str = 'Data element %s is type %s, contains an invalid character(%s)' % \
                     (self.refdes, self.data_type, elem_val)
-                err['code'] = '6'
-                err['value'] = elem_val
-                errh.add_error(err)
+                self.__error__(errh, err_str, '6', elem_val)
         return True
 
 
@@ -1078,6 +1045,22 @@ class composite_if(x12_node):
                 raise errors.XML_Reader_Error, 'Read Error'
             elif ret == 0:
                 raise errors.XML_Reader_Error, 'End of Map File'
+                
+    def __error__(self, errh, err_str, err_cde, elem_val):
+        """
+        Class:      composite_if
+        Name:       __error__
+        Desc:       Forward the error to an error_handler
+        Params:  
+        """
+        err = {}
+        err['id'] = 'ELE'
+        err['str'] = err_str
+        err['code'] = err_cde
+        err['value'] = elem_val
+        err['pos'] = self.seq
+        err['data_ele'] = self.data_ele
+        errh.add_error(err)
         
     def debug_print(self):
         """
