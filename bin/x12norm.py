@@ -15,7 +15,7 @@ eol = ''
 for o, a in opts:
     if o == '-e': eol = '\n'
 
-errh = pyx12.error_handler.err_handler()
+errh = pyx12.error_handler.errh_null()
 for filename in args:
     src = pyx12.x12file.x12file(filename, errh)
     for c in src:
