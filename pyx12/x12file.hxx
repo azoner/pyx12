@@ -15,8 +15,9 @@ $Id$
 #ifndef PYX12_X12FILE_H_
 #define PYX12_X12FILE_H_
 
-#include <iostream>
 #include <fstream>
+#include <iostream>
+#include <iterator>
 #include <list>
 #include <stack>
 #include <string>
@@ -63,10 +64,11 @@ namespace Pyx12 {
         int get_seg_count() const {return seg_count;};
         int get_cur_line() const {return cur_line;};
         list<string> get_term() const;
-        string seg_str(pyx12::segment seg_data, string seg_term, string ele_term, 
-            string sub_ele_term, string eol='\n') const;
         
     //    ostream& operator<<(ostream&, x12file&);
     };
+
+    //class x12fileIter : public iterator <forward_iterator_tag, pyx12::x12file> {
+    
 };
 #endif // PYX12_X12FILE_H_

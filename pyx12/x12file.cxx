@@ -18,6 +18,7 @@ $Id$
  * Tracks segment/line/loop counts.
  */
  
+#include <algorithm>
 #include <iterator>
 #include <string>
 #include <vector>
@@ -126,68 +127,89 @@ vector<string> x12file::next()
                 raise x12Error, "The ISA segement must have 16 elements";
             //seg[-1] = subele_term
             interchange_control_number = seg_data.get_value_by_ref_des("ISA13");
-            if(interchange_control_number in isa_ids)
+            if(find(isa_ids.begin(), isa_ids.end(), interchange_control_number) != isa_ids.end()) {
                 err_str = "ISA Interchange Control Number '";
                 err_str += interchange_control_number;
                 err_str += "' is not unique within file";
                 //errh.isa_error("025", err_str)
-            loops.push_back(make_pair("ISA", interchange_control_number))
-            isa_ids.push_back(interchange_control_number)
+            }
+            loops.push_back(make_pair("ISA", interchange_control_number));
+            isa_ids.push_back(interchange_control_number);
             gs_count = 0;
             gs_ids.erase(gs_ids.begin(), gs_ids.end());
             isa_usage = seg_data.get_value_by_ref_des("ISA15");
         case "IEA":
             if(loops.rbegin()->first != "ISA" 
-                    || loops.rbegin()->second != seg_data.get_value_by_ref_des("IEA02"))
+                    || loops.rbegin()->second != seg_data.get_value_by_ref_des("IEA02")) {
                 err_str = "IEA id=";
                 err_str += seg_data.get_value_by_ref_des("IEA02");
-                err_str +=" does not match ISA id="l
+                err_str +=" does not match ISA id=";
                 err_str += loops.rbegin()->second;
                 //errh.isa_error('001', err_str)
-            if(atoi(seg[1]) != gs_count)
-                err_str = 'IEA count for IEA02=%s is wrong' % (seg[2])
-                errh.isa_error('021', err_str)
+            }
+            if(atoi(seg_data.get_value_by_ref_des("IEA02")) != gs_count) {
+                err_str = "IEA count for IEA02=";
+                err_str += seg_data.get_value_by_ref_des("IEA02");
+                err_str +=" is wrong";
+                //errh.isa_error("021", err_str)
+            }
             loops.erase(loops.rbegin());
         case "GS":
-            group_control_number = seg[6]
-            if(group_control_number in gs_ids)
-                err_str = 'GS Interchange Control Number %s not unique within file' \
-                    % (group_control_number)
-                errh.gs_error('6', err_str)
+            group_control_number = seg_data.get_value_by_ref_des("GS06");
+            if(find(gs_ids.begin(), gs_ids.end(), group_control_number) != gs_ids.end()) {
+                err_str = "GS Interchange Control Number ";
+                err_str += group_control_number;
+                err_str += " not unique within file";
+                //errh.gs_error('6', err_str)
+            }
             gs_count++;
-            gs_ids.push_back(group_control_number)
-            loops.push_back(make_pair("GS", group_control_number))
+            gs_ids.push_back(group_control_number);
+            loops.push_back(make_pair("GS", group_control_number));
             st_count = 0;
             st_ids.erase(st_ids.begin(), st_ids.end());
         case "GE":
-            if(loops[-1][0] != 'GS' || loops[-1][1] != seg[2])
-                err_str = 'GE id=%s does not match GS id=%s' % (seg[2], loops[-1][1])
-                errh.gs_error('4', err_str)
-            if(int(seg[1]) != st_count)
-                err_str = 'GE count of %s for GE02=%s is wrong. I count %i' \
-                    % (seg[1], seg[2], st_count)
-                errh.gs_error('5', err_str)
+            string ge_id = seg_data.get_value_by_ref_des("GE02");
+            if(loops.rbegin()->first != "GS" 
+                    || loops.rbegin()->second != ge_id) {
+                err_str = "GE id=";
+                err_str += ge_id;
+                err_str += " does not match GS id=";
+                err_str += loops.rbegin()->second;
+                //errh.gs_error("4", err_str)
+            }
+            if(atoi(seg_data.get_value_by_ref_des("GE01")) != st_count) {
+                err_str = "GE count of ";
+                err_str += seg_data.get_value_by_ref_des("GE01");
+                err_str += " for GE02=" + ge_id;
+                err_str += " is wrong. I count ";
+                err_str += st_count; // XXX
+                //errh.gs_error("5", err_str)
+            }
             loops.erase(loops.rbegin());
         case "ST":
-            transaction_control_number = seg[2]
-            if(transaction_control_number in st_ids)
-                err_str = 'ST Interchange Control Number %s not unique within file' \
-                    % (transaction_control_number)
-                errh.st_error('23', err_str)
+            transaction_control_number = seg_data.get_value_by_ref_des("ST02");
+            if(find(st_ids.begin(), st_ids.end(), transaction_control_number) != st_ids.end()) {
+                err_str = "ST Interchange Control Number " + transaction_control_number + " not unique within file";
+                //errh.st_error('23', err_str)
+            }
             st_count++;
             st_ids.push_back(transaction_control_number)
             loops.push_back(make_pair("ST", transaction_control_number));
-            seg_count = 1 
-            hl_count = 0
+            seg_count = 1; 
+            hl_count = 0;
         case "SE":
-            se_trn_control_num = seg[2]
-            if(loops[-1][0] != 'ST' || loops[-1][1] != se_trn_control_num)
-                err_str = 'SE id=%s does not match ST id=%s' % (se_trn_control_num, loops[-1][1])
-                errh.st_error('3', err_str)
-            if(int(seg[1]) != seg_count + 1)
-                err_str = 'SE count of %s for SE02=%s is wrong. I count %i' \
-                    % (seg[1], se_trn_control_num, seg_count + 1)
-                errh.st_error('4', err_str)
+            se_trn_control_num = seg_data.get_value_by_ref_des("SE02");
+            if(loops.rbegin()->first != "ST" 
+                    || loops.rbegin()->second != se_trn_control_num) {
+                err_str = "SE id=" + se_trn_control_num;
+                err_str += " does not match ST id=" + loops.rbegin()->second;
+                //errh.st_error("3", err_str)
+            }
+            if(atoi(seg_data.get_value_by_ref_des("SE01")) != seg_count + 1) {
+                err_str = "SE count of " + seg_data.get_value_by_ref_des("SE01");
+                err_str += " for SE02=" + se_trn_control_num + " is wrong. I count " + (seg_count + 1); // XX
+                //errh.st_error('4', err_str)
+            }
             loops.erase(loops.rbegin());
         case "LS":
             loops.push_back(make_pair("LS", seg_data.get_value_by_ref_des("LS06")));
@@ -196,18 +218,17 @@ vector<string> x12file::next()
         case "HL":
             seg_count++;
             hl_count++;
-            if(hl_count != int(seg[1]))
-                err_str = 'My HL count %i does not match your HL count %s' \
-                    % (hl_count, seg[1])
-                errh.seg_error('HL1', err_str)
-            if(seg[2] != '')
-                parent = int(seg[2])
-                if(parent not in hl_stack)
-                    hl_stack.push_back(parent)
-                else:
-                    if(hl_stack)
-                        while(hl_stack[-1] != parent)
-                            hl_stack.erase(hl_stack.rbegin());
+            if(hl_count != atoi(seg_data.get_value_by_ref_des("HL01"))) {
+                //err_str = "My HL count %i does not match your HL count %s' \
+                //    % (hl_count, seg[1])
+                //errh.seg_error("HL1", err_str)
+            }
+            if(seg_data.get_value_by_ref_des("HL02") != "") {
+                hl_parent = atoi(seg_data.get_value_by_ref_des("HL02"));
+                while(!hl_stack.empty() && hl_stack.top() != hl_parent)
+                    hl_stack.pop();
+            }
+            hl_stack.push(hl_count);
         default:
             seg_count++;
     }
@@ -289,8 +310,9 @@ list<string> x12file::get_term() const {
  * @type src_file string
  * @param errh L{error_handler.err_handler}
  */
+/*
 string x12file::seg_str(pyx12::segment seg_data, string seg_term, string ele_term,
     string sub_ele_term, string eol="\n") const {
 }
-
+*/
 
