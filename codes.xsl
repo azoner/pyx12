@@ -56,6 +56,15 @@
         <td><xsl:value-of select="name"/></td>
         <td><xsl:value-of select="data_ele"/></td>
 	</tr>
+	<tr>
+	<td colspan="1"></td>
+	<td colspan="2" class="code">
+        <xsl:for-each select="code">
+	    <xsl:value-of select="."/><xsl:text> </xsl:text> 
+        </xsl:for-each>
+	</td>
+	<td colspan="3"></td>
+	</tr>
 	<xsl:apply-templates/>
 	</table>
 	<p></p>
