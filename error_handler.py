@@ -37,7 +37,7 @@ Interface to an X12 997 Response
 
 #import os
 #import sys
-#import string
+import string
 from types import *
 
 # Intrapackage imports
@@ -50,9 +50,11 @@ class if_997:
     """
     Name:   if_997
     Desc:   Interface to an X12 997 Response
+            Everytime we hit a GS loop in the source, create a new instance of
+            this class.
             Holds instances of source GS loops
     """
-    def __init__(self, x12_src):
+    def __init__(self, x12_src, st_control_num):
         """
         Name:   __init__
         Desc:    
@@ -62,18 +64,17 @@ class if_997:
         (isa_id, gs_id, st_id, ls_id, seg_count, cur_line) = x12_src.get_id()
 
         self.gs_loops = []
+        self.gs_loop_count = 0
         self.eol = '\n'
 
         
     def __repr__(self):
         x12src = self.x12_src
         eol = self.eol
-        str = x12src.seg_str(['ISA'], eol) 
-        str += x12src.seg_str(['GS'], eol) 
+        str = ''
         for gs_loop in self.gs_loops:
             str += gs_loop.__repr__()
-        str += x12src.seg_str(['GE'], eol) 
-        str += x12src.seg_str(['IEA'], eol) 
+        self.gs_loop_count += 1
         return str
 
 #    def add_seg_error(self, seg_id_code, seg_error_code):
@@ -138,17 +139,28 @@ class gs_997:
         if not (self.ack_code and self.st_count_orig and self.st_count_recv \
             and self.st_count_accept):
             raise EngineError, 'gs_997 variables not set'
-        str = 'ST*~\n'
-        str = x12src.seg_str(['ST', ''], eol)
+        #ST
+        seg = ['ST', '997', '%i'%st_control_num]
+        str = x12src.seg_str(seg, eol)
+
+        #AK1
         str += x12src.seg_str(['AK1', self.fic, self.cur_gs_id], eol)
+        
+        #Loop AK2
         for st_loop in self.st_loops:
             str += st_loop.__repr__()
+        
+        #AK9
         seg = ['AK9', self.ack_code, '%i'%self.st_count_orig, \
             '%i'%self.st_count_recv, '%i'%self.st_count_accept]
         for code in self.err_cde:
             seg.append('%s' % code)
         str += x12src.seg_str(seg, eol)
-        str += x12src.seg_str(['SE'], eol) 
+        
+        #SE
+        seg_count = str.count(x12src.seg_term+self.eol) + 1
+        seg = ['SE', '%i'%seg_count, '%i'%st_control_num]
+        str = x12src.seg_str(seg, eol)
         return str
 
 #    def add_seg_error(self, seg_id_code, seg_error_code):
