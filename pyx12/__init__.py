@@ -32,6 +32,6 @@
 
 __author__  = "John Holland <jholland@kazoocmh.org> <john@zoner.org>"
 __status__  = "beta"
-__version__ = "1.0.1b2"
-__date__    = "2004-02-01"
+__version__ = "1.0.1b3"
+__date__    = "2004-02-09"
 
