@@ -42,6 +42,8 @@ class params:
         self.params['skip_997'] = False
         self.params['simple_dtd'] = 'http://www.kazoocmh.org/x12simple.dtd'
         self.params['idtag_dtd'] = 'http://www.kazoocmh.org/x12idtag.dtd'
+        self.params['xmlout'] = 'simple'
+        #self.params['xmlout'] = 'idtag'
         
         for filename in config_files:
             self._read_config_file(filename)
