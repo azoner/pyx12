@@ -760,7 +760,7 @@ class segment_if(x12_node):
                 (seg_data.get_seg_id(), len(seg_data), child_count)
             #self.logger.error(err_str)
             err_value = seg_data[child_count+1].format()
-            errh.seg_error('3', err_str, err_value)
+            errh.ele_error('3', err_str, err_value)
             valid = False
 
         for i in xrange(len(seg_data)):
@@ -775,7 +775,7 @@ class segment_if(x12_node):
                     subele_node = child_node.get_child_node_by_idx(subele_count+1)
                     err_str = 'Too many sub-elements in composite %s' % (subele_node.refdes)
                     err_value = comp_data[subele_count].get_value()
-                    errh.seg_error('3', err_str, err_value)
+                    errh.ele_error('3', err_str, err_value)
                 valid &= child_node.is_valid(comp_data, errh, self.check_dte)
             elif child_node.is_element():
                 # Validate Element
@@ -1049,7 +1049,11 @@ class element_if(x12_node):
                     return False
                 else:
                     return True
-                
+        if self.usage == 'N' and elem.get_value() != '':
+            err_str = 'Data element "%s" (%s) is marked as Not Used' % (self.name, self.refdes)
+            self.__error__(errh, err_str, '5', None)
+            return False
+
         elem_val = elem.get_value()
         valid = True
         if (not self.data_type is None) and (self.data_type == 'R' or self.data_type[0] == 'N'):
@@ -1293,6 +1297,11 @@ class composite_if(x12_node):
                 errh.ele_error('2', err_str, None)
                 return False
 
+        if self.usage == 'N' and not comp_data.is_empty():
+            err_str = 'Composite "%s" is marked as Not Used' % (self.name) #, self.refdes)
+            errh.ele_error('5', err_str, None)
+            return False
+
         #try:
         #    a = len(comp_data)
         #except:
@@ -1301,10 +1310,13 @@ class composite_if(x12_node):
             err_str = 'Too many sub-elements in composite %s' % (self.refdes)
             errh.ele_error('3', err_str, None)
             valid = False
-        for i in xrange(len(comp_data)):
+        for i in xrange(min(len(comp_data), self.get_child_count())):
             valid &= self.get_child_node_by_idx(i).is_valid(comp_data[i], errh, check_dte)
-        for i in xrange(len(comp_data), self.get_child_count()): #Check missing required elements
-            valid &= self.get_child_node_by_idx(i).is_valid(None, errh)
+        for i in xrange(min(len(comp_data), self.get_child_count()), \
+                self.get_child_count()): 
+            if i < self.get_child_count():
+                #Check missing required elements
+                valid &= self.get_child_node_by_idx(i).is_valid(None, errh)
         return valid
 
 #    def getnodebypath(self, path):

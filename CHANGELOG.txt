@@ -1,4 +1,6 @@
-Validate length of D8 and D6 daatatypes.
+Validate Not Used composites and elements
+
+Validate length of D8 and D6 datatypes.
 
 Config file support
 
