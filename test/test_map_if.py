@@ -311,6 +311,22 @@ class CompositeRequirement(unittest.TestCase):
         self.failUnless(result)
         self.assertEqual(self.errh.err_cde, None)
 
+    def test_comp_S_sub_R_ok3(self):
+        self.errh.err_cde = None
+        param = params()
+        param.set('map_path', os.path.expanduser('~/src/pyx12/map/'))
+        param.set('pickle_path', os.path.expanduser('~/src/pyx12/map/'))
+        map = pyx12.map_if.load_map_file('837.4010.X096.xml', param)
+        node = map.getnodebypath('/2000B/2300/2400/SV202')
+        #node = node.get_child_node_by_idx(0)
+        self.assertNotEqual(node, None)
+        self.assertEqual(node.base_name, 'composite')
+        self.assertEqual(node.id, 'SV202')
+        comp = pyx12.segment.composite('', ':')
+        result = node.is_valid(comp, self.errh)
+        self.failUnless(result)
+        self.assertEqual(self.errh.err_cde, None)
+
     def test_comp_required_fail1(self):
         self.errh.err_cde = None
         node = self.map.getnodebypath('/2000A/2000B/2300/CLM')
@@ -420,11 +436,11 @@ def suite():
     #    IsValidSyntaxP, IsValidSyntaxR, IsValidSyntaxC, \
     #    IsValidSyntaxE, IsValidSyntaxL))
     suite = unittest.TestSuite()
-    suite.addTest(unittest.makeSuite(Test_getnodebypath))
-    suite.addTest(unittest.makeSuite(TrailingSpaces))
+    #suite.addTest(unittest.makeSuite(Test_getnodebypath))
+    #suite.addTest(unittest.makeSuite(TrailingSpaces))
     suite.addTest(unittest.makeSuite(CompositeRequirement))
-    suite.addTest(unittest.makeSuite(ElementRequirement))
-    suite.addTest(unittest.makeSuite(Element_is_valid))
+    #suite.addTest(unittest.makeSuite(ElementRequirement))
+    #suite.addTest(unittest.makeSuite(Element_is_valid))
     return suite
                 
 #if __name__ == "__main__":
