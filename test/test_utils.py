@@ -66,6 +66,7 @@ class BasicDate(unittest.TestCase):
         self.failUnless(IsValidDataType('20040229', 'DT', 'B'))
         self.failUnless(IsValidDataType('020414', 'DT', 'B'))
         self.failUnless(IsValidDataType('960229', 'DT', 'B'))
+        self.failUnless(IsValidDataType('200402020400', 'DT', 'B'))
         
     def testInvalid(self):
         self.failIf(IsValidDataType('990229', 'DT', 'B'))
@@ -76,6 +77,11 @@ class BasicDate(unittest.TestCase):
         self.failIf(IsValidDataType('200204a', 'DT', 'B'))
         self.failIf(IsValidDataType('2002041a', 'DT', 'B'))
         self.failIf(IsValidDataType('030732', 'DT', 'B'))
+        self.failIf(IsValidDataType('200402024 00', 'DT', 'B'))
+        self.failIf(IsValidDataType('200422024000', 'DT', 'B'))
+        self.failIf(IsValidDataType('20040222040', 'DT', 'B'))
+        self.failIf(IsValidDataType('2004022204', 'DT', 'B'))
+        self.failIf(IsValidDataType('200402220', 'DT', 'B'))
 
 class BasicTime(unittest.TestCase):
     def testValid(self):
@@ -143,6 +149,14 @@ class ExtendedDate(unittest.TestCase):
         self.failUnless(IsValidDataType('20040229', 'DT', 'E'))
         self.failUnless(IsValidDataType('020414', 'DT', 'E'))
         self.failUnless(IsValidDataType('960229', 'DT', 'E'))
+        self.failUnless(IsValidDataType('200402020400', 'DT', 'B'))
+        self.failUnless(IsValidDataType('20010418', 'D8', 'E'))
+        self.failUnless(IsValidDataType('20030429', 'D8', 'E'))
+        self.failUnless(IsValidDataType('19040229', 'D8', 'E'))
+        self.failUnless(IsValidDataType('20000229', 'D8', 'E'))
+        self.failUnless(IsValidDataType('20040229', 'D8', 'E'))
+        self.failUnless(IsValidDataType('020414', 'D6', 'E'))
+        self.failUnless(IsValidDataType('960229', 'D6', 'E'))
         
     def testInvalid(self):
         self.failIf(IsValidDataType('990229', 'DT', 'E'))
@@ -153,6 +167,18 @@ class ExtendedDate(unittest.TestCase):
         self.failIf(IsValidDataType('2002041a', 'DT', 'E'))
         self.failIf(IsValidDataType('19000229', 'DT', 'E'))
         self.failIf(IsValidDataType('20030229', 'DT', 'E'))
+        self.failIf(IsValidDataType('200402024 00', 'DT', 'B'))
+
+        self.failIf(IsValidDataType('990229', 'D6', 'E'))
+        self.failIf(IsValidDataType('030732', 'D6', 'E'))
+        self.failIf(IsValidDataType('19992377', 'D8', 'E'))
+        self.failIf(IsValidDataType('19991277', 'D8', 'E'))
+        self.failIf(IsValidDataType('200204a', 'D8', 'E'))
+        self.failIf(IsValidDataType('2002041a', 'D8', 'E'))
+        self.failIf(IsValidDataType('19000229', 'D8', 'E'))
+        self.failIf(IsValidDataType('20030229', 'D8', 'E'))
+        self.failIf(IsValidDataType('200402024 00', 'D8', 'B'))
+
 
 class ExtendedTime(unittest.TestCase):
     def testValid(self):

@@ -90,11 +90,14 @@ def IsValidDataType(str, data_type, charset = 'B'):
                 m = re.compile("[^A-Z0-9!\"&'()*+,\-\\\./:;?=\s]", re.S).search(str)
                 if m and m.group(0):  # invalid string found
                     raise IsValidError 
-        elif data_type == 'DT':
+        elif data_type == 'RD8':
+            (start, end) = str.split('-')
+            return IsValidDataType(start, 'D8', charset) and IsValidDataType(end, 'D8', charset) 
+        elif data_type in ('DT', 'D8', 'D6'):
             m = re.compile("[^0-9]+", re.S).search(str)  # first test date for non-numeric chars
             if m:  # invalid string found
                 raise IsValidError 
-            if 8 == len(str) or 6 == len(str): # valid lengths for date
+            if len(str) in (6, 8, 12): # valid lengths for date
                 try:
                     if 6 == len(str):  # if 2 digit year, add CC
                         if str[0:2] < 50:
@@ -118,6 +121,9 @@ def IsValidDataType(str, data_type, charset = 'B'):
                             if day < 1 or day > 29:
                                 raise IsValidError
                         elif day < 1 or day > 28:
+                            raise IsValidError
+                    if len(str) == 12:
+                        if not IsValidDataType(str[8:12], 'TM', charset):
                             raise IsValidError
                 except TypeError:
                     raise IsValidError
