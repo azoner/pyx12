@@ -30,7 +30,7 @@ class ArbitraryDelimiters(unittest.TestCase):
         self.assertEqual(self.seg[-1][0].get_value(), 'ZZ')
                     
     def test_other_terms(self):
-        self.assertEqual(self.seg.format('~', '*', ':', ''), 'TST*AA:1:1*BB:5*ZZ~')
+        self.assertEqual(self.seg.format('~', '*', ':'), 'TST*AA:1:1*BB:5*ZZ~')
 
 
 class Identity(unittest.TestCase):
