@@ -32,6 +32,7 @@
 
 import string
 from types import *
+import pdb
 
 # Intrapackage imports
 import errors
@@ -64,6 +65,9 @@ def IsValidDataType(str, data_type, charset = 'B'):
     #print str, data_type, charset
     if not data_type:
         return True
+    if type(str) is not StringType:
+        return False
+
     try:
         if data_type[0] == 'N':
             m = re.compile("^-?[0-9]+", re.S).search(str)

@@ -970,13 +970,14 @@ class element_if(x12_node):
                  
         Returns: boolean
         """
-        #global codes
         if self.parent.is_composite():
-            #errh.add_ele(self.id, self.name, self.parent.seq, self.data_ele, self.seq)
             errh.add_ele(self)
         else:
-            #errh.add_ele(node, self.id, self.name, self.seq, self.data_ele)
             errh.add_ele(self)
+
+        if type(elem_val) is ListType:
+            err_str = 'Data element %s is an invalid composite' % (self.refdes)
+            self.__error__(errh, err_str, '6', elem_val)
 
         if elem_val == '' or elem_val is None:
             if self.usage == 'N':
