@@ -141,7 +141,7 @@ def x12n_document(param, src_file, fd_997, fd_html, fd_xmldoc=None):
             node = walker.walk(node, seg, errh, src.get_seg_count(), \
                 src.get_cur_line(), src.get_ls_id())
         except EngineError:
-            logger.error('Source file line %i' % (src.cur_line))
+            logger.error('Source file line %i' % (src.get_cur_line()))
             raise
             node = orig_node
             continue
@@ -150,7 +150,6 @@ def x12n_document(param, src_file, fd_997, fd_html, fd_xmldoc=None):
             #raise EngineError, 'Node is None (%s)' % (seg.get_seg_id())
             node = orig_node
         else:
-
             if seg.get_seg_id() == 'ISA':
                 errh.add_isa_loop(seg, src)
             elif seg.get_seg_id() == 'IEA':

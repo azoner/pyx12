@@ -193,11 +193,24 @@ class Implicit_Loops(unittest.TestCase):
         """
         Test for match of 820 Individual Remittance Loop
         """
-        map = pyx12.map_if.load_map_file('820.4010.X061.A1.xml', self.param)
-        node = map.getnodebypath('/ISA_LOOP/GS_LOOP/ST_LOOP/HEADER/1000B/N3')
         errh = pyx12.error_handler.errh_null()
+        map = pyx12.map_if.load_map_file('820.4010.X061.A1.xml', self.param)
+        node = map.getnodebypath('/ISA_LOOP/GS_LOOP/ST_LOOP/HEADER')
+        self.assertNotEqual(node, None)
+        self.assertEqual(node.base_name, 'loop')
+        node.cur_count = 1
+        node = map.getnodebypath('/ISA_LOOP/GS_LOOP/ST_LOOP/HEADER/1000A')
+        self.assertNotEqual(node, None)
+        self.assertEqual(node.base_name, 'loop')
+        node.cur_count = 1
+        node = map.getnodebypath('/ISA_LOOP/GS_LOOP/ST_LOOP/HEADER/1000B')
+        self.assertNotEqual(node, None)
+        self.assertEqual(node.base_name, 'loop')
+        node.cur_count = 1
+        node = map.getnodebypath('/ISA_LOOP/GS_LOOP/ST_LOOP/HEADER/1000B/N1')
         self.assertNotEqual(node, None)
         self.assertEqual(node.base_name, 'segment')
+        node.cur_count = 1
         seg_data = pyx12.segment.segment('ENT*1*2J*EI*99998707~', '~', '*', ':')
         node = self.walker.walk(node, seg_data, errh, 5, 4, None)
         self.assertEqual(errh.err_cde, None, errh.err_str)

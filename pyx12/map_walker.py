@@ -245,8 +245,6 @@ class walk_tree:
 
         @return: Does the segment match the first segment node in the loop?
         @rtype: boolean
-
-        @bug: Fails to match second loop in a wrapping loop
         """
         #if seg_data.get_seg_id() == 'HL':
         #    pdb.set_trace()
@@ -257,8 +255,11 @@ class walk_tree:
             return False
         first_child_node = loop_node.get_child_node_by_idx(0)
         if first_child_node.is_loop():
-            return self._is_loop_match(first_child_node, seg_data, errh, \
-                seg_count, cur_line, ls_id)
+            #If any loop node matches
+            for child_node in loop_node.children:
+                if child_node.is_loop() and self._is_loop_match(child_node, \
+                        seg_data, errh, seg_count, cur_line, ls_id):
+                    return True
         elif is_first_seg_match2(first_child_node, seg_data): 
             return True
         elif loop_node.usage == 'R' and loop_node.get_cur_count() < 1:
