@@ -172,21 +172,14 @@ class x12file:
             if loop[0] == 'LS': ls_id = loop[1]
         return (isa_id, gs_id, st_id, ls_id, self.seg_count, self.cur_line)
 
-
     def print_seg(self, seg):
-        tmp = []
-        for a in seg:
-            if type(a) is ListType:
-                tmp.append(string.join(a, self.subele_term))
-            else:
-                tmp.append(a)
-        sys.stdout.write('%s~\n' % (string.join(tmp, self.ele_term)))
+        sys.stdout.write('%s\n' % (self.seg_str(seg)))
 
-    def seg_str(self, seg):
+    def seg_str(self, seg, eol=''):
         tmp = []
         for a in seg:
             if type(a) is ListType:
                 tmp.append(string.join(a, self.subele_term))
             else:
                 tmp.append(a)
-        return '%s~' % (string.join(tmp, self.ele_term))
+        return '%s%s%s' % (string.join(tmp, self.ele_term), self.seg_term, eol) 
