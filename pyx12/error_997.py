@@ -1,0 +1,286 @@
+#    $Id$
+#    This file is part of the pyX12 project.
+#
+#    Copyright (c) 2001-2004 Kalamazoo Community Mental Health Services,
+#                John Holland <jholland@kazoocmh.org> <john@zoner.org>
+#
+#    All rights reserved.
+#
+#        Redistribution and use in source and binary forms, with or without modification, 
+#        are permitted provided that the following conditions are met:
+#
+#        1. Redistributions of source code must retain the above copyright notice, this list 
+#           of conditions and the following disclaimer. 
+#        
+#        2. Redistributions in binary form must reproduce the above copyright notice, this 
+#           list of conditions and the following disclaimer in the documentation and/or other 
+#           materials provided with the distribution. 
+#        
+#        3. The name of the author may not be used to endorse or promote products derived 
+#           from this software without specific prior written permission. 
+#
+#        THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR IMPLIED 
+#        WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF 
+#        MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO 
+#        EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, 
+#        EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT 
+#        OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS 
+#        INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN 
+#        CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) 
+#        ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF 
+#        THE POSSIBILITY OF SUCH DAMAGE.
+
+
+"""
+Visitor - Visits an error_handler composite
+Generates a 997 Response
+"""
+
+#import os
+#import sys
+import string
+from types import *
+import time
+import logging
+
+# Intrapackage imports
+from errors import *
+from x12file import seg_str
+import error_visitor
+
+__author__  = "John Holland <jholland@kazoocmh.org> <john@zoner.org>"
+
+logger = logging.getLogger('pyx12.error_997')
+logger.setLevel(logging.DEBUG)
+#logger.setLevel(logging.ERROR)
+
+class error_997_visitor(error_visitor.error_visitor):
+    """
+    Class:      error_997_visitor
+    Desc:    
+    """
+    def __init__(self, fd, term=('~', '*', '~', '\n')): 
+        """
+        Class:      error_997_visitor
+        Name:       __init__
+        Desc:    
+        Params:     fd - target file
+                    term - tuple of x12 terminators used
+        """
+        self.fd = fd
+        self.seg_term = '~'
+        self.ele_term = '*'
+        self.subele_term = ':'
+        #self.seg_term = term[0]
+        #self.ele_term = term[1]
+        #self.subele_term = term[2]
+        #self.eol = term[3]
+        self.eol = '\r\n'
+        self.seg_count = 0
+        self.st_control_num = 0
+
+    def visit_root_pre(self, errh):
+        """
+        Class:      error_997_visitor 
+        Name:       visit_root_pre
+        Desc:    
+        Params:     errh - error_handler instance
+        """
+        #now = time.localtime()
+        seg = errh.cur_isa_node.seg
+        #ISA*00*          *00*          *ZZ*ENCOUNTER      *ZZ*00GR           *030425*1501*U*00401*000065350*0*T*:~
+        isa_seg = [seg[0],seg[3],seg[4],seg[1],seg[7],seg[8],seg[5],seg[6]]
+        isa_seg.append(time.strftime('%y%m%d')) # Date
+        isa_seg.append(time.strftime('%H%M')) # Time
+        isa_seg.extend([seg[11],seg[12]])
+        self.isa_control_num = ('%s%s'%(time.strftime('%y%m%d'), time.strftime('%H%M')))[-1:]
+        isa_seg.append(self.isa_control_num) # ISA Interchange Control Number
+        isa_seg.extend([seg[14],seg[15]])
+        isa_seg.append(self.subele_term)
+        self._write(isa_seg)
+        self.isa_seg = isa_seg
+        self.gs_loop_count = 0
+
+        # GS*FA*ENCOUNTER*00GR*20030425*150153*653500001*X*004010
+        seg = errh.cur_gs_node.seg
+        gs_seg = [seg[0], 'FA', seg[3], seg[2], time.strftime('%Y%m%d'), time.strftime('%H%M%S')]
+        gs_seg.extend([seg[6], seg[7], '004010'])
+        self._write(gs_seg)
+        self.gs_seg = gs_seg
+        #self.gs_997_count = 0
+        self.st_loop_count = 0
+        self.gs_loop_count += 1
+
+    def visit_root_post(self, errh):
+        """
+        Class:      error_997_visitor 
+        Name:       visit_root_post
+        Desc:    
+        Params:     errh - error_handler instance
+        """
+        self._write(['GE', '%i' % self.st_loop_count, self.gs_seg[6]])
+        gs_loop_count = 1
+        self._write(['IEA', '%i' % self.gs_loop_count, self.isa_control_num]) # isa_seg[13]])
+        
+    def visit_isa_pre(self, err_isa):
+        """
+        Class:      error_997_visitor
+        Name:       visit_isa_pre
+        Desc:    
+        Params:     err_isa - error_isa instance
+        """
+
+    def visit_isa_post(self, err_isa):
+        """
+        Class:      error_997_visitor
+        Name:       visit_isa_post
+        Desc:    
+        Params:     err_isa - error_isa instance
+        """
+
+    def visit_gs_pre(self, err_gs): 
+        """
+        Class:      error_997_visitor 
+        Name:       visit_gs_pre
+        Desc:    
+        Params:     err_gs - error_gs instance
+        """
+        #ST
+        self.st_control_num += 1
+        seg = ['ST', '997', '%04i' % self.st_control_num]
+        self.seg_count = 0
+        self._write(seg)
+        self.st_loop_count += 1
+
+        #AK1
+        seg = ['AK1', err_gs.fic, err_gs.gs_control_num]
+        self._write(seg)
+        
+ 
+    def visit_gs_post(self, err_gs): 
+        """
+        Class:      error_997_visitor 
+        Name:       visit_gs_post
+        Desc:    
+        Params:     err_gs - error_gs instance
+        """
+        if not (err_gs.ack_code and err_gs.st_count_orig and \
+            err_gs.st_count_recv):
+            raise EngineError, 'err_gs variables not set'
+        #.st_count_orig = None # AK902
+        #.st_count_recv = None # AK903
+        #.st_count_accept = None # AK904
+        #.err_cde = [] # AK905-9
+
+        #seg.append(err_st.ack_code)
+#        if '1' in err_gs.errors: ack_code = 'R'
+#        elif '2' in err_gs.errors: ack_code = 'R'
+#        elif '3' in err_gs.errors: ack_code = 'R'
+#        elif '4' in err_gs.errors: ack_code = 'R'
+#        elif '5' in err_gs.errors: ack_code = 'E'
+#        elif '6' in err_gs.errors: ack_code = 'E'
+#        else: ack_code = 'A'
+
+        seg = ['AK9', err_gs.ack_code, '%i' % err_gs.st_count_orig, \
+            '%i' % err_gs.st_count_recv, \
+            '%i' % (err_gs.st_count_recv - err_gs.count_failed_st())]
+        for (err_cde, err_str) in err_gs.errors:
+            seg.append('%s' % err_cde)
+        self._write(seg)
+        #for child in err_gs.children:
+            #print child.cur_line, child.seg
+        #logger.info('err_gs has %i children' % len(self.children))
+        
+        #SE
+        seg_count = self.seg_count + 1
+        seg = ['SE', '%i' % seg_count, '%04i' % self.st_control_num]
+        self._write(seg)
+
+    def visit_st_pre(self, err_st):
+        """
+        Class:      error_997_visitor
+        Name:       visit_st_pre
+        Desc:    
+        Params:     err_st - error_st instance
+        """
+        seg = ['AK2', err_st.trn_set_id , err_st.trn_set_control_num]
+        self._write(seg)
+        
+    def visit_st_post(self, err_st):
+        """
+        Class:      error_997_visitor
+        Name:       visit_st_post
+        Desc:    
+        Params:     err_st - error_st instance
+        """
+        if err_st.ack_code is None:
+            raise EngineError, 'err_st.ack_cde variable not set'
+#        self.ack_code = None # AK501
+        seg = ['AK5']
+#        self.err_cde = [] # AK502-6
+        err_codes = []
+        if err_st.child_err_count() > 0:
+            err_codes.append('5')
+        for (err_cde, err_str) in err_st.errors:
+            err_codes.append(err_cde)
+        seg.append(err_st.ack_code)
+        err_codes.sort()
+        for i in range(min(len(err_codes),5)):
+            seg.append(err_codes[i])
+        self._write(seg)
+
+    def visit_seg(self, err_seg):
+        """
+        Class:      error_997_visitor
+        Name:       visit_seg
+        Desc:    
+        Params:     err_seg - error_seg instance
+        """
+        #logger.debug('visit_deg: AK3 - ')
+        seg_base = ['AK3', err_seg.seg_id, '%i' % err_seg.seg_count]
+        if err_seg.ls_id:
+            seg_base.append(err_seg.ls_id)
+        else:
+            seg_base.append('')
+        for (err_cde, err_str, err_value) in err_seg.errors:
+            seg = seg_base
+            seg.append(err_cde)
+            self._write(seg)
+        if err_seg.child_err_count() > 0:
+            seg = seg_base
+            seg.append('8')
+            self._write(seg)
+        
+    def visit_ele(self, err_ele): 
+        """
+        Class:      error_997_visitor
+        Name:       visit_ele
+        Desc:    
+        Params:     err_ele - error_ele instance
+        """
+        seg_base = ['AK4']
+        if err_ele.subele_pos: 
+            seg_base.append(['%i' % (err_ele.ele_pos), '%i' % err_ele.subele_pos])
+        else:
+            seg_base.append('%i' % (err_ele.ele_pos))
+        if err_ele.ele_ref_num:
+            seg_base.append(err_ele.ele_ref_num)
+        else:
+            seg_base.append('')
+        for (err_cde, err_str, bad_value) in err_ele.errors:
+            seg = seg_base
+            seg.append(err_cde)
+            if bad_value:
+                seg.append(bad_value)
+            self._write(seg)
+
+    def _write(self, seg):
+        """
+        Class:      error_997_visitor
+        Name:       _write
+        Desc:    
+        Params:     seg - list of elements
+        """
+        self.fd.write(seg_str(seg, self.seg_term, self.ele_term, \
+            self.subele_term, self.eol))
+        self.seg_count += 1
