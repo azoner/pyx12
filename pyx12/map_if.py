@@ -64,13 +64,16 @@ class x12_node:
         self.id = None
         self.name = None
         self.parent = None
-        #self.prev_node = None
+        self.prev_node = None
         self.next_node = None
         self.children = []
         self.path = ''
 
     def __del__(self):
         pass
+
+    def __rept__(self):
+        return self.name
 
     def getnodebypath(self, path):
         """
@@ -220,9 +223,15 @@ class map_if(x12_node):
                         pass
                     elif cur_name == 'segment':
                         self.children.append(segment_if(self, self, index))
+                        if len(self.children) > 1:
+                            self.children[-1].prev_node = self.children[-2]
+                            self.children[-2].next_node = self.children[-1]
                         index += 1
                     elif cur_name == 'loop':
                         self.children.append(loop_if(self, self, index))
+                        if len(self.children) > 1:
+                            self.children[-1].prev_node = self.children[-2]
+                            self.children[-2].next_node = self.children[-1]
                         index += 1
                     
                     #if self.cur_level < self.reader.Depth():
@@ -269,10 +278,10 @@ class map_if(x12_node):
 
     def __repr__(self):
         #out = '%s%s %s %s %s\n' % (str(' '*self.base_level), self.base_name, self.base_level, self.id, self.name)
-        out = '%s%s' % (str(' '*self.base_level), self.base_name)
-        out += '%sid %s\n' % (str(' '*(self.base_level+1)), self.id)
-        out += '%sname %s\n' % (str(' '*(self.base_level+1)), self.name)
-        return out
+        #out = '%s%s' % (str(' '*self.base_level), self.base_name)
+        #out += '%sid %s\n' % (str(' '*(self.base_level+1)), self.id)
+        #out += '%sname %s\n' % (str(' '*(self.base_level+1)), self.name)
+        return '%s\n' % (self.id)
 
     def __path_parent__(self):
         return os.path.basename(os.path.dirname(self.cur_path))
@@ -308,7 +317,8 @@ class map_if(x12_node):
         return self
 
     def next(self):
-        pdb.set_trace()
+        #if self.cur_iter_node.id == 'GS06':
+        #pdb.set_trace()
         if self.cur_iter_node.id == 'IEA':
             raise StopIteration
         #first, get first child
@@ -317,31 +327,17 @@ class map_if(x12_node):
             return self.cur_iter_node
         #node_idx = self.cur_iter_node.index # Get original index of starting node
         cur_node = self.cur_iter_node
-        node = self._pop_to_parent(cur_node) 
+        #node = self._pop_to_parent(cur_node) 
         while 1:
-            #second, get siblings
-            found = False
-            for child in node.children:
-                if found:
-                    self.cur_iter_node = child
-                    return self.cur_iter_node
-                if child is cur_node:
-                    found = True
-                #if child.index > node_idx:
+            #second, get next sibling
+            if cur_node is None:
+                raise StopIteration
+            if cur_node.next_node != None:
+                self.cur_iter_node = cur_node.next_node
+                return self.cur_iter_node
             #last, get siblings of parent
-            node = self._pop_to_parent(node)
-            cur_node = node
+            cur_node = cur_node.parent
         return None
-
-    def _pop_to_parent(self, node):
-        if node.is_map_root():
-            return node
-        map_node = node.parent
-        if map_node is None:
-            raise errors.EngineError, "Node is None: %s" % (node.name)
-        return map_node
-
-                 
 
 
 ############################################################
@@ -399,12 +395,21 @@ class loop_if(x12_node):
                 cur_name = reader.Name()
                 if cur_name == 'loop' and self.base_level < reader.Depth():
                     self.children.append(loop_if(self.root, self, index))
+                    if len(self.children) > 1:
+                        self.children[-1].prev_node = self.children[-2]
+                        self.children[-2].next_node = self.children[-1]
                     index += 1
                 elif cur_name == 'segment':
                     self.children.append(segment_if(self.root, self, index))
+                    if len(self.children) > 1:
+                        self.children[-1].prev_node = self.children[-2]
+                        self.children[-2].next_node = self.children[-1]
                     index += 1
                 elif cur_name == 'element':
                     self.children.append(element_if(self.root, self))
+                    if len(self.children) > 1:
+                        self.children[-1].prev_node = self.children[-2]
+                        self.children[-2].next_node = self.children[-1]
                     
                 #if self.cur_level < reader.Depth():
                 #    self.cur_path = os.path.join(self.cur_path, cur_name)
@@ -456,15 +461,17 @@ class loop_if(x12_node):
         #    self.id, self.name, self.base_level)
         out = ''
         if self.id: 
-            out += '%sid %s\n' % (str(' '*(self.base_level+1)), self.id)
+            out += '%sLOOP %s' % (str(' '*(self.base_level+1)), self.id)
+            #out += '%sid: %s  ' % (str(' '*(self.base_level+1)), self.id)
         if self.name: 
-            out += '%sname %s\n' % (str(' '*(self.base_level+1)), self.name)
+            out += '  "%s"' % (self.name)
         if self.usage: 
-            out += '%susage %s\n' % (str(' '*(self.base_level+1)), self.usage)
+            out += '  usage: %s' % (self.usage)
         if self.seq: 
-            out += '%sseq %s\n' % (str(' '*(self.base_level+1)), self.seq)
+            out += '  seq: %s' % (self.seq)
         if self.repeat: 
-            out += '%srepeat%s\n' % (str(' '*(self.base_level+1)), self.repeat)
+            out += '  repeat: %s' % (self.repeat)
+        out += '\n'
         return out
 
     def get_max_repeat(self):
@@ -539,7 +546,6 @@ class segment_if(x12_node):
         self.max_use = None
         self.syntax = []
  
-
 #        if parent == None:
 #            self.path = id
 #        else:
@@ -561,8 +567,14 @@ class segment_if(x12_node):
                     self.base_name = 'segment'
                 elif cur_name == 'element':
                     self.children.append(element_if(self.root, self))
+                    if len(self.children) > 1:
+                        self.children[-1].prev_node = self.children[-2]
+                        self.children[-2].next_node = self.children[-1]
                 elif cur_name == 'composite':
                     self.children.append(composite_if(self.root, self))
+                    if len(self.children) > 1:
+                        self.children[-1].prev_node = self.children[-2]
+                        self.children[-2].next_node = self.children[-1]
                     
                 #if self.cur_level < reader.Depth():
                 #    self.cur_path = os.path.join(self.cur_path, cur_name)
@@ -620,19 +632,20 @@ class segment_if(x12_node):
         Class: segment_if
         """
         t1 = str(' '*self.base_level)
-        t2 = str(' '*(self.base_level+1))
-        out = '%s%s %s %s %s\n' % (t1, self.base_name, \
-            self.base_level, self.id, self.name)
-        if self.id: 
-            out += '%sid %s\n' % (t2, self.id)
-        if self.name: 
-            out += '%sname %s\n' % (t2, self.name)
+        #t2 = str(' '*(self.base_level+1))
+        #self.base_name
+        out = '%s%s "%s"' % (t1, self.id, self.name)
+        #if self.id: 
+        #    out += '%sid %s\n' % (t2, self.id)
+        #if self.name: 
+        #    out += '%sname %s\n' % (t2, self.name)
         if self.usage: 
-            out += '%susage %s\n' % (t2, self.usage)
+            out += '  usage: %s' % (self.usage)
         if self.pos: 
-            out += '%spos %i\n' % (t2, self.pos)
+            out += '  pos: %i' % (self.pos)
         if self.max_use: 
-            out += '%smax_use %s\n' % (t2, self.max_use)
+            out += '  max_use: %s' % (self.max_use)
+        out += '\n'
         return out
 
     def get_elemval_by_id(self, seg, id):
@@ -921,30 +934,31 @@ class element_if(x12_node):
         """
         Class: element_if
         """
-        out = '%s%s %s %s\n' % (str(' '*self.base_level), self.base_name, \
-            self.base_level, self.name)
+        out = '%s%s "%s"' % (str(' '*self.base_level), self.refdes, self.name)
         if self.data_ele: 
-            out += '%sdata_ele %s\n' % (str(' '*(self.base_level+1)), self.data_ele)
-        if self.name: 
-            out += '%sname %s\n' % (str(' '*(self.base_level+1)), self.name)
+            out += '  data_ele: %s' % (self.data_ele)
+        #if self.name: 
+        #    out += '  name: %s' % (self.name)
         if self.usage: 
-            out += '%susage %s\n' % (str(' '*(self.base_level+1)), self.usage)
+            out += '  usage: %s' % (self.usage)
         if self.seq: 
-            out += '%sseq %i\n' % (str(' '*(self.base_level+1)), self.seq)
-        if self.refdes: 
-            out += '%srefdes %s\n' % (str(' '*(self.base_level+1)), self.refdes)
-        if self.data_type: 
-            out += '%sdata_type %s\n' % (str(' '*(self.base_level+1)), self.data_type)
-        if self.min_len: 
-            out += '%smin_len %s\n' % (str(' '*(self.base_level+1)), self.min_len)
-        if self.max_len: 
-            out += '%smax_len %s\n' % (str(' '*(self.base_level+1)), self.max_len)
+            out += '  seq: %i' % (self.seq)
+        #if self.refdes: 
+        #    out += '  refdes: %s' % (self.refdes)
+        #if self.data_type: 
+        #    out += '  data_type: %s' % (self.data_type)
+        out += '  %s(%s, %s)' % (self.data_type, self.min_len, self.max_len)
+        #if self.min_len: 
+        #    out += '  min_len: %s' % (self.min_len)
+        #if self.max_len: 
+        #    out += '  max_len: %s' % (self.max_len)
         if self.external_codes: 
-            out += '%sexternal codes %s\n' % (str(' '*(self.base_level+1)), self.external_codes)
-        if self.valid_codes:
-            out += '%svalid codes:\n' % (str(' '*(self.base_level+1)))
-            for code in self.valid_codes:
-                out += '%scode %s\n' % (str(' '*(self.base_level+2)), code)
+            out += '   external codes: %s' % (self.external_codes)
+        #if self.valid_codes:
+        #    out += '%svalid codes:\n' % (str(' '*(self.base_level+1)))
+        #    for code in self.valid_codes:
+        #        out += '%scode %s\n' % (str(' '*(self.base_level+2)), code)
+        out += '\n'
         return out
    
     def __del__(self):
@@ -1158,6 +1172,9 @@ class composite_if(x12_node):
                     self.base_name = 'composite'
                 elif cur_name == 'element':
                     self.children.append(element_if(self.root, self))
+                    if len(self.children) > 1:
+                        self.children[-1].prev_node = self.children[-2]
+                        self.children[-2].next_node = self.children[-1]
                     
                 #if self.cur_level < reader.Depth():
                 #    self.cur_path = os.path.join(self.cur_path, cur_name)
@@ -1216,16 +1233,15 @@ class composite_if(x12_node):
         """
         Class: composite_if
         """
-        out = '%s%s %s %s %s\n' % (str(' '*self.base_level), self.base_name, \
-            self.base_level, self.id, self.name)
-        if self.name: 
-            out += '%sname %s\n' % (str(' '*(self.base_level+1)), self.name)
+        out = '%s%s "%s"' % (str(' '*self.base_level), \
+            self.id, self.name)
         if self.usage: 
-            out += '%susage %s\n' % (str(' '*(self.base_level+1)), self.usage)
+            out += '  usage %s' % (self.usage)
         if self.seq: 
-            out += '%sseq %i\n' % (str(' '*(self.base_level+1)), self.seq)
+            out += '  seq %i' % (self.seq)
         if self.refdes: 
-            out += '%srefdes %s\n' % (str(' '*(self.base_level+1)), self.refdes)
+            out += '  refdes %s' % (self.refdes)
+        out += '\n'
         return out
 
     def xml(self):

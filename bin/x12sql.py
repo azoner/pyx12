@@ -56,18 +56,18 @@ __status__  = pyx12.__status__
 __version__ = pyx12.__version__
 __date__    = pyx12.__date__
 
-def gen_sql(map):
+def gen_sql(map_root):
     """
     iterate through map, generate sql
     """
     fd = sys.stdout
-    i = 0
-    for node in map:
-        i += 1
+    #pdb.set_trace()
+    #print map_root.debug_print()
+    for node in map_root:
         #if (node.is_loop() or node.is_map_root()): 
         #    fd.write('%s\n' % (node.id))
                 #if child.is_segment():
-        fd.write('%i: %s\n' % (i, node.id))
+        fd.write('%s\n' % (node.id))
     return None
 
    
@@ -119,7 +119,7 @@ def main():
 
     for map_filename in args:
         try:
-            gen_sql(pyx12.map_if.map_if(os.path.join(map_path, 'x12.control.00401.xml'), param))
+            gen_sql(pyx12.map_if.map_if(os.path.join(map_path, map_filename), param))
         except IOError:
             logger.error('Could not open files')
             usage()
