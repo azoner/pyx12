@@ -1,5 +1,5 @@
 #! /usr/bin/env /usr/local/bin/python
-# script to convert a X12N batch transaction set into an XML document
+# script to validate a X12N batch transaction set  and convert it into an XML document
 #
 #    $Id$
 #    This file is part of the pyX12 project.
