@@ -145,7 +145,7 @@ class x12file:
                     err_str = 'IEA id=%s does not match ISA id=%s' % \
                         (seg.get_value_by_ref_des('IEA02'), self.loops[-1][1])
                     self.errh.isa_error('001', err_str)
-                if int(seg.get_value_by_ref_des('IEA01')) != self.gs_count:
+                if self._int(seg.get_value_by_ref_des('IEA01')) != self.gs_count:
                     err_str = 'IEA count for IEA02=%s is wrong' % \
                         (seg.get_value_by_ref_des('IEA02'))
                     self.errh.isa_error('021', err_str)
@@ -170,7 +170,7 @@ class x12file:
                     err_str = 'GE id=%s does not match GS id=%s' % \
                         (seg.get_value_by_ref_des('GE02'), self.loops[-1][1])
                     self.errh.gs_error('4', err_str)
-                if int(seg.get_value_by_ref_des('GE01')) != self.st_count:
+                if self._int(seg.get_value_by_ref_des('GE01')) != self.st_count:
                     err_str = 'GE count of %s for GE02=%s is wrong. I count %i' \
                         % (seg.get_value_by_ref_des('GE01'), \
                         seg.get_value_by_ref_des('GE02'), self.st_count)
@@ -192,7 +192,7 @@ class x12file:
                 if self.loops[-1][0] != 'ST' or self.loops[-1][1] != se_trn_control_num:
                     err_str = 'SE id=%s does not match ST id=%s' % (se_trn_control_num, self.loops[-1][1])
                     self.errh.st_error('3', err_str)
-                if int(seg.get_value_by_ref_des('SE01')) != self.seg_count + 1:
+                if self._int(seg.get_value_by_ref_des('SE01')) != self.seg_count + 1:
                     err_str = 'SE count of %s for SE02=%s is wrong. I count %i' \
                         % (seg.get_value_by_ref_des('SE01'), \
                             se_trn_control_num, self.seg_count + 1)
@@ -206,14 +206,14 @@ class x12file:
                 self.seg_count += 1
                 self.hl_count += 1
                 hl_count = seg.get_value_by_ref_des('HL01')
-                if self.hl_count != int(hl_count):
+                if self.hl_count != self._int(hl_count):
                     #raise x12Error, 'My HL count %i does not match your HL count %s' \
                     #    % (self.hl_count, seg[1])
                     err_str = 'My HL count %i does not match your HL count %s' \
                         % (self.hl_count, hl_count)
                     self.errh.seg_error('HL1', err_str)
                 if seg.get_value_by_ref_des('HL02') != '':
-                    parent = int(seg.get_value_by_ref_des('HL02'))
+                    parent = self._int(seg.get_value_by_ref_des('HL02'))
                     if parent not in self.hl_stack:
                         self.hl_stack.append(parent)
                     else:
@@ -230,6 +230,19 @@ class x12file:
         self.cur_line += 1
         return seg
 
+    def _int(self, str_val):
+        """
+        Converts a string to an integer
+        @type str_val: string
+        @return: Int value if successful, None if not
+        @rtype: int
+        """
+        try:
+            return int(str_val)
+        except ValueError:
+            return None
+        return None
+        
     def cleanup(self):
         """
         At EOF, check for missing end segments
