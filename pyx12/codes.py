@@ -172,6 +172,8 @@ class ExternalCodes:
             #return True
         #check the code against the list indexed by key
         else:
+            if key in param.get_param('exclude_external_codes').split(','):
+                return True
             if not self.codes.has_key(key):
                 raise errors.EngineError, 'Externel Code "%s" is not defined' % (key)
                 

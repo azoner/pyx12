@@ -41,7 +41,8 @@ class params:
             'ignore_ext_codes': False, 'skip_html': False, 'skip_997': False,
             'ignore_syntax': False,
             'map_path': '/usr/local/share/pyx12/map',
-            'pickle_path': '/usr/local/share/pyx12/map'
+            'pickle_path': '/usr/local/share/pyx12/map',
+            'exclude_external_codes': ''
             }
 
     def get_param(self, param_str):

@@ -91,6 +91,7 @@ def main():
         if o == '-v': logger.setLevel(logging.DEBUG)
         if o == '-q': logger.setLevel(logging.ERROR)
         if o == '-c': param.set_param('charset', a)
+        if o == '-x': param.set_param('exclude_external_codes', a)
         if o == '-H': flag_html = True
         if o == '-l':
             try:
