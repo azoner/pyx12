@@ -1,0 +1,62 @@
+.\" Process this file with
+.\" groff -man -Tascii x12lint.1
+.\"
+.TH X12LINT 1 "DECEMBER 2004" FreeBSD "User Manuals"
+.SH NAME
+x12lint \- validate a HIPAA X12 document
+.SH SYNOPSIS
+.B x12lint [-bar] [-c
+.I config-file
+.B ]
+.I file
+.B ...
+.SH DESCRIPTION
+.B x12lint
+Validate a HIPAA X12 document.  Generate a 997 response.
+.SH OPTIONS
+.IP -c <b|e>
+Specify X12 character set: b=basic, e=extended
+.IP -d
+Debug Mode.  Implies verbose output.
+.IP -f
+Force map load.  Do not use the map pickle file.
+.IP -H
+Create HTML output file
+.IP -l <file>
+Output log
+.IP -m <path>
+Path to map files
+.IP -m <path>
+Path to pickle files
+.IP -P
+Run a profiler
+.IP -q
+Quiet output
+.IP -v
+Verbose output
+.IP -x <tag>
+Exclude external code from code checks
+.SH FILES
+.I /etc/x12lint.conf
+.RS
+The system wide configuration file. See
+.BR x12lint (5)
+for further details.
+.RE
+.I ~/.x12lintrc
+.RS
+Per user configuration file. See
+.BR x12lint (5)
+for further details.
+.IR x12lint.conf .
+Overridden by the
+.B -c
+option.
+.SH BUGS
+
+.SH AUTHOR
+John Holland <john at zoner dot org>
+.SH "SEE ALSO"
+.BR x12xml(1),
+.BR x12lint (5),
+.BR x12norm (1)
