@@ -51,37 +51,6 @@ __author__  = "John Holland <jholland@kazoocmh.org> <john@zoner.org>"
 
 logger = logging.getLogger('pyx12')
 
-class err_node:
-    def __init__(self, obj): 
-        #obj = {'id': '', 'seg': seg, 'src_id': src.get_id()}
-        self.seg = obj['seg']
-        self.src_id =  obj['src_id']
-        (isa_id, gs_id, st_id, ls_id, seg_count, cur_line) = self.src_id
-        self.cur_line = cur_line
-        self.isa_id = isa_id
-        self.gs_id = gs_id
-        self.st_id = st_id
-        self.ls_id = ls_id
-        self.seg_count = seg_count
-        self.children = []
-
-    def accept(self, visitor):
-        pass
-        
-    def add_node(self, obj):
-        pass
-
-#    def add_seg_error(self):
-#        for child in children
-
-        
-    def add_error(self, err):
-        pass
-        
-    def update_node(self, obj):
-        pass
-
-
 class err_handler:
     """
     Name:   err_handler
@@ -117,13 +86,72 @@ class err_handler:
                 logger.debug(obj)
                 self.children[-1].add_node(obj)
             
+    def add_isa_loop(self, seg, src):
+        # Are we on right node
+        node.children.append(err_isa(node, seg, src)
+        
+    def add_gs_loop(self, seg, src):
+        # Are we on right node
+        node.children.append(err_gs(node, seg, src)
+        
+    def add_st_loop(self, seg, src):
+        # Are we on right node
+        node.children.append(err_st(node, seg, src)
+        
+    def add_seg(self, seg, src):
+        # Are we on right node
+        node.children.append(err_seg(node, seg, src)
+        
+    def add_ele(self, seg, src):
+        # Are we on right node
+        node.children.append(err_ele(node, seg, src)
         
     def add_error(self, err):
         self.children[-1].add_error(err)
 
     def update_node(self, obj):
         self.children[-1].update_node(obj)
-            
+
+         
+
+class err_node:
+    def __init__(self, parent, obj): 
+        #obj = {'id': '', 'seg': seg, 'src_id': src.get_id()}
+        self.seg = obj['seg']
+        self.src_id =  obj['src_id']
+        (isa_id, gs_id, st_id, ls_id, seg_count, cur_line) = self.src_id
+        self.cur_line = cur_line
+        self.isa_id = isa_id
+        self.gs_id = gs_id
+        self.st_id = st_id
+        self.ls_id = ls_id
+        self.seg_count = seg_count
+        self.parent = parent
+        self.children = []
+        self.id = None
+
+    def accept(self, visitor):
+        pass
+        
+    def add_node(self, obj):
+        pass
+
+#    def add_seg_error(self):
+#        for child in children
+
+        
+    def add_error(self, err):
+        pass
+        
+    def update_node(self, obj):
+        pass
+
+    def get_id(self):
+        return self.id
+
+    def pop_to_parent(self):
+        return self.parent
+   
 
 class err_isa(err_node):
     """
@@ -144,6 +172,7 @@ class err_isa(err_node):
             raise EngineError, 'err_isa.__init__', obj
         
         self.isa_trn_set_id = self.isa_id
+        self.id = 'ISA'
 
         self.err_cde = []
 
@@ -222,6 +251,7 @@ class err_gs(err_node):
         
         self.gs_control_num = self.gs_id
         self.fic = self.seg[1]
+        self.id = 'GS'
         
         self.st_loops = []
 
@@ -332,6 +362,7 @@ class err_st(err_node):
             raise EngineError, 'err_st.__init__', obj
         
         self.trn_set_control_num = self.st_id
+        self.id = 'ST'
 
         # Must be set before repr
         self.ack_code = None # AK501
@@ -418,6 +449,7 @@ class err_seg(err_node):
         self.seg_id_code = self.seg[0]
         self.seg_pos = self.seg_count
         self.loop_id = self.ls_id
+        self.id = 'SEG'
         #self.seg_error_code = seg_error_code
         
         self.st_errors = []
@@ -509,6 +541,7 @@ class err_ele(err_node):
         self.subele_pos = obj['subele_pos']
         self.ele_ref_num = obj['ele_ref_num']
         #self.bad_val = bad_val
+        self.id = 'ELE'
 
         self.ele_errors = []
 
