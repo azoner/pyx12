@@ -220,7 +220,8 @@ def gen_sql(map_root, prefix):
                 # who is parent?
                 # same level, then pop to parent and create sub-table
                 if cur_table.is_match_parent(parent):
-                    cur_table = cur_table.parent
+                    if cur_table.parent:
+                        cur_table = cur_table.parent
                     cur_table.sub_tables.append(table(node.id, node.name, path, cur_table))
                     cur_table = cur_table.sub_tables[-1]
                     cur_table.fk_name = cur_table.root.unique_fk_name(\
@@ -317,13 +318,13 @@ def main():
     logger.addHandler(stderr_hdlr)
 
     prefix = None
-    #param.set_param('map_path', os.path.expanduser('/usr/local/share/pyx12/map'))
-    #param.set_param('pickle_path', os.path.expanduser('/tmp'))
+    #param.set('map_path', os.path.expanduser('/usr/local/share/pyx12/map'))
+    #param.set('pickle_path', os.path.expanduser('/tmp'))
     for o, a in opts:
         if o == '-v': logger.setLevel(logging.DEBUG)
         if o == '-q': logger.setLevel(logging.ERROR)
-        if o == '-m': param.set_param('map_path', a)
-        if o == '-p': param.set_param('pickle_path', a)
+        if o == '-m': param.set('map_path', a)
+        if o == '-p': param.set('pickle_path', a)
         if o == '-f': prefix = a
         if o == '-l':
             try:
@@ -333,13 +334,13 @@ def main():
             except IOError:
                 logger.error('Could not open log file: %s' % (a))
         #if o == '-9': target_997 = os.path.splitext(src_filename)[0] + '.997'
-    map_path = param.get_param('map_path')
+    map_path = param.get('map_path')
 
     for map_filename in args:
         try:
             (map_path, map_file) = os.path.split(os.path.abspath(map_filename))
             if os.path.isfile(os.path.join(map_path, map_file)):
-                param.set_param('map_path', map_path)
+                param.set('map_path', map_path)
             if not prefix:
                 prefix = map_file.split('.')[0]
             sql = gen_sql(pyx12.map_if.map_if(os.path.join(map_path, map_file), param), prefix)
