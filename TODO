@@ -1,4 +1,6 @@
-Handle intra-segment dependancies
+TA1 output
+
+TA1 input
 
 Restructure maps
   Add loop wrappers to ISA/GS/ST
@@ -9,9 +11,10 @@ HTML output
     Explicit loops
 
 Unit Testing
+  map_walker
   x12file - HL
   map_if
-  map_walker
+  syntax examples
   codes
 
 Functional Testing
@@ -27,3 +30,4 @@ Make C++ Modules
 XML Error output
 
 XML Data output
+  841

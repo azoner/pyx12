@@ -7,6 +7,32 @@ import pdb
 from errors import *
 import map_if
 
+class Test_getnodebypath(unittest.TestCase):
+    """
+    """
+    def setUp(self):
+        self.map = map_if.load_map_file('map/837.4010.X098.A1.xml')
+
+    def test_get_ISA(self):
+        node = self.map.getnodebypath('/ISA')
+        self.assertEqual(node.id, 'ISA')
+        self.assertEqual(node.base_name, 'segment')
+
+    def test_get_GS(self):
+        node = self.map.getnodebypath('/GS')
+        self.assertEqual(node.id, 'GS')
+        self.assertEqual(node.base_name, 'segment')
+
+    def test_get_ST(self):
+        node = self.map.getnodebypath('/ST')
+        self.assertEqual(node.id, 'ST')
+        self.assertEqual(node.base_name, 'segment')
+
+    def test_get_1000A(self):
+        node = self.map.getnodebypath('/1000A')
+        self.assertEqual(node.id, '1000A')
+        self.assertEqual(node.base_name, 'loop')
+
 class IsValidSyntaxP(unittest.TestCase):
     """
     If has one, must have all
@@ -160,7 +186,8 @@ class IsValidSyntaxE(unittest.TestCase):
         self.failUnless(result, err_str)
 
 def suite():
-    suite = unittest.makeSuite((IsValidSyntaxChecks))
+    suite = unittest.makeSuite((IsValidSyntaxP, IsValidSyntaxR, IsValidSyntaxC, \
+        IsValidSyntaxE, IsValidSyntaxL))
     return suite
                 
 if __name__ == "__main__":

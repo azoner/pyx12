@@ -13,7 +13,38 @@ import map_if
 
 
 class Explicit_Loops(unittest.TestCase):
+    """
+    SE to ST - repeat ST loop
+    SE to GE - end ST loop
+    GE to GS - repeat GS loop
+    GE to IEA - end GS loop
+    IEA to ISA - repeat ISA
 
+    FAIL - no end tag for explicit loop
+    FAIL - Mandatory segment skipped
+    FAIL - Mandatory loop skipped
+
+    TA1 segment
+
+    Repeat of segment
+    repeat of loop
+    child loop
+    next sibling loop
+    end loop - goto parent
+
+    start at loop node
+    start at segment node
+    start at element/composite node?
+
+    MATCH regular segment
+    MATCH loop by first segment
+    MATCH ID segment
+    MATCH HL segment
+
+    FAIL - found not used segment
+    FAIL - segment repeat exceeds max count
+
+    """
     def setUp(self):
         self.walker = walk_tree()
         #self.map = map_if.map_if('map/837.4010.X098.A1.xml')
