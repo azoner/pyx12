@@ -40,7 +40,7 @@
 #include <iostream>
 #include <fstream>
 
-#include "x12file.h"
+#include "x12file.hxx"
 
 //logger = logging.getLogger('pyx12.x12file')
 
