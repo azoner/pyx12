@@ -54,6 +54,7 @@ import errors
 import codes
 from utils import *
 
+subele_term = None
 
 class x12n_document:
     #dom_codes = xml.dom.minidom.parse('map/codes.xml')
@@ -66,6 +67,8 @@ class x12n_document:
 	self.seg_term = line[-1]
 	self.ele_term = line[3]
 	self.subele_term = line[-2]
+	global subele_term
+	subele_term = self.subele_term
 
 	# get ISA segment map
 	seg = string.split(line[:-1], self.ele_term)
@@ -103,7 +106,7 @@ class x12n_document:
 	    raise errors.WEDI1Error, 'Last segment should be IEA, is "%s"' % (lines[-1][0])
 
 	# Loop through GS segments
-	for loop in GetLoops(lines[:-1], 'GS', 'GE', 6, 2):
+	for loop in GetExplicitLoops(lines[:-1], 'GS', 'GE', 6, 2):
 	    gs = GS_loop(self, loop)
 
 	iea_seg.xml()
@@ -150,13 +153,13 @@ class GS_loop:
 	dom_maps.unlink()
 
 	# Get map for this GS loop
-	print "--load whole dom"
+	#print "--load whole dom"
 	self.dom_map = xml.dom.minidom.parse('map/' + self.map_file)
-	print "--end load whole dom"
+	#print "--end load whole dom"
 
 	# Loop through ST segments
 	#print gs[1:-1]
-	for loop in GetLoops(gs[1:-1], 'ST', 'SE', 2, 2):
+	for loop in GetExplicitLoops(gs[1:-1], 'ST', 'SE', 2, 2):
 	    st = ST_loop(self, isa, loop)
 	
 	ge_seg.xml()
@@ -194,6 +197,13 @@ class segment:
     Takes a dom node of the segment and the parsed segment line as a list
     """
     def __init__(self, node, seg):
+        """
+        Name:    __init__
+        Desc:    Sends an xml representation of the segmens to stdout
+        Params:  node - dom node of the segment
+		 seg - the parsed segment line as a list
+        Returns: 
+        """
     	self.id = GetChildElementText(node, 'id')
     	self.name = GetChildElementText(node, 'name')
     	self.end_tag = GetChildElementText(node, 'end_tag')
@@ -223,16 +233,35 @@ class segment:
 	tab.decr()
 
     def xml(self):
+        """
+        Name:    xml
+        Desc:    Sends an xml representation of the segment to stdout
+        Params:  
+        Returns: 
+        """
+
         sys.stdout.write('<segment code="%s">\n' % (self.id))
     	for elem in self.element_list:
 	    elem.xml()
         sys.stdout.write('</segment>\n') # % (tab.indent()))
     
     def validate(self):
+        """
+        Name:    validate
+        Desc:    Validate the segment and child elements or composites
+        Params:  
+        Returns: 
+        """
     	for elem in self.element_list:
 	    elem.validate()
 	    
     def GetElementValue(self, refdes):
+        """
+        Name:    GetElementValue
+        Desc:    Get the value of an X12 element by name
+        Params:  refdes - the X12 element Reference Identifier
+        Returns: Value of the element, or None if not found
+        """
     	for elem in self.element_list:
 	    if elem.refdes == refdes:
 	        return elem.x12_elem
@@ -241,6 +270,13 @@ class segment:
 
 class element:
     def __init__(self, node, x12_elem):
+        """
+        Name:    __init__
+        Desc:    Get the values for this element
+        Params:  node - a dom node of the element
+		 x12_elem - the x12 element value 
+        Returns: 
+        """
         self.x12_elem = x12_elem
     	self.name = GetChildElementText(node, 'name')
     	self.usage = GetChildElementText(node, 'usage')
@@ -267,13 +303,26 @@ class element:
 	tab.decr()
 
     def xml(self):
+        """
+        Name:    xml
+        Desc:    Sends an xml representation of the element to stdout
+        Params:  
+        Returns: 
+        """
 	sys.stdout.write('<elem code="%s">%s</elem>\n' % (self.refdes, self.x12_elem))
     
     def validate(self):
-    	if self.usage == 'N' and (self.x12_elem == '' or self.x12_elem is None):
-	    return 1
-    	if self.usage == 'R' and (self.x12_elem == '' or self.x12_elem is None):
-	    raise errors.WEDI1Error, 'Element %s is required' % (self.refdes)
+        """
+        Name:    xml
+        Desc:    Validates the element
+        Params:  
+        Returns: 
+        """
+    	if self.x12_elem == '' or self.x12_elem is None:
+    	    if self.usage == 'N':
+	    	return 1
+    	    elif self.usage == 'R':
+	    	raise errors.WEDI1Error, 'Element %s is required' % (self.refdes)
     	if (not self.data_type is None) and (self.data_type == 'R' or self.data_type[0] == 'N'):
 	    elem = string.replace(string.replace(self.x12_elem, '-', ''), '.', '')
 	    if len(elem) < int(self.min_len):
@@ -298,6 +347,12 @@ class element:
 	    raise errors.WEDI1Error, "Invalid X12 datatype: '%s' is not a '%s'" % (self.x12_elem, self.data_type) 
 
     def __valid_code__(self):
+        """
+        Name:    __valid_code__
+        Desc:    Verify the x12 element value is in the given list of valid codes
+        Params:  
+        Returns: 1 if found, else 0
+        """
         if not self.valid_codes:
 	    return 1
 	if self.x12_elem in self.valid_codes:
@@ -305,11 +360,61 @@ class element:
 	return 0
 
 
-class composite(element):
+class composite:
     def __init__(self, node, x12_elem):
+        """
+        Name:    __init__
+        Desc:    Get the values for this composite
+        Params:  node - a dom node of the composite
+		 x12_elem - the x12 element value 
+        Returns: 
+        """
         self.node = node
 	self.x12_elem = x12_elem
+    	self.name = GetChildElementText(node, 'name')
+    	self.usage = GetChildElementText(node, 'usage')
+    	self.req_des = GetChildElementText(node, 'req_des')
+    	self.seq = GetChildElementText(node, 'seq')
+    	self.refdes = GetChildElementText(node, 'refdes')
 
+	composite = string.split(string.strip(x12_elem), subele_term)
+	i = 0 
+	self.sub_element_list = []
+	for child in node.childNodes:
+	    if child.nodeType == child.ELEMENT_NODE and child.tagName == 'element':
+	        if i < len(composite):
+	            self.sub_element_list.append(element(child, composite[i]))
+	        else:
+	            self.sub_element_list.append(element(child, None))
+	        i = i + 1
+
+    def xml(self):
+        """
+        Name:    xml
+        Desc:    Sends an xml representation of the composite to stdout
+        Params:  
+        Returns: 
+        """
+        sys.stdout.write('<composite code="%s">\n' % (self.refdes))
+    	for sub_elem in self.sub_element_list:
+	    sub_elem.xml()
+        sys.stdout.write('</composite>\n')
+
+    def validate(self):
+        """
+        Name:    validate
+        Desc:    Validates the composite
+        Params:  
+        Returns: 1 on success
+        """
+    	if self.x12_elem == '' or self.x12_elem is None:
+    	    if self.usage == 'N':
+	    	return 1
+    	    elif self.usage == 'R':
+	    	raise errors.WEDI1Error, 'Composite %s is required' % (self.refdes)
+    	for sub_elem in self.sub_element_list:
+	    sub_elem.validate()
+    
 def main():
     """Script main program."""
     import getopt
