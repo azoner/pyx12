@@ -47,6 +47,9 @@ class Indent:
         print ' ' * (self.tab * self.tabs)
         return ' ' * (self.tab * self.tabs)
 
+class IsValidError(Exception): pass
+
+
 def IsValidDataType(str, data_type, charset = 'B'):
     """
     Params:  str - data value to validate
@@ -56,79 +59,80 @@ def IsValidDataType(str, data_type, charset = 'B'):
     """
     import re
     #print str, data_type, charset
-    success = 1
     if not data_type: return 1
-    if data_type[0] == 'N':
-        m = re.compile("^-?[0-9]+", re.S).search(str)
-        if not m:
-            success = 0  # nothing matched
-        if m.group(0) != str:  # matched substring != original, bad
-            success = 0
-        return success
-    elif data_type == 'R':
-        m = re.compile("^-?[0-9]*(\.[0-9]+)?", re.S).search(str)
-        if not m: 
-            success = 0  # nothing matched
-        if m.group(0) != str:  # matched substring != original, bad
-            success = 0
-        return success
-    elif data_type in ('ID', 'AN'):
-        if charset == 'E':  # extended charset
-            m = re.compile("[^A-Z0-9!\"&'()*+,\-\\\./:;?=\sa-z%~@\[\]_{}\\\|<>#$\s]", re.S).search(str)
-            if m and m.group(0):
-             success = 0
-        else:
-            m = re.compile("[^A-Z0-9!\"&'()*+,\-\\\./:;?=\s]", re.S).search(str)
-            if m and m.group(0):  # invalid string found
-             success = 0
-        return success
-    elif data_type == 'DT':
-        m = re.compile("[^0-9]+", re.S).search(str)  # first test date for non-numeric chars
-        if m:  # invalid string found
-            success = 0
-        if 8 == len(str) or 6 == len(str): # valid lengths for date
-            if 6 == len(str):  # if 2 digit year, add CC
-                if str[0:2] < 50:
-                    str = '20' + str
-                else: str = '19' + str
-            month = int(str[4:6])  # check month
-            if month < 1 or month > 12:
-             success = 0
-            day = int(str[6:8])  # check day
-            if month in (1, 3, 5, 7, 8, 10, 12):  # 31 day month
-                if day < 1 or day > 31:
-                 success = 0
-            elif month in (4, 6, 9, 11):  # 30 day month
-                if day < 1 or day > 30:
-                 success = 0
-            else: # else 28 day
-                year = int(str[0:4])  # get year
-                if not (year % 4) and ((year % 100) or (not (year % 400)) ):  # leap year
-                    if day < 1 or day > 29:
-                     success = 0
-                elif day < 1 or day > 28:
-                 success = 0
-        else:
-            success = 0
-        return success
-    elif data_type == 'TM':
-        m = re.compile("[^0-9]+", re.S).search(str)  # first test time for non-numeric chars
-        if m:  # invalid string found
-            success = 0
-        elif str[0:2] > '23' or str[2:4] > '59':  # check hour, minute segment
-            success = 0
-        elif len(str) > 4:  # time contains seconds
-            if len(str) < 6:  # length is munted
-             success = 0
-            elif str[4:6] > '59':  # check seconds
-             success = 0
-            # check decimal seconds here in the future
-            elif len(str) > 8:
-                # print 'unhandled decimal seconds encountered'
-             success = 0
-        return success
-    elif data_type == 'B': pass
-#    else:  
-#        # print 'data_type parameter is not valid, abort'
-#        return 1
-    return success
+    try:
+        if data_type[0] == 'N':
+            m = re.compile("^-?[0-9]+", re.S).search(str)
+            if not m:
+                raise IsValidError # nothing matched
+            if m.group(0) != str:  # matched substring != original, bad
+                raise IsValidError # nothing matched
+        elif data_type == 'R':
+            m = re.compile("^-?[0-9]*(\.[0-9]+)?", re.S).search(str)
+            if not m: 
+                raise IsValidError # nothing matched
+            if m.group(0) != str:  # matched substring != original, bad
+                raise IsValidError 
+        elif data_type in ('ID', 'AN'):
+            if charset == 'E':  # extended charset
+                m = re.compile("[^A-Z0-9!\"&'()*+,\-\\\./:;?=\sa-z%~@\[\]_{}\\\|<>#$\s]", re.S).search(str)
+                if m and m.group(0):
+                    raise IsValidError 
+            else:
+                m = re.compile("[^A-Z0-9!\"&'()*+,\-\\\./:;?=\s]", re.S).search(str)
+                if m and m.group(0):  # invalid string found
+                    raise IsValidError 
+        elif data_type == 'DT':
+            m = re.compile("[^0-9]+", re.S).search(str)  # first test date for non-numeric chars
+            if m:  # invalid string found
+                raise IsValidError 
+            if 8 == len(str) or 6 == len(str): # valid lengths for date
+                try:
+                    if 6 == len(str):  # if 2 digit year, add CC
+                        if str[0:2] < 50:
+                            str = '20' + str
+                        else:
+                            str = '19' + str
+                    month = int(str[4:6])  # check month
+                    if month < 1 or month > 12:
+                        raise IsValidError
+                    day = int(str[6:8])  # check day
+                    if month in (1, 3, 5, 7, 8, 10, 12):  # 31 day month
+                        if day < 1 or day > 31:
+                            raise IsValidError
+                    elif month in (4, 6, 9, 11):  # 30 day month
+                        if day < 1 or day > 30:
+                            raise IsValidError
+                    else: # else 28 day
+                        year = int(str[0:4])  # get year
+                        if not (year % 4) and ((year % 100) or (not (year % 400)) ):  # leap year
+                            if day < 1 or day > 29:
+                                raise IsValidError
+                        elif day < 1 or day > 28:
+                            raise IsValidError
+                except TypeError:
+                    raise IsValidError
+            else:
+                raise IsValidError 
+        elif data_type == 'TM':
+            m = re.compile("[^0-9]+", re.S).search(str)  # first test time for non-numeric chars
+            if m:  # invalid string found
+                raise IsValidError 
+            elif str[0:2] > '23' or str[2:4] > '59':  # check hour, minute segment
+                raise IsValidError 
+            elif len(str) > 4:  # time contains seconds
+                if len(str) < 6:  # length is munted
+                    raise IsValidError 
+                elif str[4:6] > '59':  # check seconds
+                    raise IsValidError 
+                # check decimal seconds here in the future
+                elif len(str) > 8:
+                    # print 'unhandled decimal seconds encountered'
+                    raise IsValidError 
+        elif data_type == 'B': pass
+    except IsValidError:
+        return False
+    #    else:  
+    #        # print 'data_type parameter is not valid, abort'
+    #        return 1
+    return True
