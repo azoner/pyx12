@@ -52,6 +52,9 @@ class base_element:
         returns 
         """
         raise NotImplementedError()
+
+    def format(self):
+        raise NotImplementedError()
     
 
 class composite(base_element):
@@ -62,11 +65,10 @@ class composite(base_element):
         
         ele_str: string
         subele_term: char
-        
-        returns void
         """
 
         self.subele_term = subele_term
+        self.subele_term_orig = subele_term
         self.elements = ele_str.split(self.subele_term)
     
     def __len__(self):
@@ -82,6 +84,12 @@ class composite(base_element):
         returns 
         """
         return '%s' % (string.join(self.elements, self.subele_term))
+
+    def set_subele_term(self, subele_term):
+        self.subele_term = subele_term
+
+    def format(self, subele_term):
+        return '%s' % (string.join(self.elements, subele_term))
     
 
 class element(base_element):
@@ -112,6 +120,9 @@ class element(base_element):
         returns 
         """
         return self.ele_val
+    
+    def format(self, subele_term=None):
+        return self.ele_val
 
 
 class segment:
@@ -120,14 +131,15 @@ class segment:
     # Attributes:
     
     # Operations
-    def __init__(self, seg_str, seg_term, ele_term, subele_term, eol='\n'):
+    def __init__(self, seg_str, seg_term, ele_term, subele_term):
         """function segment
         
         returns void
         """
         self.seg_term = seg_term
+        self.seg_term_orig = seg_term
         self.ele_term = ele_term
-        self.eol = eol
+        self.ele_term_orig = ele_term
         elems = string.split(seg_str, self.ele_term)
         self.elements = []
         self.seg_id = elems[0]
@@ -143,9 +155,9 @@ class segment:
         str_elems = []
         for ele in self.elements:
             str_elems.append(ele.__repr__())
-        return '%s%s%s%s%s' % (self.seg_id, self.ele_term, \
+        return '%s%s%s%s' % (self.seg_id, self.ele_term, \
             string.join(str_elems, self.ele_term), \
-            self.seg_term, self.eol)
+            self.seg_term)
     
     def __getitem__(self, idx):
         """function operator[]
@@ -155,7 +167,10 @@ class segment:
         """
         if idx == 0:
             raise IndexError, 'list index out of range'
-        return self.elements[idx-1].__repr__()
+        elif idx < 0:
+            return self.elements[idx].__repr__()    
+        else:
+            return self.elements[idx-1].__repr__()
 
     def __len__(self):
         return len(self.elements)
@@ -167,4 +182,22 @@ class segment:
         """
         return self.seg_id
     
+    def set_seg_term(self, seg_term):
+        self.seg_term = seg_term
 
+    def set_ele_term(self, ele_term):
+        self.ele_term = ele_term
+
+    def set_subele_term(self, subele_term):
+        self.subele_term = subele_term
+
+    def set_eol(self, eol):
+        self.eol = eol
+
+    def format(self, seg_term, ele_term, subele_term, eol='\n'):
+        str_elems = []
+        for ele in self.elements:
+            str_elems.append(ele.format(subele_term))
+        return '%s%s%s%s%s' % (self.seg_id, ele_term, \
+            string.join(str_elems, ele_term), \
+            seg_term, eol)
