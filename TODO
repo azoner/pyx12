@@ -1,5 +1,3 @@
-TA1 output
-
 TA1 input
 
 Error Handling
@@ -14,7 +12,6 @@ HTML output
   Informational lines
     Explicit loops
   GS errors are re-printing at the GE level
-  
 
 Unit Testing
   map_walker
@@ -23,7 +20,7 @@ Unit Testing
   codes
 
 Functional Testing
-    997 output
+  997 output
 
 Make C++ Modules
   x12file
@@ -31,7 +28,10 @@ Make C++ Modules
   map_walker
   codes
 
-
 Base map_if children on map
- - get by id quicker
- - get by idx slower?
+  get by id quicker
+  get by idx slower?
+
+restructure maps.xml
+  mapfile element
+  map desc ???
