@@ -107,9 +107,9 @@ def main():
                 target_html = os.path.splitext(src_filename)[0] + '.html'
                 fd_html = open(target_html, 'w')
             if pyx12.x12n_document.x12n_document(param, fd_src, fd_997, fd_html):
-                sys.stderr.write('OK\n')
+                sys.stderr.write('%s: OK\n' % (src_filename))
             else:
-                sys.stderr.write('Failure\n')
+                sys.stderr.write('%s: Failure\n' % (src_filename))
         except IOError:
             logger.error('Could not open files')
             usage()
