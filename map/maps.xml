@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 
+    This file is part of the pyX12 project.
+
+    Copyright (c) 2001, 2002 Kalamazoo Community Mental Health Services,
+		John Holland <jholland@kazoocmh.org> <john@zoner.org>
+
+    All rights reserved.
+
+	Redistribution and use in source and binary forms, with or without modification, 
+	are permitted provided that the following conditions are met:
+
+	1. Redistributions of source code must retain the above copyright notice, this list 
+	   of conditions and the following disclaimer. 
+	
+	2. Redistributions in binary form must reproduce the above copyright notice, this 
+	   list of conditions and the following disclaimer in the documentation and/or other 
+	   materials provided with the distribution. 
+	
+	3. The name of the author may not be used to endorse or promote products derived 
+	   from this software without specific prior written permission. 
+
+	THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR IMPLIED 
+	WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF 
+	MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO 
+	EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, 
+	EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT 
+	OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS 
+	INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN 
+	CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) 
+	ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF 
+	THE POSSIBILITY OF SUCH DAMAGE.
+-->
+
+<!-- 
+Used to identify the map used for a particular Functional Group
+icvn - Interchange Control Version Number (ISA12)
+fic - Functional Identifier Code (GS01)
+vriic - Version / Release / Industry Identifier Code (GS08)
+-->
+
+<maps>
+   <version icvn="00401">
+      <map vriic="004010X093" fic="HR">map.276.4010.X093.xml</map>
+      <map vriic="004010X093" fic="HN">map.277.4010.X093.xml</map>
+      <map vriic="004010X092" fic="HS">map.270.4010.X092.xml</map>
+      <map vriic="004010X092" fic="HB">map.271.4010.X092.xml</map>
+      <map vriic="004010X094" fic="HI">map.278.4010.X094.xml</map>
+      <map vriic="004010X061" fic="RA">map.820.4010.X061.xml</map>
+      <map vriic="004010X095" fic="BE">map.834.4010.X091.xml</map>
+      <map vriic="004010X091" fic="HP">map.835.4010.X091.xml</map>
+      <map vriic="004010X096" fic="HC">map.837.4010.X096.xml</map>
+      <map vriic="004010X097" fic="HC">map.837.4010.X097.xml</map>
+      <map vriic="004010X098" fic="HC">map.837.4010.X098.xml</map>
+      <map vriic="004010X093A1" fic="HR">map.276.4010.X093.A1.xml</map>
+      <map vriic="004010X093A1" fic="HN">map.277.4010.X093.A1.xml</map>
+      <map vriic="004010X092A1" fic="HS">map.270.4010.X092.A1.xml</map>
+      <map vriic="004010X092A1" fic="HB">map.271.4010.X092.A1.xml</map>
+      <map vriic="004010X094A1" fic="HI">map.278.4010.X094.A1.xml</map>
+      <map vriic="004010X061A1" fic="RA">map.820.4010.X061.A1.xml</map>
+      <map vriic="004010X095A1" fic="BE">map.834.4010.X091.A1.xml</map>
+      <map vriic="004010X091A1" fic="HP">map.835.4010.X091.A1.xml</map>
+      <map vriic="004010X096A1" fic="HC">map.837.4010.X096.A1.xml</map>
+      <map vriic="004010X097A1" fic="HC">map.837.4010.X097.A1.xml</map>
+      <map vriic="004010X098A1" fic="HC">map.837.4010.X098.A1.xml</map>
+   </version>
+</maps>
