@@ -45,6 +45,11 @@ class x12xml_simple(x12xml):
 
     def seg(self, seg_node, seg_data):
         """
+        Generate XML for the segment data and matching map node
+        @param seg_node: Map Node
+        @type seg_node: L{node<map_if.x12_node>}
+        @param seg_data: Segment object
+        @type seg_data: L{segment<segment.segment>}
         """
         if not seg_node.is_segment():
             raise EngineError, 'Node must be a segment'
@@ -91,5 +96,7 @@ class x12xml_simple(x12xml):
         self.path = path
 
 def is_not_blank(x):
+    """
+    @rtype boolean
+    """
     return x != ''
-
