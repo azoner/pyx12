@@ -194,6 +194,12 @@ class err_handler:
         @type map_node: L{map_if<map_if.x12_node>}
         @param seg_data: Segment object
         @type seg_data: L{segment<segment.segment>}
+        @param seg_count: Count of current segment in the ST Loop
+        @type seg_count: int
+        @param cur_line: Current line number in the file
+        @type cur_line: int
+        @param ls_id: The current LS loop identifier
+        @type ls_id: string
         """
         parent = self.cur_st_node
         self.cur_seg_node = err_seg(parent, map_node, seg_data, seg_count, cur_line, ls_id)

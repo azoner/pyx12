@@ -144,9 +144,10 @@ class walk_tree:
                             return child
                         elif child.usage == 'R' and child.get_cur_count() < 1:
                             fake_seg = pyx12.segment.segment('%s'% (child.id), '~', '*', ':')
-                            errh.add_seg(child, fake_seg, seg_count, cur_line, ls_id)
+                            #errh.add_seg(child, fake_seg, seg_count, cur_line, ls_id)
                             err_str = 'Mandatory segment "%s" (%s) missing' % (child.name, child.id)
-                            self.mandatory_segs_missing.append((seg_data.get_seg_id(), '3', err_str))
+                            self.mandatory_segs_missing.append((child, fake_seg,
+                                '3', err_str, seg_count, cur_line, ls_id))
                         #else:
                             #logger.debug('Segment %s is not a match for (%s*%s)' % \
                             #   (child.id, seg_data.get_seg_id(), seg_data[0].get_value()))
@@ -214,7 +215,10 @@ class walk_tree:
         @param errh: Error handler
         @type errh: L{error_handler.err_handler}
         """
-        for (seg_id, err_cde, err_str) in self.mandatory_segs_missing:
+        #if self.mandatory_segs_missing: pdb.set_trace()
+        for (seg_node, seg_data, err_cde, err_str, 
+                seg_count, cur_line, ls_id) in self.mandatory_segs_missing:
+            errh.add_seg(seg_node, seg_data, seg_count, cur_line, ls_id)
             errh.seg_error(err_cde, err_str, None)
         self.mandatory_segs_missing = []
 
@@ -255,12 +259,14 @@ class walk_tree:
         elif is_first_seg_match2(first_child_node, seg_data): 
             return True
         elif loop_node.usage == 'R' and loop_node.get_cur_count() < 1:
+            #pdb.set_trace()
             fake_seg = pyx12.segment.segment('%s' % \
                 (first_child_node.id), '~', '*', ':')
-            errh.add_seg(loop_node, fake_seg, seg_count, cur_line, ls_id)
+            #errh.add_seg(first_child_node, fake_seg, seg_count, cur_line, ls_id)
             err_str = 'Mandatory loop "%s" (%s) missing' % \
                 (loop_node.name, loop_node.id)
-            self.mandatory_segs_missing.append((seg_data.get_seg_id(), '3', err_str))
+            self.mandatory_segs_missing.append((first_child_node, fake_seg, \
+                '3', err_str, seg_count, cur_line, ls_id))
             #errh.seg_error('3', err_str, None)
         return False
 
