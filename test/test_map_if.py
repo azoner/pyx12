@@ -573,4 +573,9 @@ def suite():
                 
 #if __name__ == "__main__":
 #    unittest.main()   
+try:
+    import psyco
+    psyco.full()
+except ImportError:
+    pass
 unittest.TextTestRunner(verbosity=2).run(suite())
