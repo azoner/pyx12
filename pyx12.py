@@ -54,6 +54,7 @@ import pdb
 #import xml.dom.minidom
 
 # Intrapackage imports
+import err_997
 from errors import *
 import codes
 import map_index
@@ -74,8 +75,13 @@ def x12n_document(fd):
 
     logger = logging.getLogger('pyx12')
     check_dte = '20030930'
+    
     # Get X12 DATA file
-    src = x12file.x12file(fd) 
+    try:
+        src = x12file.x12file(fd) 
+    except x12Error:
+        logger.error('This does not look like a X12 data file')
+        sys.exit(2)
 
     #Get Map of Control Segments
     control_map = map_if.map_if('map/map.x12.control.00401.xml')
@@ -90,9 +96,13 @@ def x12n_document(fd):
             map_node.is_valid(seg, [])
             #map_node = control_map
             icvn = map_node.get_elemval_by_id(seg, 'ISA12')
-            #isa_seg = segment(control_map.getnodebypath('/ISA'), seg)
-            #isa_seg.validate()
-            #icvn = isa_seg.GetElementValue('ISA12')
+            #ISA*00*          *00*          *ZZ*ENCOUNTER      *ZZ*00GR           *030425*1501*U*00401*000065350*0*T*:~
+            isa_seg = [seg[0],seg[3],seg[4],seg[1],seg[7],seg[8],seg[5],seg[6]]
+            isa_seg.append('030425') # Date
+            isa_seg.append('1501') # Time
+            isa_seg.extend([seg[11],seg[12]]
+            isa_seg.append('056213432') # ISA ID
+            isa_seg.extend([seg[14],seg[15]]
         elif seg[0] == 'GS':
             #map_node = walker.walk(map_node, seg)
             map_node = control_map.getnodebypath('/GS')
@@ -109,12 +119,13 @@ def x12n_document(fd):
             #logger.debug('icvn=%s fic=%s vriic=%s' % (icvn, fic, vriic))
             map_index_if = map_index.map_index('map/maps.xml')
             map_file = map_index_if.get_filename(icvn, vriic, fic)
+            gs_997_count = 0
         else:
             break        
 
     #Determine which map to use for this transaction
     if map_file is None:
-        raise x12Error, "Map not found.  icvn=%s, fic=%s, vriic=%s" % \
+        raise EngineError, "Map not found.  icvn=%s, fic=%s, vriic=%s" % \
             (icvn, fic, vriic)
     map = map_if.map_if(os.path.join('map', map_file))
     logger.info('Map file: %s' % (map_file))
@@ -123,16 +134,46 @@ def x12n_document(fd):
 
     fd.seek(0)
     src = x12file.x12file(fd) 
+
+    fd_997 = open('data/997.txt', 'w')
+    errors_997 = err_997.if_997(src)
+    # Create 997 ISA segment
+    isa_seg.append(src.subele_term)
+    fd_997.write(src.seg_str(isa_seg, '\n')
     for seg in src:
         logger.debug(seg)
         #find node
+        seg_err_codes = []
         ele_err_list = []
         #e997 = err_997.err_997()
-        node = walker.walk(node, seg)
+        node = walker.walk(node, seg, seg_err_codes)
+
+        if seg[0] == 'GS':
+            # Write 997 file
+            fic = map_node.get_elemval_by_id(seg, 'GS01')
+            vriic = map_node.get_elemval_by_id(seg, 'GS08')
+            #map_node = control_map.getnodebypath('/GS')
+            #map_node.is_valid(seg, [])
+            map_file_new = map_index_if.get_filename(icvn, vriic, fic)
+            if map_file != map_file_new:
+                map_file = map_file_new
+                if map_file is None:
+                    raise EngineError, "Map not found.  icvn=%s, fic=%s, vriic=%s" % \
+                        (icvn, fic, vriic)
+                map = map_if.map_if(os.path.join('map', map_file))
+                logger.info('Map file: %s' % (map_file))
+                node = map.getnodebypath('/GS')
+        elif seg[0] == 'ST':
+            pass
         node.is_valid(seg, ele_err_list) 
 
         #get special values
         #generate xml
+        
+    # Create 997 IEA segment
+    isa_seg.append(src.subele_term)
+    fd_997.write(src.seg_str(['IEA', '%i'%gs_997_count, isa_seg[13]], '\n')
+
     logger.info('End')
 
    
@@ -162,19 +203,20 @@ def main():
         if o == '-v': logger.setLevel(logging.DEBUG)
         if o == '-q': logger.setLevel(logging.ERROR)
 
-#    try:
-    if 1:
+    try:
         if args:
-            for file in args:
-                fd = open(file, 'r')
-                a = x12n_document(fd)
+            fd = open(args[0], 'r')
         else:
-            a = x12n_document(sys.stdin)
+            fd = sys.stdin
+    except:
+        logger.error('Could not open file')
+        sys.exit(2)
 
-#    except KeyboardInterrupt:
-#        print "\n[interrupt]"
-#        success = 0
-#    return success
+    try:
+        x12n_document(fd)
+    except KeyboardInterrupt:
+        print "\n[interrupt]"
+    return True
 
 codes = codes.ExternalCodes()
 tab = Indent()

@@ -612,11 +612,13 @@ class segment_if(x12_node):
             data_ele = child_node.data_ele
             ele_err_list.append(seq, None, data_ele, '3', seg[child_count+1], err_str)
         valid = True
+#        if seg[0] == 'BGN':
+#            pdb.set_trace()
         for i in xrange(self.get_child_count()):
-            self.logger.debug('i=%i, len(seg)-1 = %i' % (i, len(seg)-1))
+            self.logger.debug('i=%i, len(seg)-1=%i / child_count=%i' % (i, len(seg)-1, self.get_child_count()))
+            child_node = self.get_child_node_by_idx(i)
             if i < len(seg)-1:
                 #if type(seg[i+1]) is ListType: # composite
-                child_node = self.get_child_node_by_idx(i)
                 self.logger.debug('i=%i, elem=%s, id=%s' % (i, seg[i+1], child_node.id))
                 if child_node.is_composite():
                     # Validate composite
@@ -812,7 +814,7 @@ class element_if(x12_node):
         """
         self.logger.error(err_str)
         err_list.append((self.seq, None, self.data_ele, err_cde, value, err_str))
-        raise errors.WEDI1Error, err_str
+        #raise errors.WEDI1Error, err_str
 
     def __valid_code__(self, code):
         """
