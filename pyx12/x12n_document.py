@@ -82,7 +82,7 @@ def x12n_document(param, src_file, fd_997, fd_html, fd_xmldoc=None):
     for seg in src:
         if seg.get_seg_id() == 'ISA':
             #map_node = walker.walk(control_map, seg)
-            map_node = control_map.getnodebypath('/ISA/ISA')
+            map_node = control_map.getnodebypath('/ISA_LOOP/ISA')
             errh.add_isa_loop(seg, src)
             map_node.is_valid(seg, errh)
             #map_node = control_map
@@ -90,7 +90,7 @@ def x12n_document(param, src_file, fd_997, fd_html, fd_xmldoc=None):
             icvn = seg.get_value_by_ref_des('ISA12')
         elif seg.get_seg_id() == 'GS':
             #map_node = walker.walk(map_node, seg)
-            map_node = control_map.getnodebypath('/ISA/GS/GS')
+            map_node = control_map.getnodebypath('/ISA_LOOP/GS_LOOP/GS')
             errh.add_gs_loop(seg, src)
             map_node.is_valid(seg, errh)
             #fic = map_node.get_elemval_by_id(seg, 'GS01')
@@ -116,7 +116,7 @@ def x12n_document(param, src_file, fd_997, fd_html, fd_xmldoc=None):
     #map = map_if.map_if(os.path.join('map', map_file), param)
     cur_map = map_if.load_map_file(map_file, param)
     logger.debug('Map file: %s' % (map_file))
-    node = cur_map.getnodebypath('/ISA/ISA')
+    node = cur_map.getnodebypath('/ISA_LOOP/ISA')
     logger.debug('Map file loaded')
 
     src = x12file.x12file(src_file, errh) 
@@ -168,7 +168,7 @@ def x12n_document(param, src_file, fd_997, fd_html, fd_xmldoc=None):
                     #map = map_if.map_if(os.path.join('map', map_file), param)
                     cur_map = map_if.load_map_file(map_file, param)
                     logger.debug('Map file: %s' % (map_file))
-                    node = cur_map.getnodebypath('/ISA/GS/GS')
+                    node = cur_map.getnodebypath('/ISA_LOOP/GS_LOOP/GS')
                     node.cur_count = 1
                 errh.add_gs_loop(seg, src)
             elif seg.get_seg_id() == 'GE':
