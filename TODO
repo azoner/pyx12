@@ -1,0 +1,24 @@
+Write Errors in html output
+  Match current segment to error
+  Mark invalid elements in segment
+
+Handle intra-segment dependancies
+
+Pickle/Unpickle map tree
+
+Unit Testing
+  x12file
+  map_if
+  codes
+
+Functional Testing
+
+Make C++ Modules
+  x12file
+  map_if
+  codes
+
+
+XML Error output
+
+XML Data output
