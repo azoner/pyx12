@@ -1,12 +1,16 @@
 <?xml version="1.0"?>
 <!-- 
-    $Id$
-	This file is part of the pyX12 project.
+######################################################################
+# Copyright (c) 2001-2005 Kalamazoo Community Mental Health Services,
+#   John Holland <jholland@kazoocmh.org> <john@zoner.org>
+# All rights reserved.
+#
+# This software is licensed as described in the file LICENSE.txt, which
+# you should have received as part of this distribution.
+#
+######################################################################
 
-    Copyright (c) 2001-2004 Kalamazoo Community Mental Health Services,
-		John Holland <jholland@kazoocmh.org> <john@zoner.org>
-
-    All rights reserved.
+#    $Id$
 -->
 <transaction>
   <id>837</id>
