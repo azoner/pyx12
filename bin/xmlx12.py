@@ -58,9 +58,12 @@ def convert(filename, fd_out):
     try:
         reader = libxml2.newTextReaderFilename(filename)
         ret = reader.Read()
+        found_text = False
         while ret == 1:
             tmpNodeType = reader.NodeType()
+            #print tmpNodeType, reader.Name(), reader.Value()
             if tmpNodeType == NodeType['element_start']:
+                found_text = False
                 cur_name = reader.Name()
                 if cur_name == 'seg':
                     while reader.MoveToNextAttribute():
@@ -68,27 +71,35 @@ def convert(filename, fd_out):
                             #fd_out.write(reader.Value())
                             seg_data = pyx12.segment.segment(reader.Value(), \
                                 '~', '*', ':')
+                            #if reader.Value() == 'NM1':
+                            #    pdb.set_trace()
                 elif cur_name == 'comp':
                     comp = []
-                elif cur_name == 'ele' and reader.IsEmptyElement():
-                    seg_data.append('')
+                #elif cur_name == 'ele' and not reader.HasValue():
+                #    seg_data.append('')
             elif tmpNodeType == NodeType['CData2']:
-                #print tmpNodeType, cur_name, reader.Name(), reader.Value()
                 #pdb.set_trace()
                 if cur_name in ('ele', 'subele'):
                     seg_data.append(reader.Value().replace('\n', ''))
+                    found_text = True
             elif tmpNodeType == NodeType['text']:
                 if cur_name == 'ele':
                     seg_data.append(reader.Value())
+                    found_text = True
                 elif cur_name == 'subele':
                     comp.append(reader.Value())
+                    found_text = True
             elif tmpNodeType == NodeType['element_end']:
                 cur_name = reader.Name()
                 if cur_name == 'seg':
                     fd_out.write(seg_data.format())
                     fd_out.write('\n')
-                #elif cur_name == 'ele':
-                #    fd_out.write('*')
+                elif cur_name == 'ele' and not found_text:
+                    seg_data.append('')
+                    found_text = True
+                elif cur_name == 'subele' and not found_text:
+                    comp.append('')
+                    found_text = True
                 elif cur_name == 'comp':
                     seg_data.append(string.join(comp, ':'))
                 #elif cur_name == 'subele':
