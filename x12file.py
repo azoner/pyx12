@@ -43,7 +43,7 @@ Tracks segment/line/loop counts
 import string
 
 # Intrapackage imports
-import errors
+from errors import *
 
 
 class x12file:
@@ -59,12 +59,14 @@ class x12file:
     	Params:  fd - file descriptor
     	"""
 	
-	self.cur_line = 0
 	self.lines = []
 	self.loops = []
+	self.hl_stack = []
 	self.gs_count = 0
 	self.st_count = 0
+	self.hl_count = 0
 	self.seg_count = 0
+	self.cur_line = 0
 	#os.linesep = self.seg_term
 
         ISA_len = 106
@@ -77,7 +79,7 @@ class x12file:
         self.subele_term = line[-2]
 
 	self.lines = []
-	self.lines.append(line)
+	self.lines.append(line[:-1])
 	for line in string.split(fd.read(), self.seg_term):
 	    if string.strip(line) != '':
 		self.lines.append(string.strip(line).replace('\n','').replace('\r',''))
@@ -90,14 +92,17 @@ class x12file:
             raise StopIteration
     	line = self.lines[self.cur_line]
 	seg = string.split(line, self.ele_term)
+	for i in xrange(len(seg)):
+	    if seg[i].find(self.subele_term) != -1:
+	    	seg[i] = seg[i].split(self.subele_term)
 	if seg[0] == 'ISA': 
 	    self.loops.append(('ISA', seg[13]))
 	    self.gs_count = 0
 	elif seg[0] == 'IEA': 
 	    if self.loops[-1][0] != 'ISA' or self.loops[-1][1] != seg[2]:
-		raise errors.ISAError, 'IEA does not match ISA id'
+		raise ISAError, 'IEA does not match ISA id'
 	    if int(seg[1]) != self.gs_count:
-	    	raise errors.ISAError, 'IEA count for IEA02=%s is wrong' % (seg[2])
+	    	raise ISAError, 'IEA count for IEA02=%s is wrong' % (seg[2])
 	    del self.loops[-1]
 	elif seg[0] == 'GS': 
 	    self.gs_count += 1
@@ -105,9 +110,9 @@ class x12file:
 	    self.st_count = 0
 	elif seg[0] == 'GE': 
 	    if self.loops[-1][0] != 'GS' or self.loops[-1][1] != seg[2]:
-		raise errors.GSError, 'GE does not match GS id'
+		raise GSError, 'GE does not match GS id'
 	    if int(seg[1]) != self.st_count:
-	    	raise errors.GSError, 'GE count for GE02=%s is wrong. I count %i' % (seg[2], self.st_count)
+	    	raise GSError, 'GE count for GE02=%s is wrong. I count %i' % (seg[2], self.st_count)
 	    del self.loops[-1]
 	elif seg[0] == 'ST': 
 	    self.st_count += 1
@@ -115,14 +120,38 @@ class x12file:
 	    self.seg_count = 1 
 	elif seg[0] == 'SE': 
 	    if self.loops[-1][0] != 'ST' or self.loops[-1][1] != seg[2]:
-		raise errors.STError, 'SE does not match ST id'
+		raise STError, 'SE does not match ST id'
 	    if int(seg[1]) != self.seg_count + 1:
-	    	raise errors.STError, 'SE count for SE02=%s is wrong. I count %i' % (seg[2], self.seg_count + 1)
+	    	raise STError, 'SE count of %s for SE02=%s is wrong. I count %i' % (seg[1], seg[2], self.seg_count + 1)
 	    del self.loops[-1]
+	elif seg[0] == 'HL': 
+	    self.seg_count += 1
+	    self.hl_count += 1
+	    if self.hl_count != int(seg[1]):
+	    	raise x12Error, 'My HL count %i does not match your HL count %s' % (self.hl_count, seg[1])
+	    if seg[2] != '':
+	    	parent = int(seg[2])
+	    	if parent not in self.hl_stack:
+	    	    self.hl_stack.append(parent)
+	    	else:
+	    	    if self.hl_stack:
+	    	    	while self.hl_stack[-1] != parent:
+	    	    	    del self.hl_stack[-1]
 	else:
 	    self.seg_count += 1
     	self.cur_line += 1
 	return seg
+
+    def get_id(self):
+    	isa_id = None
+	gs_id = None
+	st_id = None
+    	for loop in self.loops:
+	    if loop[0] == 'ISA': isa_id = loop[1]
+	    if loop[0] == 'GS': gs_id = loop[1]
+	    if loop[0] == 'ST': st_id = loop[1]
+    	return (isa_id, gs_id, st_id, self.seg_count, self.cur_line)
+
 
 #    def close(self):
 #        """Free the memory buffer.
