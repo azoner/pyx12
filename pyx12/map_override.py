@@ -20,6 +20,9 @@ import errors
 
 
 class map_override:
+    """
+    Apply local overrides to the current map. Overrides defined in a xml document.
+    """
     def __init__(self, map_root, override_file, icvn, vriic, fic):
         try:
             reader = libxml2.newTextReaderFilename(map_file)

@@ -10,6 +10,10 @@
 
 #    $Id$
 
+"""
+Validate and transform HIPAA X12 documents
+"""
+
 __author__  = "John Holland <jholland@kazoocmh.org> <john@zoner.org>"
 __status__  = "beta"
 __version__ = "1.1.0"

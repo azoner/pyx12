@@ -70,6 +70,9 @@ def is_first_seg_match2(child, seg_data):
 
 
 class walk_tree:
+    """
+    Walks a map_if tree.  Tracks loop/segment counting, missing loop/segment.
+    """
     def __init__(self):
 #        end_tag_stack = []
         #self.cur_seg_count = 0

@@ -39,6 +39,9 @@ MAXINT = 2147483647
 # X12 Node Superclass
 ############################################################
 class x12_node:
+    """
+    X12 Node Superclass
+    """
     def __init__(self):
         self.id = None
         self.name = None
@@ -160,6 +163,9 @@ class x12_node:
 # Map file interface
 ############################################################
 class map_if(x12_node):
+    """
+    Map file interface
+    """
     def __init__(self, map_file, param):
         """
         @param param: map of parameters
@@ -354,6 +360,7 @@ class map_if(x12_node):
 ############################################################
 class loop_if(x12_node):
     """
+    Loop Interface
     """
     def __init__(self, root, parent, my_index): 
         """
@@ -557,6 +564,7 @@ class loop_if(x12_node):
 ############################################################
 class segment_if(x12_node):
     """
+    Segment Interface
     """
     def __init__(self, root, parent, my_index):
         """
@@ -875,6 +883,9 @@ class segment_if(x12_node):
 # Element Interface
 ############################################################
 class element_if(x12_node):
+    """
+    Element Interface
+    """
     def __init__(self, root, parent):
         """
         @requires: Must be entered with a libxml2 element node current
@@ -1070,13 +1081,14 @@ class element_if(x12_node):
 
     def is_valid(self, elem, errh, check_dte=None, type_list=[]):
         """
-        Is this a valid element
+        Is this a valid element?
+
         @param elem: element instance
         @type elem: pyx12.element
         @param errh: instance of error_handler
         @param check_dte: date string to check against (YYYYMMDD)
-        @param type: Optional data/time type list
-        @type type: list[string]
+        @param type_list: Optional data/time type list
+        @type type_list: list[string]
         @return: True if valid
         @rtype: boolean
         """
@@ -1205,6 +1217,9 @@ class element_if(x12_node):
 # Composite Interface
 ############################################################
 class composite_if(x12_node):
+    """
+    Composite Node Interface
+    """
     def __init__(self, root, parent):
         """
         Get the values for this composite
@@ -1538,7 +1553,12 @@ def syntax_ele_id_str(seg_id, ele_pos_list):
     return output
         
     
-class IsValidError(Exception): pass
+class IsValidError(Exception):
+    """
+    Exception for invalid X12 type errors
+    """
+    pass
+
 
 def IsValidDataType(str_val, data_type, charset = 'B'):
     """
