@@ -75,7 +75,8 @@
     <xsl:template match="segment">
 	<div class="segment">
         <xsl:value-of select="id"/>-
-        <xsl:value-of select="name"/>
+        <xsl:value-of select="name"/><xsl:text>    </xsl:text>
+        <xsl:for-each select="syntax"><xsl:value-of select="."/><xsl:text> </xsl:text></xsl:for-each>
 	</div>
 	<table>
 	<xsl:apply-templates/>
