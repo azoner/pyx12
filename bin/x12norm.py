@@ -28,4 +28,4 @@ for filename in args:
                 c[1] = src.st_count
             elif c[0] == 'SE' and errh.err_cde == '4':
                 c[1] = src.seg_count
-        sys.stdout.write(src.format_seg(c, eol))
+        sys.stdout.write(c.format() + eol)

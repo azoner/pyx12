@@ -72,7 +72,7 @@ def main():
     """
     param = pyx12.params.params()
     logger = logging.getLogger('pyx12')
-    logger.setLevel(logging.INFO)
+    logger.setLevel(logging.CRITICAL)
     formatter = logging.Formatter('%(asctime)s %(levelname)s %(module)s %(lineno)d %(message)s')
 
     stderr_hdlr = logging.StreamHandler()
@@ -101,7 +101,7 @@ def main():
         os.chdir(dir1)
         names = os.listdir(dir1)
     except os.error:
-        print "Can't list", dir1
+        logger.critical('Can''t list %s' % (dir1))
         names = []
     names.sort()
     for name in names:
@@ -110,30 +110,52 @@ def main():
             head, tail = name[:-4], name[-4:]
             if tail == '.txt':
                 try:
+                    sys.stdout.write('\n' + ('=' * 60))
+                    sys.stdout.write('\nChecking: %s\n' % (os.path.basename(src_filename)))
                     if flag_997:
                         if os.path.splitext(src_filename)[1] == '.997':
-                            #target_997 = src_filename + '.997'
+                            target_997 = src_filename + '.997'
                             base_997 = src_filename + '.997.base'
                         else:
-                            #target_997 = os.path.splitext(src_filename)[0] + '.997'
+                            target_997 = os.path.splitext(src_filename)[0] + '.997'
                             base_997 = os.path.splitext(src_filename)[0] + '.997.base'
                         fd_997 = tempfile.NamedTemporaryFile()
-                        target_997 = fd_997.name
                     if not os.path.isfile(base_997):
-                        logger.error('Base 997 not found: %s' % (base_997))
+                        logger.critical('Base 997 not found: %s' % (os.path.basename(base_997)))
                         continue
                     #if flag_html:
                     #    target_html = os.path.splitext(src_filename)[0] + '.html'
                     #    fd_html = open(target_html, 'w')
 
                     pyx12.x12n_document.x12n_document(param, src_filename, fd_997, fd_html)
+
                     fd_997.seek(0)
+                    target_997 = fd_997.name
+                    fd_new = tempfile.NamedTemporaryFile()
+                    for line in fd_997.readlines():
+                        if line[:3] not in ('ISA', 'GS*', 'ST*', 'SE*', 'GE*', 'IEA'):
+                            fd_new.write(line)
+                    #fd_new.seek(0)
+                    #sys.stdout.write(fd_new.read())
+                    fd_new.seek(0)
+                    
+                    fd_base = open(base_997, 'r')
+                    fd_orig = tempfile.NamedTemporaryFile()
+                    for line in fd_base.readlines():
+                        if line[:3] not in ('ISA', 'GS*', 'ST*', 'SE*', 'GE*', 'IEA'):
+                            fd_orig.write(line)
+                    fd_orig.write(fd_base.read())
+                    #fd_orig.seek(0)
+                    #sys.stdout.write(fd_orig.read())
+                    fd_orig.seek(0)
                     #open(target_997, 'w').write(fd_997.read())
                     #fd_997.close()
 
-                    diff_txt = diff(base_997, target_997)
+                    diff_txt = diff(fd_orig.name, fd_new.name)
                     if diff:
-                        print diff_txt
+                        for line in diff_txt.splitlines(True):
+                            if '/tmp/' not in line:
+                                sys.stdout.write(line)
                     else:
                         sys.stdout.write(': OK')
                     sys.stdout.write('\n')
