@@ -5,7 +5,6 @@
             <id>TST</id>
             <name>TEST</name>
             <usage>R</usage>
-            <req_des>M</req_des>
             <pos>020</pos>
             <max_use>1</max_use>
             <composite>
@@ -49,7 +48,6 @@
             <id>UNU</id>
             <name>Unused Segment</name>
             <usage>N</usage>
-            <req_des>O</req_des>
             <pos>030</pos>
             <max_use>1</max_use>
             <element>
