@@ -43,7 +43,7 @@
 #include <stack>
 #include <iostream>
 #include <fstream>
-#include <ostream>
+//#include <ostream>
 
 using namespace std;
 
@@ -54,10 +54,10 @@ private:
 public:
     element(const string& ele_str);
     size_t length();
-    ostream& operator<<(ostream&, element&);
+    ostream& operator<<(ostream&);
     string format();
     string get_value();
-    void set_value(string, ele_str);
+    void set_value(string ele_str);
     bool is_composite();
     bool is_element();
     bool is_empty();
@@ -66,55 +66,59 @@ public:
 
 class composite {
 private:
-    vector<string> elements;
-    char subele_term, subele_term_orig;
-    bool not_delim(char c);
-    bool delim(char c);
+    vector<element> elements;
+    string subele_term, subele_term_orig;
     vector<string> split(const string& ele_str);
 
 public:
     composite(const string& ele_str, const string& subele_term_);
-    string& operator[](size_type i) { return elements[i]; };
-    const string& operator[](size_type i) const { return elements[i]; };
+    //string& operator[](size_type i) { return elements[i]; };
+    //const string& operator[](size_type i) const { return elements[i]; };
     size_t length();
-    ostream& operator<<(ostream&, composite&);
+    ostream& operator<<(ostream&);
     string format();
-    string& get_value();
-    void set_subele_term(const subele_term_);
+    string format(const string& subele_term_);
+    string get_value();
+    void set_subele_term(const string& subele_term_);
     bool is_composite();
     bool is_element();
     bool is_empty();
+    bool not_delim(char c);
+    bool delim(char c);
 };
 
 
 class segment {
 private:
-    char seg_term, seg_term_orig;
-    char ele_term, ele_term_orig;
-    char subele_term, subele_term_orig;
+    string seg_term, seg_term_orig;
+    string ele_term, ele_term_orig;
+    string subele_term, subele_term_orig;
     string seg_id;
-    vector<string> elements;
+    vector<composite> elements;
+    vector<string> split(const string& ele_str);
 
 public:
-    segment(const string& seg_str, const char seg_term_, 
-        const char ele_term_, const char subele_term_);
-    string& operator[](size_type i) { return elements[i]; };
-    const string& operator[](size_type i) const { return elements[i]; };
-    string& get_item(size_type i) { return elements[i]; };
-    const string& get_item(size_type i) const { return elements[i]; };
-    void set_item(size_type i, string val) { elements[i] = val; };
+    segment(const string& seg_str, const string& seg_term_, 
+        const string& ele_term_, const string& subele_term_);
+    //string& operator[](size_type i) { return elements[i]; };
+    //const string& operator[](size_type i) const { return elements[i]; };
+    //string& get_item(size_type i) { return elements[i]; };
+    //const string& get_item(size_type i) const { return elements[i]; };
+    //void set_item(size_type i, string val) { elements[i] = val; };
     void append(string val);
     size_t length();
     string get_seg_id();
     string get_value_by_ref_des(const string& ref_des);
-    void set_seg_term(char seg_term_);
-    void set_ele_term(char ele_term_);
-    void set_subele_term(char subele_term_);
+    void set_seg_term(const string& seg_term_);
+    void set_ele_term(const string& ele_term_);
+    void set_subele_term(const string& subele_term_);
     string format();
-    vector<string> format_ele_list(vector<string> str_elems, char subele_term_);
+    vector<string> format_ele_list(vector<string> str_elems, const string& subele_term_);
     bool is_empty();
+    bool not_delim(char c);
+    bool delim(char c);
 
-    ostream& operator<<(ostream&, segment&);
+    ostream& operator<<(ostream&);
 };
 
 #endif // PYX12_SEGMENT_HXX_

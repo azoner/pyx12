@@ -38,7 +38,7 @@
 #include <string>
 #include <vector>
 #include <iostream>
-#include <fstream>
+#include <algorithm>
 
 #include "segment.hxx"
 #include "errors.hxx"
@@ -65,9 +65,9 @@ size_t element::length()
     return 1;
 }
 
-ostream& element::operator<<(ostream& os, element& ele)
+ostream& element::operator<<(ostream& os)
 {
-    os << ele;
+    os << value;
     return os;
 }
 
@@ -81,7 +81,7 @@ string element::get_value()
     return value;
 }
 
-void element::set_value(string, ele_str)
+void element::set_value(string ele_str)
 {
     value = ele_str;
 }
@@ -99,22 +99,27 @@ bool element::is_element()
 bool element::is_empty()
 {
     if(value.length() != 0)
-        return true
+        return true;
     else
-        return false
+        return false;
 }
 
 
 composite::composite(const string& ele_str, const string& subele_term_)
 {
+    typedef vector<string>::const_iterator iter;
     subele_term = subele_term_;
     subele_term_orig = subele_term_;
-    elements = split(ele_str);
+    vector<string> elems = split(ele_str);
+    iter i = elems.begin();
+    while(i != elems.end()) {
+        elements.push_back(element((*i)));
+    }
 }
 
 bool composite::not_delim(char c)
 {
-    if(c != subele_term)
+    if(c != subele_term[0])
         return true;
     else
         return false;
@@ -122,7 +127,7 @@ bool composite::not_delim(char c)
 
 bool composite::delim(char c)
 {
-    if(c == subele_term)
+    if(c == subele_term[0])
         return true;
     else
         return false;
@@ -133,53 +138,60 @@ vector<string> composite::split(const string& ele_str)
     typedef string::const_iterator iter;
     vector<string> ret;
 
-    iter i = string.begin();
-    while(i != str.end()) {
-        i = find_if(i, str.end(), not_delim);
-        j = find_if(i, str.end(), delim);
-        if(i != str.end())
-            ret = push_back(string(i, j));
+    iter i = ele_str.begin();
+    iter j;
+    while(i != ele_str.end()) {
+        i = find_if(i, ele_str.end(), composite::not_delim);
+        j = find_if(i, ele_str.end(), composite::delim);
+        if(i != ele_str.end())
+            ret.push_back(string(i, j));
         i = j;
-    }
+    };
     return ret;
 }
 
 size_t composite::length()
 {
-    return elements.length();
+    return elements.size();
 }
 
-ostream& composite::operator<<(ostream& os, composite& comp)
+ostream& composite::operator<<(ostream& os)
 {
-    for(vector<string> size_type i = 0; i != comp.size(), ++i)
-        os << i->value; // XXXXXXXXXXXX
+    vector<element>::iterator i = elements.begin();
+    while(i != elements.end()) {
+        os << i->format();
+        ++i;
+    }
     return os;
 }
 
-string composite::format(char subele_term_='')
+string composite::format()
 {
-    char term;
+    return format(subele_term);
+}
+
+string composite::format(const string& subele_term_)
+{
+    typedef vector<element>::iterator iter;
+    string term;
     string ret;
-    if(subele_term_ == '')
-        term = subele_term;
-    else
-        term = subele_term_;
+    term = subele_term_;
     if(!elements.empty())
-        ret.append(elements[0].format())
+        ret.append(elements[0].format());
     iter i = elements.begin() + 1;
-    while(i != str.end()) {
-        ret.append(term);
-        ret.append(i->format());
+    while(i != elements.end()) {
+        ret += term;
+        ret += i->format();
     }
     return ret;
 }
 
 string composite::get_value()
 {
-    if(elements.length() == 1)
+    if(elements.size() == 1)
         return elements[0].get_value();
     else
-        throw Pyx12Errors::IndexError("value of composite is undefined");
+        throw Pyx12Errors::EngineError("value of composite is undefined");
 }
 
 void composite::set_subele_term(const string& subele_term_)
@@ -202,7 +214,7 @@ bool composite::is_empty()
     return elements.empty();
 }
 
-
+/*
 class segment {
     vector<string> elements;
 
@@ -211,31 +223,34 @@ public:
     size_t length();
     string get_seg_id();
     string get_value_by_ref_des(const string& ref_des);
-    void set_seg_term(char seg_term);
-    void set_ele_term(char ele_term);
-    void set_subele_term(char subele_term);
+    void set_seg_term(const string& seg_term);
+    void set_ele_term(const string& ele_term);
+    void set_subele_term(const string& subele_term);
     string format();
-    vector<string> format_ele_list(vector<string> str_elems, char subele_term);
+    vector<string> format_ele_list(vector<string> str_elems, const string& subele_term);
 };
+*/
 
 
-
-segment::segment(const string& seg_str, const char seg_term_,
-        const char ele_term_, const char subele_term_);
+segment::segment(const string& seg_str, const string& seg_term_,
+        const string& ele_term_, const string& subele_term_)
 {
-    typedef string::const_iterator iter;
+    typedef vector<string>::const_iterator iter;
+    vector<string> elems;
     seg_term = seg_term_;
     seg_term_orig = subele_term_;
     ele_term = ele_term_;
     ele_term_orig = ele_term_;
     subele_term = subele_term_;
     subele_term_orig = subele_term_;
-    seg_id = '';
+    //seg_id = '';
     if(seg_str.empty())
-        throw Errors::EngineError("seg_str should not be empty");
+        throw Pyx12Errors::EngineError("seg_str should not be empty");
     if(seg_str.substr(seg_str.length()-1) == seg_term)
-        seg_str.erase(seg_str.rbegin()) // strip trailing seg_term
-    vector<string> elems = split(seg_str);
+        //elems = split(seg_str.substr(seg_str.begin(), seg_str.end()-1));
+        elems = split(seg_str.substr(0, seg_str.length()-1));
+    else
+        elems = split(seg_str);
     seg_id = elems.front();
 
     iter i = elems.begin();
@@ -245,20 +260,19 @@ segment::segment(const string& seg_str, const char seg_term_,
         else
             elements.push_back(composite((*i), subele_term));
     }
-    return ret;
 }
 
-bool composite::not_delim(char c)
+bool segment::not_delim(char c)
 {
-    if(c != ele_term)
+    if(c != ele_term[0])
         return true;
     else
         return false;
 }
 
-bool composite::delim(char c)
+bool segment::delim(char c)
 {
-    if(c == ele_term)
+    if(c == ele_term[0])
         return true;
     else
         return false;
@@ -270,24 +284,33 @@ vector<string> segment::split(const string& seg_str)
     vector<string> ret;
 
     iter i = seg_str.begin();
+    iter j;
     while(i != seg_str.end()) {
-        i = find_if(i, str.end(), not_delim);
-        j = find_if(i, str.end(), delim);
-        if(i != str.end())
+        i = find_if(i, seg_str.end(), segment::not_delim);
+        j = find_if(i, seg_str.end(), segment::delim);
+        if(i != seg_str.end())
             ret.push_back(string(i, j));
         i = j;
     }
     return ret;
 }
 
-ostream& segment::operator<<(ostream& os, segment& seg)
+ostream& segment::operator<<(ostream& os)
 {
-    for(vector<string> size_type i = 0; i != seg.size(), ++i)
-        os << i->value; // XXXXXXXXXXXX
+    vector<composite>::iterator i = elements.begin();
+    while(i != elements.end()) {
+        os << i->format(); // XXXXXXXXXXXX
+        ++i;
+    }
     return os;
 }
 
-bool composite::is_empty()
+bool segment::is_empty()
 {
     return elements.empty();
+}
+
+size_t segment::length()
+{
+    return elements.size();
 }
