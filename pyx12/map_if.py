@@ -503,9 +503,6 @@ class loop_if(x12_node):
     def get_parent(self):
         return self.parent
 
-#    def is_match(self):
-#        pass
-
 #    def is_valid(self, seg_data, errh):
 #        pass
 
@@ -763,6 +760,13 @@ class segment_if(x12_node):
                 and self.children[0].data_type == 'ID' \
                 and len(self.children[0].valid_codes) > 0 \
                 and seg[0].get_value() not in self.children[0].valid_codes:
+                #logger.debug('is_match: %s %s' % (seg.get_seg_id(), seg[1]), self.children[0].valid_codes)
+                return False
+            elif seg.get_seg_id() == 'ENT' \
+                and self.children[1].is_element() \
+                and self.children[1].data_type == 'ID' \
+                and len(self.children[1].valid_codes) > 0 \
+                and seg[1].get_value() not in self.children[1].valid_codes:
                 #logger.debug('is_match: %s %s' % (seg.get_seg_id(), seg[1]), self.children[0].valid_codes)
                 return False
             elif self.children[0].is_composite() \
