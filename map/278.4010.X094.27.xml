@@ -1277,7 +1277,7 @@
             <data_type>AN</data_type>
             <min_len>1</min_len>
             <max_len>30</max_len>
-            <valid_codes external="prov_taxonomy"/>
+            <!--<valid_codes external="prov_taxonomy"/>-->
           </element>
           <element>
             <data_ele>156</data_ele>
@@ -5430,7 +5430,7 @@
             <data_type>AN</data_type>
             <min_len>1</min_len>
             <max_len>30</max_len>
-            <valid_codes external="prov_taxonomy"/>
+            <!--<valid_codes external="prov_taxonomy"/>-->
           </element>
           <element>
             <data_ele>156</data_ele>
