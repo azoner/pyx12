@@ -61,9 +61,7 @@
     	<tr><td colspan="4">
 	<table>
 	<tr class="loop">
-	<td colspan="2"></td>
         <td><strong><xsl:value-of select="id"/> - <xsl:value-of select="name"/></strong></td>
-	<td colspan="2"></td>
         <td><xsl:value-of select="count"/></td>
 	</tr>
 	<xsl:apply-templates/>
