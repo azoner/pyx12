@@ -1420,8 +1420,6 @@ def is_syntax_valid(seg_data, syn):
     @param syn: list containing the syntax type, and the indices of elements
     @type syn: list[string]
     @rtype: tuple(boolean, error string)
-
-    @bug: Handle syntax and short segments
     """
     # handle intra-segment dependancies
     if len(syn) < 3:

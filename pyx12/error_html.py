@@ -43,7 +43,7 @@ class error_html:
         @type term: tuple(string, string, string, string)
 
         @bug: GS errors are re-printing at the GE level
-        @bug: IEA missing errors not shown
+        @bug: Explicit loop trailers missing errors not shown
         """
         self.errh = errh
         self.fd = fd

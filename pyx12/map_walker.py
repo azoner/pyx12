@@ -244,8 +244,6 @@ class walk_tree:
 
         @return: Does the segment match the first segment node in the loop?
         @rtype: boolean
-
-        @todo: loop counting checks
         """
         #if seg_data.get_seg_id() == 'HL':
         #    pdb.set_trace()
