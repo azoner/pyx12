@@ -123,7 +123,9 @@ class error_html:
         self.fd.write('<span class="seg">%i: %s</span><br>\n' % \
             (cur_line, self._seg_str(seg)))
         for err_node in err_node_list:
-            for (err_cde, err_str) in err_node.errors:
+            for err_tuple in err_node.errors:
+                err_cde = err_tuple[0]
+                err_str = err_tuple[1]
                 self.fd.write('<span class="error">&nbsp;%s (Code: %s)</span><br>\n' % \
                     (err_str, err_cde))
             for ele in err_node.elements:
