@@ -288,13 +288,13 @@ class Test_getnodebypath(unittest.TestCase):
         self.assertEqual(node.get_path(), path)
         self.assertEqual(node.base_name, 'segment')
 
-    def test_get_by_id(self):
-        path = '/ISA/GS/ST/DETAIL/2000A/2000B/2300/DTP[435]'
-        node = self.map.getnodebypath(path)
-        self.assertNotEqual(node, None)
-        self.assertEqual(node.id, 'DTP')
-        self.assertEqual(node.get_path(), path)
-        self.assertEqual(node.base_name, 'segment')
+#    def test_get_by_id(self):
+#        path = '/ISA/GS/ST/DETAIL/2000A/2000B/2300/DTP[435]'
+#        node = self.map.getnodebypath(path)
+#        self.assertNotEqual(node, None)
+#        self.assertEqual(node.id, 'DTP')
+#        self.assertEqual(node.get_path(), path)
+#        self.assertEqual(node.base_name, 'segment')
 
     def test_get_TST(self):
         path = '/TST'

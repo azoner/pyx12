@@ -343,7 +343,7 @@ class LoopCounting(unittest.TestCase):
         self.errh = pyx12.error_handler.errh_null()
 
     def test_max_loop_count_ok1(self):
-        node = self.map.getnodebypath('/ISA/GS/ST/DETAIL/2000A/2000B/2300/2400/LX')
+        node = self.map.getnodebypath('/ISA/GS/ST/DETAIL/2000A/2000B/2300/2400')
         self.assertNotEqual(node, None, 'Node not found')
         node.cur_count = 48 
         seg_data = pyx12.segment.segment('LX*51~', '~', '*', ':')
@@ -353,7 +353,7 @@ class LoopCounting(unittest.TestCase):
         self.assertEqual(self.errh.err_cde, None, self.errh.err_str)
 
     def test_max_loop_count_fail1(self):
-        node = self.map.getnodebypath('/ISA/GS/ST/DETAIL/2000A/2000B/2300/2400/LX')
+        node = self.map.getnodebypath('/ISA/GS/ST/DETAIL/2000A/2000B/2300/2400')
         self.assertNotEqual(node, None, 'Node not found')
         node.cur_count = 50
         seg_data = pyx12.segment.segment('LX*51~', '~', '*', ':')

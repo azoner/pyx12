@@ -38,12 +38,12 @@ class Identity(unittest.TestCase):
     def setUp(self):
         pass
 
-    def test_identity(self):
+    def test_identity1(self):
         seg_str = 'TST*AA:1:1*BB:5*ZZ'
         seg = pyx12.segment.segment(seg_str, '~', '*', ':')
         self.assertEqual(seg.__repr__(), seg_str+'~')
 
-    def test_identity1(self):
+    def test_identity2(self):
         seg_str = 'ISA*00*          *00*          *ZZ*ZZ000          *'
         seg_str += 'ZZ*ZZ001          *030828*1128*U*00401*000010121*0*T*:\n'
         seg = pyx12.segment.segment(seg_str, '~', '*', ':')
