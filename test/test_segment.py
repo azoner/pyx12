@@ -131,14 +131,16 @@ class Indexing(unittest.TestCase):
         seg_str = 'TST*AA*1*Y*BB:5*ZZ'
         self.seg = pyx12.segment.segment(seg_str, '~', '*', ':')
 
-    def test_index1(self):
+    def test_index_simple_1(self):
         self.assertEqual(self.seg[0][0].get_value(), 'AA')
 
-    def test_index2(self):
+    def test_index_simple_2(self):
         self.assertEqual(self.seg[0].get_value(), 'AA')
 
-    def test_getitem3(self):
+    def test_index_composite_1(self):
         self.assertEqual(self.seg[3][0].get_value(), 'BB')
+
+    def test_index_composite_2(self):
         self.assertEqual(self.seg[3][1].get_value(), '5')
                     
 
