@@ -1070,6 +1070,7 @@ class element_if(x12_node):
         """
         errh.add_ele(self)
 
+        pdb.set_trace()
         if elem and elem.is_composite():
             err_str = 'Data element "%s" (%s) is an invalid composite' % \
                 (self.name, self.refdes)
@@ -1142,7 +1143,7 @@ class element_if(x12_node):
                     (self.name, self.refdes, self.data_type, elem_val)
                 self._error(errh, err_str, '6', elem_val)
                 valid = False
-        if not IsValidDataType(elem_val, type, self.root.param.get('charset')):
+        if type is not None and not IsValidDataType(elem_val, type, self.root.param.get('charset')):
             if type in ('RD8', 'DT', 'D8', 'D6'):
                 err_str = 'Data element "%s" (%s) contains an invalid date (%s)' % \
                     (self.name, self.refdes, elem_val)
