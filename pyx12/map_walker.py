@@ -1,37 +1,14 @@
+######################################################################
+# Copyright (c) 2001-2004 Kalamazoo Community Mental Health Services,
+#   John Holland <jholland@kazoocmh.org> <john@zoner.org>
+# All rights reserved.
+#
+# This software is licensed as described in the file LICENSE.txt, which
+# you should have received as part of this distribution.
+#
+######################################################################
+
 #    $Id$
-#    This file is part of the pyX12 project.
-#
-#    Copyright (c) 2001-2004 Kalamazoo Community Mental Health Services,
-#                John Holland <jholland@kazoocmh.org> <john@zoner.org>
-#
-#    All rights reserved.
-#
-#        Redistribution and use in source and binary forms, with or without
-#        modification, are permitted provided that the following conditions are
-#        met:
-#
-#        1. Redistributions of source code must retain the above copyright
-#        notice, this list of conditions and the following disclaimer. 
-#        
-#        2. Redistributions in binary form must reproduce the above copyright
-#        notice, this list of conditions and the following disclaimer in the
-#        documentation and/or other materials provided with the distribution. 
-#        
-#        3. The name of the author may not be used to endorse or promote
-#        products derived from this software without specific prior written
-#        permission. 
-#
-#        THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR
-#        IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
-#        WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-#        DISCLAIMED. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT,
-#        INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
-#        (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
-#        SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
-#        HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
-#        STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING
-#        IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
-#        POSSIBILITY OF SUCH DAMAGE.
 
 """
 Walk a tree of x12_map nodes.  Find the correct node.
@@ -64,43 +41,51 @@ class walk_tree:
         self.mandatory_segs_missing = []  # Store errors until we know we have an error
         pass
 
+    def find_match(self, node, seg_datam errh):
+        """
+        Given the current node and the segment, find the next matching node in the tree.
+
+        @param node: Current map node
+        @type node: map_if.x12_node
+        @param seg_data: The segment data to match
+        @type seg_data: segment.segment
+        @return: Path of matching node.  None if not found.
+        @rtype: string
+        """
+        orig_node = node
+        node_pos = node.pos # Get original position ordinal of starting node
+        if not (node.is_loop() or node.is_map_root()): 
+            node = self.pop_to_parent_loop(node) # Get enclosing loop
+        while 1:
+            for child in node.children:
+                if child.is_segment():
+                    if child.pos >= node_pos:
+                        if child.is_match(seg_data):
+                            if node.is_loop() \
+                                    and self._is_loop_match(node, seg_data, errh, seg_count, cur_line, ls_id):
+                                return node.get_child_node_by_idx(0).get_path()
+                            return child.get_path()
+                elif child.is_loop(): 
+                    if child.pos >= node_pos:
+                        if self._is_loop_match(child, seg_data, errh, seg_count, cur_line, ls_id):
+                            node_seg = child.get_child_node_by_idx(0)
+                            return node_seg.get_path()
+            if node.is_map_root(): # If at root and we haven't found the segment yet.
+                return ''
+            node_pos = node.pos # Get position ordinal of current node in tree
+            node = self.pop_to_parent_loop(node) # Get enclosing parent loop
+        return ''
+
     def walk(self, node, seg_data, errh, seg_count, cur_line, ls_id):
         """
+        Walk the tree from the starting node to the new node.
+        Handle errors relating to the walk.
         Handle required segment/loop missed (not found in seg)
         Handle found segment = Not used
         """
 
         #logger.info('%s seg_count=%i / cur_line=%i' % (node.id, seg_count, cur_line))
-        if not seg_data.get_seg_id():
-            err_str = 'Segment identifier is blank'
-            errh.seg_error('1', err_str)
-            return None
-
-        if not self.is_seg_id_valid(seg_data.get_seg_id()):
-            err_str = 'Segment identifier %s is invalid' % (seg_data.get_seg_id())
-            errh.seg_error('1', err_str)
-            return None
-
         orig_node = node
-
-        # Special Handlers for ISA, GS, ST
-#        while not node.is_map_root():
-#            node = self.pop_to_parent_loop(node) # Get root node
-#        if orig_node.id == 'SE' and seg_data.get_seg_id() == 'ST':
-#            return node.getnodebypath('/ST')
-#        if orig_node.id == 'GE' and seg_data.get_seg_id() == 'GS':
-#            return node.getnodebypath('/GS')
-#        if orig_node.id == 'IEA' and seg_data.get_seg_id() == 'ISA':
-#            return node.getnodebypath('/ISA')
-
-#        if orig_node.id in ['ST']: #, 'GS', 'ISA']:
-#            orig_node.cur_count = 1
-            # UGLY HACK.  Reset counts of sibling nodes to zero
-#            node_idx = orig_node.index
-#            for child in self.pop_to_parent_loop(orig_node).children:
-#                if child.is_segment() and child.index > node_idx:
-#                    child.cur_count = 0
-#        node = orig_node
 
         self.mandatory_segs_missing = []
         #node_idx = node.index # Get original index of starting node

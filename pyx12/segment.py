@@ -312,3 +312,9 @@ class segment:
             if not ele.is_empty():
                 return False
         return True
+        
+    def is_seg_id_valid(self):
+        if seg_data.get_seg_id() or len(seg_id) < 2 or len(seg_id) > 3:
+            return False
+        else:
+            return True

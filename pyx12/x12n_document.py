@@ -147,6 +147,11 @@ def x12n_document(param, src_file, fd_997, fd_html, fd_xmldoc=None):
         #find node
         orig_node = node
         try:
+            if not seg.is_seg_id_valid():
+                err_str = 'Segment identifier %s is invalid' % (seg_data.get_seg_id())
+                errh.seg_error('1', err_str)
+                continue
+                    
             node = walker.walk(node, seg, errh, src.get_seg_count(), \
                 src.get_cur_line(), src.get_ls_id())
         except EngineError:
