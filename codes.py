@@ -39,6 +39,7 @@ import xml.dom.minidom
 
 # Intrapackage imports
 import errors
+from utils import *
 
 class ExternalCodes:
     """
