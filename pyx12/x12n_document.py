@@ -176,6 +176,7 @@ def x12n_document(param, fd_src, fd_997, fd_html, fd_xmldoc=None):
                     map = map_if.load_map_file(map_file, param)
                     logger.debug('Map file: %s' % (map_file))
                     node = map.getnodebypath('/GS')
+                    node.cur_count = 1
                 errh.add_gs_loop(seg, src)
             elif seg[0] == 'GE':
                 errh.close_gs_loop(node, seg, src)

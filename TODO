@@ -2,6 +2,10 @@ TA1 output
 
 TA1 input
 
+Error Handling
+  Stream Errors to XML
+  Combine error XML with HTML/XML/997 output
+
 Restructure maps
   Add loop wrappers to ISA/GS/ST
   Mod map_if to match
@@ -28,8 +32,6 @@ Make C++ Modules
   map_walker
   codes
 
-
-XML Error output
 
 Base map_if children on map
  - get by id quicker

@@ -97,7 +97,9 @@ class x12file:
         self.seg_term = line[-1]
         self.ele_term = line[3]
         self.subele_term = line[-2]
-
+        logger.debug('seg_term "%s" / ele_term "%s" / subele_term "%s"' % \
+            (self.seg_term, self.ele_term, self.subele_term))
+       
         self.buffer = line
         self.buffer += self.fd.read(DEFAULT_BUFSIZE)
         
@@ -212,22 +214,23 @@ class x12file:
         return seg
 
     def cleanup(self):
-        for (seg, id) in self.loops.reverse(): 
-            if self.loops[-1][0] == 'ST':
-                err_str = 'ST id=%s was not closed with a SE' % (id, self.loops[-1][1])
-                self.errh.st_error('3', err_str)
-                errh.close_st_loop(None, None, self)
-            elif self.loops[-1][0] == 'GS':
-                err_str = 'GS id=%s was not closed with a GE' % (id, self.loops[-1][1])
-                self.errh.gs_error('3', err_str)
-                errh.close_gs_loop(None, None, self)
-            elif self.loops[-1][0] == 'ISA':
-                err_str = 'ISA id=%s was not closed with a IEA' % (id, self.loops[-1][1])
-                self.errh.isa_error('3', err_str)
-                errh.close_isa_loop(None, None, self)
-            #elif self.loops[-1][0] == 'LS':
-            #    err_str = 'LS id=%s was not closed with a LE' % (id, self.loops[-1][1])
-            #    self.errh.ls_error('3', err_str)
+        if self.loops:
+            for (seg, id) in self.loops.reverse(): 
+                if self.loops[-1][0] == 'ST':
+                    err_str = 'ST id=%s was not closed with a SE' % (id, self.loops[-1][1])
+                    self.errh.st_error('3', err_str)
+                    errh.close_st_loop(None, None, self)
+                elif self.loops[-1][0] == 'GS':
+                    err_str = 'GS id=%s was not closed with a GE' % (id, self.loops[-1][1])
+                    self.errh.gs_error('3', err_str)
+                    errh.close_gs_loop(None, None, self)
+                elif self.loops[-1][0] == 'ISA':
+                    err_str = 'ISA id=%s was not closed with a IEA' % (id, self.loops[-1][1])
+                    self.errh.isa_error('3', err_str)
+                    errh.close_isa_loop(None, None, self)
+                #elif self.loops[-1][0] == 'LS':
+                #    err_str = 'LS id=%s was not closed with a LE' % (id, self.loops[-1][1])
+                #    self.errh.ls_error('3', err_str)
         
 
     def get_id(self):
