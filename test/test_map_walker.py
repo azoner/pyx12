@@ -138,23 +138,40 @@ class Implicit_Loops(unittest.TestCase):
         #result = node.is_valid(seg_data, self.errh)
         #self.failIf(result)
         self.assertEqual(errh.err_cde, '3', errh.err_str)
-
+        
+    def test_match_loop_by_hl_ok(self):
+        """
+        MATCH loop by HL segment
+        """
+        node = self.map.getnodebypath('/2000A')
+        self.assertNotEqual(node, None)
+        self.assertEqual(node.base_name, 'loop')
+        seg_data = pyx12.segment.segment('HL*1**20*1~', '~', '*', ':')
+        errh = pyx12.error_handler.errh_null()
+        node = self.walker.walk(node, seg_data, errh, 5, 4, None)
+        result = node.is_valid(seg_data, self.errh)
+        self.assertEqual(errh.err_cde, None, errh.err_str)
+ 
     def test_loop_required_ok1(self):
         """
         MATCH loop by first segment
         Test for found /2000A/2010AA/NM1 segment
         """
-        node = self.map.getnodebypath('/2000A/HL')
+        node = self.map.getnodebypath('/2000A')
         self.assertNotEqual(node, None)
-        self.assertEqual(node.base_name, 'segment')
+        self.assertEqual(node.base_name, 'loop')
         seg_data = pyx12.segment.segment('HL*1**20*1~', '~', '*', ':')
-        result = node.is_valid(seg_data, self.errh)
-        seg_data = pyx12.segment.segment('NM1*85*1*Provider Name*****XX*24423423~', '~', '*', ':')
         errh = pyx12.error_handler.errh_null()
         node = self.walker.walk(node, seg_data, errh, 5, 4, None)
         result = node.is_valid(seg_data, self.errh)
+        self.assertEqual(errh.err_cde, None, errh.err_str)
+        seg_data = pyx12.segment.segment('NM1*85*2*Provider Name*****XX*24423423~', '~', '*', ':')
+        errh = pyx12.error_handler.errh_null()
+        node = self.walker.walk(node, seg_data, errh, 5, 4, None)
+        self.assertEqual(errh.err_cde, None, errh.err_str)
+        result = node.is_valid(seg_data, self.errh)
         self.failUnless(result)
-        self.assertEqual(errh.err_cde, None)
+        self.assertEqual(errh.err_cde, None, errh.err_str)
 
     def tearDown(self):
         del self.errh
@@ -165,7 +182,6 @@ class SegmentWalk(unittest.TestCase):
     """
     FAIL - segment repeat exceeds max count
     OK - segment repeat does not exceed max count
-    FAIL - found not used segment
     FAIL - segment was not found
     """
 
@@ -201,7 +217,7 @@ class SegmentWalk(unittest.TestCase):
 #        node = self.walker.walk(node, seg, self.errh, 5, 4, None)
 #        self.assertNotEqual(seg.get_seg_id(), node.id)
 
-     def test_segment_required_fail1(self):
+    def test_segment_required_fail1(self):
         """
         Skipped required segment
         """
@@ -213,6 +229,20 @@ class SegmentWalk(unittest.TestCase):
         node = self.walker.walk(node, seg_data, errh, 5, 4, None)
         self.assertEqual(errh.err_cde, '3', errh.err_str)
    
+    def test_found_unused_segment1(self):
+        param = params()
+        param.set_param('map_path', os.path.expanduser('~/src/pyx12/map/'))
+        param.set_param('pickle_path', os.path.expanduser('~/src/pyx12/map/'))
+        map = pyx12.map_if.load_map_file('comp_test.xml', param)
+        node = map.getnodebypath('/TST')
+        self.assertNotEqual(node, None)
+        self.assertEqual(node.base_name, 'segment')
+        seg_data = pyx12.segment.segment('UNU*AA*B~', '~', '*', ':')
+        node = self.walker.walk(node, seg_data, self.errh, 5, 4, None)
+        #result = node.is_valid(comp, self.errh)
+        #self.failUnless(result)
+        self.assertEqual(self.errh.err_cde, '2', self.errh.err_str)
+
     def tearDown(self):
         del self.errh
         del self.map

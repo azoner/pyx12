@@ -45,5 +45,44 @@
                 </element>
             </composite>
         </segment>
+        <segment>
+            <id>UNU</id>
+            <name>Unused Segment</name>
+            <usage>N</usage>
+            <req_des>O</req_des>
+            <pos>030</pos>
+            <max_use>1</max_use>
+            <element>
+                <name>Element 1</name>
+                <usage>S</usage>
+                <seq>01</seq>
+                <refdes>UNU01</refdes>
+                <data_type>ID</data_type>
+                <min_len>2</min_len>
+                <max_len>3</max_len>
+                <max_use>1</max_use>
+            </element>
+            <element>
+                <name>Element 2</name>
+                <usage>S</usage>
+                <seq>02</seq>
+                <refdes>UNU02</refdes>
+                <data_type>ID</data_type>
+                <min_len>1</min_len>
+                <max_len>3</max_len>
+                <max_use>1</max_use>
+            </element>
+            <element>
+                <name>Element 3</name>
+                <usage>S</usage>
+                <seq>03</seq>
+                <refdes>UNU03</refdes>
+                <data_type>ID</data_type>
+                <min_len>1</min_len>
+                <max_len>3</max_len>
+                <max_use>1</max_use>
+            </element>
+        </segment>
+        
     </transaction>
 </map>
