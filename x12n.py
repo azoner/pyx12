@@ -83,23 +83,77 @@ class x12n_document:
 	for seg_node in seg_nodes:
 	    if GetChildElementText(seg_node, 'id') == 'ISA':
 	    	isa_seg_node = seg_node
+	    if GetChildElementText(seg_node, 'id') == 'IEA':
+	    	iea_seg_node = seg_node
 
+	# Start XML output
+	sys.stdout.write('<?xml version="1.0" encoding="UTF-8"?>\n')
+	tab.incr()
 	# ISA Segment	
 	isa_seg = segment(isa_seg_node, seg)
 	isa_seg.validate()
 	isa_seg.xml()
 	self.icvn = isa_seg.GetElementValue('ISA12')
 	
-	# loop through GS loops
-	#gs = GS_loop(self)
+	lines = []
+	for line in string.split(sys.stdin.read(), self.seg_term):
+	    if string.strip(line) != '':
+	        lines.append(string.split(string.strip(line), self.ele_term))
+	
+	# IEA Segment	
+	#for line in lines:
+	#    print line
+	if lines[-1:][0][0] == 'IEA':
+	    iea_seg = segment(iea_seg_node, lines[-1:][0])
+	    iea_seg.validate()
+	else:
+	    raise WEDI1Error, 'Last segment should be IEA, is "%s"' % (lines[-1:][0][0])
+	
+	idx = 0
+	gs_idx = 0
+	gs_loops = []
+	while idx < len(lines)-1:
+	    if lines[idx][0] == 'GS': 
+	    	if gs_idx != 0:
+		    raise WEDI1Error, 'Encountered a GS segment before a required GE segment'
+		else:
+	    	    gs_idx = idx
+	    if lines[idx][0] == 'GE':
+	        gs_loops.append(lines[gs_idx:idx+1])
+		gs_idx = 0
+	    idx = idx + 1
 
-	# get IEA segment map
-	# parse IEA
-	# print IEA
+	for loop in gs_loops:
+	    #print loop
+	    gs = GS_loop(self, loop)
+
+	iea_seg.xml()
+	sys.stdout.write('</xml>\n')
+	dom_isa.unlink()
 
     
 class GS_loop:
-    def __init__(self, isa):
+    def __init__(self, isa, gs):
+	dom_gs = xml.dom.minidom.parse('map/map.x12.control.00401.xml')
+	seg_nodes = dom_gs.getElementsByTagName("segment")
+	for seg_node in seg_nodes:
+	    if GetChildElementText(seg_node, 'id') == 'GS':
+	    	gs_seg_node = seg_node
+	    if GetChildElementText(seg_node, 'id') == 'GE':
+	    	ge_seg_node = seg_node
+	gs_seg = segment(gs_seg_node, gs[0])
+	gs_seg.validate()
+	gs_seg.xml()
+	self.fic = gs_seg.GetElementValue('GS01')
+	self.vriic = gs_seg.GetElementValue('GS08')
+
+	if gs[-1:][0][0] == 'GE':
+	    ge_seg = segment(ge_seg_node, gs[-1:][0])
+	    ge_seg.validate()
+	else:
+	    raise WEDI1Error, 'Last segment should be GE, is "%s"' % (gs[-1:][0][0])
+
+	#Get map for this GS loop
         dom_map = xml.dom.minidom.parse('map/maps.xml')
     	vers = dom_map.getElementsByTagName("version")
 	for ver in vers:
@@ -107,17 +161,45 @@ class GS_loop:
 	        maps = ver.getElementsByTagName("map")
 
 	for map in maps:
-	    if map.getAttribute('fic') == 'HR' and map.getAttribute('vriic') == '004010X093':
+	    if map.getAttribute('fic') == self.fic and map.getAttribute('vriic') == self.vriic:
                 for node in map.childNodes:
            	    if node.nodeType == node.TEXT_NODE:
 		        node.normalize()
                         self.map_file = node.data
+	if not self.map_file:
+	    raise GSError, 'Map file not found, icvn=%s, fic=%s, vriic=%s' % (isa.icvn,self.fic,self.vriic)
 	dom_map.unlink()
-	print self.map_file
+
+	# Loop through ST segments
+	idx = 0
+	st_idx = 0
+	st_loops = []
+	while idx < len(gs)-1:
+	    if gs[idx][0] == 'ST': 
+	    	if st_idx != 0:
+		    raise WEDI1Error, 'Encountered a ST segment before a required SE segment'
+		else:
+	    	    st_idx = idx
+	    if gs[idx][0] == 'SE':
+	        st_loops.append(gs[st_idx:idx+1])
+		st_idx = 0
+	    idx = idx + 1
+
+	for loop in st_loops:
+	    #print loop
+	    st = ST_loop(self, isa, loop)
+
+	
+	ge_seg.xml()
+	dom_gs.unlink()
 
     def getMapFile(self):
     	return self.map_file
 
+class ST_loop:
+    def __init__(self, gs, isa, st):
+        print st[0]
+	pass
     
 class segment:
     """
@@ -131,6 +213,7 @@ class segment:
     	self.req_des = GetChildElementText(node, 'req_des')
     	self.pos = GetChildElementText(node, 'pos')
 
+	tab.incr()
 	#element_nodes = node.getElementsByTagName('element')
 	i = 1 
 	self.element_list = []
@@ -148,11 +231,14 @@ class segment:
 	            self.element_list.append(composite(child, None))
 	        i = i + 1
 
+    def __del__(self):
+	tab.decr()
+
     def xml(self):
-        print '<segment code="%s">' % (self.id)
+        sys.stdout.write('%s<segment code="%s">\n' % (tab.indent(),self.id))
     	for elem in self.element_list:
 	    elem.xml()
-        print '</segment>'
+        sys.stdout.write('%s</segment>\n' % (tab.indent()))
     
     def validate(self):
     	for elem in self.element_list:
@@ -189,15 +275,18 @@ class element:
 		        	a.normalize()
 				self.valid_codes.append(a.data)
 
+    def __del__(self):
+	tab.decr()
+
     def xml(self):
-	print '<elem code="%s">%s</elem>' % (self.refdes, self.x12_elem)
+	sys.stdout.write('%s<elem code="%s">%s</elem>\n' % (tab.indent(), self.refdes, self.x12_elem))
     
     def validate(self):
 	if len(self.x12_elem) < int(self.min_len):
-	    print "too short: ", self.x12_elem, int(self.min_len)
+	    sys.stderr.write('too short: %s len=%i\n' % (self.x12_elem, int(self.min_len))
 	    raise WEDI1Error, "too short"
 	if len(self.x12_elem) > int(self.max_len):
-	    print "too long: ", self.x12_elem, int(self.max_len)
+	    sys.stderr.write('too long: %s len=%i\n' % (self.x12_elem, int(self.max_len))
 	    raise WEDI1Error, "too long"
 	if self.x12_elem == None and self.usage == 'R':
 	    raise WEDI3Error
@@ -219,11 +308,42 @@ class composite(element):
         self.node = node
 	self.x12_elem = x12_elem
 
-class ExternalCodes:
+class Indent:
     def __init__(self):
+	self.tab = 2 # number of spaces in a tab
+	self.tabs = 0 # current tabs
+    def incr(self):
+    	self.tabs = self.tabs + 1
+    def decr(self):
+    	self.tabs = max(self.tabs - 1, 0)
+    def indent(self):
+        print ' ' * (self.tab * self.tabs)
+    	return ' ' * (self.tab * self.tabs)
+
+class ExternalCodes:
+    """
+    Name:    ExternalCodes
+    Desc:    Validates an ID against an external list of codes
+    """
+
+    def __init__(self):
+    	"""
+    	Name:    __init__
+    	Desc:    Initialize the external list of codes
+    	Params:  
+    	"""
     	# init a map of codes from codes.xml
 	pass
+
     def IsValid(self, key, code):
+    	"""
+    	Name:    IsValid
+    	Desc:    Initialize the external list of codes
+    	Params:  key - the external codeset identifier
+		 code - code to be verified
+    	Returns: 1 if code is valid, 0 if not
+    	"""
+
 	#if not given a key, do not flag an error
     	if not key:
 	    return 1
@@ -239,6 +359,8 @@ def IsValidDataType(str, data_type, charset = 'D'):
     Returns: 1 if str is valid, 0 if not
     """
     import re
+    #print str, data_type, charset
+    if not data_type: return 1
     if data_type[0] == 'N':
         m = re.compile("^-?[0-9]+", re.S).search(str)
         if not m:
@@ -329,7 +451,7 @@ def IsValidDataType(str, data_type, charset = 'D'):
     elif data_type == 'B': pass
     else:  
         # print 'data_type parameter is not valid, abort'
-        return 0
+        return 1
     return 1
 
 
@@ -364,8 +486,8 @@ def main():
         opts, args = getopt.getopt(sys.argv[1:], ':')
 #        opts, args = getopt.getopt(sys.argv[1:], 'lfd:')
     except getopt.error, msg:
-        print msg
-        print "usage: x12n.py file"
+        sys.stderr.write(msg + '\n')
+        sys.stdout.write('usage: x12n.py file\n')
         sys.exit(2)
     #for o, a in opts:
     #    if o == '-d': ddir = a
@@ -384,6 +506,7 @@ def main():
 #    return success
 
 codes = ExternalCodes()
+tab = Indent()
 
 if __name__ == '__main__':
     sys.exit(not main())
