@@ -41,6 +41,7 @@ Validate against a map and codeset values.
 Create a XML document based on the data file
 """
 
+import time
 import os, os.path
 #import stat
 import sys
@@ -88,6 +89,7 @@ def x12n_document(fd):
     
     logger.info('Start')
     walker = walk_tree()
+    now = time.localtime()
     #Determine which map to use for this transaction
     for seg in src:
         if seg[0] == 'ISA':
@@ -98,10 +100,11 @@ def x12n_document(fd):
             icvn = map_node.get_elemval_by_id(seg, 'ISA12')
             #ISA*00*          *00*          *ZZ*ENCOUNTER      *ZZ*00GR           *030425*1501*U*00401*000065350*0*T*:~
             isa_seg = [seg[0],seg[3],seg[4],seg[1],seg[7],seg[8],seg[5],seg[6]]
-            isa_seg.append('030425') # Date
-            isa_seg.append('1501') # Time
+            isa_seg.append(now.strftime('%y%m%d')) # Date
+            isa_seg.append(now.strftime('%H%M')) # Time
             isa_seg.extend([seg[11],seg[12]]
-            isa_seg.append('056213432') # ISA ID
+            isa_control_num = ('%s%s'%(now.strftime('%y%m%d'), now.strftime('%H%M')))[-1:]
+            isa_seg.append(isa_control_num) # ISA Interchange Control Number
             isa_seg.extend([seg[14],seg[15]]
         elif seg[0] == 'GS':
             #map_node = walker.walk(map_node, seg)
@@ -109,12 +112,10 @@ def x12n_document(fd):
             map_node.is_valid(seg, [])
             fic = map_node.get_elemval_by_id(seg, 'GS01')
             vriic = map_node.get_elemval_by_id(seg, 'GS08')
+            # GS*FA*ENCOUNTER*00GR*20030425*150153*653500001*X*004010
+            gs_seg = [seg[0], 'FA', seg[2], seg[1], now.strftime('%Y%m%d'), now.strftime('%H%M%s')]
+            gs_seg.extend([seg[6], seg[7], '004010'])
             
-            #gs_seg = segment(control_map.getnodebypath('/GS'), seg)
-            #gs_seg.validate()
-            #fic = gs_seg.GetElementValue('GS01')
-            #vriic = gs_seg.GetElementValue('GS08')
-
             #Get map for this GS loop
             #logger.debug('icvn=%s fic=%s vriic=%s' % (icvn, fic, vriic))
             map_index_if = map_index.map_index('map/maps.xml')
@@ -140,6 +141,8 @@ def x12n_document(fd):
     # Create 997 ISA segment
     isa_seg.append(src.subele_term)
     fd_997.write(src.seg_str(isa_seg, '\n')
+    fd_997.write(src.seg_str(gs_seg, '\n') # 997 GS segment
+                     
     for seg in src:
         logger.debug(seg)
         #find node
@@ -172,7 +175,9 @@ def x12n_document(fd):
         
     # Create 997 IEA segment
     isa_seg.append(src.subele_term)
-    fd_997.write(src.seg_str(['IEA', '%i'%gs_997_count, isa_seg[13]], '\n')
+    fd_997.write(src.seg_str(['GE', '%i'%errors_997.st_loop_count, gs_seg[6]], '\n')
+    gs_loop_count = 1
+    fd_997.write(src.seg_str(['IEA', '%i'%gs_loop_count, isa_seg[13]], '\n')
 
     logger.info('End')
 

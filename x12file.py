@@ -38,6 +38,7 @@ Tracks end of explicit loops
 Tracks segment/line/loop counts
 """
 
+import logging
 #import os
 import sys
 import string
@@ -56,9 +57,10 @@ class x12file:
 
     def __init__(self, fd):
         """
-        Name:    __init__
-        Desc:    Initialize the file
-        Params:  fd - source file descriptor
+        Class:      x12file
+        Name:       __init__
+        Desc:       Initialize the file
+        Params:     fd - source file descriptor
         """
         
         self.loops = []
@@ -67,9 +69,13 @@ class x12file:
         self.st_count = 0
         self.hl_count = 0
         self.seg_count = 0
+        self.gs_errors = []
+        self.st_info = {}
         self.cur_line = 0
         self.buffer = None
         self.fd = fd
+
+        self.logger = logging.getLogger('pyx12')
 
         ISA_len = 106
         line = fd.read(ISA_len)
@@ -87,6 +93,19 @@ class x12file:
         
     def __iter__(self):
         return self
+
+    def _err_hdlr(self, err_str, err_cde):
+        """
+        Class:      x12file
+        Name:       __init__
+        Desc:       Initialize the file
+        Params:     err_list - list of error codes
+                    err_str - description of error
+                    err_cde - AK403 Data element syntax error code
+        """
+        self.logger.error(err_str)
+        self.gs_errors.append((err_cde, err_str))
+        #raise errors.WEDI1Error, err_str
 
     def next(self):
         try:
@@ -121,10 +140,16 @@ class x12file:
             self.st_count = 0
         elif seg[0] == 'GE': 
             if self.loops[-1][0] != 'GS' or self.loops[-1][1] != seg[2]:
-                raise GSError, 'GE does not match GS id'
+                err_str = 'GE id=%s does not match GS id=%s' % (seg[2], self.loops[-1][1])
+                self.logger.error(err_str)
+                self.gs_errors.append(('4', err_str))
+                #raise GSError, err_str
             if int(seg[1]) != self.st_count:
-                raise GSError, 'GE count for GE02=%s is wrong. I count %i' \
-                    % (seg[2], self.st_count)
+                err_str = 'GE count of %s for GE02=%s is wrong. I count %i' \
+                    % (seg[1], seg[2], self.st_count)
+                self.logger.error(err_str)
+                self.gs_errors.append(('5', err_str))
+                #raise GSError, err_str
             del self.loops[-1]
         elif seg[0] == 'ST': 
             self.st_count += 1
@@ -132,10 +157,16 @@ class x12file:
             self.seg_count = 1 
         elif seg[0] == 'SE': 
             if self.loops[-1][0] != 'ST' or self.loops[-1][1] != seg[2]:
-                raise STError, 'SE does not match ST id'
+                err_str = 'SE id=%s does not match ST id=%s' % (seg[2], self.loops[-1][1])
+                self.logger.error(err_str)
+                self.st_errors.append(('3', err_str))
+                #raise STError, err_str
             if int(seg[1]) != self.seg_count + 1:
-                raise STError, 'SE count of %s for SE02=%s is wrong. I count %i' \
+                err_str = 'SE count of %s for SE02=%s is wrong. I count %i' \
                     % (seg[1], seg[2], self.seg_count + 1)
+                self.logger.error(err_str)
+                self.st_errors.append(('4', err_str))
+                #raise STError, err_str
             del self.loops[-1]
         elif seg[0] == 'LS': 
             self.loops.append(('LS', seg[6]))
