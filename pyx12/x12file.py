@@ -35,10 +35,10 @@
 
 
 """
-Interface to an X12 data file
-Efficiently handles large files
-Tracks end of explicit loops
-Tracks segment/line/loop counts
+Interface to an X12 data file.
+Efficiently handles large files.
+Tracks end of explicit loops.
+Tracks segment/line/loop counts.
 """
 
 #import logging
@@ -62,16 +62,16 @@ logger = logging.getLogger('pyx12.x12file')
 
 class x12file:
     """
-    Name:    x12file
-    Desc:    Interface to an X12 data file
+    Interface to an X12 data file
     """
 
     def __init__(self, src_file, errh):
         """
-        Class:      x12file
-        Name:       __init__
-        Desc:       Initialize the file
-        Params:     src_file - source file name
+        Initialize the file
+
+        @param src_file: absolute path of source file 
+        @type src_file: string
+        @param errh: reference to error handler
         """
         self.fd = open(src_file, 'U')
         self.errh = errh
@@ -115,6 +115,9 @@ class x12file:
         return self
 
     def next(self):
+        """
+        Iterate over input file segments
+        """
         self.errors = []
         try:
             if self.buffer.find(self.seg_term) == -1: # Need more data
@@ -249,6 +252,9 @@ class x12file:
         return seg
 
     def cleanup(self):
+        """
+        At EOF, check for missing end segments
+        """
         if self.loops:
             self.loops.reverse()
             for (seg, id) in self.loops: 
@@ -314,7 +320,27 @@ class x12file:
         return (self.seg_term, self.ele_term, self.subele_term, '\n')
 
     def format_seg(self, seg, eol='\n'):
+        """
+        Format an original representation of the segment
+
+        @param seg: Segment object
+        @type seg: pyx12.segment
+        @return: string
+        """
         return '%s' % (self.seg_str(seg, self.seg_term, self.ele_term, self.subele_term, eol))
 
     def seg_str(self, seg, seg_term, ele_term, subele_term, eol=''):
+        """
+        Format a representation of the segment
+
+        @param seg: Segment object
+        @type seg: pyx12.segment
+        @param seg_term: Segment terminator
+        @type seg_term: string
+        @param ele_term: Element terminator
+        @type ele_term: string
+        @param subele_term: Sub-element terminator
+        @type subele_term: string
+        @return: string
+        """
         return seg.format(seg_term, ele_term, subele_term) + eol

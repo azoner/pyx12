@@ -82,8 +82,6 @@ class x12_node:
 
     def getnodebypath(self, path):
         """
-        Class:      x12_node
-        Name:       getnodebypath
         """
         pathl = path.split('/')
         if len(pathl) == 0: return None
@@ -103,13 +101,7 @@ class x12_node:
 
     def get_child_node_by_idx(self, idx):
         """
-        Name:    get_child_node_by_idx
-        Desc:    
-        Params:  
- 
-        Returns: 
-
-        Note: idx is zero based
+        @param idx: zero based
         """
         if idx >= len(self.children):
             return None
@@ -118,11 +110,8 @@ class x12_node:
             
     def get_path(self):
         """
-        Class:      x12_node 
-        Name:       get_path 
-        Desc:    
-                 
-        Returns: string of path - XPath style
+        @return: path - XPath style
+        @rtype: string
         """
         parent_path = self.parent.get_path()
         if parent_path == '/':
@@ -175,8 +164,7 @@ class x12_node:
 class map_if(x12_node):
     def __init__(self, map_file, param):
         """
-        Class:      map_if
-        Params:     params - map of parameters
+        @param param: map of parameters
         """
         #codes = codes.ExternalCodes()
         #tab = Indent()
@@ -301,8 +289,6 @@ class map_if(x12_node):
 
     def getnodebypath(self, path):
         """
-        Class:      map_if
-        Name:       getnodebypath
         """
         pathl = path.split('/')[1:]
         if len(pathl) == 0: return None
@@ -359,13 +345,7 @@ class loop_if(x12_node):
     """
     def __init__(self, root, parent, my_index): 
         """
-        Name:    __init__
-        Desc:    
-        Params:  
- 
-        Returns: 
-
-        Note: Should be entered with a loop node current
+        @requires: Must be entered with a libxml2 loop node current
         """
         x12_node.__init__(self)
         self.root = root
@@ -552,12 +532,8 @@ class segment_if(x12_node):
     """
     def __init__(self, root, parent, my_index):
         """
-        Class: segment_if
-        Name:    __init__
-        Desc:    
-        Params: parent - parent node 
-                 
-        Note: Should be entered with a segment node current
+        @requires: Must be entered with a libxml2 segment node current
+        @param parent: parent node 
         """
 
         #global reader
@@ -670,7 +646,6 @@ class segment_if(x12_node):
 
     def __repr__(self):
         """
-        Class: segment_if
         """
         t1 = str(' '*self.base_level)
         #t2 = str(' '*(self.base_level+1))
@@ -691,12 +666,11 @@ class segment_if(x12_node):
 
 #    def get_elemval_by_id(self, seg_data, id):
 #        """
-#        Class: segment_if
-#        Name:  get_elemval_by_id  
-#        Desc:  Return the value of an element or sub-element identified by the id
-#        Params: seg_data - data segment instance to search
-#                id - string 
-#        Returns: value of the element
+#        Return the value of an element or sub-element identified by the id
+#        @param seg_data: data segment instance to search
+#        @param id: string 
+#        @return: value of the element
+#        @rtype: string
 #        """
 #        for child in self.children:
 #            if child.is_element():
@@ -716,23 +690,13 @@ class segment_if(x12_node):
     
     def get_parent(self):
         """
-        Class: segment_if
-        Name:    
-        Desc:    
-        Params:  
-                 
-        Returns: ref to parent class instance
+        @return: ref to parent class instance
+        @rtype: pyx12.x12_node
         """
         return self.parent
 
 #    def get_seg_count(self):
 #        """
-#        Class: segment_if
-#        Name:    
-#        Desc:    
-#        Params:  
-#                 
-#        Returns: 
 #        """
 #        pass
 
@@ -744,11 +708,9 @@ class segment_if(x12_node):
 
     def is_match(self, seg):
         """
-        Class: segment_if
-        Name: is_match
-        Desc: is segment given a match to this node?
-        Params:  seg - data segment instance
-        Returns: boolean
+        is segment given a match to this node?
+        @param seg: data segment instance
+        @return: boolean
         """
         if seg.get_seg_id() == self.id:
             if self.children[0].is_element() \
@@ -775,12 +737,9 @@ class segment_if(x12_node):
 
     def is_valid(self, seg_data, errh):
         """
-        Class:      segment_if
-        Name:       is_valid
-        Desc:    
-        Params:     seg_data - data segment instance
-                    errh - instance of error_handler
-        Returns:    boolean
+        @param seg_data: data segment instance
+        @param errh: instance of error_handler
+        @return:    boolean
         """
         valid = True
         child_count = self.get_child_count()
@@ -827,8 +786,7 @@ class segment_if(x12_node):
 
     def _split_syntax(self, syntax):
         """
-        Class:      segment_if
-        Desc:       Split a Syntax string into a list
+        Split a Syntax string into a list
         """
         if syntax[0] not in ['P', 'R', 'C', 'L', 'E']:
             #self.logger.error('Syntax %s is not valid' % (syntax))
@@ -844,15 +802,11 @@ class segment_if(x12_node):
 ############################################################
 # Element Interface
 ############################################################
-class element_if(x12_node):
+class element_if(xpyx12.x12_node12_node):
     def __init__(self, root, parent):
         """
-        Class: element_if
-        Name:    __init__
-        Desc:    
-        Params: parent - parent node 
-                 
-        Returns: 
+        @requires: Must be entered with a libxml2 element node current
+        @param parent: parent node 
         """
 
         #global reader
@@ -978,7 +932,6 @@ class element_if(x12_node):
 
     def __repr__(self):
         """
-        Class: element_if
         """
         out = '%s%s "%s"' % (str(' '*self.base_level), self.refdes, self.name)
         if self.data_ele: 
@@ -1012,20 +965,15 @@ class element_if(x12_node):
 
     def __error__(self, errh, err_str, err_cde, elem_val):
         """
-        Class:      element_if
-        Name:       __error__
-        Desc:       Forward the error to an error_handler
-        Params:  
+        Forward the error to an error_handler
         """
         errh.ele_error(err_cde, err_str, elem_val) #, pos=self.seq, data_ele=self.data_ele)
         
     def __valid_code__(self, code):
         """
-        Class:  element_if
-        Name:   __valid_code__
-        Desc:   Verify the x12 element value is in the given list of valid codes
-        Params:  
-        Returns: True if found, else False
+        Verify the x12 element value is in the given list of valid codes
+        @return: True if found, else False
+        @rtype: boolean
         """
         #if not self.valid_codes:
         #    return True
@@ -1035,38 +983,27 @@ class element_if(x12_node):
 
     def get_parent(self):
         """
-        Class: element_if
-        Name:    
-        Desc:    
-        Params:  
-                 
-        Returns: ref to parent class instance
+        @return: ref to parent class instance
         """
         return self.parent
 
     def is_match(self):
         """
-        Class: element_if
-        Name:    
-        Desc:    
-        Params:  
-                 
-        Returns: boolean
+        @return: 
+        @rtype: boolean
         """
         # match also by ID
         pass
 
     def is_valid(self, elem, errh, check_dte=None):
         """
-        Class:  element_if
-        Name:   is_valid 
-        Desc:    
-        Params:  
-            elem - element instance
-            errh - instance of error_handler
-            check_dte - date string to check against (YYYYMMDD)
-                 
-        Returns: boolean
+        Is this a valid element
+        @param elem: element instance
+        @type elem: pyx12.element
+        @param errh: instance of error_handler
+        @param check_dte: date string to check against (YYYYMMDD)
+        @return: True if valid
+        @rtype: boolean
         """
         errh.add_ele(self)
 
@@ -1164,12 +1101,6 @@ class element_if(x12_node):
 
     def get_seg_count(self):
         """
-        Class: element_if
-        Name:    
-        Desc:    
-        Params:  
-                 
-        Returns: 
         """
         pass
 
@@ -1183,10 +1114,8 @@ class element_if(x12_node):
 class composite_if(x12_node):
     def __init__(self, root, parent):
         """
-        Class: composite_if
-        Name:    __init__
-        Desc:    Get the values for this composite
-        Params:         parent - parent node 
+        Get the values for this composite
+        @param parent: parent node 
         """
 
         #global reader
@@ -1269,10 +1198,7 @@ class composite_if(x12_node):
                 
     def __error__(self, errh, err_str, err_cde, elem_val):
         """
-        Class:      composite_if
-        Name:       __error__
-        Desc:       Forward the error to an error_handler
-        Params:  
+        Forward the error to an error_handler
         """
         errh.ele_error(err_cde, err_str, elem_val)
             #, pos=self.seq, data_ele=self.data_ele)
@@ -1284,7 +1210,6 @@ class composite_if(x12_node):
 
     def __repr__(self):
         """
-        Class: composite_if
         """
         out = '%s%s "%s"' % (str(' '*self.base_level), \
             self.id, self.name)
@@ -1299,11 +1224,7 @@ class composite_if(x12_node):
 
     def xml(self):
         """
-        Class:      composite_if
-        Name:       xml
-        Desc:       Sends an xml representation of the composite to stdout
-        Params:  
-        Returns: 
+        Sends an xml representation of the composite to stdout
         """
         sys.stdout.write('<composite>\n')
         for sub_elem in self.children:
@@ -1312,12 +1233,11 @@ class composite_if(x12_node):
 
     def is_valid(self, comp_data, errh, check_dte=None):
         """
-        Class:      composite_if
-        Name:       validate
-        Desc:       Validates the composite
-        Params:     comp_data - data composite instance, has multiple values
-                    errh - instance of error_handler
-        Returns:    True on success
+        Validates the composite
+        @param comp_data: data composite instance, has multiple values
+        @param errh: instance of error_handler
+        @return:    boolean
+        @rtype: boolean
         """
         valid = True
         if (comp_data is None or comp_data.is_empty()) and self.usage in ('N', 'S'):
@@ -1359,11 +1279,6 @@ class composite_if(x12_node):
 
 #    def getnodebypath(self, path):
 #        """
-#        Class:  composite_if
-#        Name:    
-#        Desc:    
-#        Params:  
-#        Returns: 
 #        """
 #        pathl = path.split('/')
 #        if len(pathl) <=2: return None
@@ -1382,7 +1297,10 @@ class Pickle_Errors(Exception):
 
 def load_map_file(map_file, param):
     """
-    map_file - absolute path for file
+    Loads the map by pickle if available
+    @param map_file: absolute path for file
+    @type map_file: string
+    @rtype: pyx12.map_if
     """
     logger = logging.getLogger('pyx12.pickler')
     map_path = param.get('map_path')
@@ -1417,12 +1335,12 @@ def load_map_file(map_file, param):
 
 def is_syntax_valid(seg_data, syn):
     """
-    Name:       is_syntax_valid
-    Desc:       Verifies the syntax 
-    Params:     seg_data - data segment instance
-                syn - list containing the syntax type, 
-                    and the indices of elements
-    Returns: (boolean, error string)
+    Verifies the segment against the syntax
+    @param seg_data: data segment instance
+    @type seg_data: pyx12.segment
+    @param syn: list containing the syntax type, and the indices of elements
+    @type syn: list[string]
+    @rtype: tuple(boolean, error string)
     """
     # handle intra-segment dependancies
     if len(syn) < 3:
