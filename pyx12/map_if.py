@@ -724,10 +724,10 @@ class segment_if(x12_node):
             ret = '/' + self.path
         else:
             ret = parent_path + '/' + self.path
-        if self.children[0].is_element() \
-            and self.children[0].data_type == 'ID' \
-            and len(self.children[0].valid_codes) > 0:
-            ret += '[%s]' % (self.children[0].valid_codes[0])
+        #if self.children[0].is_element() \
+        #    and self.children[0].data_type == 'ID' \
+        #    and len(self.children[0].valid_codes) > 0:
+        #    ret += '[%s]' % (self.children[0].valid_codes[0])
         return ret
 
     def is_first_seg_in_loop(self):
