@@ -437,14 +437,14 @@ class loop_if(x12_node):
     def get_parent(self):
         return self.parent
 
-    def is_match(self):
-        pass
+#    def is_match(self):
+#        pass
 
-    def is_valid(self, seg, errh):
-        pass
+#    def is_valid(self, seg, errh):
+#        pass
 
-    def parse(self):
-        pass
+#    def parse(self):
+#        pass
 
     def get_seg_count(self):
         i = 0
@@ -631,16 +631,16 @@ class segment_if(x12_node):
         """
         return self.parent
 
-    def get_seg_count(self):
-        """
-        Class: segment_if
-        Name:    
-        Desc:    
-        Params:  
-                 
-        Returns: 
-        """
-        pass
+#    def get_seg_count(self):
+#        """
+#        Class: segment_if
+#        Name:    
+#        Desc:    
+#        Params:  
+#                 
+#        Returns: 
+#        """
+#        pass
 
     def is_first_seg_in_loop(self):
         if self is self.get_parent().children[0]:
@@ -739,17 +739,6 @@ class segment_if(x12_node):
             syn.append(int(syntax[i*2+1:i*2+3]))
         return syn
         
-    def parse(self):
-        """
-        Class: segment_if
-        Name:    
-        Desc:    
-        Params:  
-                 
-        Returns: list of elements??? 
-        """
-        pass
-
     def reset_cur_count(self):
         self.cur_count = 0
 

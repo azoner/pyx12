@@ -98,8 +98,6 @@ class x12file:
         self.ele_term = line[3]
         self.subele_term = line[-2]
 
-        self.lines = []
-        self.lines.append(line[:-1])
         self.buffer = line
         self.buffer += self.fd.read(DEFAULT_BUFSIZE)
         
