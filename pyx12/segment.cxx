@@ -204,21 +204,9 @@ bool composite::is_empty()
 
 
 class segment {
-private:
-    char seg_term, seg_term_orig;
-    char ele_term, ele_term_orig;
-    char subele_term, subele_term_orig;
-    string seg_id;
     vector<string> elements;
 
 public:
-    segment(const string& seg_str, const char seg_term, 
-        const char ele_term, const char subele_term);
-    string& operator[](size_type i) { return elements[i]; };
-    const string& operator[](size_type i) const { return elements[i]; };
-    string& get_item(size_type i) { return elements[i]; };
-    const string& get_item(size_type i) const { return elements[i]; };
-    void set_item(size_type i, string val) { elements[i] = val; };
     void append(string val);
     size_t length();
     string get_seg_id();
@@ -228,139 +216,78 @@ public:
     void set_subele_term(char subele_term);
     string format();
     vector<string> format_ele_list(vector<string> str_elems, char subele_term);
-    bool is_empty();
-
-    ostream& operator<<(ostream&, segment&);
 };
 
 
 
-segment::segment(const string& src_filename) //, errh)
+segment::segment(const string& seg_str, const char seg_term_,
+        const char ele_term_, const char subele_term_);
 {
-    //errh = errh
-    string line;
-    string err_str;
-    char c, str[256];
+    typedef string::const_iterator iter;
+    seg_term = seg_term_;
+    seg_term_orig = subele_term_;
+    ele_term = ele_term_;
+    ele_term_orig = ele_term_;
+    subele_term = subele_term_;
+    subele_term_orig = subele_term_;
+    seg_id = '';
+    if(seg_str.empty())
+        throw Errors::EngineError("seg_str should not be empty");
+    if(seg_str.substr(seg_str.length()-1) == seg_term)
+        seg_str.erase(seg_str.rbegin()) // strip trailing seg_term
+    vector<string> elems = split(seg_str);
+    seg_id = elems.front();
 
-    gs_count = 0;
-    st_count = 0;
-    hl_count = 0;
-    seg_count = 0;
-    cur_line = 0;
-    src_fs.open(src_filename.c_str());
-    src_fs.get(str, ISA_LEN);
-    line = str;
-    string::size_type idx = 0;
-    if(line.substr(0,3) != "ISA") {
-        err_str = "First line does not begin with 'ISA') " + line.substr(0,3);
-        cerr << err_str;
-        //raise x12Error, err_str
+    iter i = elems.begin();
+    while(i != elems.end()) {
+        if(seg_id=="ISA")
+            elements.push_back(composite((*i), ele_term));
+        else
+            elements.push_back(composite((*i), subele_term));
     }
-    if(line.size() != ISA_LEN) {
-        err_str = "ISA line is only ";
-        err_str += line.length();
-        err_str += " characters";
-        cerr << err_str;
-        //#errh.isa_error('ISA4', err_str)
-        //raise x12Error, err_str
-    }
-    seg_term = line.at(line.size()-1);
-    ele_term = line.at(3);
-    subele_term = line.at(line.size()-2);
-#ifdef DEBUG
-    cerr << "seg_term " << seg_term;
-    cerr << "ele_term" << ele_term;
-    cerr << "subele_term " << subele_term;
-    cerr << "\n"; 
-#endif
-   
-    //buffer = line
-    //buffer += fd.read(DEFAULT_BUFSIZE)
-    src_fs.seekg(0);
-}
-        
-vector<string> segment::next()
-{
-    vector<string> seg;
-    string line;
-    string err_str;
-    string group_control_number;
-    string::size_type pos;
-    //char line_tmp [MAX_LINE_LEN];
-    /*
-     * void get_chunk(istream& in, string& s, char terminator = '\t')
-     * {
-     *   s.erase(s.begin(), s.end());
-     *     s.reserve(20);
-     *       string::value_type ch;
-     *         while (in.get(ch) && ch != terminator)
-     *             s.insert(s.end(), ch);
-     *             }
-     *             
-     */
-    //src_fs.get_line(&line_tmp, MAX_LINE_LEN, seg_term);
-    //line += line_tmp;
-    getline(src_fs, line, seg_term);
-    while(true) {
-        // Get first segment in buffer
-        while(true) {
-            if(line[0] == ' ')
-                line.erase(0, 1);
-            else
-                break;
-        }
-        while(true) {
-            if(line[line.length()-1] == ' ')
-                line.erase(line.length()-1);
-            else
-                break;
-        }
-        while(pos = line.find('\n') != string::npos) 
-            line.erase(pos, pos+1);
-        while(pos = line.find('\r') != string::npos) 
-            line.erase(pos, pos+1);
-        if(line != "")
-            break;
-    }
-
-    if(line[line.size()-1] == ele_term)
-    {
-        err_str = "Segment contains trailing element terminators";
-        cerr << err_str << '\n';
-        //errh.seg_error('SEG1', err_str, src_line=cur_line+1 )
-    }
-    string::size_type epos;
-    pos = 0;
-    while(pos != line.length()) {
-        epos = line.find(ele_term);
-        seg.push_back(line.substr(pos, epos));
-        pos = epos + 1;
-    };
-    cur_line += 1;
-    return seg;
+    return ret;
 }
 
-list<string> segment::get_id()
+bool composite::not_delim(char c)
 {
-    isa_id = None
-    gs_id = None
-    st_id = None
-    ls_id = None
-    for loop in loops)
-        if(loop[0] == 'ISA') isa_id = loop[1]
-        if(loop[0] == 'GS') gs_id = loop[1]
-        if(loop[0] == 'ST') st_id = loop[1]
-        if(loop[0] == 'LS') ls_id = loop[1]
-    return (isa_id, gs_id, st_id, ls_id, seg_count, cur_line)
+    if(c != ele_term)
+        return true;
+    else
+        return false;
 }
 
-void segment::print_seg(seg)
-    sys.stdout.write('%s' % (seg_str(seg, seg_term, ele_term, subele_term, '\n')))
+bool composite::delim(char c)
+{
+    if(c == ele_term)
+        return true;
+    else
+        return false;
+}
 
-string segment::format_seg(seg))
-    return '%s' % (seg_str(seg, seg_term, ele_term, subele_term, '\n'))
+vector<string> segment::split(const string& seg_str)
+{
+    typedef string::const_iterator iter;
+    vector<string> ret;
 
-list<string> segment::get_term()
-    return (seg_term, ele_term, subele_term, '\n')
+    iter i = seg_str.begin();
+    while(i != seg_str.end()) {
+        i = find_if(i, str.end(), not_delim);
+        j = find_if(i, str.end(), delim);
+        if(i != str.end())
+            ret.push_back(string(i, j));
+        i = j;
+    }
+    return ret;
+}
 
+ostream& segment::operator<<(ostream& os, segment& seg)
+{
+    for(vector<string> size_type i = 0; i != seg.size(), ++i)
+        os << i->value; // XXXXXXXXXXXX
+    return os;
+}
 
+bool composite::is_empty()
+{
+    return elements.empty();
+}
