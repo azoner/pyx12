@@ -71,27 +71,35 @@ class x12n_document:
     #dom_codes = xml.dom.minidom.parse('map/codes.xml')
     def __init__(self):
 	global subele_term
+
+	# Get X12 DATA file
    	src = x12file.x12file(sys.stdin) 
 	subele_term = src.subele_term
 	#self.subele_term = ''
+	self.gs_loops = []
 
 	# get ISA segment map
 #	seg = string.split(line[:-1], self.ele_term)
 	#print seg
 
+	#Get Map of Control Segments
 	control = map_if.map_if('map/map.x12.control.00401.xml')
 	
+	#Determine which map to use for this transaction
 	for seg in src:
 	    if seg[0] == 'ISA':
-	    	#	node = map.getnodebypath('/ISA')
 		isa_seg = segment(control.getnodebypath('/ISA'), seg)
 		isa_seg.validate()
 		self.icvn = isa_seg.GetElementValue('ISA12')
 	    elif seg[0] == 'IEA':
 	    	iea_seg = segment_if(control.getnodebypath('/IEA'), seg)
 	    	iea_seg.validate()
+	    elif seg[0] == 'GS':
+		self.gs_loops.append(GS_loop(self, src, control))   	
 	    else:
 	    	pass
+	
+	#Parse Data file
 
     def xml(self):
 	# Start XML output
@@ -103,41 +111,30 @@ class x12n_document:
 
     
 class GS_loop:
-    def __init__(self, isa, gs):
-	dom_gs = xml.dom.minidom.parse('map/map.x12.control.00401.xml')
-	seg_nodes = dom_gs.getElementsByTagName("segment")
-	for seg_node in seg_nodes:
-	    if GetChildElementText(seg_node, 'id') == 'GS':
-	    	gs_seg_node = seg_node
-	    if GetChildElementText(seg_node, 'id') == 'GE':
-	    	ge_seg_node = seg_node
-	gs_seg = segment(gs_seg_node, gs[0])
-	gs_seg.validate()
-	gs_seg.xml()
-	self.fic = gs_seg.GetElementValue('GS01')
-	self.vriic = gs_seg.GetElementValue('GS08')
+    def __init__(self, parent, control):
 
-	if gs[-1:][0][0] == 'GE':
-	    ge_seg = segment(ge_seg_node, gs[-1:][0])
-	    ge_seg.validate()
-	else:
-	    raise errors.WEDI1Error, 'Last segment should be GE, is "%s"' % (gs[-1:][0][0])
+    	self.st_loops = []
 
-	#Get map for this GS loop
-	map_index = map_index.map_index('map/maps.xml')
-	self.map_file = map_index.get_filename(isa.icvn, self.vriic, self.fic)
+	for seg in src:
+	    if seg[0] == 'ISA':
+		gs_seg = segment(control.getnodebypath('/GS'), seg)
+		gs_seg.validate()
+		self.fic= gs_seg.GetElementValue('GS01')
+		self.vriic = gs_seg.GetElementValue('GS08')
+
+		#Get map for this GS loop
+		map_index = map_index.map_index('map/maps.xml')
+		self.map_file = map_index.get_filename(parent.icvn, self.vriic, self.fic)
+		print self.map_file
+	    elif seg[0] == 'GE':
+	    	ge_seg = segment_if(control.getnodebypath('/GE'), seg)
+	    	ge_seg.validate()
+	    elif seg[0] == 'ST':
+		self.st_loops.append(GS_loop(self, src, control))   	
+	    else:
+	    	pass
+
 	
-	# Get map for this GS loop
-	#print "--load whole dom"
-	self.dom_map = xml.dom.minidom.parse('map/' + self.map_file)
-	#print "--end load whole dom"
-
-	# Loop through ST segments
-	for loop in GetExplicitLoops(gs[1:-1], 'ST', 'SE', 2, 2):
-	    st = ST_loop(self, isa, loop)
-	
-	ge_seg.xml()
-	dom_gs.unlink()
 
     def getMapFile(self):
     	return self.map_file
@@ -238,6 +235,8 @@ class segment:
 		 seg - the parsed segment line as a list
         Returns: 
         """
+
+	self.node = node
     	#self.id = GetChildElementText(node, 'id')
     	#self.name = GetChildElementText(node, 'name')
     	#self.end_tag = GetChildElementText(node, 'end_tag')
@@ -290,6 +289,7 @@ class segment:
     	for elem in self.element_list:
 	    elem.validate()
 	    
+    
     def GetElementValue(self, refdes):
         """
         Name:    GetElementValue
@@ -313,6 +313,7 @@ class element:
         Returns: 
         """
 
+	self.node = node
         self.x12_elem = x12_elem
 	
     def __del__(self):
@@ -326,7 +327,7 @@ class element:
         Returns: 
         """
 	sys.stdout.write('<element code="%s">%s</element>\n' % (self.refdes, self.x12_elem))
-    
+	
     def validate(self):
         """
         Name:    xml
@@ -335,8 +336,9 @@ class element:
         Returns: 
         """
 
-	return node.is_valid(self.x12_elem)
+	return self.node.is_valid(self.x12_elem)
 
+   
 
 class composite:
     def __init__(self, node, x12_elem):
