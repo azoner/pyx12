@@ -140,6 +140,7 @@ class IEA_Checks(unittest.TestCase):
         src = pyx12.x12file.x12file(fd.name, self.errh)
         for seg in src:
             pass
+        src.cleanup()
         self.assertEqual(self.errh.err_cde, '023', self.errh.err_str)
 
     def tearDown(self):
