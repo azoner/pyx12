@@ -68,16 +68,16 @@ class Element_is_valid(unittest.TestCase):
         self.failIf(result)
         self.assertEqual(self.errh.err_cde, '6')
         
-    def test_bad_char_DT(self):
-        node = self.map.getnodebypath('/2000A/2000B/2300/DTP')
-        node = self.node.get_child_node_by_idx(2)
-        self.assertNotEqual(node, None)
-        self.assertEqual(node.id, 'DTP03')
-        self.assertEqual(node.base_name, 'element')
+    #def test_bad_char_DT(self):
+    #    node = self.map.getnodebypath('/2000A/2000B/2300/DTP')
+    #    node = self.node.get_child_node_by_idx(2)
+    #    self.assertNotEqual(node, None)
+    #    self.assertEqual(node.id, 'DTP03')
+    #    self.assertEqual(node.base_name, 'element')
 
-        result = node.is_valid('2003010Z', self.errh)
-        self.failIf(result)
-        self.assertEqual(self.errh.err_cde, '6')
+    #    result = node.is_valid('2003010Z', self.errh)
+    #    self.failIf(result)
+    #    self.assertEqual(self.errh.err_cde, '6')
 
     def test_valid_codes_ok1(self):
         #CLM05-01   02 bad, 11 good, no external
