@@ -97,6 +97,6 @@ class x12xml_simple(x12xml):
 
 def is_not_blank(x):
     """
-    @rtype boolean
+    @rtype: boolean
     """
     return x != ''

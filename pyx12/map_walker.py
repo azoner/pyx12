@@ -43,42 +43,28 @@ class walk_tree:
 
     def walk(self, node, seg_data, errh, seg_count, cur_line, ls_id):
         """
+        Walk the node tree from the starting node to the node matching
+        seg_data. Catch any counting or requirement errors along the way.
+        
         Handle required segment/loop missed (not found in seg)
         Handle found segment = Not used
+        
+        @param node: Starting node
+        @type node: L{node<map_if.x12_node>}
+        @param seg_data: Segment object
+        @type seg_data: L{segment<segment.segment>}
+        @param seg_count: Count of current segment in the ST Loop
+        @type seg_count: int
+        @param cur_line: Current line number in the file
+        @type cur_line: int
+        @param ls_id: The current LS loop identifier
+        @type ls_id: string
+        @return: The matching x12_node
+        @rtype: L{node<map_if.x12_node>}
         """
 
-        #logger.info('%s seg_count=%i / cur_line=%i' % (node.id, seg_count, cur_line))
-        if not seg_data.get_seg_id():
-            err_str = 'Segment identifier is blank'
-            errh.seg_error('1', err_str)
-            return None
-
-        if not self.is_seg_id_valid(seg_data.get_seg_id()):
-            err_str = 'Segment identifier %s is invalid' % (seg_data.get_seg_id())
-            errh.seg_error('1', err_str)
-            return None
-
         orig_node = node
-
-        # Special Handlers for ISA, GS, ST
-#        while not node.is_map_root():
-#            node = pop_to_parent_loop(node) # Get root node
-#        if orig_node.id == 'SE' and seg_data.get_seg_id() == 'ST':
-#            return node.getnodebypath('/ST')
-#        if orig_node.id == 'GE' and seg_data.get_seg_id() == 'GS':
-#            return node.getnodebypath('/GS')
-#        if orig_node.id == 'IEA' and seg_data.get_seg_id() == 'ISA':
-#            return node.getnodebypath('/ISA')
-
-#        if orig_node.id in ['ST']: #, 'GS', 'ISA']:
-#            orig_node.cur_count = 1
-            # UGLY HACK.  Reset counts of sibling nodes to zero
-#            node_idx = orig_node.index
-#            for child in pop_to_parent_loop(orig_node).children:
-#                if child.is_segment() and child.index > node_idx:
-#                    child.cur_count = 0
-#        node = orig_node
-
+        #logger.info('%s seg_count=%i / cur_line=%i' % (node.id, seg_count, cur_line))
         self.mandatory_segs_missing = []
         #node_idx = node.index # Get original index of starting node
         node_pos = node.pos # Get original position ordinal of starting node
@@ -145,9 +131,17 @@ class walk_tree:
 #    def _is_loop_repeat(self, node, seg_data):
 #        if not (node.is_loop() or node.is_map_root()): 
 #            node = pop_to_parent_loop(node) # Get enclosing loop
-#        return self.is_first_seg_match(node, seg_data):
+#        return self._is_first_seg_match(node, seg_data):
 
     def _seg_not_found(self, orig_node, seg_data, errh):
+        """
+        @param orig_node: Original starting node
+        @type orig_node: L{node<map_if.x12_node>}
+        @param seg_data: Segment object
+        @type seg_data: L{segment<segment.segment>}
+        @param errh: Error handler
+        @type errh: L{error_handler.err_handler}
+        """
         if seg_data.get_seg_id() == 'HL':
             seg_str = seg_data.format('', '*', ':')
         else:
@@ -157,40 +151,27 @@ class walk_tree:
         #raise EngineError, "Could not find segment %s*%s.  Started at %s" % \
         #    (seg.get_seg_id(), seg[1], orig_node.get_path())
 
-    def is_seg_id_valid(self, seg_id):
-        if len(seg_id) < 2 or len(seg_id) > 3:
-            return False
-        else:
-            return True
-
-    def is_first_seg_match(self, node, seg_data):
-        """
-        Find the first segment in loop, verify it matches segment
-        @rtype: boolean
-        """
-        if not node.is_loop(): raise EngineError, \
-            "Call to first_seg_match failed, node is not a loop"
-        child = node.get_child_node_by_idx(0)
-        if child.is_segment():
-            if child.is_match(seg_data):
-                return True
-            else:
-                return False # seg does not match the first segment in loop, so not valid
-        return False
-
-    def is_first_seg_match2(self, child, seg_data):
-        """
-        Find the first segment in loop, verify it matches segment
-        Return: boolean
-        """
-        if child.is_segment():
-            if child.is_match(seg_data):
-                return True
-            else:
-                return False # seg does not match the first segment in loop, so not valid
-        return False
+#    def _is_first_seg_match(self, node, seg_data):
+#        """
+#        Find the first segment in loop, verify it matches segment
+#        @rtype: boolean
+#        """
+#        if not node.is_loop(): raise EngineError, \
+#            "Call to first_seg_match failed, node is not a loop"
+#        child = node.get_child_node_by_idx(0)
+#        if child.is_segment():
+#            if child.is_match(seg_data):
+#                return True
+#            else:
+#                return False # seg does not match the first segment in loop, so not valid
+#        return False
 
     def _flush_mandatory_segs(self, errh):
+        """
+        Handle error reporting for any outstanding missing mandatory segments
+        @param errh: Error handler
+        @type errh: L{error_handler.err_handler}
+        """
         for (seg_id, err_cde, err_str) in self.mandatory_segs_missing:
             errh.seg_error(err_cde, err_str, None)
         self.mandatory_segs_missing = []
@@ -200,12 +181,21 @@ class walk_tree:
         Try to match the current loop to the segment
         Handle loop and segment counting.
         Check for used/missing
+        @param loop_node: Loop Node
+        @type loop_node: L{node<map_if.x12_node>}
+        @param seg_data: Segment object
+        @type seg_data: L{segment<segment.segment>}
+        @param errh: Error handler
+        @type errh: L{error_handler.err_handler}
+
+        @return: Does the segment match the first segment node in the loop?
+        @rtype: boolean
         """
         if not loop_node.is_loop(): raise EngineError, \
             "Call to first_seg_match failed, node %s is not a loop. seg %s" \
             % (loop_node.id, seg_data.get_seg_id())
         first_child_node = loop_node.get_child_node_by_idx(0)
-        if self.is_first_seg_match2(first_child_node, seg_data): 
+        if is_first_seg_match2(first_child_node, seg_data): 
             #node = loop_node.children[0]
             if loop_node.usage == 'N':
                 err_str = "Loop %s found but marked as not used" % (loop_node.id)
@@ -232,6 +222,12 @@ class walk_tree:
 
 
 def pop_to_parent_loop(node):
+    """
+    @param node: Loop Node
+    @type node: L{node<map_if.x12_node>}
+    @return: First ancestor loop node
+    @rtype: L{node<map_if.x12_node>}
+    """
     if node.is_map_root():
         return node
     map_node = node.parent
@@ -242,4 +238,22 @@ def pop_to_parent_loop(node):
     if not (map_node.is_loop() or map_node.is_map_root()):
         raise EngineError, "Called pop_to_parent_loop, can't find parent loop"
     return map_node
+
+def is_first_seg_match2(child, seg_data):
+    """
+    Find the first segment in loop, verify it matches segment
+
+    @param child: child node
+    @type child: L{node<map_if.x12_node>}
+    @param seg_data: Segment object
+    @type seg_data: L{segment<segment.segment>}
+    @rtype: boolean
+    """
+    if child.is_segment():
+        if child.is_match(seg_data):
+            return True
+        else:
+            return False # seg does not match the first segment in loop, so not valid
+    return False
+
 
