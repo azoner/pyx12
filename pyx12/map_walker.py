@@ -178,6 +178,11 @@ class walk_tree:
             errh.seg_error(err_cde, err_str, None)
         self.mandatory_segs_missing = []
 
+    #def _is_loop_match(self, loop_node, seg_data, errh, seg_count, cur_line, ls_id):
+    #    if not loop_node.is_loop(): raise EngineError, \
+    #        "Call to first_seg_match failed, node %s is not a loop. seg %s" \
+    #        % (loop_node.id, seg_data.get_seg_id())
+
     def _is_loop_match(self, loop_node, seg_data, errh, seg_count, cur_line, ls_id):
         """
         Try to match the current loop to the segment
@@ -200,7 +205,10 @@ class walk_tree:
             "Call to first_seg_match failed, node %s is not a loop. seg %s" \
             % (loop_node.id, seg_data.get_seg_id())
         first_child_node = loop_node.get_child_node_by_idx(0)
-        if is_first_seg_match2(first_child_node, seg_data): 
+        if first_child_node.is_loop():
+            return self._is_loop_match(first_child_node, seg_data, errh, \
+                seg_count, cur_line, ls_id)
+        elif is_first_seg_match2(first_child_node, seg_data): 
             #node = loop_node.children[0]
             if loop_node.usage == 'N':
                 err_str = "Loop %s found but marked as not used" % (loop_node.id)

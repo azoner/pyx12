@@ -229,57 +229,83 @@ class Test_getnodebypath(unittest.TestCase):
         self.map = pyx12.map_if.load_map_file('837.4010.X098.A1.xml', param)
 
     def test_get_ISA(self):
-        node = self.map.getnodebypath('/ISA/ISA')
+        path = '/ISA/ISA'
+        node = self.map.getnodebypath(path)
         self.assertEqual(node.id, 'ISA')
+        self.assertEqual(node.get_path(), path)
         self.assertEqual(node.base_name, 'segment')
 
     def test_get_GS(self):
-        node = self.map.getnodebypath('/ISA/GS/GS')
+        path = '/ISA/GS/GS'
+        node = self.map.getnodebypath(path)
         self.assertEqual(node.id, 'GS')
+        self.assertEqual(node.get_path(), path)
         self.assertEqual(node.base_name, 'segment')
 
     def test_get_ST(self):
-        node = self.map.getnodebypath('/ISA/GS/ST/HEADER/ST')
+        path = '/ISA/GS/ST/ST'
+        node = self.map.getnodebypath(path)
         self.assertEqual(node.id, 'ST')
+        self.assertEqual(node.get_path(), path)
         self.assertEqual(node.base_name, 'segment')
 
     def test_get_1000A(self):
-        node = self.map.getnodebypath('/ISA/GS/ST/HEADER/1000A')
+        path = '/ISA/GS/ST/HEADER/1000A'
+        node = self.map.getnodebypath(path)
         self.assertEqual(node.id, '1000A')
+        self.assertEqual(node.get_path(), path)
         self.assertEqual(node.base_name, 'loop')
 
     def test_get_2000A(self):
-        node = self.map.getnodebypath('/ISA/GS/ST/DETAIL/2000A')
+        path = '/ISA/GS/ST/DETAIL/2000A'
+        node = self.map.getnodebypath(path)
         self.assertEqual(node.id, '2000A')
+        self.assertEqual(node.get_path(), path)
         self.assertEqual(node.base_name, 'loop')
 
     def test_get_2000B(self):
         #pdb.set_trace()
-        node = self.map.getnodebypath('/ISA/GS/ST/DETAIL/2000A/2000B')
+        path = '/ISA/GS/ST/DETAIL/2000A/2000B'
+        node = self.map.getnodebypath(path)
         self.assertNotEqual(node, None)
         self.assertEqual(node.id, '2000B')
+        self.assertEqual(node.get_path(), path)
         self.assertEqual(node.base_name, 'loop')
 
     def test_get_2300(self):
-        node = self.map.getnodebypath('/ISA/GS/ST/DETAIL/2000A/2000B/2300')
+        path = '/ISA/GS/ST/DETAIL/2000A/2000B/2300'
+        node = self.map.getnodebypath(path)
         self.assertNotEqual(node, None)
         self.assertEqual(node.id, '2300')
+        self.assertEqual(node.get_path(), path)
         self.assertEqual(node.base_name, 'loop')
 
     def test_get_2300_CLM(self):
-        node = self.map.getnodebypath('/ISA/GS/ST/DETAIL/2000A/2000B/2300/CLM')
+        path = '/ISA/GS/ST/DETAIL/2000A/2000B/2300/CLM'
+        node = self.map.getnodebypath(path)
         self.assertNotEqual(node, None)
         self.assertEqual(node.id, 'CLM')
+        self.assertEqual(node.get_path(), path)
+        self.assertEqual(node.base_name, 'segment')
+
+    def test_get_by_id(self):
+        path = '/ISA/GS/ST/DETAIL/2000A/2000B/2300/DTP[435]'
+        node = self.map.getnodebypath(path)
+        self.assertNotEqual(node, None)
+        self.assertEqual(node.id, 'DTP')
+        self.assertEqual(node.get_path(), path)
         self.assertEqual(node.base_name, 'segment')
 
     def test_get_TST(self):
+        path = '/TST'
         param = params()
         param.set('map_path', os.path.expanduser('~/src/pyx12/map/'))
         param.set('pickle_path', os.path.expanduser('~/src/pyx12/map/'))
         map = pyx12.map_if.load_map_file('comp_test.xml', param)
-        node = map.getnodebypath('/TST')
+        node = map.getnodebypath(path)
         self.assertNotEqual(node, None)
         self.assertEqual(node.id, 'TST')
+        self.assertEqual(node.get_path(), path)
 
     def tearDown(self):
         del self.map
