@@ -96,28 +96,13 @@ class x12n_document:
 	# IEA Segment	
 	#for line in lines:
 	#    print line
-	if lines[-1:][0][0] == 'IEA':
-	    iea_seg = segment(iea_seg_node, lines[-1:][0])
+	if lines[-1][0] == 'IEA':
+	    iea_seg = segment(iea_seg_node, lines[-1])
 	    iea_seg.validate()
 	else:
-	    raise errors.WEDI1Error, 'Last segment should be IEA, is "%s"' % (lines[-1:][0][0])
-	
-	idx = 0
-	gs_idx = 0
-	gs_loops = []
-	while idx < len(lines)-1:
-	    if lines[idx][0] == 'GS': 
-	    	if gs_idx != 0:
-		    raise errors.WEDI1Error, 'Encountered a GS segment before a required GE segment'
-		else:
-	    	    gs_idx = idx
-	    if lines[idx][0] == 'GE':
-	        gs_loops.append(lines[gs_idx:idx+1])
-		gs_idx = 0
-	    idx = idx + 1
+	    raise errors.WEDI1Error, 'Last segment should be IEA, is "%s"' % (lines[-1][0])
 
-	for loop in gs_loops:
-	    #print loop
+	for loop in GetLoops(lines[:-1], 'GS', 'GE'):
 	    gs = GS_loop(self, loop)
 
 	iea_seg.xml()
@@ -275,10 +260,18 @@ class element:
 	sys.stdout.write('<elem code="%s">%s</elem>\n' % (self.refdes, self.x12_elem))
     
     def validate(self):
-	if len(self.x12_elem) < int(self.min_len):
-	    raise errors.WEDI1Error, 'too short %s len=%i' % (self.x12_elem, int(self.min_len))
-	if len(self.x12_elem) > int(self.max_len):
-	    raise errors.WEDI1Error, 'too long: %s len=%i' % (self.x12_elem, int(self.max_len))
+    	if (not self.data_type is None) and (self.data_type == 'R' or self.data_type[0] == 'N'):
+	    elem = string.replace(string.replace(self.x12_elem, '-', ''), '.', '')
+	    if len(elem) < int(self.min_len):
+	    	raise errors.WEDI1Error, 'too short %s len=%i' % (elem, int(self.min_len))
+	    if len(elem) > int(self.max_len):
+	    	raise errors.WEDI1Error, 'too long: %s len=%i' % (elem, int(self.max_len))
+	else:
+	    if len(self.x12_elem) < int(self.min_len):
+	    	raise errors.WEDI1Error, 'too short %s len=%i' % (self.x12_elem, int(self.min_len))
+	    if len(self.x12_elem) > int(self.max_len):
+	    	raise errors.WEDI1Error, 'too long: %s len=%i' % (self.x12_elem, int(self.max_len))
+
 	if self.x12_elem == None and self.usage == 'R':
 	    raise errors.WEDI3Error
 	if not (self.__valid_code__() or codes.IsValid(self.external_codes, self.x12_elem) ):
