@@ -155,7 +155,7 @@ class segment:
         """
         if idx == 0:
             raise IndexError, 'list index out of range'
-        return self.elements[idx-1]
+        return self.elements[idx-1].__repr__()
 
     def __len__(self):
         return len(self.elements)

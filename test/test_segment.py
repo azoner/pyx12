@@ -4,21 +4,27 @@ import unittest
 
 import pyx12.segment
 
-class Identity(unittest.TestCase):
+class ArbitraryDelimiters(unittest.TestCase):
 
-    #def setUp(self):
+    def setUp(self):
+        self.seg_str = 'TST&AA!1!1&BB!5&ZZ'
+        self.seg = pyx12.segment.segment(self.seg_str, '+', '&', '!')
 
     def test_identity(self):
-        seg_str = 'TST&AA!1!1&BB!5&ZZ'
-        seg = pyx12.segment.segment(seg_str, '+', '&', '!')
-        self.assertEqual(seg_str+'+\n', seg.__repr__())
-        self.assertEqual(seg.get_seg_id(), 'TST')
-        self.assertEqual(len(seg), 3)
-        self.assertEqual(seg[3], 'ZZ')
+        self.assertEqual(self.seg_str+'+\n', self.seg.__repr__())
+
+    def test_get_seg_id(self):
+        self.assertEqual(self.seg.get_seg_id(), 'TST')
+
+    def test_len(self):
+        self.assertEqual(len(self.seg), 3)
+
+    def test_getitem(self):
+        self.assertEqual(self.seg[3], 'ZZ')
                     
 def suite():
     suite = unittest.TestSuite()
-    suite.addTest(unittest.makeSuite(Identity))
+    suite.addTest(unittest.makeSuite(ArbitraryDelimiters))
     return suite
 
 #if __name__ == "__main__":
