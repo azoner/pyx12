@@ -71,7 +71,6 @@ def main():
         opts, args = getopt.getopt(sys.argv[1:], '9c:fl:m:p:qvx:H')
     except getopt.error, msg:
         usage()
-        raise
         sys.exit(2)
     logger = logging.getLogger('pyx12')
     logger.setLevel(logging.INFO)
@@ -111,7 +110,10 @@ def main():
         try:
             fd_src = open(src_filename, 'U')
             if flag_997:
-                target_997 = os.path.splitext(src_filename)[0] + '.997'
+                if os.path.splitext(src_filename)[1] == '.997':
+                    target_997 = src_filename + '.997'
+                else:
+                    target_997 = os.path.splitext(src_filename)[0] + '.997'
                 fd_997 = open(target_997, 'w')
             if flag_html:
                 target_html = os.path.splitext(src_filename)[0] + '.html'
