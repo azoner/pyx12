@@ -273,8 +273,8 @@ class CompositeRequirement(unittest.TestCase):
         self.assertNotEqual(node, None)
         #self.assertEqual(node.id, 'CLM05', node.id)
         self.assertEqual(node.base_name, 'composite')
-        seg = pyx12.segment.segment('03**1~', '~', '*', ':')
-        result = node.is_valid(seg, self.errh)
+        comp = pyx12.segment.composite('03::1', ':')
+        result = node.is_valid(comp, self.errh)
         self.failUnless(result)
         self.assertEqual(self.errh.err_cde, None)
 
@@ -287,8 +287,8 @@ class CompositeRequirement(unittest.TestCase):
         node = node.get_child_node_by_idx(0)
         self.assertNotEqual(node, None)
         self.assertEqual(node.base_name, 'composite')
-        seg = pyx12.segment.segment('**1~', '~', '*', ':')
-        result = node.is_valid(seg, self.errh)
+        comp = pyx12.segment.composite('::1', ':')
+        result = node.is_valid(comp, self.errh)
         self.failUnless(result)
         self.assertEqual(self.errh.err_cde, None)
 
@@ -297,8 +297,8 @@ class CompositeRequirement(unittest.TestCase):
         node = node.get_child_node_by_idx(4)
         self.assertNotEqual(node, None)
         self.assertEqual(node.base_name, 'composite')
-        seg = pyx12.segment.segment('', '~', '*', ':')
-        result = node.is_valid(seg, self.errh)
+        comp = pyx12.segment.composite('', ':')
+        result = node.is_valid(comp, self.errh)
         self.failIf(result)
         self.assertEqual(self.errh.err_cde, '2')
 

@@ -77,6 +77,17 @@ class element:
     def set_value(self, elem_str):
         self.value = elem_str
 
+    def is_composite(self):
+        return False
+ 
+    def is_element(self):
+        return True
+
+    def is_empty(self):
+        if self.value and self.value.strip() != '':
+            return False
+        else:
+            return True
 
 class composite:
     """Class element
@@ -154,6 +165,13 @@ class composite:
             return True
         else:
             return False
+
+    def is_empty(self):
+        for ele in self.elements:
+            if not ele.is_empty():
+                return False
+        return True
+
 
 class segment:
     """Class segment
@@ -252,3 +270,9 @@ class segment:
     def format_ele_list(self, str_elems, subele_term=':'):
         for ele in self.elements:
             str_elems.append(ele.format(subele_term))
+
+    def is_empty(self):
+        for ele in self.elements:
+            if not ele.is_empty():
+                return False
+        return True

@@ -125,6 +125,54 @@ class RefDes(unittest.TestCase):
     def test_composite2(self):
         self.assertEqual(self.seg.get_value_by_ref_des('TST04-1'), 'BB')
 
+
+class IsEmpty(unittest.TestCase):
+
+    def setUp(self):
+        seg_str = 'TST*AA*1*Y*BB:5*ZZ'
+        self.seg = pyx12.segment.segment(seg_str, '~', '*', ':')
+
+    def test_empty_seg(self):
+        seg_str = 'AAA'
+        seg = pyx12.segment.segment(seg_str, '~', '*', ':')
+        self.failUnless(seg.is_empty())
+
+    def test_empty_seg_bad1(self):
+        seg_str = 'AAA*1~'
+        seg = pyx12.segment.segment(seg_str, '~', '*', ':')
+        self.failIf(seg.is_empty())
+
+    def test_empty_seg_bad2(self):
+        seg_str = 'AAA*:1~'
+        seg = pyx12.segment.segment(seg_str, '~', '*', ':')
+        self.failIf(seg.is_empty())
+
+    def test_empty_comp1(self):
+        comp_str = ''
+        comp = pyx12.segment.composite(comp_str, ':')
+        self.failUnless(comp.is_empty())
+
+    def test_empty_comp2(self):
+        comp_str = '::'
+        comp = pyx12.segment.composite(comp_str, ':')
+        self.failUnless(comp.is_empty())
+
+    def test_empty_comp_bad1(self):
+        comp_str = '1::a'
+        comp = pyx12.segment.composite(comp_str, ':')
+        self.failIf(comp.is_empty())
+
+    def test_empty_comp_bad2(self):
+        comp_str = '::a'
+        comp = pyx12.segment.composite(comp_str, ':')
+        self.failIf(comp.is_empty())
+
+    def test_empty_comp_bad3(self):
+        comp_str = 'a'
+        comp = pyx12.segment.composite(comp_str, ':')
+        self.failIf(comp.is_empty())
+
+
 class Indexing(unittest.TestCase):
 
     def setUp(self):
@@ -153,6 +201,7 @@ def suite():
     suite.addTest(unittest.makeSuite(Simple))
     suite.addTest(unittest.makeSuite(RefDes))
     suite.addTest(unittest.makeSuite(Indexing))
+    suite.addTest(unittest.makeSuite(IsEmpty))
     return suite
 
 #if __name__ == "__main__":

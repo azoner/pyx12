@@ -498,7 +498,7 @@ class loop_if(x12_node):
 #    def is_match(self):
 #        pass
 
-#    def is_valid(self, seg, errh):
+#    def is_valid(self, seg_data, errh):
 #        pass
 
 #    def parse(self):
@@ -659,25 +659,25 @@ class segment_if(x12_node):
         out += '\n'
         return out
 
-    def get_elemval_by_id(self, seg, id):
-        """
-        Class: segment_if
-        Name:  get_elemval_by_id  
-        Desc:  Return the value of an element or sub-element identified by the id
-        Params: seg - segment object to search
-                id - string 
-        Returns: value of the element
-        """
-        for child in self.children:
-            if child.is_element():
-                if child.id == id:
-                    return seg[child.seq].get_value()
-            elif child.is_composite():
-                for child in self.children:
-                    if child.is_element():
-                        if child.id == id:
-                            return seg[child.seq]
-        return None
+#    def get_elemval_by_id(self, seg_data, id):
+#        """
+#        Class: segment_if
+#        Name:  get_elemval_by_id  
+#        Desc:  Return the value of an element or sub-element identified by the id
+#        Params: seg_data - data segment instance to search
+#                id - string 
+#        Returns: value of the element
+#        """
+#        for child in self.children:
+#            if child.is_element():
+#                if child.id == id:
+#                    return seg_data[child.seq].get_value()
+#            elif child.is_composite():
+#                for child in self.children:
+#                    if child.is_element():
+#                        if child.id == id:
+#                            return seg_data[child.seq]
+#        return None
 
     def get_max_repeat(self):
         if self.max_use is None or self.max_use == '>1':
@@ -717,25 +717,25 @@ class segment_if(x12_node):
         Class: segment_if
         Name: is_match
         Desc: is segment given a match to this node?
-        Params:  seg - list of element values
+        Params:  seg - data segment instance
         Returns: boolean
         """
         if seg.get_seg_id() == self.id:
             if self.children[0].is_element() \
                 and self.children[0].data_type == 'ID' \
                 and len(self.children[0].valid_codes) > 0 \
-                and seg[1] not in self.children[0].valid_codes:
+                and seg[0].get_value() not in self.children[0].valid_codes:
                 #logger.debug('is_match: %s %s' % (seg.get_seg_id(), seg[1]), self.children[0].valid_codes)
                 #pdb.set_trace()
                 return False
             elif self.children[0].is_composite() \
                 and self.children[0].children[0].data_type == 'ID' \
                 and len(self.children[0].children[0].valid_codes) > 0 \
-                and seg[1][0] not in self.children[0].children[0].valid_codes:
+                and seg[0][0].get_value() not in self.children[0].children[0].valid_codes:
                 return False
             elif seg.get_seg_id() == 'HL' and self.children[2].is_element() \
                 and len(self.children[2].valid_codes) > 0 \
-                and seg[3] not in self.children[2].valid_codes:
+                and seg[2].get_value() not in self.children[2].valid_codes:
                 return False
             return True
         else:
@@ -743,49 +743,49 @@ class segment_if(x12_node):
 
     def is_segment(self): return True
 
-    def is_valid(self, seg, errh):
+    def is_valid(self, seg_data, errh):
         """
         Class:      segment_if
         Name:       is_valid
         Desc:    
-        Params:     seg - data segment instance
+        Params:     seg_data - data segment instance
                     errh - instance of error_handler
         Returns:    boolean
         """
         valid = True
         child_count = self.get_child_count()
-        if len(seg) > child_count:
+        if len(seg_data) > child_count:
             child_node = self.get_child_node_by_idx(child_count+1)
             err_str = 'Too many elements in segment %s. Has %i, should have %i' % \
-                (seg.get_seg_id(), len(seg), child_count)
+                (seg_data.get_seg_id(), len(seg_data), child_count)
             #self.logger.error(err_str)
-            err_value = seg[child_count+1].__repr__()
+            err_value = seg_data[child_count+1].format()
             errh.seg_error('3', err_str, err_value)
             valid = False
 
-        for i in xrange(len(seg)):
-            #self.logger.debug('i=%i, len(seg)=%i / child_count=%i' % \
-            #   (i, len(seg), self.get_child_count()))
+        for i in xrange(len(seg_data)):
+            #self.logger.debug('i=%i, len(seg_data)=%i / child_count=%i' % \
+            #   (i, len(seg_data), self.get_child_count()))
             child_node = self.get_child_node_by_idx(i)
             if child_node.is_composite():
                 # Validate composite
-                comp = seg[i]
+                comp_data = seg_data[i]
                 subele_count = child_node.get_child_count()
-                if len(comp) > subele_count:
+                if len(comp_data) > subele_count:
                     subele_node = child_node.get_child_node_by_idx(subele_count+1)
                     err_str = 'Too many sub-elements in composite %s' % (subele_node.refdes)
-                    err_value = comp[subele_count]
+                    err_value = comp_data[subele_count].get_value()
                     errh.seg_error('3', err_str, err_value)
-                valid &= child_node.is_valid(comp, errh, self.check_dte)
+                valid &= child_node.is_valid(comp_data, errh, self.check_dte)
             elif child_node.is_element():
                 # Validate Element
-                valid &= child_node.is_valid(seg[i][0], errh, self.check_dte)
-        for i in xrange(len(seg), self.get_child_count()):
+                valid &= child_node.is_valid(seg_data[i][0], errh, self.check_dte)
+        for i in xrange(len(seg_data), self.get_child_count()):
             #missing required elements
             valid &= child_node.is_valid(None, errh)
                 
         for syn in self.syntax:
-            (bResult, err_str) = is_syntax_valid(seg, syn)
+            (bResult, err_str) = is_syntax_valid(seg_data, syn)
             if not bResult:
                 #pdb.set_trace()
                 errh.ele_error('2', err_str, None)
@@ -1033,11 +1033,12 @@ class element_if(x12_node):
         """
         errh.add_ele(self)
 
-        if len(elem) > 1:
+        if elem and elem.is_composite():
             err_str = 'Data element %s is an invalid composite' % (self.refdes)
             self.__error__(errh, err_str, '6', elem.__repr__())
+            return False
 
-        if elem is None or len(elem) == 0 or elem.get_value() == '':
+        if elem is None or elem.get_value() == '':
             if self.usage in ('N', 'S'):
                 return True
             elif self.usage == 'R':
@@ -1267,22 +1268,22 @@ class composite_if(x12_node):
             sub_elem.xml()
         sys.stdout.write('</composite>\n')
 
-    def is_valid(self, comp, errh, check_dte=None):
+    def is_valid(self, comp_data, errh, check_dte=None):
         """
         Class:      composite_if
         Name:       validate
         Desc:       Validates the composite
-        Params:     comp - composite instance, has multiple values
+        Params:     comp_data - data composite instance, has multiple values
                     errh - instance of error_handler
         Returns:    True on success
         """
         valid = True
-        if comp is None or len(comp) == 0 and self.usage == 'N':
+        if (comp_data is None or comp_data.is_empty()) and self.usage == 'N':
             return True
 
         if self.usage == 'R':
             good_flag = False
-            for sub_ele in comp:
+            for sub_ele in comp_data:
                 if sub_ele is not None and len(sub_ele.get_value()) > 0:
                     good_flag = True
                     break
@@ -1291,13 +1292,13 @@ class composite_if(x12_node):
                 errh.ele_error('2', err_str, None)
                 return False
 
-        if len(comp) > self.get_child_count():
+        if len(comp_data) > self.get_child_count():
             err_str = 'Too many sub-elements in composite %s' % (self.refdes)
             errh.ele_error('3', err_str, None)
             valid = False
-        for i in xrange(len(comp)):
-            valid &= self.get_child_node_by_idx(i).is_valid(comp[i], errh, check_dte)
-        for i in xrange(len(comp), self.get_child_count()): #Check missing required elements
+        for i in xrange(len(comp_data)):
+            valid &= self.get_child_node_by_idx(i).is_valid(comp_data[i], errh, check_dte)
+        for i in xrange(len(comp_data), self.get_child_count()): #Check missing required elements
             valid &= self.get_child_node_by_idx(i).is_valid(None, errh)
         return valid
 
@@ -1359,11 +1360,11 @@ def load_map_file(map_file, param):
             #raise
     return map
 
-def is_syntax_valid(seg, syn):
+def is_syntax_valid(seg_data, syn):
     """
     Name:       is_syntax_valid
     Desc:       Verifies the syntax 
-    Params:     seg - data segment instance
+    Params:     seg_data - data segment instance
                 syn - list containing the syntax type, 
                     and the indices of elements
     Returns: (boolean, error string)
@@ -1378,18 +1379,18 @@ def is_syntax_valid(seg, syn):
         #pdb.set_trace()
         count = 0
         for s in syn[1:]:
-            if len(seg) >= s and seg[s-1].get_value() != '':
+            if len(seg_data) >= s and seg_data[s-1].get_value() != '':
                 count += 1
         if count != 0 and count != len(syn)-1:
             err_str = 'Syntax Error (%s): If any of %s is present, then all are required'\
-                % (syntax_str(syn), syntax_ele_id_str(seg.get_seg_id(), syn[1:]))
+                % (syntax_str(syn), syntax_ele_id_str(seg_data.get_seg_id(), syn[1:]))
             return (False, err_str)
         else:
             return (True, None)
     elif syn[0] == 'R':
         count = 0
         for s in syn[1:]:
-            if len(seg) >= s and seg[s-1].get_value() != '':
+            if len(seg_data) >= s and seg_data[s-1].get_value() != '':
                 count += 1
         if count == 0:
             err_str = 'Syntax Error (%s): At least one element is required' % \
@@ -1400,41 +1401,42 @@ def is_syntax_valid(seg, syn):
     elif syn[0] == 'E':
         count = 0
         for s in syn[1:]:
-            if len(seg) >= s and seg[s-1].get_value() != '':
+            if len(seg_data) >= s and seg_data[s-1].get_value() != '':
                 count += 1
         if count > 1:
             err_str = 'Syntax Error (%s): At most one of %s may be present'\
-                % (syntax_str(syn), syntax_ele_id_str(seg.get_seg_id(), syn[1:]))
+                % (syntax_str(syn), syntax_ele_id_str(seg_data.get_seg_id(), syn[1:]))
             return (False, err_str)
         else:
             return (True, None)
     elif syn[0] == 'C':
         # If the first is present, then all others are required
-        if len(seg) >= syn[1] and seg[syn[1]-1].get_value() != '':
+        if len(seg_data) >= syn[1] and seg_data[syn[1]-1].get_value() != '':
             count = 0
             for s in syn[2:]:
-                if len(seg) >= s and seg[s-1].get_value() != '':
+                if len(seg_data) >= s and seg_data[s-1].get_value() != '':
                     count += 1
             if count != len(syn)-2:
                 if len(syn[2:]) > 1: verb = 'are'
                 else: verb = 'is'
                 err_str = 'Syntax Error (%s): If %s%02i is present, then %s %s required'\
-                    % (syntax_str(syn), seg.get_seg_id(), syn[1], syntax_ele_id_str(seg.get_seg_id(), syn[2:]), verb)
+                    % (syntax_str(syn), seg_data.get_seg_id(), syn[1], \
+                    syntax_ele_id_str(seg_data.get_seg_id(), syn[2:]), verb)
                 return (False, err_str)
             else:
                 return (True, None)
         else:
             return (True, None)
     elif syn[0] == 'L':
-        if seg[syn[1]-1].get_value() != '':
+        if seg_data[syn[1]-1].get_value() != '':
             count = 0
             for s in syn[2:]:
-                if len(seg) >= s and seg[s-1].get_value() != '':
+                if len(seg_data) >= s and seg_data[s-1].get_value() != '':
                     count += 1
             if count == 0:
                 err_str = 'Syntax Error (%s): If %s%02i is present, then at least one of '\
-                    % (syntax_str(syn), seg.get_seg_id(), syn[1])
-                err_str += syntax_ele_id_str(seg.get_seg_id(), syn[2:])
+                    % (syntax_str(syn), seg_data.get_seg_id(), syn[1])
+                err_str += syntax_ele_id_str(seg_data.get_seg_id(), syn[2:])
                 err_str += ' is required'
                 return (False, err_str)
             else:
