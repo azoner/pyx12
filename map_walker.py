@@ -52,6 +52,7 @@ import pdb
 class walk_tree:
     def __init__(self):
         end_tag_stack = []
+        self.cur_seg_count = 0
 
     def walk(self, node, seg):
         """
@@ -65,14 +66,26 @@ class walk_tree:
         # Repeat of current segment
         if node.is_segment():
             if node.is_match(seg):
+                self.cur_seg_count +=1
+                if self.cur_seg_count > node.max_use:  # handle seg repeat count
+                    raise WEDIError, "Segment %s exceeded max count.  Found %i, should have %i" \
+                        % (seg[0], self.cur_seg_count, node.max_use)
                 return node
-        #handle seg repeat count
-
+        self.cur_seg_count = 0
+        
+        # Repeat loop
+        node = orig_node
+        if node.is_segment():
+            node = self.pop_to_parent_loop(node) # We are in a segment
+        if self.is_first_seg_match(node, seg): 
+            return node # Return the loop node
 
         if seg[0] == 'NM1':
             pdb.set_trace()
             
         # match next node in loop
+        # Finds next child loop or segment in the containing loop
+        node = orig_node
         if not (node.is_loop() or node.is_map_root()): 
             node = self.pop_to_parent_loop(node)
         node_idx = None
@@ -88,49 +101,15 @@ class walk_tree:
                     elif child.usage == 'R':
                         raise WEDIError, "Required segment %s not found" % (child.id)
                 elif node.is_loop(): 
+                    node_idx = node.index
                     logger.debug('map_walker: child_node id=%s' % (child.id))
                     if self.is_first_seg_match(child, seg): 
                         return child # Return the loop node
                     else:
                         logger.debug('map_walker: child_node id=%s is node a match' % (child.id))
      
-        # Next segment in loop
-#        node_idx = None
-#        if node.is_segment(): 
-#            node_idx = node.index
-#            node = self.pop_to_parent_loop(node)
-#            for child in node.children:
-#                if child.is_segment() and child.index > node_idx:
-#                    #print child.id, child.index, node_idx
-#                    if child.is_match(seg):
-#                        if child.usage == 'N':
-#                            raise WEDIError, "Segment %s found but marked as not used" % (child.id)
-#                        return child
-#                    elif child.usage == 'R':
-#                        raise WEDIError, "Required segment %s not found" % (child.id)
-            
-        # Child loop
-        node = orig_node
-        logger.debug('map_walker: orig_node id=%s' % (node.id))
-        node = self.pop_to_parent_loop(node)
-        logger.debug('map_walker: parent_node id=%s' % (node.id))
-        for child in node.children:
-            if child.is_loop():
-                logger.debug('map_walker: child_node id=%s' % (child.id))
-                if self.is_first_seg_match(child, seg): 
-                    return child # Return the loop node
-                else:
-                    logger.debug('map_walker: child_node id=%s is node a match' % (child.id))
-                    
-                    
-        # Repeat loop
-        node = orig_node
-        node = self.pop_to_parent_loop(node) # We are in a segment
-        if self.is_first_seg_match(node, seg): 
-            return node # Return the loop node
-
-                                  
-        # Sibling Loop
+           
+        # Sibling Loop or segment
         node = orig_node
         node_idx = None
         while not node.is_loop(): 
