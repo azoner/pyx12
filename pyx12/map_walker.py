@@ -96,6 +96,9 @@ class walk_tree:
         @type ls_id: string
         @return: The matching x12_node
         @rtype: L{node<map_if.x12_node>}
+
+        @todo: bug - segments with same pos occur out of order
+            and first node is required
         """
 
         #logger.debug('start walk %s' % (node))
