@@ -93,7 +93,7 @@ class walk_tree:
         mandatory_segs_missing = []  # Store errors until we know we have an error
         #seg_max_count_err = [] # Store max count exceeded errors until we know we have an error
         node_idx = node.index # Get original index of starting node
-        #if seg[0] == 'OI':
+        #if seg[0] == 'ST':
         #    pdb.set_trace()
         if not (node.is_loop() or node.is_map_root()): 
             node = self.pop_to_parent_loop(node) # Get enclosing loop
