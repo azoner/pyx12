@@ -56,18 +56,40 @@ __status__  = pyx12.__status__
 __version__ = pyx12.__version__
 __date__    = pyx12.__date__
 
+def format_name(name):
+    return name.replace(' ', '_')
+    
 def gen_sql(map_root):
     """
     iterate through map, generate sql
     """
     fd = sys.stdout
-    #pdb.set_trace()
-    #print map_root.debug_print()
+    tbl_stack = []
     for node in map_root:
-        #if (node.is_loop() or node.is_map_root()): 
-        #    fd.write('%s\n' % (node.id))
-                #if child.is_segment():
-        fd.write('%s\n' % (node.id))
+        if node.id in ('ISA', 'IEA', 'TA1', 'GS', 'GE', 'SE'):
+            continue
+        if node.is_map_root():
+            continue
+        if node.is_loop():
+            fd.write('CREATE TABLE [%s_%s]\n' % (node.id, format_name(node.name)))
+        elif node.is_segment():
+            if node.repeat != '1':
+                fd.write('CREATE TABLE [%s_%s]\n' % (node.id, format_name(node.name)))
+        elif node.is_element():
+            fd.write('[%s_%s]' % (node.id, format_name(node.name)))
+            if node.data_type in ('DT', 'TM'):
+                fd.write(' [datetime]')
+            elif node.data_type in ('AN', 'ID'):
+                if node.min_len == node.max_len:
+                    fd.write(' [char] (%s)' % (node.max_len))
+                else:
+                    fd.write(' [varchar] (%s)' % (node.max_len))
+            elif node.data_type == 'N0':
+                fd.write(' [int]')
+            elif node.data_type == 'R' or node.data_type[0] == 'N':
+                fd.write(' [float]')
+            fd.write('\n')
+        elif node.is_composite():
     return None
 
    
