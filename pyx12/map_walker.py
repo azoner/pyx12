@@ -160,12 +160,13 @@ class walk_tree:
                             #node_seg = child.get_child_node_by_idx(0)
                             return node_seg
             if node.is_map_root(): # If at root and we haven't found the segment yet.
-                self._seg_not_found(orig_node, seg_data, errh)
+                self._seg_not_found(orig_node, seg_data, errh, seg_count, \
+                    cur_line, ls_id)
                 return None
             node_pos = node.pos # Get position ordinal of current node in tree
             node = pop_to_parent_loop(node) # Get enclosing parent loop
 
-        self._seg_not_found(orig_node, seg_data, errh)
+        self._seg_not_found(orig_node, seg_data, errh, seg_count, cur_line, ls_id)
         return None
 
 #    def _is_loop_repeat(self, node, seg_data):
@@ -173,7 +174,7 @@ class walk_tree:
 #            node = pop_to_parent_loop(node) # Get enclosing loop
 #        return self._is_first_seg_match(node, seg_data):
 
-    def _seg_not_found(self, orig_node, seg_data, errh):
+    def _seg_not_found(self, orig_node, seg_data, errh, seg_count, cur_line, ls_id):
         """
         Create error for not found segments
 
@@ -189,6 +190,7 @@ class walk_tree:
         else:
             seg_str = '%s*%s' % (seg_data.get_seg_id(), seg_data[0][0].get_value())
         err_str = 'Segment %s not found.  Started at %s' % (seg_str, orig_node.get_path()) 
+        errh.add_seg(orig_node, seg_data, seg_count, cur_line, ls_id)
         errh.seg_error('1', err_str, None)
         #raise EngineError, "Could not find segment %s*%s.  Started at %s" % \
         #    (seg.get_seg_id(), seg[1], orig_node.get_path())

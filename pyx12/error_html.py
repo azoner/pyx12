@@ -20,6 +20,7 @@ import string
 from types import *
 import time
 import logging
+import pdb
 
 # Intrapackage imports
 from errors import *
@@ -41,8 +42,8 @@ class error_html:
         @param term: tuple of x12 terminators used
         @type term: tuple(string, string, string, string)
 
-        @todo: GS errors are re-printing at the GE level
-        @todo: Informational lines - Show loops
+        @bug: GS errors are re-printing at the GE level
+        @bug: IEA missing errors not shown
         """
         self.errh = errh
         self.fd = fd
@@ -51,6 +52,7 @@ class error_html:
         self.subele_term = term[2]
         self.eol = ''
         self.last_line = 0
+        self.loop_info = None
 
     def header(self):
         self.fd.write('<html>\n<head>\n')
@@ -74,7 +76,8 @@ class error_html:
 
     def loop(self, loop_node):
         if loop_node.type != 'wrapper':
-            self.gen_info('Loop %s: %s' % (loop_node.id, loop_node.name))
+            #self.gen_info('Loop %s: %s' % (loop_node.id, loop_node.name))
+            self.loop_info = 'Loop %s: %s' % (loop_node.id, loop_node.name)
 
     def gen_info(self, info_str):
         """
@@ -83,13 +86,13 @@ class error_html:
         
     def gen_seg(self, seg_data, src, err_node_list):
         """
-        Params:     seg_data - data segment instance
+        Find error seg for this segment.
+        Find any skipped error values.
+        ID pos of bad value.
+        @param seg_data: data segment instance
         """
         cur_line = src.cur_line
 
-        # Find error seg for this segment
-        #   Find any skipped error values
-        # ID pos of bad value
         #while errh
         ele_pos_map = {}
         for err_node in err_node_list:
@@ -97,18 +100,19 @@ class error_html:
                 ele_pos_map[ele.ele_pos] = ele.subele_pos
 
         t_seg = [] #list of formatted elements
-        seg_data.format_ele_list(t_seg) 
+        #seg_data.format_ele_list(t_seg) 
         for i in range(len(seg_data)):
             if seg_data[i].is_composite():
+                #if seg_data.get_seg_id()=='CLM': pdb.set_trace()
                 t_seg.append([])
                 for j in range(len(seg_data[i])):
                     ele_str = escape_html_chars(seg_data[i][j].get_value())
-                    if i in ele_pos_map.keys() and ele_pos_map[i] == j:
+                    if i+1 in ele_pos_map.keys() and ele_pos_map[i+1] == j+1:
                         ele_str = self._wrap_ele_error(ele_str)
                     t_seg[-1].append(ele_str)
             else:
                 ele_str = escape_html_chars(seg_data[i].get_value())
-                if i in ele_pos_map.keys():
+                if i+1 in ele_pos_map.keys():
                     ele_str = self._wrap_ele_error(ele_str)
                 t_seg.append(ele_str)
                 
@@ -120,7 +124,9 @@ class error_html:
                 if err_cde == '3':
                     self.fd.write('<span class="error">&nbsp;%s (Segment Error Code: %s)</span><br>\n' % \
                         (err_str, err_cde))
-
+        if self.loop_info:
+            self.gen_info(self.loop_info)
+        self.loop_info = None
         self.fd.write('<span class="seg">%i:&nbsp;%s</span><br>\n' % \
             (cur_line, self._seg_str(seg_data.get_seg_id(), t_seg)))
         for err_node in err_node_list:
@@ -134,8 +140,9 @@ class error_html:
             for ele in err_node.elements:
                 for (err_cde, err_str, err_val) in ele.get_error_list(seg_data.get_seg_id(), False):
                 #for (err_cde, err_str, err_val) in ele.errors:
-                    self.fd.write('<span class="error">&nbsp;%s (Element Error Code: %s)</span><br>\n' % \
-                        (err_str, err_cde))
+                    if not (seg_data.get_seg_id()=='GE' and 'GS' in err_str): #Ugly hack
+                        self.fd.write('<span class="error">&nbsp;%s (Element Error Code: %s)</span><br>\n' % \
+                            (err_str, err_cde))
         
     def _seg_str(self, seg_id, ele_list):
         """

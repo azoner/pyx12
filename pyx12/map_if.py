@@ -1053,7 +1053,7 @@ class element_if(x12_node):
         # match also by ID
         pass
 
-    def is_valid(self, elem, errh, check_dte=None):
+    def is_valid(self, elem, errh, check_dte=None, type=None):
         """
         Is this a valid element
         @param elem: element instance
@@ -1121,14 +1121,13 @@ class element_if(x12_node):
             
         if not self._is_valid_code(elem_val, errh, check_dte):
             valid = False
-           
-        if not IsValidDataType(elem_val, self.data_type, self.root.param.get('charset')):
-            if self.data_type == 'DT':
+        if not IsValidDataType(elem_val, type, self.root.param.get('charset')):
+            if _type == in ('DT', 'D8', 'D6'):
                 err_str = 'Data element "%s" (%s) contains an invalid date (%s)' % \
                     (self.name, self.refdes, elem_val)
                 self._error(errh, err_str, '8', elem_val)
                 valid = False
-            elif self.data_type == 'TM':
+            elif type == 'TM':
                 err_str = 'Data element "%s" (%s) contains an invalid time (%s)' % \
                     (self.name, self.refdes, elem_val)
                 self._error(errh, err_str, '9', elem_val)
@@ -1295,7 +1294,7 @@ class composite_if(x12_node):
             sub_elem.xml()
         sys.stdout.write('</composite>\n')
 
-    def is_valid(self, comp_data, errh, check_dte=None):
+    def is_valid(self, comp_data, errh, check_dte=None, type=None):
         """
         Validates the composite
         @param comp_data: data composite instance, has multiple values
