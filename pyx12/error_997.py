@@ -106,7 +106,7 @@ class error_997_visitor(error_visitor.error_visitor):
             if err_isa.errors:
                 (err_cde, err_str) = err_isa.errors[0]
                 #seg.extend(['R', err_cde])
-                ta1_seg.append('R')
+                ta1_seg.append('E')
                 ta1_seg.append(err_cde)
             else:
                 #seg.extend(['A', '000'])
