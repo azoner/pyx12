@@ -36,9 +36,11 @@ External Codes interface
 """
 
 import os, os.path
-import sys
+#import sys
 import cPickle
 import libxml2
+import datetime 
+import pdb
 from stat import ST_MTIME
 from stat import ST_SIZE
 
@@ -63,7 +65,7 @@ class ExternalCodes:
         Params:  
         """
         
-        self.codes = {}
+        self.codes = {} # {code_type: [(code_values, eff_dte, exp_dte)]}
         code_file = 'map/codes.xml'
         pickle_file = '%s.%s' % (os.path.splitext(code_file)[0], 'pkl')
         id = None
@@ -92,8 +94,8 @@ class ExternalCodes:
                         if cur_name == 'codeset':
                             code_list = []
                             base_level = reader.Depth()
-                            #base_name = 'codeset'
-                        #cur_level = reader.Depth()
+                        elif cur_name == 'version':
+                            pass
                     elif reader.NodeType() == NodeType['element_end']:
                         if reader.Name() == 'codeset':
                             self.codes[id] = code_list
@@ -111,7 +113,19 @@ class ExternalCodes:
                         if cur_name == 'id':
                             id = reader.Value()
                         elif cur_name == 'code':
-                            code_list.append(reader.Value())
+                            eff_dte = None
+                            exp_dte = None
+                            code_val = reader.Value()
+                            if reader.HasAttributes():
+                                print 'yes'
+                                reader.MoveToFirstAttribute()
+                                while reader.MoveToNextAttribute():
+                                    if code_val == '101Y00000N': print reader.Name(), reader.Value()
+                                    if reader.Name() == 'eff_dte': eff_dte = reader.Value()
+                                    elif reader.Name() == 'exp_dte': exp_dte = reader.Value()
+                                code_list.append((code_val, eff_dte, exp_dte))
+                                #reader.GetAttributeNo(0), reader.GetAttributeNo(1)))
+                                #reader.GetAttribute('eff_dte'), reader.GetAttribute('exp_dte')))
 
                     ret = reader.Read()
                     if ret == -1:
@@ -121,30 +135,47 @@ class ExternalCodes:
             except errors.XML_Reader_Error:
                 pass
         try:
-            cPickle.dump(self.codes,open(pickle_file,'w'))
+            pass
+            #cPickle.dump(self.codes,open(pickle_file,'w'))
         except:
             pass
 
 
-    def IsValid(self, key, code):
+    def IsValid(self, key, code, check_dte):
         """
         Name:    IsValid
         Desc:    Initialize the external list of codes
         Params:  key - the external codeset identifier
                  code - code to be verified
+                 check_dte - YYYYMMDD - Date on which to check code validity. eg 20040514
         Returns: 1 if code is valid, 0 if not
         """
 
         #if not given a key, do not flag an error
         if not key:
-            return 1
+            return True
         #check the code against the list indexed by key
         else:
+            if len(check_dte) != 8: raise errors.EngineError, 'Bad check date %s' & (check_dte)
+            dt_check_dte = datetime.date(int(check_dte[:4]), int(check_dte[4:6]), int(check_dte[-2:]))
             if not key in self.codes.keys():
                 raise errors.EngineError, 'Enternel Code %s is not defined' % (key)
-            if not code in self.codes[key]:
-                return 0
-        return 1
+            #if not code in self.codes[key]:
+            for code_tuple in self.codes[key]:
+                if code == code_tuple[0]:
+                    print code_tuple
+                    if code_tuple[1] != None:
+                        dt_eff_dte = datetime.date(int(code_tuple[1][:4]), \
+                            int(code_tuple[1][4:6]), int(code_tuple[1][-2:]))
+                    else: dt_eff_dte = dt_check_dte.min
+                    if code_tuple[2] != None:
+                        dt_exp_dte = datetime.date(int(code_tuple[2][:4]), \
+                            int(code_tuple[2][4:6]), int(code_tuple[2][-2:]))
+                    else: dt_exp_dte= dt_check_dte.max
+                    if dt_check_dte >= dt_eff_dte and dt_check_dte <= dt_exp_dte:
+                        return True
+                return False
+        return True
 
     def debug_print(self):
         for key in self.codes.keys():
