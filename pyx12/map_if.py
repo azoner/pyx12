@@ -317,8 +317,8 @@ class map_if(x12_node):
 
     def reset_cur_count(self):
         for child in self.children:
-            if child.is_loop():
-                child.reset_cur_count()
+            #if child.is_loop():
+            child.reset_cur_count()
 
     def __iter__(self):
         return self
@@ -516,8 +516,8 @@ class loop_if(x12_node):
 
     def reset_cur_count(self):
         for child in self.children:
-            if child.is_loop():
-                child.reset_cur_count()
+            #if child.is_loop():
+            child.reset_cur_count()
 
 ############################################################
 # Segment Interface
