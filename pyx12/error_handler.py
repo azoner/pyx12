@@ -516,7 +516,10 @@ class err_isa(err_node):
         self.cur_line_isa = cur_line
         self.cur_line_iea = None
         
-        self.isa_trn_set_id = self.isa_id
+        self.isa_trn_set_id = seg[13]
+        self.ta1_req = seg[14]
+        self.orig_date = seg[9]
+        self.orig_time = seg[10]
         self.id = 'ISA'
 
         self.parent = parent

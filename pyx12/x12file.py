@@ -133,7 +133,7 @@ class x12file:
             if interchange_control_number in self.isa_ids:
                 err_str = 'ISA Interchange Control Number %s not unique within file' \
                     % (interchange_control_number)
-                self.errh.isa_error('ISA5', err_str)
+                self.errh.isa_error('025', err_str)
             self.loops.append(('ISA', interchange_control_number))
             self.isa_ids.append(interchange_control_number)
             self.gs_count = 0
@@ -141,10 +141,10 @@ class x12file:
         elif seg[0] == 'IEA': 
             if self.loops[-1][0] != 'ISA' or self.loops[-1][1] != seg[2]:
                 err_str = 'IEA id=%s does not match ISA id=%s' % (seg[2], self.loops[-1][1])
-                self.errh.isa_error('IEA2', err_str)
+                self.errh.isa_error('001', err_str)
             if int(seg[1]) != self.gs_count:
                 err_str = 'IEA count for IEA02=%s is wrong' % (seg[2])
-                self.errh.isa_error('IEA3', err_str)
+                self.errh.isa_error('021', err_str)
             del self.loops[-1]
         elif seg[0] == 'GS': 
             group_control_number = seg[6]
@@ -217,17 +217,17 @@ class x12file:
         if self.loops:
             for (seg, id) in self.loops.reverse(): 
                 if self.loops[-1][0] == 'ST':
-                    err_str = 'ST id=%s was not closed with a SE' % (id, self.loops[-1][1])
+                    err_str = 'ST id=%s was not closed with a SE' % (id)
                     self.errh.st_error('3', err_str)
-                    errh.close_st_loop(None, None, self)
+                    self.errh.close_st_loop(None, None, self)
                 elif self.loops[-1][0] == 'GS':
-                    err_str = 'GS id=%s was not closed with a GE' % (id, self.loops[-1][1])
+                    err_str = 'GS id=%s was not closed with a GE' % (id)
                     self.errh.gs_error('3', err_str)
-                    errh.close_gs_loop(None, None, self)
+                    self.errh.close_gs_loop(None, None, self)
                 elif self.loops[-1][0] == 'ISA':
-                    err_str = 'ISA id=%s was not closed with a IEA' % (id, self.loops[-1][1])
-                    self.errh.isa_error('3', err_str)
-                    errh.close_isa_loop(None, None, self)
+                    err_str = 'ISA id=%s was not closed with a IEA' % (id)
+                    self.errh.isa_error('023', err_str)
+                    self.errh.close_isa_loop(None, None, self)
                 #elif self.loops[-1][0] == 'LS':
                 #    err_str = 'LS id=%s was not closed with a LE' % (id, self.loops[-1][1])
                 #    self.errh.ls_error('3', err_str)

@@ -101,6 +101,18 @@ class error_997_visitor(error_visitor.error_visitor):
         self.isa_seg = isa_seg
         self.gs_loop_count = 0
 
+        #TA1 segment
+        err_isa = errh.cur_isa_node
+        if err_isa.ta1_req == '1':
+            seg = ['TA1', err_isa.isa_trn_set_id, err_isa.orig_date, \
+                err_isa.orig_time]
+            if err_isa.errors:
+                (err_cde, err_str) = err_isa.errors[0]
+                seg.extend(['R', err_cde])
+            else:
+                seg.extend(['A', '000'])
+            self._write(seg)
+
         # GS*FA*ENCOUNTER*00GR*20030425*150153*653500001*X*004010
         seg = errh.cur_gs_node.seg
         gs_seg = [seg[0], 'FA', seg[3], seg[2], time.strftime('%Y%m%d'), time.strftime('%H%M%S')]
