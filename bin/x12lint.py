@@ -123,7 +123,7 @@ def main():
                 logger.error('Could not open log file: %s' % (a))
         #if o == '-9': target_997 = os.path.splitext(src_filename)[0] + '.997'
 
-    if debug:
+    if not debug:
         try:
             import psyco
             psyco.full()

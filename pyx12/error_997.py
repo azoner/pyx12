@@ -335,7 +335,6 @@ class error_997_visitor(error_visitor.error_visitor):
         Desc:    
         Params:     err_ele - error_ele instance
         """
-        seg_base = ['AK4']
         seg_base = pyx12.segment.segment('AK4', '~', '*', ':')
         if err_ele.subele_pos: 
             seg_base.append('%i:%i' % (err_ele.ele_pos, err_ele.subele_pos))
@@ -360,6 +359,6 @@ class error_997_visitor(error_visitor.error_visitor):
         Desc:    
         Params:     seg_data - data segment instance
         """
-        self.fd.write(seg_data.format(self.seg_term, self.ele_term, \
-            self.subele_term))
+        self.fd.write('%s\n' % (seg_data.format(self.seg_term, self.ele_term, \
+            self.subele_term)))
         self.seg_count += 1
