@@ -98,6 +98,7 @@ def main():
         if o == '-d': 
             param.set('debug', True)
             debug = True
+            logger.setLevel(logging.DEBUG)
         if o == '-x': param.set('exclude_external_codes', a)
         if o == '-f': param.set('force_map_load', True)
         if o == '-m': param.set('map_path', a)
