@@ -34,6 +34,9 @@
 
 # THIS IS PRE-ALPHA CODE.  IT DOES NOT WORK. 
 
+"""
+Interface to a X12N IG Map
+"""
 import os.path
 #import stat
 import sys
@@ -85,6 +88,14 @@ class x12_node:
 	    	return node
 	return None
  
+    def get_child_count(self):
+    	return len(self.children)
+
+    def get_child_node_by_idx(self, idx):
+    	if idx >= len(self.children):
+	    return None
+	else:
+    	    return self.children[idx]
 
 #    def debug_print(self):
 #    	sys.stdout.write('%s%s %s %s %s\n' % (str(' '*self.base_level), self.base_name, self.base_level, self.id, self.name))
@@ -199,7 +210,6 @@ class map_if(x12_node):
 ############################################################
 class loop_if(x12_node):
     """
-    Should be entered with a loop node current
     """
     def __init__(self, parent): 
         """
@@ -208,6 +218,8 @@ class loop_if(x12_node):
         Params:  
 		 
         Returns: 
+    	
+	Note: Should be entered with a loop node current
         """
 	global reader
 	x12_node.__init__(self)
@@ -326,15 +338,14 @@ class loop_if(x12_node):
 ############################################################
 class segment_if(x12_node):
     """
-    Should be entered with a segment node current
     """
     def __init__(self, parent):
         """
         Name:    __init__
         Desc:    
-        Params:  
+        Params: parent - parent node 
 		 
-        Returns: 
+	Note: Should be entered with a segment node current
         """
 
 	global reader
@@ -501,7 +512,7 @@ class element_if(x12_node):
         """
         Name:    __init__
         Desc:    
-        Params:  
+        Params: parent - parent node 
 		 
         Returns: 
         """
@@ -757,9 +768,7 @@ class composite_if(x12_node):
         """
         Name:    __init__
         Desc:    Get the values for this composite
-        Params:  
-		 
-        Returns: 
+        Params:	 parent - parent node 
         """
 
 	global reader
