@@ -183,7 +183,7 @@ def x12n_document(param, src_file, fd_997, fd_html, fd_xmldoc=None):
             elif seg.get_seg_id() == 'GE':
                 errh.close_gs_loop(node, seg, src)
             elif seg.get_seg_id() == 'ST':
-                    errh.add_st_loop(seg, src)
+                errh.add_st_loop(seg, src)
             elif seg.get_seg_id() == 'SE':
                 errh.close_st_loop(node, seg, src)
             else:
