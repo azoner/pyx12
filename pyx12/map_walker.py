@@ -245,6 +245,8 @@ class walk_tree:
 
         @return: Does the segment match the first segment node in the loop?
         @rtype: boolean
+
+        @bug: Fails to match second loop in a wrapping loop
         """
         #if seg_data.get_seg_id() == 'HL':
         #    pdb.set_trace()
