@@ -132,7 +132,7 @@ class walk_tree:
                                     seg_node = node.children[0]
                                     seg_node.cur_count = 1
                                     #logger.debug('MATCH Loop %s / Segment %s (%s*%s)' \
-                                        % (node.id, seg_node.id, seg[0], seg[1]))
+                                    #    % (node.id, seg_node.id, seg[0], seg[1]))
                                     for (seg_id, err_cde, err_str) in mandatory_segs_missing:
                                         errh.seg_error(err_cde, err_str, None)
                                     return seg_node # Return the first segment in node
@@ -154,7 +154,7 @@ class walk_tree:
                             mandatory_segs_missing.append((seg[0], '3', err_str))
                             #break
                             #raise WEDIError, err_str
-                        else:
+                        #else:
                             #logger.debug('Segment %s is not a match for (%s*%s)' % (child.id, seg[0], seg[1]))
                     elif child.is_loop(): 
                         #logger.debug('child_node id=%s' % (child.id))
@@ -164,11 +164,11 @@ class walk_tree:
                             node = child.children[0]
                             node.cur_count = 1
                             #logger.debug('MATCH Loop %s / Segment %s (%s*%s)' \
-                                % (child.id, node.id, seg[0], seg[1]))
+                            #    % (child.id, node.id, seg[0], seg[1]))
                             for (seg_id, err_cde, err_str) in mandatory_segs_missing:
                                 errh.seg_error(err_cde, err_str, None)
                             return node # Return the first segment in node
-                        else:
+                        #else:
                             #logger.debug('Loop id=%s is not a match for (%s*%s)' % \
                             #    (child.id, seg[0], seg[1]))
             if node.is_map_root(): # If at root and we haven't found the segment yet.
