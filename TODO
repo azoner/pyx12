@@ -28,3 +28,7 @@ Make C++ Modules
 
 
 XML Error output
+
+Base map_if children on map
+ - get by id quicker
+ - get by idx slower?
