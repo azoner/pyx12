@@ -314,7 +314,11 @@ class segment:
         return True
         
     def is_seg_id_valid(self):
-        if seg_data.get_seg_id() or len(seg_id) < 2 or len(seg_id) > 3:
+        """
+        Is the Segment identifier the correct length
+        @rtype: boolean
+        """
+        if not self.seg_id or len(self.seg_id) < 2 or len(self.seg_id) > 3:
             return False
         else:
             return True

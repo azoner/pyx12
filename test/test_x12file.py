@@ -398,47 +398,41 @@ class Formatting(unittest.TestCase):
 
 class Segment_ID_Checks(unittest.TestCase):
 
-    def setUp(self):
-        #self.walker = walk_tree()
-        #param = params()
-        #param.set('map_path', os.path.expanduser('~/src/pyx12/map/'))
-        #param.set('pickle_path', os.path.expanduser('~/src/pyx12/map/'))
-        #self.map = pyx12.map_if.load_map_file('837.4010.X098.A1.xml', param)
-        self.errh = pyx12.error_handler.errh_null()
-        #self.node = self.map.getnodebypath('/ISA/GS/ST/HEADER/ST')
-
     def test_segment_id_short(self):
+        errh = pyx12.error_handler.errh_null()
         str = 'ISA*00*          *00*          *ZZ*ZZ000          *ZZ*ZZ001          *030828*1128*U*00401*000010121*0*T*:~\n'
         str += 'Z*0019~\n'
         fd = tempfile.NamedTemporaryFile()
         fd.write(str)
         fd.seek(0)
-        src = pyx12.x12file.x12file(fd.name, self.errh)
+        src = pyx12.x12file.x12file(fd.name, errh)
         for seg in src:
             pass
-        self.assertEqual(self.errh.err_cde, '1', self.errh.err_str)
+        self.assertEqual(errh.err_cde, '1', errh.err_str)
 
     def test_segment_id_long(self):
+        errh = pyx12.error_handler.errh_null()
         str = 'ISA*00*          *00*          *ZZ*ZZ000          *ZZ*ZZ001          *030828*1128*U*00401*000010121*0*T*:~\n'
         str += 'ZZZZ*0019~\n'
         fd = tempfile.NamedTemporaryFile()
         fd.write(str)
         fd.seek(0)
-        src = pyx12.x12file.x12file(fd.name, self.errh)
+        src = pyx12.x12file.x12file(fd.name, errh)
         for seg in src:
             pass
-        self.assertEqual(self.errh.err_cde, '1', self.errh.err_str)
+        self.assertEqual(errh.err_cde, '1', errh.err_str)
 
     def test_segment_empty(self):
+        errh = pyx12.error_handler.errh_null()
         str = 'ISA*00*          *00*          *ZZ*ZZ000          *ZZ*ZZ001          *030828*1128*U*00401*000010121*0*T*:~\n'
-        str += '~\n'
+        str += '*1~\n'
         fd = tempfile.NamedTemporaryFile()
         fd.write(str)
         fd.seek(0)
-        src = pyx12.x12file.x12file(fd.name, self.errh)
+        src = pyx12.x12file.x12file(fd.name, errh)
         for seg in src:
             pass
-        self.assertEqual(self.errh.err_cde, '1', self.errh.err_str)
+        self.assertEqual(errh.err_cde, '1', errh.err_str)
 
 
 def suite():

@@ -1126,7 +1126,7 @@ class errh_null:
         self.err_cde = err_cde
         self.err_str = err_str
         
-    def seg_error(self, err_cde, err_str, err_value=None):
+    def seg_error(self, err_cde, err_str, err_value=None, src_line=None):
         """
         Class:      errh_null
         """

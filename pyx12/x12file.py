@@ -17,8 +17,8 @@ Tracks end of explicit loops.
 Tracks segment/line/loop counts.
 """
 
-import sys
-import string
+#import sys
+#import string
 from types import *
 import logging
 import pdb
@@ -93,24 +93,27 @@ class x12file:
         """
         self.errors = []
         try:
-            if self.buffer.find(self.seg_term) == -1: # Need more data
-                self.buffer += self.fd.read(DEFAULT_BUFSIZE)
-            while 1:
-                # Get first segment in buffer
-                (line, self.buffer) = self.buffer.split(self.seg_term, 1) 
-                line = line.strip().replace('\n','').replace('\r','')
-                if line != '':
-                    break
-            if line[-1] == self.ele_term:
-                err_str = 'Segment contains trailing element terminators'
-                #self.errors.append(('SEG1', err_str, src_line=self.cur_line+1))
-                self.errh.seg_error('SEG1', err_str, None, src_line=self.cur_line+1)
-            #seg = string.split(line, self.ele_term)
-            seg = pyx12.segment.segment(line, self.seg_term, self.ele_term, \
-                self.subele_term)
-            if not seg.is_seg_id_valid():
-                err_str = 'Segment identifier %s is invalid' % (seg_data.get_seg_id())
-                self.errh.seg_error('1', err_str, None, src_line=self.cur_line+1)
+            while True:
+                if self.buffer.find(self.seg_term) == -1: # Need more data
+                    self.buffer += self.fd.read(DEFAULT_BUFSIZE)
+                while True:
+                    # Get first segment in buffer
+                    (line, self.buffer) = self.buffer.split(self.seg_term, 1) 
+                    line = line.strip().replace('\n','').replace('\r','')
+                    if line != '':
+                        break
+                if line[-1] == self.ele_term:
+                    err_str = 'Segment contains trailing element terminators'
+                    #self.errors.append(('SEG1', err_str, src_line=self.cur_line+1))
+                    self.errh.seg_error('SEG1', err_str, None, src_line=self.cur_line+1)
+                #seg = string.split(line, self.ele_term)
+                seg = pyx12.segment.segment(line, self.seg_term, self.ele_term, \
+                    self.subele_term)
+                if not seg.is_seg_id_valid():
+                    err_str = 'Segment identifier "%s" is invalid' % (seg.get_seg_id())
+                    self.errh.seg_error('1', err_str, None, src_line=self.cur_line+1)
+                else:
+                    break # Found valid segment, so can stop looking
         except:
             raise StopIteration
 
@@ -233,21 +236,21 @@ class x12file:
         """
         if self.loops:
             self.loops.reverse()
-            for (seg, id) in self.loops: 
+            for (seg, id1) in self.loops: 
                 if self.loops[-1][0] == 'ST':
-                    err_str = 'ST id=%s was not closed with a SE' % (id)
+                    err_str = 'ST id=%s was not closed with a SE' % (id1)
                     self.errh.st_error('3', err_str)
                     self.errh.close_st_loop(None, None, self)
                 elif self.loops[-1][0] == 'GS':
-                    err_str = 'GS id=%s was not closed with a GE' % (id)
+                    err_str = 'GS id=%s was not closed with a GE' % (id1)
                     self.errh.gs_error('3', err_str)
                     self.errh.close_gs_loop(None, None, self)
                 elif self.loops[-1][0] == 'ISA':
-                    err_str = 'ISA id=%s was not closed with a IEA' % (id)
+                    err_str = 'ISA id=%s was not closed with a IEA' % (id1)
                     self.errh.isa_error('023', err_str)
                     self.errh.close_isa_loop(None, None, self)
                 #elif self.loops[-1][0] == 'LS':
-                #    err_str = 'LS id=%s was not closed with a LE' % (id, self.loops[-1][1])
+                #    err_str = 'LS id=%s was not closed with a LE' % (id1, self.loops[-1][1])
                 #    self.errh.ls_error('3', err_str)
             self.loops.reverse()
         

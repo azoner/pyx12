@@ -128,10 +128,6 @@ class RefDes(unittest.TestCase):
 
 class IsEmpty(unittest.TestCase):
 
-    def setUp(self):
-        seg_str = 'TST*AA*1*Y*BB:5*ZZ'
-        self.seg = pyx12.segment.segment(seg_str, '~', '*', ':')
-
     def test_empty_seg(self):
         seg_str = 'AAA'
         seg = pyx12.segment.segment(seg_str, '~', '*', ':')
@@ -192,6 +188,29 @@ class Indexing(unittest.TestCase):
         self.assertEqual(self.seg[3][1].get_value(), '5')
                     
 
+class IsValidSegID(unittest.TestCase):
+
+    def test_valid_seg_id(self):
+        seg_str = 'AAA'
+        seg = pyx12.segment.segment(seg_str, '~', '*', ':')
+        self.failUnless(seg.is_seg_id_valid())
+
+    def test_empty_seg(self):
+        seg_str = ''
+        seg = pyx12.segment.segment(seg_str, '~', '*', ':')
+        self.failIf(seg.is_seg_id_valid())
+
+    def test_seg_id_too_long(self):
+        seg_str = 'AAAA*1~'
+        seg = pyx12.segment.segment(seg_str, '~', '*', ':')
+        self.failIf(seg.is_seg_id_valid())
+
+    def test_seg_id_too_short(self):
+        seg_str = 'A*1~'
+        seg = pyx12.segment.segment(seg_str, '~', '*', ':')
+        self.failIf(seg.is_seg_id_valid())
+
+
 def suite():
     suite = unittest.TestSuite()
     suite.addTest(unittest.makeSuite(ArbitraryDelimiters))
@@ -202,6 +221,7 @@ def suite():
     suite.addTest(unittest.makeSuite(RefDes))
     suite.addTest(unittest.makeSuite(Indexing))
     suite.addTest(unittest.makeSuite(IsEmpty))
+    suite.addTest(unittest.makeSuite(IsValidSegID))
     return suite
 
 #if __name__ == "__main__":
