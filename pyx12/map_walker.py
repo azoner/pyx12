@@ -69,8 +69,8 @@ class walk_tree:
             errh.seg_error('1', err_str)
             return None
 
-        if not self.is_seg_id_valid(seg[0]):
-            err_str = 'Segment identifier %s is invalid' % (seg[0])
+        if not self.is_seg_id_valid(seg.get_seg_id()):
+            err_str = 'Segment identifier %s is invalid' % (seg.get_seg_id())
             errh.seg_error('1', err_str)
             return None
 
@@ -79,11 +79,11 @@ class walk_tree:
         # Special Handlers for ISA, GS, ST
         while not node.is_map_root():
             node = self.pop_to_parent_loop(node) # Get root node
-        if orig_node.id == 'SE' and seg[0] == 'ST':
+        if orig_node.id == 'SE' and seg.get_seg_id() == 'ST':
             return node.getnodebypath('/ST')
-        if orig_node.id == 'GE' and seg[0] == 'GS':
+        if orig_node.id == 'GE' and seg.get_seg_id() == 'GS':
             return node.getnodebypath('/GS')
-        if orig_node.id == 'IEA' and seg[0] == 'ISA':
+        if orig_node.id == 'IEA' and seg.get_seg_id() == 'ISA':
             return node.getnodebypath('/ISA')
 
         if orig_node.id in ['ST']: #, 'GS', 'ISA']:
@@ -93,15 +93,15 @@ class walk_tree:
         mandatory_segs_missing = []  # Store errors until we know we have an error
         #seg_max_count_err = [] # Store max count exceeded errors until we know we have an error
         node_idx = node.index # Get original index of starting node
-        #if seg[0] == 'ST':
+        #if seg.get_seg_id() == 'ST':
         #    pdb.set_trace()
         if not (node.is_loop() or node.is_map_root()): 
             node = self.pop_to_parent_loop(node) # Get enclosing loop
         while 1:
-            #if seg[0] == 'HL':
+            #if seg.get_seg_id() == 'HL':
             #    print seg
             #    pdb.set_trace()
-            #logger.debug(seg[0])
+            #logger.debug(seg.get_seg_id())
             for child in node.children:
                 #logger.debug('id=%s child.index=%i node_idx=%i' % \
                 #    (child.id, child.index, node_idx))
@@ -110,7 +110,7 @@ class walk_tree:
                     #    % (child.id, child.cur_count, child.get_max_repeat()))
                     if child.is_segment():
                         if child.is_match(seg):
-                            #logger.debug('MATCH segment %s (%s*%s)' % (child.id, seg[0], seg[1]))
+                            #logger.debug('MATCH segment %s (%s*%s)' % (child.id, seg.get_seg_id(), seg[1]))
                             if child.usage == 'N':
                                 err_str = "Segment %s found but marked as not used" % (child.id)
                                 errh.seg_error('2', err_str, None)
@@ -132,14 +132,14 @@ class walk_tree:
                                     seg_node = node.children[0]
                                     seg_node.cur_count = 1
                                     #logger.debug('MATCH Loop %s / Segment %s (%s*%s)' \
-                                    #    % (node.id, seg_node.id, seg[0], seg[1]))
+                                    #    % (node.id, seg_node.id, seg.get_seg_id(), seg[1]))
                                     for (seg_id, err_cde, err_str) in mandatory_segs_missing:
                                         errh.seg_error(err_cde, err_str, None)
                                     return seg_node # Return the first segment in node
                                 else:
                                     err_str = "Segment %s exceeded max count.  Found %i, should have %i" \
-                                        % (seg[0], child.cur_count, child.get_max_repeat())
-                                    #seg_max_count_err.append((seg[0], '5', err_str))
+                                        % (seg.get_seg_id(), child.cur_count, child.get_max_repeat())
+                                    #seg_max_count_err.append((seg.get_seg_id(), '5', err_str))
                                     #continue # Try to find another match
                                     errh.seg_error('5', err_str, None)
                             for (seg_id, err_cde, err_str) in mandatory_segs_missing:
@@ -150,11 +150,11 @@ class walk_tree:
                             #pdb.set_trace()
                             errh.add_seg(child, [child.id], seg_count, cur_line, ls_id)
                             err_str = "Mandatory segment %s missing" % (child.id)
-                            mandatory_segs_missing.append((seg[0], '3', err_str))
+                            mandatory_segs_missing.append((seg.get_seg_id(), '3', err_str))
                             #break
                             #raise WEDIError, err_str
                         #else:
-                            #logger.debug('Segment %s is not a match for (%s*%s)' % (child.id, seg[0], seg[1]))
+                            #logger.debug('Segment %s is not a match for (%s*%s)' % (child.id, seg.get_seg_id(), seg[1]))
                     elif child.is_loop(): 
                         #logger.debug('child_node id=%s' % (child.id))
                         if self.is_first_seg_match(child, seg): 
@@ -163,13 +163,13 @@ class walk_tree:
                             node = child.children[0]
                             node.cur_count = 1
                             #logger.debug('MATCH Loop %s / Segment %s (%s*%s)' \
-                            #    % (child.id, node.id, seg[0], seg[1]))
+                            #    % (child.id, node.id, seg.get_seg_id(), seg[1]))
                             for (seg_id, err_cde, err_str) in mandatory_segs_missing:
                                 errh.seg_error(err_cde, err_str, None)
                             return node # Return the first segment in node
                         #else:
                             #logger.debug('Loop id=%s is not a match for (%s*%s)' % \
-                            #    (child.id, seg[0], seg[1]))
+                            #    (child.id, seg.get_seg_id(), seg[1]))
             if node.is_map_root(): # If at root and we haven't found the segment yet.
                 self._seg_not_found(orig_node, seg, errh)
                 return None
@@ -177,7 +177,7 @@ class walk_tree:
             node = self.pop_to_parent_loop(node) # Get enclosing parent loop
 
         self._seg_not_found(orig_node, seg, errh)
-        #err_str = "Segment %s not found" % (seg[0])
+        #err_str = "Segment %s not found" % (seg.get_seg_id())
         #errh.seg_error('1', err_str, None)
         return None
 
@@ -187,14 +187,14 @@ class walk_tree:
 #        return self.is_first_seg_match(node, seg):
 
     def _seg_not_found(self, orig_node, seg, errh):
-        if seg[0] == 'HL':
+        if seg.get_seg_id() == 'HL':
             seg_str = string.join(seg, '*')
         else:
-            seg_str = '%s*%s' % (seg[0], seg[1])
+            seg_str = '%s*%s' % (seg.get_seg_id(), seg[1])
         err_str = 'Segment %s not found.  Started at %s' % (seg_str, orig_node.get_path()) 
         errh.seg_error('1', err_str, None)
         #raise EngineError, "Could not find segment %s*%s.  Started at %s" % \
-        #    (seg[0], seg[1], orig_node.get_path())
+        #    (seg.get_seg_id(), seg[1], orig_node.get_path())
         
 
     def pop_to_parent_loop(self, node):

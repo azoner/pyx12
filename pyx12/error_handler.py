@@ -882,7 +882,7 @@ class err_seg(err_node):
         else:
             self.name = map_node.name
             self.pos = map_node.pos
-        self.seg_id = seg[0]
+        self.seg_id = seg.get_seg_id()
         self.seg_count = seg_count
         self.cur_line = cur_line
         self.ls_id = ls_id

@@ -116,7 +116,7 @@ class error_997_visitor(error_visitor.error_visitor):
 
         # GS*FA*ENCOUNTER*00GR*20030425*150153*653500001*X*004010
         seg = errh.cur_gs_node.seg
-        gs_seg = [seg[0], 'FA', seg[3], seg[2], time.strftime('%Y%m%d'), time.strftime('%H%M%S')]
+        gs_seg = [seg.get_seg_id(), 'FA', seg[3], seg[2], time.strftime('%Y%m%d'), time.strftime('%H%M%S')]
         gs_seg.extend([seg[6], seg[7], '004010'])
         self._write(gs_seg)
         self.gs_seg = gs_seg

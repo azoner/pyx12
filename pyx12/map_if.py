@@ -8,29 +8,32 @@
 #
 #    All rights reserved.
 #
-#       Redistribution and use in source and binary forms, with or without modification, 
-#       are permitted provided that the following conditions are met:
+#       Redistribution and use in source and binary forms, with or without
+#       modification, are permitted provided that the following conditions are
+#       met:
 #
-#       1. Redistributions of source code must retain the above copyright notice, this list 
-#          of conditions and the following disclaimer. 
+#       1. Redistributions of source code must retain the above copyright
+#       notice, this list of conditions and the following disclaimer. 
 #       
-#       2. Redistributions in binary form must reproduce the above copyright notice, this 
-#          list of conditions and the following disclaimer in the documentation and/or other 
-#          materials provided with the distribution. 
+#       2. Redistributions in binary form must reproduce the above copyright
+#       notice, this list of conditions and the following disclaimer in the
+#       documentation and/or other materials provided with the distribution. 
 #       
-#       3. The name of the author may not be used to endorse or promote products derived 
-#          from this software without specific prior written permission. 
+#       3. The name of the author may not be used to endorse or promote
+#       products derived from this software without specific prior written
+#       permission. 
 #
-#       THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR IMPLIED 
-#       WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF 
-#       MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO 
-#       EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, 
-#       EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT 
-#       OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS 
-#       INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN 
-#       CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) 
-#       ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF 
-#       THE POSSIBILITY OF SUCH DAMAGE.
+#       THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR
+#       IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+#       WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+#       DISCLAIMED. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT,
+#       INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+#       (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+#       SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
+#       HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
+#       STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING
+#       IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+#       POSSIBILITY OF SUCH DAMAGE.
 
 """
 Interface to a X12N IG Map
@@ -52,7 +55,9 @@ import codes
 from utils import *
 
 #Global Variables
-NodeType = {'element_start': 1, 'element_end': 15, 'attrib': 2, 'text': 3, 'CData': 4, 'entity_ref': 5, 'entity_decl':6, 'pi': 7, 'comment': 8, 'doc': 9, 'dtd': 10, 'doc_frag': 11, 'notation': 12}
+NodeType = {'element_start': 1, 'element_end': 15, 'attrib': 2, 'text': 3, 
+    'CData': 4, 'entity_ref': 5, 'entity_decl':6, 'pi': 7, 'comment': 8, 
+    'doc': 9, 'dtd': 10, 'doc_frag': 11, 'notation': 12}
 
 MAXINT = 2147483647
 
@@ -158,7 +163,8 @@ class x12_node:
 
 
 #    def debug_print(self):
-#       sys.stdout.write('%s%s %s %s %s\n' % (str(' '*self.base_level), self.base_name, self.base_level, self.id, self.name))
+#       sys.stdout.write('%s%s %s %s %s\n' % (str(' '*self.base_level), \
+#           self.base_name, self.base_level, self.id, self.name))
 #       for node in self.children:
 #           node.debug_print()
 
@@ -709,12 +715,12 @@ class segment_if(x12_node):
         Params:  seg - list of element values
         Returns: boolean
         """
-        if seg[0] == self.id:
+        if seg.get_seg_id() == self.id:
             if self.children[0].is_element() \
                 and self.children[0].data_type == 'ID' \
                 and len(self.children[0].valid_codes) > 0 \
                 and seg[1] not in self.children[0].valid_codes:
-                #logger.debug('is_match: %s %s' % (seg[0], seg[1]), self.children[0].valid_codes)
+                #logger.debug('is_match: %s %s' % (seg.get_seg_id(), seg[1]), self.children[0].valid_codes)
                 #pdb.set_trace()
                 return False
             elif self.children[0].is_composite() \
@@ -722,7 +728,7 @@ class segment_if(x12_node):
                 and len(self.children[0].children[0].valid_codes) > 0 \
                 and seg[1][0] not in self.children[0].children[0].valid_codes:
                 return False
-            elif seg[0] == 'HL' and self.children[2].is_element() \
+            elif seg.get_seg_id() == 'HL' and self.children[2].is_element() \
                 and len(self.children[2].valid_codes) > 0 \
                 and seg[3] not in self.children[2].valid_codes:
                 return False
@@ -746,7 +752,7 @@ class segment_if(x12_node):
         if (len(seg)-1) > child_count:
             child_node = self.get_child_node_by_idx(child_count+1)
             err_str = 'Too many elements in segment %s. Has %i, should have %i' % \
-                (seg[0], len(seg)-1, child_count)
+                (seg.get_seg_id(), len(seg)-1, child_count)
             #self.logger.error(err_str)
             err_value = seg[child_count+1]
             errh.seg_error('3', err_str, err_value)
@@ -1375,7 +1381,7 @@ def is_syntax_valid(seg, syn):
                 count += 1
         if count != 0 and count != len(syn)-1:
             err_str = 'Syntax Error (%s): If any of %s is present, then all are required'\
-                % (syntax_str(syn), syntax_ele_id_str(seg[0], syn[1:]))
+                % (syntax_str(syn), syntax_ele_id_str(seg.get_seg_id(), syn[1:]))
             return (False, err_str)
         else:
             return (True, None)
@@ -1397,7 +1403,7 @@ def is_syntax_valid(seg, syn):
                 count += 1
         if count > 1:
             err_str = 'Syntax Error (%s): At most one of %s may be present'\
-                % (syntax_str(syn), syntax_ele_id_str(seg[0], syn[1:]))
+                % (syntax_str(syn), syntax_ele_id_str(seg.get_seg_id(), syn[1:]))
             return (False, err_str)
         else:
             return (True, None)
@@ -1412,7 +1418,7 @@ def is_syntax_valid(seg, syn):
                 if len(syn[2:]) > 1: verb = 'are'
                 else: verb = 'is'
                 err_str = 'Syntax Error (%s): If %s%02i is present, then %s %s required'\
-                    % (syntax_str(syn), seg[0], syn[1], syntax_ele_id_str(seg[0], syn[2:]), verb)
+                    % (syntax_str(syn), seg.get_seg_id(), syn[1], syntax_ele_id_str(seg.get_seg_id(), syn[2:]), verb)
                 return (False, err_str)
             else:
                 return (True, None)
@@ -1426,8 +1432,8 @@ def is_syntax_valid(seg, syn):
                     count += 1
             if count == 0:
                 err_str = 'Syntax Error (%s): If %s%02i is present, then at least one of '\
-                    % (syntax_str(syn), seg[0], syn[1])
-                err_str += syntax_ele_id_str(seg[0], syn[2:])
+                    % (syntax_str(syn), seg.get_seg_id(), syn[1])
+                err_str += syntax_ele_id_str(seg.get_seg_id(), syn[2:])
                 err_str += ' is required'
                 return (False, err_str)
             else:

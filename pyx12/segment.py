@@ -140,7 +140,10 @@ class segment:
         self.seg_term_orig = seg_term
         self.ele_term = ele_term
         self.ele_term_orig = ele_term
-        elems = string.split(seg_str, self.ele_term)
+        if seg_str[-1] == seg_term:
+            elems = string.split(seg_str[:-1], self.ele_term)
+        else:
+            elems = string.split(seg_str, self.ele_term)
         self.elements = []
         self.seg_id = elems[0]
         for ele in elems[1:]:
@@ -148,8 +151,8 @@ class segment:
                 self.elements.append(composite(ele, subele_term))
             else:
                 self.elements.append(element(ele))
-        if self.seg_id == 'ISA':
-            self.elements.append(element(subele_term))
+        #if self.seg_id == 'ISA':
+        #    self.elements.append(element(subele_term))
     
     def __repr__(self):
         """function __repr__

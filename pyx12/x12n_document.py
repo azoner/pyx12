@@ -1,4 +1,5 @@
-# script to validate a X12N batch transaction set  and convert it into an XML document
+# script to validate a X12N batch transaction set  and convert it into an XML
+# document
 #
 #    $Id$
 #    This file is part of the pyX12 project.
@@ -8,29 +9,32 @@
 #
 #    All rights reserved.
 #
-#        Redistribution and use in source and binary forms, with or without modification, 
-#        are permitted provided that the following conditions are met:
+#        Redistribution and use in source and binary forms, with or without
+#        modification, are permitted provided that the following conditions are
+#        met:
 #
-#        1. Redistributions of source code must retain the above copyright notice, this list 
-#           of conditions and the following disclaimer. 
+#        1. Redistributions of source code must retain the above copyright
+#        notice, this list of conditions and the following disclaimer. 
 #        
-#        2. Redistributions in binary form must reproduce the above copyright notice, this 
-#           list of conditions and the following disclaimer in the documentation and/or other 
-#           materials provided with the distribution. 
+#        2. Redistributions in binary form must reproduce the above copyright
+#        notice, this list of conditions and the following disclaimer in the
+#        documentation and/or other materials provided with the distribution. 
 #        
-#        3. The name of the author may not be used to endorse or promote products derived 
-#           from this software without specific prior written permission. 
+#        3. The name of the author may not be used to endorse or promote
+#        products derived from this software without specific prior written
+#        permission. 
 #
-#        THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR IMPLIED 
-#        WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF 
-#        MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO 
-#        EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, 
-#        EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT 
-#        OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS 
-#        INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN 
-#        CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) 
-#        ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF 
-#        THE POSSIBILITY OF SUCH DAMAGE.
+#        THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR
+#        IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+#        WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+#        DISCLAIMED. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT,
+#        INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+#        (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+#        SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
+#        HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
+#        STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING
+#        IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+#        POSSIBILITY OF SUCH DAMAGE.
 
 """
 Parse a ANSI X12N data file.
@@ -90,14 +94,14 @@ def x12n_document(param, src_file, fd_997, fd_html, fd_xmldoc=None):
     walker = walk_tree()
     #Determine which map to use for this transaction
     for seg in src:
-        if seg[0] == 'ISA':
+        if seg.get_seg_id() == 'ISA':
             #map_node = walker.walk(control_map, seg)
             map_node = control_map.getnodebypath('/ISA')
             errh.add_isa_loop(seg, src)
             map_node.is_valid(seg, errh)
             #map_node = control_map
             icvn = map_node.get_elemval_by_id(seg, 'ISA12')
-        elif seg[0] == 'GS':
+        elif seg.get_seg_id() == 'GS':
             #map_node = walker.walk(map_node, seg)
             map_node = control_map.getnodebypath('/GS')
             errh.add_gs_loop(seg, src)
@@ -149,17 +153,17 @@ def x12n_document(param, src_file, fd_997, fd_html, fd_xmldoc=None):
             continue
 
         if node is None:
-            #raise EngineError, 'Node is None (%s)' % (seg[0])
+            #raise EngineError, 'Node is None (%s)' % (seg.get_seg_id())
             node = orig_node
         else:
 
-            if seg[0] == 'ISA':
+            if seg.get_seg_id() == 'ISA':
                 errh.add_isa_loop(seg, src)
-            elif seg[0] == 'IEA':
+            elif seg.get_seg_id() == 'IEA':
                 errh.close_isa_loop(node, seg, src)
                 # Generate 997
                 #XXX Generate TA1 if needed.
-            elif seg[0] == 'GS':
+            elif seg.get_seg_id() == 'GS':
                 fic = map_node.get_elemval_by_id(seg, 'GS01')
                 vriic = map_node.get_elemval_by_id(seg, 'GS08')
                 #map_node = control_map.getnodebypath('/GS')
@@ -176,11 +180,11 @@ def x12n_document(param, src_file, fd_997, fd_html, fd_xmldoc=None):
                     node = map.getnodebypath('/GS')
                     node.cur_count = 1
                 errh.add_gs_loop(seg, src)
-            elif seg[0] == 'GE':
+            elif seg.get_seg_id() == 'GE':
                 errh.close_gs_loop(node, seg, src)
-            elif seg[0] == 'ST':
+            elif seg.get_seg_id() == 'ST':
                     errh.add_st_loop(seg, src)
-            elif seg[0] == 'SE':
+            elif seg.get_seg_id() == 'SE':
                 errh.close_st_loop(node, seg, src)
             else:
                 errh.add_seg(node, seg, src.get_seg_count(), src.get_cur_line(), src.get_ls_id())
