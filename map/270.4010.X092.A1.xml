@@ -641,7 +641,7 @@
             <loop xid="2000B">
               <name>Information Receiver Level</name>
               <usage>R</usage>
-              <pos>010</pos>
+              <pos>040</pos>
               <repeat>&gt;1</repeat>
               <segment xid="HL">
                 <name>Information Receiver Level</name>
@@ -1171,7 +1171,7 @@
               <loop xid="2000C">
                 <name>Subscriber Level</name>
                 <usage>R</usage>
-                <pos>010</pos>
+                <pos>040</pos>
                 <repeat>&gt;1</repeat>
                 <segment xid="HL">
                   <name>Subscriber Level</name>
@@ -2476,7 +2476,7 @@
                 <loop xid="2000D">
                   <name>Dependent Level</name>
                   <usage>S</usage>
-                  <pos>010</pos>
+                  <pos>040</pos>
                   <repeat>&gt;1</repeat>
                   <segment xid="HL">
                     <name>Dependent Level</name>

@@ -1971,7 +1971,7 @@
             <loop xid="2000B">
               <name>Subscriber Hierarchical Level</name>
               <usage>R</usage>
-              <pos>001</pos>
+              <pos>020</pos>
               <count>&gt;1</count>
               <segment xid="HL">
                 <name>Subscriber Hierarchical Level</name>
@@ -16662,7 +16662,7 @@
               <loop xid="2000C">
                 <name>Patient Hierarchical Level</name>
                 <usage>S</usage>
-                <pos>001</pos>
+                <pos>140</pos>
                 <count>&gt;1</count>
                 <segment xid="HL">
                   <name>Patient Hierarchical Level</name>

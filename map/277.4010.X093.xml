@@ -737,7 +737,7 @@
             <loop xid="2000B">
               <name>Information Receiver Level</name>
               <usage>R</usage>
-              <pos>010</pos>
+              <pos>060</pos>
               <count>&gt;1</count>
               <segment xid="HL">
                 <name>Information Receiver Level</name>
@@ -918,7 +918,7 @@
               <loop xid="2000C">
                 <name>Service Provider Level</name>
                 <usage>R</usage>
-                <pos>010</pos>
+                <pos>060</pos>
                 <count>&gt;1</count>
                 <segment xid="HL">
                   <name>Service Provider Level</name>
@@ -1099,7 +1099,7 @@
                 <loop xid="2000D">
                   <name>Subscriber Level</name>
                   <usage>R</usage>
-                  <pos>010</pos>
+                  <pos>060</pos>
                   <count>&gt;1</count>
                   <segment xid="HL">
                     <name>Subscriber Level</name>
@@ -2248,7 +2248,7 @@
                   <loop xid="2000E">
                     <name>Dependent Level</name>
                     <usage>S</usage>
-                    <pos>010</pos>
+                    <pos>100</pos>
                     <count>&gt;1</count>
                     <segment xid="HL">
                       <name>Dependent Level</name>

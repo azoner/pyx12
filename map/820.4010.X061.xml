@@ -2524,7 +2524,7 @@
           <loop xid="2000B">
             <name>Individual Remittance</name>
             <usage>S</usage>
-            <pos>010</pos>
+            <pos>160</pos>
             <count>&gt;1</count>
             <segment xid="ENT">
               <name>Individual Remittance</name>

@@ -4698,11 +4698,7 @@
               <min_len>1</min_len>
               <max_len>18</max_len>
             </element>
-          </segment>
-<!--End of PLB segment-->
-        </loop>
-<!--End of FOOTER loop-->
-        <segment xid="SE">
+         <segment xid="SE">
           <name>Transaction Set Trailer</name>
           <usage>R</usage>
           <pos>020</pos>
@@ -4727,6 +4723,10 @@
           </element>
         </segment>
 <!--End of SE segment-->
+          </segment>
+<!--End of PLB segment-->
+        </loop>
+<!--End of FOOTER loop-->
       </loop>
 <!--End of ST loop-->
       <segment xid="GE">
