@@ -41,8 +41,8 @@ class IEA_Checks(unittest.TestCase):
 
     def test_IEA_id_match_ISA_id(self):
         seg = None
-        str = 'ISA*00*          *00*          *ZZ*00GR           *ZZ*ENCOUNTER      *030828*1128*U*00401*000010121*0*T*:~\n'
-        str += 'GS*HC*00GR*ENCOUNTER*20030828*1128*17*X*004010X098~\n'
+        str = 'ISA*00*          *00*          *ZZ*ZZ000          *ZZ*ZZ001          *030828*1128*U*00401*000010121*0*T*:~\n'
+        str += 'GS*HC*ZZ000*ZZ001*20030828*1128*17*X*004010X098~\n'
         str += 'GE*0*17~\n'
         str += 'IEA*1*000010555~\n'
         self.fd = StringIO.StringIO(str)
@@ -54,8 +54,8 @@ class IEA_Checks(unittest.TestCase):
 
     def test_IEA_count(self):
         seg = None
-        str = 'ISA*00*          *00*          *ZZ*00GR           *ZZ*ENCOUNTER      *030828*1128*U*00401*000010121*0*T*:~\n'
-        str += 'GS*HC*00GR*ENCOUNTER*20030828*1128*17*X*004010X098~\n'
+        str = 'ISA*00*          *00*          *ZZ*ZZ000          *ZZ*ZZ001          *030828*1128*U*00401*000010121*0*T*:~\n'
+        str += 'GS*HC*ZZ000*ZZ001*20030828*1128*17*X*004010X098~\n'
         str += 'GE*0*17~\n'
         str += 'IEA*2*000010121~\n'
         self.fd = StringIO.StringIO(str)
@@ -75,8 +75,8 @@ class GE_Checks(unittest.TestCase):
 
     def test_GE_id_match_GS_id(self):
         seg = None
-        str = 'ISA*00*          *00*          *ZZ*00GR           *ZZ*ENCOUNTER      *030828*1128*U*00401*000010121*0*T*:~\n'
-        str += 'GS*HC*00GR*ENCOUNTER*20030828*1128*17*X*004010X098~\n'
+        str = 'ISA*00*          *00*          *ZZ*ZZ000          *ZZ*ZZ001          *030828*1128*U*00401*000010121*0*T*:~\n'
+        str += 'GS*HC*ZZ000*ZZ001*20030828*1128*17*X*004010X098~\n'
         str += 'GE*0*555~\n'
         str += 'IEA*1*000010121~\n'
         self.fd = StringIO.StringIO(str)
@@ -87,8 +87,8 @@ class GE_Checks(unittest.TestCase):
 
     def test_GE_count(self):
         seg = None
-        str = 'ISA*00*          *00*          *ZZ*00GR           *ZZ*ENCOUNTER      *030828*1128*U*00401*000010121*0*T*:~\n'
-        str += 'GS*HC*00GR*ENCOUNTER*20030828*1128*17*X*004010X098~\n'
+        str = 'ISA*00*          *00*          *ZZ*ZZ000          *ZZ*ZZ001          *030828*1128*U*00401*000010121*0*T*:~\n'
+        str += 'GS*HC*ZZ000*ZZ001*20030828*1128*17*X*004010X098~\n'
         str += 'GE*999*17~\n'
         str += 'IEA*1*000010121~\n'
         self.fd = StringIO.StringIO(str)
@@ -96,6 +96,20 @@ class GE_Checks(unittest.TestCase):
         while seg in src:
             pass
         self.assertEqual(self.errh.err_cde, '5', self.errh.err_str)
+
+    def test_Unique_Functional_Group_ID(self):
+        seg = None
+        str = 'ISA*00*          *00*          *ZZ*ZZ000          *ZZ*ZZ001          *030828*1128*U*00401*000010121*0*T*:~\n'
+        str += 'GS*HC*ZZ000*ZZ001*20030828*1128*17*X*004010X098~\n'
+        str += 'GE*0*17~\n'
+        str += 'GS*HC*ZZ000*ZZ001*20030828*1128*17*X*004010X098~\n'
+        str += 'GE*0*17~\n'
+        str += 'IEA*2*000010121~\n'
+        self.fd = StringIO.StringIO(str)
+        src = x12file.x12file(self.fd, self.errh)
+        while seg in src:
+            pass
+        self.assertEqual(self.errh.err_cde, '6', self.errh.err_str)
 
     def tearDown(self):
         self.fd.close()
@@ -107,8 +121,8 @@ class SE_Checks(unittest.TestCase):
 
     def test_SE_id_match_ST_id(self):
         seg = None
-        str = 'ISA*00*          *00*          *ZZ*00GR           *ZZ*ENCOUNTER      *030828*1128*U*00401*000010121*0*T*:~\n'
-        str += 'GS*HC*00GR*ENCOUNTER*20030828*1128*17*X*004010X098~\n'
+        str = 'ISA*00*          *00*          *ZZ*ZZ000          *ZZ*ZZ001          *030828*1128*U*00401*000010121*0*T*:~\n'
+        str += 'GS*HC*ZZ000*ZZ001*20030828*1128*17*X*004010X098~\n'
         str += 'ST*837*11280001~\n'
         str += 'SE*2*11280999~\n'
         str += 'GE*1*17~\n'
@@ -121,8 +135,8 @@ class SE_Checks(unittest.TestCase):
 
     def test_SE_count(self):
         seg = None
-        str = 'ISA*00*          *00*          *ZZ*00GR           *ZZ*ENCOUNTER      *030828*1128*U*00401*000010121*0*T*:~\n'
-        str += 'GS*HC*00GR*ENCOUNTER*20030828*1128*17*X*004010X098~\n'
+        str = 'ISA*00*          *00*          *ZZ*ZZ000          *ZZ*ZZ001          *030828*1128*U*00401*000010121*0*T*:~\n'
+        str += 'GS*HC*ZZ000*ZZ001*20030828*1128*17*X*004010X098~\n'
         str += 'ST*837*11280001~\n'
         str += 'SE*0*11280001~\n'
         str += 'GE*1*17~\n'
@@ -132,6 +146,22 @@ class SE_Checks(unittest.TestCase):
         while seg in src:
             pass
         self.assertEqual(self.errh.err_cde, '4', self.errh.err_str)
+
+    def test_Unique_Transaction_Set_ID(self):
+        seg = None
+        str = 'ISA*00*          *00*          *ZZ*ZZ000          *ZZ*ZZ001          *030828*1128*U*00401*000010121*0*T*:~\n'
+        str += 'GS*HC*ZZ000*ZZ001*20030828*1128*17*X*004010X098~\n'
+        str += 'ST*837*11280001~\n'
+        str += 'SE*2*11280001~\n'
+        str += 'ST*837*11280001~\n'
+        str += 'SE*2*11280001~\n'
+        str += 'GE*2*17~\n'
+        str += 'IEA*1*000010121~\n'
+        self.fd = StringIO.StringIO(str)
+        src = x12file.x12file(self.fd, self.errh)
+        while seg in src:
+            pass
+        self.assertEqual(self.errh.err_cde, '23', self.errh.err_str)
 
     def tearDown(self):
         self.fd.close()
