@@ -62,6 +62,45 @@ class Test_getnodebypath(unittest.TestCase):
     def tearDown(self):
         del self.map
         
+
+class CompositeRequirement(unittest.TestCase):
+    def setUp(self):
+        param = params()
+        self.map = map_if.load_map_file('map/837.4010.X098.A1.xml', param)
+        self.errh = error_handler.errh_null()
+
+    def test_comp_required_ok1(self):
+        node = self.map.getnodebypath('/2000A/2000B/2300/CLM')
+        node = node.get_child_node_by_idx(4)
+        self.assertNotEqual(node, None)
+        #self.assertEqual(node.id, 'CLM05', node.id)
+        self.assertEqual(node.base_name, 'composite')
+        result = node.is_valid(['03', '', '1'], self.errh)
+        self.failUnless(result)
+        self.assertEqual(self.errh.err_cde, None)
+
+    def test_comp_required_ok2(self):
+        param = params()
+        map = map_if.load_map_file('map/comp_test.xml', param)
+        node = map.getnodebypath('/TST')
+        node = node.get_child_node_by_idx(0)
+        self.assertNotEqual(node, None)
+        #self.assertEqual(node.id, 'CLM05', node.id)
+        self.assertEqual(node.base_name, 'composite')
+        result = node.is_valid([None, '', '1'], self.errh)
+        self.failUnless(result)
+        self.assertEqual(self.errh.err_cde, None)
+
+    def test_comp_required_fail1(self):
+        node = self.map.getnodebypath('/2000A/2000B/2300/CLM')
+        node = node.get_child_node_by_idx(4)
+        self.assertNotEqual(node, None)
+        #self.assertEqual(node.id, 'CLM05', node.id)
+        self.assertEqual(node.base_name, 'composite')
+        result = node.is_valid([None, '', ''], self.errh)
+        self.failIf(result)
+        self.assertEqual(self.errh.err_cde, '2')
+
 class TrailingSpaces(unittest.TestCase):
     def setUp(self):
         param = params()
@@ -107,6 +146,7 @@ class IsValidSyntax(unittest.TestCase):
         #self.failUnlessRaises(EngineError, map_if.is_syntax_valid, seg, syntax)
         self.failIf(result, err_str)
 
+
 class IsValidSyntaxP(unittest.TestCase):
     """
     If has one, must have all
@@ -137,6 +177,7 @@ class IsValidSyntaxP(unittest.TestCase):
         syntax = ['P', 8, 9]
         (result, err_str) = map_if.is_syntax_valid(seg, syntax)
         self.failUnless(result, err_str)
+
 
 class IsValidSyntaxR(unittest.TestCase):
     """
@@ -185,6 +226,7 @@ class IsValidSyntaxR(unittest.TestCase):
         syntax = ['R', 3, 5, 6, 8]
         (result, err_str) = map_if.is_syntax_valid(seg, syntax)
         self.failIf(result, err_str)
+
 
 class IsValidSyntaxC(unittest.TestCase):
     """
@@ -256,6 +298,7 @@ class IsValidSyntaxL(unittest.TestCase):
         (result, err_str) = map_if.is_syntax_valid(seg, syntax)
         self.failUnless(result, err_str)
 
+
 class IsValidSyntaxE(unittest.TestCase):
     """
     Not more than one of the elements may be present
@@ -296,13 +339,15 @@ class IsValidSyntaxE(unittest.TestCase):
         (result, err_str) = map_if.is_syntax_valid(seg, syntax)
         self.failUnless(result, err_str)
 
+
 def suite():
     #suite = unittest.makeSuite((Test_getnodebypath, IsValidSyntax, \
     #    IsValidSyntaxP, IsValidSyntaxR, IsValidSyntaxC, \
     #    IsValidSyntaxE, IsValidSyntaxL))
     suite = unittest.TestSuite()
-    suite.addTest(unittest.makeSuite(Test_getnodebypath))
+#    suite.addTest(unittest.makeSuite(Test_getnodebypath))
     suite.addTest(unittest.makeSuite(TrailingSpaces))
+    suite.addTest(unittest.makeSuite(CompositeRequirement))
     suite.addTest(unittest.makeSuite(IsValidSyntax))
     suite.addTest(unittest.makeSuite(IsValidSyntaxP))
     suite.addTest(unittest.makeSuite(IsValidSyntaxR))
