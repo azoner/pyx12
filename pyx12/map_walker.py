@@ -62,6 +62,7 @@ class walk_tree:
         @rtype: L{node<map_if.x12_node>}
 
         @todo: Handle maximum loop count exceeded
+        @todo: Handle walk into grouping loops
         """
 
         orig_node = node

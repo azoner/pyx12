@@ -14,15 +14,6 @@ Error Handling
   Combine error XML with HTML/XML/997 output
   Error specifications - XML
 
-Restructure maps
-  Add loop wrappers to ISA/GS/ST
-  Mod map_if and map_walker to match
-
-HTML output
-  Informational lines
-    Explicit loops
-  GS errors are re-printing at the GE level
-
 Unit Testing
   map_walker
   x12file - HL

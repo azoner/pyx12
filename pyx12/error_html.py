@@ -40,6 +40,9 @@ class error_html:
         @type fd: file descriptor
         @param term: tuple of x12 terminators used
         @type term: tuple(string, string, string, string)
+
+        @todo: GS errors are re-printing at the GE level
+        @todo: Informational lines - Show loops
         """
         self.errh = errh
         self.fd = fd
