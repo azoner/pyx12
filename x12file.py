@@ -74,7 +74,7 @@ class x12file:
         ISA_len = 106
         line = fd.read(ISA_len)
         if line[:3] != 'ISA': 
-            raise WEDI1Error, "First line does not begin with 'ISA': %s" % line[:3]
+            raise x12Error, "First line does not begin with 'ISA': %s" % line[:3]
         assert (len(line) == ISA_len), "ISA line is only %i characters" % len(line)
         self.seg_term = line[-1]
         self.ele_term = line[3]
