@@ -61,7 +61,14 @@ class Alter(unittest.TestCase):
         seg_str = 'TST*AA:1:1*BB:5*ZZ'
         seg = pyx12.segment.segment(seg_str, '~', '*', ':')
         seg[2] = 'YY'
-        self.assertEqual(seg.__repr__(), 'TST*AA:1:1*BB:5*YY~')
+        self.assertEqual(seg.format(), 'TST*AA:1:1*BB:5*YY~')
+
+    def test_alter_composite(self):
+        seg_str = 'TST*AA:1:1*BB:5*ZZ~'
+        seg = pyx12.segment.segment(seg_str, '~', '*', ':')
+        seg[1] = 'CC:2'
+        self.assertEqual(seg.format(), 'TST*AA:1:1*CC:2*ZZ~')
+
 
 class Composite(unittest.TestCase):
 
@@ -124,6 +131,9 @@ class RefDes(unittest.TestCase):
 
     def test_composite2(self):
         self.assertEqual(self.seg.get_value_by_ref_des('TST04-1'), 'BB')
+
+    def test_composite3(self):
+        self.assertEqual(self.seg.get_value_by_ref_des('TST04'), 'BB:5')
 
 
 class IsEmpty(unittest.TestCase):

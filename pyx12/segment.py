@@ -234,17 +234,20 @@ class segment:
         return self.seg_id
 
     def get_value_by_ref_des(self, ref_des):
+        """
+        """
         if ref_des[:len(self.seg_id)] != self.seg_id:
             raise EngineError, 'Invalid ref_des: %s, seg_id: %s' % (ref_des, self.seg_id)
         rest = ref_des[len(self.seg_id):]
         dash = rest.find('-')
         if dash == -1:
             ele_idx = int(rest) - 1
-            comp_idx = 0
+            #comp_idx = 0
+            return self.elements[ele_idx].format()
         else:
             ele_idx = int(rest[:dash]) - 1
             comp_idx = int(rest[dash+1:]) - 1
-        return self.elements[ele_idx][comp_idx].get_value()
+            return self.elements[ele_idx][comp_idx].get_value()
     
     def set_seg_term(self, seg_term):
         self.seg_term = seg_term
