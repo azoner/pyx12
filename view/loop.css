@@ -1,0 +1,17 @@
+table
+{
+    width: 100%; 
+    border:1px solid white;
+    background-color: #0000CC;
+}
+
+tr.loop
+{
+    background-color: #CCCCFF;
+    color: black;
+    font-style: normal;
+    height: 20px;
+    text-align: center;
+    vertical-align: top;
+    width: 17%;
+}
