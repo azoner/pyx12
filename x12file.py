@@ -157,6 +157,8 @@ class x12file:
         return (isa_id, gs_id, st_id, self.seg_count, self.cur_line)
 
 
+    def print(self):
+        sys.stdout.write('\n')
 #    def close(self):
 #        """Free the memory buffer.
 #        """
