@@ -166,6 +166,48 @@ class SE_Checks(unittest.TestCase):
     def tearDown(self):
         self.fd.close()
 
+class HL_Checks(unittest.TestCase):
+    def setUp(self):
+        self.fd = None
+        self.errh = error_handler.errh_null()
+
+    def test_HL_increment_good(self):
+        seg = None
+        str = 'ISA*00*          *00*          *ZZ*ZZ000          *ZZ*ZZ001          *030828*1128*U*00401*000010121*0*T*:~\n'
+        str += 'GS*HC*ZZ000*ZZ001*20030828*1128*17*X*004010X098~\n'
+        str += 'ST*837*11280001~\n'
+        str += 'HL*1**20*1~\n'
+        str += 'HL*2*1*22*1~\n'
+        str += 'HL*3*2*23*1~\n'
+        str += 'HL*4*1*22*1~\n'
+        str += 'SE*6*11280001~\n'
+        str += 'GE*1*17~\n'
+        str += 'IEA*1*000010121~\n'
+        self.fd = StringIO.StringIO(str)
+        src = x12file.x12file(self.fd, self.errh)
+        while seg in src:
+            pass
+        self.assertEqual(self.errh.err_cde, None, self.errh.err_str)
+
+    def test_HL_increment_good(self):
+        seg = None
+        str = 'ISA*00*          *00*          *ZZ*ZZ000          *ZZ*ZZ001          *030828*1128*U*00401*000010121*0*T*:~\n'
+        str += 'GS*HC*ZZ000*ZZ001*20030828*1128*17*X*004010X098~\n'
+        str += 'ST*837*11280001~\n'
+        str += 'HL*1**20*1~\n'
+        str += 'HL*2*1*22*1~\n'
+        str += 'HL*3*2*23*1~\n'
+        str += 'HL*5*1*22*1~\n'
+        str += 'SE*6*11280001~\n'
+        str += 'GE*1*17~\n'
+        str += 'IEA*1*000010121~\n'
+        self.fd = StringIO.StringIO(str)
+        src = x12file.x12file(self.fd, self.errh)
+        while seg in src:
+            pass
+        self.assertEqual(self.errh.err_cde, 'HL1', self.errh.err_str)
+
+
 
 def suite():
     suite = unittest.makeSuite((ISA_header, IEA_Checks, GE_Checks, SE_Checks))
