@@ -12,6 +12,7 @@
 
 """
 Holds Run-time Parameters
+
 Order of precedence:
  1. set(param) - Command line parameters
  2. '~/.pyx12rc' - User's directory

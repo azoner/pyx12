@@ -13,8 +13,8 @@
 """
 Walk a tree of x12_map nodes.  Find the correct node.
 
-If seg indicates a loop has been entered, returns the loop node
-If seg indicates a segment has been entered, returns the segment node
+If seg indicates a loop has been entered, returns the first child segment node.
+If seg indicates a segment has been entered, returns the segment node.
 """
 
 import logging
@@ -225,7 +225,7 @@ def pop_to_parent_loop(node):
     """
     @param node: Loop Node
     @type node: L{node<map_if.x12_node>}
-    @return: First ancestor loop node
+    @return: Closest parent loop node
     @rtype: L{node<map_if.x12_node>}
     """
     if node.is_map_root():

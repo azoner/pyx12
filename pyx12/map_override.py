@@ -11,14 +11,12 @@
 #    $Id$
 
 """
-Apply local overrides to the current map
+Apply local overrides to the current map.
 Overrides defined in a xml document. 
 """
 
 import libxml2
 import errors
-
-NodeType = {'element_start': 1, 'element_end': 15, 'attrib': 2, 'text': 3, 'CData': 4, 'entity_ref': 5, 'entity_decl':6, 'pi': 7, 'comment': 8, 'doc': 9, 'dtd': 10, 'doc_frag': 11, 'notation': 12}
 
 
 class map_override:
@@ -28,6 +26,11 @@ class map_override:
         except:
             raise errors.EngineError, 'Map file not found: %s' % (map_file)
                     
+        NodeType = {'element_start': 1, 'element_end': 15, 'attrib': 2, \
+            'text': 3, 'CData': 4, 'entity_ref': 5, 'entity_decl':6, \
+            'pi': 7, 'comment': 8, 'doc': 9, 'dtd': 10, 'doc_frag': 11, \
+            'notation': 12}
+
         while reader.Read():
             #processNode(reader)
             if reader.NodeType() == NodeType['element_start'] and reader.Name() == 'version':
