@@ -109,7 +109,7 @@ def main():
                 else:
                     fd_997 = open(target_997, 'w')
             else:
-                target_997 = os.path.splitext(src_filename)[0] + '.997.txt'
+                target_997 = os.path.splitext(src_filename)[0] + '.997'
                 fd_997 = open(target_997, 'w')
             if len(args) > 2:
                 target_html = args[1]
