@@ -3,6 +3,7 @@
 import unittest
 
 import pyx12.segment
+from pyx12.errors import *
 
 class ArbitraryDelimiters(unittest.TestCase):
 
@@ -20,16 +21,13 @@ class ArbitraryDelimiters(unittest.TestCase):
         self.assertEqual(len(self.seg), 3)
 
     def test_getitem3(self):
-        self.assertEqual(self.seg[3][1], 'ZZ')
-                    
-    def test_getitem_0(self):
-        self.failUnlessRaises(IndexError, self.seg.__getitem__, 0)
+        self.assertEqual(self.seg[2][0], 'ZZ')
                     
     def test_getitem1(self):
-        self.assertEqual(self.seg[1].__repr__(), 'AA!1!1')
+        self.assertEqual(self.seg[0].__repr__(), 'AA!1!1')
                     
     def test_getitem_minus_1(self):
-        self.assertEqual(self.seg[-1][1], 'ZZ')
+        self.assertEqual(self.seg[-1][0], 'ZZ')
                     
     def test_other_terms(self):
         self.assertEqual(self.seg.format('~', '*', ':', ''), 'TST*AA:1:1*BB:5*ZZ~')
@@ -62,7 +60,7 @@ class Alter(unittest.TestCase):
     def test_alter_element(self):
         seg_str = 'TST*AA:1:1*BB:5*ZZ'
         seg = pyx12.segment.segment(seg_str, '~', '*', ':')
-        seg[3] = 'YY'
+        seg[2] = 'YY'
         self.assertEqual(seg.__repr__(), 'TST*AA:1:1*BB:5*YY~')
 
 class Composite(unittest.TestCase):
@@ -72,17 +70,17 @@ class Composite(unittest.TestCase):
         self.seg = pyx12.segment.segment(seg_str, '~', '*', ':')
 
     def test_composite_is_a(self):
-        self.failUnless(self.seg[1].is_composite())
-        self.failIf(self.seg[1].is_element())
+        self.failUnless(self.seg[0].is_composite())
+        self.failIf(self.seg[0].is_element())
         
     def test_composite_len(self):
-        self.assertEqual(len(self.seg[1]), 3)
+        self.assertEqual(len(self.seg[0]), 3)
 
     def test_composite_indexing(self):
-        self.assertEqual(self.seg[1][1], 'AA')
-        self.assertEqual(self.seg[1][3], 'Y')
-        self.assertEqual(self.seg[1][-1], 'Y')
-        self.failUnlessRaises(IndexError, lambda x: self.seg[1][x], 4)
+        self.assertEqual(self.seg[0][0], 'AA')
+        self.assertEqual(self.seg[0][2], 'Y')
+        self.assertEqual(self.seg[0][-1], 'Y')
+        self.failUnlessRaises(IndexError, lambda x: self.seg[0][x], 3)
 
 
 class Simple(unittest.TestCase):
@@ -92,19 +90,40 @@ class Simple(unittest.TestCase):
         self.seg = pyx12.segment.segment(seg_str, '~', '*', ':')
 
     def test_simple_is_a(self):
-        self.failUnless(self.seg[1].is_element())
-        self.failIf(self.seg[1].is_composite())
+        self.failUnless(self.seg[0].is_element())
+        self.failIf(self.seg[0].is_composite())
         
     def test_simple_len(self):
-        self.assertEqual(len(self.seg[1]), 1)
+        self.assertEqual(len(self.seg[0]), 1)
 
     def test_simple_indexing(self):
-        self.assertEqual(self.seg[1][1], 'AA')
-        self.assertEqual(self.seg[2][1], '1')
-        self.assertEqual(self.seg[3][1], 'Y')
-        self.assertEqual(self.seg[3][-1], 'Y')
-        self.failUnlessRaises(IndexError, lambda x: self.seg[1][x], 2)
+        self.assertEqual(self.seg[0][0], 'AA')
+        self.assertEqual(self.seg[1][0], '1')
+        self.assertEqual(self.seg[2][0], 'Y')
+        self.assertEqual(self.seg[2][-1], 'Y')
+        self.failUnlessRaises(IndexError, lambda x: self.seg[0][x], 1)
 
+
+class RefDes(unittest.TestCase):
+
+    def setUp(self):
+        seg_str = 'TST*AA*1*Y*BB:5*ZZ'
+        self.seg = pyx12.segment.segment(seg_str, '~', '*', ':')
+
+    def test_simple1(self):
+        self.assertEqual(self.seg.get_value_by_ref_des('TST01'), 'AA')
+
+    def test_fail_seg_id(self):
+        self.failUnlessRaises(EngineError, self.seg.get_value_by_ref_des, 'XXX01')
+
+    def test_simple2(self):
+        self.assertEqual(self.seg.get_value_by_ref_des('TST02'), '1')
+
+    def test_composite1(self):
+        self.assertEqual(self.seg.get_value_by_ref_des('TST04-2'), '5')
+
+    def test_composite2(self):
+        self.assertEqual(self.seg.get_value_by_ref_des('TST04-1'), 'BB')
 
 
 def suite():
@@ -114,6 +133,7 @@ def suite():
     suite.addTest(unittest.makeSuite(Alter))
     suite.addTest(unittest.makeSuite(Composite))
     suite.addTest(unittest.makeSuite(Simple))
+    suite.addTest(unittest.makeSuite(RefDes))
     return suite
 
 #if __name__ == "__main__":

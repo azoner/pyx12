@@ -33,13 +33,24 @@
 #        IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 #        POSSIBILITY OF SUCH DAMAGE.
 
+"""
+Implements an interface to a x12 segment.
+
+A segment is comprised of a segment identifier and a sequence of elements.
+An element can be a simple element or a composite.  A simple element is 
+treated as a composite element with one sub-element.
+
+All indexing is zero based.
+"""
+
 import string
+
+from pyx12.errors import *
 
 class element:
     """Class element
 
        Can be a simple element or a composite
-       INDEXING IS 1 BASED
        A simple element is treated as a composite element with one sub-element.
     """
     # Attributes:
@@ -58,16 +69,9 @@ class element:
         
     def __getitem__(self, idx):
         """function operator[]
-        1 based index
-        [0] throws exception
         returns element value for idx
         """
-        if idx == 0:
-            raise IndexError, 'element index out of range'
-        elif idx < 0:
-            return self.elements[idx]
-        else:
-            return self.elements[idx-1]
+        return self.elements[idx]
 
     def __setitem__(self, idx, val):
         """function operator[]=
@@ -75,13 +79,7 @@ class element:
         [0] throws exception
         sets element value for idx
         """
-        if idx == 0:
-            raise IndexError, 'list index out of range'
-        elif idx < 0:
-            i = idx
-        else:
-            i = idx - 1
-        self.elements[i] = val
+        self.elements[idx] = val
 
     def __len__(self):
         """function length
@@ -157,29 +155,14 @@ class segment:
     
     def __getitem__(self, idx):
         """function operator[]
-        1 based index
-        [0] throws exception
-        returns base element instance
+        returns element instance
         """
-        if idx == 0:
-            raise IndexError, 'list index out of range'
-        elif idx < 0:
-            return self.elements[idx]
-        else:
-            return self.elements[idx-1]
+        return self.elements[idx]
 
     def __setitem__(self, idx, val):
         """function operator[]
-        1 based index
-        [0] throws exception
         """
-        if idx == 0:
-            raise IndexError, 'list index out of range'
-        elif idx < 0:
-            i = idx
-        else:
-            i = idx - 1
-        self.elements[i] = element(val, self.subele_term)
+        self.elements[idx] = element(val, self.subele_term)
 
     def __len__(self):
         return len(self.elements)
@@ -190,6 +173,19 @@ class segment:
         returns string
         """
         return self.seg_id
+
+    def get_value_by_ref_des(self, ref_des):
+        if ref_des[:len(self.seg_id)] != self.seg_id:
+            raise EngineError, 'Invalid ref_des: %s, seg_id: %s' % (ref_des, self.seg_id)
+        rest = ref_des[len(self.seg_id):]
+        dash = rest.find('-')
+        if dash == -1:
+            ele_idx = int(rest) - 1
+            comp_idx = 0
+        else:
+            ele_idx = int(rest[:dash]) - 1
+            comp_idx = int(rest[dash+1:]) - 1
+        return self.elements[ele_idx][comp_idx]
     
     def set_seg_term(self, seg_term):
         self.seg_term = seg_term
