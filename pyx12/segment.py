@@ -49,6 +49,7 @@ from pyx12.errors import *
 
 class element:
     """
+    Holds a simple element, which is just a simple string.
     """
 
     def __init__(self, ele_str):
@@ -109,7 +110,7 @@ class element:
 
 class composite:
     """
-    Can be a simple element or a composite
+    Can be a simple element or a composite.
     A simple element is treated as a composite element with one sub-element.
     """
     # Attributes:
@@ -196,6 +197,7 @@ class composite:
 
 class segment:
     """
+    Encapsulates a X12 segment.  Contains composites.
     """
     # Attributes:
     
