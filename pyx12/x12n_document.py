@@ -169,7 +169,8 @@ def x12n_document(param, src_file, fd_997, fd_html, fd_xmldoc=None):
                     cur_map = map_if.load_map_file(map_file, param)
                     logger.debug('Map file: %s' % (map_file))
                     node = cur_map.getnodebypath('/ISA_LOOP/GS_LOOP/GS')
-                    node.cur_count = 1
+                    node.reset_cur_count()
+                    node.incr_cur_count()
                 errh.add_gs_loop(seg, src)
             elif seg.get_seg_id() == 'GE':
                 errh.close_gs_loop(node, seg, src)
@@ -184,7 +185,7 @@ def x12n_document(param, src_file, fd_997, fd_html, fd_xmldoc=None):
 
         if fd_html:
             if node is not None and node.is_first_seg_in_loop():
-                html.gen_info('Loop %s: %s' % (node.get_parent().id, node.get_parent().name))
+                html.loop(node.get_parent())
             err_node_list = []
             #cur_line = src.cur_line
             while 1:

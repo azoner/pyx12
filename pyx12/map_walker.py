@@ -18,7 +18,7 @@ If seg indicates a segment has been entered, returns the segment node.
 """
 
 import logging
-#import pdb
+import pdb
 #import string
 
 # Intrapackage imports
@@ -118,16 +118,16 @@ class walk_tree:
                         #logger.debug('id=%s cur_count=%i max_repeat=%i' \
                         #    % (child.id, child.cur_count, child.get_max_repeat()))
                         if child.is_match(seg_data):
-                            child.cur_count += 1
+                            child.incr_cur_count()
                             #logger.debug('MATCH segment %s (%s*%s)' % (child.id,\
                             #   seg_data.get_seg_id(), seg_data[0].get_value()))
                             if child.usage == 'N':
                                 err_str = "Segment %s found but marked as not used" % (child.id)
                                 errh.seg_error('2', err_str, None)
                             elif child.usage == 'R' or child.usage == 'S':
-                                if child.cur_count > child.get_max_repeat():  # handle seg repeat count
+                                if child.get_cur_count() > child.get_max_repeat():  # handle seg repeat count
                                     err_str = "Segment %s exceeded max count.  Found %i, should have %i" \
-                                        % (seg_data.get_seg_id(), child.cur_count, child.get_max_repeat())
+                                        % (seg_data.get_seg_id(), child.get_cur_count(), child.get_max_repeat())
                                     errh.add_seg(child, seg_data, seg_count, cur_line, ls_id)
                                     errh.seg_error('5', err_str, None)
                             else:
@@ -140,7 +140,7 @@ class walk_tree:
                                 #return node1.get_child_node_by_idx(0)
                             self._flush_mandatory_segs(errh)
                             return child
-                        elif child.usage == 'R' and child.cur_count < 1:
+                        elif child.usage == 'R' and child.get_cur_count() < 1:
                             fake_seg = pyx12.segment.segment('%s'% (child.id), '~', '*', ':')
                             errh.add_seg(child, fake_seg, seg_count, cur_line, ls_id)
                             err_str = 'Mandatory segment "%s" (%s) missing' % (child.name, child.id)
@@ -153,10 +153,12 @@ class walk_tree:
                         if self._is_loop_match(child, seg_data, errh, \
                                 seg_count, cur_line, ls_id):
                             child.reset_cur_count() # Set counts of children to zero
+                            child.incr_cur_count()
                             node_seg = self._goto_seg_match(child, seg_data, \
                                 errh, seg_count, cur_line, ls_id)
                             #node_seg = child.get_child_node_by_idx(0)
-                            node_seg.cur_count = 1
+                            node_seg.reset_cur_count()
+                            node_seg.incr_cur_count()
                             return node_seg
                         #if child.get_child_node_by_idx(0).is_loop():
                         #    node1 = self.walk(child.get_child_node_by_idx(0), \
@@ -243,6 +245,8 @@ class walk_tree:
         @todo: Match a child of wrapping loops
         @todo: loop counting checks
         """
+        #if seg_data.get_seg_id() == 'HL':
+        #    pdb.set_trace()
         if not loop_node.is_loop(): raise EngineError, \
             "Call to first_seg_match failed, node %s is not a loop. seg %s" \
             % (loop_node.id, seg_data.get_seg_id())
@@ -254,13 +258,13 @@ class walk_tree:
                 seg_count, cur_line, ls_id)
         elif is_first_seg_match2(first_child_node, seg_data): 
             return True
-        elif loop_node.usage == 'R' and loop_node.cur_count < 1:
+        elif loop_node.usage == 'R' and loop_node.get_cur_count() < 1:
             fake_seg = pyx12.segment.segment('%s' % \
                 (first_child_node.id), '~', '*', ':')
             errh.add_seg(loop_node, fake_seg, seg_count, cur_line, ls_id)
             err_str = 'Mandatory loop "%s" (%s) missing' % \
                 (loop_node.name, loop_node.id)
-            #self.mandatory_segs_missing.append((seg_data.get_seg_id(), '3', err_str))
+            self.mandatory_segs_missing.append((seg_data.get_seg_id(), '3', err_str))
             #errh.seg_error('3', err_str, None)
         return False
 
@@ -286,14 +290,14 @@ class walk_tree:
                 err_str = "Loop %s found but marked as not used" % (loop_node.id)
                 errh.seg_error('2', err_str, None)
             elif loop_node.usage in ('R', 'S'):
-                loop_node.cur_count += 1
-                if loop_node.cur_count > loop_node.get_max_repeat():
+                loop_node.reset_cur_count()
+                loop_node.incr_cur_count()
+                first_child_node.incr_cur_count()
+                if loop_node.get_cur_count() > loop_node.get_max_repeat():
                     err_str = "Loop %s exceeded max count.  Found %i, should have %i" \
-                        % (loop_node.id, loop_node.cur_count, loop_node.get_max_repeat())
+                        % (loop_node.id, loop_node.get_cur_count(), loop_node.get_max_repeat())
                     errh.add_seg(loop_node, seg_data, seg_count, cur_line, ls_id)
                     errh.seg_error('4', err_str, None)
-                loop_node.reset_cur_count()
-                first_child_node.cur_count = 1
                 #logger.debug('MATCH Loop %s / Segment %s (%s*%s)' \
                 #    % (child.id, first_child_node.id, seg_data.get_seg_id(), seg[0].get_value()))
             else:

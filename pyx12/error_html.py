@@ -72,6 +72,10 @@ class error_html:
         self.fd.write('<p>\n<a href="http://sourceforge.net/projects/pyx12/">pyx12 Validator</a>\n</p>\n')
         self.fd.write('</body>\n</html>\n')
 
+    def loop(self, loop_node):
+        if loop_node.type != 'wrapper':
+            self.gen_info('Loop %s: %s' % (loop_node.id, loop_node.name))
+
     def gen_info(self, info_str):
         """
         """

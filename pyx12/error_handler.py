@@ -114,6 +114,7 @@ class err_iter:
 
 class err_handler:
     """
+    The interface to the error handling structures.
     """
     def __init__(self):
         """
@@ -152,47 +153,57 @@ class err_handler:
         """
         return self.id
 
-    def add_isa_loop(self, seg, src):
+    def add_isa_loop(self, seg_data, src):
         """
+        @param seg_data: Segment object
+        @type seg_data: L{segment<segment.segment>}
         """
         #logger.debug('add_isa loop')
-        self.children.append(err_isa(self, seg, src))
+        self.children.append(err_isa(self, seg_data, src))
         self.cur_isa_node = self.children[-1]
         self.cur_seg_node = self.cur_isa_node
         self.seg_node_added = True
         
-    def add_gs_loop(self, seg, src):
+    def add_gs_loop(self, seg_data, src):
         """
+        @param seg_data: Segment object
+        @type seg_data: L{segment<segment.segment>}
         """
         #logger.debug('add_gs loop')
         parent = self.cur_isa_node
-        parent.children.append(err_gs(parent, seg, src))
+        parent.children.append(err_gs(parent, seg_data, src))
         self.cur_gs_node = parent.children[-1]
         self.cur_seg_node = self.cur_gs_node
         self.seg_node_added = True
         
-    def add_st_loop(self, seg, src):
+    def add_st_loop(self, seg_data, src):
         """
+        @param seg_data: Segment object
+        @type seg_data: L{segment<segment.segment>}
         """
         #logger.debug('add_st loop')
         parent = self.cur_gs_node
-        parent.children.append(err_st(parent, seg, src))
+        parent.children.append(err_st(parent, seg_data, src))
         self.cur_st_node = parent.children[-1]
         self.cur_seg_node = self.cur_st_node
         self.seg_node_added = True
         
-    def add_seg(self, map_node, seg, seg_count, cur_line, ls_id):
+    def add_seg(self, map_node, seg_data, seg_count, cur_line, ls_id):
         """
+        @param map_node: current segment node
+        @type map_node: L{map_if<map_if.x12_node>}
+        @param seg_data: Segment object
+        @type seg_data: L{segment<segment.segment>}
         """
         parent = self.cur_st_node
-        self.cur_seg_node = err_seg(parent, map_node, seg, seg_count, cur_line, ls_id)
+        self.cur_seg_node = err_seg(parent, map_node, seg_data, seg_count, cur_line, ls_id)
         self.seg_node_added = False
         #logger.debug('add_seg: %s' % map_node.name)
         #if len(parent.children) > 0:
         #    if parent.children[-1].err_count() == 0:
         #        del parent.children[-1]
-        #        logger.debug('del seg: %s' % map_node.name)
-        #parent.children.append(err_seg(parent, map_node, seg, src))
+        #        logger.debug('del seg_data: %s' % map_node.name)
+        #parent.children.append(err_seg(parent, map_node, seg_data, src))
         
     def _add_cur_seg(self):
         """
