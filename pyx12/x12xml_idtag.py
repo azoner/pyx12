@@ -59,7 +59,7 @@ class x12xml_idtag(x12xml):
         self.writer = XMLWriter(fd)
         self.writer.doctype(
             u"x12doc", u"-//J Holland//DTD XML X12 Document Conversion1.0//EN//XML",
-            u"http://www.kazoocmh.org/x12simple.dtd")
+            u"http://www.kazoocmh.org/x12idtag.dtd")
 
         self.writer.push(u"x12doc")
         self.path = '/'
