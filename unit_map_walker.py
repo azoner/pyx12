@@ -10,6 +10,7 @@ import error_handler
 from errors import *
 from map_walker import walk_tree
 import map_if
+from params import params
 
 
 class Explicit_Loops(unittest.TestCase):
@@ -19,7 +20,8 @@ class Explicit_Loops(unittest.TestCase):
     def setUp(self):
         self.walker = walk_tree()
         #self.map = map_if.map_if('map/837.4010.X098.A1.xml')
-        self.map = map_if.load_map_file('map/837.4010.X098.A1.xml')
+        param = params()
+        self.map = map_if.load_map_file('map/837.4010.X098.A1.xml', param)
         self.errh = error_handler.errh_null()
 
     def test_ISA_to_GS(self):
@@ -97,12 +99,21 @@ class Implicit_Loops(unittest.TestCase):
     def setUp(self):
         self.walker = walk_tree()
         #self.map = map_if.map_if('map/837.4010.X098.A1.xml')
-        self.map = map_if.load_map_file('map/837.4010.X098.A1.xml')
+        param = params()
+        self.map = map_if.load_map_file('map/837.4010.X098.A1.xml', param)
         self.errh = error_handler.errh_null()
 
     def test_ST_to_BHT(self):
         node = self.map.getnodebypath('/ST')
         seg = ['BHT', '0019']
+        node = self.walker.walk(node, seg, self.errh, 5, 4, None)
+        self.assertEqual(seg[0], node.id)
+
+    def test_repeat_loop_with_one_segment(self):
+        param = params()
+        map = map_if.load_map_file('map/841.4010.XXXC.xml', param)
+        node = map.getnodebypath('/1000/2000/2100/SPI')
+        seg = ['SPI', '00']
         node = self.walker.walk(node, seg, self.errh, 5, 4, None)
         self.assertEqual(seg[0], node.id)
 
@@ -116,7 +127,8 @@ class SegmentWalk(unittest.TestCase):
 
     def setUp(self):
         self.walker = walk_tree()
-        self.map = map_if.load_map_file('map/837.4010.X098.A1.xml')
+        param = params()
+        self.map = map_if.load_map_file('map/837.4010.X098.A1.xml', param)
         self.errh = error_handler.errh_null()
 
     def test_match_regular_segment(self):

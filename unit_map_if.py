@@ -6,12 +6,14 @@ import pdb
 #import error_handler
 from errors import *
 import map_if
+from params import params
 
 class Test_getnodebypath(unittest.TestCase):
     """
     """
     def setUp(self):
-        self.map = map_if.load_map_file('map/837.4010.X098.A1.xml')
+        param = params()
+        self.map = map_if.load_map_file('map/837.4010.X098.A1.xml', param)
 
     def test_get_ISA(self):
         node = self.map.getnodebypath('/ISA')
