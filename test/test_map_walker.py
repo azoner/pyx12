@@ -326,6 +326,16 @@ class Counting(unittest.TestCase):
         node = self.walker.walk(node, seg_data, self.errh, 5, 4, None)
         self.assertEqual(self.errh.err_cde, '5', self.errh.err_str)
 
+    def test_max_loop_count_fail1(self):
+        node = self.map.getnodebypath('/ISA/GS/ST/DETAIL/2000A/2000B/2300/2400/LX')
+        self.assertNotEqual(self.node, None)
+        node.cur_count = 50
+        seg_data = pyx12.segment.segment('LX*51~', '~', '*', ':')
+        self.errh.err_cde = None
+        self.errh.err_str = None
+        node = self.walker.walk(node, seg_data, self.errh, 5, 4, None)
+        self.assertEqual(self.errh.err_cde, '4', self.errh.err_str)
+
 
 class CountOrdinal(unittest.TestCase):
 
