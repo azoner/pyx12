@@ -2589,12 +2589,12 @@
               </loop>
 <!--End of 2010BA loop-->
               <loop xid="2010BB">
-                <name>Payer Name</name>
+                <name>Destination Payer</name>
                 <usage>R</usage>
                 <pos>015</pos>
                 <repeat>1</repeat>
                 <segment xid="NM1">
-                  <name>Payer Name</name>
+                  <name>Destination Payer Name</name>
                   <usage>R</usage>
                   <pos>015</pos>
                   <max_use>1</max_use>
@@ -2712,7 +2712,7 @@
                 </segment>
 <!--End of NM1 segment-->
                 <segment xid="N3">
-                  <name>Payer Address</name>
+                  <name>Destination Payer Address</name>
                   <usage>S</usage>
                   <pos>025</pos>
                   <max_use>1</max_use>
@@ -2737,7 +2737,7 @@
                 </segment>
 <!--End of N3 segment-->
                 <segment xid="N4">
-                  <name>Payer City/State/ZIP Code</name>
+                  <name>Destination Payer City/State/ZIP Code</name>
                   <usage>S</usage>
                   <pos>030</pos>
                   <max_use>1</max_use>
@@ -2801,7 +2801,7 @@
                 </segment>
 <!--End of N4 segment-->
                 <segment xid="REF">
-                  <name>Payer Secondary Identification</name>
+                  <name>Destination Payer Secondary Identification</name>
                   <usage>S</usage>
                   <pos>035</pos>
                   <max_use>3</max_use>
