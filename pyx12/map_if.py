@@ -205,7 +205,8 @@ class map_if(x12_node):
                 raise errors.XML_Reader_Error, 'End of Map File'
             while ret == 1:
                 #print 'map_if', self.reader.NodeType(), self.reader.Depth(), self.reader.Name()
-                if self.reader.NodeType() == NodeType['element_start']:
+                tmpNodeType = self.reader.NodeType()
+                if tmpNodeType == NodeType['element_start']:
                 #       if self.reader.Name() in ('map', 'transaction', 'loop', 'segment', 'element'):
                 #    print 't'*self.reader.Depth(), self.reader.Depth(), \
                 #       self.base_level, self.reader.NodeType(), self.reader.Name()
@@ -228,7 +229,7 @@ class map_if(x12_node):
                     #elif self.cur_level > self.reader.Depth():
                     #    self.cur_path = os.path.dirname(self.cur_path)
                     self.cur_level = self.reader.Depth()
-                elif self.reader.NodeType() == NodeType['element_end']:
+                elif tmpNodeType == NodeType['element_end']:
                     #print '--', self.reader.Name(), self.base_level, \
                     #   self.self.reader.Depth(), self.reader.Depth() <= self.base_level 
                     #print self.reader.Depth(),  self.base_level, self.reader.NodeType(), self.reader.Name()
@@ -243,7 +244,7 @@ class map_if(x12_node):
                     #    pass
                     cur_name = ''
                 
-                elif self.reader.NodeType() == NodeType['text'] and self.base_level + 2 == self.reader.Depth():
+                elif tmpNodeType == NodeType['text'] and self.base_level + 2 == self.reader.Depth():
                     #print cur_name, self.reader.Value()
                     if cur_name == 'id' and self.base_name == 'transaction':
                         self.id = self.reader.Value()
@@ -351,7 +352,8 @@ class loop_if(x12_node):
             #print reader.NodeType(), reader.Name()
             #print 'loop', reader.NodeType(), reader.Depth(), reader.Name()
             #processNode(reader)
-            if reader.NodeType() == NodeType['element_start']:
+            tmpNodeType = reader.NodeType()
+            if tmpNodeType == NodeType['element_start']:
                 #if reader.Name() in ('map', 'transaction', 'loop', 'segment', 'element'):
                 #    print 'l'*reader.Depth(), reader.Depth(),  self.base_level, reader.NodeType(), reader.Name()
                 cur_name = reader.Name()
@@ -369,7 +371,7 @@ class loop_if(x12_node):
                 #elif self.cur_level > reader.Depth():
                 #    self.cur_path = os.path.dirname(self.cur_path)
                 self.cur_level = reader.Depth()
-            elif reader.NodeType() == NodeType['element_end']:
+            elif tmpNodeType == NodeType['element_end']:
                 #print '--', reader.Name(), self.base_level, reader.Depth(), reader.Depth() <= self.base_level 
                 if reader.Depth() <= self.base_level:
                     ret = reader.Read()
@@ -383,7 +385,7 @@ class loop_if(x12_node):
                 #    pass
                 cur_name = ''
                 
-            elif reader.NodeType() == NodeType['text'] and self.base_level + 2 == reader.Depth():
+            elif tmpNodeType == NodeType['text'] and self.base_level + 2 == reader.Depth():
                 #print cur_name, reader.Value()
                 if cur_name == 'id' and self.base_name == 'loop':
                     self.id = reader.Value()
@@ -509,7 +511,8 @@ class segment_if(x12_node):
         while ret == 1:
             #print '--- segment while'
             #print 'seg', reader.NodeType(), reader.Depth(), reader.Name()
-            if reader.NodeType() == NodeType['element_start']:
+            tmpNodeType = reader.NodeType()
+            if tmpNodeType == NodeType['element_start']:
                 #if reader.Name() in ('map', 'transaction', 'loop', 'segment', 'element'):
                 #    print 's'*reader.Depth(), reader.Depth(),  self.base_level, reader.NodeType(), reader.Name()
                 cur_name = reader.Name()
@@ -526,7 +529,7 @@ class segment_if(x12_node):
                 #elif self.cur_level > reader.Depth():
                 #    self.cur_path = os.path.dirname(self.cur_path)
                 self.cur_level = reader.Depth()
-            elif reader.NodeType() == NodeType['element_end']:
+            elif tmpNodeType == NodeType['element_end']:
                 #print '--', reader.Name(), self.base_level, reader.Depth(), reader.Depth() <= self.base_level 
                 if reader.Depth() <= self.base_level:
                     ret = reader.Read()
@@ -540,7 +543,7 @@ class segment_if(x12_node):
                 #    pass
                 cur_name = ''
                 
-            elif reader.NodeType() == NodeType['text'] and self.base_level + 2 == reader.Depth():
+            elif tmpNodeType == NodeType['text'] and self.base_level + 2 == reader.Depth():
                 #print cur_name, reader.Value()
                 if cur_name == 'id' and self.base_name == 'segment':
                     self.id = reader.Value()
@@ -806,7 +809,8 @@ class element_if(x12_node):
         while ret == 1:
             #print '--- segment while'
             #print 'seg', reader.NodeType(), reader.Depth(), reader.Name()
-            if reader.NodeType() == NodeType['element_start']:
+            tmpNodeType = reader.NodeType()
+            if tmpNodeType == NodeType['element_start']:
                 #if reader.Name() in ('map', 'transaction', 'loop', 'segment', 'element'):
                 #    print 's'*reader.Depth(), reader.Depth(),  self.base_level, reader.NodeType(), reader.Name()
                 cur_name = reader.Name()
@@ -823,7 +827,7 @@ class element_if(x12_node):
                 #elif self.cur_level > reader.Depth():
                 #    self.cur_path = os.path.dirname(self.cur_path)
                 self.cur_level = reader.Depth()
-            elif reader.NodeType() == NodeType['element_end']:
+            elif tmpNodeType == NodeType['element_end']:
                 #print '--', reader.Name(), self.base_level, reader.Depth(), reader.Depth() <= self.base_level 
                 if reader.Depth() <= self.base_level:
                     ret = reader.Read()
@@ -837,7 +841,7 @@ class element_if(x12_node):
                 #    pass
                 cur_name = ''
                 
-            elif reader.NodeType() == NodeType['text'] and self.base_level + 2 <= reader.Depth():
+            elif tmpNodeType == NodeType['text'] and self.base_level + 2 <= reader.Depth():
                 #print cur_name, reader.Value()
 #                if cur_name == 'id':
 #                    self.id = reader.Value()
@@ -1122,7 +1126,8 @@ class composite_if(x12_node):
         while ret == 1:
             #print '--- segment while'
             #print 'seg', reader.NodeType(), reader.Depth(), reader.Name()
-            if reader.NodeType() == NodeType['element_start']:
+            tmpNodeType = reader.NodeType()
+            if tmpNodeType == NodeType['element_start']:
                 #if reader.Name() in ('map', 'transaction', 'loop', 'segment', 'element'):
                 #    print 's'*reader.Depth(), reader.Depth(),  self.base_level, reader.NodeType(), reader.Name()
                 cur_name = reader.Name()
@@ -1137,7 +1142,7 @@ class composite_if(x12_node):
                 #elif self.cur_level > reader.Depth():
                 #    self.cur_path = os.path.dirname(self.cur_path)
                 self.cur_level = reader.Depth()
-            elif reader.NodeType() == NodeType['element_end']:
+            elif tmpNodeType == NodeType['element_end']:
                 #print '--', reader.Name(), self.base_level, reader.Depth(), reader.Depth() <= self.base_level 
                 if reader.Depth() <= self.base_level:
                     ret = reader.Read()
@@ -1151,7 +1156,7 @@ class composite_if(x12_node):
                 #    pass
                 cur_name = ''
                 
-            elif reader.NodeType() == NodeType['text'] and self.base_level + 2 == reader.Depth():
+            elif tmpNodeType == NodeType['text'] and self.base_level + 2 == reader.Depth():
                 #print cur_name, reader.Value()
                 if cur_name == 'name':
                     self.name = reader.Value()
@@ -1283,15 +1288,18 @@ def load_map_file(map_file, param):
     map_path = param.get_param('map_path')
     pickle_file = '%s.%s' % (os.path.splitext(os.path.join(map_path, \
         map_file))[0], 'pkl')
+    map_full = os.path.join(map_path, map_file)
     try:
-        if os.stat(map_file)[ST_MTIME] < os.stat(pickle_file)[ST_MTIME]:
+        if os.stat(map_full)[ST_MTIME] < os.stat(pickle_file)[ST_MTIME]:
             map = cPickle.load(open(pickle_file))
             if map.cur_path != '/transaction' or len(map.children) == 0:
                 raise Pickle_Errors, "reload map"
-            logger.debug('Map %s loaded from pickle %s' % (map_file, pickle_file))
+            logger.debug('Map %s loaded from pickle %s' % (map_full, pickle_file))
         else:
             raise Pickle_Errors, "reload map"
     except:
+        pdb.set_trace()
+        raise
         try:
             map = map_if(map_file, param)
         except:
