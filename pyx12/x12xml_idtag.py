@@ -76,7 +76,9 @@ class x12xml_idtag(x12xml):
         self.writer.push(seg_node.id)
         for i in range(len(seg_data)):
             child_node = seg_node.get_child_node_by_idx(i)
-            if child_node.is_composite():
+            if child_node.usage == 'N' or seg_data[i].is_empty():
+                pass # Do not try to ouput for invalid or empty elements
+            elif child_node.is_composite():
                 self.writer.push(seg_node.id)
                 comp_data = seg_data[i]
                 for j in range(len(comp_data)):

@@ -1,3 +1,11 @@
+Fixed xml generation bug:
+    An element or composite containing data but marked as "Not Used" will not
+    have an XML node generated.  This would not be a valid file anyway.
+
+    Generation of XML nodes for empty element or composite data is supressed.
+    These are just placeholders and the existence of an empty XML node
+    communicates the same information as no node.
+
 Fixed bug: Match any sub-loop of a containing loop.
 
 Release 1.1.0
