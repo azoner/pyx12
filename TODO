@@ -12,6 +12,8 @@ TA1 input
 
 LX index incrementing
 
+For large input files, split html output into parts
+
 Error Handling
   Stream Errors to XML
   Combine error XML with HTML/XML/997 output
