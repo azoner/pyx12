@@ -1516,7 +1516,7 @@ def is_syntax_valid(seg_data, syn):
         if len(seg_data) > syn_idx[0]-1 and seg_data.get('%02i' % (syn_idx[0])) != '':
             count = 0
             for s in syn_idx[1:]:
-                if len(seg_data) >= s and seg_data.get'%02i' % (s)() != '':
+                if len(seg_data) >= s and seg_data.get('%02i' % (s)) != '':
                     count += 1
             if count == 0:
                 err_str = 'Syntax Error (%s): If %s%02i is present, then at least one of '\
