@@ -8,8 +8,6 @@ Restructure maps
 
 Handle intra-segment dependancies
 
-Pickle/Unpickle map tree
-
 Unit Testing
   x12file
   map_walker
