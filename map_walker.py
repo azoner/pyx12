@@ -59,21 +59,22 @@ def walk_tree(node, seg):
 
     # Next segment in loop
     node_idx = None
-    if node.is_segment(): node_idx = node.index
-    while not node.is_loop(): 
-        node = node.parent
-    for child in node.children:
-        if child.is_segment() and child.index > node_idx:
-            if child.is_match(seg):
-                return child
-    
+    if node.is_segment(): 
+        node_idx = node.index
+        node = pop_to_parent_loop(node)
+        for child in node.children:
+            if child.is_segment() and child.index >= node_idx:
+                if child.is_match(seg):
+                    return child
+        
     # Repeat loop
-    # We are in a segment
-    node = pop_to_parent_loop(node)
+    node = orig_node
+    node = pop_to_parent_loop(node) # We are in a segment
     if is_first_seg_match(node, seg): 
         return node # Return the loop node
 
     # Child loop
+    node = orig_node
     node = pop_to_parent_loop(node)
     for child in node.children:
         if child.is_loop():
@@ -81,6 +82,7 @@ def walk_tree(node, seg):
                 return child # Return the loop node
                                
     # Sibling Loop
+    node = orig_node
     node_idx = None
     while not node.is_loop(): 
         node = node.parent
@@ -89,8 +91,14 @@ def walk_tree(node, seg):
     for child in node.children:
         if child.is_loop() and child.index > node_idx:
             if is_first_seg_match(child, seg): return child
+    node = orig_node
 
     # Parent Loop
+    node = pop_to_parent_loop(node) # Get my loop
+    node = pop_to_parent_loop(node) # Then get its loop
+    if is_first_seg_match(node, seg): 
+        return node
+
 
     raise EngineError, "Could not find seg %s*%s.  Started at %s" % (seg[0], seg[1], orig_node.id)
 
