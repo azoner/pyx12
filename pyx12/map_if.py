@@ -1035,7 +1035,7 @@ class element_if(x12_node):
             self.root.ext_codes.IsValid(self.external_codes, elem_val, check_dte):
             bValidCode = True
         if not bValidCode:
-            err_str = '(%s) is not a valid code for data element %s' % (elem_val, self.refdes)
+            err_str = '(%s) is not a valid code for %s (%s)' % (elem_val, self.name, self.refdes)
             self.__error__(errh, err_str, '7', elem_val)
             valid = False
            
