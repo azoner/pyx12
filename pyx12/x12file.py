@@ -117,7 +117,7 @@ class x12file:
                     break
             if line[-1] == self.ele_term:
                 err_str = 'Segment contains trailing element terminators'
-                self.errh.seg_error('SEG1', err_str)
+                self.errh.seg_error('SEG1', err_str, src_line=self.cur_line+1 )
             seg = string.split(line, self.ele_term)
         except:
             raise StopIteration

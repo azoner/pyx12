@@ -280,11 +280,15 @@ class err_handler:
         logger.error('st_error: %s - %s' % (err_cde, err_str))
         self.cur_st_node.add_error(err_cde, err_str)
         
-    def seg_error(self, err_cde, err_str, err_value=None):
+    def seg_error(self, err_cde, err_str, err_value=None, src_line=None):
         """
         Class:      err_handler
         """
-        logger.error('seg_error: %s - %s (%s)' % (err_cde, err_str, err_value))
+        sout = ''
+        if src_line is not None:
+            sout += '#%s '
+        sout += 'seg_error: %s - %s (%s)' % (err_cde, err_str, err_value)
+        logger.error(sout)
         self._add_cur_seg()
         self.cur_seg_node.add_error(err_cde, err_str, err_value)
         
@@ -764,7 +768,7 @@ class err_st(err_node):
 
         self.id = 'ST'
         
-        self.ack_code = None 
+        self.ack_code = 'R'
         self.parent = parent
         self.children = []
         self.errors = []
