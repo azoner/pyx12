@@ -41,7 +41,7 @@ map_files = [
 ]
 
 mkpath('build/bin')
-scripts = ('x12_build_pkl', 'x12html', 'x12info', 'x12lint', 
+scripts = ('x12_build_pkl', 'x12html', 'x12info', 'x12valid', 
     'x12norm', 'x12sql', 'x12xml', 'xmlx12')
 for filename in scripts:
     copy_file(os.path.join('bin', filename+'.py'), 
