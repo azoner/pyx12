@@ -80,6 +80,7 @@ class error_html:
         self.fd.write('  span.seg { color: black; font-style: normal; }\n')
         self.fd.write('  span.error { background-color: #CCCCFF; color: red; font-style: normal; }\n')
         self.fd.write('  span.info { background-color: #CCCCCC; color: blue; font-style: normal; }\n')
+        self.fd.write('  span.ele_err { background-color: yellow; color: red; font-style: normal; }\n')
         self.fd.write('-->\n</style>\n')
         self.fd.write('</head>\n<body>\n')
         self.fd.write('<h1>pyx12 Error Analysis</h1>\n<h3>Analysis Date: %s</h3><p>\n' % \
@@ -108,22 +109,33 @@ class error_html:
         Params:     seg - list of elements
         """
         cur_line = src.cur_line
-        err_pos = []
 
         # Find error seg for this seg
         #   Find any skipped error values
         # ID pos of bad value
         #while errh
+        ele_pos_map = {}
+        for err_node in err_node_list:
+            for ele in err_node.elements:
+                ele_pos_map[ele.ele_pos] = ele.subele_pos
+
         t_seg = []
-        for ele in seg:
-            if type(ele) is ListType: # Composite
+        for i in range(len(seg)):
+            if type(seg[i]) is ListType: # Composite
                 t_seg.append([])
-                for subele in ele:
-                    t_seg[-1].append(escape_html_chars(subele))
+                for j in range(len(seg[i])):
+                    ele_str = escape_html_chars(seg[i][j])
+                    if i in ele_pos_map.keys() and ele_pos_map[i] == j:
+                        ele_str = self._wrap_ele_error(ele_str)
+                    t_seg[-1].append(ele_str)
             else:
-                t_seg.append(escape_html_chars(ele))
+                ele_str = escape_html_chars(seg[i])
+                if i in ele_pos_map.keys():
+                    ele_str = self._wrap_ele_error(ele_str)
+                t_seg.append(ele_str)
+                
         self.fd.write('<span class="seg">%i: %s</span><br>\n' % \
-            (cur_line, self._seg_str(seg)))
+            (cur_line, self._seg_str(t_seg)))
         for err_node in err_node_list:
             for err_tuple in err_node.errors:
                 err_cde = err_tuple[0]
@@ -148,3 +160,5 @@ class error_html:
         return seg_str(seg, self.seg_term, self.ele_term, \
             self.subele_term, self.eol)
         
+    def _wrap_ele_error(self, str):
+        return '<span class="ele_err">%s</span>' % (str)
