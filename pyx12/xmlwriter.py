@@ -115,6 +115,9 @@ class XMLWriter:
         del self.stack[-1]
         self.__indent()
         self.out.write(u"</%s>\n" % elem)
+
+    def __len__(self):
+        return len(self.stack)
     
     def __indent(self):
         self.out.write(self.indent * (len(self.stack) * 2))
