@@ -20,7 +20,7 @@ class ArbitraryDelimiters(unittest.TestCase):
         self.assertEqual(len(self.seg), 3)
 
     def test_getitem3(self):
-        self.assertEqual(self.seg[3].__repr__(), 'ZZ')
+        self.assertEqual(self.seg[3][1], 'ZZ')
                     
     def test_getitem_0(self):
         self.failUnlessRaises(IndexError, self.seg.__getitem__, 0)
@@ -29,10 +29,11 @@ class ArbitraryDelimiters(unittest.TestCase):
         self.assertEqual(self.seg[1].__repr__(), 'AA!1!1')
                     
     def test_getitem_minus_1(self):
-        self.assertEqual(self.seg[-1].__repr__(), 'ZZ')
+        self.assertEqual(self.seg[-1][1], 'ZZ')
                     
     def test_other_terms(self):
         self.assertEqual(self.seg.format('~', '*', ':', ''), 'TST*AA:1:1*BB:5*ZZ~')
+
 
 class Identity(unittest.TestCase):
 
@@ -72,15 +73,38 @@ class Composite(unittest.TestCase):
 
     def test_composite_is_a(self):
         self.failUnless(self.seg[1].is_composite())
+        self.failIf(self.seg[1].is_element())
         
     def test_composite_len(self):
         self.assertEqual(len(self.seg[1]), 3)
 
     def test_composite_indexing(self):
-        self.assertEqual(self.seg[1][0], 'AA')
-        self.assertEqual(self.seg[1][2], 'Y')
+        self.assertEqual(self.seg[1][1], 'AA')
+        self.assertEqual(self.seg[1][3], 'Y')
         self.assertEqual(self.seg[1][-1], 'Y')
-        self.failUnlessRaises(IndexError, lambda x: self.seg[1][x], 3)
+        self.failUnlessRaises(IndexError, lambda x: self.seg[1][x], 4)
+
+
+class Simple(unittest.TestCase):
+
+    def setUp(self):
+        seg_str = 'TST*AA*1*Y*BB:5*ZZ'
+        self.seg = pyx12.segment.segment(seg_str, '~', '*', ':')
+
+    def test_simple_is_a(self):
+        self.failUnless(self.seg[1].is_element())
+        self.failIf(self.seg[1].is_composite())
+        
+    def test_simple_len(self):
+        self.assertEqual(len(self.seg[1]), 1)
+
+    def test_simple_indexing(self):
+        self.assertEqual(self.seg[1][1], 'AA')
+        self.assertEqual(self.seg[2][1], '1')
+        self.assertEqual(self.seg[3][1], 'Y')
+        self.assertEqual(self.seg[3][-1], 'Y')
+        self.failUnlessRaises(IndexError, lambda x: self.seg[1][x], 2)
+
 
 
 def suite():
@@ -89,10 +113,16 @@ def suite():
     suite.addTest(unittest.makeSuite(Identity))
     suite.addTest(unittest.makeSuite(Alter))
     suite.addTest(unittest.makeSuite(Composite))
+    suite.addTest(unittest.makeSuite(Simple))
     return suite
 
 #if __name__ == "__main__":
 #    unittest.main()
+try:
+    import psyco
+    psyco.full()
+except ImportError:
+    pass
 unittest.TextTestRunner(verbosity=2).run(suite())
 
 

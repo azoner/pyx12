@@ -33,64 +33,55 @@
 #        IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 #        POSSIBILITY OF SUCH DAMAGE.
 
-
 import string
 
-class base_element:
-    """Abstract class base_element
+class element:
+    """Class element
+
+       Can be a simple element or a composite
+       INDEXING IS 1 BASED
+       A simple element is treated as a composite element with one sub-element.
     """
-    def __init__(self):
-        pass
+    # Attributes:
     
-    def __len__(self):
-        """function length
-        returns int
-
-        """
-        raise NotImplementedError()
-    
-    def __repr__(self):
-        raise NotImplementedError()
-
-    def format(self, subele_term=None):
-        raise NotImplementedError()
-
-    def get_value(self, subele_term=None):
-        raise NotImplementedError()
-
-    def is_composite(self):
-        return False
-    
-    def is_element(self):
-        return False
-
-class composite(base_element):
-    """Class composite
-
-        INDEXING IS 0 BASED
-    """
-    def __init__(self, ele_str, subele_term):
-        """function composite
+    # Operations
+    def __init__(self, ele_str, subele_term=None):
+        """function element
         
         ele_str: string
-        subele_term: char
+        
+        returns void
         """
-        base_element.__init__(self)
         self.subele_term = subele_term
         self.subele_term_orig = subele_term
         self.elements = ele_str.split(self.subele_term)
-    
+        
     def __getitem__(self, idx):
         """function operator[]
-        returns element
+        1 based index
+        [0] throws exception
+        returns element value for idx
         """
-        return self.elements[idx]
+        if idx == 0:
+            raise IndexError, 'element index out of range'
+        elif idx < 0:
+            return self.elements[idx]
+        else:
+            return self.elements[idx-1]
 
     def __setitem__(self, idx, val):
-        """function operator[]
-        returns element
+        """function operator[]=
+        1 based index
+        [0] throws exception
+        sets element value for idx
         """
-        self.elements[idx] = val
+        if idx == 0:
+            raise IndexError, 'list index out of range'
+        elif idx < 0:
+            i = idx
+        else:
+            i = idx - 1
+        self.elements[i] = val
 
     def __len__(self):
         """function length
@@ -98,7 +89,7 @@ class composite(base_element):
         returns int
         """
         return len(self.elements)
-    
+
     def __repr__(self):
         """function __repr__
         
@@ -111,48 +102,18 @@ class composite(base_element):
 
     def set_subele_term(self, subele_term):
         self.subele_term = subele_term
-
+  
     def is_composite(self):
-        return True
-
-class element(base_element):
-    """Class element
-    """
-    # Attributes:
-    
-    # Operations
-    def __init__(self, ele_str):
-        """function element
-        
-        ele_str: string
-        
-        returns void
-        """
-        base_element.__init__(self)
-        self.ele_val = ele_str
-    
-    def __len__(self):
-        """function length
-        
-        returns int
-        """
-        return 1
-    
-    def __repr__(self):
-        """function __repr__
-        
-        returns string
-        """
-        return self.ele_val
-    
-    def format(self, subele_term=None):
-        return self.ele_val
-
-    def get_value(self):
-        return self.ele_val
-
+        if len(self.elements) > 1:
+            return True
+        else:
+            return False
+ 
     def is_element(self):
-        return True
+        if len(self.elements) == 1:
+            return True
+        else:
+            return False
 
 class segment:
     """Class segment
@@ -182,12 +143,7 @@ class segment:
         if elems:
             self.seg_id = elems[0]
         for ele in elems[1:]:
-            if ele.find(subele_term) != -1: # Split composite
-                self.elements.append(composite(ele, subele_term))
-            else:
-                self.elements.append(element(ele))
-        #if self.seg_id == 'ISA':
-        #    self.elements.append(element(subele_term))
+            self.elements.append(element(ele, subele_term))
     
     def __repr__(self):
         """function __repr__
@@ -203,7 +159,7 @@ class segment:
         """function operator[]
         1 based index
         [0] throws exception
-        returns element
+        returns base element instance
         """
         if idx == 0:
             raise IndexError, 'list index out of range'
@@ -216,7 +172,6 @@ class segment:
         """function operator[]
         1 based index
         [0] throws exception
-        returns element
         """
         if idx == 0:
             raise IndexError, 'list index out of range'
@@ -224,10 +179,7 @@ class segment:
             i = idx
         else:
             i = idx - 1
-        if val.find(self.subele_term) != -1: # Split composite
-            self.elements[i] = composite(val, self.subele_term)
-        else:
-            self.elements[i] = element(val)
+        self.elements[i] = element(val, self.subele_term)
 
     def __len__(self):
         return len(self.elements)
