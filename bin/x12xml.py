@@ -47,6 +47,7 @@ def usage():
     sys.stdout.write('usage: %s [options] source_file\n' % (pgm_nme))
     sys.stdout.write('\noptions:\n')
     sys.stdout.write('  -c <file>  XML configuration file\n')
+    sys.stdout.write('  -d         Debug mode\n')
     sys.stdout.write('  -f         Force map load.  Do not use the map pickle file\n')
     sys.stdout.write('  -H         Create HTML output file\n')
     sys.stdout.write('  -l <file>  Output log\n')
@@ -91,10 +92,14 @@ def main():
             os.path.expanduser('~/.pyx12.conf.xml'))
 
     #param.set('map_path', os.path.expanduser('~/src/pyx12/map/'))
+    debug = False
     for o, a in opts:
         if o == '-h':
             usage()
             return True
+        if o == '-d':
+            logger.setLevel(logging.DEBUG)
+            debug = True
         if o == '-v': logger.setLevel(logging.DEBUG)
         if o == '-q': logger.setLevel(logging.ERROR)
         if o == '-x': param.set('exclude_external_codes', a)
@@ -113,6 +118,13 @@ def main():
             except IOError:
                 logger.error('Could not open log file: %s' % (a))
                 return False
+
+    if not debug:
+        try:
+            import psyco
+            psyco.full()
+        except ImportError:
+            pass
 
     if len(args) > 0:
         src_filename = args[0]

@@ -24,16 +24,18 @@ def usage():
     sys.stdout.write('usage: %s [options] source_file\n' % (pgm_nme))
     sys.stdout.write('\noptions:\n')
     sys.stdout.write('  -h         Help\n')
+    sys.stdout.write('  -d         Debug mode\n')
     sys.stdout.write('  -e         Add eol to each segment line\n')
     sys.stdout.write('  -f         Fix.  Try to fix counting errors\n')
     sys.stdout.write('  -o file    Output file.\n')
 
 def main():
     try:
-        opts, args = getopt.getopt(sys.argv[1:], 'hefo:')
+        opts, args = getopt.getopt(sys.argv[1:], 'dhefo:')
     except getopt.error, msg:
         usage()
         return False
+    debug = False
     eol = ''
     file_out = None
     fix = False
@@ -41,9 +43,17 @@ def main():
         if o == '-h':
             usage()
             return True
+        if o == '-d': debug = True
         if o == '-e': eol = '\n'
         if o == '-f': fix = True
         if o == '-o': file_out = a
+
+    if not debug:
+        try:
+            import psyco
+            psyco.full()
+        except ImportError:
+            pass
 
     if file_out:
         fd_out = open(file_out, 'w')
