@@ -1190,10 +1190,14 @@
     <code>ZMK</code>
     <code>ZRZ</code>
     <code>ZWD</code>
+    </version>
   </codeset>
   <codeset>
     <id>entity_id</id>
     <name>Entity Identifier Code</name>
+    <version>
+    <id>20000101</id>
+    <eff_dte>20000101</eff_dte>
     <code>13</code>
     <code>17</code>
     <code>1E</code>
@@ -1980,10 +1984,14 @@
     <code>N92</code>
     <code>N93</code>
     <code>N94</code>
+    </version>
   </codeset>
   <codeset>
     <id>service_type</id>
     <name>Service Type Code</name>
+    <version>
+    <id>20000101</id>
+    <eff_dte>20000101</eff_dte>
     <code>1</code>
     <code>2</code>
     <code>3</code>
@@ -2126,10 +2134,14 @@
     <code>BQ</code>
     <code>BR</code>
     <code>BS</code>
+    </version>
   </codeset>
   <codeset>
     <id>receiver_provider_specialty</id>
     <name>Receiver Provider Specialty Code</name>
+    <version>
+    <id>20000101</id>
+    <eff_dte>20000101</eff_dte>
     <code>101Y00000N</code>
     <code>101YA0400N</code>
     <code>101YM0800N</code>
