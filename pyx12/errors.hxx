@@ -36,8 +36,9 @@
 */
 
 /* pyx12 package exception classes */
+#include <string>
 
-namespace Pyx12Errors {
+namespace Pyx12 {
     /* Class for XML Reader errors */
     class XML_Reader_Error {
     public:
@@ -107,9 +108,9 @@ namespace Pyx12Errors {
     /* Base class for translation engine errors */
     class EngineError {
     public:
-        EngineError(string err_str_);
+        EngineError(std::string err_str_);
     private:
-        string err_str;
+        std::string err_str;
     };
 
     /* Pop a HL level */
