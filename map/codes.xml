@@ -37,6 +37,10 @@
     <id>prov_taxonomy</id>
     <name>Provider Taxonomy Code</name>
     <data_ele>127</data_ele>
+
+    <version>
+    <eff_dte>20020101</eff_dte>
+    <exp_dte>20050101</exp_dte>
     <code>101Y00000N</code>
     <code>101YA0400N</code>
     <code>101YM0800N</code>
@@ -690,11 +694,13 @@
     <code>3416S0300N</code>
     <code>343900000N</code>
     <code>344600000N</code>
+    </version>
   </codeset>
   <codeset>
     <id>states</id>
     <name>US State or Province Codes</name>
     <data_ele>156</data_ele>
+    <version>
     <code>AA</code>
     <code>AB</code>
     <code>AE</code>
@@ -773,6 +779,7 @@
     <id>country</id>
     <name>Country Codes</name>
     <data_ele>26</data_ele>
+    <version>
     <code>AF</code>
     <code>AL</code>
     <code>DZ</code>
@@ -1012,11 +1019,13 @@
     <code>YU</code>
     <code>ZM</code>
     <code>ZW</code>
+    </version>
   </codeset>
   <codeset>
     <id>currency</id>
     <name>Currency Code</name>
     <data_ele>100</data_ele>
+    <version>
     <code>ADP</code>
     <code>AED</code>
     <code>AFA</code>
@@ -1395,11 +1404,13 @@
     <code>X4</code>
     <code>X5</code>
     <code>ZZ</code>
+    </version>
   </codeset>
   <codeset>
     <id>adjustment_reason</id>
     <name>Adjustment Reason Code</name>
     <data_ele>1034</data_ele>
+    <version>
     <code>1</code>
     <code>2</code>
     <code>3</code>
@@ -1592,11 +1603,13 @@
     <code>D14</code>
     <code>D15</code>
     <code>W1</code>
+    </version>
   </codeset>
   <codeset>
     <id>remark_code</id>
     <name>Remark Code</name>
     <data_ele>127</data_ele>
+    <version>
     <code>M1</code>
     <code>M2</code>
     <code>M3</code>
@@ -2758,11 +2771,13 @@
     <code>3416S0300N</code>
     <code>343900000N</code>
     <code>344600000N</code>
+    </version>
   </codeset>
   <codeset>
     <id>claim_status_cat</id>
     <name>Health Care Claim Status Category Code (Code Source 507)</name>
     <data_ele>1271</data_ele>
+    <version>
     <code>A0</code>
     <code>A1</code>
     <code>A2</code>
@@ -2791,11 +2806,13 @@
     <code>R5</code>
     <code>RQ</code>
     <code>X0</code>
+    </version>
   </codeset>
   <codeset>
     <id>claim_status</id>
     <name>Health Care Claim Status Code (Code Source 508)</name>
     <data_ele>1271</data_ele>
+    <version>
     <code>0</code>
     <code>1</code>
     <code>2</code>
@@ -3270,5 +3287,6 @@
     <code>484</code>
     <code>485</code>
     <code>486</code>
+    </version>
   </codeset>
 </codesets>
