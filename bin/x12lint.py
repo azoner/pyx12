@@ -44,7 +44,6 @@ import sys
 import logging
 from types import *
 import pdb
-#import profile
 import tempfile
 
 # Intrapackage imports
@@ -67,6 +66,7 @@ def usage():
     sys.stdout.write('  -l <file>  Output log\n')
     sys.stdout.write('  -m <path>  Path to map files\n')
     sys.stdout.write('  -p <path>  Path to to pickle files\n')
+    sys.stdout.write('  -P         Profile script\n')
     sys.stdout.write('  -q         Quiet output\n')
     sys.stdout.write('  -v         Verbose output\n')
     sys.stdout.write('  -x <tag>   Exclude external code\n')
@@ -78,7 +78,7 @@ def main():
     import getopt
     param = pyx12.params.params()
     try:
-        opts, args = getopt.getopt(sys.argv[1:], 'c:fl:m:p:qvx:H')
+        opts, args = getopt.getopt(sys.argv[1:], 'c:fl:m:p:qvx:HP')
     except getopt.error, msg:
         usage()
         sys.exit(2)
@@ -96,6 +96,7 @@ def main():
 
     flag_html = False
     flag_997 = True
+    profile = False
     #param.set_param('map_path', os.path.expanduser('/usr/local/share/pyx12/map'))
     #param.set_param('pickle_path', os.path.expanduser('/tmp'))
     for o, a in opts:
@@ -106,6 +107,7 @@ def main():
         if o == '-f': param.set_param('force_map_load', True)
         if o == '-m': param.set_param('map_path', a)
         if o == '-p': param.set_param('pickle_path', a)
+        if o == '-P': profile = True
         if o == '-H': flag_html = True
         if o == '-l':
             try:
@@ -131,10 +133,16 @@ def main():
             if flag_html:
                 target_html = os.path.splitext(src_filename)[0] + '.html'
                 fd_html = open(target_html, 'w')
-            if pyx12.x12n_document.x12n_document(param, src_filename, fd_997, fd_html):
-                sys.stderr.write('%s: OK\n' % (src_filename))
+
+            if profile:
+                import profile
+                profile.run('pyx12.x12n_document.x12n_document(param, src_filename, fd_997, fd_html)', 
+                    'pyx12.prof')
             else:
-                sys.stderr.write('%s: Failure\n' % (src_filename))
+                if pyx12.x12n_document.x12n_document(param, src_filename, fd_997, fd_html):
+                    sys.stderr.write('%s: OK\n' % (src_filename))
+                else:
+                    sys.stderr.write('%s: Failure\n' % (src_filename))
             fd_997.seek(0)
             open(target_997, 'w').write(fd_997.read())
         except IOError:
@@ -146,7 +154,10 @@ def main():
 
     return True
 
-#profile.run('x12n_document(src_filename)', 'pyx12.prof')
 if __name__ == '__main__':
+    #if sys.argv[0] == 'x12lintp':
+    #    import profile
+    #    profile.run('pyx12.x12n_document(src_filename)', 'pyx12.prof')
+    #else:
     sys.exit(not main())
 
