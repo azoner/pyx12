@@ -42,6 +42,7 @@ import string
 from types import *
 import time
 import logging
+import pdb
 
 # Intrapackage imports
 from errors import *
@@ -99,15 +100,18 @@ class error_997_visitor(error_visitor.error_visitor):
         #isa_seg.append(self.isa_control_num) # ISA Interchange Control Number
         #isa_seg.extend([seg[14],seg[15]])
         #isa_seg.append(self.subele_term)
+
+        #logger.info('\n'+seg.format())
+        #pdb.set_trace()
         isa_seg = pyx12.segment.segment('ISA*00*          *00*          ', '~', '*', ':')
-        isa_seg.append(seg[6].getvalue())
-        isa_seg.append(seg[7].getvalue())
-        isa_seg.append(seg[4].getvalue())
-        isa_seg.append(seg[5].getvalue())
+        isa_seg.append(seg[6].get_value())
+        isa_seg.append(seg[7].get_value())
+        isa_seg.append(seg[4].get_value())
+        isa_seg.append(seg[5].get_value())
         isa_seg.append(time.strftime('%y%m%d')) # Date
         isa_seg.append(time.strftime('%H%M')) # Time
-        isa_seg.append(seg[10].getvalue())
-        isa_seg.append(seg[11].getvalue())
+        isa_seg.append(seg[10].get_value())
+        isa_seg.append(seg[11].get_value())
         isa_seg.append(self.isa_control_num) # ISA Interchange Control Number
         isa_seg.append(seg[13].get_value())
         isa_seg.append(seg[14].get_value())
@@ -137,7 +141,7 @@ class error_997_visitor(error_visitor.error_visitor):
             self._write(ta1_seg)
 
         # GS*FA*ENCOUNTER*00GR*20030425*150153*653500001*X*004010
-        seg = errh.cur_gs_node.seg
+        seg = errh.cur_gs_node.seg_data
         gs_seg = pyx12.segment.segment('GS', '~', '*', ':')
         gs_seg.append('FA')
         gs_seg.append(seg[2].get_value())
