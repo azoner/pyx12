@@ -141,7 +141,7 @@ def x12n_document(param, fd_src, fd_997, fd_html, fd_xmldoc=None):
         xmldoc = x12xml_idtag.x12xml_idtag(fd_xmldoc)
 
     for seg in src:
-        logger.debug(seg)
+        #logger.debug(seg)
         #find node
         orig_node = node
         try:

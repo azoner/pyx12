@@ -93,7 +93,7 @@ class err_iter:
                 if self.cur_node in self.visit_stack:
                     del self.visit_stack[-1]
                 self.cur_node = node
-                logger.debug(node)
+                #logger.debug(node)
                 if node.id == 'ROOT':
                     raise IterOutOfBounds
                 #    raise IterDone
@@ -184,7 +184,7 @@ class err_handler:
         """
         Class:      err_handler
         """
-        logger.debug('add_isa loop')
+        #logger.debug('add_isa loop')
         self.children.append(err_isa(self, seg, src))
         self.cur_isa_node = self.children[-1]
         self.cur_seg_node = self.cur_isa_node
@@ -194,7 +194,7 @@ class err_handler:
         """
         Class:      err_handler
         """
-        logger.debug('add_gs loop')
+        #logger.debug('add_gs loop')
         parent = self.cur_isa_node
         parent.children.append(err_gs(parent, seg, src))
         self.cur_gs_node = parent.children[-1]
@@ -205,7 +205,7 @@ class err_handler:
         """
         Class:      err_handler
         """
-        logger.debug('add_st loop')
+        #logger.debug('add_st loop')
         parent = self.cur_gs_node
         parent.children.append(err_st(parent, seg, src))
         self.cur_st_node = parent.children[-1]
@@ -600,7 +600,7 @@ class err_isa(err_node):
 class err_gs(err_node):
     """
     Name:    err_gs
-    Desc:    Holds source GS loop debugrmation
+    Desc:    Holds source GS loop information
     """
 
     def __init__(self, parent, seg, src):
@@ -650,7 +650,7 @@ class err_gs(err_node):
         Class:      err_gs
         Name:       add_error
         Desc:    
-        Params:     err - node error debugrmation
+        Params:     err - node error information
         """
         self.errors.append((err_cde, err_str))
 
@@ -919,7 +919,7 @@ class err_seg(err_node):
         Class:      err_seg
         Name:       add_error
         Desc:    
-        Params:     err - node error debugrmation
+        Params:     err - node error information
         """
         self.errors.append((err_cde, err_str, err_value))
         
@@ -1009,7 +1009,7 @@ class err_ele(err_node):
         Desc:    
         Params:     
         """
-        logger.debug('err_ele.add_error: %s %s %s' % (err_cde, err_str, bad_value))
+        #logger.debug('err_ele.add_error: %s %s %s' % (err_cde, err_str, bad_value))
         self.errors.append((err_cde, err_str, bad_value))
         
     def err_count(self):
