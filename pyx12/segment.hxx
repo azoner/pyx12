@@ -49,18 +49,18 @@ namespace Pyx12 {
     class composite {
     private:
         vector<element> elements;
-        string subele_term, subele_term_orig;
+        char subele_term, subele_term_orig;
         vector<string> split(const string& ele_str);
 
     public:
-        composite(const string& ele_str, const string& subele_term_);
+        composite(const string& ele_str, const char subele_term_);
         element& operator[](size_t);
         const element& operator[](size_t) const;
         size_t length();
         string format();
-        string format(const string& subele_term_);
+        string format(const char subele_term_);
         string get_value();
-        void set_subele_term(const string& subele_term_);
+        void set_subele_term(const char subele_term_);
         bool is_composite();
         bool is_element();
         bool is_empty();
@@ -72,16 +72,16 @@ namespace Pyx12 {
 
     class segment {
     private:
-        string seg_term, seg_term_orig;
-        string ele_term, ele_term_orig;
-        string subele_term, subele_term_orig;
+        char seg_term, seg_term_orig;
+        char ele_term, ele_term_orig;
+        char subele_term, subele_term_orig;
         string seg_id;
         vector<composite> elements;
         vector<string> split(const string& ele_str);
 
     public:
-        segment(const string& seg_str, const string& seg_term_, 
-            const string& ele_term_, const string& subele_term_);
+        segment(const string& seg_str, const char seg_term_, 
+            const char ele_term_, const char subele_term_);
         composite& operator[](size_t i);
         const composite& operator[](size_t i) const;
         composite& get_item(size_t i);
@@ -91,12 +91,12 @@ namespace Pyx12 {
         size_t length();
         string get_seg_id();
         string get_value_by_ref_des(const string& ref_des);
-        void set_seg_term(const string& seg_term_);
-        void set_ele_term(const string& ele_term_);
-        void set_subele_term(const string& subele_term_);
+        void set_seg_term(const char seg_term_);
+        void set_ele_term(const char ele_term_);
+        void set_subele_term(const char subele_term_);
         string format();
-        string format(const string& seg_term_, const string& ele_term_, const string& subele_term_);
-        vector<string> format_ele_list(vector<string> str_elems, const string& subele_term_);
+        string format(const char seg_term_, const char ele_term_, const char subele_term_);
+        vector<string> format_ele_list(vector<string> str_elems, const char subele_term_);
         bool is_empty();
 //        bool not_delim(char c);
 //        bool delim(char c);
@@ -104,17 +104,29 @@ namespace Pyx12 {
         friend ostream & operator << (ostream & os, Pyx12::segment & seg);
     };
 
-/*
+
     class IsDelim {
     private:
         char seg_term;
 
     public:
-        IsDelim(const char c = '*') : seg_term(c) {}
+        IsDelim(const char c) : seg_term(c) {}
 
         bool operator() (const char c)
             return (seg_term == c);
     };
-*/
+
+    class IsNotDelim {
+    private:
+        char seg_term;
+
+    public:
+        IsDelim(const char c) : seg_term(c) {}
+
+        bool operator() (const char c)
+            return (seg_term != c);
+    };
+
+
 }
 #endif // PYX12_SEGMENT_HXX_

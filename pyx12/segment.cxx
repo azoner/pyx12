@@ -77,7 +77,7 @@ bool Pyx12::element::is_empty()
 }
 
 
-Pyx12::composite::composite(const string& ele_str, const string& subele_term_)
+Pyx12::composite::composite(const string& ele_str, const char subele_term_)
 {
     typedef vector<string>::const_iterator iter;
     subele_term = subele_term_;
@@ -114,15 +114,10 @@ vector<string> Pyx12::composite::split(const string& ele_str)
     vector<string> ret;
 
     iter i = ele_str.begin();
-    iter j;
     while(i != ele_str.end()) {
-        while(i != ele_str.end()) {
-            if((*i) != subele_term[0])
-                break;
-            ++i;
-        }
-        j = find(i, ele_str.end(), subele_term[0]);
-        if(i != ele_str.end())
+        i = find_if(i, str.end(), Pyx12::IsNotDelim(subele_term));
+        iter j = find_if(i, ele_str.end(), Pyx12::IsDelim(subele_term));
+        if i != ele_str.end()
             ret.push_back(string(i, j));
         i = j;
     };
@@ -139,12 +134,12 @@ string Pyx12::composite::format()
     return format(subele_term);
 }
 
-string Pyx12::composite::format(const string& subele_term_)
+string Pyx12::composite::format(const char subele_term_)
 {
     typedef vector<element>::iterator iter;
-    string term;
+    char term;
     string ret;
-    term = subele_term_;
+    char = subele_term_;
     if(!elements.empty())
         ret += elements[0].format();
     iter i = elements.begin() + 1;
@@ -164,7 +159,8 @@ string Pyx12::composite::get_value()
         throw Pyx12::EngineError("value of composite is undefined");
 }
 
-void Pyx12::composite::set_subele_term(const string& subele_term_)
+void Pyx12::composite::set_subele_term(const char subele_term_)
+    
 {
     subele_term = subele_term_;
 }
@@ -195,8 +191,8 @@ const Pyx12::element& Pyx12::composite::operator[](size_t i) const {
 ///////////////////////////////////////////////////////////////////////////
 //  SEGMENT CLASS
 ///////////////////////////////////////////////////////////////////////////
-Pyx12::segment::segment(const string& seg_str, const string& seg_term_ = "~",
-        const string& ele_term_ = "*", const string& subele_term_ = ":")
+Pyx12::segment::segment(const string& seg_str, const char seg_term_ = '~',
+        const char ele_term_ = '*', const char subele_term_ = ':')
 {
     typedef vector<string>::const_iterator iter;
     vector<string> elems;
@@ -250,18 +246,13 @@ vector<string> Pyx12::segment::split(const string& seg_str)
     vector<string> ret;
 
     iter i = seg_str.begin();
-    iter j;
     while(i != seg_str.end()) {
-        while(i != seg_str.end()) {
-            if((*i) != ele_term[0])
-                break;
-            ++i;
-        }
-        j = find(i, seg_str.end(), ele_term[0]);
-        if(i != seg_str.end())
+        i = find_if(i, seg_str.end(), Pyx12::IsNotDelim(ele_term));
+        iter j = find_if(i, seg_str.end(), Pyx12::IsDelim(ele_term));
+        if i != seg_str.end()
             ret.push_back(string(i, j));
         i = j;
-    }
+    };
     return ret;
 }
 
@@ -300,15 +291,15 @@ string Pyx12::segment::get_value_by_ref_des(const string& ref_des) {
     return elements[ele_idx][comp_idx].get_value();
 }
 
-void Pyx12::segment::set_seg_term(const string& seg_term_) {
+void Pyx12::segment::set_seg_term(const char seg_term_) {
     seg_term = seg_term_;
 }
 
-void Pyx12::segment::set_ele_term(const string& ele_term_) {
+void Pyx12::segment::set_ele_term(const char ele_term_) {
     ele_term = ele_term_;
 }
 
-void Pyx12::segment::set_subele_term(const string& subele_term_) {
+void Pyx12::segment::set_subele_term(const char subele_term_) {
     subele_term = subele_term_;
 }
 
@@ -316,7 +307,7 @@ string Pyx12::segment::format() {
     return format(this->seg_term, this->ele_term, this->subele_term);
 }
 
-string Pyx12::segment::format(const string& seg_term_, const string& ele_term_, const string& subele_term_) {
+string Pyx12::segment::format(const char seg_term_, const char ele_term_, const char subele_term_) {
     string ret;
     vector<composite>::iterator i = elements.begin();
     if (i != elements.end()) {
@@ -332,7 +323,7 @@ string Pyx12::segment::format(const string& seg_term_, const string& ele_term_, 
     return ret;
 }
 
-vector<string> Pyx12::segment::format_ele_list(vector<string> str_elems, const string& subele_term_) {
+vector<string> Pyx12::segment::format_ele_list(vector<string> str_elems, const char subele_term_) {
     vector<string> ret;
     vector<composite>::iterator i = elements.begin();
     while(i != elements.end()) {
