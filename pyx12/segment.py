@@ -285,6 +285,8 @@ class segment:
         """
         @rtype: boolean
         """
+        if len(self.elements) == 0:
+            return True
         for ele in self.elements:
             if not ele.is_empty():
                 return False
