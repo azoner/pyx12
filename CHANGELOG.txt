@@ -1,3 +1,9 @@
+Config file support
+
+Loop walking bug
+
+Refactor interface to segments
+
 Restructure interface to x12file
 
 Removed Taxonomy Codes from codes.xml
