@@ -5,33 +5,33 @@
 #    This file is part of the pyX12 project.
 #
 #    Copyright (c) 2001, 2002 Kalamazoo Community Mental Health Services,
-#		John Holland <jholland@kazoocmh.org> <john@zoner.org>
+#                John Holland <jholland@kazoocmh.org> <john@zoner.org>
 #
 #    All rights reserved.
 #
-#	Redistribution and use in source and binary forms, with or without modification, 
-#	are permitted provided that the following conditions are met:
+#        Redistribution and use in source and binary forms, with or without modification, 
+#        are permitted provided that the following conditions are met:
 #
-#	1. Redistributions of source code must retain the above copyright notice, this list 
-#	   of conditions and the following disclaimer. 
-#	
-#	2. Redistributions in binary form must reproduce the above copyright notice, this 
-#	   list of conditions and the following disclaimer in the documentation and/or other 
-#	   materials provided with the distribution. 
-#	
-#	3. The name of the author may not be used to endorse or promote products derived 
-#	   from this software without specific prior written permission. 
+#        1. Redistributions of source code must retain the above copyright notice, this list 
+#           of conditions and the following disclaimer. 
+#        
+#        2. Redistributions in binary form must reproduce the above copyright notice, this 
+#           list of conditions and the following disclaimer in the documentation and/or other 
+#           materials provided with the distribution. 
+#        
+#        3. The name of the author may not be used to endorse or promote products derived 
+#           from this software without specific prior written permission. 
 #
-#	THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR IMPLIED 
-#	WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF 
-#	MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO 
-#	EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, 
-#	EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT 
-#	OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS 
-#	INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN 
-#	CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) 
-#	ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF 
-#	THE POSSIBILITY OF SUCH DAMAGE.
+#        THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR IMPLIED 
+#        WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF 
+#        MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO 
+#        EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, 
+#        EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT 
+#        OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS 
+#        INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN 
+#        CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) 
+#        ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF 
+#        THE POSSIBILITY OF SUCH DAMAGE.
 
 # THIS IS PRE-ALPHA CODE.  IT DOES NOT WORK. 
 
@@ -61,80 +61,77 @@ import x12file
 from utils import *
 
 #Global Variables
-subele_term = None
 __version__ = "0.1.0"
 
 def x12n_document():
-	global subele_term
 
-	# Get X12 DATA file
-   	src = x12file.x12file(sys.stdin) 
-	subele_term = src.subele_term
+        # Get X12 DATA file
+        src = x12file.x12file(sys.stdin) 
 
-	#Get Map of Control Segments
-	control = map_if.map_if('map/map.x12.control.00401.xml')
-	
-	#Determine which map to use for this transaction
-	for line in src:
-	    if line[0] == 'ISA':
-		isa_seg = segment(control.getnodebypath('/ISA'), line)
-		isa_seg.validate()
-		icvn = isa_seg.GetElementValue('ISA12')
-	    elif line[0] == 'GS':
-		gs_seg = segment(control.getnodebypath('/GS'), line)
-		gs_seg.validate()
-		fic = gs_seg.GetElementValue('GS01')
-		vriic = gs_seg.GetElementValue('GS08')
+        #Get Map of Control Segments
+        control = map_if.map_if('map/map.x12.control.00401.xml')
+        
+        #Determine which map to use for this transaction
+        for line in src:
+            if line[0] == 'ISA':
+                isa_seg = segment(control.getnodebypath('/ISA'), line)
+                isa_seg.validate()
+                icvn = isa_seg.GetElementValue('ISA12')
+            elif line[0] == 'GS':
+                gs_seg = segment(control.getnodebypath('/GS'), line)
+                gs_seg.validate()
+                fic = gs_seg.GetElementValue('GS01')
+                vriic = gs_seg.GetElementValue('GS08')
 
-		#Get map for this GS loop
-		map_index = map_index.map_index('map/maps.xml')
-		map_file = map_index.get_filename(icvn, vriic, fic)
-		#print map_file
-	    else:
-	    	break	
+                #Get map for this GS loop
+                map_index = map_index.map_index('map/maps.xml')
+                map_file = map_index.get_filename(icvn, vriic, fic)
+                #print map_file
+            else:
+                break        
 
-	#Determine which map to use for this transaction
-	map = map_if.map_if(os.path.join('map', map_file))
-	node = map.getnodebypath('/ST')
+        #Determine which map to use for this transaction
+        map = map_if.map_if(os.path.join('map', map_file))
+        node = map.getnodebypath('/ST')
 
-	for seg in src:
-	    #find node
-	    # repeat of seg
-	    # next seg in loop
-	    # repeat of loop
-	    # child loop
-	    # sibling loop 
-	    # parent loop
-	    # - first id element ==
+        for seg in src:
+            #find node
+            # repeat of seg
+            # next seg in loop
+            # repeat of loop
+            # child loop
+            # sibling loop 
+            # parent loop
+            # - first id element ==
 
-	    #validate intra-element dependancies
-	    
-	    if len(seg) > node.get_child_count(): raise x12Error, 'Too many elements in segment %s' % (seg[0])
-	    for i in xrange(node.get_child_count()):
-	    	# Validate Elements
-	    	if i < len(seg):
-	    	    if type(ele) is ListType: # composite
-		    	# Validate composite
-			comp_node = node.get_child_node_by_idx(i)
-			if len(seg) > node.get_child_count(): 
-			    raise x12Error, 'Too many elements in segment %s' % (seg[0])
-			for i in xrange(node.get_child_count()):
-			    # Validate Elements
-			    if i < len(seg):
-				if type(ele) is ListType:
-				    # Validate composite
-				    comp_node = node.get_child_node_by_idx(i)
-				else:
-				    node.get_child_node_by_idx(i).is_valid(seg[i])
-			    else:
-				node.get_child_node_by_idx(i).is_valid(None)
-		    else: # element
-		    	node.get_child_node_by_idx(i).is_valid(seg[i])
-		else: #missing required elements
-		    node.get_child_node_by_idx(i).is_valid(None)
-	    	
-	    #get special values
-	    #generate xml
+            #validate intra-element dependancies
+            
+            if len(seg) > node.get_child_count(): raise x12Error, 'Too many elements in segment %s' % (seg[0])
+            for i in xrange(node.get_child_count()):
+                # Validate Elements
+                if i < len(seg):
+                    if type(ele) is ListType: # composite
+                        # Validate composite
+                        comp_node = node.get_child_node_by_idx(i)
+                        if len(seg) > node.get_child_count():
+                            raise x12Error, 'Too many elements in segment %s' % (seg[0])
+                        for i in xrange(node.get_child_count()):
+                            # Validate Elements
+                            if i < len(seg):
+                                if type(ele) is ListType:
+                                    # Validate composite
+                                    comp_node = node.get_child_node_by_idx(i)
+                                else:
+                                    node.get_child_node_by_idx(i).is_valid(seg[i])
+                            else:
+                                node.get_child_node_by_idx(i).is_valid(None)
+                    else: # element
+                        node.get_child_node_by_idx(i).is_valid(seg[i])
+                else: #missing required elements
+                    node.get_child_node_by_idx(i).is_valid(None)
+                
+            #get special values
+            #generate xml
 
 #############################################################################
 ###  SEGMENT - Link data segment to map
@@ -149,40 +146,40 @@ class segment:
         Name:    __init__
         Desc:    Sends an xml representation of the segmens to stdout
         Params:  node - map_py node of the segment
-		 seg - the parsed segment line as a list
+                 seg - the parsed segment line as a list
         Returns: 
         """
 
-	if node == None: raise x12Error
-	self.node = node
-    	#self.id = GetChildElementText(node, 'id')
-    	#self.name = GetChildElementText(node, 'name')
-    	#self.end_tag = GetChildElementText(node, 'end_tag')
-    	#self.usage = GetChildElementText(node, 'usage')
-    	#self.req_des = GetChildElementText(node, 'req_des')
-    	#self.pos = GetChildElementText(node, 'pos')
+        if node == None: raise x12Error
+        self.node = node
+        #self.id = GetChildElementText(node, 'id')
+        #self.name = GetChildElementText(node, 'name')
+        #self.end_tag = GetChildElementText(node, 'end_tag')
+        #self.usage = GetChildElementText(node, 'usage')
+        #self.req_des = GetChildElementText(node, 'req_des')
+        #self.pos = GetChildElementText(node, 'pos')
 
-	tab.incr()
-	#element_nodes = node.getElementsByTagName('element')
-	i = 1 
-	self.element_list = []
-	# APPLY LIST OF ELEMENTS TO ELEMENTS IN NODE
-	for child in node.children:
-	    if child.base_name == 'element':
-	        if i < len(seg):
-	            self.element_list.append(element(child, seg[i]))
-	        else:
-	            self.element_list.append(element(child, None))
-	        i += 1
-	    elif child.base_name == 'composite':
-	        if i < len(seg):
-	            self.element_list.append(composite(child, seg[i]))
-	        else:
-	            self.element_list.append(composite(child, None))
-	        i += 1
+        tab.incr()
+        #element_nodes = node.getElementsByTagName('element')
+        i = 1 
+        self.element_list = []
+        # APPLY LIST OF ELEMENTS TO ELEMENTS IN NODE
+        for child in node.children:
+            if child.base_name == 'element':
+                if i < len(seg):
+                    self.element_list.append(element(child, seg[i]))
+                else:
+                    self.element_list.append(element(child, None))
+                i += 1
+            elif child.base_name == 'composite':
+                if i < len(seg):
+                    self.element_list.append(composite(child, seg[i]))
+                else:
+                    self.element_list.append(composite(child, None))
+                i += 1
 
     def __del__(self):
-	tab.decr()
+        tab.decr()
 
     def xml(self):
         """
@@ -193,8 +190,8 @@ class segment:
         """
 
         sys.stdout.write('<segment code="%s">\n' % (node.id))
-    	for elem in self.element_list:
-	    elem.xml()
+        for elem in self.element_list:
+            elem.xml()
         sys.stdout.write('</segment>\n') # % (tab.indent()))
     
     def validate(self):
@@ -204,9 +201,9 @@ class segment:
         Params:  
         Returns: 
         """
-    	for elem in self.element_list:
-	    elem.validate()
-	    
+        for elem in self.element_list:
+            elem.validate()
+            
     
     def GetElementValue(self, refdes):
         """
@@ -215,11 +212,11 @@ class segment:
         Params:  refdes - the X12 element Reference Identifier
         Returns: Value of the element, or None if not found
         """
-    	for elem in self.element_list:
-	    if elem.refdes == refdes:
-	        return elem.x12_elem
-	return None
-    	
+        for elem in self.element_list:
+            if elem.refdes == refdes:
+                return elem.x12_elem
+        return None
+        
 
 #############################################################################
 ###  ELEMENT - Link data element to map
@@ -230,15 +227,15 @@ class element:
         Name:    __init__
         Desc:    Get the values for this element
         Params:  node - a map_if node of the element
-		 x12_elem - the x12 element value 
+                 x12_elem - the x12 element value 
         Returns: 
         """
 
-	self.node = node
+        self.node = node
         self.x12_elem = x12_elem
-	
+        
     def __del__(self):
-	tab.decr()
+        tab.decr()
 
     def xml(self):
         """
@@ -247,8 +244,8 @@ class element:
         Params:  
         Returns: 
         """
-	sys.stdout.write('<element code="%s">%s</element>\n' % (node.refdes, self.x12_elem))
-	
+        sys.stdout.write('<element code="%s">%s</element>\n' % (node.refdes, self.x12_elem))
+        
     def validate(self):
         """
         Name:    xml
@@ -257,65 +254,9 @@ class element:
         Returns: 
         """
 
-	return self.node.is_valid(self.x12_elem)
+        return self.node.is_valid(self.x12_elem)
 
    
-
-class composite:
-    def __init__(self, node, x12_elem):
-        """
-        Name:    __init__
-        Desc:    Get the values for this composite
-        Params:  node - a dom node of the composite
-		 x12_elem - the x12 element value 
-        Returns: 
-        """
-        self.node = node
-	self.x12_elem = x12_elem
-    	self.name = GetChildElementText(node, 'name')
-    	self.usage = GetChildElementText(node, 'usage')
-    	self.req_des = GetChildElementText(node, 'req_des')
-    	self.seq = GetChildElementText(node, 'seq')
-    	self.refdes = GetChildElementText(node, 'refdes')
-
-	composite = string.split(string.strip(x12_elem), subele_term)
-	i = 0 
-	self.sub_element_list = []
-	for child in node.childNodes:
-	    if child.nodeType == child.ELEMENT_NODE and child.tagName == 'element':
-	        if i < len(composite):
-	            self.sub_element_list.append(element(child, composite[i]))
-	        else:
-	            self.sub_element_list.append(element(child, None))
-	        i = i + 1
-
-    def xml(self):
-        """
-        Name:    xml
-        Desc:    Sends an xml representation of the composite to stdout
-        Params:  
-        Returns: 
-        """
-        sys.stdout.write('<composite code="%s">\n' % (self.refdes))
-    	for sub_elem in self.sub_element_list:
-	    sub_elem.xml()
-        sys.stdout.write('</composite>\n')
-
-    def validate(self):
-        """
-        Name:    validate
-        Desc:    Validates the composite
-        Params:  
-        Returns: 1 on success
-        """
-    	if self.x12_elem == '' or self.x12_elem is None:
-    	    if self.usage == 'N':
-	    	return 1
-    	    elif self.usage == 'R':
-	    	raise WEDI1Error, 'Composite %s is required' % (self.refdes)
-    	for sub_elem in self.sub_element_list:
-	    sub_elem.validate()
-    
 def main():
     """Script main program."""
     import getopt
@@ -332,7 +273,7 @@ def main():
     if 1:
         if args:
             for file in args:
-		sys.stdin = open(file, 'r')
+                sys.stdin = open(file, 'r')
                 a = x12n_document()
         else:
             a = x12n_document()
