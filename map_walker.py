@@ -56,6 +56,7 @@ def walk_tree(node, seg):
     if node.is_segment():
         if node.is_match(seg):
             return node
+    #handle seg repeat
 
     # Next segment in loop
     node_idx = None
@@ -66,6 +67,8 @@ def walk_tree(node, seg):
             if child.is_segment() and child.index >= node_idx:
                 if child.is_match(seg):
                     return child
+                elif child.reqdes = 'R':
+                    raise WEDIError, "Required segment %s not found" % (child.id)
         
     # Repeat loop
     node = orig_node
