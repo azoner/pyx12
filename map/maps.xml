@@ -42,32 +42,32 @@ vriic - Version / Release / Industry Identifier Code (GS08)
 
 <maps>
    <version icvn="00401">
-      <map vriic="004010X093" fic="HR">map.276.4010.X093.xml</map>
-      <map vriic="004010X093" fic="HN">map.277.4010.X093.xml</map>
-      <map vriic="004010X092" fic="HS">map.270.4010.X092.xml</map>
-      <map vriic="004010X092" fic="HB">map.271.4010.X092.xml</map>
-      <map vriic="004010X094" fic="HI">map.278.4010.X094.27.xml</map>
-      <map vriic="004010X094" fic="HI">map.278.4010.X094.xml</map>
-      <map vriic="004010X061" fic="RA">map.820.4010.X061.xml</map>
-      <map vriic="004010X095" fic="BE">map.834.4010.X095.xml</map>
-      <map vriic="004010X091" fic="HP">map.835.4010.X091.xml</map>
-      <map vriic="004010X096" fic="HC">map.837.4010.X096.xml</map>
-      <map vriic="004010X097" fic="HC">map.837.4010.X097.xml</map>
-      <map vriic="004010X098" fic="HC">map.837.4010.X098.xml</map>
-      <map vriic="004010X093A1" fic="HR">map.276.4010.X093.A1.xml</map>
-      <map vriic="004010X093A1" fic="HN">map.277.4010.X093.A1.xml</map>
-      <map vriic="004010X092A1" fic="HS">map.270.4010.X092.A1.xml</map>
-      <map vriic="004010X092A1" fic="HB">map.271.4010.X092.A1.xml</map>
-      <map vriic="004010X094A1" fic="HI">map.278.4010.X094.27.A1.xml</map>
-      <map vriic="004010X094A1" fic="HI">map.278.4010.X094.A1.xml</map>
-      <map vriic="004010X061A1" fic="RA">map.820.4010.X061.A1.xml</map>
-      <map vriic="004010X095A1" fic="BE">map.834.4010.X095.A1.xml</map>
-      <map vriic="004010X091A1" fic="HP">map.835.4010.X091.A1.xml</map>
-      <map vriic="004010X096A1" fic="HC">map.837.4010.X096.A1.xml</map>
-      <map vriic="004010X097A1" fic="HC">map.837.4010.X097.A1.xml</map>
-      <map vriic="004010X098A1" fic="HC">map.837.4010.X098.A1.xml</map>
-      <map vriic="004010XXXC" fic="SP">map.841.4010.XXXC.xml</map>
-      <map vriic="004010" fic="FA">map.997.4010.xml</map>
-      <map vriic="" fic="">map.x12.control.00401.xml</map>
+      <map vriic="004010X093" fic="HR">276.4010.X093.xml</map>
+      <map vriic="004010X093" fic="HN">277.4010.X093.xml</map>
+      <map vriic="004010X092" fic="HS">270.4010.X092.xml</map>
+      <map vriic="004010X092" fic="HB">271.4010.X092.xml</map>
+      <map vriic="004010X094" fic="HI">278.4010.X094.27.xml</map>
+      <map vriic="004010X094" fic="HI">278.4010.X094.xml</map>
+      <map vriic="004010X061" fic="RA">820.4010.X061.xml</map>
+      <map vriic="004010X095" fic="BE">834.4010.X095.xml</map>
+      <map vriic="004010X091" fic="HP">835.4010.X091.xml</map>
+      <map vriic="004010X096" fic="HC">837.4010.X096.xml</map>
+      <map vriic="004010X097" fic="HC">837.4010.X097.xml</map>
+      <map vriic="004010X098" fic="HC">837.4010.X098.xml</map>
+      <map vriic="004010X093A1" fic="HR">276.4010.X093.A1.xml</map>
+      <map vriic="004010X093A1" fic="HN">277.4010.X093.A1.xml</map>
+      <map vriic="004010X092A1" fic="HS">270.4010.X092.A1.xml</map>
+      <map vriic="004010X092A1" fic="HB">271.4010.X092.A1.xml</map>
+      <map vriic="004010X094A1" fic="HI">278.4010.X094.27.A1.xml</map>
+      <map vriic="004010X094A1" fic="HI">278.4010.X094.A1.xml</map>
+      <map vriic="004010X061A1" fic="RA">820.4010.X061.A1.xml</map>
+      <map vriic="004010X095A1" fic="BE">834.4010.X095.A1.xml</map>
+      <map vriic="004010X091A1" fic="HP">835.4010.X091.A1.xml</map>
+      <map vriic="004010X096A1" fic="HC">837.4010.X096.A1.xml</map>
+      <map vriic="004010X097A1" fic="HC">837.4010.X097.A1.xml</map>
+      <map vriic="004010X098A1" fic="HC">837.4010.X098.A1.xml</map>
+      <map vriic="004010XXXC" fic="SP">841.4010.XXXC.xml</map>
+      <map vriic="004010" fic="FA">997.4010.xml</map>
+      <map vriic="" fic="">x12.control.00401.xml</map>
    </version>
 </maps>
