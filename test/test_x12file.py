@@ -1,10 +1,8 @@
 #! /usr/bin/env /usr/local/bin/python
 
-#import test_support
-#from test_support import TestFailed, have_unicode
 import unittest
 #import sys
-import StringIO
+#import StringIO
 import pdb
 import tempfile
 
@@ -18,7 +16,7 @@ class Delimiters(unittest.TestCase):
     def setUp(self):
         self.errh = pyx12.error_handler.errh_null()
 
-    def test_delimiters(self):
+    def test_arbitrary_delimiters(self):
         str = 'ISA&00&          &00&          &ZZ&ZZ000          &ZZ&ZZ001          &030828&1128&U&00401&000010121&0&T&!+\n'
         str += 'GS&HC&ZZ000&ZZ001&20030828&1128&17&X&004010X098+\n'
         str += 'ST&837&11280001+\n'
