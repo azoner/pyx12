@@ -40,6 +40,7 @@ import sys
 import string
 from types import *
 #import time
+import pdb
 
 # Intrapackage imports
 from errors import *
@@ -90,6 +91,7 @@ class error_debug_visitor(error_visitor):
         Params:     err_isa - error_isa instance
         """
         self.fd.write('%s\n' % err_isa.id)
+        self.fd.write('-- ISA errors --\n')
         for err in err_isa.errors:
             self.fd.write('  %s %s\n' % err)
         for ele in err_isa.elements:
@@ -113,6 +115,7 @@ class error_debug_visitor(error_visitor):
         Params:     err_gs - error_gs instance
         """
         self.fd.write('%s\n' % err_gs.id)
+        self.fd.write('-- GS errors --\n')
         for err in err_gs.errors:
             self.fd.write('  %s %s\n' % err)
         for ele in err_gs.elements:
@@ -143,10 +146,11 @@ class error_debug_visitor(error_visitor):
         Params:     err_st - error_st instance
         """
         self.fd.write('%s\n' % err_st.id)
+        self.fd.write('-- ST errors --\n')
         for err in err_st.errors:
             self.fd.write('  ERR %s %s\n' % err)
         for ele in err_st.elements:
-            self.fd.write('  %s %s\n' % (ele.id, ele.name))
+            self.fd.write('  ST Element:  %s %s\n' % (ele.id, ele.name))
         
     def visit_st_post(self, err_st):
         """
@@ -164,11 +168,12 @@ class error_debug_visitor(error_visitor):
         Desc:    
         Params:     err_seg - error_seg instance
         """
-        self.fd.write('%s\n' % err_seg.id)
+        #pdb.set_trace()
+        self.fd.write('%s %s\n' % (err_seg.id, err_seg.name))
         for err in err_seg.errors:
             self.fd.write('  ERR %s %s\n' % err)
-        for ele in err_seg.children:
-            self.fd.write('  %s %s\n' % (ele.id, ele.name))
+        #for ele in err_seg.elements:
+        #    self.fd.write('  %s %s\n' % (ele.id, ele.name))
 
     def visit_ele(self, err_ele): 
         """
@@ -177,6 +182,6 @@ class error_debug_visitor(error_visitor):
         Desc:    
         Params:     err_ele - error_ele instance
         """
-        self.fd.write('%s %s\n' % (err_ele.id, err_ele.name))
+        self.fd.write('  %s %s\n' % (err_ele.id, err_ele.name))
         for err in err_ele.errors:
-            self.fd.write('  ELE ERR %s %s (%s)\n' % err)
+            self.fd.write('    ERR %s %s (%s)\n' % err)
