@@ -35,7 +35,12 @@
 External Codes interface
 """
 
+import os
+import cPickle
 import xml.dom.minidom
+from stat import ST_MTIME
+from stat import ST_SIZE
+
 
 # Intrapackage imports
 import errors
@@ -53,21 +58,37 @@ class ExternalCodes:
     	Desc:    Initialize the external list of codes
     	Params:  
     	"""
+	
 	self.codes = {}
+	
+    	# init a map of codes from the pickled file codes.pic
+	try:
+            dt1 = os.stat('map/codes.xml')[ST_MTIME]
+	    dt2 = os.stat('map/codes.pic')[ST_MTIME]
+	    if dt1 < dt2:
+		self.codes = cPickle.load(open('map/codes.pic'))
+	except:
+	    pass
+	
     	# init a map of codes from codes.xml
-	dom_codes = xml.dom.minidom.parse('map/codes.xml')
-	codeset_nodes = dom_codes.getElementsByTagName("codeset")
-	for codeset_node in codeset_nodes:
-	    id = GetChildElementText(codeset_node, 'id')
-	    code_list = []
-            for code in codeset_node.childNodes:
-	        if code.nodeType == code.ELEMENT_NODE and code.tagName == 'code':
-        	    for a in code.childNodes:
-       	    	        if a.nodeType == a.TEXT_NODE:
-	        	    a.normalize()
-			    code_list.append(a.data)
-	    self.codes[id] = code_list
-	print self.codes.keys()
+	if len(self.codes) == 0:
+	    dom_codes = xml.dom.minidom.parse('map/codes.xml')
+	    codeset_nodes = dom_codes.getElementsByTagName("codeset")
+	    for codeset_node in codeset_nodes:
+	        id = GetChildElementText(codeset_node, 'id')
+	        code_list = []
+                for code in codeset_node.childNodes:
+	            if code.nodeType == code.ELEMENT_NODE and code.tagName == 'code':
+        	        for a in code.childNodes:
+       	    	            if a.nodeType == a.TEXT_NODE:
+	        	        a.normalize()
+			        code_list.append(a.data)
+	        self.codes[id] = code_list
+	    try:
+	        cPickle.dump(self.codes,open('map/codes.pic','w'))
+	    except:
+	        pass
+	#print self.codes.keys()
 
     def IsValid(self, key, code):
     	"""
