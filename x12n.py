@@ -60,6 +60,7 @@ import errors
 import codes
 import map_index
 import map_if
+import x12file
 from utils import *
 
 #Global Variables
@@ -69,19 +70,12 @@ __version__ = "0.1.0"
 class x12n_document:
     #dom_codes = xml.dom.minidom.parse('map/codes.xml')
     def __init__(self):
-        ISA_len = 106
-    	line = sys.stdin.read(ISA_len)
-	#.seek(0)
-	assert (line[:3] == 'ISA'), "First line does not begin with 'ISA': %s" % line[:3]
-	assert (len(line) == ISA_len), "ISA line is only %i characters" % len(line)
-	self.seg_term = line[-1]
-	self.ele_term = line[3]
-	self.subele_term = line[-2]
+   	src = x12file.x12file(sys.stdin) 
 	global subele_term
 	subele_term = self.subele_term
 
 	# get ISA segment map
-	seg = string.split(line[:-1], self.ele_term)
+#	seg = string.split(line[:-1], self.ele_term)
 	#print seg
 
 	dom_isa = xml.dom.minidom.parse('map/map.x12.control.00401.xml')
@@ -92,28 +86,16 @@ class x12n_document:
 	    if GetChildElementText(seg_node, 'id') == 'IEA':
 	    	iea_seg_node = seg_node
 
-	# ISA Segment	
-	isa_seg = segment(isa_seg_node, seg)
-	isa_seg.validate()
-	self.icvn = isa_seg.GetElementValue('ISA12')
-	
-	lines = []
-	for line in string.split(sys.stdin.read(), self.seg_term):
-	    if string.strip(line) != '':
-	        lines.append(string.split(string.strip(line), self.ele_term))
-	
-	# IEA Segment	
-	#for line in lines:
-	#    print line
-	if lines[-1][0] == 'IEA':
-	    iea_seg = segment(iea_seg_node, lines[-1])
-	    iea_seg.validate()
-	else:
-	    raise errors.WEDI1Error, 'Last segment should be IEA, is "%s"' % (lines[-1][0])
-
-	# Loop through GS segments
-	for loop in GetExplicitLoops(lines[:-1], 'GS', 'GE', 6, 2):
-	    gs = GS_loop(self, loop)
+	for seg in src:
+	    if seg[0] == 'ISA':
+		isa_seg = segment(isa_seg_node, seg)
+		isa_seg.validate()
+		self.icvn = isa_seg.GetElementValue('ISA12')
+	    elif seg[0] == 'IEA':
+	    	iea_seg = segment(iea_seg_node, lines[-1])
+	    	iea_seg.validate()
+	    else:
+	    	pass
 
 	dom_isa.unlink()
 
