@@ -410,6 +410,20 @@ class Segment_ID_Checks(unittest.TestCase):
             pass
         self.assertEqual(errh.err_cde, '1', errh.err_str)
 
+    def test_segment_last_space(self):
+        errh = pyx12.error_handler.errh_null()
+        str = 'ISA*00*          *00*          *ZZ*ZZ000          *ZZ*ZZ001          *030828*1128*U*00401*000010121*0*T*:~\n'
+        str += 'ZZ*0019 ~\n'
+        fd = tempfile.NamedTemporaryFile()
+        fd.write(str)
+        fd.seek(0)
+        val = None
+        src = pyx12.x12file.x12file(fd.name, errh)
+        for seg in src:
+            if seg.get_seg_id() == 'ZZ':
+                val = seg[0].format()
+        self.assertEqual(val, '0019 ')
+
     def test_segment_id_long(self):
         errh = pyx12.error_handler.errh_null()
         str = 'ISA*00*          *00*          *ZZ*ZZ000          *ZZ*ZZ001          *030828*1128*U*00401*000010121*0*T*:~\n'

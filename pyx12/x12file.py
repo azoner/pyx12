@@ -21,7 +21,7 @@ import sys
 #import string
 from types import *
 import logging
-#import pdb
+import pdb
 
 # Intrapackage imports
 from errors import *
@@ -105,7 +105,7 @@ class x12file:
                 while True:
                     # Get first segment in buffer
                     (line, self.buffer) = self.buffer.split(self.seg_term, 1) 
-                    line = line.strip().replace('\n','').replace('\r','')
+                    line = line.replace('\n','').replace('\r','')
                     if line != '':
                         break
                 if line[-1] == self.ele_term:
