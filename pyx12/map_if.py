@@ -1288,7 +1288,7 @@ class composite_if(x12_node):
         Returns:    True on success
         """
         valid = True
-        if comp_data is None or comp_data.is_empty() and self.usage == 'N':
+        if (comp_data is None or comp_data.is_empty()) and self.usage in ('N', 'S'):
             return True
 
         if self.usage == 'R':
