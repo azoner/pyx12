@@ -57,7 +57,7 @@ __version__ = "0.3.0.0"
 __date__    = "10/1/2003"
 
 def usage():
-    sys.stdout.write('usage: x12lint source_file [target_997 [target_html]]\n')
+    sys.stdout.write('usage: x12lint source_files\n')
     
 def main():
     """
@@ -66,70 +66,57 @@ def main():
     import getopt
     param = pyx12.params.params()
     try:
-        opts, args = getopt.getopt(sys.argv[1:], 'qv')
+        opts, args = getopt.getopt(sys.argv[1:], '9c:qvHl:')
     except getopt.error, msg:
-        sys.stdout.write('usage: pyx12.py source_file [target_997 [target_html]]\n')
+        usage()
         raise
         sys.exit(2)
     logger = logging.getLogger('pyx12')
-    hdlr = logging.FileHandler('./run.log')
-    stderr_hdlr = logging.StreamHandler()
-    formatter = logging.Formatter('%(asctime)s %(levelname)s %(module)s %(lineno)d %(message)s')
-    hdlr.setFormatter(formatter)
-    stderr_hdlr.setFormatter(formatter)
-    logger.addHandler(hdlr) 
-    logger.addHandler(stderr_hdlr)
     logger.setLevel(logging.INFO)
+    formatter = logging.Formatter('%(asctime)s %(levelname)s %(module)s %(lineno)d %(message)s')
+
+    hdlr = logging.FileHandler('./run.log')
+    hdlr.setFormatter(formatter)
+    logger.addHandler(hdlr) 
+    
+    stderr_hdlr = logging.StreamHandler()
+    stderr_hdlr.setFormatter(formatter)
+    logger.addHandler(stderr_hdlr)
 
     fd_src = None
     fd_997 = None
     fd_html = None
 
-    target_html = ''
-    target_997 = ''
+    flag_html = False
+    flag_997 = True
     param.set_param('map_path', os.path.expanduser('~/src/pyx12/map/'))
     for o, a in opts:
         if o == '-v': logger.setLevel(logging.DEBUG)
         if o == '-q': logger.setLevel(logging.ERROR)
         if o == '-c': param.set_param('charset', a)
-        #if o == '-H': target_html = a
-        #if o == '-E': target_997 = a
+        if o == '-H': flag_html = True
+        #if o == '-9': target_997 = os.path.splitext(src_filename)[0] + '.997'
 
-    try:
-        #print args
-        if args:
-            src_filename = args[0]
+    for src_filename in args:
+        try:
             fd_src = open(src_filename, 'U')
-            if len(args) > 1:
-                target_997 = args[1]
-                if target_997 == '-':
-                    fd_997 = sys.stdout
-                else:
-                    fd_997 = open(target_997, 'w')
-            else:
+            if flag_997:
                 target_997 = os.path.splitext(src_filename)[0] + '.997'
                 fd_997 = open(target_997, 'w')
-            if len(args) > 2:
-                target_html = args[1]
-                if target_html == '-':
-                    fd_html = sys.stdout
-                else:
-                    fd_html = open(target_html, 'w')
-            else:
+            if flag_html:
                 target_html = os.path.splitext(src_filename)[0] + '.html'
                 fd_html = open(target_html, 'w')
-    except:
-        logger.error('Could not open files')
-        usage()
-        sys.exit(2)
+            if pyx12.x12n_document.x12n_document(param, fd_src, fd_997, fd_html):
+                sys.stderr.write('OK\n')
+            else:
+                sys.stderr.write('Failure\n')
+        except IOError:
+            logger.error('Could not open files')
+            usage()
+            sys.exit(2)
+        except KeyboardInterrupt:
+            print "\n[interrupt]"
 
-    try:
-        if pyx12.x12n_document.x12n_document(param, fd_src, fd_997, fd_html):
-            sys.stderr.write('OK\n')
-        else:
-            sys.stderr.write('Failure\n')
-    except KeyboardInterrupt:
-        print "\n[interrupt]"
     return True
 
 #profile.run('x12n_document(src_filename)', 'pyx12.prof')
