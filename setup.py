@@ -1,6 +1,7 @@
-from distutils import core
+#from distutils import core
+import distutils 
 import cPickle
-import os.path
+import os
 import sys
 
 import pyx12
@@ -37,6 +38,14 @@ map_files = [
     'map/x12.control.00401.xml' 
 ]
 
+distutils.mkpath('build/bin')
+scripts = ('x12_build_pkl', 'x12html', 'x12info', 'x12lint', 
+    'x12norm', 'x12sql', 'x12xml', 'xmlx12')
+for filename in scripts:
+    distutils.copy_file(os.path.join('bin', filename+'.py'), 
+        os.path.join('build/bin', filename))
+testfiles = filter(lambda x: os.path.splitext(x)[1] in ('.base', '.txt'), os.listdir('test/files'))
+    
 kw = {  
     'name': "pyx12",
     'version': pyx12.__version__,
@@ -46,8 +55,7 @@ kw = {
     'author_email': "jholland@kazoocmh.org",
     'url': "http://www.sourceforge.net/pyx12/",
     'packages': ['pyx12'],
-    'scripts': [ 'bin/x12lint.py', 'bin/x12html.py', 'bin/x12xml.py',
-        'bin/x12_build_pkl.py', 'bin/x12norm.py'],
+    'scripts': ['build/bin/%s' % (script) for script in scripts]
     'data_files': [
         (map_dir, map_files),
         (map_dir, ['map/README', 'map/codes.xml', 'map/codes.xsd',
@@ -65,8 +73,8 @@ kw = {
       #package_dir = {'': ''},
 }
 
-if (hasattr(core, 'setup_keywords') and
-    'classifiers' in core.setup_keywords):
+if (hasattr(distutils.core, 'setup_keywords') and
+    'classifiers' in distutils.core.setup_keywords):
     kw['classifiers'] = \
         ['Topic :: Communications, Office/Business',
          'Environment :: Console (Text Based)',
@@ -78,4 +86,4 @@ for file in map_files:
     param.set('map_path', 'map')
     map_file = os.path.basename(file)
 
-core.setup(**kw)
+distutils.core.setup(**kw)
