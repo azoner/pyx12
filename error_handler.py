@@ -63,12 +63,17 @@ class err_node:
         self.st_id = st_id
         self.ls_id = ls_id
         self.seg_count = seg_count
+        self.children = []
 
     def accept(self, visitor):
         pass
         
     def add_node(self, obj):
         pass
+
+#    def add_seg_error(self):
+#        for child in children
+
         
     def add_error(self, err):
         pass
@@ -92,8 +97,8 @@ class err_handler:
         #self.x12_src = x12_src
         #(isa_id, gs_id, st_id, ls_id, seg_count, cur_line) = x12_src.get_id()
 
-        self.isa_loops = []
         #self.isa_loop_count = 0
+        self.children = []
 
     def accept(self, visitor):
         """
@@ -106,18 +111,18 @@ class err_handler:
 
     def add_node(self, obj):
         if obj['id'] == 'ISA':
-            self.isa_loops.append(err_isa(obj))
+            self.children.append(err_isa(obj))
         else:
-            if len(self.isa_loops) != 0:
+            if len(self.children) != 0:
                 logger.debug(obj)
-                self.isa_loops[-1].add_node(obj)
+                self.children[-1].add_node(obj)
             
         
     def add_error(self, err):
-        self.isa_loops[-1].add_error(err)
+        self.children[-1].add_error(err)
 
     def update_node(self, obj):
-        self.isa_loops[-1].update_node(obj)
+        self.children[-1].update_node(obj)
             
 
 class err_isa(err_node):
@@ -140,7 +145,6 @@ class err_isa(err_node):
         
         self.isa_trn_set_id = self.isa_id
 
-        self.gs_loops = []
         self.err_cde = []
 
     def accept(self, visitor):
@@ -160,11 +164,11 @@ class err_isa(err_node):
         Params:     obj - map of passed variables
         """
         if obj['id'] == 'GS':
-            self.gs_loops.append(err_gs(obj))
+            self.children.append(err_gs(obj))
         else:
-            if len(self.gs_loops) != 0:
+            if len(self.children) != 0:
                 logger.debug(obj)
-                self.gs_loops[-1].add_node(obj)
+                self.children[-1].add_node(obj)
                 
 
     def add_error(self, err):
@@ -179,7 +183,7 @@ class err_isa(err_node):
             err_str = err['str']
             self.err_cde.append([err_cde, err_str])
         else:
-            self.gs_loops[-1].add_error(err)
+            self.children[-1].add_error(err)
             
     def update_node(self, obj):
         """
@@ -191,7 +195,7 @@ class err_isa(err_node):
         if obj['id'] == 'IEA':
             pass # Handle variables
         else:
-            self.gs_loops[-1].update_node(obj)
+            self.children[-1].update_node(obj)
 
 #    def set_st_id(self, st_id, trn_set_id):
 #        self.cur_st_id = st_id
@@ -333,7 +337,6 @@ class err_st(err_node):
         self.ack_code = None # AK501
         self.err_cde = [] # AK502-6
 
-        self.segments = [] # err_seg instances
 
     def accept(self, visitor):
         """
@@ -351,15 +354,15 @@ class err_st(err_node):
         Desc:    
         Params:     obj - node object information
         """
-        if self.segments:
-            if self.segments[-1].err_count() == 0:
-                del self.segments[-1]
+        if self.children:
+            if self.children[-1].err_count() == 0:
+                del self.children[-1]
         if obj['id'] == 'SEG':
-            self.segments.append(err_seg(obj))
+            self.children.append(err_seg(obj))
         else:
-            if len(self.segments) != 0:
+            if len(self.children) != 0:
                 logger.debug(obj)
-                self.segments[-1].add_node(obj)
+                self.children[-1].add_node(obj)
 
     def add_error(self, err):
         """
@@ -372,7 +375,7 @@ class err_st(err_node):
             pass
             #add error info
         else:
-            self.segments[-1].add_error(err)
+            self.children[-1].add_error(err)
  
     def update_node(self, obj):
         """
@@ -418,7 +421,6 @@ class err_seg(err_node):
         #self.seg_error_code = seg_error_code
         
         self.st_errors = []
-        self.elems = []
 
     def accept(self, visitor):
         """
@@ -437,13 +439,13 @@ class err_seg(err_node):
         Params:     obj - node object information
         """
         # If last element added does not have any errors by now, delete
-        if self.elems:
-            if self.elems[-1].err_count() == 0:
-                del self.elems[-1]
+        if self.children:
+            if self.children[-1].err_count() == 0:
+                del self.children[-1]
         if obj['id'] == 'ELE':
-            self.elems.append(err_ele(obj))
+            self.children.append(err_ele(obj))
         else:
-            #self.elems[-1].add_node(obj)
+            #self.children[-1].add_node(obj)
             raise EngineError, 'add_node - unhandled add', obj
 
     def add_error(self, err):
@@ -457,7 +459,7 @@ class err_seg(err_node):
             self.st_errors.append((err['code'], err['value'], err['seq'], \
                 err['data_ele'], err['str']))
         else:
-            self.elems[-1].add_error(err)
+            self.children[-1].add_error(err)
         
     def err_count(self):
         """
@@ -467,7 +469,7 @@ class err_seg(err_node):
         Returns:    count of errors
         """
         ele_err_ct = 0
-        for ele in self.elems:
+        for ele in self.children:
             if ele.err_count() > 0:
                 ele_err_ct = 1
                 break
