@@ -1070,7 +1070,6 @@ class element_if(x12_node):
         """
         errh.add_ele(self)
 
-        pdb.set_trace()
         if elem and elem.is_composite():
             err_str = 'Data element "%s" (%s) is an invalid composite' % \
                 (self.name, self.refdes)
