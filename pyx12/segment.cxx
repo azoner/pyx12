@@ -95,7 +95,6 @@ Pyx12::composite::composite(const string& ele_str, const string& subele_term_)
     }
 }
 
-/*
 bool Pyx12::composite::not_delim(char c)
 {
     if(c != subele_term[0])
@@ -111,7 +110,6 @@ bool Pyx12::composite::delim(char c)
     else
         return false;
 }
-*/
 
 vector<string> Pyx12::composite::split(const string& ele_str)
 {
@@ -242,7 +240,7 @@ Pyx12::segment::segment(const string& seg_str, const string& seg_term_,
         i++;
     }
 }
-/*
+
 bool Pyx12::segment::not_delim(char c)
 {
     if(c != ele_term[0])
@@ -258,7 +256,7 @@ bool Pyx12::segment::delim(char c)
     else
         return false;
 }
-*/
+
 vector<string> Pyx12::segment::split(const string& seg_str)
 {
     typedef string::const_iterator iter;
@@ -268,7 +266,7 @@ vector<string> Pyx12::segment::split(const string& seg_str)
     iter j;
     while(i != seg_str.end()) {
         cerr << "B1" << endl;
-        //i = find_if(i, seg_str.end(), Pyx12::segment::not_delim);
+        i = find_if(i, seg_str.end(), Pyx12::segment::not_delim);
         //j = find_if(i, seg_str.end(), Pyx12::segment::delim);
         while(i != seg_str.end())
             if((*i++) != ele_term[0])

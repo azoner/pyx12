@@ -65,8 +65,8 @@ namespace Pyx12 {
         bool is_composite();
         bool is_element();
         bool is_empty();
-        //bool not_delim(char c);
-        //bool delim(char c);
+        bool not_delim(char c);
+        bool delim(char c);
     };
 
 
@@ -98,8 +98,8 @@ namespace Pyx12 {
         string format(const string& seg_term_, const string& ele_term_, const string& subele_term_);
         vector<string> format_ele_list(vector<string> str_elems, const string& subele_term_);
         bool is_empty();
-        //bool not_delim(char c);
-        //bool delim(char c);
+        bool not_delim(char c);
+        bool delim(char c);
 
         ostream& operator<<(ostream&);
     };
