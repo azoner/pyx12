@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<grammar 
+ xmlns="http://relaxng.org/ns/structure/1.0">
+    <start>
+        <element name="params">
+            <attribute name="version">
+                <text/>
+            </attribute>
+        <zeroOrMore>
+            <element name="param">
+                <optional>
+                    <element name="type">
+                        <text/>
+                    </element>
+                </optional>
+                <attribute name="name">
+                    <text/>
+                </attribute>
+                <element name="value">
+                    <text/>
+                </element>
+                <element name="comment">
+                    <text/>
+                </element>
+            </element>
+        </zeroOrMore>
+        </element>
+    </start>
+</grammar>
