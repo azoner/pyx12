@@ -131,9 +131,10 @@ def x12n_document(fd):
         node = walker.walk(node, seg, errh)
 
         if seg[0] == 'ISA':
-            errh.add_node({'id': 'ISA', 'seg': seg, 'src_id': src.get_id()})
+            errh.add_isa_loop(seg, src)
         elif seg[0] == 'IEA':
-            errh.update_node({'id': 'IEA', 'seg': seg, 'src_id': src.get_id()})
+            errh.close_isa_loop(seg, sec, gs_count)
+            #errh.update_node({'id': 'IEA', 'seg': seg, 'src_id': src.get_id()})
         elif seg[0] == 'GS':
             fic = map_node.get_elemval_by_id(seg, 'GS01')
             vriic = map_node.get_elemval_by_id(seg, 'GS08')
@@ -148,15 +149,15 @@ def x12n_document(fd):
                 map = map_if.map_if(os.path.join('map', map_file))
                 logger.info('Map file: %s' % (map_file))
                 node = map.getnodebypath('/GS')
-            errh.add_node({'id': 'GS', 'seg': seg, 'src_id': src.get_id()})
+            errh.add_gs_loop(seg, src)
         elif seg[0] == 'GE':
-            errh.update_node({'id': 'GE', 'seg': seg, 'src_id': src.get_id()})
+            errh.close_gs_loop(seg, sec, st_count)
         elif seg[0] == 'ST':
-            errh.add_node({'id': 'ST', 'seg': seg, 'src_id': src.get_id()})
+            errh.add_st_loop(seg, src)
         elif seg[0] == 'SE':
-            errh.update_node({'id': 'SE', 'seg': seg, 'src_id': src.get_id()})
+            errh.close_gs_loop(seg, sec, seg_count)
         else:
-            errh.add_node({'id': 'SEG', 'seg': seg, 'src_id': src.get_id()})
+            errh.add_seg(seg, src)
 
         node.is_valid(seg, errh) 
 

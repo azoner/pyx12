@@ -128,8 +128,11 @@ class err_handler:
     def seg_error(self, err_cde, err_str):
         self.cur_seg_node.add_error(err_cde, err_str)
         
-    def ele_error(self, err_cde, err_str):
-        self.cur_ele_node.add_error(err_cde, err_str)
+    def ele_error(self, err_cde, err_str, bad_value, pos, data_ele):
+        self.cur_ele_node.add_error(err_cde, err_str, bad_value, pos, data_ele)
+
+    def close_isa_loop(self, seg, sec, gs_count):
+        self.cur_isa_node.close(seg, sec, gs_count)
         
     def find_node(self, type):
         """
@@ -236,18 +239,21 @@ class err_isa(err_node):
         Params:     
         """
         self.errors.append((err_cde, err_str))
+        
+    def close(self, seg, sec, gs_count):
+        pass
             
-    def update_node(self, obj):
-        """
-        Class:      err_isa
-        Name:       update_node
-        Desc:    
-        Params:     obj - map of passed variables
-        """
-        if obj['id'] == 'IEA':
-            pass # Handle variables
-        else:
-            self.children[-1].update_node(obj)
+#    def update_node(self, obj):
+#        """
+#        Class:      err_isa
+#        Name:       update_node
+#        Desc:    
+#        Params:     obj - map of passed variables
+#        """
+#        if obj['id'] == 'IEA':
+#            pass # Handle variables
+#        else:
+#            self.children[-1].update_node(obj)
 
 #    def set_st_id(self, st_id, trn_set_id):
 #        self.cur_st_id = st_id

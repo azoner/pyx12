@@ -81,12 +81,9 @@ class x12file:
         ISA_len = 106
         line = fd.read(ISA_len)
         if line[:3] != 'ISA': 
-            err = {}
-            err['id'] = 'ISA'
-            err['code'] = 'ISA1'
-            err['str'] = "First line does not begin with 'ISA': %s" % line[:3]
-            errh.add_error(err)
-            raise x12Error, "First line does not begin with 'ISA': %s" % line[:3]
+            err_str = "First line does not begin with 'ISA': %s" % line[:3]
+            errh.isa_error('ISA1', err_str)
+            raise x12Error, err_str
         assert (len(line) == ISA_len), "ISA line is only %i characters" % len(line)
         self.seg_term = line[-1]
         self.ele_term = line[3]
@@ -124,17 +121,11 @@ class x12file:
             self.gs_count = 0
         elif seg[0] == 'IEA': 
             if self.loops[-1][0] != 'ISA' or self.loops[-1][1] != seg[2]:
-                err = {}
-                err['id'] = 'ISA'
-                err['code'] = 'ISA2'
-                err['str'] = 'IEA id=%s does not match ISA id=%s' % (seg[2], self.loops[-1][1])
-                errh.add_error(err)
+                err_str = 'IEA id=%s does not match ISA id=%s' % (seg[2], self.loops[-1][1])
+                errh.isa_error('ISA2', err_str)
             if int(seg[1]) != self.gs_count:
-                err = {}
-                err['id'] = 'ISA'
-                err['code'] = 'ISA3'
-                err['str'] = 'IEA count for IEA02=%s is wrong' % (seg[2])
-                errh.add_error(err)
+                err_str = 'IEA count for IEA02=%s is wrong' % (seg[2])
+                errh.isa_error('ISA3', err_str)
             del self.loops[-1]
         elif seg[0] == 'GS': 
             self.gs_count += 1
@@ -142,18 +133,12 @@ class x12file:
             self.st_count = 0
         elif seg[0] == 'GE': 
             if self.loops[-1][0] != 'GS' or self.loops[-1][1] != seg[2]:
-                err = {}
-                err['id'] = 'GS'
-                err['str'] = 'GE id=%s does not match GS id=%s' % (seg[2], self.loops[-1][1])
-                err['code'] = '4'
-                errh.add_error(err)
+                err_str = 'GE id=%s does not match GS id=%s' % (seg[2], self.loops[-1][1])
+                errh.gs_error('4', err_str)
             if int(seg[1]) != self.st_count:
-                err = {}
-                err['id'] = 'GS'
-                err['str'] = 'GE count of %s for GE02=%s is wrong. I count %i' \
+                err_str = 'GE count of %s for GE02=%s is wrong. I count %i' \
                     % (seg[1], seg[2], self.st_count)
-                err['code'] = '5'
-                errh.add_error(err)
+                errh.gs_error('5', err_str)
             del self.loops[-1]
         elif seg[0] == 'ST': 
             self.st_count += 1
@@ -161,18 +146,12 @@ class x12file:
             self.seg_count = 1 
         elif seg[0] == 'SE': 
             if self.loops[-1][0] != 'ST' or self.loops[-1][1] != seg[2]:
-                err = {}
-                err['id'] = 'ST'
-                err['str'] = 'SE id=%s does not match ST id=%s' % (seg[2], self.loops[-1][1])
-                err['code'] = '3'
-                errh.add_error(err)
+                err_str = 'SE id=%s does not match ST id=%s' % (seg[2], self.loops[-1][1])
+                errh.st_error('3', err_str)
             if int(seg[1]) != self.seg_count + 1:
-                err = {}
-                err['id'] = 'ST'
-                err['str'] = 'SE count of %s for SE02=%s is wrong. I count %i' \
+                err_str = 'SE count of %s for SE02=%s is wrong. I count %i' \
                     % (seg[1], seg[2], self.seg_count + 1)
-                err['code'] = '4'
-                errh.add_error(err)
+                errh.st_error('4', err_str)
             del self.loops[-1]
         elif seg[0] == 'LS': 
             self.loops.append(('LS', seg[6]))
@@ -182,13 +161,11 @@ class x12file:
             self.seg_count += 1
             self.hl_count += 1
             if self.hl_count != int(seg[1]):
-                raise x12Error, 'My HL count %i does not match your HL count %s' \
+                #raise x12Error, 'My HL count %i does not match your HL count %s' \
+                #    % (self.hl_count, seg[1])
+                err_str = 'My HL count %i does not match your HL count %s' \
                     % (self.hl_count, seg[1])
-                err = {}
-                err['id'] = 'SEG'
-                err['str'] = 'My HL count %i does not match your HL count %s' \
-                    % (self.hl_count, seg[1])
-                errh.add_error(err)
+                errh.seg_error('HL1', err_str)
             if seg[2] != '':
                 parent = int(seg[2])
                 if parent not in self.hl_stack:

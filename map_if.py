@@ -817,14 +817,7 @@ class element_if(x12_node):
         Desc:       Forward the error to an error_handler
         Params:  
         """
-        err = {}
-        err['id'] = 'ELE'
-        err['str'] = err_str
-        err['code'] = err_cde
-        err['value'] = elem_val
-        err['pos'] = self.seq
-        err['data_ele'] = self.data_ele
-        errh.add_error(err)
+        errh.ele_error(err_cde, err_str, elem_val, pos=self.seq, data_ele=self.data_ele)
         
     def __valid_code__(self, code):
         """
@@ -887,15 +880,10 @@ class element_if(x12_node):
         Returns: boolean
         """
         global codes
-        obj = {}
-        obj['id'] = 'ELE'
         if self.parent.is_composite():
-            obj['ele_pos'] = self.parent.seq
-            obj['subele_pos'] = self.seq
+            errh.add_ele(self.parent.seq, self.data_ele, self.seq)
         else:
-            obj['ele_pos'] = self.seq
-        obj['ele_ref_num'] = self.data_ele
-        errh.add_node(obj)
+            errh.add_ele(self.seq, self.data_ele)
         if elem_val == '' or elem_val is None:
             if self.usage == 'N':
                 return True
