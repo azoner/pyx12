@@ -113,7 +113,7 @@ class error_html:
                 self.fd.write('<span class="error">&nbsp;%s (Code: %s)</span><br>\n' % \
                     (err_str, err_cde))
             for ele in err_node.elements:
-                for (err_cde, err_str) in ele.errors:
+                for (err_cde, err_str, err_val) in ele.errors:
                     self.fd.write('<span class="error">&nbsp;%s (Code: %s)</span><br>\n' % \
                         (err_str, err_cde))
             
