@@ -45,6 +45,7 @@ class x12xml_simple(x12xml):
     def seg(self, seg_node, seg_data):
         """
         Generate XML for the segment data and matching map node
+        
         @param seg_node: Map Node
         @type seg_node: L{node<map_if.x12_node>}
         @param seg_data: Segment object
