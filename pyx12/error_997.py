@@ -98,8 +98,8 @@ class error_997_visitor(error_visitor.error_visitor):
         seg = errh.cur_gs_node.seg_data
         gs_seg = pyx12.segment.segment('GS', '~', '*', ':')
         gs_seg.append('FA')
-        gs_seg.append(seg[2].get_value())
-        gs_seg.append(seg[1].get_value())
+        gs_seg.append(seg[2].get_value().rstrip())
+        gs_seg.append(seg[1].get_value().rstrip())
         gs_seg.append(time.strftime('%Y%m%d'))
         gs_seg.append(time.strftime('%H%M%S'))
         gs_seg.append(seg[5].get_value())

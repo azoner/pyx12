@@ -236,7 +236,7 @@ class err_handler:
         """
         """
         self._add_cur_seg()
-        if not self.ele_node_added:
+        if not self.ele_node_added and self.cur_seg_node is not None:
             self.cur_seg_node.elements.append(self.cur_ele_node)
             self.ele_node_added = True
         #logger.debug('----  add_ele: %s' % self.cur_seg_node.elements[-1].name)
