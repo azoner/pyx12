@@ -166,7 +166,7 @@ class Element_is_valid(unittest.TestCase):
     def test_null_R(self):
         node = self.node.get_child_node_by_idx(0)
         self.assertNotEqual(node, None)
-        self.assertEqual(node.id, 'CLM1')
+        self.assertEqual(node.id, 'CLM01')
         self.assertEqual(node.base_name, 'element')
         result = node.is_valid(None, self.errh)
         self.failIf(result)
@@ -175,7 +175,7 @@ class Element_is_valid(unittest.TestCase):
     def test_blank_R(self):
         node = self.node.get_child_node_by_idx(0)
         self.assertNotEqual(node, None)
-        self.assertEqual(node.id, 'CLM1')
+        self.assertEqual(node.id, 'CLM01')
         self.assertEqual(node.base_name, 'element')
         result = node.is_valid('', self.errh)
         self.failIf(result)
