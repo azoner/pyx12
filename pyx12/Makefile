@@ -20,5 +20,8 @@ errors.o: errors.cxx errors.hxx
 #    ./greet <../data/name1
 #    ./frame <../data/name2
 
+test1.o: test1.cxx segment.hxx
+	$(CC) $(CXXFLAGS) -c test1.cxx
+
 clean:
 	rm -f *.o *.core
