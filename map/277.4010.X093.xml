@@ -229,7 +229,7 @@
         <name>Component Element Separator</name>
         <usage>R</usage>
         <seq>16</seq>
-        <data_type/>
+        <data_type>AN</data_type>
         <min_len>1</min_len>
         <max_len>1</max_len>
       </element>
