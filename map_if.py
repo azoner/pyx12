@@ -611,8 +611,7 @@ class segment_if(x12_node):
             err = {}
             err['id'] = 'SEG'
             err['seq'] = child_node.seq
-            err['str'] = 'Too many elements in segment %s. Has %i, should have %i' % \
-                (seg[0], len(seg)-1, child_count)
+            err['str'] = err_str
             err['code'] = '3'
             err['data_ele'] = child_node.data_ele
             err['value'] = seg[child_count+1]
@@ -621,11 +620,11 @@ class segment_if(x12_node):
 #        if seg[0] == 'BGN':
 #            pdb.set_trace()
         for i in xrange(self.get_child_count()):
-            self.logger.debug('i=%i, len(seg)-1=%i / child_count=%i' % (i, len(seg)-1, self.get_child_count()))
+            #self.logger.debug('i=%i, len(seg)-1=%i / child_count=%i' % (i, len(seg)-1, self.get_child_count()))
             child_node = self.get_child_node_by_idx(i)
             if i < len(seg)-1:
                 #if type(seg[i+1]) is ListType: # composite
-                self.logger.debug('i=%i, elem=%s, id=%s' % (i, seg[i+1], child_node.id))
+                #self.logger.debug('i=%i, elem=%s, id=%s' % (i, seg[i+1], child_node.id))
                 if child_node.is_composite():
                     # Validate composite
                     comp = seg[i+1]
@@ -645,7 +644,7 @@ class segment_if(x12_node):
                     # Validate Element
                     valid &= child_node.is_valid(seg[i+1], errh, self.check_dte)
             else: #missing required elements
-                self.logger.debug('id=%s, name=%s' % (child_node.id, child_node.base_name))
+                #self.logger.debug('id=%s, name=%s' % (child_node.id, child_node.base_name))
                 valid &= child_node.is_valid(None, errh)
         return valid
 
@@ -888,6 +887,15 @@ class element_if(x12_node):
         Returns: boolean
         """
         global codes
+        obj = {}
+        obj['id'] = 'ELE'
+        if self.parent.is_composite():
+            obj['ele_pos'] = self.parent.seq
+            obj['subele_pos'] = self.seq
+        else:
+            obj['ele_pos'] = self.seq
+        obj['ele_ref_num'] = self.data_ele
+        errh.add_node(obj)
         if elem_val == '' or elem_val is None:
             if self.usage == 'N':
                 return True

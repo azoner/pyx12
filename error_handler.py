@@ -35,6 +35,7 @@
 Interface to X12 Errors
 """
 
+import logging
 #import os
 #import sys
 #import string
@@ -47,6 +48,8 @@ __author__  = "John Holland <jholland@kazoocmh.org> <john@zoner.org>"
 
 #class error_node:
 #    def __init__(self)
+
+logger = logging.getLogger('pyx12')
 
 class err_node:
     def __init__(self, obj): 
@@ -105,7 +108,10 @@ class err_handler:
         if obj['id'] == 'ISA':
             self.isa_loops.append(err_isa(obj))
         else:
-            self.isa_loops[-1].add_node(obj)
+            if len(self.isa_loops) != 0:
+                logger.debug(obj)
+                self.isa_loops[-1].add_node(obj)
+            
         
     def add_error(self, err):
         self.isa_loops[-1].add_error(err)
@@ -156,7 +162,10 @@ class err_isa(err_node):
         if obj['id'] == 'GS':
             self.gs_loops.append(err_gs(obj))
         else:
-            self.gs_loops[-1].add_node(obj)
+            if len(self.gs_loops) != 0:
+                logger.debug(obj)
+                self.gs_loops[-1].add_node(obj)
+                
 
     def add_error(self, err):
         """
@@ -239,7 +248,9 @@ class err_gs(err_node):
         if obj['id'] == 'ST':
             self.st_loops.append(err_st(obj))
         else:
-            self.st_loops[-1].add_node(obj)
+            if len(self.st_loops) != 0:
+                logger.debug(obj)
+                self.st_loops[-1].add_node(obj)
 
     def add_error(self, err):
         """
@@ -346,7 +357,9 @@ class err_st(err_node):
         if obj['id'] == 'SEG':
             self.segments.append(err_seg(obj))
         else:
-            self.segments[-1].add_node(obj)
+            if len(self.segments) != 0:
+                logger.debug(obj)
+                self.segments[-1].add_node(obj)
 
     def add_error(self, err):
         """
@@ -454,7 +467,7 @@ class err_seg(err_node):
         Returns:    count of errors
         """
         ele_err_ct = 0
-        for ele in self.ele_errors:
+        for ele in self.elems:
             if ele.err_count() > 0:
                 ele_err_ct = 1
                 break
@@ -485,14 +498,14 @@ class err_ele(err_node):
         Desc:    
         Params:     obj
         """
-        err_node.__init__(self, obj)
+        #err_node.__init__(self, obj)
 
         if obj['id'] != 'ELE':
             raise EngineError, 'err_ele.__init__', obj
 
-        self.ele_pos = ele_pos
-        self.subele_pos = subele_pos
-        self.ele_ref_num = ele_ref_num
+        self.ele_pos = obj['ele_pos']
+        self.subele_pos = obj['subele_pos']
+        self.ele_ref_num = obj['ele_ref_num']
         #self.bad_val = bad_val
 
         self.ele_errors = []

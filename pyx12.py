@@ -41,7 +41,7 @@ Validate against a map and codeset values.
 Create a XML document based on the data file
 """
 
-import time
+#import time
 import os, os.path
 #import stat
 import sys
@@ -156,7 +156,7 @@ def x12n_document(fd):
         elif seg[0] == 'SE':
             errh.update_node({'id': 'SE', 'seg': seg, 'src_id': src.get_id()})
         else:
-            errh.add_node({'id': seg[0], 'seg': seg, 'src_id': src.get_id()})
+            errh.add_node({'id': 'SEG', 'seg': seg, 'src_id': src.get_id()})
 
         node.is_valid(seg, errh) 
 
@@ -191,6 +191,7 @@ def main():
         if o == '-q': logger.setLevel(logging.ERROR)
 
     try:
+        print args
         if args:
             fd = open(args[0], 'r')
         else:
