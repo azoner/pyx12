@@ -115,7 +115,7 @@ vector<string> Pyx12::composite::split(const string& ele_str)
 
     iter i = ele_str.begin();
     while(i != ele_str.end()) {
-        i = find_if(i, str.end(), Pyx12::IsNotDelim(subele_term));
+        i = find_if(i, ele_str.end(), Pyx12::IsNotDelim(subele_term));
         iter j = find_if(i, ele_str.end(), Pyx12::IsDelim(subele_term));
         if i != ele_str.end()
             ret.push_back(string(i, j));
