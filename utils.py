@@ -121,6 +121,7 @@ def IsValidDataType(str, data_type, charset = 'B'):
                 return 0
             s = str[4:6]
             if s > '59':  # check seconds
+                return 0
             # check decimal seconds here in the future
             if len(str) > 8:
                 # print 'unhandled decimal seconds encountered'

@@ -56,6 +56,7 @@ from utils import *
 
 #Global Variables
 subele_term = None
+__version__ = "0.1.0"
 
 class x12n_document:
     #dom_codes = xml.dom.minidom.parse('map/codes.xml')
@@ -193,6 +194,9 @@ class ST_loop:
 	# Loop through HL delimited Loops
 	#for loop in GetHLLoops(st[2:-1]):
 	#    hl = HL_loop(self, transaction_node, loop)
+	self.seg_list_idx = 0
+	self.seg_list = st[2:-1]
+	hl = HL_loop(self, transaction_node)
 
 	se_seg = segment(se_seg_node, st[-1:][0])
 	se_seg.validate()
@@ -203,26 +207,47 @@ class HL_loop:
     """
     Takes a dom node of the loop and the parsed segment lines as a list
     """
-    def __init__(self, st, parent_node, loop):
+    def __init__(self, st, parent_node):
         """
         Name:    __init__
         Desc:    Handles the parsing of loop started by HL segments 
         Params:  st - parent class
 		 parent_node - dom node containing the loop
-		 loop - parsed segment lines as a list
         Returns: 
         """
+
+	# Find start of this HL segment in DOM tree
 	seg_nodes = parent_node.getElementsByTagName("loop")
 	for seg_node in seg_nodes:
 	    if GetChildElementText(seg_node, 'id') == 'HL':
 	    	hl_seg_node = seg_node
 
-	print loop[0]
+	# Verify we have the right node
+	
     
-	#hl_seg = segment(hl_seg_node, loop[0])
-	#hl_seg.validate()
-	#hl_seg.xml()
+	hl_seg = segment(hl_seg_node, st.seg_list[st.seg_list_idx])
+	st.seg_list_idx = st.seg_list_idx + 1
+	hl_seg.validate()
+	hl_seg.xml()
+	self.id_num = hl_seg.GetElementValue('HL01')
 
+	hl_children = []
+	
+	while st.seg_list_idx < len(st.seg_list):
+	    if st.seg_list[st.seg_list_idx][0] == 'HL':
+		a = segment(hl_seg_node, st.seg_list[st.seg_list_idx])
+		if self.id_num == a.GetElementValue('HL02'): #If I am the parent
+		    try:
+		        hl_children.append(HL_loop(st, hl_seg_node))
+		    except HL_Loop_Pop:
+		    	continue
+		    	#idx = hl_children[-1].seg_list_idx
+		else:
+		    raise HL_Loop_Pop
+	    else: # handle the other segments
+	        pass
+	    st.seg_list_idx = st.seg_list_idx + 1
+	    	
 
 class segment:
     """
@@ -309,6 +334,7 @@ class element:
 		 x12_elem - the x12 element value 
         Returns: 
         """
+
         self.x12_elem = x12_elem
     	self.name = GetChildElementText(node, 'name')
     	self.usage = GetChildElementText(node, 'usage')
