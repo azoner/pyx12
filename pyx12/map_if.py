@@ -974,10 +974,7 @@ class element_if(x12_node):
                  
         Returns: boolean
         """
-        if self.parent.is_composite():
-            errh.add_ele(self)
-        else:
-            errh.add_ele(self)
+        errh.add_ele(self)
 
         if type(elem_val) is ListType:
             err_str = 'Data element %s is an invalid composite' % (self.refdes)
@@ -1298,8 +1295,6 @@ def load_map_file(map_file, param):
         else:
             raise Pickle_Errors, "reload map"
     except:
-        pdb.set_trace()
-        raise
         try:
             map = map_if(map_file, param)
         except:
