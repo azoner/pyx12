@@ -36,8 +36,8 @@ Create a XML rendering of the X12 document
 
 import logging
 import pdb
-import string
-import os.path
+#import string
+#import os.path
 
 # Intrapackage imports
 from errors import *
@@ -51,6 +51,7 @@ logger.setLevel(logging.DEBUG)
 
 class x12xml_simple(x12xml):
     def __init__(self, fd):
+        x12xml.__init__(self)
         self.writer = XMLWriter(fd)
         self.writer.doctype(
             u"x12doc", u"-//J Holland//DTD XML X12 Document Conversion1.0//EN//XML",
@@ -65,80 +66,60 @@ class x12xml_simple(x12xml):
     def seg(self, seg_node, seg):
         """
         """
+        if not seg_node.is_segment():
+            raise EngineError, 'Node must be a segment'
         parent = x12xml.pop_to_parent_loop(self, seg_node) # Get enclosing loop
         # check path for new loops to be added
-        #path = parent.get_path()
-        pop_loops = []
-        push_loops = []
-        old_path = [] 
-        new_path = [] 
-        self_path = self.path.split('/')
-        path = parent.get_path().split('/')
-        for i in range(len(old_path)):
-            if old_path[i] != '':
-                old_path
-                
-        
-        match_idx = 0
-        for i in range(min(len(path), len(self.path))):
-            if path[i] != self.path[i]:
-                break
-            match_idx += 1
-
-        for i = range(len(self.path)-1, match_idx-1, -1):
-            pop_loops.append(self.path[i])
+        path = parent.get_path()
+        if self.path != path:
+            #pdb.set_trace()
+            #logger.debug('self.path=%s path=%s' % (self.path, path))
+            #pop_loops = []
+            #push_loops = []
+            last_path = filter(lambda x: x!='', self.path.split('/'))
+            cur_path = filter(lambda x: x!='', parent.get_path().split('/'))
             
-        #for i in range(max(len(path), len(self.path))):
-        #    try:
-        #        if path[i] != self.path[i]:
-                    
-        #    if i < len(path):
-        #        pass
+            match_idx = 0
+            for i in range(min(len(cur_path), len(last_path))):
+                if cur_path[i] != last_path[i]:
+                    break
+                match_idx += 1
 
-        
-        # find new loops
-        base = os.path.commonprefix([path, self.path])
+            for i in range(len(last_path)-1, match_idx-1, -1):
+                #pop_loops.append(last_path[i])
+                #logger.debug('POP=%s' % (last_path[i]))
+                self.writer.pop()
 
-        if  path != self.path:
-            logger.debug('self.path=%s path=%s base=%s' % (self.path, path, base))
-        # add loops
-        if path != self.path and len(path) > len(self.path):
-            if path[len(base):] != '':
-                path_diff = path[len(base):].split('/')
-            else:
-                path_diff = []
-
-            for loop_id in path_diff:
-                if loop_id != '':
-                    #pdb.set_trace()
-                    logger.debug('PUSH=%s' % (loop_id))
-                    logger.debug(path_diff)
-                    self.writer.push(u"loop", {u'id': loop_id})
+            for i in range(match_idx, len(cur_path)):
+                #push_loops.append(cur_path[i])
+                #logger.debug('PUSH=%s' % (cur_path[i]))
+                self.writer.push(u"loop", {u'id': cur_path[i]})
             
-        #self.writer.elem(u'segment', content, attrs={}):
-
-        # find closed loops
-        # close them, reverse order
-        if path != self.path and len(path) < len(self.path):
-            if self.path[len(base):] != '':
-                path_diff = self.path[len(base):].split('/')
+        self.writer.push(u"seg", {u'id': seg_node.id})
+        for i in range(1, len(seg)):
+            child_node = seg_node.get_child_node_by_idx(i-1)
+            if child_node.is_composite():
+                self.writer.push(u"comp", {u'id': seg_node.id})
+                comp = seg[i]
+                for j in range(len(comp)):
+                    subele_node = child_node.get_child_node_by_idx(j)
+                    self.writer.elem(u'subele', comp[j], attrs={u'id': subele_node.id})
+                self.writer.pop() #comp
+            elif child_node.is_element():
+                if seg[i] == '':
+                    self.writer.empty(u"ele", attrs={u'id': child_node.id})
+                else:
+                    self.writer.elem(u'ele', seg[i], attrs={u'id': child_node.id})
             else:
-                path_diff = []
-
-            for i in range(len(path_diff)-1, 0, -1):
-                if path_diff[i] != '':
-                    #pdb.set_trace()
-                    logger.debug('POP=%s' % (path_diff[i]))
-                    logger.debug(path_diff)
-                    self.writer.pop()
+                raise EngineError, 'Node must be a either an element or a composite'
+        self.writer.pop() #seg
 
         self.path = path
-
         
-        #self.writer.empty(u"any")
         
         #if not (node.is_loop() or node.is_map_root()): 
         #    node = x12xml.pop_to_parent_loop(node) # Get enclosing loop
+
 
 #    def pop_to_parent_loop(self, node):
 #        if node.is_map_root():
@@ -152,4 +133,7 @@ class x12xml_simple(x12xml):
 #            raise EngineError, "Called pop_to_parent_loop, can't find parent loop"
 #        return map_node
         
+
+def is_not_blank(x):
+    return x != ''
 

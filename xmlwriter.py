@@ -8,6 +8,7 @@
 
 import sys
 import codecs
+from utils import escape_html_chars
 
 class XMLWriter:
     """
@@ -51,7 +52,7 @@ class XMLWriter:
 
     """
 
-    def __init__(self, out=sys.stdout, encoding="utf-8", indent=u"  "):
+    def __init__(self, out=sys.stdout, encoding="utf-8", indent=u" "):
         """
         out      - a stream for the output
         encoding - an encoding used to wrap the output for unicode
@@ -121,12 +122,14 @@ class XMLWriter:
         self.out.write(self.indent * (len(self.stack) * 2))
     
     def __escape_cont(self, text):
+        if text is None:
+            return None
         return text.replace(u"&", u"&amp;")\
-                   .replace(u"<", u"&lt;").replace(u">", u"&gt;")
+            .replace(u"<", u"&lt;").replace(u">", u"&gt;")
 
     def __escape_attr(self, text):
+        if text is None:
+            return None
         return text.replace(u"&", u"&amp;") \
-               .replace(u"'", u"&apos;").replace(u"<", u"&lt;")\
-               .replace(u">", u"&gt;")
-
-
+            .replace(u"'", u"&apos;").replace(u"<", u"&lt;")\
+            .replace(u">", u"&gt;")
