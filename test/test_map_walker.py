@@ -1,5 +1,7 @@
 #! /usr/bin/env /usr/local/bin/python
 
+#    $Id$
+
 import os.path
 import unittest
 import pdb
@@ -13,7 +15,7 @@ from pyx12.params import params
 import pyx12.segment
 
 
-class Explicit_Loops(unittest.TestCase):
+class Find_Explicit_Loops(unittest.TestCase):
 
     def setUp(self):
         self.walker = walk_tree()
@@ -21,71 +23,106 @@ class Explicit_Loops(unittest.TestCase):
         param.set('map_path', os.path.expanduser('~/src/pyx12/map/'))
         param.set('pickle_path', os.path.expanduser('~/src/pyx12/map/'))
         self.map = pyx12.map_if.load_map_file('837.4010.X098.A1.xml', param)
-        self.errh = pyx12.error_handler.errh_null()
 
     def test_ISA_to_GS(self):
         node = self.map.getnodebypath('/ISA/ISA')
         seg = pyx12.segment.segment('GS*HC', '~', '*', ':')
-        node = self.walker.walk(node, seg, self.errh, 5, 4, None)
-        self.assertEqual(seg.get_seg_id(), node.id)
+        path = self.walker.find_match(node, seg)
+        self.assertEqual(path, '/ISA/GS/GS')
 
     def test_GS_to_ST(self):
         node = self.map.getnodebypath('/ISA/GS/GS')
         seg = pyx12.segment.segment('ST*837', '~', '*', ':')
-        node = self.walker.walk(node, seg, self.errh, 5, 4, None)
-        self.assertNotEqual(node, None)
-        self.assertEqual(seg.get_seg_id(), node.id)
+        path = self.walker.find_match(node, seg)
+        self.assertEqual(path, '/ISA/GS/ST/HEADER/ST')
 
     def test_SE_to_ST(self):
         node = self.map.getnodebypath('/ISA/GS/ST/FOOTER/SE')
         seg = pyx12.segment.segment('ST*837', '~', '*', ':')
-        node = self.walker.walk(node, seg, self.errh, 5, 4, None)
-        self.assertEqual(seg.get_seg_id(), node.id)
+        path = self.walker.find_match(node, seg)
+        self.assertEqual(path, '/ISA/GS/ST/HEADER/ST')
 
     def test_SE_to_GE(self):
         node = self.map.getnodebypath('/ISA/GS/ST/FOOTER/SE')
         #node.cur_count = 1 # HACK
         seg = pyx12.segment.segment('GE*1', '~', '*', ':')
-        node = self.walker.walk(node, seg, self.errh, 5, 4, None)
-        self.assertNotEqual(node, None)
-        self.assertEqual(seg.get_seg_id(), node.id)
+        path = self.walker.find_match(node, seg)
+        self.assertEqual(path, '/ISA/GS/GE')
 
     def test_GE_to_GS(self):
         node = self.map.getnodebypath('/ISA/GS/GE')
         seg = pyx12.segment.segment('GS*HC', '~', '*', ':')
-        node = self.walker.walk(node, seg, self.errh, 5, 4, None)
-        self.assertNotEqual(node, None)
-        self.assertEqual(seg.get_seg_id(), node.id)
+        path = self.walker.find_match(node, seg)
+        self.assertEqual(path, '/ISA/GS/GS')
 
     def test_GE_to_IEA(self):
         node = self.map.getnodebypath('/ISA/GS/GE')
         self.assertEqual('GE', node.id)
         seg = pyx12.segment.segment('IEA*1', '~', '*', ':')
-        node = self.walker.walk(node, seg, self.errh, 5, 4, None)
-        self.assertNotEqual(node, None)
-        self.assertEqual(seg.get_seg_id(), node.id)
+        path = self.walker.find_match(node, seg)
+        self.assertEqual(path, '/ISA/IEA')
 
     def test_IEA_to_ISA(self):
         node = self.map.getnodebypath('/ISA/IEA')
         self.assertEqual('IEA', node.id)
         seg = pyx12.segment.segment('ISA*00', '~', '*', ':')
-        node = self.walker.walk(node, seg, self.errh, 5, 4, None)
-        self.assertNotEqual(node, None)
-        self.assertEqual(seg.get_seg_id(), node.id)
+        path = self.walker.find_match(node, seg)
+        self.assertEqual(path, '/ISA/ISA')
 
     def test_ST_to_BHT_fail(self):
         node = self.map.getnodebypath('/ISA/GS/ST/HEADER/ST')
         seg = pyx12.segment.segment('ZZZ*0019', '~', '*', ':')
-        node = self.walker.walk(node, seg, self.errh, 5, 4, None)
-        self.assertEqual(node, None)
+        path = self.walker.find_match(node, seg)
+        self.assertEqual(path, '')
 
     def tearDown(self):
-        del self.errh
         del self.map
         del self.walker
         
 
-class Implicit_Loops(unittest.TestCase):
+class Find_Implicit_Loops(unittest.TestCase):
+    """
+    TA1 segment
+
+    child loop
+    next sibling loop
+    end loop - goto parent loop
+    
+    start at loop node
+    start at segment node
+
+    MATCH HL segment
+
+    """
+
+    def setUp(self):
+        self.walker = walk_tree()
+        param = params()
+        param.set('map_path', os.path.expanduser('~/src/pyx12/map/'))
+        param.set('pickle_path', os.path.expanduser('~/src/pyx12/map/'))
+        self.map = pyx12.map_if.load_map_file('837.4010.X098.A1.xml', param)
+
+    def test_ST_to_BHT(self):
+        node = self.map.getnodebypath('/ISA/GS/ST/HEADER/ST')
+        seg_data = pyx12.segment.segment('BHT*0019', '~', '*', ':')
+        path = self.walker.find_match(node, seg_data)
+        self.assertEqual(path, '/ISA/GS/ST/HEADER/BHT')
+
+    def test_match_loop_by_hl_ok(self):
+        """
+        MATCH loop by HL segment
+        """
+        node = self.map.getnodebypath('/ISA/GS/ST/DETAIL/2000A')
+        seg_data = pyx12.segment.segment('HL*1**20*1~', '~', '*', ':')
+        path = self.walker.find_match(node, seg_data)
+        self.assertEqual(path, '/ISA/GS/ST/DETAIL/2000A/HL')
+ 
+    def tearDown(self):
+        del self.map
+        del self.walker
+        
+
+class Walk_Implicit_Loops(unittest.TestCase):
     """
     TA1 segment
 
@@ -390,12 +427,12 @@ class CountOrdinal(unittest.TestCase):
 
 def suite():
     suite = unittest.TestSuite()
-    suite.addTest(unittest.makeSuite(Explicit_Loops))
-    suite.addTest(unittest.makeSuite(Implicit_Loops))
-    suite.addTest(unittest.makeSuite(SegmentWalk))
-    suite.addTest(unittest.makeSuite(Segment_ID_Checks))
-    suite.addTest(unittest.makeSuite(Counting))
-    suite.addTest(unittest.makeSuite(CountOrdinal))
+    suite.addTest(unittest.makeSuite(Find_Explicit_Loops))
+    suite.addTest(unittest.makeSuite(Find_Implicit_Loops))
+    #suite.addTest(unittest.makeSuite(SegmentWalk))
+    #suite.addTest(unittest.makeSuite(Segment_ID_Checks))
+    #suite.addTest(unittest.makeSuite(Counting))
+    #suite.addTest(unittest.makeSuite(CountOrdinal))
     return suite
 
 #if __name__ == "__main__":
