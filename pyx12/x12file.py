@@ -108,6 +108,9 @@ class x12file:
             #seg = string.split(line, self.ele_term)
             seg = pyx12.segment.segment(line, self.seg_term, self.ele_term, \
                 self.subele_term)
+            if not seg.is_seg_id_valid():
+                err_str = 'Segment identifier %s is invalid' % (seg_data.get_seg_id())
+                self.errh.seg_error('1', err_str, None, src_line=self.cur_line+1)
         except:
             raise StopIteration
 
