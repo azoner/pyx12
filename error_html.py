@@ -83,12 +83,12 @@ class error_html:
         self.fd.write('-->\n</style>\n')
         self.fd.write('</head>\n<body>\n')
         self.fd.write('<h1>pyx12 Error Analysis</h1>\n<h3>Analysis Date: %s</h3><p>\n' % \
-            (time.strftime('%y%m%d %H%M%S')))
+            (time.strftime('%m/%d/%Y %H:%M:%S')))
         self.fd.write('<div class="segs" style="">\n')
 
     def footer(self):
         self.fd.write('</div>\n')
-        self.fd.write('<p>\n<a href="http://sourceforge.net/projects/pyx12/">pyx12 project page</a>\n</p>\n')
+        self.fd.write('<p>\n<a href="http://sourceforge.net/projects/pyx12/">pyx12 Validator</a>\n</p>\n')
         self.fd.write('</body>\n</html>\n')
 
     def gen_info(self, info_str):
@@ -114,12 +114,14 @@ class error_html:
         #   Find any skipped error values
         # ID pos of bad value
         #while errh
-        for i in range(len(seg)):
-            if type(seg[i]) is ListType: # Composite
-                for j in range(len(seg[i])):
-                    seg[i][j] = escape_html_chars(seg[i][j])
+        t_seg = []
+        for ele in seg:
+            if type(ele) is ListType: # Composite
+                t_seg.append([])
+                for subele in ele:
+                    t_seg[-1].append(escape_html_chars(subele))
             else:
-                seg[i] = escape_html_chars(seg[i])
+                t_seg.append(escape_html_chars(ele))
         self.fd.write('<span class="seg">%i: %s</span><br>\n' % \
             (cur_line, self._seg_str(seg)))
         for err_node in err_node_list:
