@@ -60,5 +60,6 @@ class WEDI6Error(WEDIError): pass
 
 class EngineError(Exception): 
     """Base class for translation engine errors."""
+
 class HL_Loop_Pop(EngineError):
     """Pop a HL level"""
