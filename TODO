@@ -12,6 +12,7 @@ LX index incrementing
 Error Handling
   Stream Errors to XML
   Combine error XML with HTML/XML/997 output
+  Error specifications - XML
 
 Restructure maps
   Add loop wrappers to ISA/GS/ST
