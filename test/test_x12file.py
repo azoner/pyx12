@@ -230,6 +230,7 @@ class GE_Checks(unittest.TestCase):
     def tearDown(self):
         pass
 
+
 class SE_Checks(unittest.TestCase):
     def setUp(self):
         self.errh = pyx12.error_handler.errh_null()
@@ -301,6 +302,7 @@ class SE_Checks(unittest.TestCase):
 
     def tearDown(self):
         pass
+
 
 class HL_Checks(unittest.TestCase):
     def setUp(self):
