@@ -39,7 +39,10 @@ class params:
     def __init__(self):
         self.params = {'charset': 'E', 'checkdate': None, 'ignore_codes': False,\
             'ignore_ext_codes': False, 'skip_html': False, 'skip_997': False,
-            'ignore_syntax': False}
+            'ignore_syntax': False,
+            'map_path': '/usr/local/share/pyx12/map',
+            'pickle_path': '/tmp'
+            }
 
     def get_param(self, param_str):
         if param_str in self.params.keys():

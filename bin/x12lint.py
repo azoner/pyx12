@@ -85,7 +85,8 @@ def main():
 
     flag_html = False
     flag_997 = True
-    param.set_param('map_path', os.path.expanduser('~/src/pyx12/map/'))
+    #param.set_param('map_path', os.path.expanduser('/usr/local/share/pyx12/map'))
+    #param.set_param('pickle_path', os.path.expanduser('/tmp'))
     for o, a in opts:
         if o == '-v': logger.setLevel(logging.DEBUG)
         if o == '-q': logger.setLevel(logging.ERROR)

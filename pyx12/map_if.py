@@ -1263,7 +1263,8 @@ def load_map_file(map_file, param):
     """
     logger = logging.getLogger('pyx12.pickler')
     map_path = param.get_param('map_path')
-    pickle_file = '%s.%s' % (os.path.splitext(os.path.join(map_path, \
+    pickle_path = param.get_param('pickle_path')
+    pickle_file = '%s.%s' % (os.path.splitext(os.path.join(pickle_path, \
         map_file))[0], 'pkl')
     map_full = os.path.join(map_path, map_file)
     try:

@@ -97,7 +97,7 @@ def main():
     logger.addHandler(stderr_hdlr)
     logger.setLevel(logging.INFO)
 
-    param.set_param('map_path', os.path.expanduser('~/src/pyx12/map/'))
+    #param.set_param('map_path', os.path.expanduser('~/src/pyx12/map/'))
     for o, a in opts:
         if o == '-v': logger.setLevel(logging.DEBUG)
         if o == '-q': logger.setLevel(logging.ERROR)
