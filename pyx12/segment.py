@@ -275,7 +275,9 @@ class segment:
             string.join(str_elems, ele_term), \
             seg_term)
 
-    def format_ele_list(self, str_elems, subele_term=':'):
+    def format_ele_list(self, str_elems, subele_term=None):
+        if subele_term is None:
+            subele_term = self.subele_term
         for ele in self.elements:
             str_elems.append(ele.format(subele_term))
 
