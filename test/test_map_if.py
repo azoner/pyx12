@@ -19,6 +19,63 @@ class Element_is_valid(unittest.TestCase):
         self.node = self.map.getnodebypath('/2000A/2000B/2300/CLM')
         self.errh = pyx12.error_handler.errh_null()
 
+    def test_len_ID(self):
+        node = self.node.get_child_node_by_idx(18)
+        self.assertNotEqual(node, None)
+        self.assertEqual(node.id, 'CLM19')
+        self.assertEqual(node.base_name, 'element')
+
+        result = node.is_valid('1', self.errh)
+        self.failIf(result)
+        self.assertEqual(self.errh.err_cde, '4')
+
+        result = node.is_valid('AA', self.errh)
+        self.failUnless(result)
+        self.assertEqual(self.errh.err_cde, None)
+
+        result = node.is_valid('AAAAAA', self.errh)
+        self.failIf(result)
+        self.assertEqual(self.errh.err_cde, '5')
+
+    def test_len_R(self):
+        node = self.node.get_child_node_by_idx(1)
+        self.assertNotEqual(node, None)
+        self.assertEqual(node.id, 'CLM02')
+        self.assertEqual(node.base_name, 'element')
+
+        result = node.is_valid('-5.2344', self.errh)
+        self.failUnless(result)
+        self.assertEqual(self.errh.err_cde, None)
+
+        result = node.is_valid('-5.23442673245673345', self.errh)
+        self.failUnless(result)
+        self.assertEqual(self.errh.err_cde, None)
+
+        result = node.is_valid('-5.234426732456733454', self.errh)
+        self.failIf(result)
+        self.assertEqual(self.errh.err_cde, '5')
+
+    def test_bad_char_R(self):
+        node = self.node.get_child_node_by_idx(1)
+        self.assertNotEqual(node, None)
+        self.assertEqual(node.id, 'CLM02')
+        self.assertEqual(node.base_name, 'element')
+
+        result = node.is_valid('-5.AB4', self.errh)
+        self.failIf(result)
+        self.assertEqual(self.errh.err_cde, '6')
+        
+    def test_bad_char_DT(self):
+        node = self.map.getnodebypath('/2000A/2000B/2300/DTP')
+        node = self.node.get_child_node_by_idx(2)
+        self.assertNotEqual(node, None)
+        self.assertEqual(node.id, 'DTP03')
+        self.assertEqual(node.base_name, 'element')
+
+        result = node.is_valid('2003010Z', self.errh)
+        self.failIf(result)
+        self.assertEqual(self.errh.err_cde, '6')
+
     def test_valid_codes_ok1(self):
         #CLM05-01   02 bad, 11 good, no external
         node = self.node.get_child_node_by_idx(4) #CLM05
@@ -41,7 +98,7 @@ class Element_is_valid(unittest.TestCase):
         self.assertEqual(self.errh.err_cde, '7')
 
     def test_external_codes_ok1(self):
-        "CLM11-04 external states, no valid_codes"
+        #CLM11-04 external states, no valid_codes
         node = self.node.get_child_node_by_idx(10) #CLM11
         node = node.get_child_node_by_idx(3) #CLM11-4
         self.assertNotEqual(node, None)
@@ -105,7 +162,27 @@ class Element_is_valid(unittest.TestCase):
         result = node.is_valid('', self.errh)
         self.failUnless(result)
         self.assertEqual(self.errh.err_cde, None)
+         
+    def test_null_R(self):
+        node = self.node.get_child_node_by_idx(0)
+        self.assertNotEqual(node, None)
+        self.assertEqual(node.id, 'CLM1')
+        self.assertEqual(node.base_name, 'element')
+        result = node.is_valid(None, self.errh)
+        self.failIf(result)
+        self.assertEqual(self.errh.err_cde, '1')
         
+    def test_blank_R(self):
+        node = self.node.get_child_node_by_idx(0)
+        self.assertNotEqual(node, None)
+        self.assertEqual(node.id, 'CLM1')
+        self.assertEqual(node.base_name, 'element')
+        result = node.is_valid('', self.errh)
+        self.failIf(result)
+        self.assertEqual(self.errh.err_cde, '1')
+        
+
+       
 
 
 class Test_getnodebypath(unittest.TestCase):
