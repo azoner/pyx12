@@ -124,6 +124,10 @@ class x12file:
             if int(seg[1]) != self.seg_count + 1:
                 raise STError, 'SE count of %s for SE02=%s is wrong. I count %i' % (seg[1], seg[2], self.seg_count + 1)
             del self.loops[-1]
+        elif seg[0] == 'LS': 
+            self.loops.append(('LS', seg[6]))
+        elif seg[0] == 'LE': 
+            del self.loops[-1]
         elif seg[0] == 'HL': 
             self.seg_count += 1
             self.hl_count += 1
