@@ -113,13 +113,13 @@ class walk_tree:
                     #    % (child.id, child.cur_count, child.get_max_repeat()))
                     if child.is_segment():
                         if child.is_match(seg_data):
+                            child.cur_count += 1
                             #logger.debug('MATCH segment %s (%s*%s)' % (child.id,\
                             #   seg_data.get_seg_id(), seg_data[0].get_value()))
                             if child.usage == 'N':
                                 err_str = "Segment %s found but marked as not used" % (child.id)
                                 errh.seg_error('2', err_str, None)
                             elif child.usage == 'R' or child.usage == 'S':
-                                child.cur_count += 1
                                 #if child is orig_node:
                                 #    #logger.debug('child %s IS orig_node %s' % (child.id, orig_node.id))
                                 #    child.cur_count += 1 # Repeat of segment
@@ -153,7 +153,9 @@ class walk_tree:
                         #logger.debug('child_node id=%s' % (child.id))
                         if self._is_loop_match(child, seg_data, errh, seg_count, cur_line, ls_id):
                             child.reset_cur_count() # Set counts of children to zero
-                            return child.get_child_node_by_idx(0)
+                            node_seg = child.get_child_node_by_idx(0)
+                            node_seg.cur_count = 1
+                            return node_seg
             if node.is_map_root(): # If at root and we haven't found the segment yet.
                 self._seg_not_found(orig_node, seg_data, errh)
                 return None
