@@ -65,18 +65,31 @@ def gen_sql(map_root):
     """
     fd = sys.stdout
     tbl_stack = []
+    indent = 0
+    indent_str = str(' '*indent*2)
     for node in map_root:
-        if node.id in ('ISA', 'IEA', 'TA1', 'GS', 'GE', 'SE'):
+        if node.id is None:
+            continue
+        id = node.id
+        if id[:3] in ('ISA', 'IEA', 'TA1') or \
+            id[:2] in ('GS', 'GE', 'SE'):
             continue
         if node.is_map_root():
             continue
         if node.is_loop():
-            fd.write('CREATE TABLE [%s_%s]\n' % (node.id, format_name(node.name)))
+            table_name = 'loop_%s_%s' % (node.id, format_name(node.name))
+            ident = '%s_num' % (table_name)
+            fd.write('%sCREATE TABLE [%s]\n' % (indent_str, table_name))
+            tbl_stack.append((table_name, ident))
+            indent += 1 
+            indent_str = str(' '*indent*2)
         elif node.is_segment():
-            if node.repeat != '1':
-                fd.write('CREATE TABLE [%s_%s]\n' % (node.id, format_name(node.name)))
+            #if node.get_max_repeat() != 1:
+            fd.write('%sCREATE TABLE [%s_%s]\n' % (indent_str, node.id, format_name(node.name)))
+            indent += 1 
+            indent_str = str(' '*indent*2)
         elif node.is_element():
-            fd.write('[%s_%s]' % (node.id, format_name(node.name)))
+            fd.write('%s[%s_%s]' % (indent_str, node.id, format_name(node.name)))
             if node.data_type in ('DT', 'TM'):
                 fd.write(' [datetime]')
             elif node.data_type in ('AN', 'ID'):
@@ -88,8 +101,11 @@ def gen_sql(map_root):
                 fd.write(' [int]')
             elif node.data_type == 'R' or node.data_type[0] == 'N':
                 fd.write(' [float]')
+            fd.write(' NULL')
+            fd.write('  -- %s(%s, %s)' % (node.data_type, node.min_len, node.max_len))
             fd.write('\n')
         elif node.is_composite():
+            pass
     return None
 
    
