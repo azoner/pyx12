@@ -62,7 +62,7 @@ class walk_tree:
 
         # Special Handlers for ISA, GS, ST
 #        while not node.is_map_root():
-#            node = self.pop_to_parent_loop(node) # Get root node
+#            node = pop_to_parent_loop(node) # Get root node
 #        if orig_node.id == 'SE' and seg_data.get_seg_id() == 'ST':
 #            return node.getnodebypath('/ST')
 #        if orig_node.id == 'GE' and seg_data.get_seg_id() == 'GS':
@@ -74,7 +74,7 @@ class walk_tree:
 #            orig_node.cur_count = 1
             # UGLY HACK.  Reset counts of sibling nodes to zero
 #            node_idx = orig_node.index
-#            for child in self.pop_to_parent_loop(orig_node).children:
+#            for child in pop_to_parent_loop(orig_node).children:
 #                if child.is_segment() and child.index > node_idx:
 #                    child.cur_count = 0
 #        node = orig_node
@@ -83,7 +83,7 @@ class walk_tree:
         #node_idx = node.index # Get original index of starting node
         node_pos = node.pos # Get original position ordinal of starting node
         if not (node.is_loop() or node.is_map_root()): 
-            node = self.pop_to_parent_loop(node) # Get enclosing loop
+            node = pop_to_parent_loop(node) # Get enclosing loop
         while 1:
             #logger.debug(seg_data.get_seg_id())
             for child in node.children:
@@ -137,14 +137,14 @@ class walk_tree:
                 return None
             #node_idx = node.index # Get index of current node in tree
             node_pos = node.pos # Get position ordinal of current node in tree
-            node = self.pop_to_parent_loop(node) # Get enclosing parent loop
+            node = pop_to_parent_loop(node) # Get enclosing parent loop
 
         self._seg_not_found(orig_node, seg_data, errh)
         return None
 
 #    def _is_loop_repeat(self, node, seg_data):
 #        if not (node.is_loop() or node.is_map_root()): 
-#            node = self.pop_to_parent_loop(node) # Get enclosing loop
+#            node = pop_to_parent_loop(node) # Get enclosing loop
 #        return self.is_first_seg_match(node, seg_data):
 
     def _seg_not_found(self, orig_node, seg_data, errh):
@@ -156,18 +156,6 @@ class walk_tree:
         errh.seg_error('1', err_str, None)
         #raise EngineError, "Could not find segment %s*%s.  Started at %s" % \
         #    (seg.get_seg_id(), seg[1], orig_node.get_path())
-
-    def pop_to_parent_loop(self, node):
-        if node.is_map_root():
-            return node
-        map_node = node.parent
-        if map_node is None:
-            raise EngineError, "Node is None: %s" % (node.name)
-        while not (map_node.is_loop() or map_node.is_map_root()): 
-            map_node = map_node.parent
-        if not (map_node.is_loop() or map_node.is_map_root()):
-            raise EngineError, "Called pop_to_parent_loop, can't find parent loop"
-        return map_node
 
     def is_seg_id_valid(self, seg_id):
         if len(seg_id) < 2 or len(seg_id) > 3:
@@ -241,3 +229,17 @@ class walk_tree:
             self.mandatory_segs_missing.append((seg_data.get_seg_id(), '3', err_str))
             #errh.seg_error('3', err_str, None)
         return False
+
+
+def pop_to_parent_loop(node):
+    if node.is_map_root():
+        return node
+    map_node = node.parent
+    if map_node is None:
+        raise EngineError, "Node is None: %s" % (node.name)
+    while not (map_node.is_loop() or map_node.is_map_root()): 
+        map_node = map_node.parent
+    if not (map_node.is_loop() or map_node.is_map_root()):
+        raise EngineError, "Called pop_to_parent_loop, can't find parent loop"
+    return map_node
+
