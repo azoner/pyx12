@@ -41,13 +41,11 @@
       <end_tag>IEA</end_tag>
       <usage>R</usage>
       <req_des>M</req_des>
-      <req_des>M</req_des>
       <pos>0</pos>
       <element>
          <data_ele>I01</data_ele>
          <name>Authorization Information Qualifier</name>
          <usage>R</usage>
-         <req_des>M</req_des>
          <req_des>M</req_des>
          <seq>01</seq>
          <refdes>ISA01</refdes>
@@ -64,7 +62,6 @@
          <name>Authorization Information</name>
          <usage>R</usage>
          <req_des>M</req_des>
-         <req_des>M</req_des>
          <seq>02</seq>
          <refdes>ISA02</refdes>
          <data_type>AN</data_type>
@@ -75,7 +72,6 @@
          <data_ele>I03</data_ele>
          <name>Security Information Qualifier</name>
          <usage>R</usage>
-         <req_des>M</req_des>
          <req_des>M</req_des>
          <seq>03</seq>
          <refdes>ISA03</refdes>
@@ -92,7 +88,6 @@
          <name>Security Information</name>
          <usage>R</usage>
          <req_des>M</req_des>
-         <req_des>M</req_des>
          <seq>04</seq>
          <refdes>ISA04</refdes>
          <data_type>AN</data_type>
@@ -103,7 +98,6 @@
          <data_ele>I05</data_ele>
          <name>Interchange ID Qualifier</name>
          <usage>R</usage>
-         <req_des>M</req_des>
          <req_des>M</req_des>
          <seq>05</seq>
          <refdes>ISA05</refdes>
@@ -127,7 +121,6 @@
          <name>Interchange Sender ID</name>
          <usage>R</usage>
          <req_des>M</req_des>
-         <req_des>M</req_des>
          <seq>06</seq>
          <refdes>ISA06</refdes>
          <data_type>AN</data_type>
@@ -138,7 +131,6 @@
          <data_ele>I05</data_ele>
          <name>Interchange ID Qualifier</name>
          <usage>R</usage>
-         <req_des>M</req_des>
          <req_des>M</req_des>
          <seq>07</seq>
          <refdes>ISA07</refdes>
@@ -162,7 +154,6 @@
          <name>Interchange Receiver ID</name>
          <usage>R</usage>
          <req_des>M</req_des>
-         <req_des>M</req_des>
          <seq>08</seq>
          <refdes>ISA08</refdes>
          <data_type>AN</data_type>
@@ -173,7 +164,6 @@
          <data_ele>I08</data_ele>
          <name>Interchange Date</name>
          <usage>R</usage>
-         <req_des>M</req_des>
          <req_des>M</req_des>
          <seq>09</seq>
          <refdes>ISA09</refdes>
@@ -187,7 +177,6 @@
          <name>Interchange Time</name>
          <usage>R</usage>
          <req_des>M</req_des>
-         <req_des>M</req_des>
          <seq>10</seq>
          <refdes>ISA10</refdes>
          <data_type>TM</data_type>
@@ -199,7 +188,6 @@
          <data_ele>I10</data_ele>
          <name>Interchange Control Standards Identifier</name>
          <usage>R</usage>
-         <req_des>M</req_des>
          <req_des>M</req_des>
          <seq>11</seq>
          <refdes>ISA11</refdes>
@@ -215,7 +203,6 @@
          <name>Interchange Control Version Number</name>
          <usage>R</usage>
          <req_des>M</req_des>
-         <req_des>M</req_des>
          <seq>12</seq>
          <refdes>ISA12</refdes>
          <data_type>ID</data_type>
@@ -230,7 +217,6 @@
          <name>Interchange Control Number</name>
          <usage>R</usage>
          <req_des>M</req_des>
-         <req_des>M</req_des>
          <seq>13</seq>
          <refdes>ISA13</refdes>
          <data_type>N0</data_type>
@@ -241,7 +227,6 @@
          <data_ele>I13</data_ele>
          <name>Acknowledgment Requested</name>
          <usage>R</usage>
-         <req_des>M</req_des>
          <req_des>M</req_des>
          <seq>14</seq>
          <refdes>ISA14</refdes>
@@ -258,7 +243,6 @@
          <name>Usage Indicator</name>
          <usage>R</usage>
          <req_des>M</req_des>
-         <req_des>M</req_des>
          <seq>15</seq>
          <refdes>ISA15</refdes>
          <data_type>ID</data_type>
@@ -274,7 +258,6 @@
          <name>Component Element Separator</name>
          <usage>R</usage>
          <req_des>M</req_des>
-         <req_des>M</req_des>
          <seq>16</seq>
          <refdes>ISA16</refdes>
          <data_type/>
@@ -287,13 +270,11 @@
       <name>Interchange Control Trailer</name>
       <usage>R</usage>
       <req_des>M</req_des>
-      <req_des>M</req_des>
       <pos>0</pos>
       <element>
          <data_ele>I16</data_ele>
          <name>Number of Included Functional Groups</name>
          <usage>R</usage>
-         <req_des>M</req_des>
          <req_des>M</req_des>
          <seq>01</seq>
          <refdes>IEA01</refdes>
@@ -305,7 +286,6 @@
          <data_ele>I12</data_ele>
          <name>Interchange Control Number</name>
          <usage>R</usage>
-         <req_des>M</req_des>
          <req_des>M</req_des>
          <seq>02</seq>
          <refdes>IEA02</refdes>
