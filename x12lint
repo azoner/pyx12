@@ -124,7 +124,10 @@ def main():
         sys.exit(2)
 
     try:
-        x12n_document(param, fd_src, fd_997, fd_html)
+        if x12n_document(param, fd_src, fd_997, fd_html):
+            sys.stderr.write('OK\n')
+        else:
+            sys.stderr.write('Failure\n')
     except KeyboardInterrupt:
         print "\n[interrupt]"
     return True
