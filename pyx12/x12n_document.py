@@ -226,12 +226,9 @@ def x12n_document(param, src_file, fd_997, fd_html, fd_xmldoc=None):
     del cur_map
     try:
         if errh.get_error_count() > 0:
-            del errh
             return False
         else:
-            del errh
             return True
     except:
         print errh
-        del errh
         return False
