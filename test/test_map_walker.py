@@ -135,9 +135,10 @@ class Implicit_Loops(unittest.TestCase):
         param.set('pickle_path', os.path.expanduser('~/src/pyx12/map/'))
         map = pyx12.map_if.load_map_file('841.4010.XXXC.xml', param)
         node = map.getnodebypath('/ISA/GS/ST/DETAIL/1000/2000/2100/SPI')
-        self.assertEqual(node, None)
+        self.assertNotEqual(node, None, 'Node not found')
         seg_data = pyx12.segment.segment('SPI*00', '~', '*', ':')
         node = self.walker.walk(node, seg_data, self.errh, 5, 4, None)
+        self.assertNotEqual(node, None, 'walker failed')
         self.assertEqual(seg_data.get_seg_id(), node.id)
 
     def test_loop_required_fail1(self):
@@ -328,6 +329,17 @@ class Counting(unittest.TestCase):
         node = self.walker.walk(node, seg_data, self.errh, 5, 4, None)
         self.assertEqual(self.errh.err_cde, '5', self.errh.err_str)
 
+
+class LoopCounting(unittest.TestCase):
+
+    def setUp(self):
+        self.walker = walk_tree()
+        param = params()
+        param.set('map_path', os.path.expanduser('~/src/pyx12/map/'))
+        param.set('pickle_path', os.path.expanduser('~/src/pyx12/map/'))
+        self.map = pyx12.map_if.load_map_file('837.4010.X098.A1.xml', param)
+        self.errh = pyx12.error_handler.errh_null()
+
     def test_max_loop_count_ok1(self):
         node = self.map.getnodebypath('/ISA/GS/ST/DETAIL/2000A/2000B/2300/2400/LX')
         self.assertNotEqual(node, None, 'Node not found')
@@ -419,6 +431,7 @@ def suite():
     suite.addTest(unittest.makeSuite(SegmentWalk))
     suite.addTest(unittest.makeSuite(Segment_ID_Checks))
     suite.addTest(unittest.makeSuite(Counting))
+    suite.addTest(unittest.makeSuite(LoopCounting))
     suite.addTest(unittest.makeSuite(CountOrdinal))
     return suite
 
