@@ -380,7 +380,7 @@ class loop_if(x12_node):
         self.id = None
         self.name = None
         self.usage = None
-        self.seq = None
+        #self.seq = None
         self.pos = None
         self.repeat = None
         
@@ -463,8 +463,8 @@ class loop_if(x12_node):
                 elif cur_name == 'usage' and self.base_name == 'loop':
                     self.usage = reader.Value()
                 elif cur_name == 'pos' and self.base_name == 'loop':
-                    self.pos = reader.Value()
-                    self.seq = self.pos  # XXX
+                    self.pos = int(reader.Value())
+                    #self.seq = self.pos  # XXX
                 elif cur_name == 'repeat' and self.base_name == 'loop':
                     self.repeat = reader.Value()
 

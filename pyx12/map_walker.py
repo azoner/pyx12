@@ -103,11 +103,8 @@ class walk_tree:
 #        node = orig_node
 
         self.mandatory_segs_missing = []
-        node_idx = node.index # Get original index of starting node
-        if node.is_segment():
-            node_pos = node.pos # Get original position ordinal of starting node
-        else:
-            node_pos = 0
+        #node_idx = node.index # Get original index of starting node
+        node_pos = node.pos # Get original position ordinal of starting node
         if not (node.is_loop() or node.is_map_root()): 
             node = self.pop_to_parent_loop(node) # Get enclosing loop
         while 1:
@@ -150,7 +147,8 @@ class walk_tree:
                             #logger.debug('Segment %s is not a match for (%s*%s)' % \
                             #   (child.id, seg_data.get_seg_id(), seg_data[0].get_value()))
                 elif child.is_loop(): 
-                    if child.index >= node_idx:
+                    #if child.index >= node_idx:
+                    if child.pos >= node_pos:
                         #logger.debug('child_node id=%s' % (child.id))
                         if self._is_loop_match(child, seg_data, errh, seg_count, cur_line, ls_id):
                             child.reset_cur_count() # Set counts of children to zero
@@ -160,9 +158,8 @@ class walk_tree:
             if node.is_map_root(): # If at root and we haven't found the segment yet.
                 self._seg_not_found(orig_node, seg_data, errh)
                 return None
-            node_idx = node.index # Get index of current node in tree
-            if node.is_segment():
-                node_pos = node.pos # Get position ordinal of current node in tree
+            #node_idx = node.index # Get index of current node in tree
+            node_pos = node.pos # Get position ordinal of current node in tree
             node = self.pop_to_parent_loop(node) # Get enclosing parent loop
 
         self._seg_not_found(orig_node, seg_data, errh)

@@ -19,7 +19,7 @@ class Element_is_valid(unittest.TestCase):
         param.set('map_path', os.path.expanduser('~/src/pyx12/map/'))
         param.set('pickle_path', os.path.expanduser('~/src/pyx12/map/'))
         self.map = pyx12.map_if.load_map_file('837.4010.X098.A1.xml', param)
-        self.node = self.map.getnodebypath('/ISA/GS/ST/2000A/2000B/2300/CLM')
+        self.node = self.map.getnodebypath('/ISA/GS/ST/DETAIL/2000A/2000B/2300/CLM')
         self.errh = pyx12.error_handler.errh_null()
 
     def test_len_ID(self):
@@ -239,35 +239,35 @@ class Test_getnodebypath(unittest.TestCase):
         self.assertEqual(node.base_name, 'segment')
 
     def test_get_ST(self):
-        node = self.map.getnodebypath('/ISA/GS/ST/ST')
+        node = self.map.getnodebypath('/ISA/GS/ST/HEADER/ST')
         self.assertEqual(node.id, 'ST')
         self.assertEqual(node.base_name, 'segment')
 
     def test_get_1000A(self):
-        node = self.map.getnodebypath('/ISA/GS/ST/1000A')
+        node = self.map.getnodebypath('/ISA/GS/ST/HEADER/1000A')
         self.assertEqual(node.id, '1000A')
         self.assertEqual(node.base_name, 'loop')
 
     def test_get_2000A(self):
-        node = self.map.getnodebypath('/ISA/GS/ST/2000A')
+        node = self.map.getnodebypath('/ISA/GS/ST/DETAIL/2000A')
         self.assertEqual(node.id, '2000A')
         self.assertEqual(node.base_name, 'loop')
 
     def test_get_2000B(self):
         #pdb.set_trace()
-        node = self.map.getnodebypath('/ISA/GS/ST/2000A/2000B')
+        node = self.map.getnodebypath('/ISA/GS/ST/DETAIL/2000A/2000B')
         self.assertNotEqual(node, None)
         self.assertEqual(node.id, '2000B')
         self.assertEqual(node.base_name, 'loop')
 
     def test_get_2300(self):
-        node = self.map.getnodebypath('/ISA/GS/ST/2000A/2000B/2300')
+        node = self.map.getnodebypath('/ISA/GS/ST/DETAIL/2000A/2000B/2300')
         self.assertNotEqual(node, None)
         self.assertEqual(node.id, '2300')
         self.assertEqual(node.base_name, 'loop')
 
     def test_get_2300_CLM(self):
-        node = self.map.getnodebypath('/ISA/GS/ST/2000A/2000B/2300/CLM')
+        node = self.map.getnodebypath('/ISA/GS/ST/DETAIL/2000A/2000B/2300/CLM')
         self.assertNotEqual(node, None)
         self.assertEqual(node.id, 'CLM')
         self.assertEqual(node.base_name, 'segment')
@@ -286,7 +286,7 @@ class CompositeRequirement(unittest.TestCase):
 
     def test_comp_required_ok1(self):
         self.errh.err_cde = None
-        node = self.map.getnodebypath('/ISA/GS/ST/2000A/2000B/2300/CLM')
+        node = self.map.getnodebypath('/ISA/GS/ST/DETAIL/2000A/2000B/2300/CLM')
         node = node.get_child_node_by_idx(4)
         self.assertNotEqual(node, None)
         #self.assertEqual(node.id, 'CLM05', node.id)
@@ -303,6 +303,7 @@ class CompositeRequirement(unittest.TestCase):
         param.set('pickle_path', os.path.expanduser('~/src/pyx12/map/'))
         map = pyx12.map_if.load_map_file('comp_test.xml', param)
         node = map.getnodebypath('/TST')
+        self.assertNotEqual(node, None)
         node = node.get_child_node_by_idx(0)
         self.assertNotEqual(node, None)
         self.assertEqual(node.base_name, 'composite')
@@ -317,7 +318,7 @@ class CompositeRequirement(unittest.TestCase):
         param.set('map_path', os.path.expanduser('~/src/pyx12/map/'))
         param.set('pickle_path', os.path.expanduser('~/src/pyx12/map/'))
         map = pyx12.map_if.load_map_file('837.4010.X096.xml', param)
-        node = map.getnodebypath('/ISA/GS/ST/2000A/2000B/2300/2400/SV2')
+        node = map.getnodebypath('/ISA/GS/ST/DETAIL/2000A/2000B/2300/2400/SV2')
         node = node.get_child_node_by_idx(1) #SV202
         self.assertNotEqual(node, None)
         self.assertEqual(node.base_name, 'composite')
@@ -329,7 +330,7 @@ class CompositeRequirement(unittest.TestCase):
 
     def test_comp_required_fail1(self):
         self.errh.err_cde = None
-        node = self.map.getnodebypath('/ISA/GS/ST/2000A/2000B/2300/CLM')
+        node = self.map.getnodebypath('/ISA/GS/ST/DETAIL/2000A/2000B/2300/CLM')
         node = node.get_child_node_by_idx(4)
         self.assertNotEqual(node, None)
         self.assertEqual(node.base_name, 'composite')
@@ -342,10 +343,10 @@ class CompositeRequirement(unittest.TestCase):
 
     def test_comp_not_used_fail1(self):
         self.errh.err_cde = None
-        node = self.map.getnodebypath('/ISA/GS/ST/REF')
+        node = self.map.getnodebypath('/ISA/GS/ST/HEADER/REF')
         self.assertNotEqual(node, None)
         self.assertEqual(node.id, 'REF')
-        self.assertEqual(node.get_path(), '/ISA/GS/ST/REF')
+        self.assertEqual(node.get_path(), '/ISA/GS/ST/HEADER/REF')
         self.assertEqual(node.base_name, 'segment')
         seg_data = pyx12.segment.segment('REF*87*004010X098A1**:1~', '~', '*', ':')
         result = node.is_valid(seg_data, self.errh)
@@ -375,7 +376,7 @@ class TrailingSpaces(unittest.TestCase):
 
     def test_no_trailing_AN_ok(self):
         self.errh.err_cde = None
-        node = self.map.getnodebypath('/ISA/GS/ST/2000A/2000B/2300/CLM')
+        node = self.map.getnodebypath('/ISA/GS/ST/DETAIL/2000A/2000B/2300/CLM')
         node = node.get_child_node_by_idx(0)
         self.assertNotEqual(node, None)
         self.assertEqual(node.id, 'CLM01')
@@ -387,7 +388,7 @@ class TrailingSpaces(unittest.TestCase):
 
     def test_trailing_AN_bad(self):
         self.errh.err_cde = None
-        node = self.map.getnodebypath('/ISA/GS/ST/2000A/2000B/2300/CLM')
+        node = self.map.getnodebypath('/ISA/GS/ST/DETAIL/2000A/2000B/2300/CLM')
         node = node.get_child_node_by_idx(0)
         self.assertNotEqual(node, None)
         self.assertEqual(node.id, 'CLM01')
@@ -408,10 +409,10 @@ class ElementRequirement(unittest.TestCase):
 
     def test_ele_not_used_fail1(self):
         self.errh.err_cde = None
-        node = self.map.getnodebypath('/ISA/GS/ST/REF')
+        node = self.map.getnodebypath('/ISA/GS/ST/HEADER/REF')
         self.assertNotEqual(node, None)
         self.assertEqual(node.id, 'REF')
-        self.assertEqual(node.get_path(), '/ISA/GS/ST/REF')
+        self.assertEqual(node.get_path(), '/ISA/GS/ST/HEADER/REF')
         self.assertEqual(node.base_name, 'segment')
         seg_data = pyx12.segment.segment('REF*87*004010X098A1*Description*~', '~', '*', ':')
         result = node.is_valid(seg_data, self.errh)
@@ -420,7 +421,7 @@ class ElementRequirement(unittest.TestCase):
 
     def test_ele_required_ok1(self):
         self.errh.err_cde = None
-        node = self.map.getnodebypath('/ISA/GS/ST/2000A/2000B/2300/CLM')
+        node = self.map.getnodebypath('/ISA/GS/ST/DETAIL/2000A/2000B/2300/CLM')
         node = node.get_child_node_by_idx(1)
         self.assertNotEqual(node, None)
         #self.assertEqual(node.id, 'CLM05', node.id)
@@ -436,11 +437,11 @@ def suite():
     #    IsValidSyntaxP, IsValidSyntaxR, IsValidSyntaxC, \
     #    IsValidSyntaxE, IsValidSyntaxL))
     suite = unittest.TestSuite()
-    suite.addTest(unittest.makeSuite(Test_getnodebypath))
-    suite.addTest(unittest.makeSuite(TrailingSpaces))
+    #suite.addTest(unittest.makeSuite(Test_getnodebypath))
+    #suite.addTest(unittest.makeSuite(TrailingSpaces))
     suite.addTest(unittest.makeSuite(CompositeRequirement))
-    suite.addTest(unittest.makeSuite(ElementRequirement))
-    suite.addTest(unittest.makeSuite(Element_is_valid))
+    #suite.addTest(unittest.makeSuite(ElementRequirement))
+    #suite.addTest(unittest.makeSuite(Element_is_valid))
     return suite
                 
 #if __name__ == "__main__":

@@ -62,7 +62,7 @@
 	<table>
 	<tr class="loop">
 	<td colspan="2"></td>
-        <td><strong><xsl:value-of select="id"/> - <xsl:value-of select="name"/></strong></td>
+        <td><strong><xsl:value-of select="@xid"/> - <xsl:value-of select="name"/></strong></td>
 	<td colspan="2"></td>
         <td><xsl:value-of select="count"/></td>
 	</tr>
@@ -74,7 +74,7 @@
 
     <xsl:template match="segment">
 	<div class="segment">
-        <xsl:value-of select="id"/>-
+        <xsl:value-of select="@xid"/>-
         <xsl:value-of select="name"/><xsl:text>    </xsl:text>
         <span class="syntax"><xsl:for-each select="syntax"><xsl:value-of select="."/><xsl:text> </xsl:text></xsl:for-each></span>
 	</div>

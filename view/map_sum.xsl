@@ -61,9 +61,9 @@
     <tr><td colspan="4">
         <table>
             <tr class="loop">
-            <td><xsl:value-of select="seq"/></td>
+            <td><xsl:value-of select="pos"/></td>
             <td></td>
-            <td><strong><xsl:value-of select="id"/> - <xsl:value-of select="name"/></strong></td>
+            <td><strong><xsl:value-of select="@xid"/> - <xsl:value-of select="name"/></strong></td>
             <td colspan="2"></td>
             <td><xsl:value-of select="count"/></td>
             </tr>
@@ -76,7 +76,7 @@
     <xsl:template match="segment">
     <tr class="segment">
         <td><xsl:value-of select="pos"/></td>
-        <td><xsl:value-of select="id"/></td>
+        <td><xsl:value-of select="@xid"/></td>
         <td><xsl:value-of select="name"/></td>
         <td><xsl:value-of select="usage"/></td>
         <td><xsl:value-of select="max_use"/></td>

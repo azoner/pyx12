@@ -4,6 +4,7 @@ table
     border:1px solid white;
     background-color: #0000CC;
     padding: 10;
+    margin-left: 10px;
 }
 
 tr.loop
