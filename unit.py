@@ -68,6 +68,8 @@ class pyx12LibraryTests(unittest.TestCase):
         self.failIf(IsValidDataType('030732', 'DT', 'B'))
 
     def test_valid_codes_basic_TM(self):
+        self.failIf(IsValidDataType('7 31', 'TM', 'B'))
+        self.failIf(IsValidDataType('7:31', 'TM', 'B'))
         self.failUnless(IsValidDataType('0731', 'TM', 'B'))
         self.failIf(IsValidDataType('07315a', 'TM', 'B'))
         self.failUnless(IsValidDataType('000159', 'TM', 'B'))
@@ -127,6 +129,8 @@ class pyx12LibraryTests(unittest.TestCase):
         self.failIf(IsValidDataType('030732', 'DT', 'E'))
 
     def test_valid_codes_extended_TM(self):
+        self.failIf(IsValidDataType('7 31', 'TM', 'B'))
+        self.failIf(IsValidDataType('7:31', 'TM', 'B'))
         self.failUnless(IsValidDataType('0731', 'TM', 'E'))
         self.failIf(IsValidDataType('07315a', 'TM', 'E'))
         self.failUnless(IsValidDataType('000159', 'TM', 'E'))
