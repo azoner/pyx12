@@ -2202,820 +2202,397 @@
                         </segment>
                      </loop>
                   </loop>
-               </loop>
-               <loop>
-                  <id>2000E</id>
-                  <name>Dependent Level</name>
-                  <usage>S</usage>
-                  <req_des>O</req_des>
-                  <seq>010</seq>
-                  <count>&gt;1</count>
-                  <segment>
-                     <id>HL</id>
+                  <loop>
+                     <id>2000E</id>
                      <name>Dependent Level</name>
                      <usage>S</usage>
                      <req_des>O</req_des>
-                     <pos>010</pos>
-                     <element>
-                        <data_ele>628</data_ele>
-                        <name>Hierarchical ID Number</name>
-                        <usage>R</usage>
-                        <req_des>M</req_des>
-                        <seq>01</seq>
-                        <refdes>HL01</refdes>
-                        <data_type>AN</data_type>
-                        <min_len>1</min_len>
-                        <max_len>12</max_len>
-                     </element>
-                     <element>
-                        <data_ele>734</data_ele>
-                        <name>Hierarchical Parent ID Number</name>
-                        <usage>R</usage>
-                        <req_des>O</req_des>
-                        <seq>02</seq>
-                        <refdes>HL02</refdes>
-                        <data_type>AN</data_type>
-                        <min_len>1</min_len>
-                        <max_len>12</max_len>
-                     </element>
-                     <element>
-                        <data_ele>735</data_ele>
-                        <name>Hierarchical Level Code</name>
-                        <usage>R</usage>
-                        <req_des>M</req_des>
-                        <seq>03</seq>
-                        <refdes>HL03</refdes>
-                        <data_type>ID</data_type>
-                        <min_len>1</min_len>
-                        <max_len>2</max_len>
-                        <valid_codes>
-                           <code>23</code>
-                        </valid_codes>
-                     </element>
-                     <element>
-                        <data_ele>736</data_ele>
-                        <name>Hierarchical Child Code</name>
-                        <usage>N</usage>
-                        <req_des>O</req_des>
-                        <seq>04</seq>
-                        <refdes>HL04</refdes>
-                        <data_type>ID</data_type>
-                        <min_len>1</min_len>
-                        <max_len>1</max_len>
-                     </element>
-                  </segment>
-                  <segment>
-                     <id>DMG</id>
-                     <name>Dependent Demographic Information</name>
-                     <usage>R</usage>
-                     <req_des>M</req_des>
-                     <pos>040</pos>
-                     <syntax>P0102</syntax>
-                     <element>
-                        <data_ele>1250</data_ele>
-                        <name>Date Time Period Format Qualifier</name>
-                        <usage>R</usage>
-                        <req_des>X</req_des>
-                        <seq>01</seq>
-                        <refdes>DMG01</refdes>
-                        <data_type>ID</data_type>
-                        <min_len>2</min_len>
-                        <max_len>3</max_len>
-                        <valid_codes>
-                           <code>D8</code>
-                        </valid_codes>
-                     </element>
-                     <element>
-                        <data_ele>1251</data_ele>
-                        <name>Patient Birth Date</name>
-                        <usage>R</usage>
-                        <req_des>X</req_des>
-                        <seq>02</seq>
-                        <refdes>DMG02</refdes>
-                        <data_type>AN</data_type>
-                        <min_len>1</min_len>
-                        <max_len>35</max_len>
-                     </element>
-                     <element>
-                        <data_ele>1068</data_ele>
-                        <name>Patient Gender Code</name>
-                        <usage>R</usage>
-                        <req_des>O</req_des>
-                        <seq>03</seq>
-                        <refdes>DMG03</refdes>
-                        <data_type>ID</data_type>
-                        <min_len>1</min_len>
-                        <max_len>1</max_len>
-                        <valid_codes>
-                           <code>F</code>
-                           <code>M</code>
-                           <code>U</code>
-                        </valid_codes>
-                     </element>
-                     <element>
-                        <data_ele>1067</data_ele>
-                        <name>Marital Status Code</name>
-                        <usage>N</usage>
-                        <req_des>O</req_des>
-                        <seq>04</seq>
-                        <refdes>DMG04</refdes>
-                        <data_type>ID</data_type>
-                        <min_len>1</min_len>
-                        <max_len>1</max_len>
-                     </element>
-                     <element>
-                        <data_ele>1109</data_ele>
-                        <name>Race or Ethnicity Code</name>
-                        <usage>N</usage>
-                        <req_des>O</req_des>
-                        <seq>05</seq>
-                        <refdes>DMG05</refdes>
-                        <data_type>ID</data_type>
-                        <min_len>1</min_len>
-                        <max_len>1</max_len>
-                     </element>
-                     <element>
-                        <data_ele>1066</data_ele>
-                        <name>Citizenship Status Code</name>
-                        <usage>N</usage>
-                        <req_des>O</req_des>
-                        <seq>06</seq>
-                        <refdes>DMG06</refdes>
-                        <data_type>ID</data_type>
-                        <min_len>1</min_len>
-                        <max_len>2</max_len>
-                     </element>
-                     <element>
-                        <data_ele>26</data_ele>
-                        <name>Country Code</name>
-                        <usage>N</usage>
-                        <req_des>O</req_des>
-                        <seq>07</seq>
-                        <refdes>DMG07</refdes>
-                        <data_type>ID</data_type>
-                        <min_len>2</min_len>
-                        <max_len>3</max_len>
-                     </element>
-                     <element>
-                        <data_ele>659</data_ele>
-                        <name>Basis of Verification Code</name>
-                        <usage>N</usage>
-                        <req_des>O</req_des>
-                        <seq>08</seq>
-                        <refdes>DMG08</refdes>
-                        <data_type>ID</data_type>
-                        <min_len>1</min_len>
-                        <max_len>2</max_len>
-                     </element>
-                     <element>
-                        <data_ele>380</data_ele>
-                        <name>Quantity</name>
-                        <usage>N</usage>
-                        <req_des>O</req_des>
-                        <seq>09</seq>
-                        <refdes>DMG09</refdes>
-                        <data_type>R</data_type>
-                        <min_len>1</min_len>
-                        <max_len>15</max_len>
-                     </element>
-                  </segment>
-                  <loop>
-                     <id>2100E</id>
-                     <name>Dependent Name</name>
-                     <usage>R</usage>
-                     <req_des>M</req_des>
-                     <seq>050</seq>
+                     <seq>010</seq>
                      <count>&gt;1</count>
                      <segment>
-                        <id>NM1</id>
-                        <name>Dependent Name</name>
-                        <usage>R</usage>
-                        <req_des>M</req_des>
-                        <pos>050</pos>
-                        <syntax>P0809</syntax>
-                        <syntax>C1110</syntax>
+                        <id>HL</id>
+                        <name>Dependent Level</name>
+                        <usage>S</usage>
+                        <req_des>O</req_des>
+                        <pos>010</pos>
                         <element>
-                           <data_ele>98</data_ele>
-                           <name>Entity Identifier Code</name>
+                           <data_ele>628</data_ele>
+                           <name>Hierarchical ID Number</name>
                            <usage>R</usage>
                            <req_des>M</req_des>
                            <seq>01</seq>
-                           <refdes>NM101</refdes>
-                           <data_type>ID</data_type>
-                           <min_len>2</min_len>
-                           <max_len>3</max_len>
-                           <valid_codes>
-                              <code>QC</code>
-                           </valid_codes>
+                           <refdes>HL01</refdes>
+                           <data_type>AN</data_type>
+                           <min_len>1</min_len>
+                           <max_len>12</max_len>
                         </element>
                         <element>
-                           <data_ele>1065</data_ele>
-                           <name>Entity Type Qualifier</name>
+                           <data_ele>734</data_ele>
+                           <name>Hierarchical Parent ID Number</name>
+                           <usage>R</usage>
+                           <req_des>O</req_des>
+                           <seq>02</seq>
+                           <refdes>HL02</refdes>
+                           <data_type>AN</data_type>
+                           <min_len>1</min_len>
+                           <max_len>12</max_len>
+                        </element>
+                        <element>
+                           <data_ele>735</data_ele>
+                           <name>Hierarchical Level Code</name>
                            <usage>R</usage>
                            <req_des>M</req_des>
-                           <seq>02</seq>
-                           <refdes>NM102</refdes>
-                           <data_type>ID</data_type>
-                           <min_len>1</min_len>
-                           <max_len>1</max_len>
-                           <valid_codes>
-                              <code>1</code>
-                           </valid_codes>
-                        </element>
-                        <element>
-                           <data_ele>1035</data_ele>
-                           <name>Patient Last Name</name>
-                           <usage>R</usage>
-                           <req_des>O</req_des>
                            <seq>03</seq>
-                           <refdes>NM103</refdes>
-                           <data_type>AN</data_type>
-                           <min_len>1</min_len>
-                           <max_len>35</max_len>
-                        </element>
-                        <element>
-                           <data_ele>1036</data_ele>
-                           <name>Patient First Name</name>
-                           <usage>S</usage>
-                           <req_des>O</req_des>
-                           <seq>04</seq>
-                           <refdes>NM104</refdes>
-                           <data_type>AN</data_type>
-                           <min_len>1</min_len>
-                           <max_len>25</max_len>
-                        </element>
-                        <element>
-                           <data_ele>1037</data_ele>
-                           <name>Patient Middle Name</name>
-                           <usage>S</usage>
-                           <req_des>O</req_des>
-                           <seq>05</seq>
-                           <refdes>NM105</refdes>
-                           <data_type>AN</data_type>
-                           <min_len>1</min_len>
-                           <max_len>25</max_len>
-                        </element>
-                        <element>
-                           <data_ele>1038</data_ele>
-                           <name>Patient Name Prefix</name>
-                           <usage>S</usage>
-                           <req_des>O</req_des>
-                           <seq>06</seq>
-                           <refdes>NM106</refdes>
-                           <data_type>AN</data_type>
-                           <min_len>1</min_len>
-                           <max_len>10</max_len>
-                        </element>
-                        <element>
-                           <data_ele>1039</data_ele>
-                           <name>Patient Name Suffix</name>
-                           <usage>S</usage>
-                           <req_des>O</req_des>
-                           <seq>07</seq>
-                           <refdes>NM107</refdes>
-                           <data_type>AN</data_type>
-                           <min_len>1</min_len>
-                           <max_len>10</max_len>
-                        </element>
-                        <element>
-                           <data_ele>66</data_ele>
-                           <name>Identification Code Qualifier</name>
-                           <usage>S</usage>
-                           <req_des>X</req_des>
-                           <seq>08</seq>
-                           <refdes>NM108</refdes>
+                           <refdes>HL03</refdes>
                            <data_type>ID</data_type>
                            <min_len>1</min_len>
                            <max_len>2</max_len>
                            <valid_codes>
-                              <code>MI</code>
-                              <code>ZZ</code>
+                              <code>23</code>
                            </valid_codes>
                         </element>
                         <element>
-                           <data_ele>67</data_ele>
-                           <name>Patient Primary Identifier</name>
-                           <usage>S</usage>
-                           <req_des>X</req_des>
-                           <seq>09</seq>
-                           <refdes>NM109</refdes>
-                           <data_type>AN</data_type>
-                           <min_len>2</min_len>
-                           <max_len>80</max_len>
-                        </element>
-                        <element>
-                           <data_ele>706</data_ele>
-                           <name>Entity Relationship Code</name>
-                           <usage>N</usage>
-                           <req_des>X</req_des>
-                           <seq>10</seq>
-                           <refdes>NM110</refdes>
-                           <data_type>ID</data_type>
-                           <min_len>2</min_len>
-                           <max_len>2</max_len>
-                        </element>
-                        <element>
-                           <data_ele>98</data_ele>
-                           <name>Entity Identifier Code</name>
-                           <usage>N</usage>
-                           <req_des>O</req_des>
-                           <seq>11</seq>
-                           <refdes>NM111</refdes>
-                           <data_type>ID</data_type>
-                           <min_len>2</min_len>
-                           <max_len>3</max_len>
-                        </element>
-                     </segment>
-                  </loop>
-                  <loop>
-                     <id>2200E</id>
-                     <name>Claim Submitter Trace Number</name>
-                     <usage>R</usage>
-                     <req_des>M</req_des>
-                     <seq>090</seq>
-                     <count>&gt;1</count>
-                     <segment>
-                        <id>TRN</id>
-                        <name>Claim Submitter Trace Number</name>
-                        <usage>R</usage>
-                        <req_des>M</req_des>
-                        <pos>090</pos>
-                        <element>
-                           <data_ele>481</data_ele>
-                           <name>Trace Type Code</name>
-                           <usage>R</usage>
-                           <req_des>M</req_des>
-                           <seq>01</seq>
-                           <refdes>TRN01</refdes>
-                           <data_type>ID</data_type>
-                           <min_len>1</min_len>
-                           <max_len>2</max_len>
-                           <valid_codes>
-                              <code>1</code>
-                           </valid_codes>
-                        </element>
-                        <element>
-                           <data_ele>127</data_ele>
-                           <name>Trace Number</name>
-                           <usage>R</usage>
-                           <req_des>M</req_des>
-                           <seq>02</seq>
-                           <refdes>TRN02</refdes>
-                           <data_type>AN</data_type>
-                           <min_len>1</min_len>
-                           <max_len>30</max_len>
-                        </element>
-                        <element>
-                           <data_ele>509</data_ele>
-                           <name>Originating Company Identifier</name>
-                           <usage>N</usage>
-                           <req_des>O</req_des>
-                           <seq>03</seq>
-                           <refdes>TRN03</refdes>
-                           <data_type>AN</data_type>
-                           <min_len>10</min_len>
-                           <max_len>10</max_len>
-                        </element>
-                        <element>
-                           <data_ele>127</data_ele>
-                           <name>Reference Identification</name>
+                           <data_ele>736</data_ele>
+                           <name>Hierarchical Child Code</name>
                            <usage>N</usage>
                            <req_des>O</req_des>
                            <seq>04</seq>
-                           <refdes>TRN04</refdes>
-                           <data_type>AN</data_type>
-                           <min_len>1</min_len>
-                           <max_len>30</max_len>
-                        </element>
-                     </segment>
-                     <segment>
-                        <id>REF</id>
-                        <name>Payer Claim Identification Number</name>
-                        <usage>S</usage>
-                        <req_des>O</req_des>
-                        <pos>100</pos>
-                        <syntax>R0203</syntax>
-                        <element>
-                           <data_ele>128</data_ele>
-                           <name>Reference Identification Qualifier</name>
-                           <usage>R</usage>
-                           <req_des>M</req_des>
-                           <seq>01</seq>
-                           <refdes>REF01</refdes>
-                           <data_type>ID</data_type>
-                           <min_len>2</min_len>
-                           <max_len>3</max_len>
-                           <valid_codes>
-                              <code>1K</code>
-                           </valid_codes>
-                        </element>
-                        <element>
-                           <data_ele>127</data_ele>
-                           <name>Payer Claim Control Number</name>
-                           <usage>R</usage>
-                           <req_des>X</req_des>
-                           <seq>02</seq>
-                           <refdes>REF02</refdes>
-                           <data_type>AN</data_type>
-                           <min_len>1</min_len>
-                           <max_len>30</max_len>
-                        </element>
-                        <element>
-                           <data_ele>352</data_ele>
-                           <name>Description</name>
-                           <usage>N</usage>
-                           <req_des>X</req_des>
-                           <seq>03</seq>
-                           <refdes>REF03</refdes>
-                           <data_type>AN</data_type>
-                           <min_len>1</min_len>
-                           <max_len>80</max_len>
-                        </element>
-                        <composite>
-                           <data_ele>C040</data_ele>
-                           <name>Reference Identifier</name>
-                           <usage>N</usage>
-                           <req_des>O</req_des>
-                           <seq>04</seq>
-                           <refdes>REF04</refdes>
-                        </composite>
-                     </segment>
-                     <segment>
-                        <id>REF</id>
-                        <name>Institutional Bill Type Identification</name>
-                        <usage>S</usage>
-                        <req_des>O</req_des>
-                        <pos>100</pos>
-                        <syntax>R0203</syntax>
-                        <element>
-                           <data_ele>128</data_ele>
-                           <name>Reference Identification Qualifier</name>
-                           <usage>R</usage>
-                           <req_des>M</req_des>
-                           <seq>01</seq>
-                           <refdes>REF01</refdes>
-                           <data_type>ID</data_type>
-                           <min_len>2</min_len>
-                           <max_len>3</max_len>
-                           <valid_codes>
-                              <code>BLT</code>
-                           </valid_codes>
-                        </element>
-                        <element>
-                           <data_ele>127</data_ele>
-                           <name>Bill Type Identifier</name>
-                           <usage>R</usage>
-                           <req_des>X</req_des>
-                           <seq>02</seq>
-                           <refdes>REF02</refdes>
-                           <data_type>AN</data_type>
-                           <min_len>1</min_len>
-                           <max_len>30</max_len>
-                        </element>
-                        <element>
-                           <data_ele>352</data_ele>
-                           <name>Description</name>
-                           <usage>N</usage>
-                           <req_des>X</req_des>
-                           <seq>03</seq>
-                           <refdes>REF03</refdes>
-                           <data_type>AN</data_type>
-                           <min_len>1</min_len>
-                           <max_len>80</max_len>
-                        </element>
-                        <composite>
-                           <data_ele>C040</data_ele>
-                           <name>Reference Identifier</name>
-                           <usage>N</usage>
-                           <req_des>O</req_des>
-                           <seq>04</seq>
-                           <refdes>REF04</refdes>
-                        </composite>
-                     </segment>
-                     <segment>
-                        <id>REF</id>
-                        <name>Medical Record Identification</name>
-                        <usage>S</usage>
-                        <req_des>O</req_des>
-                        <pos>100</pos>
-                        <syntax>R0203</syntax>
-                        <element>
-                           <data_ele>128</data_ele>
-                           <name>Reference Identification Qualifier</name>
-                           <usage>R</usage>
-                           <req_des>M</req_des>
-                           <seq>01</seq>
-                           <refdes>REF01</refdes>
-                           <data_type>ID</data_type>
-                           <min_len>2</min_len>
-                           <max_len>3</max_len>
-                           <valid_codes>
-                              <code>EA</code>
-                           </valid_codes>
-                        </element>
-                        <element>
-                           <data_ele>127</data_ele>
-                           <name>Medical Record Number</name>
-                           <usage>R</usage>
-                           <req_des>X</req_des>
-                           <seq>02</seq>
-                           <refdes>REF02</refdes>
-                           <data_type>AN</data_type>
-                           <min_len>1</min_len>
-                           <max_len>30</max_len>
-                        </element>
-                        <element>
-                           <data_ele>352</data_ele>
-                           <name>Description</name>
-                           <usage>N</usage>
-                           <req_des>X</req_des>
-                           <seq>03</seq>
-                           <refdes>REF03</refdes>
-                           <data_type>AN</data_type>
-                           <min_len>1</min_len>
-                           <max_len>80</max_len>
-                        </element>
-                        <composite>
-                           <data_ele>C040</data_ele>
-                           <name>Reference Identifier</name>
-                           <usage>N</usage>
-                           <req_des>O</req_des>
-                           <seq>04</seq>
-                           <refdes>REF04</refdes>
-                        </composite>
-                     </segment>
-                     <segment>
-                        <id>AMT</id>
-                        <name>Claim Submitted Charges</name>
-                        <usage>S</usage>
-                        <req_des>O</req_des>
-                        <pos>110</pos>
-                        <element>
-                           <data_ele>522</data_ele>
-                           <name>Amount Qualifier Code</name>
-                           <usage>R</usage>
-                           <req_des>M</req_des>
-                           <seq>01</seq>
-                           <refdes>AMT01</refdes>
-                           <data_type>ID</data_type>
-                           <min_len>1</min_len>
-                           <max_len>3</max_len>
-                           <valid_codes>
-                              <code>T3</code>
-                           </valid_codes>
-                        </element>
-                        <element>
-                           <data_ele>782</data_ele>
-                           <name>Total Claim Charge Amount</name>
-                           <usage>R</usage>
-                           <req_des>M</req_des>
-                           <seq>02</seq>
-                           <refdes>AMT02</refdes>
-                           <data_type>R</data_type>
-                           <min_len>1</min_len>
-                           <max_len>18</max_len>
-                        </element>
-                        <element>
-                           <data_ele>478</data_ele>
-                           <name>Credit/Debit Flag Code</name>
-                           <usage>N</usage>
-                           <req_des>O</req_des>
-                           <seq>03</seq>
-                           <refdes>AMT03</refdes>
+                           <refdes>HL04</refdes>
                            <data_type>ID</data_type>
                            <min_len>1</min_len>
                            <max_len>1</max_len>
                         </element>
                      </segment>
                      <segment>
-                        <id>DTP</id>
-                        <name>Claim Service Date</name>
-                        <usage>S</usage>
-                        <req_des>O</req_des>
-                        <pos>120</pos>
-                        <element>
-                           <data_ele>374</data_ele>
-                           <name>Date Time Qualifier</name>
-                           <usage>R</usage>
-                           <req_des>M</req_des>
-                           <seq>01</seq>
-                           <refdes>DTP01</refdes>
-                           <data_type>ID</data_type>
-                           <min_len>3</min_len>
-                           <max_len>3</max_len>
-                           <valid_codes>
-                              <code>232</code>
-                           </valid_codes>
-                        </element>
+                        <id>DMG</id>
+                        <name>Dependent Demographic Information</name>
+                        <usage>R</usage>
+                        <req_des>M</req_des>
+                        <pos>040</pos>
+                        <syntax>P0102</syntax>
                         <element>
                            <data_ele>1250</data_ele>
                            <name>Date Time Period Format Qualifier</name>
                            <usage>R</usage>
-                           <req_des>M</req_des>
-                           <seq>02</seq>
-                           <refdes>DTP02</refdes>
+                           <req_des>X</req_des>
+                           <seq>01</seq>
+                           <refdes>DMG01</refdes>
                            <data_type>ID</data_type>
                            <min_len>2</min_len>
                            <max_len>3</max_len>
                            <valid_codes>
-                              <code>RD8</code>
+                              <code>D8</code>
                            </valid_codes>
                         </element>
                         <element>
                            <data_ele>1251</data_ele>
-                           <name>Claim Service Period</name>
+                           <name>Patient Birth Date</name>
                            <usage>R</usage>
-                           <req_des>M</req_des>
-                           <seq>03</seq>
-                           <refdes>DTP03</refdes>
+                           <req_des>X</req_des>
+                           <seq>02</seq>
+                           <refdes>DMG02</refdes>
                            <data_type>AN</data_type>
                            <min_len>1</min_len>
                            <max_len>35</max_len>
                         </element>
+                        <element>
+                           <data_ele>1068</data_ele>
+                           <name>Patient Gender Code</name>
+                           <usage>R</usage>
+                           <req_des>O</req_des>
+                           <seq>03</seq>
+                           <refdes>DMG03</refdes>
+                           <data_type>ID</data_type>
+                           <min_len>1</min_len>
+                           <max_len>1</max_len>
+                           <valid_codes>
+                              <code>F</code>
+                              <code>M</code>
+                              <code>U</code>
+                           </valid_codes>
+                        </element>
+                        <element>
+                           <data_ele>1067</data_ele>
+                           <name>Marital Status Code</name>
+                           <usage>N</usage>
+                           <req_des>O</req_des>
+                           <seq>04</seq>
+                           <refdes>DMG04</refdes>
+                           <data_type>ID</data_type>
+                           <min_len>1</min_len>
+                           <max_len>1</max_len>
+                        </element>
+                        <element>
+                           <data_ele>1109</data_ele>
+                           <name>Race or Ethnicity Code</name>
+                           <usage>N</usage>
+                           <req_des>O</req_des>
+                           <seq>05</seq>
+                           <refdes>DMG05</refdes>
+                           <data_type>ID</data_type>
+                           <min_len>1</min_len>
+                           <max_len>1</max_len>
+                        </element>
+                        <element>
+                           <data_ele>1066</data_ele>
+                           <name>Citizenship Status Code</name>
+                           <usage>N</usage>
+                           <req_des>O</req_des>
+                           <seq>06</seq>
+                           <refdes>DMG06</refdes>
+                           <data_type>ID</data_type>
+                           <min_len>1</min_len>
+                           <max_len>2</max_len>
+                        </element>
+                        <element>
+                           <data_ele>26</data_ele>
+                           <name>Country Code</name>
+                           <usage>N</usage>
+                           <req_des>O</req_des>
+                           <seq>07</seq>
+                           <refdes>DMG07</refdes>
+                           <data_type>ID</data_type>
+                           <min_len>2</min_len>
+                           <max_len>3</max_len>
+                        </element>
+                        <element>
+                           <data_ele>659</data_ele>
+                           <name>Basis of Verification Code</name>
+                           <usage>N</usage>
+                           <req_des>O</req_des>
+                           <seq>08</seq>
+                           <refdes>DMG08</refdes>
+                           <data_type>ID</data_type>
+                           <min_len>1</min_len>
+                           <max_len>2</max_len>
+                        </element>
+                        <element>
+                           <data_ele>380</data_ele>
+                           <name>Quantity</name>
+                           <usage>N</usage>
+                           <req_des>O</req_des>
+                           <seq>09</seq>
+                           <refdes>DMG09</refdes>
+                           <data_type>R</data_type>
+                           <min_len>1</min_len>
+                           <max_len>15</max_len>
+                        </element>
                      </segment>
                      <loop>
-                        <id>2210E</id>
-                        <name>Service Line Information</name>
-                        <usage>S</usage>
-                        <req_des>O</req_des>
-                        <seq>130</seq>
+                        <id>2100E</id>
+                        <name>Dependent Name</name>
+                        <usage>R</usage>
+                        <req_des>M</req_des>
+                        <seq>050</seq>
                         <count>&gt;1</count>
                         <segment>
-                           <id>SVC</id>
-                           <name>Service Line Information</name>
-                           <usage>S</usage>
-                           <req_des>O</req_des>
-                           <pos>130</pos>
-                           <composite>
-                              <data_ele>C003</data_ele>
-                              <name>Composite Medical Procedure Identifier</name>
+                           <id>NM1</id>
+                           <name>Dependent Name</name>
+                           <usage>R</usage>
+                           <req_des>M</req_des>
+                           <pos>050</pos>
+                           <syntax>P0809</syntax>
+                           <syntax>C1110</syntax>
+                           <element>
+                              <data_ele>98</data_ele>
+                              <name>Entity Identifier Code</name>
                               <usage>R</usage>
                               <req_des>M</req_des>
                               <seq>01</seq>
-                              <refdes>SVC01</refdes>
-                              <element>
-                                 <data_ele>235</data_ele>
-                                 <name>Product or Service ID Qualifier</name>
-                                 <usage>R</usage>
-                                 <req_des>M</req_des>
-                                 <seq>01</seq>
-                                 <refdes>SVC01-01</refdes>
-                                 <data_type>ID</data_type>
-                                 <min_len>2</min_len>
-                                 <max_len>2</max_len>
-                                 <valid_codes>
-                                    <code>AD</code>
-                                    <code>CI</code>
-                                    <code>HC</code>
-                                    <code>ID</code>
-                                    <code>IV</code>
-                                    <code>N1</code>
-                                    <code>N2</code>
-                                    <code>N3</code>
-                                    <code>N4</code>
-                                    <code>ND</code>
-                                    <code>NH</code>
-                                    <code>NU</code>
-                                    <code>RB</code>
-                                 </valid_codes>
-                              </element>
-                              <element>
-                                 <data_ele>234</data_ele>
-                                 <name>Service Identification Code</name>
-                                 <usage>R</usage>
-                                 <req_des>M</req_des>
-                                 <seq>02</seq>
-                                 <refdes>SVC01-02</refdes>
-                                 <data_type>AN</data_type>
-                                 <min_len>1</min_len>
-                                 <max_len>48</max_len>
-                              </element>
-                              <element>
-                                 <data_ele>1339</data_ele>
-                                 <name>Procedure Modifier</name>
-                                 <usage>S</usage>
-                                 <req_des>O</req_des>
-                                 <seq>03</seq>
-                                 <refdes>SVC01-03</refdes>
-                                 <data_type>AN</data_type>
-                                 <min_len>2</min_len>
-                                 <max_len>2</max_len>
-                              </element>
-                              <element>
-                                 <data_ele>1339</data_ele>
-                                 <name>Procedure Modifier</name>
-                                 <usage>S</usage>
-                                 <req_des>O</req_des>
-                                 <seq>04</seq>
-                                 <refdes>SVC01-04</refdes>
-                                 <data_type>AN</data_type>
-                                 <min_len>2</min_len>
-                                 <max_len>2</max_len>
-                              </element>
-                              <element>
-                                 <data_ele>1339</data_ele>
-                                 <name>Procedure Modifier</name>
-                                 <usage>S</usage>
-                                 <req_des>O</req_des>
-                                 <seq>05</seq>
-                                 <refdes>SVC01-05</refdes>
-                                 <data_type>AN</data_type>
-                                 <min_len>2</min_len>
-                                 <max_len>2</max_len>
-                              </element>
-                              <element>
-                                 <data_ele>1339</data_ele>
-                                 <name>Procedure Modifier</name>
-                                 <usage>S</usage>
-                                 <req_des>O</req_des>
-                                 <seq>06</seq>
-                                 <refdes>SVC01-06</refdes>
-                                 <data_type>AN</data_type>
-                                 <min_len>2</min_len>
-                                 <max_len>2</max_len>
-                              </element>
-                              <element>
-                                 <data_ele>352</data_ele>
-                                 <name>Description</name>
-                                 <usage>N</usage>
-                                 <req_des>O</req_des>
-                                 <seq>07</seq>
-                                 <refdes>SVC01-07</refdes>
-                                 <data_type>AN</data_type>
-                                 <min_len>1</min_len>
-                                 <max_len>80</max_len>
-                              </element>
-                           </composite>
+                              <refdes>NM101</refdes>
+                              <data_type>ID</data_type>
+                              <min_len>2</min_len>
+                              <max_len>3</max_len>
+                              <valid_codes>
+                                 <code>QC</code>
+                              </valid_codes>
+                           </element>
                            <element>
-                              <data_ele>782</data_ele>
-                              <name>Line Item Charge Amount</name>
+                              <data_ele>1065</data_ele>
+                              <name>Entity Type Qualifier</name>
                               <usage>R</usage>
                               <req_des>M</req_des>
                               <seq>02</seq>
-                              <refdes>SVC02</refdes>
-                              <data_type>R</data_type>
+                              <refdes>NM102</refdes>
+                              <data_type>ID</data_type>
                               <min_len>1</min_len>
-                              <max_len>18</max_len>
+                              <max_len>1</max_len>
+                              <valid_codes>
+                                 <code>1</code>
+                              </valid_codes>
                            </element>
                            <element>
-                              <data_ele>782</data_ele>
-                              <name>Monetary Amount</name>
-                              <usage>N</usage>
+                              <data_ele>1035</data_ele>
+                              <name>Patient Last Name</name>
+                              <usage>R</usage>
                               <req_des>O</req_des>
                               <seq>03</seq>
-                              <refdes>SVC03</refdes>
-                              <data_type>R</data_type>
+                              <refdes>NM103</refdes>
+                              <data_type>AN</data_type>
                               <min_len>1</min_len>
-                              <max_len>18</max_len>
+                              <max_len>35</max_len>
                            </element>
                            <element>
-                              <data_ele>234</data_ele>
-                              <name>Revenue Code</name>
+                              <data_ele>1036</data_ele>
+                              <name>Patient First Name</name>
                               <usage>S</usage>
                               <req_des>O</req_des>
                               <seq>04</seq>
-                              <refdes>SVC04</refdes>
+                              <refdes>NM104</refdes>
                               <data_type>AN</data_type>
                               <min_len>1</min_len>
-                              <max_len>48</max_len>
+                              <max_len>25</max_len>
                            </element>
                            <element>
-                              <data_ele>380</data_ele>
-                              <name>Quantity</name>
-                              <usage>N</usage>
+                              <data_ele>1037</data_ele>
+                              <name>Patient Middle Name</name>
+                              <usage>S</usage>
                               <req_des>O</req_des>
                               <seq>05</seq>
-                              <refdes>SVC05</refdes>
-                              <data_type>R</data_type>
+                              <refdes>NM105</refdes>
+                              <data_type>AN</data_type>
                               <min_len>1</min_len>
-                              <max_len>15</max_len>
+                              <max_len>25</max_len>
                            </element>
-                           <composite>
-                              <data_ele>C003</data_ele>
-                              <name>Composite Medical Procedure Identifier</name>
-                              <usage>N</usage>
+                           <element>
+                              <data_ele>1038</data_ele>
+                              <name>Patient Name Prefix</name>
+                              <usage>S</usage>
                               <req_des>O</req_des>
                               <seq>06</seq>
-                              <refdes>SVC06</refdes>
-                           </composite>
+                              <refdes>NM106</refdes>
+                              <data_type>AN</data_type>
+                              <min_len>1</min_len>
+                              <max_len>10</max_len>
+                           </element>
                            <element>
-                              <data_ele>380</data_ele>
-                              <name>Original Units of Service Count</name>
+                              <data_ele>1039</data_ele>
+                              <name>Patient Name Suffix</name>
                               <usage>S</usage>
                               <req_des>O</req_des>
                               <seq>07</seq>
-                              <refdes>SVC07</refdes>
-                              <data_type>R</data_type>
+                              <refdes>NM107</refdes>
+                              <data_type>AN</data_type>
                               <min_len>1</min_len>
-                              <max_len>15</max_len>
+                              <max_len>10</max_len>
+                           </element>
+                           <element>
+                              <data_ele>66</data_ele>
+                              <name>Identification Code Qualifier</name>
+                              <usage>S</usage>
+                              <req_des>X</req_des>
+                              <seq>08</seq>
+                              <refdes>NM108</refdes>
+                              <data_type>ID</data_type>
+                              <min_len>1</min_len>
+                              <max_len>2</max_len>
+                              <valid_codes>
+                                 <code>MI</code>
+                                 <code>ZZ</code>
+                              </valid_codes>
+                           </element>
+                           <element>
+                              <data_ele>67</data_ele>
+                              <name>Patient Primary Identifier</name>
+                              <usage>S</usage>
+                              <req_des>X</req_des>
+                              <seq>09</seq>
+                              <refdes>NM109</refdes>
+                              <data_type>AN</data_type>
+                              <min_len>2</min_len>
+                              <max_len>80</max_len>
+                           </element>
+                           <element>
+                              <data_ele>706</data_ele>
+                              <name>Entity Relationship Code</name>
+                              <usage>N</usage>
+                              <req_des>X</req_des>
+                              <seq>10</seq>
+                              <refdes>NM110</refdes>
+                              <data_type>ID</data_type>
+                              <min_len>2</min_len>
+                              <max_len>2</max_len>
+                           </element>
+                           <element>
+                              <data_ele>98</data_ele>
+                              <name>Entity Identifier Code</name>
+                              <usage>N</usage>
+                              <req_des>O</req_des>
+                              <seq>11</seq>
+                              <refdes>NM111</refdes>
+                              <data_type>ID</data_type>
+                              <min_len>2</min_len>
+                              <max_len>3</max_len>
+                           </element>
+                        </segment>
+                     </loop>
+                     <loop>
+                        <id>2200E</id>
+                        <name>Claim Submitter Trace Number</name>
+                        <usage>R</usage>
+                        <req_des>M</req_des>
+                        <seq>090</seq>
+                        <count>&gt;1</count>
+                        <segment>
+                           <id>TRN</id>
+                           <name>Claim Submitter Trace Number</name>
+                           <usage>R</usage>
+                           <req_des>M</req_des>
+                           <pos>090</pos>
+                           <element>
+                              <data_ele>481</data_ele>
+                              <name>Trace Type Code</name>
+                              <usage>R</usage>
+                              <req_des>M</req_des>
+                              <seq>01</seq>
+                              <refdes>TRN01</refdes>
+                              <data_type>ID</data_type>
+                              <min_len>1</min_len>
+                              <max_len>2</max_len>
+                              <valid_codes>
+                                 <code>1</code>
+                              </valid_codes>
+                           </element>
+                           <element>
+                              <data_ele>127</data_ele>
+                              <name>Trace Number</name>
+                              <usage>R</usage>
+                              <req_des>M</req_des>
+                              <seq>02</seq>
+                              <refdes>TRN02</refdes>
+                              <data_type>AN</data_type>
+                              <min_len>1</min_len>
+                              <max_len>30</max_len>
+                           </element>
+                           <element>
+                              <data_ele>509</data_ele>
+                              <name>Originating Company Identifier</name>
+                              <usage>N</usage>
+                              <req_des>O</req_des>
+                              <seq>03</seq>
+                              <refdes>TRN03</refdes>
+                              <data_type>AN</data_type>
+                              <min_len>10</min_len>
+                              <max_len>10</max_len>
+                           </element>
+                           <element>
+                              <data_ele>127</data_ele>
+                              <name>Reference Identification</name>
+                              <usage>N</usage>
+                              <req_des>O</req_des>
+                              <seq>04</seq>
+                              <refdes>TRN04</refdes>
+                              <data_type>AN</data_type>
+                              <min_len>1</min_len>
+                              <max_len>30</max_len>
                            </element>
                         </segment>
                         <segment>
                            <id>REF</id>
-                           <name>Service Line Item Identification</name>
+                           <name>Payer Claim Identification Number</name>
                            <usage>S</usage>
                            <req_des>O</req_des>
-                           <pos>140</pos>
+                           <pos>100</pos>
                            <syntax>R0203</syntax>
                            <element>
                               <data_ele>128</data_ele>
@@ -3028,12 +2605,12 @@
                               <min_len>2</min_len>
                               <max_len>3</max_len>
                               <valid_codes>
-                                 <code>FJ</code>
+                                 <code>1K</code>
                               </valid_codes>
                            </element>
                            <element>
                               <data_ele>127</data_ele>
-                              <name>Line Item Control Number</name>
+                              <name>Payer Claim Control Number</name>
                               <usage>R</usage>
                               <req_des>X</req_des>
                               <seq>02</seq>
@@ -3063,11 +2640,158 @@
                            </composite>
                         </segment>
                         <segment>
-                           <id>DTP</id>
-                           <name>Service Line Date</name>
+                           <id>REF</id>
+                           <name>Institutional Bill Type Identification</name>
                            <usage>S</usage>
                            <req_des>O</req_des>
-                           <pos>150</pos>
+                           <pos>100</pos>
+                           <syntax>R0203</syntax>
+                           <element>
+                              <data_ele>128</data_ele>
+                              <name>Reference Identification Qualifier</name>
+                              <usage>R</usage>
+                              <req_des>M</req_des>
+                              <seq>01</seq>
+                              <refdes>REF01</refdes>
+                              <data_type>ID</data_type>
+                              <min_len>2</min_len>
+                              <max_len>3</max_len>
+                              <valid_codes>
+                                 <code>BLT</code>
+                              </valid_codes>
+                           </element>
+                           <element>
+                              <data_ele>127</data_ele>
+                              <name>Bill Type Identifier</name>
+                              <usage>R</usage>
+                              <req_des>X</req_des>
+                              <seq>02</seq>
+                              <refdes>REF02</refdes>
+                              <data_type>AN</data_type>
+                              <min_len>1</min_len>
+                              <max_len>30</max_len>
+                           </element>
+                           <element>
+                              <data_ele>352</data_ele>
+                              <name>Description</name>
+                              <usage>N</usage>
+                              <req_des>X</req_des>
+                              <seq>03</seq>
+                              <refdes>REF03</refdes>
+                              <data_type>AN</data_type>
+                              <min_len>1</min_len>
+                              <max_len>80</max_len>
+                           </element>
+                           <composite>
+                              <data_ele>C040</data_ele>
+                              <name>Reference Identifier</name>
+                              <usage>N</usage>
+                              <req_des>O</req_des>
+                              <seq>04</seq>
+                              <refdes>REF04</refdes>
+                           </composite>
+                        </segment>
+                        <segment>
+                           <id>REF</id>
+                           <name>Medical Record Identification</name>
+                           <usage>S</usage>
+                           <req_des>O</req_des>
+                           <pos>100</pos>
+                           <syntax>R0203</syntax>
+                           <element>
+                              <data_ele>128</data_ele>
+                              <name>Reference Identification Qualifier</name>
+                              <usage>R</usage>
+                              <req_des>M</req_des>
+                              <seq>01</seq>
+                              <refdes>REF01</refdes>
+                              <data_type>ID</data_type>
+                              <min_len>2</min_len>
+                              <max_len>3</max_len>
+                              <valid_codes>
+                                 <code>EA</code>
+                              </valid_codes>
+                           </element>
+                           <element>
+                              <data_ele>127</data_ele>
+                              <name>Medical Record Number</name>
+                              <usage>R</usage>
+                              <req_des>X</req_des>
+                              <seq>02</seq>
+                              <refdes>REF02</refdes>
+                              <data_type>AN</data_type>
+                              <min_len>1</min_len>
+                              <max_len>30</max_len>
+                           </element>
+                           <element>
+                              <data_ele>352</data_ele>
+                              <name>Description</name>
+                              <usage>N</usage>
+                              <req_des>X</req_des>
+                              <seq>03</seq>
+                              <refdes>REF03</refdes>
+                              <data_type>AN</data_type>
+                              <min_len>1</min_len>
+                              <max_len>80</max_len>
+                           </element>
+                           <composite>
+                              <data_ele>C040</data_ele>
+                              <name>Reference Identifier</name>
+                              <usage>N</usage>
+                              <req_des>O</req_des>
+                              <seq>04</seq>
+                              <refdes>REF04</refdes>
+                           </composite>
+                        </segment>
+                        <segment>
+                           <id>AMT</id>
+                           <name>Claim Submitted Charges</name>
+                           <usage>S</usage>
+                           <req_des>O</req_des>
+                           <pos>110</pos>
+                           <element>
+                              <data_ele>522</data_ele>
+                              <name>Amount Qualifier Code</name>
+                              <usage>R</usage>
+                              <req_des>M</req_des>
+                              <seq>01</seq>
+                              <refdes>AMT01</refdes>
+                              <data_type>ID</data_type>
+                              <min_len>1</min_len>
+                              <max_len>3</max_len>
+                              <valid_codes>
+                                 <code>T3</code>
+                              </valid_codes>
+                           </element>
+                           <element>
+                              <data_ele>782</data_ele>
+                              <name>Total Claim Charge Amount</name>
+                              <usage>R</usage>
+                              <req_des>M</req_des>
+                              <seq>02</seq>
+                              <refdes>AMT02</refdes>
+                              <data_type>R</data_type>
+                              <min_len>1</min_len>
+                              <max_len>18</max_len>
+                           </element>
+                           <element>
+                              <data_ele>478</data_ele>
+                              <name>Credit/Debit Flag Code</name>
+                              <usage>N</usage>
+                              <req_des>O</req_des>
+                              <seq>03</seq>
+                              <refdes>AMT03</refdes>
+                              <data_type>ID</data_type>
+                              <min_len>1</min_len>
+                              <max_len>1</max_len>
+                           </element>
+                        </segment>
+                        <segment>
+                           <id>DTP</id>
+                           <name>Claim Service Date</name>
+                           <usage>S</usage>
+                           <req_des>O</req_des>
+                           <pos>120</pos>
                            <element>
                               <data_ele>374</data_ele>
                               <name>Date Time Qualifier</name>
@@ -3079,7 +2803,7 @@
                               <min_len>3</min_len>
                               <max_len>3</max_len>
                               <valid_codes>
-                                 <code>472</code>
+                                 <code>232</code>
                               </valid_codes>
                            </element>
                            <element>
@@ -3098,7 +2822,7 @@
                            </element>
                            <element>
                               <data_ele>1251</data_ele>
-                              <name>Service Date</name>
+                              <name>Claim Service Period</name>
                               <usage>R</usage>
                               <req_des>M</req_des>
                               <seq>03</seq>
@@ -3108,6 +2832,282 @@
                               <max_len>35</max_len>
                            </element>
                         </segment>
+                        <loop>
+                           <id>2210E</id>
+                           <name>Service Line Information</name>
+                           <usage>S</usage>
+                           <req_des>O</req_des>
+                           <seq>130</seq>
+                           <count>&gt;1</count>
+                           <segment>
+                              <id>SVC</id>
+                              <name>Service Line Information</name>
+                              <usage>S</usage>
+                              <req_des>O</req_des>
+                              <pos>130</pos>
+                              <composite>
+                                 <data_ele>C003</data_ele>
+                                 <name>Composite Medical Procedure Identifier</name>
+                                 <usage>R</usage>
+                                 <req_des>M</req_des>
+                                 <seq>01</seq>
+                                 <refdes>SVC01</refdes>
+                                 <element>
+                                    <data_ele>235</data_ele>
+                                    <name>Product or Service ID Qualifier</name>
+                                    <usage>R</usage>
+                                    <req_des>M</req_des>
+                                    <seq>01</seq>
+                                    <refdes>SVC01-01</refdes>
+                                    <data_type>ID</data_type>
+                                    <min_len>2</min_len>
+                                    <max_len>2</max_len>
+                                    <valid_codes>
+                                       <code>AD</code>
+                                       <code>CI</code>
+                                       <code>HC</code>
+                                       <code>ID</code>
+                                       <code>IV</code>
+                                       <code>N1</code>
+                                       <code>N2</code>
+                                       <code>N3</code>
+                                       <code>N4</code>
+                                       <code>ND</code>
+                                       <code>NH</code>
+                                       <code>NU</code>
+                                       <code>RB</code>
+                                    </valid_codes>
+                                 </element>
+                                 <element>
+                                    <data_ele>234</data_ele>
+                                    <name>Service Identification Code</name>
+                                    <usage>R</usage>
+                                    <req_des>M</req_des>
+                                    <seq>02</seq>
+                                    <refdes>SVC01-02</refdes>
+                                    <data_type>AN</data_type>
+                                    <min_len>1</min_len>
+                                    <max_len>48</max_len>
+                                 </element>
+                                 <element>
+                                    <data_ele>1339</data_ele>
+                                    <name>Procedure Modifier</name>
+                                    <usage>S</usage>
+                                    <req_des>O</req_des>
+                                    <seq>03</seq>
+                                    <refdes>SVC01-03</refdes>
+                                    <data_type>AN</data_type>
+                                    <min_len>2</min_len>
+                                    <max_len>2</max_len>
+                                 </element>
+                                 <element>
+                                    <data_ele>1339</data_ele>
+                                    <name>Procedure Modifier</name>
+                                    <usage>S</usage>
+                                    <req_des>O</req_des>
+                                    <seq>04</seq>
+                                    <refdes>SVC01-04</refdes>
+                                    <data_type>AN</data_type>
+                                    <min_len>2</min_len>
+                                    <max_len>2</max_len>
+                                 </element>
+                                 <element>
+                                    <data_ele>1339</data_ele>
+                                    <name>Procedure Modifier</name>
+                                    <usage>S</usage>
+                                    <req_des>O</req_des>
+                                    <seq>05</seq>
+                                    <refdes>SVC01-05</refdes>
+                                    <data_type>AN</data_type>
+                                    <min_len>2</min_len>
+                                    <max_len>2</max_len>
+                                 </element>
+                                 <element>
+                                    <data_ele>1339</data_ele>
+                                    <name>Procedure Modifier</name>
+                                    <usage>S</usage>
+                                    <req_des>O</req_des>
+                                    <seq>06</seq>
+                                    <refdes>SVC01-06</refdes>
+                                    <data_type>AN</data_type>
+                                    <min_len>2</min_len>
+                                    <max_len>2</max_len>
+                                 </element>
+                                 <element>
+                                    <data_ele>352</data_ele>
+                                    <name>Description</name>
+                                    <usage>N</usage>
+                                    <req_des>O</req_des>
+                                    <seq>07</seq>
+                                    <refdes>SVC01-07</refdes>
+                                    <data_type>AN</data_type>
+                                    <min_len>1</min_len>
+                                    <max_len>80</max_len>
+                                 </element>
+                              </composite>
+                              <element>
+                                 <data_ele>782</data_ele>
+                                 <name>Line Item Charge Amount</name>
+                                 <usage>R</usage>
+                                 <req_des>M</req_des>
+                                 <seq>02</seq>
+                                 <refdes>SVC02</refdes>
+                                 <data_type>R</data_type>
+                                 <min_len>1</min_len>
+                                 <max_len>18</max_len>
+                              </element>
+                              <element>
+                                 <data_ele>782</data_ele>
+                                 <name>Monetary Amount</name>
+                                 <usage>N</usage>
+                                 <req_des>O</req_des>
+                                 <seq>03</seq>
+                                 <refdes>SVC03</refdes>
+                                 <data_type>R</data_type>
+                                 <min_len>1</min_len>
+                                 <max_len>18</max_len>
+                              </element>
+                              <element>
+                                 <data_ele>234</data_ele>
+                                 <name>Revenue Code</name>
+                                 <usage>S</usage>
+                                 <req_des>O</req_des>
+                                 <seq>04</seq>
+                                 <refdes>SVC04</refdes>
+                                 <data_type>AN</data_type>
+                                 <min_len>1</min_len>
+                                 <max_len>48</max_len>
+                              </element>
+                              <element>
+                                 <data_ele>380</data_ele>
+                                 <name>Quantity</name>
+                                 <usage>N</usage>
+                                 <req_des>O</req_des>
+                                 <seq>05</seq>
+                                 <refdes>SVC05</refdes>
+                                 <data_type>R</data_type>
+                                 <min_len>1</min_len>
+                                 <max_len>15</max_len>
+                              </element>
+                              <composite>
+                                 <data_ele>C003</data_ele>
+                                 <name>Composite Medical Procedure Identifier</name>
+                                 <usage>N</usage>
+                                 <req_des>O</req_des>
+                                 <seq>06</seq>
+                                 <refdes>SVC06</refdes>
+                              </composite>
+                              <element>
+                                 <data_ele>380</data_ele>
+                                 <name>Original Units of Service Count</name>
+                                 <usage>S</usage>
+                                 <req_des>O</req_des>
+                                 <seq>07</seq>
+                                 <refdes>SVC07</refdes>
+                                 <data_type>R</data_type>
+                                 <min_len>1</min_len>
+                                 <max_len>15</max_len>
+                              </element>
+                           </segment>
+                           <segment>
+                              <id>REF</id>
+                              <name>Service Line Item Identification</name>
+                              <usage>S</usage>
+                              <req_des>O</req_des>
+                              <pos>140</pos>
+                              <syntax>R0203</syntax>
+                              <element>
+                                 <data_ele>128</data_ele>
+                                 <name>Reference Identification Qualifier</name>
+                                 <usage>R</usage>
+                                 <req_des>M</req_des>
+                                 <seq>01</seq>
+                                 <refdes>REF01</refdes>
+                                 <data_type>ID</data_type>
+                                 <min_len>2</min_len>
+                                 <max_len>3</max_len>
+                                 <valid_codes>
+                                    <code>FJ</code>
+                                 </valid_codes>
+                              </element>
+                              <element>
+                                 <data_ele>127</data_ele>
+                                 <name>Line Item Control Number</name>
+                                 <usage>R</usage>
+                                 <req_des>X</req_des>
+                                 <seq>02</seq>
+                                 <refdes>REF02</refdes>
+                                 <data_type>AN</data_type>
+                                 <min_len>1</min_len>
+                                 <max_len>30</max_len>
+                              </element>
+                              <element>
+                                 <data_ele>352</data_ele>
+                                 <name>Description</name>
+                                 <usage>N</usage>
+                                 <req_des>X</req_des>
+                                 <seq>03</seq>
+                                 <refdes>REF03</refdes>
+                                 <data_type>AN</data_type>
+                                 <min_len>1</min_len>
+                                 <max_len>80</max_len>
+                              </element>
+                              <composite>
+                                 <data_ele>C040</data_ele>
+                                 <name>Reference Identifier</name>
+                                 <usage>N</usage>
+                                 <req_des>O</req_des>
+                                 <seq>04</seq>
+                                 <refdes>REF04</refdes>
+                              </composite>
+                           </segment>
+                           <segment>
+                              <id>DTP</id>
+                              <name>Service Line Date</name>
+                              <usage>S</usage>
+                              <req_des>O</req_des>
+                              <pos>150</pos>
+                              <element>
+                                 <data_ele>374</data_ele>
+                                 <name>Date Time Qualifier</name>
+                                 <usage>R</usage>
+                                 <req_des>M</req_des>
+                                 <seq>01</seq>
+                                 <refdes>DTP01</refdes>
+                                 <data_type>ID</data_type>
+                                 <min_len>3</min_len>
+                                 <max_len>3</max_len>
+                                 <valid_codes>
+                                    <code>472</code>
+                                 </valid_codes>
+                              </element>
+                              <element>
+                                 <data_ele>1250</data_ele>
+                                 <name>Date Time Period Format Qualifier</name>
+                                 <usage>R</usage>
+                                 <req_des>M</req_des>
+                                 <seq>02</seq>
+                                 <refdes>DTP02</refdes>
+                                 <data_type>ID</data_type>
+                                 <min_len>2</min_len>
+                                 <max_len>3</max_len>
+                                 <valid_codes>
+                                    <code>RD8</code>
+                                 </valid_codes>
+                              </element>
+                              <element>
+                                 <data_ele>1251</data_ele>
+                                 <name>Service Date</name>
+                                 <usage>R</usage>
+                                 <req_des>M</req_des>
+                                 <seq>03</seq>
+                                 <refdes>DTP03</refdes>
+                                 <data_type>AN</data_type>
+                                 <min_len>1</min_len>
+                                 <max_len>35</max_len>
+                              </element>
+                           </segment>
+                        </loop>
                      </loop>
                   </loop>
                </loop>
