@@ -134,7 +134,7 @@ class Implicit_Loops(unittest.TestCase):
         param.set('map_path', os.path.expanduser('~/src/pyx12/map/'))
         param.set('pickle_path', os.path.expanduser('~/src/pyx12/map/'))
         map = pyx12.map_if.load_map_file('841.4010.XXXC.xml', param)
-        node = map.getnodebypath('/ISA/GS/ST/DETAIL/1000/2000/2100/SPI')
+        node = map.getnodebypath('/ISA/GS/ST/DETAIL/2000/2100/SPI')
         self.assertNotEqual(node, None, 'Node not found')
         seg_data = pyx12.segment.segment('SPI*00', '~', '*', ':')
         node = self.walker.walk(node, seg_data, self.errh, 5, 4, None)
@@ -300,6 +300,8 @@ class Counting(unittest.TestCase):
         self.map = pyx12.map_if.load_map_file('270.4010.X092.A1.xml', param)
         self.errh = pyx12.error_handler.errh_null()
         #self.node = self.map.getnodebypath('/ISA/GS/ST/DETAIL/2000A/2000B/2100B/N4')
+        self.node = self.map.getnodebypath('/ISA/GS/ST/DETAIL/2000A/2000B/2100B/NM1')
+        self.node.cur_count = 1
         self.node = self.map.getnodebypath('/ISA/GS/ST/DETAIL/2000A/2000B/2100B/PER')
         self.assertNotEqual(self.node, None)
 
@@ -323,7 +325,7 @@ class Counting(unittest.TestCase):
         node = self.node
         node.cur_count = 3 
         seg_data = pyx12.segment.segment('PER*IC*Name1*EM*dev@null.com~', '~', '*', ':')
-        self.assertNotEqual(node, None)
+        self.assertNotEqual(node, None, 'Node not found')
         self.errh.err_cde = None
         self.errh.err_str = None
         node = self.walker.walk(node, seg_data, self.errh, 5, 4, None)
