@@ -48,7 +48,6 @@ import pdb
 import tempfile
 
 # Intrapackage imports
-#sys.path.append('/usr/home/sniper/src')
 import pyx12
 import pyx12.x12n_document
 import pyx12.params
@@ -59,16 +58,18 @@ __version__ = pyx12.__version__
 __date__    = pyx12.__date__
 
 def usage():
+    sys.stdout.write('x12lint.py %s (%s)\n' % (__version__, __date__))
     sys.stdout.write('usage: x12lint.py [options] source_files\n')
-    sys.stdout.write('\t-H\tCreate HTML output file\n')
-    sys.stdout.write('\t-c\t<b|e> Specify X12 character set: b=basic, e=extended.  e.g. -cb \n')
-    sys.stdout.write('\t-f\tForce map load.  Do not use the map pickle file.\n')
-    sys.stdout.write('\t-l\t<logfile>\n')
-    sys.stdout.write('\t-m\t<path to map files>\n')
-    sys.stdout.write('\t-p\t<map to pickle files>\n')
-    sys.stdout.write('\t-q\tQuiet output\n')
-    sys.stdout.write('\t-v\tVerbose output\n')
-    sys.stdout.write('\t-x\t<external code tag> Exclude external code.\n')
+    sys.stdout.write('\noptions:\n')
+    sys.stdout.write('  -c <b|e>   Specify X12 character set: b=basic, e=extended\n')
+    sys.stdout.write('  -f         Force map load.  Do not use the map pickle file\n')
+    sys.stdout.write('  -H         Create HTML output file\n')
+    sys.stdout.write('  -l <file>  Output log\n')
+    sys.stdout.write('  -m <path>  Path to map files\n')
+    sys.stdout.write('  -p <path>  Path to to pickle files\n')
+    sys.stdout.write('  -q         Quiet output\n')
+    sys.stdout.write('  -v         Verbose output\n')
+    sys.stdout.write('  -x <tag>   Exclude external code\n')
     
 def main():
     """
@@ -77,7 +78,7 @@ def main():
     import getopt
     param = pyx12.params.params()
     try:
-        opts, args = getopt.getopt(sys.argv[1:], '9c:fl:m:p:qvx:H')
+        opts, args = getopt.getopt(sys.argv[1:], 'c:fl:m:p:qvx:H')
     except getopt.error, msg:
         usage()
         sys.exit(2)
