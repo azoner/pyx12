@@ -1,9 +1,12 @@
+Base map_if children on map
+  get by id quicker
+  get by idx slower?
+
+Unique path
+
 Path/property local overrides
 
 Filtering/cleanup???
-
-Handle loop/segment counting as a data structure in map_walker, not as member
-variables of map_if nodes.
 
 TA1 input
 
@@ -25,10 +28,6 @@ Make C++ Modules
   map_if
   map_walker
   codes
-
-Base map_if children on map
-  get by id quicker
-  get by idx slower?
 
 restructure maps.xml
   mapfile element
