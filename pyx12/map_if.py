@@ -179,6 +179,7 @@ class map_if(x12_node):
         self.base_level = 0
         self.base_name = ''
         self.index = 0
+        self.src_version = '$Revision$'
 
         self.id = None
         self.name = None
@@ -1266,7 +1267,8 @@ def load_map_file(map_file, param):
     try:
         if os.stat(map_full)[ST_MTIME] < os.stat(pickle_file)[ST_MTIME]:
             map = cPickle.load(open(pickle_file))
-            if map.cur_path != '/transaction' or len(map.children) == 0:
+            if map.cur_path != '/transaction' or len(map.children) == 0 \
+                or map.src_version != '$Revision$':
                 raise Pickle_Errors, "reload map"
             logger.debug('Map %s loaded from pickle %s' % (map_full, pickle_file))
         else:
