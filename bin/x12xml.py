@@ -57,6 +57,7 @@ def usage():
     sys.stdout.write('  -s <b|e>   Specify X12 character set: b=basic, e=extended\n')
     sys.stdout.write('  -v         Verbose output\n')
     sys.stdout.write('  -x <tag>   Exclude external code\n')
+    sys.stdout.write('  -X <simple|idtag>   XML output format\n')
 
 def main():
     """Script main program."""
