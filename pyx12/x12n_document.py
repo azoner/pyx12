@@ -221,6 +221,9 @@ def x12n_document(param, src_file, fd_997, fd_html, fd_xmldoc=None):
     if fd_xmldoc:
         del xmldoc
 
+    #visit_debug = error_debug.error_debug_visitor(sys.stdout)
+    #errh.accept(visit_debug)
+
     #If this transaction is not a 997, generate one.
     if not (vriic=='004010' and fic=='FA'):
         #fd_997 = open(filename_997, 'w')

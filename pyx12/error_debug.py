@@ -172,9 +172,9 @@ class error_debug_visitor(error_visitor):
         Params:     err_seg - error_seg instance
         """
         #pdb.set_trace()
-        self.fd.write('%s %s\n' % (err_seg.id, err_seg.name))
-        for err in err_seg.errors:
-            self.fd.write('  ERR %s %s\n' % err)
+        self.fd.write('%s %s %s %s\n' % (err_seg.id, err_seg.name, err_seg.get_cur_line(), err_seg.seg_id))
+        for (err_cde, err_str, err_value) in err_seg.errors:
+            self.fd.write('  ERR %s (%s) "%s" \n' % (err_cde, err_value, err_str))
         #for ele in err_seg.elements:
         #    self.fd.write('  %s %s\n' % (ele.id, ele.name))
 
