@@ -55,7 +55,7 @@ import pdb
 #import xml.dom.minidom
 
 # Intrapackage imports
-import err_997
+import error_handler
 from errors import *
 import codes
 import map_index
@@ -75,6 +75,8 @@ __date__    = "10/1/2003"
 def x12n_document(fd):
 
     logger = logging.getLogger('pyx12')
+    errh = error_handler.err_handler()
+    #errh.register()
     check_dte = '20030930'
     
     # Get X12 DATA file
@@ -98,29 +100,19 @@ def x12n_document(fd):
             map_node.is_valid(seg, [])
             #map_node = control_map
             icvn = map_node.get_elemval_by_id(seg, 'ISA12')
-            #ISA*00*          *00*          *ZZ*ENCOUNTER      *ZZ*00GR           *030425*1501*U*00401*000065350*0*T*:~
-            isa_seg = [seg[0],seg[3],seg[4],seg[1],seg[7],seg[8],seg[5],seg[6]]
-            isa_seg.append(now.strftime('%y%m%d')) # Date
-            isa_seg.append(now.strftime('%H%M')) # Time
-            isa_seg.extend([seg[11],seg[12]]
-            isa_control_num = ('%s%s'%(now.strftime('%y%m%d'), now.strftime('%H%M')))[-1:]
-            isa_seg.append(isa_control_num) # ISA Interchange Control Number
-            isa_seg.extend([seg[14],seg[15]]
+            errh.add_node({'id': 'ISA', 'seg': seg, 'src_id': src.get_id()})
         elif seg[0] == 'GS':
             #map_node = walker.walk(map_node, seg)
             map_node = control_map.getnodebypath('/GS')
             map_node.is_valid(seg, [])
             fic = map_node.get_elemval_by_id(seg, 'GS01')
             vriic = map_node.get_elemval_by_id(seg, 'GS08')
-            # GS*FA*ENCOUNTER*00GR*20030425*150153*653500001*X*004010
-            gs_seg = [seg[0], 'FA', seg[2], seg[1], now.strftime('%Y%m%d'), now.strftime('%H%M%s')]
-            gs_seg.extend([seg[6], seg[7], '004010'])
+            errh.add_node({'id': 'GS', 'seg': seg, 'src_id': src.get_id()})
             
             #Get map for this GS loop
             #logger.debug('icvn=%s fic=%s vriic=%s' % (icvn, fic, vriic))
             map_index_if = map_index.map_index('map/maps.xml')
             map_file = map_index_if.get_filename(icvn, vriic, fic)
-            gs_997_count = 0
         else:
             break        
 
@@ -136,23 +128,14 @@ def x12n_document(fd):
     fd.seek(0)
     src = x12file.x12file(fd) 
 
-    fd_997 = open('data/997.txt', 'w')
-    errors_997 = err_997.if_997(src)
-    # Create 997 ISA segment
-    isa_seg.append(src.subele_term)
-    fd_997.write(src.seg_str(isa_seg, '\n')
-    fd_997.write(src.seg_str(gs_seg, '\n') # 997 GS segment
-                     
     for seg in src:
         logger.debug(seg)
         #find node
         seg_err_codes = []
         ele_err_list = []
-        #e997 = err_997.err_997()
         node = walker.walk(node, seg, seg_err_codes)
 
         if seg[0] == 'GS':
-            # Write 997 file
             fic = map_node.get_elemval_by_id(seg, 'GS01')
             vriic = map_node.get_elemval_by_id(seg, 'GS08')
             #map_node = control_map.getnodebypath('/GS')
@@ -172,13 +155,6 @@ def x12n_document(fd):
 
         #get special values
         #generate xml
-        
-    # Create 997 IEA segment
-    isa_seg.append(src.subele_term)
-    fd_997.write(src.seg_str(['GE', '%i'%errors_997.st_loop_count, gs_seg[6]], '\n')
-    gs_loop_count = 1
-    fd_997.write(src.seg_str(['IEA', '%i'%gs_loop_count, isa_seg[13]], '\n')
-
     logger.info('End')
 
    
