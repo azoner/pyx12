@@ -44,10 +44,10 @@ from types import *
 import pdb
 #import profile
 import tempfile
-import pyx12.map_if
 
 # Intrapackage imports
 import pyx12
+import pyx12.map_if
 import pyx12.x12n_document
 import pyx12.params
 
@@ -56,30 +56,18 @@ __status__  = pyx12.__status__
 __version__ = pyx12.__version__
 __date__    = pyx12.__date__
 
-def gen_sql(node):
+def gen_sql(map):
     """
     iterate through map, generate sql
     """
     fd = sys.stdout
-
-    if not (node.is_loop() or node.is_map_root()): 
-        node = self.pop_to_parent_loop(node) # Get enclosing loop
-    while 1:
-        for child in node.children:
-            if child.index >= node_idx:
-                if child.is_segment():
-                        if child is orig_node:
-                            child.cur_count += 1
-                        else:
-                            if orig_node.is_segment():
-                                orig_node.cur_count = 0
-                            child.cur_count = 1
-                        if child.cur_count > child.get_max_repeat():  # handle seg repeat count
-                elif child.is_loop(): 
-                    pass
-        if node.is_map_root(): # If at root and we haven't found the segment yet.
-        node = self.pop_to_parent_loop(node) # Get enclosing parent loop
-
+    i = 0
+    for node in map:
+        i += 1
+        #if (node.is_loop() or node.is_map_root()): 
+        #    fd.write('%s\n' % (node.id))
+                #if child.is_segment():
+        fd.write('%i: %s\n' % (i, node.id))
     return None
 
    
@@ -127,10 +115,11 @@ def main():
             except IOError:
                 logger.error('Could not open log file: %s' % (a))
         #if o == '-9': target_997 = os.path.splitext(src_filename)[0] + '.997'
+    map_path = param.get_param('map_path')
 
     for map_filename in args:
         try:
-            control_map = map_if.map_if(os.path.join(map_path, 'x12.control.00401.xml'), param)
+            gen_sql(pyx12.map_if.map_if(os.path.join(map_path, 'x12.control.00401.xml'), param))
         except IOError:
             logger.error('Could not open files')
             usage()
