@@ -37,7 +37,7 @@
 """
 Holds Run-time Parameters
 Order of precedence:
- set_params(param) - Command line parameters
+ set(param) - Command line parameters
  '~/.pyx12rc' - User's directory
  '/usr/local/etc/pyx12.conf' - Site default
  self.params - Defaults
