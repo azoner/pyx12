@@ -145,6 +145,31 @@ def GetChildElementText(node, elem_name):
 		    return a.data
     return
     
+def GetChildNodeByChildElementValue(node, elem_name, child_elem_name, child_elem_value):
+    """
+    Returns the DOM node of the first matching element
+    """
+    for child in node.childNodes:
+        if child.nodeType == child.ELEMENT_NODE and child.tagName == elem_name:
+    	    for b in child.childNodes:
+        	if b.nodeType == b.ELEMENT_NODE and b.tagName == child_elem_name:
+    	    	    for a in b.childNodes:
+           		if a.nodeType == a.TEXT_NODE:
+		    	    a.normalize()
+		    	    if a.data == child_elem_value:
+		    	        return child
+    return
+    
+def GetChildNodeByAttrib(node, elem_name, attrib_name, attrib_value):
+    """
+    Returns the DOM node of the first matching element
+    """
+    for child in node.childNodes:
+        if child.nodeType == child.ELEMENT_NODE and child.tagName == elem_name:
+	    if child.getAttribute(attrib_name) == attrib_value:
+	    	return child
+    return
+    
 
 def getfirstfield(seg_list, segment_name, field_idx):
     """
