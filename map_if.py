@@ -60,6 +60,7 @@ codes = codes.ExternalCodes()
 
 NodeType = {'element_start': 1, 'element_end': 15, 'attrib': 2, 'text': 3, 'CData': 4, 'entity_ref': 5, 'entity_decl':6, 'pi': 7, 'comment': 8, 'doc': 9, 'dtd': 10, 'doc_frag': 11, 'notation': 12}
 
+MAXINT = 2147483647
 
 ############################################################
 # X12 Node Superclass
@@ -159,6 +160,7 @@ class map_if(x12_node):
         self.cur_level = -1 
         self.base_level = 0
         self.base_name = ''
+        self.index = 0
 
         self.id = None
         self.name = None
@@ -256,7 +258,7 @@ class map_if(x12_node):
 class loop_if(x12_node):
     """
     """
-    def __init__(self, parent, index): 
+    def __init__(self, parent, my_index): 
         """
         Name:    __init__
         Desc:    
@@ -268,12 +270,12 @@ class loop_if(x12_node):
         """
         global reader
         x12_node.__init__(self)
-        self.children = []
-        index = 0
         self.parent = parent
+        self.index = my_index
+        self.children = []
         self.path = ''
         self.base_name = 'loop'
-        self.index = index
+        self.cur_count = 0
         
         self.id = None
         self.name = None
@@ -281,6 +283,7 @@ class loop_if(x12_node):
         self.seq = None
         self.repeat = None
 
+        index = 0
         self.base_level = reader.Depth()
 #        if parent == None:
 #            self.path = id
@@ -358,6 +361,12 @@ class loop_if(x12_node):
         for node in self.children:
             node.debug_print()
 
+    def get_max_repeat(self):
+        if self.repeat is None:
+            return MAXINT
+        if self.repeat == '&gt;1' or self.repeat == '>1':
+            return MAXINT
+        return int(self.repeat)
 
     def get_path(self):
         return self.path
@@ -390,7 +399,7 @@ class loop_if(x12_node):
 class segment_if(x12_node):
     """
     """
-    def __init__(self, parent, index):
+    def __init__(self, parent, my_index):
         """
         Class: segment_if
         Name:    __init__
@@ -402,13 +411,14 @@ class segment_if(x12_node):
 
         global reader
         x12_node.__init__(self)
-        self.children = []
         self.parent = parent
+        self.index = my_index
+        self.children = []
         self.path = ''
         self.base_name = 'segment'
         self.base_level = reader.Depth()
-        self.index = index
         self.check_dte = '20030930'
+        self.cur_count = 0
 
         self.id = None
         self.end_tag = None
@@ -472,7 +482,7 @@ class segment_if(x12_node):
                 elif cur_name == 'pos' and self.base_name == 'segment':
                     self.pos = int(reader.Value())
                 elif cur_name == 'max_use' and self.base_name == 'segment':
-                    self.max_use = int(reader.Value())
+                    self.max_use = reader.Value()
 
             ret = reader.Read()
             if ret == -1:
@@ -525,6 +535,10 @@ class segment_if(x12_node):
                             return seg[child.seq]
         return None
 
+    def get_max_repeat(self):
+        if self.max_use is None:
+            return MAXINT
+        return int(self.max_use)
     
     def get_parent(self):
         """
