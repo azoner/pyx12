@@ -12,18 +12,24 @@ def main():
             src = pyx12.x12file.x12file(src_file, errh)
             state = ''
             for c in src:
-                if c[0] == 'ISA':
-                    sys.stdout.write('ISA From: %s\n' % (c[6]))
-                    sys.stdout.write('ISA To: %s\n' % (c[8]))
+                if c.get_seg_id() == 'ISA':
+                    sys.stdout.write('ISA Sender: "%s"\t' % (c[6]))
+                    sys.stdout.write('ISA Receiver: "%s"\t' % (c[8]))
                     if src.isa_usage == 'P':
-                        sys.stdout.write('PRODUCTION\n') 
+                        sys.stdout.write(' PRODUCTION\t') 
                     else:
-                        sys.stdout.write('TEST\n') 
+                        sys.stdout.write(' TEST\t') 
                     state = ''
-                elif c[0] == 'GS':
-                    sys.stdout.write('GS From: %s\n' % (c[2]))
-                    sys.stdout.write('GS To: %s\n' % (c[3]))
+                    sys.stdout.write('\n')
+                elif c.get_seg_id() == 'GS':
+                    sys.stdout.write('  GS Sender: "%s"\t' % (c[2]))
+                    sys.stdout.write('GS Receiver: "%s"\t' % (c[3]))
                     state = ''
+                    sys.stdout.write('\n')
+                elif c.get_seg_id() == 'ST':
+                    sys.stdout.write('  ST ID: "%s"\t' % (c[1]))
+                    state = ''
+                    sys.stdout.write('\n')
                 else:
                     state = ''
         except:
