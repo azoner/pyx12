@@ -45,6 +45,7 @@ import string
 # Intrapackage imports
 from errors import *
 
+DEFAULT_BUFSIZE = 8*1024
 
 class x12file:
     """
@@ -59,7 +60,7 @@ class x12file:
         Params:  fd - file descriptor
         """
         
-        self.lines = []
+        #self.lines = []
         self.loops = []
         self.hl_stack = []
         self.gs_count = 0
@@ -68,11 +69,13 @@ class x12file:
         self.seg_count = 0
         self.cur_line = 0
         #os.linesep = self.seg_term
+        self.buffer = None
+        self.fd = fd
 
         ISA_len = 106
         line = fd.read(ISA_len)
         #.seek(0)
-        assert (line[:3] == 'ISA'), "First line does not begin with 'ISA': %s" % line[:3]
+        if line[:3] != 'ISA': raise WEDI1_Error, "First line does not begin with 'ISA': %s" % line[:3]
         assert (len(line) == ISA_len), "ISA line is only %i characters" % len(line)
         self.seg_term = line[-1]
         self.ele_term = line[3]
@@ -80,17 +83,22 @@ class x12file:
 
         self.lines = []
         self.lines.append(line[:-1])
-        for line in string.split(fd.read(), self.seg_term):
-            if string.strip(line) != '':
-                self.lines.append(string.strip(line).replace('\n','').replace('\r',''))
+        self.buffer = line
+        self.buffer += self.fd.read(DEFAULT_BUFSIZE)
+        #for line in string.split(fd.read(), self.seg_term):
+        #    if string.strip(line) != '':
+        #        self.lines.append(string.strip(line).replace('\n','').replace('\r',''))
         
     def __iter__(self):
         return self
 
     def next(self):
-        if self.cur_line >= len(self.lines):
-            raise StopIteration
-        line = self.lines[self.cur_line]
+        i = buffer.find(self.seg_term)
+        if i == -1: 
+            self.buffer += self.fd.read(DEFAULT_BUFSIZE)
+            #raise StopIteration
+        line = buffer[:i].strip().replace('\n','').replace('\r','')
+        buffer = buffer[i:]
         seg = string.split(line, self.ele_term)
         for i in xrange(len(seg)):
             if seg[i].find(self.subele_term) != -1:
@@ -159,6 +167,7 @@ class x12file:
 
     def print(self):
         sys.stdout.write('\n')
+
 #    def close(self):
 #        """Free the memory buffer.
 #        """
