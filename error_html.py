@@ -32,7 +32,6 @@
 
 
 """
-Visitor - Visits an error_handler composite
 Generates HTML error output
 """
 
@@ -53,30 +52,27 @@ logger = logging.getLogger('pyx12.error_html')
 logger.setLevel(logging.DEBUG)
 #logger.setLevel(logging.ERROR)
 
-
-
-
-
-class error_html_visitor(error_visitor.error_visitor):
+class error_html:
     """
-    Class:      error_html_visitor
+    Class:      error_html
     Desc:    
     """
-    def __init__(self, fd, src, term=('~', '*', '~', '\n')): 
+    def __init__(self, errh, fd, term=('~', '*', '~', '\n')): 
         """
-        Class:      error_html_visitor
+        Class:      error_html
         Name:       __init__
         Desc:    
         Params:     fd - target file
-                    src = x12 source file
                     term - tuple of x12 terminators used
         """
+        self.errh = errh
         self.fd = fd
-        self.src = src
-        (self.seg_term, self.ele_term, self.subele_term) = src.get_term()
+        self.seg_term = term[0]
+        self.ele_term = term[1]
+        self.subele_term = term[2]
         self.eol = ''
-        self.cur_line = 0
 
+    def header(self):
         self.fd.write('<html>\n<head>\n')
         self.fd.write('<title>pyx12 Error Analysis</title>\n')
         self.fd.write('<style type="text/css">\n<!--\n')
@@ -88,116 +84,31 @@ class error_html_visitor(error_visitor.error_visitor):
             (time.strftime('%y%m%d %H%M%S')))
         self.fd.write('<div class="segs" style="">\n')
 
-    def __del__(self):
+    def footer(self):
         self.fd.write('</div>\n')
         self.fd.write('<p>\n<a href="http://sourceforge.net/projects/pyx12/">pyx12 project page</a>\n</p>\n')
         self.fd.write('</body>\n</html>\n')
 
-    def visit_root_pre(self, errh):
+    def print_seg(self, seg):
         """
-        Class:      error_html_visitor 
-        Name:       visit_root_pre
-        Desc:    
-        Params:     errh - error_handler instance
-        """
-
-    def visit_root_post(self, errh):
-        """
-        Class:      error_html_visitor 
-        Name:       visit_root_post
-        Desc:    
-        Params:     errh - error_handler instance
-        """
-        
-    def visit_isa_pre(self, err_isa):
-        """
-        Class:      error_html_visitor
-        Name:       visit_isa_pre
-        Desc:    
-        Params:     err_isa - error_isa instance
-        """
-
-    def visit_isa_post(self, err_isa):
-        """
-        Class:      error_html_visitor
-        Name:       visit_isa_post
-        Desc:    
-        Params:     err_isa - error_isa instance
-        """
-
-    def visit_gs_pre(self, err_gs): 
-        """
-        Class:      error_html_visitor 
-        Name:       visit_gs_pre
-        Desc:    
-        Params:     err_gs - error_gs instance
-        """
-         
-    def visit_gs_post(self, err_gs): 
-        """
-        Class:      error_html_visitor 
-        Name:       visit_gs_post
-        Desc:    
-        Params:     err_gs - error_gs instance
-        """
-
-    def visit_st_pre(self, err_st):
-        """
-        Class:      error_html_visitor
-        Name:       visit_st_pre
-        Desc:    
-        Params:     err_st - error_st instance
-        """
-        
-    def visit_st_post(self, err_st):
-        """
-        Class:      error_html_visitor
-        Name:       visit_st_post
-        Desc:    
-        Params:     err_st - error_st instance
-        """
-
-    def visit_seg(self, err_seg):
-        """
-        Class:      error_html_visitor
-        Name:       visit_seg
-        Desc:    
-        Params:     err_seg - error_seg instance
-        """
-        #Print all seg up to this one
-        while self.src
-        err_seg.cur_line
-        for (err_cde, err_str, err_value) in err_seg.errors:
-            self.fd.write('<span class="seg">%s</span><br>\n' % (err_str))
-                                        
-        
-    def visit_ele(self, err_ele): 
-        """
-        Class:      error_html_visitor
-        Name:       visit_ele
-        Desc:    
-        Params:     err_ele - error_ele instance
-        """
-
-    def _print_seg(self, seg, src):
-        """
-        Class:      error_html_visitor
+        Class:      error_html 
         Name:       visit_root_pre
         Desc:    
         Params:     seg - list of elements
         """
-        self.fd.write('<span class="seg">%s:&nbsp;&nbsp;%s</span><br>\n' % \
-            (src.cur_line, self._seg_str(seg))
+        # ID pos of bad value
+        self.fd.write('<span class="seg">%s</span><br>\n' % (self._seg_str(seg)))
+        # Find error seg for this seg
+        # Show seg and ele errors
+        # Handle ST, ...
         
     def _seg_str(self, seg):
         """
-        Class:      error_html_visitor
+        Class:      error_html
         Name:       _seg_str
         Desc:    
         Params:     seg - list of elements
         """
+        # Handle ><&
         return seg_str(seg, self.seg_term, self.ele_term, self.subele_term, \
             self.eol).replace(' ', '&nbsp;')
-
-
-
