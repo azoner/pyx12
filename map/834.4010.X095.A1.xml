@@ -411,8 +411,6 @@
               <data_type>DT</data_type>
               <min_len>8</min_len>
               <max_len>8</max_len>
-              <valid_codes>
-      </valid_codes>
             </element>
             <element xid="BGN04">
               <data_ele>337</data_ele>
