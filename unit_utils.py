@@ -164,31 +164,22 @@ class ExtendedTime(unittest.TestCase):
         self.failIf(IsValidDataType('7 31', 'TM', 'B'))
         self.failIf(IsValidDataType('7:31', 'TM', 'B'))
     
-
 def suite():
-    suite1 = unittest.makeSuite(BasicNumeric)
-    suite2 = unittest.makeSuite(BasicReal)
-    suite3 = unittest.makeSuite(BasicIdentifier)
-    suite4 = unittest.makeSuite(BasicString)
-    suite5 = unittest.makeSuite(BasicDate)
-    suite6 = unittest.makeSuite(BasicTime)
-    suite7 = unittest.makeSuite(ExtendedNumeric)
-    suite8 = unittest.makeSuite(ExtendedReal)
-    suite9 = unittest.makeSuite(ExtendedIdentifier)
-    suite10 = unittest.makeSuite(ExtendedString)
-    suite11 = unittest.makeSuite(ExtendedDate)
-    suite12 = unittest.makeSuite(ExtendedTime)
-    return unittest.TestSuite((suite1, suite2, suite3, suite4, suite5, \
-        suite6, suite7, suite8, suite9, suite10, suite11, suite12))
+    suite = unittest.TestSuite()
+    suite.addTest(unittest.makeSuite(BasicNumeric))
+    suite.addTest(unittest.makeSuite(BasicReal))
+    suite.addTest(unittest.makeSuite(BasicIdentifier))
+    suite.addTest(unittest.makeSuite(BasicString))
+    suite.addTest(unittest.makeSuite(BasicDate))
+    suite.addTest(unittest.makeSuite(BasicTime))
+    suite.addTest(unittest.makeSuite(ExtendedNumeric))
+    suite.addTest(unittest.makeSuite(ExtendedReal))
+    suite.addTest(unittest.makeSuite(ExtendedIdentifier))
+    suite.addTest(unittest.makeSuite(ExtendedString))
+    suite.addTest(unittest.makeSuite(ExtendedDate))
+    suite.addTest(unittest.makeSuite(ExtendedTime))
+    return suite
 
-
-#    suite = unittest.TestSuite()
-
-#    suite.addTests((\
-#        unittest.makeSuite(x12fileTests, 'test_x12file_headers'), \
-#    ))
-#    return suite
-
-if __name__ == "__main__":
-    unittest.main()   
-
+#if __name__ == "__main__":
+#    unittest.main()
+unittest.TextTestRunner(verbosity=2).run(suite())

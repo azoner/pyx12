@@ -208,10 +208,17 @@ class HL_Checks(unittest.TestCase):
         self.assertEqual(self.errh.err_cde, 'HL1', self.errh.err_str)
 
 
-
 def suite():
-    suite = unittest.makeSuite((ISA_header, IEA_Checks, GE_Checks, SE_Checks))
+    suite = unittest.TestSuite()
+    suite.addTest(unittest.makeSuite(ISA_header))
+    suite.addTest(unittest.makeSuite(IEA_Checks))
+    suite.addTest(unittest.makeSuite(GE_Checks))
+    suite.addTest(unittest.makeSuite(SE_Checks))
+    suite.addTest(unittest.makeSuite(HL_Checks))
     return suite
-                
-if __name__ == "__main__":
-    unittest.main()   
+
+#if __name__ == "__main__":
+#    unittest.main()
+unittest.TextTestRunner(verbosity=2).run(suite())
+
+

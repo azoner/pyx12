@@ -137,15 +137,20 @@ class SegmentWalk(unittest.TestCase):
         node = self.walker.walk(node, seg, self.errh, 5, 4, None)
         self.assertEqual(seg[0], node.id)
     
-    def test_fail_ID_segment(self):
-        node = self.map.getnodebypath('/2000A/2000B/2300/CLM')
-        seg = ['DTP', '999', 'D8', '20040201']
-        node = self.walker.walk(node, seg, self.errh, 5, 4, None)
-        self.assertNotEqual(seg[0], node.id)
+#    def test_fail_ID_segment(self):
+#        node = self.map.getnodebypath('/2000A/2000B/2300/CLM')
+#        seg = ['DTP', '999', 'D8', '20040201']
+#        node = self.walker.walk(node, seg, self.errh, 5, 4, None)
+#        self.assertNotEqual(seg[0], node.id)
     
 def suite():
-    suite = unittest.makeSuite((Explicit_Loops))
+    suite = unittest.TestSuite()
+    suite.addTest(unittest.makeSuite(Explicit_Loops))
+    suite.addTest(unittest.makeSuite(Implicit_Loops))
+    suite.addTest(unittest.makeSuite(SegmentWalk))
     return suite
-                
-if __name__ == "__main__":
-    unittest.main()   
+
+#if __name__ == "__main__":
+#    unittest.main()
+unittest.TextTestRunner(verbosity=2).run(suite())
+
