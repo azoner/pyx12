@@ -3150,7 +3150,7 @@
                 </element>
                 <element xid="MIA13">
                   <data_ele>782</data_ele>
-                  <name>PPS-Capital IME amount</name>
+                  <name>PPS-Capital IME Amount</name>
                   <usage>S</usage>
                   <seq>13</seq>
                   <data_type>R</data_type>
