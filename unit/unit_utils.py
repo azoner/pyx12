@@ -5,8 +5,8 @@
 import unittest
 import sys
 
-from utils import *
-from errors import *
+from pyx12.utils import *
+from pyx12.errors import *
 
 class BasicNumeric(unittest.TestCase):
     def testValid(self):

@@ -7,16 +7,16 @@ import unittest
 import StringIO
 import pdb
 
-import error_handler
+import pyx12.error_handler
 #from error_handler import ErrorErrhNull
-from errors import *
-import x12file
+from pyx12.errors import *
+import pyx12.x12file
 
 class Delimiters(unittest.TestCase):
 
     def setUp(self):
         self.fd = None
-        self.errh = error_handler.errh_null()
+        self.errh = pyx12.error_handler.errh_null()
 
     def test_delimiters(self):
         str = 'ISA&00&          &00&          &ZZ&ZZ000          &ZZ&ZZ001          &030828&1128&U&00401&000010121&0&T&!+\n'
@@ -27,7 +27,7 @@ class Delimiters(unittest.TestCase):
         str += 'GE&1&17+\n'
         str += 'IEA&1&000010121+\n'
         self.fd = StringIO.StringIO(str)
-        src = x12file.x12file(self.fd, self.errh)
+        src = pyx12.x12file.x12file(self.fd, self.errh)
         for seg in src:
             pass
         self.assertEqual(self.errh.err_cde, None)
@@ -39,7 +39,7 @@ class Delimiters(unittest.TestCase):
         str = 'ISA*00*          *00*          *ZZ*ZZ000          *ZZ*ZZ001          *030828*1128*U*00401*000010121*0*T*:~\n'
         str += 'ZZ****~\n'
         self.fd = StringIO.StringIO(str)
-        src = x12file.x12file(self.fd, self.errh)
+        src = pyx12.x12file.x12file(self.fd, self.errh)
         for seg in src:
             pass
         self.assertEqual(self.errh.err_cde, 'SEG1', self.errh.err_str)
@@ -49,19 +49,19 @@ class ISA_header(unittest.TestCase):
 
     def setUp(self):
         self.fd = None
-        self.errh = error_handler.errh_null()
+        self.errh = pyx12.error_handler.errh_null()
 
     def test_starts_with_ISA(self):
         self.fd = StringIO.StringIO(' ISA~')
-        #src = x12file.x12file(self.fd, self.errh)
+        #src = pyx12.x12file.x12file(self.fd, self.errh)
         #self.assertEqual(self.errh.err_cde, 'ISA1', self.errh.err_str)
-        self.failUnlessRaises(x12file.x12Error, x12file.x12file, self.fd, self.errh)
+        self.failUnlessRaises(pyx12.x12file.x12Error, pyx12.x12file.x12file, self.fd, self.errh)
 
     def test_at_least_ISA_len(self):
         self.fd = StringIO.StringIO('ISA~')
-        #src = x12file.x12file(self.fd, self.errh)
+        #src = pyx12.x12file.x12file(self.fd, self.errh)
         #self.assertEqual(self.errh.err_cde, 'ISA4', self.errh.err_str)
-        self.failUnlessRaises(x12file.x12Error, x12file.x12file, self.fd, self.errh)
+        self.failUnlessRaises(pyx12.x12file.x12Error, pyx12.x12file.x12file, self.fd, self.errh)
 
     def test_repeat_ISA_loops(self):
         str = 'ISA*00*          *00*          *ZZ*ZZ000          *ZZ*ZZ001          *030828*1128*U*00401*000010121*0*T*:~\n'
@@ -69,7 +69,7 @@ class ISA_header(unittest.TestCase):
         str += 'ISA*00*          *00*          *ZZ*ZZ000          *ZZ*ZZ001          *030828*1128*U*00401*000010122*0*T*:~\n'
         str += 'IEA*0*000010122~\n'
         self.fd = StringIO.StringIO(str)
-        src = x12file.x12file(self.fd, self.errh)
+        src = pyx12.x12file.x12file(self.fd, self.errh)
         for seg in src:
             pass
         self.assertEqual(self.errh.err_cde, None)
@@ -81,7 +81,7 @@ class ISA_header(unittest.TestCase):
         str += 'ISA*00*          *00*          *ZZ*ZZ000          *ZZ*ZZ001          *030828*1128*U*00401*000010121*0*T*:~\n'
         str += 'IEA*0*000010121~\n'
         self.fd = StringIO.StringIO(str)
-        src = x12file.x12file(self.fd, self.errh)
+        src = pyx12.x12file.x12file(self.fd, self.errh)
         for seg in src:
             pass
         self.assertEqual(self.errh.err_cde, 'ISA5', self.errh.err_str)
@@ -93,7 +93,7 @@ class IEA_Checks(unittest.TestCase):
 
     def setUp(self):
         self.fd = None
-        self.errh = error_handler.errh_null()
+        self.errh = pyx12.error_handler.errh_null()
 
     def test_IEA_id_match_ISA_id(self):
         seg = None
@@ -103,7 +103,7 @@ class IEA_Checks(unittest.TestCase):
         str += 'IEA*1*000010555~\n'
         self.fd = StringIO.StringIO(str)
         #pdb.set_trace()
-        src = x12file.x12file(self.fd, self.errh)
+        src = pyx12.x12file.x12file(self.fd, self.errh)
         for seg in src:
             pass
         self.assertEqual(self.errh.err_cde, 'IEA2', self.errh.err_str)
@@ -115,7 +115,7 @@ class IEA_Checks(unittest.TestCase):
         str += 'GE*0*17~\n'
         str += 'IEA*2*000010121~\n'
         self.fd = StringIO.StringIO(str)
-        src = x12file.x12file(self.fd, self.errh)
+        src = pyx12.x12file.x12file(self.fd, self.errh)
         for seg in src:
             pass
         self.assertEqual(self.errh.err_cde, 'IEA3', self.errh.err_str)
@@ -127,7 +127,7 @@ class IEA_Checks(unittest.TestCase):
 class GE_Checks(unittest.TestCase):
     def setUp(self):
         self.fd = None
-        self.errh = error_handler.errh_null()
+        self.errh = pyx12.error_handler.errh_null()
 
     def test_GE_id_match_GS_id(self):
         seg = None
@@ -136,7 +136,7 @@ class GE_Checks(unittest.TestCase):
         str += 'GE*0*555~\n'
         str += 'IEA*1*000010121~\n'
         self.fd = StringIO.StringIO(str)
-        src = x12file.x12file(self.fd, self.errh)
+        src = pyx12.x12file.x12file(self.fd, self.errh)
         for seg in src:
             pass
         self.assertEqual(self.errh.err_cde, '4', self.errh.err_str)
@@ -147,7 +147,7 @@ class GE_Checks(unittest.TestCase):
         str += 'GE*999*17~\n'
         str += 'IEA*1*000010121~\n'
         self.fd = StringIO.StringIO(str)
-        src = x12file.x12file(self.fd, self.errh)
+        src = pyx12.x12file.x12file(self.fd, self.errh)
         for seg in src:
             pass
         self.assertEqual(self.errh.err_cde, '5', self.errh.err_str)
@@ -160,7 +160,7 @@ class GE_Checks(unittest.TestCase):
         str += 'GE*0*17~\n'
         str += 'IEA*2*000010121~\n'
         self.fd = StringIO.StringIO(str)
-        src = x12file.x12file(self.fd, self.errh)
+        src = pyx12.x12file.x12file(self.fd, self.errh)
         for seg in src:
             pass
         self.assertEqual(self.errh.err_cde, '6', self.errh.err_str)
@@ -171,7 +171,7 @@ class GE_Checks(unittest.TestCase):
 class SE_Checks(unittest.TestCase):
     def setUp(self):
         self.fd = None
-        self.errh = error_handler.errh_null()
+        self.errh = pyx12.error_handler.errh_null()
 
     def test_SE_id_match_ST_id(self):
         seg = None
@@ -182,7 +182,7 @@ class SE_Checks(unittest.TestCase):
         str += 'GE*1*17~\n'
         str += 'IEA*1*000010121~\n'
         self.fd = StringIO.StringIO(str)
-        src = x12file.x12file(self.fd, self.errh)
+        src = pyx12.x12file.x12file(self.fd, self.errh)
         for seg in src:
             pass
         self.assertEqual(self.errh.err_cde, '3', self.errh.err_str)
@@ -196,7 +196,7 @@ class SE_Checks(unittest.TestCase):
         str += 'GE*1*17~\n'
         str += 'IEA*1*000010121~\n'
         self.fd = StringIO.StringIO(str)
-        src = x12file.x12file(self.fd, self.errh)
+        src = pyx12.x12file.x12file(self.fd, self.errh)
         for seg in src:
             pass
         self.assertEqual(self.errh.err_cde, '4', self.errh.err_str)
@@ -212,7 +212,7 @@ class SE_Checks(unittest.TestCase):
         str += 'GE*2*17~\n'
         str += 'IEA*1*000010121~\n'
         self.fd = StringIO.StringIO(str)
-        src = x12file.x12file(self.fd, self.errh)
+        src = pyx12.x12file.x12file(self.fd, self.errh)
         for seg in src:
             pass
         self.assertEqual(self.errh.err_cde, '23', self.errh.err_str)
@@ -223,7 +223,7 @@ class SE_Checks(unittest.TestCase):
 class HL_Checks(unittest.TestCase):
     def setUp(self):
         self.fd = None
-        self.errh = error_handler.errh_null()
+        self.errh = pyx12.error_handler.errh_null()
 
     def test_HL_increment_good(self):
         seg = None
@@ -238,7 +238,7 @@ class HL_Checks(unittest.TestCase):
         str += 'GE*1*17~\n'
         str += 'IEA*1*000010121~\n'
         self.fd = StringIO.StringIO(str)
-        src = x12file.x12file(self.fd, self.errh)
+        src = pyx12.x12file.x12file(self.fd, self.errh)
         for seg in src:
             pass
         self.assertEqual(self.errh.err_cde, None, self.errh.err_str)
@@ -256,7 +256,7 @@ class HL_Checks(unittest.TestCase):
         str += 'GE*1*17~\n'
         str += 'IEA*1*000010121~\n'
         self.fd = StringIO.StringIO(str)
-        src = x12file.x12file(self.fd, self.errh)
+        src = pyx12.x12file.x12file(self.fd, self.errh)
         for seg in src:
             pass
         self.assertEqual(self.errh.err_cde, 'HL1', self.errh.err_str)

@@ -1,16 +1,15 @@
 #! /usr/bin/env /usr/local/bin/python
 
-#import test_support
-#from test_support import TestFailed, have_unicode
+import os.path
 import unittest
 #import pdb
 
-import error_handler
+import pyx12.error_handler
 #from error_handler import ErrorErrhNull
-from errors import *
-from map_walker import walk_tree
-import map_if
-from params import params
+from pyx12.errors import *
+from pyx12.map_walker import walk_tree
+import pyx12.map_if
+from pyx12.params import params
 
 
 class Explicit_Loops(unittest.TestCase):
@@ -19,10 +18,10 @@ class Explicit_Loops(unittest.TestCase):
     """
     def setUp(self):
         self.walker = walk_tree()
-        #self.map = map_if.map_if('map/837.4010.X098.A1.xml')
         param = params()
-        self.map = map_if.load_map_file('map/837.4010.X098.A1.xml', param)
-        self.errh = error_handler.errh_null()
+        param.set_param('map_path', os.path.expanduser('~/src/pyx12/map/'))
+        self.map = pyx12.map_if.load_map_file('837.4010.X098.A1.xml', param)
+        self.errh = pyx12.error_handler.errh_null()
 
     def test_ISA_to_GS(self):
         node = self.map.getnodebypath('/ISA')
@@ -106,10 +105,10 @@ class Implicit_Loops(unittest.TestCase):
 
     def setUp(self):
         self.walker = walk_tree()
-        #self.map = map_if.map_if('map/837.4010.X098.A1.xml')
         param = params()
-        self.map = map_if.load_map_file('map/837.4010.X098.A1.xml', param)
-        self.errh = error_handler.errh_null()
+        param.set_param('map_path', os.path.expanduser('~/src/pyx12/map/'))
+        self.map = pyx12.map_if.load_map_file('837.4010.X098.A1.xml', param)
+        self.errh = pyx12.error_handler.errh_null()
 
     def test_ST_to_BHT(self):
         node = self.map.getnodebypath('/ST')
@@ -119,7 +118,8 @@ class Implicit_Loops(unittest.TestCase):
 
     def test_repeat_loop_with_one_segment(self):
         param = params()
-        map = map_if.load_map_file('map/841.4010.XXXC.xml', param)
+        param.set_param('map_path', os.path.expanduser('~/src/pyx12/map/'))
+        map = pyx12.map_if.load_map_file('841.4010.XXXC.xml', param)
         node = map.getnodebypath('/1000/2000/2100/SPI')
         seg = ['SPI', '00']
         node = self.walker.walk(node, seg, self.errh, 5, 4, None)
@@ -141,8 +141,9 @@ class SegmentWalk(unittest.TestCase):
     def setUp(self):
         self.walker = walk_tree()
         param = params()
-        self.map = map_if.load_map_file('map/837.4010.X098.A1.xml', param)
-        self.errh = error_handler.errh_null()
+        param.set_param('map_path', os.path.expanduser('~/src/pyx12/map/'))
+        self.map = pyx12.map_if.load_map_file('837.4010.X098.A1.xml', param)
+        self.errh = pyx12.error_handler.errh_null()
 
     def test_match_regular_segment(self):
         node = self.map.getnodebypath('/2000A/2010AB/NM1')
@@ -178,8 +179,9 @@ class Segment_ID_Checks(unittest.TestCase):
     def setUp(self):
         self.walker = walk_tree()
         param = params()
-        self.map = map_if.load_map_file('map/837.4010.X098.A1.xml', param)
-        self.errh = error_handler.errh_null()
+        param.set_param('map_path', os.path.expanduser('~/src/pyx12/map/'))
+        self.map = pyx12.map_if.load_map_file('837.4010.X098.A1.xml', param)
+        self.errh = pyx12.error_handler.errh_null()
         self.node = self.map.getnodebypath('/ST')
 
     def test_segment_id_short(self):
