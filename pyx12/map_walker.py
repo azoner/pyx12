@@ -154,19 +154,10 @@ class walk_tree:
                         #logger.debug('child_node id=%s' % (child.id))
                         if self._is_loop_match(child, seg_data, errh, \
                                 seg_count, cur_line, ls_id):
-                            child.reset_cur_count() # Set counts of children to zero
-                            child.incr_cur_count()
                             node_seg = self._goto_seg_match(child, seg_data, \
                                 errh, seg_count, cur_line, ls_id)
                             #node_seg = child.get_child_node_by_idx(0)
-                            node_seg.reset_cur_count()
-                            node_seg.incr_cur_count()
                             return node_seg
-                        #if child.get_child_node_by_idx(0).is_loop():
-                        #    node1 = self.walk(child.get_child_node_by_idx(0), \
-                        #        seg_data, errh, seg_count, cur_line, ls_id)
-                        #    if node1:
-                        #        return node1
             if node.is_map_root(): # If at root and we haven't found the segment yet.
                 self._seg_not_found(orig_node, seg_data, errh)
                 return None
@@ -284,6 +275,11 @@ class walk_tree:
         @type seg_data: L{segment<segment.segment>}
         @param errh: Error handler
         @type errh: L{error_handler.err_handler}
+        @param seg_count: Current segment count for ST loop
+        @type seg_count: int
+        @param cur_line: File line counter
+        @type cur_line: int
+        @type ls_id: string
 
         @return: The matching segment node
         @rtype: L{node<map_if.segment_if>}
@@ -299,7 +295,9 @@ class walk_tree:
             elif loop_node.usage in ('R', 'S'):
                 loop_node.reset_child_count()
                 loop_node.incr_cur_count()
+                #logger.debug('incr loop_node %s %i' % (loop_node.id, loop_node.cur_count))
                 first_child_node.incr_cur_count()
+                #logger.debug('incr first_child_node %s %i' % (first_child_node.id, first_child_node.cur_count))
                 if loop_node.get_cur_count() > loop_node.get_max_repeat():
                     err_str = "Loop %s exceeded max count.  Found %i, should have %i" \
                         % (loop_node.id, loop_node.get_cur_count(), loop_node.get_max_repeat())

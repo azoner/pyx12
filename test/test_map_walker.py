@@ -2,6 +2,7 @@
 
 #    $Id$
 
+import sys
 import os.path
 import unittest
 #import pdb
@@ -301,6 +302,7 @@ class Counting(unittest.TestCase):
         self.errh = pyx12.error_handler.errh_null()
         #self.node = self.map.getnodebypath('/ISA_LOOP/GS_LOOP/ST_LOOP/DETAIL/2000A/2000B/2100B/N4')
         self.node = self.map.getnodebypath('/ISA_LOOP/GS_LOOP/ST_LOOP/DETAIL/2000A/2000B/2100B/NM1')
+        self.node.parent.cur_count = 1 # Loop 2100B
         self.node.cur_count = 1
         self.node = self.map.getnodebypath('/ISA_LOOP/GS_LOOP/ST_LOOP/DETAIL/2000A/2000B/2100B/PER')
         self.assertNotEqual(self.node, None)
@@ -375,7 +377,8 @@ class CountOrdinal(unittest.TestCase):
         #self.node = self.map.getnodebypath('/ISA_LOOP/GS_LOOP/ST_LOOP/DETAIL/2000A/2000B/2100B/N4')
         self.node = self.map.getnodebypath('/ISA_LOOP/GS_LOOP/ST_LOOP/DETAIL/2000/INS')
         self.assertNotEqual(self.node, None)
-        self.node.cur_count = 1
+        self.node.parent.cur_count = 1 # Loop 2000
+        self.node.cur_count = 1 # INS
 
     def test_ord_ok1(self):
         node = self.node
@@ -426,15 +429,32 @@ class CountOrdinal(unittest.TestCase):
 
 
 
-def suite():
+def suite(args):
     suite = unittest.TestSuite()
-    suite.addTest(unittest.makeSuite(Explicit_Loops))
-    suite.addTest(unittest.makeSuite(Implicit_Loops))
-    suite.addTest(unittest.makeSuite(SegmentWalk))
-    suite.addTest(unittest.makeSuite(Segment_ID_Checks))
-    suite.addTest(unittest.makeSuite(Counting))
-    suite.addTest(unittest.makeSuite(LoopCounting))
-    suite.addTest(unittest.makeSuite(CountOrdinal))
+    if args:
+        for arg in args:
+            if arg == 'Explicit_Loops':
+                suite.addTest(unittest.makeSuite(Explicit_Loops))
+            elif arg == 'Implicit_Loops':
+                suite.addTest(unittest.makeSuite(Implicit_Loops))
+            elif arg == 'SegmentWalk':
+                suite.addTest(unittest.makeSuite(SegmentWalk))
+            elif arg == 'Segment_ID_Checks':
+                suite.addTest(unittest.makeSuite(Segment_ID_Checks))
+            elif arg == 'Counting':
+                suite.addTest(unittest.makeSuite(Counting))
+            elif arg == 'LoopCounting':
+                suite.addTest(unittest.makeSuite(LoopCounting))
+            elif arg == 'CountOrdinal':
+                suite.addTest(unittest.makeSuite(CountOrdinal))
+    else:
+        suite.addTest(unittest.makeSuite(Explicit_Loops))
+        suite.addTest(unittest.makeSuite(Implicit_Loops))
+        suite.addTest(unittest.makeSuite(SegmentWalk))
+        suite.addTest(unittest.makeSuite(Segment_ID_Checks))
+        suite.addTest(unittest.makeSuite(Counting))
+        suite.addTest(unittest.makeSuite(LoopCounting))
+        suite.addTest(unittest.makeSuite(CountOrdinal))
     return suite
 
 #if __name__ == "__main__":
@@ -444,5 +464,5 @@ try:
     psyco.full()
 except ImportError:
     pass
-unittest.TextTestRunner(verbosity=2).run(suite())
+unittest.TextTestRunner(verbosity=2).run(suite(sys.argv[1:]))
 
