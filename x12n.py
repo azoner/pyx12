@@ -228,10 +228,10 @@ class segment:
 	tab.decr()
 
     def xml(self):
-        sys.stdout.write('%s<segment code="%s">' % (tab.indent(),self.id))
+        sys.stdout.write('<segment code="%s">\n' % (self.id))
     	for elem in self.element_list:
 	    elem.xml()
-        sys.stdout.write('%s</segment>' % (tab.indent()))
+        sys.stdout.write('</segment>\n') # % (tab.indent()))
     
     def validate(self):
     	for elem in self.element_list:
@@ -272,7 +272,7 @@ class element:
 	tab.decr()
 
     def xml(self):
-	sys.stdout.write('%s<elem code="%s">%s</elem>' % (tab.indent(), self.refdes, self.x12_elem))
+	sys.stdout.write('<elem code="%s">%s</elem>\n' % (self.refdes, self.x12_elem))
     
     def validate(self):
 	if len(self.x12_elem) < int(self.min_len):
