@@ -43,7 +43,7 @@ import os, os.path
 import cPickle
 import libxml2
 import datetime 
-import pdb
+#import pdb
 from stat import ST_MTIME
 from stat import ST_SIZE
 
@@ -60,35 +60,25 @@ NodeType = {'element_start': 1, 'element_end': 15, 'attrib': 2, 'text': 3, \
 
 class ExternalCodes:
     """
-    Name:    ExternalCodes
-    Desc:    Validates an ID against an external list of codes
+    Validates an ID against an external list of codes
     """
 
     def __init__(self, base_path, exclude=None):
         """
-        Name:    __init__
-        Desc:    Initialize the external list of codes
-        Params:  
-                 exclude - comma separated string of external codes to ignore
+        Initialize the external list of codes
+        @param base_path: path to codes.xml
+        @type base_path: string
+        @param exclude: comma separated string of external codes to ignore
+        @type exclude: string
 
-        self.codes
-            <codeset>
-                <id>prov_taxonomy</id>
-                <name>Provider Taxonomy Code</name>
-                <data_ele>127</data_ele>
-                <version>
-                    <id>1.1</id>
-                    <eff_dte>20020101</eff_dte>
-                    <exp_dte>20050101</exp_dte>
-                    <code>101Y00000N</code>
-        self.codes = {id: (eff_dte, exp_dte, [code_values])}
-                    map of a tuple of two dates and a list of codes
+        @note: self.codes - map of a tuple of two dates and a list of codes 
+        {codeset_id: (eff_dte, exp_dte, [code_values])}
         """
         
         self.codes = {} 
         code_file = base_path + '/codes.xml'
         pickle_file = '%s.%s' % (os.path.splitext(code_file)[0], 'pkl')
-        id = None
+        #id1 = None
         codeset_id = None
         base_name = None
         
@@ -131,7 +121,6 @@ class ExternalCodes:
                         if reader.Name() == 'codeset':
                             self.codes[codeset_id] = (eff_dte, exp_dte, code_list)
                             #del code_list
-                            #id = None
 #                       if reader.Depth() <= base_level:
 #                           ret = reader.Read()
 #                            if ret == -1:
@@ -144,7 +133,7 @@ class ExternalCodes:
                         if cur_name == 'id':
                             if base_name == 'codeset':
                                 codeset_id = reader.Value()
-                            id = reader.Value()
+                            #id1 = reader.Value()
                         elif cur_name == 'code':
                             code_list.append(reader.Value())
                         elif cur_name == 'eff_dte':
@@ -167,12 +156,15 @@ class ExternalCodes:
 
     def IsValid(self, key, code, check_dte=None):
         """
-        Name:    IsValid
-        Desc:    Initialize the external list of codes
-        Params:  key - the external codeset identifier
-                 code - code to be verified
-                 check_dte - YYYYMMDD - Date on which to check code validity. eg 20040514
-        Returns: True if code is valid, False if not
+        Is the code in the list idenified by key
+        @param key: the external codeset identifier
+        @type key: string
+        @param code: code to be verified
+        @type code: string
+        @param check_dte: YYYYMMDD - Date on which to check code validity. eg 20040514
+        @type check_dte: string
+        @return: True if code is valid, False if not
+        @rtype: boolean
         """
 
         #if not given a key, do not flag an error

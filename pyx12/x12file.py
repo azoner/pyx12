@@ -1,38 +1,14 @@
-#    $Id$
-#    This file is part of the pyX12 project.
+######################################################################
+# Copyright (c) 2001-2004 Kalamazoo Community Mental Health Services,
+#   John Holland <jholland@kazoocmh.org> <john@zoner.org>
+# All rights reserved.
 #
-#    Copyright (c) 2001-2004 Kalamazoo Community Mental Health Services,
-#                John Holland <jholland@kazoocmh.org> <john@zoner.org>
+# This software is licensed as described in the file LICENSE.txt, which
+# you should have received as part of this distribution.  
 #
-#    All rights reserved.
-#
-#        Redistribution and use in source and binary forms, with or without
-#        modification, are permitted provided that the following conditions are
-#        met:
-#
-#        1. Redistributions of source code must retain the above copyright
-#        notice, this list of conditions and the following disclaimer. 
-#        
-#        2. Redistributions in binary form must reproduce the above copyright
-#        notice, this list of conditions and the following disclaimer in the
-#        documentation and/or other materials provided with the distribution. 
-#        
-#        3. The name of the author may not be used to endorse or promote
-#        products derived from this software without specific prior written
-#        permission. 
-#
-#        THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR
-#        IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
-#        WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-#        DISCLAIMED. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT,
-#        INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
-#        (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
-#        SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
-#        HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
-#        STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING
-#        IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
-#        POSSIBILITY OF SUCH DAMAGE.
+######################################################################
 
+#    $Id$
 
 """
 Interface to an X12 data file.
@@ -41,12 +17,9 @@ Tracks end of explicit loops.
 Tracks segment/line/loop counts.
 """
 
-#import logging
-#import os
 import sys
 import string
 from types import *
-#from utils import seg_str
 import logging
 import pdb
 
@@ -289,32 +262,52 @@ class x12file:
 #        return (isa_id, gs_id, st_id, ls_id, self.seg_count, self.cur_line)
 
     def get_isa_id(self): 
+        """
+        @rtype: string
+        """
         isa_id = None
         for loop in self.loops:
             if loop[0] == 'ISA': isa_id = loop[1]
         return isa_id
 
     def get_gs_id(self): 
+        """
+        @rtype: string
+        """
         gs_id = None
         for loop in self.loops:
             if loop[0] == 'GS': gs_id = loop[1]
         return gs_id
 
     def get_st_id(self): 
+        """
+        @rtype: string
+        """
         st_id = None
         for loop in self.loops:
             if loop[0] == 'ST': st_id = loop[1]
         return st_id
 
     def get_ls_id(self): 
+        """
+        @rtype: string
+        """
         ls_id = None
         for loop in self.loops:
             if loop[0] == 'LS': ls_id = loop[1]
         return ls_id
 
-    def get_seg_count(self): return self.seg_count
+    def get_seg_count(self): 
+        """
+        @rtype: int
+        """
+        return self.seg_count
 
-    def get_cur_line(self): return self.cur_line
+    def get_cur_line(self):
+        """
+        @rtype: int
+        """
+        return self.cur_line
 
     def get_term(self):
         return (self.seg_term, self.ele_term, self.subele_term, '\n')
@@ -325,7 +318,7 @@ class x12file:
 
         @param seg: Segment object
         @type seg: pyx12.segment
-        @return: string
+        @rtype: string
         """
         return '%s' % (self.seg_str(seg, self.seg_term, self.ele_term, self.subele_term, eol))
 
