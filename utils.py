@@ -195,9 +195,10 @@ def GetExplicitLoops(lines, start_tag, end_tag, start_idx, end_idx):
     control_num = lines[loop_idx][start_idx]
     while loop_idx < len(lines):
         for i in xrange(loop_idx+1, len(lines)):
+	    #print 'i=', i, start_tag, end_tag, lines[i]
             if lines[i][0] == end_tag and control_num == lines[i][end_idx]:
 	        # found correct end tag
-	        for j in xrange(loop_idx+1, i-1):
+	        for j in xrange(loop_idx+1, i):
                     if lines[j][0] == start_tag:
         	        raise errors.WEDI1Error, 'A %s(%s) segment was found within another %s loop' % (start_tag, 
 		    	    control_num, start_tag)
@@ -205,8 +206,10 @@ def GetExplicitLoops(lines, start_tag, end_tag, start_idx, end_idx):
         	        raise errors.WEDI1Error, 'A %s(%s) segment was found within another %s loop' % (end_tag, 
 		    	    control_num, start_tag)
                 loops.append(lines[loop_idx:i+1])
-	        loop_idx = i
+		#print 'loop_idx ', loop_idx, i+1
+	        loop_idx = i + 1
 		break
+	loop_idx = len(lines)
     if lines[-1][0] != end_tag:
         raise errors.WEDI1Error, 'Last segment should be %s, is "%s"' % (end_tag, lines[-1][0])
     return loops
@@ -222,8 +225,10 @@ def GetHLLoops(lines):
     loop_idx = 0
     if lines[loop_idx][0] != 'HL':
         raise errors.WEDI1Error, 'This segment should be a HL, is %s' % (lines[loop_idx][0])
-    for i in xrange(loop_idx+1, len(lines)):
+    #for i in xrange(loop_idx+1, len(lines)):
+    for i in xrange(1, len(lines)):
         if lines[i][0] == 'HL': 
             loops.append(lines[loop_idx:i])
             loop_idx = i
+    loops.append(lines[loop_idx:i])
     return loops

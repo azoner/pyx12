@@ -108,6 +108,8 @@ class x12n_document:
 
 	# Loop through GS segments
 	for loop in GetExplicitLoops(lines[:-1], 'GS', 'GE', 6, 2):
+	    print loop[0]
+	    print loop[-1]
 	    gs = GS_loop(self, loop)
 
 	iea_seg.xml()
@@ -155,12 +157,12 @@ class GS_loop:
 
 	# Get map for this GS loop
 	#print "--load whole dom"
-	self.dom_map = xml.dom.minidom.parse('map/' + self.map_file)
+	#self.dom_map = xml.dom.minidom.parse('map/' + self.map_file)
 	#print "--end load whole dom"
 
 	# Loop through ST segments
-	for loop in GetExplicitLoops(gs[1:-1], 'ST', 'SE', 2, 2):
-	    st = ST_loop(self, isa, loop)
+	#for loop in GetExplicitLoops(gs[1:-1], 'ST', 'SE', 2, 2):
+	#    st = ST_loop(self, isa, loop)
 	
 	ge_seg.xml()
 	dom_gs.unlink()
@@ -187,9 +189,12 @@ class ST_loop:
 	bht_seg.validate()
 	bht_seg.xml()
 
+	# ST Loop handles the Hierarchy of HL Loops under it
+	transaction_node = gs.dom_map.getElementsByTagName("transaction")
+
 	# Loop through HL delimited Loops
-	for loop in GetHLLoops(st[2:-1]):
-	    hl = HL_loop(self, loop)
+	#for loop in GetHLLoops(st[2:-1]):
+	#    hl = HL_loop(self, transaction_node, loop)
 
 	se_seg = segment(se_seg_node, st[-1:][0])
 	se_seg.validate()
@@ -200,19 +205,27 @@ class HL_loop:
     """
     Takes a dom node of the loop and the parsed segment lines as a list
     """
-    def __init__(self, st, loop):
+    def __init__(self, st, parent_node, loop):
         """
         Name:    __init__
         Desc:    Handles the parsing of loop started by HL segments 
-        Params:  node - dom node of the loop
+        Params:  st - parent class
+		 parent_node - dom node containing the loop
 		 loop - parsed segment lines as a list
         Returns: 
         """
-	seg_nodes = st.st_seg_node.getElementsByTagName("segment")
+	seg_nodes = parent_node.getElementsByTagName("loop")
 	for seg_node in seg_nodes:
-	    if GetChildElementText(seg_node, 'id') == 'ST':
-	    	st_seg_node = seg_node
+	    if GetChildElementText(seg_node, 'id') == 'HL':
+	    	hl_seg_node = seg_node
+
+	print loop[0]
     
+	#hl_seg = segment(hl_seg_node, loop[0])
+	#hl_seg.validate()
+	#hl_seg.xml()
+
+
 class segment:
     """
     Takes a dom node of the segment and the parsed segment line as a list
