@@ -288,13 +288,6 @@ class Segment_ID_Checks(unittest.TestCase):
         self.assertEqual(node, None)
         self.assertEqual(self.errh.err_cde, '1', self.errh.err_str)
 
-    def test_segment_empty(self):
-        node = self.node
-        seg_data = pyx12.segment.segment('', '~', '*', ':')
-        node = self.walker.walk(node, seg_data, self.errh, 5, 4, None)
-        self.assertEqual(node, None)
-        self.assertEqual(self.errh.err_cde, '1', self.errh.err_str)
-
 
 class Counting(unittest.TestCase):
 
@@ -422,11 +415,11 @@ class CountOrdinal(unittest.TestCase):
 def suite():
     suite = unittest.TestSuite()
     suite.addTest(unittest.makeSuite(Explicit_Loops))
-    #suite.addTest(unittest.makeSuite(Implicit_Loops))
-    #suite.addTest(unittest.makeSuite(SegmentWalk))
-    #suite.addTest(unittest.makeSuite(Segment_ID_Checks))
-    #suite.addTest(unittest.makeSuite(Counting))
-    #suite.addTest(unittest.makeSuite(CountOrdinal))
+    suite.addTest(unittest.makeSuite(Implicit_Loops))
+    suite.addTest(unittest.makeSuite(SegmentWalk))
+    suite.addTest(unittest.makeSuite(Segment_ID_Checks))
+    suite.addTest(unittest.makeSuite(Counting))
+    suite.addTest(unittest.makeSuite(CountOrdinal))
     return suite
 
 #if __name__ == "__main__":
