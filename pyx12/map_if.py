@@ -74,8 +74,8 @@ class x12_node:
         self.children = []
         self.path = ''
 
-    def __del__(self):
-        pass
+#    def __del__(self):
+#        pass
 
     def __rept__(self):
         return self.name
@@ -276,6 +276,9 @@ class map_if(x12_node):
             pass
 
         del self.reader
+
+    #def __del__(self):
+    #    print 'Map root de-cronstructor'
                 
     def debug_print(self):
         sys.stdout.write(self.__repr__())
@@ -972,8 +975,8 @@ class element_if(x12_node):
         out += '\n'
         return out
    
-    def __del__(self):
-        pass
+#    def __del__(self):
+#        pass
 
     def __error__(self, errh, err_str, err_cde, elem_val):
         """

@@ -207,6 +207,7 @@ class error_997_visitor(error_visitor.error_visitor):
         self._write(pyx12.segment.segment('ST*997*%04i' % \
             (self.st_control_num), '~', '*', ':'))
         self.seg_count = 0
+        self.seg_count = 1
         self.st_loop_count += 1
 
         #AK1

@@ -143,8 +143,9 @@ def main():
                         sys.stdout.write(': OK')
                     sys.stdout.write('\n')
                 except IOError:
-                    sys.stderr.write('Error: Could not open files\n')
-                    sys.exit(2)
+                    sys.stderr.write('Error: Could not open files (%s)\n' % (name))
+                    continue
+                    #sys.exit(2)
                 except KeyboardInterrupt:
                     print "\n[interrupt]"
 

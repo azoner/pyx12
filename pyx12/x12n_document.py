@@ -217,6 +217,7 @@ def x12n_document(param, src_file, fd_997, fd_html, fd_xmldoc=None):
 
     if fd_html:
         html.footer()
+        del html
 
     if fd_xmldoc:
         del xmldoc
@@ -231,11 +232,19 @@ def x12n_document(param, src_file, fd_997, fd_html, fd_xmldoc=None):
         if fd_997:
             visit_997 = error_997.error_997_visitor(fd_997, src.get_term())
             errh.accept(visit_997)
+            del visit_997
+    del node
+    del src
+    del control_map
+    del map
     try:
         if errh.get_error_count() > 0:
+            del errh
             return False
         else:
+            del errh
             return True
     except:
         print errh
+        del errh
         return False

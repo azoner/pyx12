@@ -148,8 +148,8 @@ class error_html:
                     self.fd.write('<span class="error">&nbsp;%s (Segment Error Code: %s)</span><br>\n' % \
                         (err_str, err_cde))
 
-        self.fd.write('<span class="seg">%i: %s</span><br>\n' % \
-            (cur_line, self._seg_str(t_seg)))
+        self.fd.write('<span class="seg">%i:&nbsp;%s</span><br>\n' % \
+            (cur_line, self._seg_str(seg_data.get_seg_id(), t_seg)))
         for err_node in err_node_list:
             for err_tuple in err_node.get_error_list(seg_data.get_seg_id(), False):
             #for err_tuple in err_node.errors:
@@ -164,14 +164,14 @@ class error_html:
                     self.fd.write('<span class="error">&nbsp;%s (Element Error Code: %s)</span><br>\n' % \
                         (err_str, err_cde))
         
-    def _seg_str(self, seg):
+    def _seg_str(self, seg_id, ele_list):
         """
         Class:      error_html
         Name:       _seg_str
         Desc:    
-        Params:     seg - list of formatted elements
+        Params:     ele_list - list of formatted elements
         """
-        return seg_str(seg, self.seg_term, self.ele_term, \
+        return seg_id + self.ele_term + seg_str(ele_list, self.seg_term, self.ele_term, \
             self.subele_term, self.eol)
         
     def _wrap_ele_error(self, str):

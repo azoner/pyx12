@@ -43,7 +43,7 @@ import os, os.path
 import sys
 import logging
 from types import *
-import pdb
+#import pdb
 import tempfile
 
 # Intrapackage imports
@@ -158,6 +158,10 @@ def main():
                     sys.stderr.write('%s: Failure\n' % (src_filename))
             fd_997.seek(0)
             open(target_997, 'w').write(fd_997.read())
+            if fd_997:
+                fd_997.close()
+            if fd_html:
+                fd_html.close()
         except IOError:
             logger.error('Could not open files')
             usage()
