@@ -248,27 +248,25 @@ class x12file:
         
     def cleanup(self):
         """
-        At EOF, check for missing end segments
+        At EOF, check for missing loop trailers
         """
         if self.loops:
-            self.loops.reverse()
             for (seg, id1) in self.loops: 
-                if self.loops[-1][0] == 'ST':
+                if seg == 'ST':
                     err_str = 'ST id=%s was not closed with a SE' % (id1)
                     self.errh.st_error('3', err_str)
                     self.errh.close_st_loop(None, None, self)
-                elif self.loops[-1][0] == 'GS':
+                elif seg == 'GS':
                     err_str = 'GS id=%s was not closed with a GE' % (id1)
                     self.errh.gs_error('3', err_str)
                     self.errh.close_gs_loop(None, None, self)
-                elif self.loops[-1][0] == 'ISA':
+                elif seg == 'ISA':
                     err_str = 'ISA id=%s was not closed with a IEA' % (id1)
                     self.errh.isa_error('023', err_str)
                     self.errh.close_isa_loop(None, None, self)
                 #elif self.loops[-1][0] == 'LS':
                 #    err_str = 'LS id=%s was not closed with a LE' % (id1, self.loops[-1][1])
                 #    self.errh.ls_error('3', err_str)
-            self.loops.reverse()
         
     def get_isa_id(self): 
         """
