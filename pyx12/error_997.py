@@ -89,7 +89,8 @@ class error_997_visitor(error_visitor.error_visitor):
         #now = time.localtime()
         seg = errh.cur_isa_node.seg
         #ISA*00*          *00*          *ZZ*ENCOUNTER      *ZZ*00GR           *030425*1501*U*00401*000065350*0*T*:~
-        isa_seg = [seg[0],seg[3],seg[4],seg[1],seg[2],seg[7],seg[8],seg[5],seg[6]]
+        isa_seg = ['ISA','00','          ','00','          ']
+        isa_seg.extend([seg[7],seg[8],seg[5],seg[6]])
         isa_seg.append(time.strftime('%y%m%d')) # Date
         isa_seg.append(time.strftime('%H%M')) # Time
         isa_seg.extend([seg[11],seg[12]])
