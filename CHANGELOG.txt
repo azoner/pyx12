@@ -1,3 +1,5 @@
+Restore mandatory_segs_missing caching
+
 Validate Not Used composites and elements
 
 Validate length of D8 and D6 datatypes.

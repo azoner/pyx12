@@ -234,6 +234,7 @@ class SegmentWalk(unittest.TestCase):
         node = map.getnodebypath('/TST')
         self.assertNotEqual(node, None)
         self.assertEqual(node.base_name, 'segment')
+        node.cur_count = 1
         seg_data = pyx12.segment.segment('UNU*AA*B~', '~', '*', ':')
         node = self.walker.walk(node, seg_data, self.errh, 5, 4, None)
         #result = node.is_valid(comp, self.errh)
@@ -298,7 +299,6 @@ class Counting(unittest.TestCase):
         node.cur_count = 1
         node = self.walker.walk(node, seg_data, self.errh, 5, 4, None)
         self.assertNotEqual(node, None)
-        #self.assertEqual(self.errh.err_cde, '5', self.errh.err_str)
         self.assertEqual(self.errh.err_cde, None, self.errh.err_str)
 
     def test_count_ok2(self):
@@ -307,7 +307,6 @@ class Counting(unittest.TestCase):
         node.cur_count = 2 
         node = self.walker.walk(node, seg_data, self.errh, 5, 4, None)
         self.assertNotEqual(node, None)
-        #self.assertEqual(self.errh.err_cde, '5', self.errh.err_str)
         self.assertEqual(self.errh.err_cde, None, self.errh.err_str)
 
     def test_count_fail1(self):
@@ -315,6 +314,8 @@ class Counting(unittest.TestCase):
         seg_data = pyx12.segment.segment('PER*IC*Name1*EM*dev@null.com~', '~', '*', ':')
         self.assertNotEqual(node, None)
         node.cur_count = 3 
+        self.errh.err_cde = None
+        self.errh.err_str = None
         node = self.walker.walk(node, seg_data, self.errh, 5, 4, None)
         self.assertEqual(self.errh.err_cde, '5', self.errh.err_str)
 
