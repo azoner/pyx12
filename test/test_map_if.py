@@ -1,6 +1,6 @@
 #! /usr/bin/env /usr/local/bin/python
 
-import os, os.path
+import os, os.path, sys
 import string
 import unittest
 #import pdb
@@ -10,6 +10,71 @@ from pyx12.errors import *
 import pyx12.map_if
 from pyx12.params import params
 import pyx12.segment
+
+class ElementIsValidDate(unittest.TestCase):
+    """
+    """
+    def setUp(self):
+        param = params()
+        param.set('map_path', os.path.expanduser('~/src/pyx12/map/'))
+        param.set('pickle_path', os.path.expanduser('~/src/pyx12/map/'))
+        self.map = pyx12.map_if.load_map_file('837.4010.X096.A1.xml', param)
+        self.node = self.map.getnodebypath('/ISA_LOOP/GS_LOOP/ST_LOOP/DETAIL/2000A/2000B/2300')
+        # 1 096 TM, 2 434 RD8 & D8
+        self.errh = pyx12.error_handler.errh_null()
+
+    def test_date_bad1(self):
+        self.errh.err_cde = None
+        seg_data = pyx12.segment.segment('DTP*434*D8*20041340~', '~', '*', ':')
+        node = self.node.get_child_node_by_idx(2) 
+        result = node.is_valid(seg_data, self.errh)
+        self.failIf(result)
+        self.assertEqual(self.errh.err_cde, '8')
+
+    def test_date_ok1(self):
+        self.errh.err_cde = None
+        seg_data = pyx12.segment.segment('DTP*434*D8*20040110~', '~', '*', ':')
+        node = self.node.get_child_node_by_idx(2) 
+        result = node.is_valid(seg_data, self.errh)
+        self.failUnless(result, '%s should be valid' % (seg_data.format()))
+        self.assertEqual(self.errh.err_cde, None)
+
+    def test_time_bad1(self):
+        self.errh.err_cde = None
+        seg_data = pyx12.segment.segment('DTP*096*TM*2577~', '~', '*', ':')
+        node = self.node.get_child_node_by_idx(1) 
+        result = node.is_valid(seg_data, self.errh)
+        self.failIf(result)
+        self.assertEqual(self.errh.err_cde, '9')
+
+    def test_time_ok1(self):
+        self.errh.err_cde = None
+        seg_data = pyx12.segment.segment('DTP*096*TM*1215~', '~', '*', ':')
+        node = self.node.get_child_node_by_idx(1) 
+        result = node.is_valid(seg_data, self.errh)
+        self.failUnless(result)
+        self.assertEqual(self.errh.err_cde, None)
+
+
+class SegmentIsValid(unittest.TestCase):
+    """
+    """
+    def setUp(self):
+        param = params()
+        param.set('map_path', os.path.expanduser('~/src/pyx12/map/'))
+        param.set('pickle_path', os.path.expanduser('~/src/pyx12/map/'))
+        self.map = pyx12.map_if.load_map_file('837.4010.X096.A1.xml', param)
+        self.node = self.map.getnodebypath('/ISA_LOOP/GS_LOOP/ST_LOOP/DETAIL/2000A/2000B/2300')
+        self.errh = pyx12.error_handler.errh_null()
+
+    def test_segment_length(self):
+        self.errh.err_cde = None
+        seg_data = pyx12.segment.segment('DTP*434*D8*20040101*R~', '~', '*', ':')
+        node = self.node.get_child_node_by_idx(2) 
+        result = node.is_valid(seg_data, self.errh)
+        self.failIf(result)
+        self.assertEqual(self.errh.err_cde, '3', self.errh.err_str)
+
 
 class Element_is_valid(unittest.TestCase):
     """
@@ -467,16 +532,24 @@ class ElementRequirement(unittest.TestCase):
         self.assertEqual(self.errh.err_cde, None)
 
 
-def suite():
+def suite(args):
     #suite = unittest.makeSuite((Test_getnodebypath, IsValidSyntax, \
     #    IsValidSyntaxP, IsValidSyntaxR, IsValidSyntaxC, \
     #    IsValidSyntaxE, IsValidSyntaxL))
     suite = unittest.TestSuite()
+    #names = set(args).intersection(set(dir()))
+    #print names
+    #if names:
+    #    for test in names:
+    #        suite.addTest(unittest.makeSuite(Test_getnodebypath))
+    #else:
     suite.addTest(unittest.makeSuite(Test_getnodebypath))
     suite.addTest(unittest.makeSuite(TrailingSpaces))
     suite.addTest(unittest.makeSuite(CompositeRequirement))
     suite.addTest(unittest.makeSuite(ElementRequirement))
     suite.addTest(unittest.makeSuite(Element_is_valid))
+    suite.addTest(unittest.makeSuite(ElementIsValidDate))
+    suite.addTest(unittest.makeSuite(SegmentIsValid))
     return suite
                 
 #if __name__ == "__main__":
@@ -486,4 +559,4 @@ try:
     psyco.full()
 except ImportError:
     pass
-unittest.TextTestRunner(verbosity=2).run(suite())
+unittest.TextTestRunner(verbosity=2).run(suite(sys.argv[1:]))

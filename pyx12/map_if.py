@@ -327,7 +327,6 @@ class map_if(x12_node):
 
     def next(self):
         #if self.cur_iter_node.id == 'GS06':
-        #pdb.set_trace()
         if self.cur_iter_node.id == 'IEA':
             raise StopIteration
         #first, get first child
@@ -765,7 +764,6 @@ class segment_if(x12_node):
                 and len(self.children[0].valid_codes) > 0 \
                 and seg[0].get_value() not in self.children[0].valid_codes:
                 #logger.debug('is_match: %s %s' % (seg.get_seg_id(), seg[1]), self.children[0].valid_codes)
-                #pdb.set_trace()
                 return False
             elif self.children[0].is_composite() \
                 and self.children[0].children[0].data_type == 'ID' \
@@ -795,15 +793,16 @@ class segment_if(x12_node):
         valid = True
         child_count = self.get_child_count()
         if len(seg_data) > child_count:
-            child_node = self.get_child_node_by_idx(child_count+1)
+            #child_node = self.get_child_node_by_idx(child_count+1)
             err_str = 'Too many elements in segment "%s" (%s). Has %i, should have %i' % \
                 (self.name, seg_data.get_seg_id(), len(seg_data), child_count)
             #self.logger.error(err_str)
-            err_value = seg_data[child_count+1].format()
+            err_value = seg_data[child_count].format()
             errh.ele_error('3', err_str, err_value)
             valid = False
 
-        for i in xrange(len(seg_data)):
+        type = None
+        for i in xrange(min(len(seg_data), child_count)):
             #self.logger.debug('i=%i, len(seg_data)=%i / child_count=%i' % \
             #   (i, len(seg_data), self.get_child_count()))
             child_node = self.get_child_node_by_idx(i)
@@ -820,8 +819,15 @@ class segment_if(x12_node):
                 valid &= child_node.is_valid(comp_data, errh, self.check_dte)
             elif child_node.is_element():
                 # Validate Element
-                valid &= child_node.is_valid(seg_data[i][0], errh, self.check_dte)
-        for i in xrange(len(seg_data), self.get_child_count()):
+                if i == 1 and seg_data.get_seg_id() == 'DTP' \
+                        and seg_data[1].format() in ('RD8', 'D8', 'D6', 'DT', 'TM'):
+                    type = seg_data[1].format()
+                if i == 2 and seg_data.get_seg_id() == 'DTP':
+                    valid &= child_node.is_valid(seg_data[i][0], errh, self.check_dte, type)
+                else:
+                    valid &= child_node.is_valid(seg_data[i][0], errh, self.check_dte)
+
+        for i in xrange(min(len(seg_data), child_count), child_count):
             #missing required elements?
             child_node = self.get_child_node_by_idx(i)
             valid &= child_node.is_valid(None, errh)
@@ -829,7 +835,6 @@ class segment_if(x12_node):
         for syn in self.syntax:
             (bResult, err_str) = is_syntax_valid(seg_data, syn)
             if not bResult:
-                #pdb.set_trace()
                 errh.ele_error('2', err_str, None)
                 valid &= False
 
@@ -1121,8 +1126,8 @@ class element_if(x12_node):
             
         if not self._is_valid_code(elem_val, errh, check_dte):
             valid = False
-        if not IsValidDataType(elem_val, type, self.root.param.get('charset')):
-            if _type == in ('DT', 'D8', 'D6'):
+        if not IsValidDataType(elem_val, self.data_type, self.root.param.get('charset')):
+            if self.data_type in ('RD8', 'DT', 'D8', 'D6'):
                 err_str = 'Data element "%s" (%s) contains an invalid date (%s)' % \
                     (self.name, self.refdes, elem_val)
                 self._error(errh, err_str, '8', elem_val)
@@ -1136,6 +1141,17 @@ class element_if(x12_node):
                 err_str = 'Data element "%s" (%s) is type %s, contains an invalid character(%s)' % \
                     (self.name, self.refdes, self.data_type, elem_val)
                 self._error(errh, err_str, '6', elem_val)
+                valid = False
+        if not IsValidDataType(elem_val, type, self.root.param.get('charset')):
+            if type in ('RD8', 'DT', 'D8', 'D6'):
+                err_str = 'Data element "%s" (%s) contains an invalid date (%s)' % \
+                    (self.name, self.refdes, elem_val)
+                self._error(errh, err_str, '8', elem_val)
+                valid = False
+            elif type == 'TM':
+                err_str = 'Data element "%s" (%s) contains an invalid time (%s)' % \
+                    (self.name, self.refdes, elem_val)
+                self._error(errh, err_str, '9', elem_val)
                 valid = False
         return valid
 
@@ -1294,7 +1310,7 @@ class composite_if(x12_node):
             sub_elem.xml()
         sys.stdout.write('</composite>\n')
 
-    def is_valid(self, comp_data, errh, check_dte=None, type=None):
+    def is_valid(self, comp_data, errh, check_dte=None):
         """
         Validates the composite
         @param comp_data: data composite instance, has multiple values
@@ -1325,7 +1341,6 @@ class composite_if(x12_node):
         #try:
         #    a = len(comp_data)
         #except:
-        #    pdb.set_trace()
         if len(comp_data) > self.get_child_count():
             err_str = 'Too many sub-elements in composite "%s" (%s)' % (self.name, self.refdes)
             errh.ele_error('3', err_str, None)
@@ -1390,7 +1405,6 @@ def load_map_file(map_file, param):
             raise errors.EngineError, 'Load of map file failed: %s%s' % \
                 (param.get('map_path'), map_file)
         #try:
-            #pdb.set_trace()
         #    cPickle.dump(map, open(pickle_file,'w'))
         #except:
         #    logger.debug('Pickle of map %s failed' % (map_file))
@@ -1419,7 +1433,6 @@ def is_syntax_valid(seg_data, syn):
     syn_idx = [int(s) for s in syn[1:]]
 
     if syn_code == 'P':
-        #pdb.set_trace()
         count = 0
         for s in syn_idx:
             if len(seg_data) >= s and seg_data[s-1].get_value() != '':
@@ -1471,7 +1484,6 @@ def is_syntax_valid(seg_data, syn):
         else:
             return (True, None)
     elif syn_code == 'L':
-        #pdb.set_trace()
         if len(seg_data) > syn_idx[0]-1 and seg_data[syn_idx[0]-1].get_value() != '':
             count = 0
             for s in syn_idx[1:]:
@@ -1614,7 +1626,10 @@ def IsValidDataType(str_val, data_type, charset = 'B'):
                 elif len(str_val) > 8:
                     # print 'unhandled decimal seconds encountered'
                     raise IsValidError 
-        elif data_type == 'B': pass
+        elif data_type == 'B':
+            pass
+        else:
+            raise IsValidError, 'Unknown data type %s' % data_type
     except IsValidError:
         return False
     #    else:  
