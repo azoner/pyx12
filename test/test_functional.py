@@ -150,14 +150,16 @@ def main():
                     #fd_997.close()
 
                     diff_txt = diff(fd_orig.name, fd_new.name)
-                    if diff:
-                        sys.stdout.write('\n' + ('=' * 10))
-                        sys.stdout.write(' Checking: %s\n' % (os.path.basename(src_filename)))
+                    sys.stdout.write('%s ... ' % (os.path.basename(src_filename)))
+                    if diff_txt:
+                        print diff_txt
+                        sys.stdout.write('FAIL\n')
                         for line in diff_txt.splitlines(True):
                             if '/tmp/' not in line:
                                 sys.stdout.write(line)
+                        sys.stdout.write('\n')
                     else:
-                        sys.stdout.write(': OK')
+                        sys.stdout.write('ok')
                     sys.stdout.write('\n')
                 except IOError:
                     sys.stderr.write('Error: Could not open files (%s)\n' % (name))
