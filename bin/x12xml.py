@@ -62,7 +62,7 @@ def main():
     """Script main program."""
     import getopt
     try:
-        opts, args = getopt.getopt(sys.argv[1:], 'c:fl:m:o:p:qs:vx:Hh')
+        opts, args = getopt.getopt(sys.argv[1:], 'c:fl:m:o:p:qs:vx:X:Hh')
     except getopt.error, msg:
         usage()
         raise
@@ -77,6 +77,7 @@ def main():
     logger.addHandler(stderr_hdlr)
     logger.setLevel(logging.INFO)
     target_xml = None
+    configfile = None
     for o, a in opts:
         if o == '-c':
             configfile = a
@@ -96,6 +97,7 @@ def main():
         if o == '-v': logger.setLevel(logging.DEBUG)
         if o == '-q': logger.setLevel(logging.ERROR)
         if o == '-x': param.set('exclude_external_codes', a)
+        if o == '-X': param.set('xmlout', a)
         if o == '-f': param.set('force_map_load', True)
         if o == '-m': param.set('map_path', a)
         if o == '-o': target_xml = a
@@ -130,9 +132,9 @@ def main():
         result = pyx12.x12n_document.x12n_document(param, src_filename, None, None, fd_xml)
         fd_xml.close()
         if not result:
-            logger.error('File %s had errors.  XML file was not created.' \
-                % (src_filename))
-            os.remove(target_xml)
+            logger.error('File %s had errors.' % (src_filename))
+            #if target_xml:
+            #    os.remove(target_xml)
             return False
     except KeyboardInterrupt:
         print "\n[interrupt]"
@@ -143,7 +145,7 @@ def main():
 if __name__ == '__main__':
     try:
         import psyco
-        psyco.full()
+        #psyco.full()
     except ImportError:
         pass
 

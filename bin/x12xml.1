@@ -1,0 +1,64 @@
+.\" Process this file with
+.\" groff -man -Tascii x12xml.1
+.\"
+.TH X12XML 1 "DECEMBER 2004" FreeBSD "User Manuals"
+.SH NAME
+x12xml \- Convert a HIPAA X12 document to XML
+.SH SYNOPSIS
+.B x12xml [options]
+.I files
+.B ...
+.SH DESCRIPTION
+.B x12xml
+Validate a HIPAA X12 document.  Generate a 997 response.
+.SH OPTIONS
+.IP -c <file>
+XML configuration file
+.IP -d
+Debug Mode.  Implies verbose output.
+.IP -f
+Force map load.  Do not use the map pickle file.
+.IP -H
+Create HTML output file
+.IP -l <file>
+Output log
+.IP -m <path>
+Path to map files
+.IP -m <path>
+Path to pickle files
+.IP -P
+Run a profiler
+.IP -q
+Quiet output
+.IP -s <b|e>
+Specify X12 character set: b=basic, e=extended
+.IP -v
+Verbose output
+.IP -x <tag>
+Exclude external code from code checks
+.IP -X <simple|idtag>
+XML output style
+.SH FILES
+.I /etc/x12xml.conf
+.RS
+The system wide configuration file. See
+.BR x12xml (5)
+for further details.
+.RE
+.I ~/.x12xmlrc
+.RS
+Per user configuration file. See
+.BR x12conf (5)
+for further details.
+.IR pyx12.conf.xml .
+Overridden by the
+.B -c
+option.
+.SH BUGS
+
+.SH AUTHOR
+John Holland <john at zoner dot org>
+.SH "SEE ALSO"
+.BR x12xml(1),
+.BR pyx12conf (5),
+.BR x12norm (1)
