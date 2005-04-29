@@ -35,8 +35,10 @@ class Explicit_Loops(unittest.TestCase):
 
     def test_ISA_to_GS(self):
         node = self.map.getnodebypath('/ISA_LOOP/ISA')
+        self.assertNotEqual(node, None, 'node not found')
         seg_data = pyx12.segment.segment('GS*HC', '~', '*', ':')
         node = self.walker.walk(node, seg_data, self.errh, 5, 4, None)
+        self.assertNotEqual(node, None, 'walker failed')
         self.assertEqual(seg_data.get_seg_id(), node.id)
 
     def test_GS_to_ST(self):

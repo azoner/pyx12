@@ -77,23 +77,24 @@ class x12xml_simple(x12xml):
         self.writer.push(u"seg", {u'id': seg_node.id})
         for i in range(len(seg_data)):
             child_node = seg_node.get_child_node_by_idx(i)
-            if child_node.usage == 'N' or seg_data[i].is_empty():
+            if child_node.usage == 'N' or seg_data.get('%02i' % (i+1)).is_empty():
                 pass # Do not try to ouput for invalid or empty elements
             elif child_node.is_composite():
                 self.writer.push(u"comp", {u'id': seg_node.id})
-                comp_data = seg_data[i]
+                comp_data = seg_data.get('%02i' % (i+1))
                 for j in range(len(comp_data)):
                     subele_node = child_node.get_child_node_by_idx(j)
                     self.writer.elem(u'subele', comp_data[j].get_value(), \
                         attrs={u'id': subele_node.id})
                 self.writer.pop() #end composite
             elif child_node.is_element():
-                if seg_data[i] == '':
+                if seg_data.get('%02i' % (i+1)) == '':
                     pass
                     #self.writer.empty(u"ele", attrs={u'id': child_node.id})
                 else:
                     #pdb.set_trace()
-                    self.writer.elem(u'ele', seg_data[i].format(), attrs={u'id': child_node.id})
+                    self.writer.elem(u'ele', seg_data.get('%02i' % (i+1)).format(), 
+                        attrs={u'id': child_node.id})
             else:
                 raise EngineError, 'Node must be a either an element or a composite'
         self.writer.pop() #end segment

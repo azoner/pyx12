@@ -21,10 +21,10 @@ class ArbitraryDelimiters(unittest.TestCase):
         self.assertEqual(len(self.seg), 3)
 
     def test_getitem3(self):
-        self.assertEqual(self.seg.get('TST03'), 'ZZ')
+        self.assertEqual(self.seg.get_value('TST03'), 'ZZ')
                     
     def test_getitem1(self):
-        self.assertEqual(self.seg.get('TST01'), 'AA!1!1')
+        self.assertEqual(self.seg.get_value('TST01'), 'AA!1!1')
                     
     def test_other_terms(self):
         self.assertEqual(self.seg.format('~', '*', ':'), 'TST*AA:1:1*BB:5*ZZ~')
@@ -78,12 +78,12 @@ class Composite(unittest.TestCase):
         self.failIf(self.seg.is_element('TST01'))
         
     def test_composite_len(self):
-        self.assertEqual(len(self.seg[0]), 3)
+        self.assertEqual(len(self.seg.get('01')), 3)
 
     def test_composite_indexing(self):
-        self.assertEqual(self.seg.get('TST01-1'), 'AA')
-        self.assertEqual(self.seg.get('TST01-3'), 'Y')
-        self.assertEqual(self.seg.get('TST01-4'), None)
+        self.assertEqual(self.seg.get_value('TST01-1'), 'AA')
+        self.assertEqual(self.seg.get_value('TST01-3'), 'Y')
+        self.assertEqual(self.seg.get_value('TST01-4'), None)
         #self.failUnlessRaises(IndexError, lambda x: self.seg.get('TST01-%i' % (x)), 4)
 
 
@@ -98,14 +98,14 @@ class Simple(unittest.TestCase):
         self.failIf(self.seg.is_composite('TST01'))
         
     def test_simple_len(self):
-        self.assertEqual(len(self.seg[0]), 1)
+        self.assertEqual(len(self.seg.get('01')), 1)
 
     def test_simple_indexing(self):
-        self.assertEqual(self.seg.get('TST01'), 'AA')
-        self.assertEqual(self.seg.get('TST02'), '1')
-        self.assertEqual(self.seg.get('TST03'), 'Y')
-        self.assertEqual(self.seg.get('TST05'), 'ZZ')
-        self.assertEqual(self.seg.get('TST06'), None)
+        self.assertEqual(self.seg.get_value('TST01'), 'AA')
+        self.assertEqual(self.seg.get_value('TST02'), '1')
+        self.assertEqual(self.seg.get_value('TST03'), 'Y')
+        self.assertEqual(self.seg.get_value('TST05'), 'ZZ')
+        self.assertEqual(self.seg.get_value('TST06'), None)
         #self.failUnlessRaises(IndexError, lambda x: self.seg[0][x].get_value(), 1)
 
 
@@ -116,37 +116,37 @@ class RefDes(unittest.TestCase):
         self.seg = pyx12.segment.segment(seg_str, '~', '*', ':')
 
     def test_simple1(self):
-        self.assertEqual(self.seg.get('TST01'), 'AA')
-        self.assertEqual(self.seg.get('01'), 'AA')
+        self.assertEqual(self.seg.get_value('TST01'), 'AA')
+        self.assertEqual(self.seg.get_value('01'), 'AA')
 
     def test_fail_seg_id(self):
-        self.failUnlessRaises(EngineError, self.seg.get, 'XXX01')
+        self.failUnlessRaises(EngineError, self.seg.get_value, 'XXX01')
 
     def test_simple2(self):
-        self.assertEqual(self.seg.get('TST02'), '1')
-        self.assertEqual(self.seg.get('02'), '1')
+        self.assertEqual(self.seg.get_value('TST02'), '1')
+        self.assertEqual(self.seg.get_value('02'), '1')
 
     def test_composite1(self):
-        self.assertEqual(self.seg.get('TST04-2'), '5')
-        self.assertEqual(self.seg.get('04-2'), '5')
+        self.assertEqual(self.seg.get_value('TST04-2'), '5')
+        self.assertEqual(self.seg.get_value('04-2'), '5')
 
     def test_composite2(self):
-        self.assertEqual(self.seg.get('TST04-1'), 'BB')
-        self.assertEqual(self.seg.get('04-1'), 'BB')
+        self.assertEqual(self.seg.get_value('TST04-1'), 'BB')
+        self.assertEqual(self.seg.get_value('04-1'), 'BB')
 
     def test_composite3(self):
-        self.assertEqual(self.seg.get('TST04'), 'BB:5')
-        self.assertEqual(self.seg.get('04'), 'BB:5')
+        self.assertEqual(self.seg.get_value('TST04'), 'BB:5')
+        self.assertEqual(self.seg.get_value('04'), 'BB:5')
 
     def test_get_value_by_ref_des(self):
-        self.assertEqual(self.seg.get_value_by_ref_des('TST02'), '1')
-        self.assertEqual(self.seg.get_value_by_ref_des('02'), '1')
+        self.assertEqual(self.seg.get_value('TST02'), '1')
+        self.assertEqual(self.seg.get_value('02'), '1')
 
     def test_none(self):
-        self.assertEqual(self.seg.get('TST15'), None)
-        self.assertEqual(self.seg.get('15'), None)
-        self.assertEqual(self.seg.get('TST15-2'), None)
-        self.assertEqual(self.seg.get('15-2'), None)
+        self.assertEqual(self.seg.get_value('TST15'), None)
+        self.assertEqual(self.seg.get_value('15'), None)
+        self.assertEqual(self.seg.get_value('TST15-2'), None)
+        self.assertEqual(self.seg.get_value('15-2'), None)
 
 
 class IsEmpty(unittest.TestCase):
@@ -199,16 +199,16 @@ class Indexing(unittest.TestCase):
         self.seg = pyx12.segment.segment(seg_str, '~', '*', ':')
 
     def test_index_simple_1(self):
-        self.assertEqual(self.seg.get('TST01'), 'AA')
+        self.assertEqual(self.seg.get_value('TST01'), 'AA')
 
     def test_index_simple_2(self):
-        self.assertEqual(self.seg.get('TST01-1'), 'AA')
+        self.assertEqual(self.seg.get_value('TST01-1'), 'AA')
 
     def test_index_composite_1(self):
-        self.assertEqual(self.seg.get('TST04-1'), 'BB')
+        self.assertEqual(self.seg.get_value('TST04-1'), 'BB')
 
     def test_index_composite_2(self):
-        self.assertEqual(self.seg.get('TST04-2'), '5')
+        self.assertEqual(self.seg.get_value('TST04-2'), '5')
                     
 
 class IsValidSegID(unittest.TestCase):

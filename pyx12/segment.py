@@ -210,16 +210,16 @@ class segment:
         """
         return self.format(self.seg_term, self.ele_term, self.subele_term)
     
-    def __getitem__(self, idx):
-        """
-        returns element instance
-        """
-        return self.elements[idx]
+#    def __getitem__(self, idx):
+#        """
+#        returns element instance
+#        """
+#        return self.elements[idx]
 
-    def __setitem__(self, idx, val):
-        """
-        """
-        self.elements[idx] = composite(val, self.subele_term)
+#    def __setitem__(self, idx, val):
+#        """
+#        """
+#        self.elements[idx] = composite(val, self.subele_term)
 
     def append(self, val):
         self.elements.append(composite(val, self.subele_term))
@@ -273,26 +273,37 @@ class segment:
         """
         @param ref_des: X12 Reference Designator
         @type ref_des: string
-        @return: Formatted element or composite
-        @rtype: string
+        @return: Element or Composite
+        @rtype: L{segment.composite}
         """
         (ele_idx, comp_idx) = self._parse_refdes(ref_des)
         if ele_idx >= self.__len__():
             return None
         if comp_idx is None:
-            return self.elements[ele_idx].format()
+            return self.elements[ele_idx]
         else:
             if comp_idx >= self.elements[ele_idx].__len__():
                 return None
-            return self.elements[ele_idx][comp_idx].get_value()
+            return self.elements[ele_idx][comp_idx]
     
+    def get_value(self, ref_des):
+        """
+        @param ref_des: X12 Reference Designator
+        @type ref_des: string
+        """
+        comp1 = self.get(ref_des)
+        if comp1 is None:
+            return None
+        else:
+            return comp1.format()
+        
     def get_value_by_ref_des(self, ref_des):
         """
         @param ref_des: X12 Reference Designator
         @type ref_des: string
-        @attention: Deprecated - use get instead
+        @attention: Deprecated - use get_value
         """
-        return self.get(ref_des)
+        return self.get(ref_des).format()
         
     def set(self, ref_des, val):
         """

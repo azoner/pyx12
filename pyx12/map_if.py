@@ -700,25 +700,6 @@ class segment_if(x12_node):
         out += '\n'
         return out
 
-#    def get_elemval_by_id(self, seg_data, id):
-#        """
-#        Return the value of an element or sub-element identified by the id
-#        @param seg_data: data segment instance to search
-#        @param id: string 
-#        @return: value of the element
-#        @rtype: string
-#        """
-#        for child in self.children:
-#            if child.is_element():
-#                if child.id == id:
-#                    return seg_data[child.pos].get_value()
-#            elif child.is_composite():
-#                for child in self.children:
-#                    if child.is_element():
-#                        if child.id == id:
-#                            return seg_data[child.pos]
-#        return None
-
     def get_max_repeat(self):
         if self.max_use is None or self.max_use == '>1':
             return MAXINT
@@ -810,7 +791,7 @@ class segment_if(x12_node):
             err_str = 'Too many elements in segment "%s" (%s). Has %i, should have %i' % \
                 (self.name, seg_data.get_seg_id(), len(seg_data), child_count)
             #self.logger.error(err_str)
-            err_value = seg_data[child_count].format()
+            err_value = seg_data.get('%02i' % (child_count+1)).format()
             errh.ele_error('3', err_str, err_value)
             valid = False
 
@@ -822,29 +803,30 @@ class segment_if(x12_node):
             child_node = self.get_child_node_by_idx(i)
             if child_node.is_composite():
                 # Validate composite
-                ref_des = '%02i' % (i)
-                comp_data = seg_data[i]
+                ref_des = '%02i' % (i+1)
+                comp_data = seg_data.get(ref_des)
                 subele_count = child_node.get_child_count()
                 if seg_data.ele_len(ref_des) > subele_count and child_node.usage != 'N':
                     subele_node = child_node.get_child_node_by_idx(subele_count+1)
                     err_str = 'Too many sub-elements in composite "%s" (%s)' % \
                         (subele_node.name, subele_node.refdes)
-                    err_value = seg_data.get(ref_des)
+                    err_value = seg_data.get(ref_des).format()
                     errh.ele_error('3', err_str, err_value)
                 valid &= child_node.is_valid(comp_data, errh, self.check_dte)
             elif child_node.is_element():
                 # Validate Element
                 if i == 1 and seg_data.get_seg_id() == 'DTP' \
-                        and seg_data[1].format() in ('RD8', 'D8', 'D6', 'DT', 'TM'):
-                    dtype = [seg_data[1].format()]
+                        and seg_data.get('02').format() in ('RD8', 'D8', 'D6', 'DT', 'TM'):
+                    dtype = [seg_data.get('02').format()]
                 if child_node.data_ele == '1250':
                     type_list.extend(child_node.valid_codes)
+                ele_data = seg_data.get('%02i' % (i+1))
                 if i == 2 and seg_data.get_seg_id() == 'DTP':
-                    valid &= child_node.is_valid(seg_data[i][0], errh, self.check_dte, dtype)
+                    valid &= child_node.is_valid(ele_data, errh, self.check_dte, dtype)
                 elif child_node.data_ele == '1251' and len(type_list) > 0:
-                    valid &= child_node.is_valid(seg_data[i][0], errh, self.check_dte, type_list)
+                    valid &= child_node.is_valid(ele_data, errh, self.check_dte, type_list)
                 else:
-                    valid &= child_node.is_valid(seg_data[i][0], errh, self.check_dte)
+                    valid &= child_node.is_valid(ele_data, errh, self.check_dte)
 
         for i in xrange(min(len(seg_data), child_count), child_count):
             #missing required elements?
@@ -1464,7 +1446,7 @@ def is_syntax_valid(seg_data, syn):
     if syn_code == 'P':
         count = 0
         for s in syn_idx:
-            if len(seg_data) >= s and seg_data[s-1].get_value() != '':
+            if len(seg_data) >= s and seg_data.get('%02i' % (s)).format() != '':
                 count += 1
         if count != 0 and count != len(syn_idx):
             err_str = 'Syntax Error (%s): If any of %s is present, then all are required'\
@@ -1475,7 +1457,7 @@ def is_syntax_valid(seg_data, syn):
     elif syn_code == 'R':
         count = 0
         for s in syn_idx:
-            if len(seg_data) >= s and seg_data[s-1].get_value() != '':
+            if len(seg_data) >= s and seg_data.get('%02i' % (s)).format() != '':
                 count += 1
         if count == 0:
             err_str = 'Syntax Error (%s): At least one element is required' % \
@@ -1486,7 +1468,7 @@ def is_syntax_valid(seg_data, syn):
     elif syn_code == 'E':
         count = 0
         for s in syn_idx:
-            if len(seg_data) >= s and seg_data[s-1].get_value() != '':
+            if len(seg_data) >= s and seg_data.get('%02i' % (s)).format() != '':
                 count += 1
         if count > 1:
             err_str = 'Syntax Error (%s): At most one of %s may be present'\
@@ -1496,10 +1478,10 @@ def is_syntax_valid(seg_data, syn):
             return (True, None)
     elif syn_code == 'C':
         # If the first is present, then all others are required
-        if len(seg_data) >= syn_idx[0] and seg_data[syn_idx[0]-1].get_value() != '':
+        if len(seg_data) >= syn_idx[0] and seg_data.get('%02i' % (syn_idx[0])).format() != '':
             count = 0
             for s in syn_idx[1:]:
-                if len(seg_data) >= s and seg_data[s-1].get_value() != '':
+                if len(seg_data) >= s and seg_data.get('%02i' % (s)).format() != '':
                     count += 1
             if count != len(syn_idx)-1:
                 if len(syn_idx[1:]) > 1: verb = 'are'

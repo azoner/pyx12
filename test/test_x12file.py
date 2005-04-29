@@ -421,7 +421,7 @@ class Segment_ID_Checks(unittest.TestCase):
         src = pyx12.x12file.x12file(fd.name, errh)
         for seg in src:
             if seg.get_seg_id() == 'ZZ':
-                val = seg[0].format()
+                val = seg.get('ZZ01').format()
         self.assertEqual(val, '0019 ')
 
     def test_segment_id_long(self):

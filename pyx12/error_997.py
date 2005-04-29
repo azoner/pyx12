@@ -65,30 +65,22 @@ class error_997_visitor(error_visitor.error_visitor):
         #now = time.localtime()
         seg = errh.cur_isa_node.seg_data
         #ISA*00*          *00*          *ZZ*ENCOUNTER      *ZZ*00GR           *030425*1501*U*00401*000065350*0*T*:~
-        #isa_seg = ['ISA','00','          ','00','          ']
-        #isa_seg.extend([seg[7],seg[8],seg[5],seg[6]])
-        #isa_seg.append(time.strftime('%y%m%d')) # Date
-        #isa_seg.append(time.strftime('%H%M')) # Time
-        #isa_seg.extend([seg[11],seg[12]])
         self.isa_control_num = ('%s%s'%(time.strftime('%y%m%d'), time.strftime('%H%M')))[1:]
-        #isa_seg.append(self.isa_control_num) # ISA Interchange Control Number
-        #isa_seg.extend([seg[14],seg[15]])
-        #isa_seg.append(self.subele_term)
 
         #logger.info('\n'+seg.format())
         #pdb.set_trace()
         isa_seg = pyx12.segment.segment('ISA*00*          *00*          ', '~', '*', ':')
-        isa_seg.append(seg[6].get_value())
-        isa_seg.append(seg[7].get_value())
-        isa_seg.append(seg[4].get_value())
-        isa_seg.append(seg[5].get_value())
+        isa_seg.append(seg.get('ISA07').format())
+        isa_seg.append(seg.get('ISA08').format())
+        isa_seg.append(seg.get('ISA05').format())
+        isa_seg.append(seg.get('ISA06').format())
         isa_seg.append(time.strftime('%y%m%d')) # Date
         isa_seg.append(time.strftime('%H%M')) # Time
-        isa_seg.append(seg[10].get_value())
-        isa_seg.append(seg[11].get_value())
+        isa_seg.append(seg.get('ISA11').format())
+        isa_seg.append(seg.get('ISA12').format())
         isa_seg.append(self.isa_control_num) # ISA Interchange Control Number
-        isa_seg.append(seg[13].get_value())
-        isa_seg.append(seg[14].get_value())
+        isa_seg.append(seg.get('ISA14').format())
+        isa_seg.append(seg.get('ISA15').format())
         isa_seg.append(self.subele_term)
         self._write(isa_seg)
         self.isa_seg = isa_seg
@@ -98,20 +90,16 @@ class error_997_visitor(error_visitor.error_visitor):
         seg = errh.cur_gs_node.seg_data
         gs_seg = pyx12.segment.segment('GS', '~', '*', ':')
         gs_seg.append('FA')
-        gs_seg.append(seg[2].get_value().rstrip())
-        gs_seg.append(seg[1].get_value().rstrip())
+        gs_seg.append(seg.get('GS03').format().rstrip())
+        gs_seg.append(seg.get('GS02').format().rstrip())
         gs_seg.append(time.strftime('%Y%m%d'))
         gs_seg.append(time.strftime('%H%M%S'))
-        gs_seg.append(seg[5].get_value())
-        gs_seg.append(seg[6].get_value())
+        gs_seg.append(seg.get('GS06').format())
+        gs_seg.append(seg.get('GS07').format())
         gs_seg.append('004010')
-        #gs_str = '%s*%s*%s*%s' % (seg.get_seg_id(), 'FA', seg[2].get_value(), seg[1].get_value()) 
-        #gs_str += '*%s*%s' % (time.strftime('%Y%m%d'), time.strftime('%H%M%S'))
-        #gs_str += '*%s*%s*%s' % (seg[5].get_value(), seg[6].get_value(), '004010')
-        #gs_str += '~'
         self._write(gs_seg)
         self.gs_seg = gs_seg
-        self.gs_id = seg[5].get_value()
+        self.gs_id = seg.get('GS06').format()
         #self.gs_997_count = 0
         self.st_loop_count = 0
         self.gs_loop_count += 1
@@ -122,8 +110,7 @@ class error_997_visitor(error_visitor.error_visitor):
         @type errh: L{error_handler.err_handler}
         """
         self._write(pyx12.segment.segment('GE*%i*%s' % (self.st_loop_count, \
-            self.gs_seg[5].get_value()), '~', '*', ':'))
-        #self._write(['GE', '%i' % self.st_loop_count, self.gs_seg[6]])
+            self.gs_seg.get('GS06').format()), '~', '*', ':'))
         self.gs_loop_count = 1
 
         #pdb.set_trace()
@@ -149,7 +136,6 @@ class error_997_visitor(error_visitor.error_visitor):
         
         self._write(pyx12.segment.segment('IEA*%i*%s' % \
             (self.gs_loop_count, self.isa_control_num), '~', '*', ':'))
-        #self._write(['IEA', '%i' % self.gs_loop_count, self.isa_control_num]) # isa_seg[13]])
         
     def visit_isa_pre(self, err_isa):
         """
