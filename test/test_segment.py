@@ -156,10 +156,6 @@ class RefDes(unittest.TestCase):
         self.assertEqual(self.seg.get_value('TST04'), 'BB:5')
         self.assertEqual(self.seg.get_value('04'), 'BB:5')
 
-    def test_get_value_by_ref_des(self):
-        self.assertEqual(self.seg.get_value('TST02'), '1')
-        self.assertEqual(self.seg.get_value('02'), '1')
-
     def test_none(self):
         self.assertEqual(self.seg.get_value('TST15'), None)
         self.assertEqual(self.seg.get_value('15'), None)
