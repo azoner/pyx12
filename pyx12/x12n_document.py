@@ -19,13 +19,13 @@ Create XML, HTML, and 997 documents based on the data file.
 #import time
 import os, os.path
 #import stat
-import sys
+#import sys
 import logging
 #import string
 from types import *
 #import StringIO
 #import tempfile
-import pdb
+#import pdb
 #import profile
 
 # Intrapackage imports
@@ -87,7 +87,7 @@ def x12n_document(param, src_file, fd_997, fd_html, fd_xmldoc=None):
             map_node.is_valid(seg, errh)
             #map_node = control_map
             #icvn = map_node.get_elemval_by_id(seg, 'ISA12')
-            icvn = seg.get_value_by_ref_des('ISA12').format()
+            icvn = seg.get_value('ISA12')
         elif seg.get_seg_id() == 'GS':
             #map_node = walker.walk(map_node, seg)
             map_node = control_map.getnodebypath('/ISA_LOOP/GS_LOOP/GS')
@@ -95,8 +95,8 @@ def x12n_document(param, src_file, fd_997, fd_html, fd_xmldoc=None):
             map_node.is_valid(seg, errh)
             #fic = map_node.get_elemval_by_id(seg, 'GS01')
             #vriic = map_node.get_elemval_by_id(seg, 'GS08')
-            fic = seg.get_value_by_ref_des('GS01').format()
-            vriic = seg.get_value_by_ref_des('GS08').format()
+            fic = seg.get_value('GS01')
+            vriic = seg.get_value('GS08')
             
             #Get map for this GS loop
             #logger.debug('icvn=%s fic=%s vriic=%s' % (icvn, fic, vriic))
@@ -159,8 +159,8 @@ def x12n_document(param, src_file, fd_997, fd_html, fd_xmldoc=None):
             elif seg.get_seg_id() == 'GS':
                 #fic = map_node.get_elemval_by_id(seg, 'GS01')
                 #vriic = map_node.get_elemval_by_id(seg, 'GS08')
-                fic = seg.get_value_by_ref_des('GS01').format()
-                vriic = seg.get_value_by_ref_des('GS08').format()
+                fic = seg.get_value('GS01')
+                vriic = seg.get_value('GS08')
                 #map_node = control_map.getnodebypath('/GS')
                 #map_node.is_valid(seg, errh)
                 map_file_new = map_index_if.get_filename(icvn, vriic, fic)

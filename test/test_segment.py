@@ -109,6 +109,24 @@ class Simple(unittest.TestCase):
         #self.failUnlessRaises(IndexError, lambda x: self.seg[0][x].get_value(), 1)
 
 
+class GetValue(unittest.TestCase):
+
+    def setUp(self):
+        seg_str = 'TST*AA*1*Y*BB:5*ZZ'
+        self.seg = pyx12.segment.segment(seg_str, '~', '*', ':')
+
+    def getElementValueOK(self):
+        self.assertEqual(self.seg.get_value('TST01'), self.seg.get('TST01').format())
+        self.assertEqual(self.seg.get_value('TST04'), self.seg.get('TST04').format())
+        self.assertEqual(self.seg.get_value('TST03'), self.seg.get('TST03').format())
+        self.assertEqual(self.seg.get_value('TST05'), self.seg.get('TST05').format())
+        self.assertEqual(self.seg.get_value('TST06'), self.seg.get('TST06').format())
+        
+    def getCompositeValueOK(self):
+        self.assertEqual(self.seg.get_value('TST04-1'), self.seg.get('TST04-1').format())
+        self.assertEqual(self.seg.get_value('TST04-2'), self.seg.get('TST04-2').format())
+
+
 class RefDes(unittest.TestCase):
 
     def setUp(self):

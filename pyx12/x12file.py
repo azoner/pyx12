@@ -134,7 +134,7 @@ class x12file:
                 if len(seg) != 16:
                     raise x12Error, 'The ISA segment must have 16 elements (%s)' % (seg)
                 #seg[-1] = self.subele_term
-                interchange_control_number = seg.get_value_by_ref_des('ISA13').format()
+                interchange_control_number = seg.get_value('ISA13')
                 if interchange_control_number in self.isa_ids:
                     err_str = 'ISA Interchange Control Number %s not unique within file' \
                         % (interchange_control_number)
@@ -143,24 +143,24 @@ class x12file:
                 self.isa_ids.append(interchange_control_number)
                 self.gs_count = 0
                 self.gs_ids = []
-                self.isa_usage = seg.get_value_by_ref_des('ISA15').format()
+                self.isa_usage = seg.get_value('ISA15')
             elif seg.get_seg_id() == 'IEA': 
                 if self.loops[-1][0] != 'ISA':
                     #pdb.set_trace()
                     err_str = 'Unterminated Loop %s' % (self.loops[-1][0])
                     self.errh.isa_error('024', err_str)
                     del self.loops[-1]
-                if self.loops[-1][1] != seg.get_value_by_ref_des('IEA02').format():
+                if self.loops[-1][1] != seg.get_value('IEA02'):
                     err_str = 'IEA id=%s does not match ISA id=%s' % \
-                        (seg.get_value_by_ref_des('IEA02').format(), self.loops[-1][1])
+                        (seg.get_value('IEA02'), self.loops[-1][1])
                     self.errh.isa_error('001', err_str)
-                if self._int(seg.get_value_by_ref_des('IEA01').format()) != self.gs_count:
+                if self._int(seg.get_value('IEA01')) != self.gs_count:
                     err_str = 'IEA count for IEA02=%s is wrong' % \
-                        (seg.get_value_by_ref_des('IEA02').format())
+                        (seg.get_value('IEA02'))
                     self.errh.isa_error('021', err_str)
                 del self.loops[-1]
             elif seg.get_seg_id() == 'GS': 
-                group_control_number = seg.get_value_by_ref_des('GS06').format()
+                group_control_number = seg.get_value('GS06')
                 if group_control_number in self.gs_ids:
                     err_str = 'GS Interchange Control Number %s not unique within file' \
                         % (group_control_number)
@@ -175,18 +175,18 @@ class x12file:
                     err_str = 'Unterminated segment %s' % (self.loops[-1][1])
                     self.errh.gs_error('3', err_str)
                     del self.loops[-1]
-                if self.loops[-1][1] != seg.get_value_by_ref_des('GE02').format():
+                if self.loops[-1][1] != seg.get_value('GE02'):
                     err_str = 'GE id=%s does not match GS id=%s' % \
-                        (seg.get_value_by_ref_des('GE02').format(), self.loops[-1][1])
+                        (seg.get_value('GE02'), self.loops[-1][1])
                     self.errh.gs_error('4', err_str)
-                if self._int(seg.get_value_by_ref_des('GE01').format()) != self.st_count:
+                if self._int(seg.get_value('GE01')) != self.st_count:
                     err_str = 'GE count of %s for GE02=%s is wrong. I count %i' \
-                        % (seg.get_value_by_ref_des('GE01').format(), \
-                        seg.get_value_by_ref_des('GE02').format(), self.st_count)
+                        % (seg.get_value('GE01'), \
+                        seg.get_value('GE02'), self.st_count)
                     self.errh.gs_error('5', err_str)
                 del self.loops[-1]
             elif seg.get_seg_id() == 'ST': 
-                transaction_control_number = seg.get_value_by_ref_des('ST02').format()
+                transaction_control_number = seg.get_value('ST02')
                 if transaction_control_number in self.st_ids:
                     err_str = 'ST Interchange Control Number %s not unique within file' \
                         % (transaction_control_number)
@@ -197,32 +197,32 @@ class x12file:
                 self.seg_count = 1 
                 self.hl_count = 0
             elif seg.get_seg_id() == 'SE': 
-                se_trn_control_num = seg.get_value_by_ref_des('SE02').format()
+                se_trn_control_num = seg.get_value('SE02')
                 if self.loops[-1][0] != 'ST' or self.loops[-1][1] != se_trn_control_num:
                     err_str = 'SE id=%s does not match ST id=%s' % (se_trn_control_num, self.loops[-1][1])
                     self.errh.st_error('3', err_str)
-                if self._int(seg.get_value_by_ref_des('SE01').format()) != self.seg_count + 1:
+                if self._int(seg.get_value('SE01')) != self.seg_count + 1:
                     err_str = 'SE count of %s for SE02=%s is wrong. I count %i' \
-                        % (seg.get_value_by_ref_des('SE01').format(), \
+                        % (seg.get_value('SE01'), \
                             se_trn_control_num, self.seg_count + 1)
                     self.errh.st_error('4', err_str)
                 del self.loops[-1]
             elif seg.get_seg_id() == 'LS': 
-                self.loops.append(('LS', seg.get_value_by_ref_des('LS06').format()))
+                self.loops.append(('LS', seg.get_value('LS06')))
             elif seg.get_seg_id() == 'LE': 
                 del self.loops[-1]
             elif seg.get_seg_id() == 'HL': 
                 self.seg_count += 1
                 self.hl_count += 1
-                hl_count = seg.get_value_by_ref_des('HL01').format()
+                hl_count = seg.get_value('HL01')
                 if self.hl_count != self._int(hl_count):
                     #raise x12Error, 'My HL count %i does not match your HL count %s' \
                     #    % (self.hl_count, seg[1])
                     err_str = 'My HL count %i does not match your HL count %s' \
                         % (self.hl_count, hl_count)
                     self.errh.seg_error('HL1', err_str)
-                if seg.get_value_by_ref_des('HL02').format() != '':
-                    hl_parent = self._int(seg.get_value_by_ref_des('HL02').format())
+                if seg.get_value('HL02') != '':
+                    hl_parent = self._int(seg.get_value('HL02'))
                     while self.hl_stack and hl_parent != self.hl_stack[-1]:
                         del self.hl_stack[-1]
                 self.hl_stack.append(self.hl_count)
