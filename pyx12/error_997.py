@@ -70,17 +70,17 @@ class error_997_visitor(error_visitor.error_visitor):
         #logger.info('\n'+seg.format())
         #pdb.set_trace()
         isa_seg = pyx12.segment.segment('ISA*00*          *00*          ', '~', '*', ':')
-        isa_seg.append(seg.get('ISA07').format())
-        isa_seg.append(seg.get('ISA08').format())
-        isa_seg.append(seg.get('ISA05').format())
-        isa_seg.append(seg.get('ISA06').format())
+        isa_seg.append(seg.get_value('ISA07'))
+        isa_seg.append(seg.get_value('ISA08'))
+        isa_seg.append(seg.get_value('ISA05'))
+        isa_seg.append(seg.get_value('ISA06'))
         isa_seg.append(time.strftime('%y%m%d')) # Date
         isa_seg.append(time.strftime('%H%M')) # Time
-        isa_seg.append(seg.get('ISA11').format())
-        isa_seg.append(seg.get('ISA12').format())
+        isa_seg.append(seg.get_value('ISA11'))
+        isa_seg.append(seg.get_value('ISA12'))
         isa_seg.append(self.isa_control_num) # ISA Interchange Control Number
-        isa_seg.append(seg.get('ISA14').format())
-        isa_seg.append(seg.get('ISA15').format())
+        isa_seg.append(seg.get_value('ISA14'))
+        isa_seg.append(seg.get_value('ISA15'))
         isa_seg.append(self.subele_term)
         self._write(isa_seg)
         self.isa_seg = isa_seg
@@ -90,16 +90,16 @@ class error_997_visitor(error_visitor.error_visitor):
         seg = errh.cur_gs_node.seg_data
         gs_seg = pyx12.segment.segment('GS', '~', '*', ':')
         gs_seg.append('FA')
-        gs_seg.append(seg.get('GS03').format().rstrip())
-        gs_seg.append(seg.get('GS02').format().rstrip())
+        gs_seg.append(seg.get_value('GS03').rstrip())
+        gs_seg.append(seg.get_value('GS02').rstrip())
         gs_seg.append(time.strftime('%Y%m%d'))
         gs_seg.append(time.strftime('%H%M%S'))
-        gs_seg.append(seg.get('GS06').format())
-        gs_seg.append(seg.get('GS07').format())
+        gs_seg.append(seg.get_value('GS06'))
+        gs_seg.append(seg.get_value('GS07'))
         gs_seg.append('004010')
         self._write(gs_seg)
         self.gs_seg = gs_seg
-        self.gs_id = seg.get('GS06').format()
+        self.gs_id = seg.get_value('GS06')
         #self.gs_997_count = 0
         self.st_loop_count = 0
         self.gs_loop_count += 1
@@ -110,7 +110,7 @@ class error_997_visitor(error_visitor.error_visitor):
         @type errh: L{error_handler.err_handler}
         """
         self._write(pyx12.segment.segment('GE*%i*%s' % (self.st_loop_count, \
-            self.gs_seg.get('GS06').format()), '~', '*', ':'))
+            self.gs_seg.get_value('GS06')), '~', '*', ':'))
         self.gs_loop_count = 1
 
         #pdb.set_trace()

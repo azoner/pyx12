@@ -93,7 +93,7 @@ class x12xml_simple(x12xml):
                     #self.writer.empty(u"ele", attrs={u'id': child_node.id})
                 else:
                     #pdb.set_trace()
-                    self.writer.elem(u'ele', seg_data.get('%02i' % (i+1)).format(), 
+                    self.writer.elem(u'ele', seg_data.get_value('%02i' % (i+1)), 
                         attrs={u'id': child_node.id})
             else:
                 raise EngineError, 'Node must be a either an element or a composite'

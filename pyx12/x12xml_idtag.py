@@ -86,12 +86,12 @@ class x12xml_idtag(x12xml):
                     self.writer.elem(subele_node.id, comp_data[j].get_value())
                 self.writer.pop() #end composite
             elif child_node.is_element():
-                if seg_data.get('%02i' % (i+1)).format() == '':
+                if seg_data.get_value('%02i' % (i+1)) == '':
                     pass
                     #self.writer.empty(child_node.id)
                 else:
                     self.writer.elem(child_node.id, 
-                        seg_data.get('%02i' % (i+1)).format())
+                        seg_data.get_value('%02i' % (i+1)))
             else:
                 raise EngineError, 'Node must be a either an element or a composite'
         self.writer.pop() #end segment

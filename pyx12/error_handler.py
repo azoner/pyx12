@@ -501,10 +501,10 @@ class err_isa(err_node):
         self.cur_line_isa = src.get_cur_line()
         self.cur_line_iea = None
         
-        self.isa_trn_set_id = seg_data.get('ISA13').format()
-        self.ta1_req = seg_data.get('ISA14').format()
-        self.orig_date = seg_data.get('ISA09').format()
-        self.orig_time = seg_data.get('ISA10').format()
+        self.isa_trn_set_id = seg_data.get_value('ISA13')
+        self.ta1_req = seg_data.get_value('ISA14')
+        self.orig_date = seg_data.get_value('ISA09')
+        self.orig_time = seg_data.get_value('ISA10')
         self.id = 'ISA'
 
         self.parent = parent
@@ -607,7 +607,7 @@ class err_gs(err_node):
         self.cur_line_gs = src.get_cur_line()
         self.cur_line_ge = None
         self.gs_control_num = src.get_gs_id()
-        self.fic = self.seg_data.get('GS01').format()
+        self.fic = self.seg_data.get_value('GS01')
         self.id = 'GS'
         
         self.st_loops = []
@@ -652,7 +652,7 @@ class err_gs(err_node):
         if seg_data is None:
             self.st_count_orig = 0
         else:
-            self.st_count_orig = int(seg_data.get('GS01').format()) # AK902
+            self.st_count_orig = int(seg_data.get_value('GE01')) # AK902
         self.st_count_recv = src.st_count # AK903
         #self.st_count_accept = self.st_count_recv - len(self.children) # AK904
 
@@ -750,7 +750,7 @@ class err_st(err_node):
         self.trn_set_control_num = src.get_st_id()
         self.cur_line_st = src.get_cur_line()
         self.cur_line_se = None
-        self.trn_set_id = seg_data.get('ST01').format()
+        self.trn_set_id = seg_data.get_value('ST01')
         self.id = 'ST'
         
         self.ack_code = 'R'

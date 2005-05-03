@@ -192,7 +192,7 @@ class walk_tree:
         if seg_data.get_seg_id() == 'HL':
             seg_str = seg_data.format('', '*', ':')
         else:
-            seg_str = '%s*%s' % (seg_data.get_seg_id(), seg_data.get('01').format())
+            seg_str = '%s*%s' % (seg_data.get_seg_id(), seg_data.get_value('01'))
         err_str = 'Segment %s not found.  Started at %s' % (seg_str, orig_node.get_path()) 
         errh.add_seg(orig_node, seg_data, seg_count, cur_line, ls_id)
         errh.seg_error('1', err_str, None)
