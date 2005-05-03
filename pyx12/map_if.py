@@ -173,7 +173,8 @@ class map_if(x12_node):
         #codes = codes.ExternalCodes()
         #tab = Indent()
         x12_node.__init__(self)
-        self.children = []
+        self.children = None
+        self.pos_map = {}
         index = 0
         cur_name = ''
         self.cur_path = '/transaction'
@@ -220,13 +221,23 @@ class map_if(x12_node):
                         self.base_name = 'transaction'
                         pass
                     elif cur_name == 'segment':
-                        self.children.append(segment_if(self, self, index))
+                        seg_node = segment_if(self, self, index)
+                        try:
+                            self.pos_map[seg_node.pos].append(seg_node)
+                        except KeyError:
+                            self.pos_map[seg_node.pos] = [seg_node]
+                        #self.children.append(segment_if(self, self, index))
                         #if len(self.children) > 1:
                         #    self.children[-1].prev_node = self.children[-2]
                         #    self.children[-2].next_node = self.children[-1]
                         index += 1
                     elif cur_name == 'loop':
-                        self.children.append(loop_if(self, self, index))
+                        loop_node = loop_if(self, self, index)
+                        try:
+                            self.pos_map[loop_node.pos].append(loop_node)
+                        except KeyError:
+                            self.pos_map[loop_node.pos] = [loop_node]
+                        #self.children.append(loop_if(self, self, index))
                         #if len(self.children) > 1:
                         #    self.children[-1].prev_node = self.children[-2]
                         #    self.children[-2].next_node = self.children[-1]
@@ -274,8 +285,18 @@ class map_if(x12_node):
                 
     def debug_print(self):
         sys.stdout.write(self.__repr__())
-        for node in self.children:
-            node.debug_print()
+        for ord in self.pos_map.keys():
+            for node in self.pos_map[ord]:
+                node.debug_print()
+
+    def __len__(self):
+        i = 0
+        for ord in self.pos_map.keys():
+            i += len(self.pos_map[ord])
+        return i
+
+    def get_child_count(self):
+        return self.__len__()
 
     def __repr__(self):
         """
@@ -300,18 +321,25 @@ class map_if(x12_node):
         """
         return self.path
 
+    def get_child_node_by_idx(self, idx):
+        """
+        @param idx: zero based
+        """
+        raise EngineError, 'map_if.get_child_node_by_idx is not a valid call'
+            
     def getnodebypath(self, path):
         """
         """
         pathl = path.split('/')[1:]
         if len(pathl) == 0: return None
         #logger.debug('%s %s %s' % (self.base_name, self.id, pathl[1]))
-        for child in self.children:
-            if child.id.lower() == pathl[0].lower():
-                if len(pathl) == 1:
-                    return child
-                else:
-                    return child.getnodebypath(string.join(pathl[1:],'/'))
+        for ord in self.pos_map.keys():
+            for child in self.pos_map[ord]:
+                if child.id.lower() == pathl[0].lower():
+                    if len(pathl) == 1:
+                        return child
+                    else:
+                        return child.getnodebypath(string.join(pathl[1:],'/'))
         return None
             
     def is_map_root(self):
@@ -321,9 +349,9 @@ class map_if(x12_node):
         return True
 
     def reset_child_count(self):
-        for child in self.children:
-            #if child.is_loop():
-            child.reset_cur_count()
+        for ord in self.pos_map.keys():
+            for child in self.pos_map[ord]:
+                child.reset_cur_count()
 
     def reset_cur_count(self):
         self.reset_child_count()
@@ -370,7 +398,8 @@ class loop_if(x12_node):
         self.root = root
         self.parent = parent
         self.index = my_index
-        self.children = []
+        self.children = None
+        self.pos_map = {}
         self.path = ''
         self.base_name = 'loop'
         self.type = 'implicit'
@@ -415,13 +444,23 @@ class loop_if(x12_node):
                 #       self.base_level, reader.NodeType(), reader.Name()
                 cur_name = reader.Name()
                 if cur_name == 'loop' and self.base_level < reader.Depth():
-                    self.children.append(loop_if(self.root, self, index))
+                    loop_node = loop_if(self.root, self, index)
+                    try:
+                        self.pos_map[loop_node.pos].append(loop_node)
+                    except KeyError:
+                        self.pos_map[loop_node.pos] = [loop_node]
+                    #self.children.append(loop_if(self.root, self, index))
                     #if len(self.children) > 1:
                     #    self.children[-1].prev_node = self.children[-2]
                     #    self.children[-2].next_node = self.children[-1]
                     index += 1
                 elif cur_name == 'segment':
-                    self.children.append(segment_if(self.root, self, index))
+                    seg_node = segment_if(self.root, self, index)
+                    try:
+                        self.pos_map[seg_node.pos].append(seg_node)
+                    except KeyError:
+                        self.pos_map[seg_node.pos] = [seg_node]
+                    #self.children.append(segment_if(self.root, self, index))
                     #if len(self.children) > 1:
                     #    self.children[-1].prev_node = self.children[-2]
                     #    self.children[-2].next_node = self.children[-1]
@@ -476,8 +515,15 @@ class loop_if(x12_node):
         
     def debug_print(self):
         sys.stdout.write(self.__repr__())
-        for node in self.children:
-            node.debug_print()
+        for ord in self.pos_map.keys():
+            for node in self.pos_map[ord]:
+                node.debug_print()
+
+    def __len__(self):
+        i = 0
+        for ord in self.pos_map.keys():
+            i += len(self.pos_map[ord])
+        return i
 
     def __repr__(self):
         """
@@ -516,6 +562,34 @@ class loop_if(x12_node):
 #    def parse(self):
 #        pass
 
+    def getnodebypath(self, path):
+        """
+        @param path: remaining path to match
+        @type path: string
+        """
+        pathl = path.split('/')
+        if len(pathl) == 0: return None
+        for ord in self.pos_map.keys():
+            for child in self.pos_map[ord]
+                if child.id.lower() == pathl[0].lower():
+                    if len(pathl) == 1:
+                        return child
+                    else:
+                        if child.is_loop():
+                            return child.getnodebypath(string.join(pathl[1:],'/'))
+                        else:
+                            return None
+        return None
+ 
+    def get_child_count(self):
+        return self.__len__()
+
+    def get_child_node_by_idx(self, idx):
+        """
+        @param idx: zero based
+        """
+        raise EngineError, 'loop_if.get_child_node_by_idx is not a valid call'
+            
     def get_seg_count(self):
         i = 0
         for child in self.children:
