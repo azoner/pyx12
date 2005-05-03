@@ -30,10 +30,7 @@ Error Handling
   Error specifications - XML (seperate tags for ISA/GS/detail errors)
 
 Unit Testing
-  map_walker
   x12file - HL counting?
-  map_if
-  codes
 
 Make C++ Modules
   x12file
