@@ -46,8 +46,8 @@ class x12_node:
         self.id = None
         self.name = None
         self.parent = None
-        self.prev_node = None
-        self.next_node = None
+#        self.prev_node = None
+#        self.next_node = None
         self.children = []
         self.path = ''
 
@@ -221,15 +221,15 @@ class map_if(x12_node):
                         pass
                     elif cur_name == 'segment':
                         self.children.append(segment_if(self, self, index))
-                        if len(self.children) > 1:
-                            self.children[-1].prev_node = self.children[-2]
-                            self.children[-2].next_node = self.children[-1]
+                        #if len(self.children) > 1:
+                        #    self.children[-1].prev_node = self.children[-2]
+                        #    self.children[-2].next_node = self.children[-1]
                         index += 1
                     elif cur_name == 'loop':
                         self.children.append(loop_if(self, self, index))
-                        if len(self.children) > 1:
-                            self.children[-1].prev_node = self.children[-2]
-                            self.children[-2].next_node = self.children[-1]
+                        #if len(self.children) > 1:
+                        #    self.children[-1].prev_node = self.children[-2]
+                        #    self.children[-2].next_node = self.children[-1]
                         index += 1
                     
                     #if self.cur_level < self.reader.Depth():
@@ -331,28 +331,28 @@ class map_if(x12_node):
     def __iter__(self):
         return self
 
-    def next(self):
-        #if self.cur_iter_node.id == 'GS06':
-        if self.cur_iter_node.id == 'IEA':
-            raise StopIteration
-        #first, get first child
-        if self.cur_iter_node.get_child_count() > 0:
-            self.cur_iter_node = self.cur_iter_node.children[0]
-            return self.cur_iter_node
-        # Get original index of starting node
-        #node_idx = self.cur_iter_node.index 
-        cur_node = self.cur_iter_node
-        #node = self._pop_to_parent(cur_node) 
-        while 1:
-            #second, get next sibling
-            if cur_node is None:
-                raise StopIteration
-            if cur_node.next_node != None:
-                self.cur_iter_node = cur_node.next_node
-                return self.cur_iter_node
-            #last, get siblings of parent
-            cur_node = cur_node.parent
-        return None
+#    def next(self):
+#        #if self.cur_iter_node.id == 'GS06':
+#        if self.cur_iter_node.id == 'IEA':
+#            raise StopIteration
+#        #first, get first child
+#        if self.cur_iter_node.get_child_count() > 0:
+#            self.cur_iter_node = self.cur_iter_node.children[0]
+#            return self.cur_iter_node
+#        # Get original index of starting node
+#        #node_idx = self.cur_iter_node.index 
+#        cur_node = self.cur_iter_node
+#        #node = self._pop_to_parent(cur_node) 
+#        while 1:
+#            #second, get next sibling
+#            if cur_node is None:
+#                raise StopIteration
+#            if cur_node.next_node != None:
+#                self.cur_iter_node = cur_node.next_node
+#                return self.cur_iter_node
+#            #last, get siblings of parent
+#            cur_node = cur_node.parent
+#        return None
 
 
 ############################################################
@@ -416,21 +416,21 @@ class loop_if(x12_node):
                 cur_name = reader.Name()
                 if cur_name == 'loop' and self.base_level < reader.Depth():
                     self.children.append(loop_if(self.root, self, index))
-                    if len(self.children) > 1:
-                        self.children[-1].prev_node = self.children[-2]
-                        self.children[-2].next_node = self.children[-1]
+                    #if len(self.children) > 1:
+                    #    self.children[-1].prev_node = self.children[-2]
+                    #    self.children[-2].next_node = self.children[-1]
                     index += 1
                 elif cur_name == 'segment':
                     self.children.append(segment_if(self.root, self, index))
-                    if len(self.children) > 1:
-                        self.children[-1].prev_node = self.children[-2]
-                        self.children[-2].next_node = self.children[-1]
+                    #if len(self.children) > 1:
+                    #    self.children[-1].prev_node = self.children[-2]
+                    #    self.children[-2].next_node = self.children[-1]
                     index += 1
                 elif cur_name == 'element':
                     self.children.append(element_if(self.root, self))
-                    if len(self.children) > 1:
-                        self.children[-1].prev_node = self.children[-2]
-                        self.children[-2].next_node = self.children[-1]
+                    #if len(self.children) > 1:
+                    #    self.children[-1].prev_node = self.children[-2]
+                    #    self.children[-2].next_node = self.children[-1]
                     
                 #if self.cur_level < reader.Depth():
                 #    self.cur_path = os.path.join(self.cur_path, cur_name)
@@ -531,6 +531,8 @@ class loop_if(x12_node):
 
     def is_match(self, seg_data):
         """
+        @type seg_data: L{segment<segment.segment>}
+        @return: Is the segment a match to this loop?
         @rtype: boolean
         """
         child = self.get_child_node_by_idx(0)
@@ -620,14 +622,14 @@ class segment_if(x12_node):
                     self.base_name = 'segment'
                 elif cur_name == 'element':
                     self.children.append(element_if(self.root, self))
-                    if len(self.children) > 1:
-                        self.children[-1].prev_node = self.children[-2]
-                        self.children[-2].next_node = self.children[-1]
+                    #if len(self.children) > 1:
+                    #    self.children[-1].prev_node = self.children[-2]
+                    #    self.children[-2].next_node = self.children[-1]
                 elif cur_name == 'composite':
                     self.children.append(composite_if(self.root, self))
-                    if len(self.children) > 1:
-                        self.children[-1].prev_node = self.children[-2]
-                        self.children[-2].next_node = self.children[-1]
+                    #if len(self.children) > 1:
+                    #    self.children[-1].prev_node = self.children[-2]
+                    #    self.children[-2].next_node = self.children[-1]
                     
                 #if self.cur_level < reader.Depth():
                 #    self.cur_path = os.path.join(self.cur_path, cur_name)
@@ -781,6 +783,7 @@ class segment_if(x12_node):
     def is_valid(self, seg_data, errh):
         """
         @param seg_data: data segment instance
+        @type seg_data: L{segment<segment.segment>}
         @param errh: instance of error_handler
         @rtype: boolean
         """
@@ -1245,9 +1248,9 @@ class composite_if(x12_node):
                     self.base_name = 'composite'
                 elif cur_name == 'element':
                     self.children.append(element_if(self.root, self))
-                    if len(self.children) > 1:
-                        self.children[-1].prev_node = self.children[-2]
-                        self.children[-2].next_node = self.children[-1]
+                    #if len(self.children) > 1:
+                    #    self.children[-1].prev_node = self.children[-2]
+                    #    self.children[-2].next_node = self.children[-1]
                     
                 #if self.cur_level < reader.Depth():
                 #    self.cur_path = os.path.join(self.cur_path, cur_name)
@@ -1429,7 +1432,7 @@ def is_syntax_valid(seg_data, syn):
     """
     Verifies the segment against the syntax
     @param seg_data: data segment instance
-    @type seg_data: pyx12.segment
+    @type seg_data: L{segment<segment.segment>}
     @param syn: list containing the syntax type, and the indices of elements
     @type syn: list[string]
     @rtype: tuple(boolean, error string)
