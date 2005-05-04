@@ -258,7 +258,8 @@ class walk_tree:
             % (loop_node.id, seg_data.get_seg_id())
         if len(loop_node) <= 0: # Has no children
             return False
-        first_child_node = loop_node.get_child_node_by_idx(0)
+        #first_child_node = loop_node.get_child_node_by_idx(0)
+        first_child_node = loop_node.pos_map[loop_node.pos_map.keys[0]][0]
         if first_child_node.is_loop():
             #If any loop node matches
             for ord in loop_node.pos_map.keys():
@@ -303,7 +304,8 @@ class walk_tree:
         if not loop_node.is_loop(): raise EngineError, \
             "_goto_seg_match failed, node %s is not a loop. seg %s" \
             % (loop_node.id, seg_data.get_seg_id())
-        first_child_node = loop_node.get_child_node_by_idx(0)
+        #first_child_node = loop_node.get_child_node_by_idx(0)
+        first_child_node = loop_node.pos_map[loop_node.pos_map.keys[0]][0]
         if is_first_seg_match2(first_child_node, seg_data): 
             if loop_node.usage == 'N':
                 err_str = "Loop %s found but marked as not used" % (loop_node.id)

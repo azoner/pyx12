@@ -614,7 +614,8 @@ class loop_if(x12_node):
         @return: Is the segment a match to this loop?
         @rtype: boolean
         """
-        child = self.get_child_node_by_idx(0)
+        #child = self.get_child_node_by_idx(0)
+        child = self.pos_map[self.pos_map.keys[0]][0]
         if child.is_loop():
             return child.is_match(seg_data)
         elif child.is_segment():
