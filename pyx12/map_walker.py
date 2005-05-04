@@ -116,10 +116,12 @@ class walk_tree:
             node = pop_to_parent_loop(node) # Get enclosing loop
         while 1:
             #logger.debug('seg_data.id % ' % (seg_data.get_seg_id()))
-            for child in node.children:
+            for ord in filter(lambda a: a>= node_pos, node.pos_map.keys()):
+            #for child in node.children:
                 #logger.debug('id=%s child.index=%i node_pos=%i' % \
                 #    (child.id, child.index, node_pos))
-                if child.pos >= node_pos:
+                for child in node.pos_map[ord]:
+                #if child.pos >= node_pos:
                     if child.is_segment():
                         #logger.debug('id=%s cur_count=%i max_repeat=%i' \
                         #    % (child.id, child.cur_count, child.get_max_repeat()))
@@ -259,10 +261,11 @@ class walk_tree:
         first_child_node = loop_node.get_child_node_by_idx(0)
         if first_child_node.is_loop():
             #If any loop node matches
-            for child_node in loop_node.children:
-                if child_node.is_loop() and self._is_loop_match(child_node, \
-                        seg_data, errh, seg_count, cur_line, ls_id):
-                    return True
+            for ord in loop_node.pos_map.keys():
+                for child_node in loop_node.pos_map[ord]:
+                    if child_node.is_loop() and self._is_loop_match(child_node, \
+                            seg_data, errh, seg_count, cur_line, ls_id):
+                        return True
         elif is_first_seg_match2(first_child_node, seg_data): 
             return True
         elif loop_node.usage == 'R' and loop_node.get_cur_count() < 1:
@@ -323,10 +326,12 @@ class walk_tree:
             self._flush_mandatory_segs(errh)
             return first_child_node
         else:
-            for child in loop_node.children:
-                if child.is_loop():
-                    node1 = self._goto_seg_match(child, seg_data, errh, \
-                        seg_count, cur_line, ls_id)
-                    if node1:
-                        return node1
+            #for child in loop_node.children:
+            for ord in loop_node.pos_map.keys():
+                for child in loop_node.pos_map[ord]:
+                    if child.is_loop():
+                        node1 = self._goto_seg_match(child, seg_data, errh, \
+                            seg_count, cur_line, ls_id)
+                        if node1:
+                            return node1
         return None

@@ -17,7 +17,7 @@ import cPickle
 import libxml2
 import logging
 import os.path
-import pdb
+#import pdb
 import string
 import sys
 from types import *
@@ -325,7 +325,7 @@ class map_if(x12_node):
         """
         @param idx: zero based
         """
-        raise EngineError, 'map_if.get_child_node_by_idx is not a valid call'
+        raise errors.EngineError, 'map_if.get_child_node_by_idx is not a valid call'
             
     def getnodebypath(self, path):
         """
@@ -466,7 +466,8 @@ class loop_if(x12_node):
                     #    self.children[-2].next_node = self.children[-1]
                     index += 1
                 elif cur_name == 'element':
-                    self.children.append(element_if(self.root, self))
+                    raise errors.EngineError, 'This should not happen'
+                    #self.children.append(element_if(self.root, self))
                     #if len(self.children) > 1:
                     #    self.children[-1].prev_node = self.children[-2]
                     #    self.children[-2].next_node = self.children[-1]
@@ -505,7 +506,6 @@ class loop_if(x12_node):
                     #self.seq = self.pos  # XXX
                 elif cur_name == 'repeat' and self.base_name == 'loop':
                     self.repeat = reader.Value()
-
 
             ret = reader.Read()
             if ret == -1:
@@ -570,7 +570,7 @@ class loop_if(x12_node):
         pathl = path.split('/')
         if len(pathl) == 0: return None
         for ord in self.pos_map.keys():
-            for child in self.pos_map[ord]
+            for child in self.pos_map[ord]:
                 if child.id.lower() == pathl[0].lower():
                     if len(pathl) == 1:
                         return child
@@ -588,13 +588,18 @@ class loop_if(x12_node):
         """
         @param idx: zero based
         """
-        raise EngineError, 'loop_if.get_child_node_by_idx is not a valid call'
+        raise errors.EngineError, 'loop_if.get_child_node_by_idx is not a valid call'
             
     def get_seg_count(self):
+        """
+        @return: Number of child segments
+        @rtype: integer
+        """
         i = 0
-        for child in self.children:
-            if child.is_segment():
-                i += 1
+        for ord in self.pos_map.keys():
+            for child in self.pos_map[ord]:
+                if child.is_segment():
+                    i += 1
         return i
 
     def is_loop(self):
@@ -628,12 +633,14 @@ class loop_if(x12_node):
         self.cur_count += 1
 
     def reset_child_count(self):
-        for child in self.children:
-            child.reset_cur_count()
+        for ord in self.pos_map.keys():
+            for child in self.pos_map[ord]:
+                child.reset_cur_count()
 
     def reset_cur_count(self):
         self.cur_count = 0
         self.reset_child_count()
+
 
 ############################################################
 # Segment Interface
