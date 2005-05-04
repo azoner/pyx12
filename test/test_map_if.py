@@ -26,7 +26,8 @@ class ElementIsValidDate(unittest.TestCase):
     def test_date_bad1(self):
         self.errh.err_cde = None
         seg_data = pyx12.segment.segment('DTP*434*D8*20041340~', '~', '*', ':')
-        node = self.node.get_child_node_by_idx(2) 
+        #node = self.node.get_child_node_by_idx(2) 
+        node = self.node.getnodebypath('DTP[434]')
         result = node.is_valid(seg_data, self.errh)
         self.failIf(result)
         self.assertEqual(self.errh.err_cde, '8')
@@ -34,7 +35,8 @@ class ElementIsValidDate(unittest.TestCase):
     def test_date_ok1(self):
         self.errh.err_cde = None
         seg_data = pyx12.segment.segment('DTP*434*D8*20040110~', '~', '*', ':')
-        node = self.node.get_child_node_by_idx(2) 
+        #node = self.node.get_child_node_by_idx(2) 
+        node = self.node.getnodebypath('DTP[434]')
         result = node.is_valid(seg_data, self.errh)
         self.failUnless(result, '%s should be valid' % (seg_data.format()))
         self.assertEqual(self.errh.err_cde, None)
@@ -42,7 +44,8 @@ class ElementIsValidDate(unittest.TestCase):
     def test_time_bad1(self):
         self.errh.err_cde = None
         seg_data = pyx12.segment.segment('DTP*096*TM*2577~', '~', '*', ':')
-        node = self.node.get_child_node_by_idx(1) 
+        #node = self.node.get_child_node_by_idx(1) 
+        node = self.node.getnodebypath('DTP[096]')
         result = node.is_valid(seg_data, self.errh)
         self.failIf(result)
         self.assertEqual(self.errh.err_cde, '9')
@@ -50,7 +53,8 @@ class ElementIsValidDate(unittest.TestCase):
     def test_time_ok1(self):
         self.errh.err_cde = None
         seg_data = pyx12.segment.segment('DTP*096*TM*1215~', '~', '*', ':')
-        node = self.node.get_child_node_by_idx(1) 
+        #node = self.node.get_child_node_by_idx(1) 
+        node = self.node.getnodebypath('DTP[096]')
         result = node.is_valid(seg_data, self.errh)
         self.failUnless(result)
         self.assertEqual(self.errh.err_cde, None)
@@ -106,13 +110,14 @@ class SegmentIsValid(unittest.TestCase):
     def test_segment_length(self):
         self.errh.err_cde = None
         seg_data = pyx12.segment.segment('DTP*434*D8*20040101*R~', '~', '*', ':')
-        node = self.node.get_child_node_by_idx(2) 
+        #node = self.node.get_child_node_by_idx(2) 
+        node = self.node.getnodebypath('DTP[434]')
         result = node.is_valid(seg_data, self.errh)
         self.failIf(result)
         self.assertEqual(self.errh.err_cde, '3', self.errh.err_str)
 
 
-class Element_is_valid(unittest.TestCase):
+class ElementIsValid(unittest.TestCase):
     """
     """
     def setUp(self):
@@ -320,7 +325,7 @@ class Element_is_valid(unittest.TestCase):
         self.assertEqual(self.errh.err_cde, '1')
         
 
-class Test_getnodebypath(unittest.TestCase):
+class GetNodeByPath(unittest.TestCase):
     """
     """
     def setUp(self):
@@ -569,23 +574,31 @@ class ElementRequirement(unittest.TestCase):
 
 
 def suite(args):
-    #suite = unittest.makeSuite((Test_getnodebypath, IsValidSyntax, \
-    #    IsValidSyntaxP, IsValidSyntaxR, IsValidSyntaxC, \
-    #    IsValidSyntaxE, IsValidSyntaxL))
     suite = unittest.TestSuite()
-    #names = set(args).intersection(set(dir()))
-    #print names
-    #if names:
-    #    for test in names:
-    #        suite.addTest(unittest.makeSuite(Test_getnodebypath))
-    #else:
-    suite.addTest(unittest.makeSuite(Test_getnodebypath))
-    suite.addTest(unittest.makeSuite(TrailingSpaces))
-    suite.addTest(unittest.makeSuite(CompositeRequirement))
-    suite.addTest(unittest.makeSuite(ElementRequirement))
-    suite.addTest(unittest.makeSuite(Element_is_valid))
-    suite.addTest(unittest.makeSuite(ElementIsValidDate))
-    suite.addTest(unittest.makeSuite(SegmentIsValid))
+    if args:
+        for arg in args:
+            if arg == 'GetNodeByPath':
+                suite.addTest(unittest.makeSuite(GetNodeByPath))
+            elif arg == 'TrailingSpaces':
+                suite.addTest(unittest.makeSuite(TrailingSpaces))
+            elif arg == 'CompositeRequirement':
+                suite.addTest(unittest.makeSuite(CompositeRequirement))
+            elif arg == 'ElementRequirement':
+                suite.addTest(unittest.makeSuite(ElementRequirement))
+            elif arg == 'ElementIsValid':
+                suite.addTest(unittest.makeSuite(ElementIsValid))
+            elif arg == 'ElementIsValidDate':
+                suite.addTest(unittest.makeSuite(ElementIsValidDate))
+            elif arg == 'SegmentIsValid':
+                suite.addTest(unittest.makeSuite(SegmentIsValid))
+    else:
+        suite.addTest(unittest.makeSuite(GetNodeByPath))
+        suite.addTest(unittest.makeSuite(TrailingSpaces))
+        suite.addTest(unittest.makeSuite(CompositeRequirement))
+        suite.addTest(unittest.makeSuite(ElementRequirement))
+        suite.addTest(unittest.makeSuite(ElementIsValid))
+        suite.addTest(unittest.makeSuite(ElementIsValidDate))
+        suite.addTest(unittest.makeSuite(SegmentIsValid))
     return suite
                 
 #if __name__ == "__main__":
