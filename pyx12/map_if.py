@@ -566,6 +566,7 @@ class loop_if(x12_node):
         """
         @param path: remaining path to match
         @type path: string
+        @return: matching node, or None is no match
         """
         pathl = path.split('/')
         if len(pathl) == 0: return None
@@ -579,8 +580,41 @@ class loop_if(x12_node):
                             return child.getnodebypath(string.join(pathl[1:],'/'))
                         else:
                             return None
-        return None
+                if child.is_loop():
+                    if child.id.upper() == pathl[0].upper():
+                        if len(pathl) == 1:
+                            return child
+                        else:
+                            return child.getnodebypath(string.join(pathl[1:],'/'))
+                elif child.is_segment() and len(pathl) == 1:
+                    if  == child.id:
+                        if child.children[0].is_element() \
+                            and child.children[0].data_type == 'ID' \
+                            and len(child.children[0].valid_codes) > 0 \
+                            and seg.get_value('01') not in child.children[0].valid_codes:
+                            return False
+                        # Special Case for 820
+                        elif seg.get_seg_id() == 'ENT' \
+                            and child.children[1].is_element() \
+                            and child.children[1].data_type == 'ID' \
+                            and len(child.children[1].valid_codes) > 0 \
+                            and seg.get_value('02') not in child.children[1].valid_codes:
+                            return False
+                        elif child.children[0].is_composite() \
+                            and child.children[0].children[0].data_type == 'ID' \
+                            and len(child.children[0].children[0].valid_codes) > 0 \
+                            and seg.get_value('01-1') not in child.children[0].children[0].valid_codes:
+                            return False
+                        elif seg.get_seg_id() == 'HL' and child.children[2].is_element() \
+                            and len(child.children[2].valid_codes) > 0 \
+                            and seg.get_value('03') not in child.children[2].valid_codes:
+                            return False
+                        return True
+                    else:
+                        return False
  
+        return None
+
     def get_child_count(self):
         return self.__len__()
 
