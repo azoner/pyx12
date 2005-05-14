@@ -140,11 +140,13 @@ class walk_tree:
                                 raise EngineError, 'Usage must be R, S, or N'
                             if node.is_loop() \
                                     and self._is_loop_match(node, seg_data, errh, seg_count, cur_line, ls_id):
-                                #_goto_seg_match
                                 node1 = self._goto_seg_match(node, seg_data, \
                                     errh, seg_count, cur_line, ls_id)
                                 #return node1.get_child_node_by_idx(0)
-                            self._flush_mandatory_segs(errh)
+                            # Remove any previously missing errors for this segment
+                            self.mandatory_segs_missing = filter(lambda x: x[0]!=child, 
+                                self.mandatory_segs_missing)
+                            self._flush_mandatory_segs(errh, child.pos)
                             return child
                         elif child.usage == 'R' and child.get_cur_count() < 1:
                             fake_seg = pyx12.segment.segment('%s'% (child.id), '~', '*', ':')
@@ -214,7 +216,7 @@ class walk_tree:
 #                return False # seg does not match the first segment in loop, so not valid
 #        return False
 
-    def _flush_mandatory_segs(self, errh):
+    def _flush_mandatory_segs(self, errh, cur_pos = None):
         """
         Handle error reporting for any outstanding missing mandatory segments
 
@@ -224,9 +226,13 @@ class walk_tree:
         #if self.mandatory_segs_missing: pdb.set_trace()
         for (seg_node, seg_data, err_cde, err_str, 
                 seg_count, cur_line, ls_id) in self.mandatory_segs_missing:
-            errh.add_seg(seg_node, seg_data, seg_count, cur_line, ls_id)
-            errh.seg_error(err_cde, err_str, None)
-        self.mandatory_segs_missing = []
+            # Create errors if not also at current position
+            if seg_node.pos != cur_pos:
+                errh.add_seg(seg_node, seg_data, seg_count, cur_line, ls_id)
+                errh.seg_error(err_cde, err_str, None)
+        self.mandatory_segs_missing = filter(lambda x: x[0].pos==cur_pos, 
+            self.mandatory_segs_missing)
+        #self.mandatory_segs_missing = []
 
     #def _is_loop_match(self, loop_node, seg_data, errh, seg_count, cur_line, ls_id):
     #    if not loop_node.is_loop(): raise EngineError, \
