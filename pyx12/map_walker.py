@@ -19,14 +19,9 @@ If seg indicates a segment has been entered, returns the segment node.
 
 import logging
 import pdb
-#import string
 
 # Intrapackage imports
 from errors import *
-#import codes
-#import map_index
-#import map_if
-#import x12file
 import pyx12.segment
 
 logger = logging.getLogger('pyx12.walk_tree')
@@ -116,7 +111,10 @@ class walk_tree:
             node = pop_to_parent_loop(node) # Get enclosing loop
         while 1:
             #logger.debug('seg_data.id % ' % (seg_data.get_seg_id()))
-            for ord in filter(lambda a: a>= node_pos, node.pos_map.keys()):
+            # Iterate through nodes with position >= current position
+            pos_keys = filter(lambda a: a>= node_pos, node.pos_map.keys())
+            pos_keys.sort()
+            for ord in pos_keys:
             #for child in node.children:
                 #logger.debug('id=%s child.index=%i node_pos=%i' % \
                 #    (child.id, child.index, node_pos))
@@ -259,10 +257,13 @@ class walk_tree:
         if len(loop_node) <= 0: # Has no children
             return False
         #first_child_node = loop_node.get_child_node_by_idx(0)
-        first_child_node = loop_node.pos_map[loop_node.pos_map.keys[0]][0]
+        pos_keys = loop_node.pos_map.keys()
+        pos_keys.sort()
+        #min_pos = reduce(min, loop_node.pos_map.keys())
+        first_child_node = loop_node.pos_map[pos_keys[0]][0]
         if first_child_node.is_loop():
             #If any loop node matches
-            for ord in loop_node.pos_map.keys():
+            for ord in pos_keys:
                 for child_node in loop_node.pos_map[ord]:
                     if child_node.is_loop() and self._is_loop_match(child_node, \
                             seg_data, errh, seg_count, cur_line, ls_id):
@@ -305,7 +306,9 @@ class walk_tree:
             "_goto_seg_match failed, node %s is not a loop. seg %s" \
             % (loop_node.id, seg_data.get_seg_id())
         #first_child_node = loop_node.get_child_node_by_idx(0)
-        first_child_node = loop_node.pos_map[loop_node.pos_map.keys[0]][0]
+        pos_keys = loop_node.pos_map.keys()
+        pos_keys.sort()
+        first_child_node = loop_node.pos_map[pos_keys[0]][0]
         if is_first_seg_match2(first_child_node, seg_data): 
             if loop_node.usage == 'N':
                 err_str = "Loop %s found but marked as not used" % (loop_node.id)
@@ -329,7 +332,7 @@ class walk_tree:
             return first_child_node
         else:
             #for child in loop_node.children:
-            for ord in loop_node.pos_map.keys():
+            for ord in pos_keys:
                 for child in loop_node.pos_map[ord]:
                     if child.is_loop():
                         node1 = self._goto_seg_match(child, seg_data, errh, \
