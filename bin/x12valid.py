@@ -126,10 +126,10 @@ def main():
         try:
             #fd_src = open(src_filename, 'U')
             if flag_997:
-                if os.path.splitext(src_filename)[1] == '.997':
-                    target_997 = src_filename + '.997'
-                else:
+                if os.path.splitext(src_filename)[1] == '.txt':
                     target_997 = os.path.splitext(src_filename)[0] + '.997'
+                else:
+                    target_997 = src_filename + '.997'
                 #fd_997 = open(target_997, 'w')
                 #(fd_997, temp_997) = tempfile.mkstemp(text=True)
                 fd_997 = tempfile.TemporaryFile()
