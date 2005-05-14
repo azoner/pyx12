@@ -15,11 +15,7 @@ Generates error debug output
 Visitor - Visits an error_handler composite
 """
 
-#import os
-#import sys
-#import string
 from types import *
-#import time
 #import pdb
 
 # Intrapackage imports

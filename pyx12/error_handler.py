@@ -15,9 +15,6 @@ Interface to X12 Errors
 """
 
 import logging
-#import os
-#import sys
-#import string
 from types import *
 import pdb
 

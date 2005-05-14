@@ -14,8 +14,6 @@
 Generates HTML error output
 """
 
-#import os
-#import sys
 import string
 from types import *
 import time
