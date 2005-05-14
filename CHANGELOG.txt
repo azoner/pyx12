@@ -1,3 +1,9 @@
+Fixed out of order segments bug:
+    If multiple segments with the same position ordinal occur out of order,
+    could get an incorrect required segment missing error.
+
+Base map_if segment children on dictionary
+
 Altered segment interface
     No more [] indexing
 

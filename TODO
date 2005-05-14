@@ -8,10 +8,6 @@ X070 Map
 
 Wrap scripts in web services
 
-Base map_if children on map
-  get by id quicker
-  get by idx slower?
-
 Unique path
 
 Path/property local overrides
