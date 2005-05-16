@@ -302,6 +302,14 @@ class map_if(x12_node):
     def get_child_count(self):
         return self.__len__()
 
+    def get_first_seg(self):
+        pos_keys = self.pos_map.keys()
+        pos_keys.sort()
+        if len(pos_keys) > 0 and self.pos_map[pos_keys[0]][0].is_segment():
+            return self.pos_map[pos_keys[0]][0]
+        else:
+            return None
+
     def __repr__(self):
         """
         @rtype: string
@@ -569,6 +577,14 @@ class loop_if(x12_node):
 
     def get_parent(self):
         return self.parent
+
+    def get_first_seg(self):
+        pos_keys = self.pos_map.keys()
+        pos_keys.sort()
+        if len(pos_keys) > 0 and self.pos_map[pos_keys[0]][0].is_segment():
+            return self.pos_map[pos_keys[0]][0]
+        else:
+            return None
 
 #    def is_valid(self, seg_data, errh):
 #        pass
@@ -863,7 +879,7 @@ class segment_if(x12_node):
         """
         @rtype: boolean
         """
-        if self is self.get_parent().children[0]:
+        if self is self.get_parent().get_first_seg():
             return True
         else:
             return False
