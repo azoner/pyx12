@@ -2450,7 +2450,16 @@
                     <data_type>ID</data_type>
                     <min_len>2</min_len>
                     <max_len>2</max_len>
-                    <valid_codes external="adjustment_reason"/>
+                    <valid_codes>
+                        <code>20</code>
+                        <code>52</code>
+                        <code>53</code>
+                        <code>AA</code>
+                        <code>H1</code>
+                        <code>H6</code>
+                        <code>IA</code>
+                        <code>J3</code>
+                    </valid_codes>
                   </element>
                   <element xid="ADX03">
                     <data_ele>128</data_ele>
@@ -2897,7 +2906,17 @@
                     <data_type>ID</data_type>
                     <min_len>2</min_len>
                     <max_len>2</max_len>
-                    <valid_codes external="adjustment_reason"/>
+                    <valid_codes>
+                        <code>20</code>
+                        <code>52</code>
+                        <code>53</code>
+                        <code>AA</code>
+                        <code>AX</code>
+                        <code>H1</code>
+                        <code>H6</code>
+                        <code>IA</code>
+                        <code>J3</code>
+                    </valid_codes>
                   </element>
                   <element xid="ADX03">
                     <data_ele>128</data_ele>
