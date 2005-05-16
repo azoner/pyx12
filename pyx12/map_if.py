@@ -333,6 +333,8 @@ class map_if(x12_node):
             
     def getnodebypath(self, path):
         """
+        @param path: Path string; /1000/2000/2000A/NM102-3
+        @type path: string
         """
         pathl = path.split('/')[1:]
         if len(pathl) == 0: return None
