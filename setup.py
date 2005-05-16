@@ -41,15 +41,15 @@ map_files = [
 ]
 
 mkpath('build/bin')
-scripts = ('x12_build_pkl', 'x12html', 'x12info', 'x12valid', 
+SCRIPTS = ('x12_build_pkl', 'x12html', 'x12info', 'x12valid', 
     'x12norm', 'x12sql', 'x12xml', 'xmlx12')
-for filename in scripts:
+for filename in SCRIPTS:
     copy_file(os.path.join('bin', filename+'.py'), 
         os.path.join('build/bin', filename))
-testfiles = ['test/%s' % (file1) for file1 in 
+TEST_FILES = ['test/%s' % (file1) for file1 in 
     filter(lambda x: x[:4] == 'test' and os.path.splitext(x)[1] == '.py',
     os.listdir('test'))]
-testdata = ['test/files/%s' % (file1) for file1 in 
+TEST_DATA = ['test/files/%s' % (file1) for file1 in 
     filter(lambda x: os.path.splitext(x)[1] in ('.base', '.txt'),
     os.listdir('test/files'))]
     
@@ -62,14 +62,14 @@ kw = {
     'author_email': "jholland@kazoocmh.org",
     'url': "http://www.sourceforge.net/pyx12/",
     'packages': ['pyx12'],
-    'scripts': ['build/bin/%s' % (script) for script in scripts],
+    'scripts': ['build/bin/%s' % (script) for script in SCRIPTS],
     'data_files': [
         (map_dir, map_files),
         (map_dir, ['map/README', 'map/codes.xml', 'map/codes.xsd',
         'map/comp_test.xml', 'map/map.xsd', 'map/maps.xml']),
         ('share/doc/pyx12', ['README.txt', 'LICENSE.txt']),
-        ('share/examples/pyx12/test', testfiles),
-        ('share/examples/pyx12/test/files', testdata),
+        ('share/examples/pyx12/test', TEST_FILES),
+        ('share/examples/pyx12/test/files', TEST_DATA),
         ('share/examples/pyx12', ['bin/pyx12.conf.xml.sample']),
         ('etc', ['bin/pyx12.conf.xml.sample']),
         ('share/doc/pyx12/view', ['view/Makefile', 'view/codes.xsl', \
