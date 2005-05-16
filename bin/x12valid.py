@@ -135,7 +135,10 @@ def main():
                 fd_997 = tempfile.TemporaryFile()
                 #O_EXCL
             if flag_html:
-                target_html = os.path.splitext(src_filename)[0] + '.html'
+                if os.path.splitext(src_filename)[1] == '.txt':
+                    target_html = os.path.splitext(src_filename)[0] + '.html'
+                else:
+                    target_html = src_filename + '.html'
                 fd_html = open(target_html, 'w')
 
             if profile:
