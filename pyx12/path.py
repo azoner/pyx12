@@ -43,7 +43,7 @@ class path:
         @type path_str: string
         
         """
-        self.loop_list = self.path_str.split('/')
+        self.loop_list = path_str.split('/')
         self.seg_id = None
         self.id_val = None
         self.ele_idx = None
@@ -53,7 +53,7 @@ class path:
             return None
         if self.loop_list[0] == '':
             self.relative = False
-            del self.relative[0]
+            del self.loop_list[0]
         else:
             self.relative = True
 
@@ -103,26 +103,32 @@ class path:
             raise EngineError, 'Invalid element path: %s' % (ele_str)
         return (ele_idx, subele_idx)
         
-    def __len__(self):
-        """
-        @rtype: int
-        """
-        return 1
+#    def __len__(self):
+#        """
+#        @rtype: int
+#        """
+#        return 1
 
     def __repr__(self):
         """
+        @return: Formatted path
         @rtype: string
         """
-        return '/'.join(self.loop_list)
+        ret = ''
+        if not self.relative: ret += '/'
+        ret += '/'.join(self.loop_list)
+        if self.seg_id:
+            ret += '/' + self.seg_id
+            if self.id_val:
+                ret += '[%s]' % self.id_val
+            if self.ele_idx:
+                ret += self.ele_idx
+            if self.subele_idx:
+                ret += '-%s' % self.subele_idx
+        return ret
 
     def format(self):
         """
         @rtype: string
         """
         return self.__repr__()
-
-    def get_value(self):
-        """
-        @rtype: string
-        """
-        return self.value
