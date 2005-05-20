@@ -225,6 +225,11 @@ class x12file:
                     hl_parent = self._int(seg.get_value('HL02'))
                     while self.hl_stack and hl_parent != self.hl_stack[-1]:
                         del self.hl_stack[-1]
+                else:
+                    if len(self.hl_stack) != 0:
+                        err_str = 'Invalid HL parent. (%i) does not match (%s)' \
+                            % (self.hl_count, hl_count)
+                        self.errh.seg_error('HL2', err_str)
                 self.hl_stack.append(self.hl_count)
             else:
                 self.seg_count += 1
