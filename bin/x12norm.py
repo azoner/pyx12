@@ -67,15 +67,17 @@ def main():
     else:
         file_in = '-'
     src = pyx12.x12file.x12file(file_in, errh)
-    for c in src:
+    for seg_data in src:
         if fix:
-            if c[0] == 'IEA' and errh.err_cde == '021':
-                c[1] = src.gs_count
-            elif c[0] == 'GE' and errh.err_cde == '5':
-                c[1] = src.st_count
-            elif c[0] == 'SE' and errh.err_cde == '4':
-                c[1] = src.seg_count
-        fd_out.write(c.format() + eol)
+            if seg_data.get_seg_id() == 'IEA' and errh.err_cde == '021':
+                seg_data.set('IEA01', src.gs_count)
+            elif seg_data.get_seg_id() == 'GE' and errh.err_cde == '5':
+                seg_data.set('GE01', src.st_count)
+            elif seg_data.get_seg_id() == 'SE' and errh.err_cde == '4':
+                seg_data.set('SE01', src.seg_count)
+            elif seg_data.get_seg_id() == 'HL' and errh.err_cde == 'HL1':
+                seg_data.set('HL01', src.hl_count)
+        fd_out.write(seg_data.format() + eol)
     if eol == '':
         fd_out.write('\n')
     return True
