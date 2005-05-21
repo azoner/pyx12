@@ -117,6 +117,7 @@ class ISA_header(unittest.TestCase):
     def tearDown(self):
         pass
 
+
 class IEA_Checks(unittest.TestCase):
 
     def setUp(self):
@@ -305,6 +306,9 @@ class SE_Checks(unittest.TestCase):
 
 
 class HL_Checks(unittest.TestCase):
+    """
+    We can do minimal HL parent checks here
+    """
     def setUp(self):
         self.errh = pyx12.error_handler.errh_null()
 
@@ -347,6 +351,66 @@ class HL_Checks(unittest.TestCase):
         for seg in src:
             pass
         self.assertEqual(self.errh.err_cde, 'HL1', self.errh.err_str)
+
+    def test_HL_parent_good(self):
+        seg = None
+        str = 'ISA*00*          *00*          *ZZ*ZZ000          *ZZ*ZZ001          *030828*1128*U*00401*000010121*0*T*:~\n'
+        str += 'GS*HC*ZZ000*ZZ001*20030828*1128*17*X*004010X098~\n'
+        str += 'ST*837*11280001~\n'
+        str += 'HL*1**20*1~\n'
+        str += 'HL*2*1*22*1~\n'
+        str += 'HL*3*2*23*1~\n'
+        str += 'HL*4*1*22*1~\n'
+        str += 'SE*6*11280001~\n'
+        str += 'GE*1*17~\n'
+        str += 'IEA*1*000010121~\n'
+        fd = tempfile.NamedTemporaryFile()
+        fd.write(str)
+        fd.seek(0)
+        src = pyx12.x12file.x12file(fd.name, self.errh)
+        for seg in src:
+            pass
+        self.assertEqual(self.errh.err_cde, None, self.errh.err_str)
+
+    def test_HL_parent_bad_invalid(self):
+        seg = None
+        str = 'ISA*00*          *00*          *ZZ*ZZ000          *ZZ*ZZ001          *030828*1128*U*00401*000010121*0*T*:~\n'
+        str += 'GS*HC*ZZ000*ZZ001*20030828*1128*17*X*004010X098~\n'
+        str += 'ST*837*11280001~\n'
+        str += 'HL*1**20*1~\n'
+        str += 'HL*2*1*22*1~\n'
+        str += 'HL*3*5*23*1~\n'
+        str += 'HL*4*2*22*1~\n'
+        str += 'SE*6*11280001~\n'
+        str += 'GE*1*17~\n'
+        str += 'IEA*1*000010121~\n'
+        fd = tempfile.NamedTemporaryFile()
+        fd.write(str)
+        fd.seek(0)
+        src = pyx12.x12file.x12file(fd.name, self.errh)
+        for seg in src:
+            pass
+        self.assertEqual(self.errh.err_cde, 'HL2', self.errh.err_str)
+
+    def test_HL_parent_bad_blank(self):
+        seg = None
+        str = 'ISA*00*          *00*          *ZZ*ZZ000          *ZZ*ZZ001          *030828*1128*U*00401*000010121*0*T*:~\n'
+        str += 'GS*HC*ZZ000*ZZ001*20030828*1128*17*X*004010X098~\n'
+        str += 'ST*837*11280001~\n'
+        str += 'HL*1**20*1~\n'
+        str += 'HL*2*1*22*1~\n'
+        str += 'HL*3**23*1~\n'
+        str += 'HL*4*2*22*1~\n'
+        str += 'SE*6*11280001~\n'
+        str += 'GE*1*17~\n'
+        str += 'IEA*1*000010121~\n'
+        fd = tempfile.NamedTemporaryFile()
+        fd.write(str)
+        fd.seek(0)
+        src = pyx12.x12file.x12file(fd.name, self.errh)
+        for seg in src:
+            pass
+        self.assertEqual(self.errh.err_cde, 'HL2', self.errh.err_str)
 
 
 class Formatting(unittest.TestCase):

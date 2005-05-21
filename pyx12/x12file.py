@@ -223,12 +223,15 @@ class x12file:
                     self.errh.seg_error('HL1', err_str)
                 if seg.get_value('HL02') != '':
                     hl_parent = self._int(seg.get_value('HL02'))
+                    if hl_parent not in self.hl_stack:
+                        err_str = 'HL parent (%i) is not a valid parent' \
+                            % (hl_parent)
+                        self.errh.seg_error('HL2', err_str)
                     while self.hl_stack and hl_parent != self.hl_stack[-1]:
                         del self.hl_stack[-1]
                 else:
                     if len(self.hl_stack) != 0:
-                        err_str = 'Invalid HL parent. (%i) does not match (%s)' \
-                            % (self.hl_count, hl_count)
+                        err_str = 'HL parent is blank, but stack not empty'
                         self.errh.seg_error('HL2', err_str)
                 self.hl_stack.append(self.hl_count)
             else:
