@@ -186,6 +186,8 @@ class x12file:
                     self.errh.gs_error('5', err_str)
                 del self.loops[-1]
             elif seg.get_seg_id() == 'ST': 
+                self.hl_stack = []
+                self.hl_count = 0
                 transaction_control_number = seg.get_value('ST02')
                 if transaction_control_number in self.st_ids:
                     err_str = 'ST Interchange Control Number %s not unique within file' \
