@@ -1471,9 +1471,9 @@
                       <element xid="STC05">
                         <data_ele>782</data_ele>
                         <name>Claim Payment Amount</name>
-                        <usage>R</usage>
+                        <usage>S</usage>
                         <seq>05</seq>
-                        <data_type>R</data_type>
+                        <data_type>O</data_type>
                         <min_len>1</min_len>
                         <max_len>10</max_len>
                       </element>

@@ -316,6 +316,7 @@
           <max_len>12</max_len>
           <valid_codes>
             <code>004010</code>
+            <code>004010X070</code>
             <code>004010X093</code>
             <code>004010X092</code>
             <code>004010X094</code>
