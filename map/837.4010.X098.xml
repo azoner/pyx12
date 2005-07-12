@@ -3380,7 +3380,7 @@
                     <min_len>1</min_len>
                     <max_len>38</max_len>
                   </element>
-                  <element xid="CLM2">
+                  <element xid="CLM02">
                     <data_ele>782</data_ele>
                     <name>Total Claim Charge Amount</name>
                     <usage>R</usage>
@@ -17257,7 +17257,7 @@
                       <min_len>1</min_len>
                       <max_len>38</max_len>
                     </element>
-                    <element xid="CLM2">
+                    <element xid="CLM02">
                       <data_ele>782</data_ele>
                       <name>Total Claim Charge Amount</name>
                       <usage>R</usage>
