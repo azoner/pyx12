@@ -64,7 +64,7 @@ def main():
     """Script main program."""
     import getopt
     try:
-        opts, args = getopt.getopt(sys.argv[1:], 'c:fl:m:o:p:qs:vx:X:Hh')
+        opts, args = getopt.getopt(sys.argv[1:], 'c:dfl:m:o:p:qs:vx:X:Hh')
     except getopt.error, msg:
         usage()
         raise
