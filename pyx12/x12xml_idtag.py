@@ -31,13 +31,13 @@ logger.setLevel(logging.DEBUG)
 #logger.setLevel(logging.ERROR)
 
 class x12xml_idtag(x12xml):
-    def __init__(self, fd, dtd_urn):
+    def __init__(self, fd, dtd_urn=None):
         x12xml.__init__(self)
         self.writer = XMLWriter(fd)
-        self.writer.doctype(
-            u"x12idtag", u"-//J Holland//DTD XML X12 Document Conversion1.0//EN//XML",
-            u"%s" % (dtd_urn))
-
+        if dtd_urn:
+            self.writer.doctype(
+                u"x12idtag", u"-//J Holland//DTD XML X12 Document Conversion1.0//EN//XML",
+                u"%s" % (dtd_urn))
         self.writer.push(u"x12idtag")
         self.path = '/'
 

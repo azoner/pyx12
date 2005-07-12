@@ -42,7 +42,7 @@ import x12file
 from map_walker import walk_tree
 import x12xml_simple
 import x12xml_idtag
-from params import params
+#from params import params
 
 #Global Variables
 #logger = None

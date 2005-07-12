@@ -41,11 +41,13 @@ class params:
         self.params['skip_html'] = False
         self.params['skip_997'] = False
         self.params['simple_dtd'] = 'http://www.kazoocmh.org/x12simple.dtd'
-        self.params['idtag_dtd'] = 'http://www.kazoocmh.org/x12idtag.dtd'
+        self.params['idtag_dtd'] = ''
+        #self.params['idtag_dtd'] = 'http://www.kazoocmh.org/x12idtag.dtd'
         self.params['xmlout'] = 'simple'
         #self.params['xmlout'] = 'idtag'
         
         for filename in config_files:
+            self.logger.debug('Read param file: %s' % (filename))
             self._read_config_file(filename)
         #self._read_config_file('/usr/local/etc/pyx12.conf.xml')
         #self._read_config_file(os.path.expanduser('~/.pyx12.conf.xml'))
@@ -76,14 +78,22 @@ class params:
                                 if reader.Name() == 'name':
                                     option = reader.Value()
                     elif tmpNodeType == NodeType['element_end']:
-                        if option is not None and value is not None:
+                        if option is not None:
+                            if value == '':
+                                value = None
                             if valtype == 'boolean':
                                 if value in ('False', 'F'):
                                     self.params[option] = False
                                 else:
                                     self.params[option] = True
                             else:
-                                self.params[option] = value
+                                try:
+                                    if self.params[option] != value:
+                                        self.params[option] = value
+                                        self.logger.debug('Params: option "%s": "%s"' % (option, self.params[option]))
+                                except:
+                                    self.params[option] = value
+                                    self.logger.debug('Params: option "%s": "%s"' % (option, self.params[option]))
                             self.logger.debug('Params: option "%s": "%s"' % (option, self.params[option]))
                     elif tmpNodeType == NodeType['text']:
                         if cur_name == 'value':
