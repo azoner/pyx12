@@ -1,3 +1,5 @@
+x12xml_idtag: Append ID value for repeating segments 
+
 Windows issues:
   NamedTempFile permissions
   location of map files
