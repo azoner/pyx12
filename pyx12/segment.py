@@ -80,7 +80,7 @@ class element:
         """
         @rtype: boolean
         """
-        if self.value and self.value.strip() != '':
+        if self.value and self.value != '':
             return False
         else:
             return True

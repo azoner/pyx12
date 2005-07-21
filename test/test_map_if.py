@@ -225,6 +225,19 @@ class ElementIsValid(unittest.TestCase):
         self.failIf(result)
         self.assertEqual(self.errh.err_cde, '7')
 
+    def test_valid_codes_bad_spaces(self):
+        self.errh.err_cde = None
+        node = self.map.getnodebypath('/ISA_LOOP/GS_LOOP/ST_LOOP/DETAIL/2000A/2000B/2300/2400/SV1')
+        node = node.get_child_node_by_idx(0) #SV101
+        node = node.get_child_node_by_idx(0) # SV101-1
+        self.assertNotEqual(node, None)
+        self.assertEqual(node.id, 'SV101-01')
+        self.assertEqual(node.base_name, 'element')
+        elem = pyx12.segment.element('  ')
+        result = node.is_valid(elem, self.errh)
+        self.failIf(result)
+        self.assertEqual(self.errh.err_cde, '7')
+
     def test_external_codes_ok1(self):
         self.errh.err_cde = None
         #CLM11-04 external states, no valid_codes
