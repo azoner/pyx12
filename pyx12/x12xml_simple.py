@@ -16,8 +16,6 @@ Create a XML rendering of the X12 document
 
 import logging
 import pdb
-#import string
-#import os.path
 
 # Intrapackage imports
 from errors import *
@@ -46,7 +44,7 @@ class x12xml_simple(x12xml):
     def seg(self, seg_node, seg_data):
         """
         Generate XML for the segment data and matching map node
-        
+
         @param seg_node: Map Node
         @type seg_node: L{node<map_if.x12_node>}
         @param seg_data: Segment object
@@ -58,10 +56,6 @@ class x12xml_simple(x12xml):
         # check path for new loops to be added
         path = parent.get_path()
         if self.path != path:
-            #pdb.set_trace()
-            #logger.debug('self.path=%s path=%s' % (self.path, path))
-            #pop_loops = []
-            #push_loops = []
             last_path = filter(lambda x: x!='', self.path.split('/'))
             cur_path = filter(lambda x: x!='', parent.get_path().split('/'))
             
