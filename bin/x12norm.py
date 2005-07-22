@@ -70,13 +70,13 @@ def main():
     for seg_data in src:
         if fix:
             if seg_data.get_seg_id() == 'IEA' and errh.err_cde == '021':
-                seg_data.set('IEA01', src.gs_count)
+                seg_data.set('IEA01', '%i' % (src.gs_count))
             elif seg_data.get_seg_id() == 'GE' and errh.err_cde == '5':
-                seg_data.set('GE01', src.st_count)
+                seg_data.set('GE01', '%i' % (src.st_count))
             elif seg_data.get_seg_id() == 'SE' and errh.err_cde == '4':
-                seg_data.set('SE01', src.seg_count)
+                seg_data.set('SE01', '%i' % (src.seg_count+1))
             elif seg_data.get_seg_id() == 'HL' and errh.err_cde == 'HL1':
-                seg_data.set('HL01', src.hl_count)
+                seg_data.set('HL01', '%i' % (src.hl_count))
         fd_out.write(seg_data.format() + eol)
     if eol == '':
         fd_out.write('\n')
