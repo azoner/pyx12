@@ -21975,6 +21975,7 @@
                         <valid_codes>
                           <code>HC</code>
                           <code>IV</code>
+                          <code>N4</code>
                           <code>ZZ</code>
                         </valid_codes>
                       </element>
@@ -45016,6 +45017,7 @@
                           <valid_codes>
                             <code>HC</code>
                             <code>IV</code>
+                            <code>N4</code>
                             <code>ZZ</code>
                           </valid_codes>
                         </element>
