@@ -1,3 +1,7 @@
+BUG: xmlx12.py is skipping empty elements
+
+xmlx12.py - handle idtag type
+
 Check ISA02 and 04 XML output
 
 x12xml_idtag: Append ID value for repeating segments 
