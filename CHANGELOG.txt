@@ -1,3 +1,5 @@
+Draft map for Unsolicited 277: 277U.4010.X070.xml
+
 Fixed bug: blank element validation
 
 Fixed mis-named xid in 837.4010.X098.xml

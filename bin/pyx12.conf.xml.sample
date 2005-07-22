@@ -63,13 +63,19 @@ or can be passed on the command line using the -c option
         <comment></comment>
     </param>
     <param name="simple_dtd">
-        <value>http://www.kazoocmh.org/x12simple.dtd</value>
+        <value>http://www.kazoocmh.org/dtd/x12simple.dtd</value>
         <comment></comment>
     </param>
+    <!--
     <param name="idtag_dtd">
-        <value>http://www.kazoocmh.org/x12idtag.dtd</value>
+        <value>http://www.kazoocmh.org/dtd/x12idtag.dtd</value>
         <comment></comment>
     </param>
+    <param name="idtagqual_dtd">
+        <value>http://www.kazoocmh.org/dtd/x12idtagqual.dtd</value>
+        <comment></comment>
+    </param>
+    -->
     <param name="xmlout">
         <value>simple</value>
         <comment>Style of XML output</comment>

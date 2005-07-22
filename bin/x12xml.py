@@ -58,7 +58,7 @@ def usage():
     sys.stderr.write('  -s <b|e>   Specify X12 character set: b=basic, e=extended\n')
     sys.stderr.write('  -v         Verbose output\n')
     sys.stderr.write('  -x <tag>   Exclude external code\n')
-    sys.stderr.write('  -X <simple|idtag>   XML output format\n')
+    sys.stderr.write('  -X <simple|idtag|idtagqual>   XML output format\n')
 
 def main():
     """Script main program."""
@@ -107,7 +107,7 @@ def main():
         if o == '-q': logger.setLevel(logging.ERROR)
         if o == '-x': param.set('exclude_external_codes', a)
         if o == '-X': 
-            if a not in ('simple','idtag'):
+            if a not in ('simple','idtag', 'idtagqual'):
                 logger.error('Unknown parameter for -X')
                 usage()
                 return False

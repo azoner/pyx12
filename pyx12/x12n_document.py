@@ -42,6 +42,7 @@ import x12file
 from map_walker import walk_tree
 import x12xml_simple
 import x12xml_idtag
+import x12xml_idtagqual
 #from params import params
 
 #Global Variables
@@ -129,6 +130,8 @@ def x12n_document(param, src_file, fd_997, fd_html, fd_xmldoc=None):
             xmldoc = x12xml_simple.x12xml_simple(fd_xmldoc, param.get('simple_dtd'))
         elif param.get('xmlout') == 'idtag':
             xmldoc = x12xml_idtag.x12xml_idtag(fd_xmldoc, param.get('idtag_dtd'))
+        elif param.get('xmlout') == 'idtagqual':
+            xmldoc = x12xml_idtagqual.x12xml_idtagqual(fd_xmldoc, param.get('idtagqual_dtd'))
         else:
             xmldoc = x12xml_simple.x12xml_simple(fd_xmldoc, param.get('simple_dtd'))
 
