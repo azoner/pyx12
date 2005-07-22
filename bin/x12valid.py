@@ -21,7 +21,6 @@ import os, os.path
 import sys
 import logging
 from types import *
-#import pdb
 import tempfile
 
 # Intrapackage imports
@@ -36,22 +35,22 @@ __date__    = pyx12.__date__
 
 def usage():
     pgm_nme = os.path.basename(sys.argv[0])
-    sys.stdout.write('%s %s (%s)\n' % (pgm_nme, __version__, __date__))
-    sys.stdout.write('usage: %s [options] source_files\n' % (pgm_nme))
-    sys.stdout.write('\noptions:\n')
-    sys.stdout.write('  -c <file>  XML configuration file\n')
-    sys.stdout.write('  -d         Debug Mode.  Implies verbose output\n')
-    sys.stdout.write('  -f         Force map load.  Do not use the map pickle file\n')
-    sys.stdout.write('  -H         Create HTML output file\n')
-    sys.stdout.write('  -l <file>  Output log\n')
-    sys.stdout.write('  -m <path>  Path to map files\n')
-    #sys.stdout.write('  -o <file>  Override file\n')
-    sys.stdout.write('  -p <path>  Path to to pickle files\n')
-    sys.stdout.write('  -P         Profile script\n')
-    sys.stdout.write('  -q         Quiet output\n')
-    sys.stdout.write('  -s <b|e>   Specify X12 character set: b=basic, e=extended\n')
-    sys.stdout.write('  -v         Verbose output\n')
-    sys.stdout.write('  -x <tag>   Exclude external code\n')
+    sys.stderr.write('%s %s (%s)\n' % (pgm_nme, __version__, __date__))
+    sys.stderr.write('usage: %s [options] source_files\n' % (pgm_nme))
+    sys.stderr.write('\noptions:\n')
+    sys.stderr.write('  -c <file>  XML configuration file\n')
+    sys.stderr.write('  -d         Debug Mode.  Implies verbose output\n')
+    sys.stderr.write('  -f         Force map load.  Do not use the map pickle file\n')
+    sys.stderr.write('  -H         Create HTML output file\n')
+    sys.stderr.write('  -l <file>  Output log\n')
+    sys.stderr.write('  -m <path>  Path to map files\n')
+    #sys.stderr.write('  -o <file>  Override file\n')
+    sys.stderr.write('  -p <path>  Path to to pickle files\n')
+    sys.stderr.write('  -P         Profile script\n')
+    sys.stderr.write('  -q         Quiet output\n')
+    sys.stderr.write('  -s <b|e>   Specify X12 character set: b=basic, e=extended\n')
+    sys.stderr.write('  -v         Verbose output\n')
+    sys.stderr.write('  -x <tag>   Exclude external code\n')
     
 def main():
     """
@@ -64,13 +63,12 @@ def main():
         usage()
         return False
     logger = logging.getLogger('pyx12')
-    logger.setLevel(logging.INFO)
-    #formatter = logging.Formatter('%(asctime)s %(levelname)s %(module)s %(lineno)d %(message)s')
     formatter = logging.Formatter('%(asctime)s %(levelname)s %(message)s')
 
-    stderr_hdlr = logging.StreamHandler()
-    stderr_hdlr.setFormatter(formatter)
-    logger.addHandler(stderr_hdlr)
+    stdout_hdlr = logging.StreamHandler()
+    stdout_hdlr.setFormatter(formatter)
+    logger.addHandler(stdout_hdlr)
+    logger.setLevel(logging.INFO)
 
     fd_src = None
     fd_997 = None
@@ -113,7 +111,6 @@ def main():
                 logger.addHandler(hdlr) 
             except IOError:
                 logger.error('Could not open log file: %s' % (a))
-        #if o == '-9': target_997 = os.path.splitext(src_filename)[0] + '.997'
 
     if not debug:
         try:

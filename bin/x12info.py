@@ -13,8 +13,8 @@ def main():
             state = ''
             for c in src:
                 if c.get_seg_id() == 'ISA':
-                    sys.stdout.write('ISA Sender: "%s"\t' % (c[6]))
-                    sys.stdout.write('ISA Receiver: "%s"\t' % (c[8]))
+                    sys.stdout.write('  ISA Sender: "%s"\t' % (c.get_value('ISA06')))
+                    sys.stdout.write('ISA Receiver: "%s"\t' % (c.get_value('ISA08')))
                     if src.isa_usage == 'P':
                         sys.stdout.write(' PRODUCTION\t') 
                     else:
@@ -22,12 +22,14 @@ def main():
                     state = ''
                     sys.stdout.write('\n')
                 elif c.get_seg_id() == 'GS':
-                    sys.stdout.write('  GS Sender: "%s"\t' % (c[2]))
-                    sys.stdout.write('GS Receiver: "%s"\t' % (c[3]))
+                    sys.stdout.write('  GS Sender: "%s"\t' % (c.get_value('GS02')))
+                    sys.stdout.write('GS Receiver: "%s"\t' % (c.get_value('GS03')))
+                    sys.stdout.write('GS Type: "%s"\t' % (c.get_value('GS08')))
                     state = ''
                     sys.stdout.write('\n')
                 elif c.get_seg_id() == 'ST':
-                    sys.stdout.write('  ST ID: "%s"\t' % (c[1]))
+                    sys.stdout.write('  ST ID: "%s"\t' % (c.get_value('ST02')))
+                    sys.stdout.write('  ST Type: "%s"\t' % (c.get_value('ST01')))
                     state = ''
                     sys.stdout.write('\n')
                 else:
