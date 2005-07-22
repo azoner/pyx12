@@ -1,3 +1,6 @@
+Added a new XML output form: idtagqual.  This form appends a ID value to
+    non-unique segment IDs
+
 Draft map for Unsolicited 277: 277U.4010.X070.xml
 
 Fixed bug: blank element validation
