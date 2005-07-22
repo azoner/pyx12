@@ -17,6 +17,21 @@ class Default(unittest.TestCase):
         self.assertEqual(self.param.get('skip_997'), False)
 
 
+class ClearParam(unittest.TestCase):
+    def setUp(self):
+        self.param = pyx12.params.params()
+
+    def test_valid1(self):
+        self.param.set('simple_dtd', '')
+        self.assertEqual(self.param.get('simple_dtd'), None)
+        self.param.set('simple_dtd', 'aaa')
+        self.assertEqual(self.param.get('simple_dtd'), 'aaa')
+
+    def test_valid2(self):
+        self.param.set('exclude_external_codes', '')
+        self.assertEqual(self.param.get('exclude_external_codes'), None)
+
+
 class SetParamOverride(unittest.TestCase):
     def setUp(self):
         self.param = pyx12.params.params()
