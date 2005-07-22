@@ -2,11 +2,11 @@ Add test for x12 > xml > x12 for all xml mappings
 
 BUG: xmlx12.py is skipping empty elements
 
-xmlx12.py - handle idtag type
+xmlx12.py - handle idtag and idtagqual types
 
 Check ISA02 and 04 XML output
 
-x12xml_idtag: Append ID value for repeating segments 
+x12xml_idtagqual: Append ID value for repeating segments 
 
 Windows issues:
   NamedTempFile permissions
