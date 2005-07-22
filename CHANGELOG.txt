@@ -1,3 +1,5 @@
+Fixed bug: blank element validation
+
 Fixed mis-named xid in 837.4010.X098.xml
 
 Fixed incorrect spelling of xmlout parameter in pyx12.conf.xml.sample
