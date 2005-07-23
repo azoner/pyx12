@@ -17,7 +17,7 @@ Append ID value for non-unique segments IDs
 """
 
 import logging
-import pdb
+#import pdb
 #import string
 #import os.path
 
@@ -28,12 +28,13 @@ from xmlwriter import XMLWriter
 from map_walker import pop_to_parent_loop
 
 logger = logging.getLogger('pyx12.x12xml.idtagqual')
-logger.setLevel(logging.DEBUG)
+#logger.setLevel(logging.DEBUG)
 #logger.setLevel(logging.ERROR)
 
 class x12xml_idtagqual(x12xml):
     def __init__(self, fd, dtd_urn=None):
         x12xml.__init__(self)
+        logger.debug('idtagqual')
         self.writer = XMLWriter(fd)
         if dtd_urn:
             self.writer.doctype(
@@ -63,7 +64,6 @@ class x12xml_idtagqual(x12xml):
         if self.path != path:
             last_path = filter(lambda x: x!='', self.path.split('/'))
             cur_path = filter(lambda x: x!='', parent.get_path().split('/'))
-            
             match_idx = 0
             for i in range(min(len(cur_path), len(last_path))):
                 if cur_path[i] != last_path[i]:
@@ -73,13 +73,14 @@ class x12xml_idtagqual(x12xml):
                 self.writer.pop()
             for i in range(match_idx, len(cur_path)):
                 self.writer.push('L'+cur_path[i])
-        self.writer.push(seg_node.id)
+        seg_node_id = self.get_node_id(seg_node, parent, seg_data)
+        self.writer.push(seg_node_id)
         for i in range(len(seg_data)):
             child_node = seg_node.get_child_node_by_idx(i)
             if child_node.usage == 'N' or seg_data.get('%02i' % (i+1)).is_empty():
                 pass # Do not try to ouput for invalid or empty elements
             elif child_node.is_composite():
-                self.writer.push(seg_node.id)
+                self.writer.push(seg_node_id)
                 comp_data = seg_data.get('%02i' % (i+1))
                 for j in range(len(comp_data)):
                     subele_node = child_node.get_child_node_by_idx(j)
@@ -97,8 +98,25 @@ class x12xml_idtagqual(x12xml):
         self.writer.pop() #end segment
         self.path = path
         
-def is_not_blank(x):
-    """
-    @rtype: boolean
-    """
-    return x != ''
+    def get_node_id(self, seg_node, parent, seg_data):
+        """
+        Get a unique node ID string
+        @param seg_node: L{node<map_if.segment_if>}
+        @param parent: L{node<map_if.segment_if>}
+        @param seg_data: L{node<segment.segment>}
+        @return: Unique node representation
+        @rtype: string
+        """
+        if len(parent.pos_map[seg_node.pos]) > 1:
+            id_val = seg_data.get_value('01')
+            if seg_node.children[0].is_element() \
+                    and seg_node.children[0].data_type == 'ID' \
+                    and len(seg_node.children[0].valid_codes) > 0 \
+                    and id_val in seg_node.children[0].valid_codes:
+                return seg_node.id + '_' + id_val
+            elif seg_node.children[0].is_composite() \
+                    and seg_node.children[0].children[0].data_type == 'ID' \
+                    and len(seg_node.children[0].children[0].valid_codes) > 0 \
+                    and id_val in seg_node.children[0].children[0].valid_codes:
+                return seg_node.id + '_' + id_val
+        return seg_node.id

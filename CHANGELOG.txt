@@ -1,4 +1,4 @@
-Added a new XML output form: idtagqual.  This form appends a ID value to
+Added a new XML output form: idtagqual.  This form appends the ID value to
     non-unique segment IDs
 
 Draft map for Unsolicited 277: 277U.4010.X070.xml
