@@ -131,10 +131,12 @@ class composite:
         return self.format(self.subele_term)
 
     def format(self, subele_term=None):
-        if subele_term is None:
-            subele_term = self.subele_term
-        return '%s' % (string.join(map(element.__repr__, self.elements), subele_term))
-
+        if subele_term is None: subele_term = self.subele_term
+        for i in range(len(self.elements)-1, -1, -1):
+            if not self.elements[i].is_empty():
+                break
+        return '%s' % (string.join(map(element.__repr__, self.elements[:i+1]), subele_term))
+            
     def get_value(self):
         if len(self.elements) == 1:
             return self.elements[0].get_value()
@@ -367,23 +369,29 @@ class segment:
         """
         @rtype: string
         """
-        if seg_term is None:
-            seg_term = self.seg_term
-        if ele_term is None:
-            ele_term = self.ele_term
-        if subele_term is None:
-            subele_term = self.subele_term
+        if seg_term is None: seg_term = self.seg_term
+        if ele_term is None: ele_term = self.ele_term
+        if subele_term is None: subele_term = self.subele_term
         str_elems = []
-        for ele in self.elements:
+        for i in range(len(self.elements)-1, -1, -1):
+            if not self.elements[i].is_empty():
+                break
+        for ele in self.elements[:i+1]:
             str_elems.append(ele.format(subele_term))
+        #str_elems
         return '%s%s%s%s' % (self.seg_id, ele_term, \
             string.join(str_elems, ele_term), \
             seg_term)
 
     def format_ele_list(self, str_elems, subele_term=None):
-        if subele_term is None:
-            subele_term = self.subele_term
-        for ele in self.elements:
+        """
+        Modifies the parameter str_elems
+        """
+        if subele_term is None: subele_term = self.subele_term
+        for i in range(len(self.elements)-1, -1, -1):
+            if not self.elements[i].is_empty():
+                break
+        for ele in self.elements[:i+1]:
             str_elems.append(ele.format(subele_term))
 
     def is_empty(self):
