@@ -82,7 +82,7 @@ class x12xml_simple(x12xml):
                         attrs={u'id': subele_node.id})
                 self.writer.pop() #end composite
             elif child_node.is_element():
-                if seg_data.get('%02i' % (i+1)) == '':
+                if seg_data.get_value('%02i' % (i+1)) == '':
                     pass
                     #self.writer.empty(u"ele", attrs={u'id': child_node.id})
                 else:

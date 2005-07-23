@@ -144,6 +144,12 @@ class Simple(unittest.TestCase):
         self.assertEqual(self.seg.get_value('TST06'), None)
         #self.failUnlessRaises(IndexError, lambda x: self.seg[0][x].get_value(), 1)
 
+    def test_simple_spaces(self):
+        seg_str = 'TST*AA*          *BB~'
+        seg = pyx12.segment.segment(seg_str, '~', '*', ':')
+        self.assertEqual(len(seg.get_value('TST02')), 10)
+        self.assertEqual(seg.get_value('TST02'), '          ')
+
 
 class GetValue(unittest.TestCase):
 
