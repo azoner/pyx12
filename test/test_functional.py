@@ -55,10 +55,8 @@ def test_997(src_filename, param):
     global logger
     try:
         if os.path.splitext(src_filename)[1] == '.997':
-            target_997 = src_filename + '.997'
             base_997 = src_filename + '.997.base'
         else:
-            target_997 = os.path.splitext(src_filename)[0] + '.997'
             base_997 = os.path.splitext(src_filename)[0] + '.997.base'
         fd_997 = tempfile.NamedTemporaryFile()
         if not os.path.isfile(base_997):
@@ -68,13 +66,10 @@ def test_997(src_filename, param):
         pyx12.x12n_document.x12n_document(param, src_filename, fd_997, None)
 
         fd_997.seek(0)
-        target_997 = fd_997.name
         fd_new = tempfile.NamedTemporaryFile()
         for line in fd_997.readlines():
             if line[:3] not in ('ISA', 'GS*', 'ST*', 'SE*', 'GE*', 'IEA'):
                 fd_new.write(line)
-        #fd_new.seek(0)
-        #sys.stdout.write(fd_new.read())
         fd_new.seek(0)
         
         fd_base = open(base_997, 'r')
@@ -83,14 +78,10 @@ def test_997(src_filename, param):
             if line[:3] not in ('ISA', 'GS*', 'ST*', 'SE*', 'GE*', 'IEA'):
                 fd_orig.write(line)
         fd_orig.write(fd_base.read())
-        #fd_orig.seek(0)
-        #sys.stdout.write(fd_orig.read())
         fd_orig.seek(0)
-        #open(target_997, 'w').write(fd_997.read())
-        #fd_997.close()
 
         diff_txt = diff(fd_orig.name, fd_new.name)
-        sys.stdout.write('%s ... ' % (os.path.basename(src_filename)))
+        sys.stdout.write('997: %s ... ' % (os.path.basename(src_filename)))
         if diff_txt:
             sys.stdout.write('FAIL\n')
             for line in diff_txt.splitlines(True):
@@ -113,10 +104,11 @@ def test_xml(src_filename, param, xmlout='simple'):
     Compare the xml output against a known good xml document
     """
     global logger
+    param.set('idtag_dtd', None)
+    param.set('idtagqual_dtd', None)
     try:
-        target_xml = os.path.splitext(src_filename)[0] + '.xml'
-        fd_xml = tempfile.NamedTemporaryFile()
         for xmlout in ('simple', 'idtag', 'idtagqual'):
+            fd_xml = tempfile.NamedTemporaryFile()
             base_xml = os.path.splitext(src_filename)[0] + '.xml.' + xmlout
             if not os.path.isfile(base_xml):
                 #logger.info('Base xml not found: %s' % (os.path.basename(base_xml)))
@@ -128,27 +120,10 @@ def test_xml(src_filename, param, xmlout='simple'):
                 break
 
             fd_xml.seek(0)
-            target_xml = fd_xml.name
-            fd_new = tempfile.NamedTemporaryFile()
-            for line in fd_xml.readlines():
-                #if line[:3] not in ('ISA', 'GS*', 'ST*', 'SE*', 'GE*', 'IEA'):
-                fd_new.write(line)
-            #fd_new.seek(0)
-            #sys.stdout.write(fd_new.read())
-            fd_new.seek(0)
-            
             fd_base = open(base_xml, 'r')
-            fd_orig = tempfile.NamedTemporaryFile()
-            for line in fd_base.readlines():
-                #if line[:3] not in ('ISA', 'GS*', 'ST*', 'SE*', 'GE*', 'IEA'):
-                fd_orig.write(line)
-            fd_orig.write(fd_base.read())
-            #fd_orig.seek(0)
-            #sys.stdout.write(fd_orig.read())
-            fd_orig.seek(0)
 
-            diff_txt = diff(fd_orig.name, fd_new.name)
-            sys.stdout.write('%s ... ' % (os.path.basename(src_filename)))
+            diff_txt = diff(fd_base.name, fd_xml.name)
+            sys.stdout.write('xml %s: %s ... ' % (xmlout, os.path.basename(src_filename)))
             if diff_txt:
                 sys.stdout.write('FAIL\n')
                 for line in diff_txt.splitlines(True):
@@ -158,6 +133,8 @@ def test_xml(src_filename, param, xmlout='simple'):
             else:
                 sys.stdout.write('ok')
             sys.stdout.write('\n')
+            del fd_base
+            del fd_xml
     except IOError:
         sys.stderr.write('Error: Could not open files (%s)\n' % (src_filename))
         return False
@@ -192,15 +169,17 @@ def main():
         except ImportError:
             pass
 
-    #diff = difflib.Differ(skip_headers)
-    try:
-        dir1 = os.path.abspath('./files')
-        os.chdir(dir1)
-        names = os.listdir(dir1)
-    except os.error:
-        logger.critical('Can''t list %s' % (dir1))
-        names = []
-    names.sort()
+    dir1 = os.path.abspath('./files')
+    if len(sys.argv) > 1:
+        names = sys.argv[1:]
+    else:
+        try:
+            os.chdir(dir1)
+            names = os.listdir(dir1)
+        except os.error:
+            logger.critical('Can''t list %s' % (dir1))
+            names = []
+        names.sort()
     for name in names:
         src_filename = os.path.join(dir1, name)
         if os.path.isfile(src_filename):

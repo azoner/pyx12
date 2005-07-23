@@ -4,7 +4,9 @@
   <loop id='ISA_LOOP'>
     <seg id='ISA'>
       <ele id='ISA01'>00</ele>
+      <ele id='ISA02'>         </ele>
       <ele id='ISA03'>00</ele>
+      <ele id='ISA04'>         </ele>
       <ele id='ISA05'>ZZ</ele>
       <ele id='ISA06'>00000AAA       </ele>
       <ele id='ISA07'>ZZ</ele>
