@@ -60,11 +60,29 @@ class Alter(unittest.TestCase):
         seg.set('TST03', 'YY')
         self.assertEqual(seg.format(), 'TST*AA:1:1*BB:5*YY~')
 
+    def test_extend_element(self):
+        seg_str = 'TST*AA:1:1*BB:5*ZZ'
+        seg = pyx12.segment.segment(seg_str, '~', '*', ':')
+        seg.set('TST05', 'AR')
+        self.assertEqual(seg.format(), 'TST*AA:1:1*BB:5*ZZ**AR~')
+
     def test_alter_composite(self):
         seg_str = 'TST*AA:1:1*BB:5*ZZ~'
         seg = pyx12.segment.segment(seg_str, '~', '*', ':')
         seg.set('TST02', 'CC:2')
         self.assertEqual(seg.format(), 'TST*AA:1:1*CC:2*ZZ~')
+
+    def test_extend_composite(self):
+        seg_str = 'TST*AA:1:1*BB:5*ZZ~'
+        seg = pyx12.segment.segment(seg_str, '~', '*', ':')
+        seg.set('TST02-4', 'T')
+        self.assertEqual(seg.format(), 'TST*AA:1:1*BB:5::T*ZZ~')
+
+    def test_extend_composite2(self):
+        seg_str = 'TST*AA:1:1*BB:5*ZZ~'
+        seg = pyx12.segment.segment(seg_str, '~', '*', ':')
+        seg.set('TST05-2', 'T')
+        self.assertEqual(seg.format(), 'TST*AA:1:1*BB:5*ZZ**:T~')
 
 
 class Composite(unittest.TestCase):

@@ -316,9 +316,13 @@ class segment:
         @type val: string
         """
         (ele_idx, comp_idx) = self._parse_refdes(ref_des)
+        while len(self.elements) <= ele_idx:
+            self.elements.append(composite('', self.subele_term))
         if comp_idx is None:
             self.elements[ele_idx] = composite(val, self.subele_term)
         else:
+            while len(self.elements[ele_idx]) <= comp_idx:
+                self.elements[ele_idx].elements.append(element(''))
             self.elements[ele_idx][comp_idx] = element(val)
 
     def is_element(self, ref_des):
