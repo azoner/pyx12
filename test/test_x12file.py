@@ -67,7 +67,7 @@ class Delimiters(unittest.TestCase):
         src = pyx12.x12file.x12file(fd.name, self.errh)
         for seg in src:
             if seg.get_seg_id() == 'ZZ':
-                self.assertEqual(self.errh.err_cde, 'SEG1', self.errh.err_str)
+                self.assertEqual(self.errh.err_cde, '3', self.errh.err_str)
 
                     
 class ISA_header(unittest.TestCase):
