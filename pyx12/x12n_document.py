@@ -126,6 +126,7 @@ def x12n_document(param, src_file, fd_997, fd_html, fd_xmldoc=None):
         html.header()
         err_iter = error_handler.err_iter(errh)
     if fd_xmldoc:
+        logger.debug('xmlout: %s' % (param.get('xmlout')))
         if param.get('xmlout') == 'simple':
             xmldoc = x12xml_simple.x12xml_simple(fd_xmldoc, param.get('simple_dtd'))
         elif param.get('xmlout') == 'idtag':

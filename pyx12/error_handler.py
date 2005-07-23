@@ -188,7 +188,7 @@ class err_handler:
     def add_seg(self, map_node, seg_data, seg_count, cur_line, ls_id):
         """
         @param map_node: current segment node
-        @type map_node: L{map_if<map_if.x12_node>}
+        @type map_node: L{node<map_if.segment_if>}
         @param seg_data: Segment object
         @type seg_data: L{segment<segment.segment>}
         @param seg_count: Count of current segment in the ST Loop
