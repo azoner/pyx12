@@ -20,14 +20,8 @@ import os, os.path
 import sys
 import libxml2
 import logging
-import string
-#import StringIO
-#import tempfile
-import pdb
-#import profile
 
 # Intrapackage imports
-import pyx12.params
 import pyx12.segment
 
 #Global Variables
@@ -47,7 +41,6 @@ def usage():
     sys.stdout.write('%s %s (%s)\n' % (pgm_nme, __version__, __date__))
     sys.stdout.write('usage: %s [options] source_file\n' % (pgm_nme))
     sys.stdout.write('\noptions:\n')
-    sys.stdout.write('  -c <file>  XML configuration file\n')
     sys.stdout.write('  -l <file>  Output log\n')
     sys.stdout.write('  -o <file>  Output file\n')
     sys.stdout.write('  -q         Quiet output\n')
@@ -61,7 +54,6 @@ def convert(filename, fd_out):
         found_text = False
         while ret == 1:
             tmpNodeType = reader.NodeType()
-            #print tmpNodeType, reader.Name(), reader.Value()
             if tmpNodeType == NodeType['element_start']:
                 found_text = False
                 cur_name = reader.Name()
@@ -71,39 +63,49 @@ def convert(filename, fd_out):
                             #fd_out.write(reader.Value())
                             seg_data = pyx12.segment.segment(reader.Value(), \
                                 '~', '*', ':')
-                            #if reader.Value() == 'NM1':
-                            #    pdb.set_trace()
-                elif cur_name == 'comp':
-                    comp = []
-                #elif cur_name == 'ele' and not reader.HasValue():
-                #    seg_data.append('')
+                elif cur_name == 'ele':
+                    while reader.MoveToNextAttribute():
+                        if reader.Name() == 'id':
+                            ele_id = reader.Value()
+                #elif cur_name == 'comp':
+                #    comp = []
+                elif cur_name == 'subele':
+                    while reader.MoveToNextAttribute():
+                        if reader.Name() == 'id':
+                            subele_id = reader.Value()
             elif tmpNodeType == NodeType['CData2']:
-                #pdb.set_trace()
-                if cur_name in ('ele', 'subele'):
-                    seg_data.append(reader.Value().replace('\n', ''))
+                if cur_name == 'ele':
+                    seg_data.set(ele_id, reader.Value().replace('\n', ''))
+                    found_text = True
+                elif cur_name == 'subele':
+                    seg_data.set(subele_id, reader.Value().replace('\n', ''))
                     found_text = True
             elif tmpNodeType == NodeType['text']:
                 if cur_name == 'ele':
-                    seg_data.append(reader.Value())
+                    seg_data.set(ele_id, reader.Value())
                     found_text = True
                 elif cur_name == 'subele':
-                    comp.append(reader.Value())
+                    #comp.set(subele_id, reader.Value())
+                    seg_data.set(subele_id, reader.Value())
                     found_text = True
             elif tmpNodeType == NodeType['element_end']:
                 cur_name = reader.Name()
                 if cur_name == 'seg':
                     fd_out.write(seg_data.format())
                     fd_out.write('\n')
-                elif cur_name == 'ele' and not found_text:
-                    seg_data.append('')
-                    found_text = True
+                elif cur_name == 'ele':
+                    if not found_text:
+                        seg_data.set(ele_id, '')
+                        found_text = True
+                    ele_id = None
                 elif cur_name == 'subele' and not found_text:
-                    comp.append('')
+                    #comp.append('')
+                    seg_data.set(subele_id, '')
                     found_text = True
+                    subele_id = None
                 elif cur_name == 'comp':
-                    seg_data.append(string.join(comp, ':'))
-                #elif cur_name == 'subele':
-                #    fd_out.write(':')
+                    #seg_data.append(string.join(comp, ':'))
+                    subele_id = None
                 cur_name = None
             ret = reader.Read()
     except:
@@ -117,7 +119,7 @@ def main():
     global logger
     import getopt
     try:
-        opts, args = getopt.getopt(sys.argv[1:], 'c:l:o:qvh')
+        opts, args = getopt.getopt(sys.argv[1:], 'l:o:qvh')
     except getopt.error, msg:
         usage()
         raise
@@ -132,19 +134,6 @@ def main():
     logger.addHandler(stderr_hdlr)
     logger.setLevel(logging.INFO)
     target_x12 = None
-    configfile = None
-    for o, a in opts:
-        if o == '-c':
-            configfile = a
-    if configfile:
-        param = pyx12.params.params('/usr/local/etc/pyx12.conf.xml',\
-            os.path.expanduser('~/.pyx12.conf.xml'), \
-            configfile)
-    else:
-        param = pyx12.params.params('/usr/local/etc/pyx12.conf.xml',\
-            os.path.expanduser('~/.pyx12.conf.xml'))
-
-    #param.set('map_path', os.path.expanduser('~/src/pyx12/map/'))
     for o, a in opts:
         if o == '-h':
             usage()
@@ -152,7 +141,6 @@ def main():
         if o == '-v': logger.setLevel(logging.DEBUG)
         if o == '-q': logger.setLevel(logging.ERROR)
         if o == '-o': target_x12 = a
-        if o == '-H': flag_html = True
         if o == '-l':
             try:
                 hdlr = logging.FileHandler(a)
@@ -173,7 +161,6 @@ def main():
         except:
             logger.error('Could not open file %s' % (target_x12))
             return False
-        #target_x12 = os.path.splitext(src_filename)[0] + '.xml'
     else:
         fd_x12 = sys.stdout
 
@@ -182,8 +169,6 @@ def main():
         fd_x12.close()
         if not result:
             logger.error('File %s had errors.' % (src_filename))
-            #if target_x12:
-            #    os.remove(target_x12)
             return False
     except KeyboardInterrupt:
         print "\n[interrupt]"
@@ -194,7 +179,7 @@ def main():
 if __name__ == '__main__':
     try:
         import psyco
-        #psyco.full()
+        psyco.full()
     except ImportError:
         pass
 
