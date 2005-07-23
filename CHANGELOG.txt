@@ -1,3 +1,5 @@
+Fixed bug: SEG1 showing in AK304
+
 Added a new XML output form: idtagqual.  This form appends the ID value to
     non-unique segment IDs
 

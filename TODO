@@ -1,5 +1,3 @@
-BUG: SEG1 showing in AK304
-
 Add test for x12 > xml > x12 for all xml mappings
 
 BUG: xmlx12.py is skipping empty elements

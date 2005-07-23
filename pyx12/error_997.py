@@ -264,6 +264,7 @@ class error_997_visitor(error_visitor.error_visitor):
         """
         #logger.debug('visit_deg: AK3 - ')
         #seg_base = ['AK3', err_seg.seg_id, '%i' % err_seg.seg_count]
+        valid_AK3_codes = ('1', '2', '3', '4', '5', '6', '7', '8')
         seg_base = pyx12.segment.segment('AK3', '~', '*', ':')
         seg_base.append(err_seg.seg_id)
         seg_base.append('%i' % err_seg.seg_count)
@@ -273,9 +274,10 @@ class error_997_visitor(error_visitor.error_visitor):
             seg_base.append('')
         seg_str = seg_base.format('~', '*', ':')
         for (err_cde, err_str, err_value) in err_seg.errors:
-            seg_data = pyx12.segment.segment(seg_str, '~', '*', ':')
-            seg_data.append(err_cde)
-            self._write(seg_data)
+            if err_cde in valid_AK3_codes:
+                seg_data = pyx12.segment.segment(seg_str, '~', '*', ':')
+                seg_data.append(err_cde)
+                self._write(seg_data)
         if err_seg.child_err_count() > 0:
             seg_data = pyx12.segment.segment(seg_str, '~', '*', ':')
             seg_data.append('8')
@@ -286,6 +288,7 @@ class error_997_visitor(error_visitor.error_visitor):
         @param err_ele: Segment error handler
         @type err_ele: L{error_handler.err_ele}
         """
+        valid_AK4_codes = ('1', '2', '3', '4', '5', '6', '7', '8', '9', '10')
         seg_base = pyx12.segment.segment('AK4', '~', '*', ':')
         if err_ele.subele_pos: 
             seg_base.append('%i:%i' % (err_ele.ele_pos, err_ele.subele_pos))
@@ -297,11 +300,12 @@ class error_997_visitor(error_visitor.error_visitor):
             seg_base.append('')
         seg_str = seg_base.format('~', '*', ':')
         for (err_cde, err_str, bad_value) in err_ele.errors:
-            seg_data = pyx12.segment.segment(seg_str, '~', '*', ':')
-            seg_data.append(err_cde)
-            if bad_value:
-                seg_data.append(bad_value)
-            self._write(seg_data)
+            if err_cde in valid_AK4_codes:
+                seg_data = pyx12.segment.segment(seg_str, '~', '*', ':')
+                seg_data.append(err_cde)
+                if bad_value:
+                    seg_data.append(bad_value)
+                self._write(seg_data)
 
     def _write(self, seg_data):
         """
