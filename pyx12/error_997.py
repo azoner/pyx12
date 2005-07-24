@@ -276,7 +276,7 @@ class error_997_visitor(error_visitor.error_visitor):
         for (err_cde, err_str, err_value) in err_seg.errors:
             if err_cde in valid_AK3_codes:
                 seg_data = pyx12.segment.segment(seg_str, '~', '*', ':')
-                seg_data.append(err_cde)
+                seg_data.set('AK304', err_cde)
                 self._write(seg_data)
         if err_seg.child_err_count() > 0:
             seg_data = pyx12.segment.segment(seg_str, '~', '*', ':')
@@ -296,15 +296,15 @@ class error_997_visitor(error_visitor.error_visitor):
             seg_base.append('%i' % (err_ele.ele_pos))
         if err_ele.ele_ref_num:
             seg_base.append(err_ele.ele_ref_num)
-        else:
-            seg_base.append('')
+        #else:
+        #    seg_base.append('')
         seg_str = seg_base.format('~', '*', ':')
         for (err_cde, err_str, bad_value) in err_ele.errors:
             if err_cde in valid_AK4_codes:
                 seg_data = pyx12.segment.segment(seg_str, '~', '*', ':')
-                seg_data.append(err_cde)
+                seg_data.set('AK403', err_cde)
                 if bad_value:
-                    seg_data.append(bad_value)
+                    seg_data.set('AK404', bad_value)
                 self._write(seg_data)
 
     def _write(self, seg_data):
