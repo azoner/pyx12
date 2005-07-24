@@ -95,35 +95,6 @@ class Format(unittest.TestCase):
         self.assertEqual(path_str, path.format())
     
 
-class RefDes(unittest.TestCase):
-
-    def test_simple1(self):
-        self.assertEqual(self.seg.get_value('TST01'), 'AA')
-        self.assertEqual(self.seg.get_value('01'), 'AA')
-
-        self.assertEqual(self.seg.get_value('TST02'), '1')
-        self.assertEqual(self.seg.get_value('02'), '1')
-
-    def test_composite1(self):
-        self.assertEqual(self.seg.get_value('TST04-2'), '5')
-        self.assertEqual(self.seg.get_value('04-2'), '5')
-
-    def test_composite2(self):
-        self.assertEqual(self.seg.get_value('TST04-1'), 'BB')
-        self.assertEqual(self.seg.get_value('04-1'), 'BB')
-
-    def test_composite3(self):
-        self.assertEqual(self.seg.get_value('TST04'), 'BB:5')
-        self.assertEqual(self.seg.get_value('04'), 'BB:5')
-
-    def test_none(self):
-        self.assertEqual(self.seg.get_value('TST15'), None)
-        self.assertEqual(self.seg.get_value('15'), None)
-        self.assertEqual(self.seg.get_value('TST15-2'), None)
-        self.assertEqual(self.seg.get_value('15-2'), None)
-
-
-
 def suite():
     suite = unittest.TestSuite()
     suite.addTest(unittest.makeSuite(AbsPath))
