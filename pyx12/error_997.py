@@ -280,7 +280,7 @@ class error_997_visitor(error_visitor.error_visitor):
                 self._write(seg_data)
         if err_seg.child_err_count() > 0:
             seg_data = pyx12.segment.segment(seg_str, '~', '*', ':')
-            seg_data.append('8')
+            seg_data.set('AK304', '8')
             self._write(seg_data)
         
     def visit_ele(self, err_ele): 
