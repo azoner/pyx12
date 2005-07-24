@@ -1,10 +1,6 @@
 Add test for x12 > xml > x12 for all xml mappings
 
-BUG: xmlx12.py is skipping empty elements
-
 xmlx12.py - handle idtag and idtagqual types
-
-Check ISA02 and 04 XML output
 
 Windows issues:
   NamedTempFile permissions

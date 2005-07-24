@@ -47,11 +47,19 @@ def usage():
     sys.stdout.write('  -v         Verbose output\n')
 
 def convert(filename, fd_out):
+    """
+    Convert a XML file in simple X12 form to an X12 file
+    @param filename:  libxml2 requires a file name.  '-' gives stdin
+    @type filename: string
+    @param fd_out: Output file
+    @type fd_out: file descripter
+    """
     global logger
     try:
         reader = libxml2.newTextReaderFilename(filename)
         ret = reader.Read()
         found_text = False
+        subele_term = ''
         while ret == 1:
             tmpNodeType = reader.NodeType()
             if tmpNodeType == NodeType['element_start']:
@@ -82,7 +90,10 @@ def convert(filename, fd_out):
                     found_text = True
             elif tmpNodeType == NodeType['text']:
                 if cur_name == 'ele':
-                    seg_data.set(ele_id, reader.Value())
+                    if ele_id == 'ISA16':
+                        subele_term = ':'
+                    else:
+                        seg_data.set(ele_id, reader.Value())
                     found_text = True
                 elif cur_name == 'subele':
                     #comp.set(subele_id, reader.Value())
@@ -91,7 +102,11 @@ def convert(filename, fd_out):
             elif tmpNodeType == NodeType['element_end']:
                 cur_name = reader.Name()
                 if cur_name == 'seg':
-                    fd_out.write(seg_data.format())
+                    if seg_data.get_seg_id() == 'ISA':
+                        seg_str = seg_data.format()
+                        fd_out.write(seg_str[:-1] + seg_str[-3] + subele_term + seg_str[-1])
+                    else:
+                        fd_out.write(seg_data.format())
                     fd_out.write('\n')
                 elif cur_name == 'ele':
                     if not found_text:

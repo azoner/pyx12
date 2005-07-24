@@ -1,3 +1,5 @@
+Fixed bug: xmlx12.py is skipping empty elements
+
 segment interface:
     extend segment and composite, do not print trailing terminators
 
