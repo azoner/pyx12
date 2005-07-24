@@ -110,8 +110,7 @@ class x12file:
                         break
                 if line[-1] == self.ele_term:
                     err_str = 'Segment contains trailing element terminators'
-                    #self.errh.seg_error('SEG1', err_str, None, src_line=self.cur_line+1)
-                    self.errh.ele_error('3', err_str, None)
+                    self.errh.seg_error('SEG1', err_str, None, src_line=self.cur_line+1)
                 #seg = string.split(line, self.ele_term)
                 seg = pyx12.segment.segment(line, self.seg_term, self.ele_term, \
                     self.subele_term)

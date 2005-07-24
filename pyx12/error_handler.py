@@ -287,7 +287,8 @@ class err_handler:
         self._add_cur_seg()
         self.cur_seg_node.add_error(err_cde, err_str, err_value)
         sout = ''
-        sout += 'Line:%i ' % (self.cur_seg_node.get_cur_line())
+        #sout += 'Line:%i ' % (self.cur_seg_node.get_cur_line())
+        sout += 'Line:%i ' % (src_line)
         sout += 'SEG:%s - %s' % (err_cde, err_str)
         if err_value:
             sout += ' (%s)' % err_value
