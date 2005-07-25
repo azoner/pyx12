@@ -30,6 +30,7 @@ import subprocess
 import pyx12
 import pyx12.x12n_document
 import pyx12.params
+import pyx12.xmlx12_simple
 
 logger = None
 
@@ -132,6 +133,25 @@ def test_xml(src_filename, param, xmlout='simple'):
                 sys.stdout.write('\n')
             else:
                 sys.stdout.write('ok')
+            sys.stdout.write('\n')
+
+            # Back to X12
+            if xmlout in ('simple'):
+                fd_xml.seek(0)
+                fd_x12 = tempfile.NamedTemporaryFile()
+                res = pyx12.xmlx12_simple.convert(fd_xml.name, fd_x12)
+                fd_xml.seek(0)
+                fd_x12.seek(0)
+                diff_txt = diff(src_filename, fd_x12.name)
+                sys.stdout.write('xmlx12 %s: %s ... ' % (xmlout, os.path.basename(src_filename)))
+                if diff_txt:
+                    sys.stdout.write('FAIL\n')
+                    for line in diff_txt.splitlines(True):
+                        if '/tmp/' not in line:
+                            sys.stdout.write(line)
+                    sys.stdout.write('\n')
+                else:
+                    sys.stdout.write('ok')
             sys.stdout.write('\n')
             del fd_base
             del fd_xml
