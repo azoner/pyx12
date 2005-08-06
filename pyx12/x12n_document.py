@@ -168,12 +168,8 @@ def x12n_document(param, src_file, fd_997, fd_html, fd_xmldoc=None):
                 # Generate 997
                 #XXX Generate TA1 if needed.
             elif seg.get_seg_id() == 'GS':
-                #fic = map_node.get_elemval_by_id(seg, 'GS01')
-                #vriic = map_node.get_elemval_by_id(seg, 'GS08')
                 fic = seg.get_value('GS01')
                 vriic = seg.get_value('GS08')
-                #map_node = control_map.getnodebypath('/GS')
-                #map_node.is_valid(seg, errh)
                 map_file_new = map_index_if.get_filename(icvn, vriic, fic)
                 if map_file != map_file_new:
                     map_file = map_file_new
@@ -187,6 +183,21 @@ def x12n_document(param, src_file, fd_997, fd_html, fd_xmldoc=None):
                     node.reset_cur_count()
                     node.incr_cur_count()
                 errh.add_gs_loop(seg, src)
+            elif seg.get_seg_id() == 'BHT':
+                if vriic in ('004010X094', '004010X094A1'):
+                    tspc = seg.get_value('BHT02')
+                    map_file_new = map_index_if.get_filename(icvn, vriic, fic, tspc)
+                    if map_file != map_file_new:
+                        map_file = map_file_new
+                        if map_file is None:
+                            raise EngineError, "Map not found.  icvn=%s, fic=%s, vriic=%s, tspc=%s" % \
+                                (icvn, fic, vriic, tspc)
+                        cur_map = map_if.load_map_file(map_file, param)
+                        logger.debug('Map file: %s' % (map_file))
+                        node = cur_map.getnodebypath('/ISA_LOOP/GS_LOOP/ST_LOOP/BHT')
+                        node.reset_cur_count()
+                        node.incr_cur_count()
+                errh.add_seg(node, seg, src.get_seg_count(), src.get_cur_line(), src.get_ls_id())
             elif seg.get_seg_id() == 'GE':
                 errh.close_gs_loop(node, seg, src)
             elif seg.get_seg_id() == 'ST':

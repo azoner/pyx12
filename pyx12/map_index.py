@@ -15,6 +15,7 @@ Locate the correct xml map file given:
     - Interchange Control Version Number (ISA12)
     - Functional Identifier Code (GS01)
     - Version / Release / Industry Identifier Code (GS08)
+    - Transaction Set Purpose Code (BHT02) (For 278 only)
 """
 
 import libxml2
@@ -54,33 +55,34 @@ class map_index:
                         vriic = reader.Value()
                     elif reader.Name() == 'fic':
                         fic = reader.Value()
+                    elif reader.Name() == 'tspc':
+                        tspc = reader.Value()
 
             if reader.NodeType() == NodeType['element_end'] and reader.Name() == 'map':
-                self.maps.append((icvn, vriic, fic, file_name))
+                self.maps.append((icvn, vriic, fic, tspc, file_name))
                 vriic = None
                 fic = None
+                tspc = None
                 file_name = None
 
             if reader.NodeType() == NodeType['text']:
                 file_name = reader.Value()
 
     
-    def add_map(self, icvn, vriic, fic, map_file):
-        self.maps.append((icvn, vriic, fic, map_file))
+    def add_map(self, icvn, vriic, fic, tspc, map_file):
+        self.maps.append((icvn, vriic, fic, tspc, map_file))
     
-    def get_filename(self, icvn, vriic, fic):
+    def get_filename(self, icvn, vriic, fic, tspc=None):
         """
         @rtype: string
         """
-        #print 'get_filename', icvn, vriic, fic
-        #if not self.map_index_file:
-        #    raise errors.GSError, 'Map file not found, icvn=%s, fic=%s, vriic=%s' % (isa.icvn,self.fic,self.vriic)
         for a in self.maps:
-            if a[0] == icvn and a[1] == vriic and a[2] == fic:
-                return a[3]
+            if a[0] == icvn and a[1] == vriic and a[2] == fic \
+                    and (a[3] is None or a[3] == tspc):
+                return a[4]
         return None
 
     def print_all(self):
         for a in self.maps:
-            print a[0], a[1], a[2], a[3]
+            print a[0], a[1], a[2], a[3], a[4]
 
