@@ -33,6 +33,7 @@ class map_index:
         @type map_index_file: string
         """
         self.maps = []
+        tspc = None
         try:
             reader = libxml2.newTextReaderFilename(map_index_file)
         except:

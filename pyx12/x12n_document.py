@@ -81,6 +81,7 @@ def x12n_document(param, src_file, fd_997, fd_html, fd_xmldoc=None):
     map_index_if = map_index.map_index(os.path.join(map_path, 'maps.xml'))
     walker = walk_tree()
     #Determine which map to use for this transaction
+    tspc = None
     for seg in src:
         if seg.get_seg_id() == 'ISA':
             #map_node = walker.walk(control_map, seg)
@@ -107,8 +108,8 @@ def x12n_document(param, src_file, fd_997, fd_html, fd_xmldoc=None):
         elif seg.get_seg_id() == 'ST':
             pass
         elif seg.get_seg_id() == 'BHT':
-            pur_cde = seg.get_value('BHT02')
-            map_file = map_index_if.get_filename(icvn, vriic, fic, pur_cde)
+            tspc = seg.get_value('BHT02')
+            map_file = map_index_if.get_filename(icvn, vriic, fic, tspc)
             break
         else:
             break        
@@ -119,8 +120,8 @@ def x12n_document(param, src_file, fd_997, fd_html, fd_xmldoc=None):
 
     #Determine which map to use for this transaction
     if map_file is None:
-        raise EngineError, "Map not found.  icvn=%s, fic=%s, vriic=%s" % \
-            (icvn, fic, vriic)
+        raise EngineError, "Map not found.  icvn=%s, fic=%s, vriic=%s, tspc=%s" % \
+            (icvn, fic, vriic, tspc)
     #map = map_if.map_if(os.path.join('map', map_file), param)
     cur_map = map_if.load_map_file(map_file, param)
     logger.debug('Map file: %s' % (map_file))
@@ -187,6 +188,7 @@ def x12n_document(param, src_file, fd_997, fd_html, fd_xmldoc=None):
                 if vriic in ('004010X094', '004010X094A1'):
                     tspc = seg.get_value('BHT02')
                     map_file_new = map_index_if.get_filename(icvn, vriic, fic, tspc)
+                    logger.debug('Map file: %s' % (map_file_new))
                     if map_file != map_file_new:
                         map_file = map_file_new
                         if map_file is None:
