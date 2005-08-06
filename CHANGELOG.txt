@@ -1,3 +1,5 @@
+RELEASE 1.2.0
+
 Fixed bug: xmlx12.py is skipping empty elements
 
 segment interface:
@@ -39,22 +41,22 @@ Fixed xml generation bug:
 
 Fixed bug: Match any sub-loop of a containing loop.
 
-Release 1.1.0
+RELEASE 1.1.0
 
-    Wrap ISA and GS with loops
+Wrap ISA and GS with loops
 
-    Restore mandatory_segs_missing caching
+Restore mandatory_segs_missing caching
 
-    Validate Not Used composites and elements
+Validate Not Used composites and elements
 
-    Validate length of D8 and D6 datatypes.
+Validate length of D8 and D6 datatypes.
 
-    Config file support
+Config file support
 
-    Loop walking bug
+Loop walking bug
 
-    Refactor interface to segments
+Refactor interface to segments
 
-    Restructure interface to x12file
+Restructure interface to x12file
 
-    Removed Taxonomy Codes from codes.xml
+Removed Taxonomy Codes from codes.xml
