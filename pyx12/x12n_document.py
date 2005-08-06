@@ -64,6 +64,7 @@ def x12n_document(param, src_file, fd_997, fd_html, fd_xmldoc=None):
     """
     map_path = param.get('map_path')
     logger = logging.getLogger('pyx12')
+    logger.debug('MAP PATH: %s' % (map_path))
     errh = error_handler.err_handler()
     #errh.register()
     #param.set('checkdate', None)
@@ -187,8 +188,9 @@ def x12n_document(param, src_file, fd_997, fd_html, fd_xmldoc=None):
             elif seg.get_seg_id() == 'BHT':
                 if vriic in ('004010X094', '004010X094A1'):
                     tspc = seg.get_value('BHT02')
+                    logger.debug('icvn=%s, fic=%s, vriic=%s, tspc=%s' % (icvn, fic, vriic, tspc))
                     map_file_new = map_index_if.get_filename(icvn, vriic, fic, tspc)
-                    logger.debug('Map file: %s' % (map_file_new))
+                    logger.debug('New map file: %s' % (map_file_new))
                     if map_file != map_file_new:
                         map_file = map_file_new
                         if map_file is None:
@@ -196,7 +198,7 @@ def x12n_document(param, src_file, fd_997, fd_html, fd_xmldoc=None):
                                 (icvn, fic, vriic, tspc)
                         cur_map = map_if.load_map_file(map_file, param)
                         logger.debug('Map file: %s' % (map_file))
-                        node = cur_map.getnodebypath('/ISA_LOOP/GS_LOOP/ST_LOOP/BHT')
+                        node = cur_map.getnodebypath('/ISA_LOOP/GS_LOOP/ST_LOOP/HEADER/BHT')
                         node.reset_cur_count()
                         node.incr_cur_count()
                 errh.add_seg(node, seg, src.get_seg_count(), src.get_cur_line(), src.get_ls_id())

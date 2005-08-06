@@ -79,7 +79,7 @@ class map_index:
         """
         for a in self.maps:
             if a[0] == icvn and a[1] == vriic and a[2] == fic \
-                    and (a[3] is None or a[3] == tspc):
+                    and (tspc is None or a[3] == tspc):
                 return a[4]
         return None
 
