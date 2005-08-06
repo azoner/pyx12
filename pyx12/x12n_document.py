@@ -78,6 +78,7 @@ def x12n_document(param, src_file, fd_997, fd_html, fd_xmldoc=None):
     #Get Map of Control Segments
     control_map = map_if.map_if(os.path.join(map_path, 'x12.control.00401.xml'), param)
     
+    map_index_if = map_index.map_index(os.path.join(map_path, 'maps.xml'))
     walker = walk_tree()
     #Determine which map to use for this transaction
     for seg in src:
@@ -98,11 +99,17 @@ def x12n_document(param, src_file, fd_997, fd_html, fd_xmldoc=None):
             #vriic = map_node.get_elemval_by_id(seg, 'GS08')
             fic = seg.get_value('GS01')
             vriic = seg.get_value('GS08')
-            
             #Get map for this GS loop
             #logger.debug('icvn=%s fic=%s vriic=%s' % (icvn, fic, vriic))
-            map_index_if = map_index.map_index(os.path.join(map_path, 'maps.xml'))
-            map_file = map_index_if.get_filename(icvn, vriic, fic)
+            if vriic not in ('004010X094', '004010X094A1'):
+                map_file = map_index_if.get_filename(icvn, vriic, fic)
+                break
+        elif seg.get_seg_id() == 'ST':
+            pass
+        elif seg.get_seg_id() == 'BHT':
+            pur_cde = seg.get_value('BHT02')
+            map_file = map_index_if.get_filename(icvn, vriic, fic, pur_cde)
+            break
         else:
             break        
 
