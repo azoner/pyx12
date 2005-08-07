@@ -287,16 +287,16 @@ class map_if(x12_node):
         sys.stdout.write(self.__repr__())
         pos_keys = self.pos_map.keys()
         pos_keys.sort()
-        for ord in pos_keys:
-            for node in self.pos_map[ord]:
+        for ord1 in pos_keys:
+            for node in self.pos_map[ord1]:
                 node.debug_print()
 
     def __len__(self):
         i = 0
         pos_keys = self.pos_map.keys()
         pos_keys.sort()
-        for ord in pos_keys:
-            i += len(self.pos_map[ord])
+        for ord1 in pos_keys:
+            i += len(self.pos_map[ord1])
         return i
 
     def get_child_count(self):
@@ -349,8 +349,8 @@ class map_if(x12_node):
         #logger.debug('%s %s %s' % (self.base_name, self.id, pathl[1]))
         pos_keys = self.pos_map.keys()
         pos_keys.sort()
-        for ord in pos_keys:
-            for child in self.pos_map[ord]:
+        for ord1 in pos_keys:
+            for child in self.pos_map[ord1]:
                 if child.id.lower() == pathl[0].lower():
                     if len(pathl) == 1:
                         return child
@@ -367,8 +367,8 @@ class map_if(x12_node):
     def reset_child_count(self):
         pos_keys = self.pos_map.keys()
         pos_keys.sort()
-        for ord in pos_keys:
-            for child in self.pos_map[ord]:
+        for ord1 in pos_keys:
+            for child in self.pos_map[ord1]:
                 child.reset_cur_count()
 
     def reset_cur_count(self):
@@ -535,16 +535,16 @@ class loop_if(x12_node):
         sys.stdout.write(self.__repr__())
         pos_keys = self.pos_map.keys()
         pos_keys.sort()
-        for ord in pos_keys:
-            for node in self.pos_map[ord]:
+        for ord1 in pos_keys:
+            for node in self.pos_map[ord1]:
                 node.debug_print()
 
     def __len__(self):
         i = 0
         pos_keys = self.pos_map.keys()
         pos_keys.sort()
-        for ord in pos_keys:
-            i += len(self.pos_map[ord])
+        for ord1 in pos_keys:
+            i += len(self.pos_map[ord1])
         return i
 
     def __repr__(self):
@@ -602,8 +602,8 @@ class loop_if(x12_node):
         if len(pathl) == 0: return None
         pos_keys = self.pos_map.keys()
         pos_keys.sort()
-        for ord in pos_keys:
-            for child in self.pos_map[ord]:
+        for ord1 in pos_keys:
+            for child in self.pos_map[ord1]:
                 if child.is_loop():
                     if child.id.upper() == pathl[0].upper():
                         if len(pathl) == 1:
@@ -657,8 +657,8 @@ class loop_if(x12_node):
         i = 0
         pos_keys = self.pos_map.keys()
         pos_keys.sort()
-        for ord in pos_keys:
-            for child in self.pos_map[ord]:
+        for ord1 in pos_keys:
+            for child in self.pos_map[ord1]:
                 if child.is_segment():
                     i += 1
         return i
@@ -697,13 +697,23 @@ class loop_if(x12_node):
     def reset_child_count(self):
         pos_keys = self.pos_map.keys()
         pos_keys.sort()
-        for ord in pos_keys:
-            for child in self.pos_map[ord]:
+        for ord1 in pos_keys:
+            for child in self.pos_map[ord1]:
                 child.reset_cur_count()
 
     def reset_cur_count(self):
         self.cur_count = 0
         self.reset_child_count()
+
+    def set_cur_count(self, ct):
+        self.cur_count = ct
+
+    def get_counts_list(self, ct_list):
+        my_ct = (self.get_path(), self.cur_count)
+        ct_list.append(my_ct)
+        if not self.parent.is_map_root():
+            self.parent.get_counts_list(ct_list)
+        return True
 
 
 ############################################################
@@ -1009,6 +1019,17 @@ class segment_if(x12_node):
 
     def reset_cur_count(self):
         self.cur_count = 0
+
+    def set_cur_count(self, ct):
+        self.cur_count = ct
+
+    def get_counts_list(self, ct_list):
+        my_ct = (self.get_path(), self.cur_count)
+        ct_list.append(my_ct)
+        if not self.parent.is_map_root():
+            self.parent.get_counts_list(ct_list)
+        return True
+
 
 ############################################################
 # Element Interface

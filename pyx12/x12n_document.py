@@ -77,59 +77,19 @@ def x12n_document(param, src_file, fd_997, fd_html, fd_xmldoc=None):
         return False
 
     #Get Map of Control Segments
-    control_map = map_if.map_if(os.path.join(map_path, 'x12.control.00401.xml'), param)
-    
+    map_file = 'x12.control.00401.xml'
+    control_map = map_if.map_if(os.path.join(map_path, map_file), param)
     map_index_if = map_index.map_index(os.path.join(map_path, 'maps.xml'))
+    #cur_map = control_map # XXX
+    node = control_map.getnodebypath('/ISA_LOOP/ISA')
+    #logger.debug('Map file loaded')
     walker = walk_tree()
-    #Determine which map to use for this transaction
-    tspc = None
-    for seg in src:
-        if seg.get_seg_id() == 'ISA':
-            #map_node = walker.walk(control_map, seg)
-            map_node = control_map.getnodebypath('/ISA_LOOP/ISA')
-            errh.add_isa_loop(seg, src)
-            map_node.is_valid(seg, errh)
-            #map_node = control_map
-            #icvn = map_node.get_elemval_by_id(seg, 'ISA12')
-            icvn = seg.get_value('ISA12')
-        elif seg.get_seg_id() == 'GS':
-            #map_node = walker.walk(map_node, seg)
-            map_node = control_map.getnodebypath('/ISA_LOOP/GS_LOOP/GS')
-            errh.add_gs_loop(seg, src)
-            map_node.is_valid(seg, errh)
-            #fic = map_node.get_elemval_by_id(seg, 'GS01')
-            #vriic = map_node.get_elemval_by_id(seg, 'GS08')
-            fic = seg.get_value('GS01')
-            vriic = seg.get_value('GS08')
-            #Get map for this GS loop
-            #logger.debug('icvn=%s fic=%s vriic=%s' % (icvn, fic, vriic))
-            if vriic not in ('004010X094', '004010X094A1'):
-                map_file = map_index_if.get_filename(icvn, vriic, fic)
-                break
-        elif seg.get_seg_id() == 'ST':
-            pass
-        elif seg.get_seg_id() == 'BHT':
-            tspc = seg.get_value('BHT02')
-            map_file = map_index_if.get_filename(icvn, vriic, fic, tspc)
-            break
-        else:
-            break        
-
+    icvn = fic = vriic = tspc = None
     #XXX Generate TA1 if needed.
-    del errh
-    errh = error_handler.err_handler()
+    #del errh
 
-    #Determine which map to use for this transaction
-    if map_file is None:
-        raise EngineError, "Map not found.  icvn=%s, fic=%s, vriic=%s, tspc=%s" % \
-            (icvn, fic, vriic, tspc)
-    #map = map_if.map_if(os.path.join('map', map_file), param)
-    cur_map = map_if.load_map_file(map_file, param)
-    logger.debug('Map file: %s' % (map_file))
-    node = cur_map.getnodebypath('/ISA_LOOP/ISA')
-    logger.debug('Map file loaded')
-
-    src = x12file.x12file(src_file, errh) 
+    #errh = error_handler.err_handler()
+    #src = x12file.x12file(src_file, errh) 
     if fd_html:
         html = error_html.error_html(errh, fd_html, src.get_term())
         html.header()
@@ -148,23 +108,32 @@ def x12n_document(param, src_file, fd_997, fd_html, fd_xmldoc=None):
     valid = True
     for seg in src:
         #logger.debug(seg)
+        #pdb.set_trace()
         #find node
         orig_node = node
-        try:
-            node = walker.walk(node, seg, errh, src.get_seg_count(), \
-                src.get_cur_line(), src.get_ls_id())
-        except EngineError:
-            logger.error('Source file line %i' % (src.get_cur_line()))
-            raise
-            node = orig_node
-            continue
-
+        
+        if seg.get_seg_id() == 'ISA':
+            node = control_map.getnodebypath('/ISA_LOOP/ISA')
+        elif seg.get_seg_id() == 'GS':
+            node = control_map.getnodebypath('/ISA_LOOP/GS_LOOP/GS')
+        else:
+            try:
+                node = walker.walk(node, seg, errh, src.get_seg_count(), \
+                    src.get_cur_line(), src.get_ls_id())
+            except EngineError:
+                logger.error('Source file line %i' % (src.get_cur_line()))
+                raise
+                #node = orig_node
+                #continue
+        #logger.debug('Node %s' % (node.__repr__()))
         if node is None:
-            #raise EngineError, 'Node is None (%s)' % (seg.get_seg_id())
             node = orig_node
         else:
             if seg.get_seg_id() == 'ISA':
                 errh.add_isa_loop(seg, src)
+                icvn = seg.get_value('ISA12')
+                #cur_map.getnodebypath('/ISA_LOOP').set_cur_count(1)
+                #cur_map.getnodebypath('/ISA_LOOP/ISA').set_cur_count(1)
             elif seg.get_seg_id() == 'IEA':
                 errh.close_isa_loop(node, seg, src)
                 # Generate 997
@@ -174,6 +143,10 @@ def x12n_document(param, src_file, fd_997, fd_html, fd_xmldoc=None):
                 vriic = seg.get_value('GS08')
                 map_file_new = map_index_if.get_filename(icvn, vriic, fic)
                 if map_file != map_file_new:
+                    #if vriic not in ('004010X094', '004010X094A1'):
+                    #    map_file = map_index_if.get_filename(icvn, vriic, fic)
+                    ct_list = []
+                    orig_node.get_counts_list(ct_list)
                     map_file = map_file_new
                     if map_file is None:
                         raise EngineError, "Map not found.  icvn=%s, fic=%s, vriic=%s" % \
@@ -181,6 +154,17 @@ def x12n_document(param, src_file, fd_997, fd_html, fd_xmldoc=None):
                     #map = map_if.map_if(os.path.join('map', map_file), param)
                     cur_map = map_if.load_map_file(map_file, param)
                     logger.debug('Map file: %s' % (map_file))
+                    for (path, ct) in ct_list:
+                        cur_map.getnodebypath(path).set_cur_count(ct)
+                    cur_map.getnodebypath('/ISA_LOOP').set_cur_count(1)
+                    cur_map.getnodebypath('/ISA_LOOP/ISA').set_cur_count(1)
+                    cur_map.getnodebypath('/ISA_LOOP/GS_LOOP').reset_cur_count()
+                    cur_map.getnodebypath('/ISA_LOOP/GS_LOOP').set_cur_count(1)
+                    cur_map.getnodebypath('/ISA_LOOP/GS_LOOP/GS').set_cur_count(1)
+                    node = cur_map.getnodebypath('/ISA_LOOP/GS_LOOP/GS')
+                    #node.reset_cur_count()
+                    #node.incr_cur_count()
+                else:
                     node = cur_map.getnodebypath('/ISA_LOOP/GS_LOOP/GS')
                     node.reset_cur_count()
                     node.incr_cur_count()
@@ -192,15 +176,19 @@ def x12n_document(param, src_file, fd_997, fd_html, fd_xmldoc=None):
                     map_file_new = map_index_if.get_filename(icvn, vriic, fic, tspc)
                     logger.debug('New map file: %s' % (map_file_new))
                     if map_file != map_file_new:
+                        ct_list = []
+                        node.get_counts_list(ct_list)
                         map_file = map_file_new
                         if map_file is None:
                             raise EngineError, "Map not found.  icvn=%s, fic=%s, vriic=%s, tspc=%s" % \
                                 (icvn, fic, vriic, tspc)
                         cur_map = map_if.load_map_file(map_file, param)
                         logger.debug('Map file: %s' % (map_file))
+                        for (path, ct) in ct_list:
+                            cur_map.getnodebypath(path).set_cur_count(ct)
                         node = cur_map.getnodebypath('/ISA_LOOP/GS_LOOP/ST_LOOP/HEADER/BHT')
-                        node.reset_cur_count()
-                        node.incr_cur_count()
+                        #node.reset_cur_count()
+                        #node.incr_cur_count()
                 errh.add_seg(node, seg, src.get_seg_count(), src.get_cur_line(), src.get_ls_id())
             elif seg.get_seg_id() == 'GE':
                 errh.close_gs_loop(node, seg, src)

@@ -1,5 +1,9 @@
 RELEASE 1.2.0
 
+Handle files with multiple transactions, simplify x12n_document
+
+Correctly distinguish 278 forms
+
 Fixed bug: xmlx12.py is skipping empty elements
 
 segment interface:

@@ -112,11 +112,11 @@ class walk_tree:
             # Iterate through nodes with position >= current position
             pos_keys = filter(lambda a: a>= node_pos, node.pos_map.keys())
             pos_keys.sort()
-            for ord in pos_keys:
+            for ord1 in pos_keys:
             #for child in node.children:
                 #logger.debug('id=%s child.index=%i node_pos=%i' % \
                 #    (child.id, child.index, node_pos))
-                for child in node.pos_map[ord]:
+                for child in node.pos_map[ord1]:
                 #if child.pos >= node_pos:
                     if child.is_segment():
                         #logger.debug('id=%s cur_count=%i max_repeat=%i' \
@@ -267,8 +267,8 @@ class walk_tree:
         first_child_node = loop_node.pos_map[pos_keys[0]][0]
         if first_child_node.is_loop():
             #If any loop node matches
-            for ord in pos_keys:
-                for child_node in loop_node.pos_map[ord]:
+            for ord1 in pos_keys:
+                for child_node in loop_node.pos_map[ord1]:
                     if child_node.is_loop() and self._is_loop_match(child_node, \
                             seg_data, errh, seg_count, cur_line, ls_id):
                         return True
@@ -336,8 +336,8 @@ class walk_tree:
             return first_child_node
         else:
             #for child in loop_node.children:
-            for ord in pos_keys:
-                for child in loop_node.pos_map[ord]:
+            for ord1 in pos_keys:
+                for child in loop_node.pos_map[ord1]:
                     if child.is_loop():
                         node1 = self._goto_seg_match(child, seg_data, errh, \
                             seg_count, cur_line, ls_id)
