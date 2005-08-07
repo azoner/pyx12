@@ -20,6 +20,7 @@ map_files = [
     'map/276.4010.X093.xml',
     'map/277.4010.X093.A1.xml',
     'map/277.4010.X093.xml',
+    'map/277U.4010.X070.xml',
     'map/278.4010.X094.27.A1.xml',
     'map/278.4010.X094.27.xml',
     'map/278.4010.X094.A1.xml',
@@ -50,7 +51,8 @@ TEST_FILES = ['test/%s' % (file1) for file1 in
     filter(lambda x: x[:4] == 'test' and os.path.splitext(x)[1] == '.py',
     os.listdir('test'))]
 TEST_DATA = ['test/files/%s' % (file1) for file1 in 
-    filter(lambda x: os.path.splitext(x)[1] in ('.base', '.txt'),
+    filter(lambda x: os.path.splitext(x)[1] 
+        in ('.base', '.txt', 'idtag', 'idtagqual', 'simple'),
     os.listdir('test/files'))]
     
 kw = {  
@@ -66,8 +68,10 @@ kw = {
     'data_files': [
         (map_dir, map_files),
         (map_dir, ['map/README', 'map/codes.xml', 'map/codes.xsd',
-        'map/comp_test.xml', 'map/map.xsd', 'map/maps.xml']),
-        ('share/doc/pyx12', ['README.txt', 'LICENSE.txt']),
+        'map/comp_test.xml', 'map/map.xsd', 'map/maps.xml', 
+        'map/x12simple.dtd']),
+        ('share/doc/pyx12', ['README.txt', 'LICENSE.txt',
+        'CHANGELOG.txt', 'INSTALL.txt']),
         ('share/examples/pyx12/test', TEST_FILES),
         ('share/examples/pyx12/test/files', TEST_DATA),
         ('share/examples/pyx12', ['bin/pyx12.conf.xml.sample']),
