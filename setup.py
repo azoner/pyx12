@@ -78,7 +78,8 @@ kw = {
         ('etc', ['bin/pyx12.conf.xml.sample']),
         ('share/doc/pyx12/view', ['view/Makefile', 'view/codes.xsl', \
             'view/loop.css', 'view/loop.xsl', 'view/map_seg.xsl', \
-            'view/map_sum.xsl', 'view/seg.css', 'view/sum.css'])    
+            'view/map_sum.xsl', 'view/seg.css', 'view/sum.css',
+            'view/none.css', 'view/plain.css'])    
     ],
       #package_dir = {'': ''},
 }
