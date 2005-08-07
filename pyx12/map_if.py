@@ -365,6 +365,9 @@ class map_if(x12_node):
         return True
 
     def reset_child_count(self):
+        """
+        Set cur_count of child nodes to zero
+        """
         pos_keys = self.pos_map.keys()
         pos_keys.sort()
         for ord1 in pos_keys:
@@ -372,6 +375,9 @@ class map_if(x12_node):
                 child.reset_cur_count()
 
     def reset_cur_count(self):
+        """
+        Set cur_count of child nodes to zero
+        """
         self.reset_child_count()
 
     def __iter__(self):
@@ -688,13 +694,19 @@ class loop_if(x12_node):
             return False
 
     def get_cur_count(self):
-        #print self.path, self.cur_count
+        """
+        @return: current count
+        @rtype: int
+        """
         return self.cur_count
         
     def incr_cur_count(self):
         self.cur_count += 1
 
     def reset_child_count(self):
+        """
+        Set cur_count of child nodes to zero
+        """
         pos_keys = self.pos_map.keys()
         pos_keys.sort()
         for ord1 in pos_keys:
@@ -702,6 +714,9 @@ class loop_if(x12_node):
                 child.reset_cur_count()
 
     def reset_cur_count(self):
+        """
+        Set cur_count of node and child nodes to zero
+        """
         self.cur_count = 0
         self.reset_child_count()
 
@@ -709,6 +724,12 @@ class loop_if(x12_node):
         self.cur_count = ct
 
     def get_counts_list(self, ct_list):
+        """
+        Build a list of (path, ct) of the current node and parents
+        Gets the node counts to apply to another map
+        @param ct_list: List to append to
+        @type ct_list: list[(string, int)]
+        """
         my_ct = (self.get_path(), self.cur_count)
         ct_list.append(my_ct)
         if not self.parent.is_map_root():
@@ -1012,18 +1033,31 @@ class segment_if(x12_node):
         return syn
         
     def get_cur_count(self):
+        """
+        @return: current count
+        @rtype: int
+        """
         return self.cur_count
         
     def incr_cur_count(self):
         self.cur_count += 1
 
     def reset_cur_count(self):
+        """
+        Set cur_count of node to zero
+        """
         self.cur_count = 0
 
     def set_cur_count(self, ct):
         self.cur_count = ct
 
     def get_counts_list(self, ct_list):
+        """
+        Build a list of (path, ct) of the current node and parents
+        Gets the node counts to apply to another map
+        @param ct_list: List to append to
+        @type ct_list: list[(string, int)]
+        """
         my_ct = (self.get_path(), self.cur_count)
         ct_list.append(my_ct)
         if not self.parent.is_map_root():
