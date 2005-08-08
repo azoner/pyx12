@@ -129,8 +129,8 @@ class Implicit_Loops(unittest.TestCase):
         self.walker = walk_tree()
         self.param = pyx12.params.params('pyx12.conf.xml')
         if map_path:
-            param.set('map_path', map_path)
-            param.set('pickle_path', map_path)
+            self.param.set('map_path', map_path)
+            self.param.set('pickle_path', map_path)
         self.map = pyx12.map_if.load_map_file('837.4010.X098.A1.xml', self.param)
         self.errh = pyx12.error_handler.errh_null()
 
@@ -238,8 +238,8 @@ class SegmentWalk(unittest.TestCase):
         self.walker = walk_tree()
         self.param = pyx12.params.params('pyx12.conf.xml')
         if map_path:
-            param.set('map_path', map_path)
-            param.set('pickle_path', map_path)
+            self.param.set('map_path', map_path)
+            self.param.set('pickle_path', map_path)
         self.map = pyx12.map_if.load_map_file('837.4010.X098.A1.xml', self.param)
         self.errh = pyx12.error_handler.errh_null()
 
