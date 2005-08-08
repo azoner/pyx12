@@ -1,3 +1,5 @@
+DTD script for idtag and idtagqual forms
+
 Add test for x12 > xml > x12 for all xml mappings
 
 xmlx12.py - handle idtag and idtagqual types
@@ -26,6 +28,7 @@ Error Handling
   Stream Errors to XML
   Combine error XML with HTML/XML/997 output
   Error specifications - XML (separate tags for ISA/GS/detail errors)
+  Remove errh object from x12file, map_if, map_walker. Return errors in parameter
 
 Unit Testing
   x12file - HL counting?
