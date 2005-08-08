@@ -168,6 +168,10 @@ def main():
     """
     global logger
     param = pyx12.params.params('pyx12.conf.xml')
+    map_path = os.path.join(string.join(os.path.abspath(
+        sys.argv[0]).split('/')[:-2], '/'), 'map')
+    if os.path.isdir(map_path):
+        param.set('map_path', map_path)
     logger = logging.getLogger('pyx12')
     logger.setLevel(logging.CRITICAL)
     formatter = logging.Formatter('%(asctime)s %(levelname)s %(module)s %(lineno)d %(message)s')
@@ -181,7 +185,7 @@ def main():
 
     profile = False
     debug = False
-    param.set('map_path', os.path.abspath('../map'))
+
     if not debug:
         try:
             import psyco

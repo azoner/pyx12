@@ -1,19 +1,25 @@
 #! /usr/bin/env /usr/local/bin/python
 
-import os.path
+import os.path, sys, string
 import unittest
 #import pdb
 
 import pyx12.map_index
-import  pyx12.params
+import pyx12.params
 #from pyx12.errors import *
 
+map_path = os.path.join(string.join(os.path.abspath(
+    sys.argv[0]).split('/')[:-2], '/'), 'map')
+if not os.path.isdir(map_path):
+    map_path = None
+        
 class GetFilename(unittest.TestCase):
     """
     """
     def setUp(self):
         param = pyx12.params.params('pyx12.conf.xml')
-        param.set('map_path', os.path.expanduser('~/src/pyx12/map/'))
+        if map_path:
+            param.set('map_path', map_path)
         map_path = param.get('map_path')
         self.idx = pyx12.map_index.map_index(os.path.join(map_path, 'maps.xml'))
 

@@ -1,7 +1,7 @@
 #! /usr/bin/env /usr/local/bin/python
 
 import unittest
-import sys
+import sys, string
 import StringIO
 import os.path
 
@@ -12,11 +12,19 @@ import pyx12.segment
 
 from pyx12.errors import *
 
+
+map_path = os.path.join(string.join(os.path.abspath(
+    sys.argv[0]).split('/')[:-2], '/'), 'map')
+if not os.path.isdir(map_path):
+    map_path = None
+
+        
 class Seg1(unittest.TestCase):
     def setUp(self):
         param = pyx12.params.params('pyx12.conf.xml')
-        param.set('map_path', os.path.expanduser('~/src/pyx12/map/'))
-        param.set('pickle_path', os.path.expanduser('~/src/pyx12/map/'))
+        if map_path:
+            param.set('map_path', map_path)
+            param.set('pickle_path', map_path)
         self.map = pyx12.map_if.load_map_file('837.4010.X098.A1.xml', param)
         self.fd = StringIO.StringIO()
         self.xml = pyx12.x12xml_idtag.x12xml_idtag(self.fd)

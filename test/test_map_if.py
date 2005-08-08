@@ -11,13 +11,19 @@ import pyx12.map_if
 import pyx12.params 
 import pyx12.segment
 
+map_path = os.path.join(string.join(os.path.abspath(
+    sys.argv[0]).split('/')[:-2], '/'), 'map')
+if not os.path.isdir(map_path):
+    map_path = None
+
 class ElementIsValidDate(unittest.TestCase):
     """
     """
     def setUp(self):
         param = pyx12.params.params('pyx12.conf.xml')
-        param.set('map_path', os.path.expanduser('~/src/pyx12/map/'))
-        param.set('pickle_path', os.path.expanduser('~/src/pyx12/map/'))
+        if map_path:
+            param.set('map_path', map_path)
+            param.set('pickle_path', map_path)
         self.map = pyx12.map_if.load_map_file('837.4010.X096.A1.xml', param)
         self.node = self.map.getnodebypath('/ISA_LOOP/GS_LOOP/ST_LOOP/DETAIL/2000A/2000B/2300')
         # 1 096 TM, 2 434 RD8 & D8
@@ -101,8 +107,9 @@ class SegmentIsValid(unittest.TestCase):
     """
     def setUp(self):
         param = pyx12.params.params('pyx12.conf.xml')
-        param.set('map_path', os.path.expanduser('~/src/pyx12/map/'))
-        param.set('pickle_path', os.path.expanduser('~/src/pyx12/map/'))
+        if map_path:
+            param.set('map_path', map_path)
+            param.set('pickle_path', map_path)
         self.map = pyx12.map_if.load_map_file('837.4010.X096.A1.xml', param)
         self.node = self.map.getnodebypath('/ISA_LOOP/GS_LOOP/ST_LOOP/DETAIL/2000A/2000B/2300')
         self.errh = pyx12.error_handler.errh_null()
@@ -122,8 +129,9 @@ class ElementIsValid(unittest.TestCase):
     """
     def setUp(self):
         param = pyx12.params.params('pyx12.conf.xml')
-        param.set('map_path', os.path.expanduser('~/src/pyx12/map/'))
-        param.set('pickle_path', os.path.expanduser('~/src/pyx12/map/'))
+        if map_path:
+            param.set('map_path', map_path)
+            param.set('pickle_path', map_path)
         self.map = pyx12.map_if.load_map_file('837.4010.X098.A1.xml', param)
         self.node = self.map.getnodebypath('/ISA_LOOP/GS_LOOP/ST_LOOP/DETAIL/2000A/2000B/2300/CLM')
         self.errh = pyx12.error_handler.errh_null()
@@ -342,10 +350,11 @@ class GetNodeByPath(unittest.TestCase):
     """
     """
     def setUp(self):
-        param = pyx12.params.params('pyx12.conf.xml')
-        param.set('map_path', os.path.expanduser('~/src/pyx12/map/'))
-        param.set('pickle_path', os.path.expanduser('~/src/pyx12/map/'))
-        self.map = pyx12.map_if.load_map_file('837.4010.X098.A1.xml', param)
+        self.param = pyx12.params.params('pyx12.conf.xml')
+        if map_path:
+            self.param.set('map_path', map_path)
+            self.param.set('pickle_path', map_path)
+        self.map = pyx12.map_if.load_map_file('837.4010.X098.A1.xml', self.param)
 
     def test_get_ISA(self):
         path = '/ISA_LOOP/ISA'
@@ -417,10 +426,7 @@ class GetNodeByPath(unittest.TestCase):
 
     def test_get_TST(self):
         path = '/TST'
-        param = pyx12.params.params('pyx12.conf.xml')
-        param.set('map_path', os.path.expanduser('~/src/pyx12/map/'))
-        param.set('pickle_path', os.path.expanduser('~/src/pyx12/map/'))
-        map = pyx12.map_if.load_map_file('comp_test.xml', param)
+        map = pyx12.map_if.load_map_file('comp_test.xml', self.param)
         node = map.getnodebypath(path)
         self.assertNotEqual(node, None)
         self.assertEqual(node.id, 'TST')
@@ -432,10 +438,11 @@ class GetNodeByPath(unittest.TestCase):
 
 class CompositeRequirement(unittest.TestCase):
     def setUp(self):
-        param = pyx12.params.params('pyx12.conf.xml')
-        param.set('map_path', os.path.expanduser('~/src/pyx12/map/'))
-        param.set('pickle_path', os.path.expanduser('~/src/pyx12/map/'))
-        self.map = pyx12.map_if.load_map_file('837.4010.X098.A1.xml', param)
+        self.param = pyx12.params.params('pyx12.conf.xml')
+        if map_path:
+            self.param.set('map_path', map_path)
+            self.param.set('pickle_path', map_path)
+        self.map = pyx12.map_if.load_map_file('837.4010.X098.A1.xml', self.param)
         self.errh = pyx12.error_handler.errh_null()
 
     def test_comp_required_ok1(self):
@@ -452,10 +459,7 @@ class CompositeRequirement(unittest.TestCase):
 
     def test_comp_required_ok2(self):
         self.errh.err_cde = None
-        param = pyx12.params.params('pyx12.conf.xml')
-        param.set('map_path', os.path.expanduser('~/src/pyx12/map/'))
-        param.set('pickle_path', os.path.expanduser('~/src/pyx12/map/'))
-        map = pyx12.map_if.load_map_file('comp_test.xml', param)
+        map = pyx12.map_if.load_map_file('comp_test.xml', self.param)
         node = map.getnodebypath('/TST')
         self.assertNotEqual(node, None)
         node = node.get_child_node_by_idx(0)
@@ -468,10 +472,7 @@ class CompositeRequirement(unittest.TestCase):
 
     def test_comp_S_sub_R_ok3(self):
         self.errh.err_cde = None
-        param = pyx12.params.params('pyx12.conf.xml')
-        param.set('map_path', os.path.expanduser('~/src/pyx12/map/'))
-        param.set('pickle_path', os.path.expanduser('~/src/pyx12/map/'))
-        map = pyx12.map_if.load_map_file('837.4010.X096.xml', param)
+        map = pyx12.map_if.load_map_file('837.4010.X096.xml', self.param)
         node = map.getnodebypath('/ISA_LOOP/GS_LOOP/ST_LOOP/DETAIL/2000A/2000B/2300/2400/SV2')
         node = node.get_child_node_by_idx(1) #SV202
         self.assertNotEqual(node, None)
@@ -511,8 +512,9 @@ class CompositeRequirement(unittest.TestCase):
 class TrailingSpaces(unittest.TestCase):
     def setUp(self):
         param = pyx12.params.params('pyx12.conf.xml')
-        param.set('map_path', os.path.expanduser('~/src/pyx12/map/'))
-        param.set('pickle_path', os.path.expanduser('~/src/pyx12/map/'))
+        if map_path:
+            param.set('map_path', map_path)
+            param.set('pickle_path', map_path)
         self.map = pyx12.map_if.load_map_file('837.4010.X098.A1.xml', param)
         self.errh = pyx12.error_handler.errh_null()
 
@@ -556,8 +558,9 @@ class TrailingSpaces(unittest.TestCase):
 class ElementRequirement(unittest.TestCase):
     def setUp(self):
         param = pyx12.params.params('pyx12.conf.xml')
-        param.set('map_path', os.path.expanduser('~/src/pyx12/map/'))
-        param.set('pickle_path', os.path.expanduser('~/src/pyx12/map/'))
+        if map_path:
+            param.set('map_path', map_path)
+            param.set('pickle_path', map_path)
         self.map = pyx12.map_if.load_map_file('837.4010.X098.A1.xml', param)
         self.errh = pyx12.error_handler.errh_null()
 
