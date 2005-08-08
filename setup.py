@@ -21,6 +21,7 @@ map_files = [
     'map/277.4010.X093.A1.xml',
     'map/277.4010.X093.xml',
     'map/277U.4010.X070.xml',
+    'map/277.4020.X104.xml', 
     'map/278.4010.X094.27.A1.xml',
     'map/278.4010.X094.27.xml',
     'map/278.4010.X094.A1.xml',
@@ -52,7 +53,7 @@ TEST_FILES = ['test/%s' % (file1) for file1 in
     os.listdir('test'))]
 TEST_DATA = ['test/files/%s' % (file1) for file1 in 
     filter(lambda x: os.path.splitext(x)[1] 
-        in ('.base', '.txt', 'idtag', 'idtagqual', 'simple'),
+        in ('.base', '.txt', '.idtag', '.idtagqual', '.simple'),
     os.listdir('test/files'))]
     
 kw = {  
