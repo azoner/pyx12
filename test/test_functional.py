@@ -18,7 +18,7 @@ Compare the 997 output against existing output
 """
 
 import os, os.path
-import sys
+import sys, string
 import logging
 from types import *
 #import pdb
