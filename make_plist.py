@@ -20,7 +20,7 @@ def main():
     [(fd_out.write(ex+x+'\n')) for x in filter(lambda x: x[:4] == 'test' and x[-3:] == '.py', manifest)]
     [(fd_out.write(ex+x+'\n')) for x in filter(lambda x: x[:10] == 'test/files' 
         and (x[-4:] == '.txt' or x[-5:] == '.base' or x[-4:] == '.txt' or x[-7:] == '.simple'
-        or x[-6:] == '.idtag' or x[-9:] == '.idtagref'), 
+        or x[-6:] == '.idtag' or x[-9:] == '.idtagqual'), 
         manifest)]
     for x in ('CHANGELOG.txt', 'INSTALL.txt', 'LICENSE.txt', 'README.txt'):
         fd_out.write(doc+x+'\n')
@@ -31,7 +31,7 @@ def main():
     [(fd_out.write(share+x+'\n')) for x in maps]
     [(fd_out.write(share+x[:-4]+'.pkl\n')) for x in filter(lambda x: os.path.basename(x) 
         not in ('maps.xml', 'comp_test.xml'), maps)]
-    for x in ('map/README', 'map/codes.xsd', 'map/map.xsd'):
+    for x in ('map/README', 'map/codes.xsd', 'map/map.xsd', 'map/x12simple.dtd'):
         fd_out.write(share+x+'\n')
 
     for dir1 in (doc+'view', doc[:-1], share+'map', share[:-1], \
