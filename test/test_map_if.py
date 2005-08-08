@@ -20,6 +20,7 @@ class ElementIsValidDate(unittest.TestCase):
     """
     """
     def setUp(self):
+        global map_path
         param = pyx12.params.params('pyx12.conf.xml')
         if map_path:
             param.set('map_path', map_path)
@@ -106,6 +107,7 @@ class SegmentIsValid(unittest.TestCase):
     """
     """
     def setUp(self):
+        global map_path
         param = pyx12.params.params('pyx12.conf.xml')
         if map_path:
             param.set('map_path', map_path)
@@ -128,6 +130,7 @@ class ElementIsValid(unittest.TestCase):
     """
     """
     def setUp(self):
+        global map_path
         param = pyx12.params.params('pyx12.conf.xml')
         if map_path:
             param.set('map_path', map_path)
@@ -350,6 +353,7 @@ class GetNodeByPath(unittest.TestCase):
     """
     """
     def setUp(self):
+        global map_path
         self.param = pyx12.params.params('pyx12.conf.xml')
         if map_path:
             self.param.set('map_path', map_path)
@@ -438,6 +442,7 @@ class GetNodeByPath(unittest.TestCase):
 
 class CompositeRequirement(unittest.TestCase):
     def setUp(self):
+        global map_path
         self.param = pyx12.params.params('pyx12.conf.xml')
         if map_path:
             self.param.set('map_path', map_path)
@@ -511,6 +516,7 @@ class CompositeRequirement(unittest.TestCase):
 
 class TrailingSpaces(unittest.TestCase):
     def setUp(self):
+        global map_path
         param = pyx12.params.params('pyx12.conf.xml')
         if map_path:
             param.set('map_path', map_path)
@@ -557,6 +563,7 @@ class TrailingSpaces(unittest.TestCase):
 
 class ElementRequirement(unittest.TestCase):
     def setUp(self):
+        global map_path
         param = pyx12.params.params('pyx12.conf.xml')
         if map_path:
             param.set('map_path', map_path)

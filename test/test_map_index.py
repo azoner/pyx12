@@ -17,6 +17,7 @@ class GetFilename(unittest.TestCase):
     """
     """
     def setUp(self):
+        global map_path
         param = pyx12.params.params('pyx12.conf.xml')
         if map_path:
             param.set('map_path', map_path)

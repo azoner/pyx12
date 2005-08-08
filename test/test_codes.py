@@ -37,7 +37,7 @@ class TestExternal(unittest.TestCase):
 
     def test_exclude_state_code(self):
         self.param.set('exclude_external_codes', 'states')
-        ext_codes = pyx12.codes.ExternalCodes(self.aram.get('map_path'), \
+        ext_codes = pyx12.codes.ExternalCodes(self.param.get('map_path'), \
             self.param.get('exclude_external_codes'))
         self.failUnless(ext_codes.IsValid('states', 'ZZ'))
 
