@@ -62,12 +62,4 @@ or can be passed on the command line using the -c option
         <value>False</value>
         <comment></comment>
     </param>
-    <param name="simple_dtd">
-        <value>http://www.kazoocmh.org/x12simple.dtd</value>
-        <comment></comment>
-    </param>
-    <param name="idtag_dtd">
-        <value>http://www.kazoocmh.org/x12idtag.dtd</value>
-        <comment></comment>
-    </param>
 </params>

@@ -59,8 +59,8 @@ TEST_DATA = ['test/files/%s' % (file1) for file1 in
 kw = {  
     'name': "pyx12",
     'version': pyx12.__version__,
-    'description': pyx12.__doc__,
-    #'description': "A X12 validator and converter",
+    #'description': pyx12.__doc__,
+    'description': "A X12 validator and converter",
     'author': "John Holland",
     'author_email': "jholland@kazoocmh.org",
     'url': "http://www.sourceforge.net/pyx12/",

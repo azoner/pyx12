@@ -1,18 +1,25 @@
-pyx12-1.1.0 has been released
+pyx12-1.2.0 has been released
 
 What's New:
 ===========
-    Corrected a number of validation bugs.
+    Created DTD for the simple XML output form. Changed URL.
+
+    Removed generation of DTD line for idtag and idtagqual XML output forms.
     
-    Added many unit and functional tests.
+    Added a new XML output form: idtagqual.  This form appends the ID value to
+    non-unique segment IDs
+        
+    Added draft map for Unsolicited 277: 277U.4010.X070.xml
 
-    xmlx12 - translate an XML document created with the x12_simple conversion 
-    back to an X12 document:
-    x12xml -Xsimple test.txt | xslt test.xsl | xmlx12 > output.txt
+    Base map_if segment children on dictionary - faster lookups
 
-    x12norm - normalize an X12 document.  Create/strip end of line characters.
+    Corrected validation bugs.
+    
+    Added more unit and functional tests.
 
-    Refactor interfaces.
+    Altered segment interface.
+    
+    See CHANGELOG.txt for all changes.
 
 What is Pyx12?
 ==============
@@ -20,7 +27,7 @@ What is Pyx12?
     X12N data file and validates it against a representation of the
     Implementation Guidelines for a HIPAA transaction.  By default, it creates
     a 997 response. It can create an html representation of the X12 document
-    or can translate to an XML representation of the data file. 
+    or can translate to and from an XML representation of the data file. 
 
 Where can I get it?
 ===================

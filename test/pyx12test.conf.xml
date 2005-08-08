@@ -53,12 +53,4 @@
         <value>False</value>
         <comment></comment>
     </param>
-    <param name="simple_dtd">
-        <value>http://www.kazoocmh.org/x12simple.dtd</value>
-        <comment></comment>
-    </param>
-    <param name="idtag_dtd">
-        <value>http://www.kazoocmh.org/x12idtag.dtd</value>
-        <comment></comment>
-    </param>
 </params>
