@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!DOCTYPE x12simple PUBLIC '-//J Holland//DTD XML X12 Document Conversion1.0//EN//XML' 'http://www.kazoocmh.org/x12simple.dtd'>
+<!DOCTYPE x12simple PUBLIC '-//J Holland//DTD XML X12 Document Conversion1.0//EN//XML' 'http://www.kazoocmh.org/dtd/x12simple.dtd'>
 <x12simple>
   <loop id='ISA_LOOP'>
     <seg id='ISA'>

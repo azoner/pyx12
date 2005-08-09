@@ -142,7 +142,7 @@ class err_handler:
         """
         @param err_list: list of errors to apply
         """
-        for (err_type, err_cde, err_str, err_val, cru_line) in err_list:
+        for (err_type, err_cde, err_str, err_val, src_line) in err_list:
             if err_type == 'isa':
                 self.isa_error(err_cde, err_str)
             elif err_type == 'gs':
@@ -150,7 +150,7 @@ class err_handler:
             elif err_type == 'st':
                 self.st_error(err_cde, err_str)
             elif err_type == 'seg':
-                self.seg_error(err_cde, err_str, err_value, src_line)
+                self.seg_error(err_cde, err_str, err_val, src_line)
 
     def get_cur_line(self):
         """
