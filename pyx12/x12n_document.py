@@ -1,4 +1,4 @@
-######################################################################
+#####################################################################
 # Copyright (c) 2001-2005 Kalamazoo Community Mental Health Services,
 #   John Holland <jholland@kazoocmh.org> <john@zoner.org>
 # All rights reserved.
@@ -71,7 +71,7 @@ def x12n_document(param, src_file, fd_997, fd_html, fd_xmldoc=None):
     
     # Get X12 DATA file
     try:
-        src = x12file.x12file(src_file, errh) 
+        src = x12file.x12file(src_file) 
     except x12Error:
         logger.error('"%s" does not look like an X12 data file' % (src_file))
         return False
@@ -86,10 +86,7 @@ def x12n_document(param, src_file, fd_997, fd_html, fd_xmldoc=None):
     walker = walk_tree()
     icvn = fic = vriic = tspc = None
     #XXX Generate TA1 if needed.
-    #del errh
 
-    #errh = error_handler.err_handler()
-    #src = x12file.x12file(src_file, errh) 
     if fd_html:
         html = error_html.error_html(errh, fd_html, src.get_term())
         html.header()
@@ -107,8 +104,6 @@ def x12n_document(param, src_file, fd_997, fd_html, fd_xmldoc=None):
 
     valid = True
     for seg in src:
-        #logger.debug(seg)
-        #pdb.set_trace()
         #find node
         orig_node = node
         
@@ -200,6 +195,7 @@ def x12n_document(param, src_file, fd_997, fd_html, fd_xmldoc=None):
                 errh.add_seg(node, seg, src.get_seg_count(), src.get_cur_line(), src.get_ls_id())
 
             valid &= node.is_valid(seg, errh)
+            errh.handle_errors(src.get_errors())
 
         if fd_html:
             if node is not None and node.is_first_seg_in_loop():

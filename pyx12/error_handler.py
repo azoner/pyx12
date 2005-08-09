@@ -138,6 +138,20 @@ class err_handler:
             child.accept(visitor)
         visitor.visit_root_post(self)
 
+    def handle_errors(self, err_list):
+        """
+        @param err_list: list of errors to apply
+        """
+        for (err_type, err_cde, err_str, err_val, cru_line) in err_list:
+            if err_type == 'isa':
+                self.isa_error(err_cde, err_str)
+            elif err_type == 'gs':
+                self.gs_error(err_cde, err_str)
+            elif err_type == 'st':
+                self.st_error(err_cde, err_str)
+            elif err_type == 'seg':
+                self.seg_error(err_cde, err_str, err_value, src_line)
+
     def get_cur_line(self):
         """
         @return: Current file line number

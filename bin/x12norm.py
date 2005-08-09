@@ -2,7 +2,7 @@
 
 import pyx12
 import pyx12.x12file
-import pyx12.error_handler
+#import pyx12.error_handler
 import sys
 import getopt
 import os.path
@@ -59,23 +59,24 @@ def main():
         fd_out = open(file_out, 'w')
     else:
         fd_out =  sys.stdout
-    errh = pyx12.error_handler.errh_null()
+    #errh = pyx12.error_handler.errh_null()
     if len(args) > 0:
         file_in = args[0]
         if not os.path.isfile(file_in):
             sys.stderr.write('File %s was not found' % (file_in))
     else:
         file_in = '-'
-    src = pyx12.x12file.x12file(file_in, errh)
+    src = pyx12.x12file.x12file(file_in)
     for seg_data in src:
         if fix:
-            if seg_data.get_seg_id() == 'IEA' and errh.err_cde == '021':
+            err_codes = [(x[1]) for x in src.get_errors()]
+            if seg_data.get_seg_id() == 'IEA' and '021' in err_codes:
                 seg_data.set('IEA01', '%i' % (src.gs_count))
-            elif seg_data.get_seg_id() == 'GE' and errh.err_cde == '5':
+            elif seg_data.get_seg_id() == 'GE' and '5' in err_codes:
                 seg_data.set('GE01', '%i' % (src.st_count))
-            elif seg_data.get_seg_id() == 'SE' and errh.err_cde == '4':
+            elif seg_data.get_seg_id() == 'SE' and '4' in err_codes:
                 seg_data.set('SE01', '%i' % (src.seg_count+1))
-            elif seg_data.get_seg_id() == 'HL' and errh.err_cde == 'HL1':
+            elif seg_data.get_seg_id() == 'HL' and 'HL1' in err_codes:
                 seg_data.set('HL01', '%i' % (src.hl_count))
         fd_out.write(seg_data.format() + eol)
     if eol == '':

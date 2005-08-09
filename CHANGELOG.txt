@@ -1,3 +1,5 @@
+Remove errh object from x12file. Return errors as list
+
 RELEASE 1.2.0
 
 Handle files with multiple transactions, simplify x12n_document
