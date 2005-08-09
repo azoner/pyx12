@@ -310,6 +310,42 @@ list<string> Pyx12::x12file::get_term() const {
     return ret;
 }
 
+void Pyx12::x12file::isa_error(const string err_cde, const string err_str) {
+    list<string, string, string> tmp;
+    tmp.push_back("isa");
+    tmp.push_back(err_cde);
+    tmp.push_back(err_str);
+    err_list.push_back(tmp)
+}
+
+void Pyx12::x12file::gs_error(const string err_cde, const string err_str) {
+    list<string, string, string> tmp;
+    tmp.push_back("gs");
+    tmp.push_back(err_cde);
+    tmp.push_back(err_str);
+    err_list.push_back(tmp)
+}
+
+void Pyx12::x12file::st_error(const string err_cde, const string err_str) {
+    list<string, string, string> tmp;
+    tmp.push_back("st");
+    tmp.push_back(err_cde);
+    tmp.push_back(err_str);
+    err_list.push_back(tmp)
+}
+
+void Pyx12::x12file::seg_error(const string err_cde, 
+        const string err_str, const string err_val, const int src_line) {
+    list<string, string, string, string, int> tmp;
+    tmp.push_back("seg");
+    tmp.push_back(err_cde);
+    tmp.push_back(err_str);
+    tmp.push_back(err_val);
+    tmp.push_back(src_line);
+    err_list.push_back(tmp)
+}
+
+
 /** Get a string representation of the segment
  *
  * @param seg_data Pyx12::segment

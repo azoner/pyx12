@@ -42,6 +42,7 @@ namespace Pyx12 {
         int hl_count;
         int seg_count;
         int cur_line;
+        list<list<string, string, string, string, int> > err_list;
         //string buffer;
         vector<string> isa_ids, gs_ids, st_ids;
         string isa_usage;
@@ -51,6 +52,10 @@ namespace Pyx12 {
         ifstream src_fs;
         string get_id(string id) const;
         string read_seg();
+        void isa_error(const string, const string);
+        void gs_error(const string, const string);
+        void st_error(const string, const string);
+        void seg_error(const string, const string, const string, const int);
 
     public:
         x12file(const string& src_filename); //, errh)
@@ -64,6 +69,7 @@ namespace Pyx12 {
         int get_seg_count() const {return seg_count;};
         int get_cur_line() const {return cur_line;};
         list<string> get_term() const;
+        list<list<string, string, string, string, int> > get_errors() const;
         
     //    ostream& operator<<(ostream&, x12file&);
     };
