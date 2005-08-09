@@ -215,6 +215,7 @@ def x12n_document(param, src_file, fd_997, fd_html, fd_xmldoc=None):
             xmldoc.seg(node, seg)
 
     src.cleanup() #Catch any skipped loop trailers
+    errh.handle_errors(src.get_errors())
     
     if fd_html:
         html.footer()

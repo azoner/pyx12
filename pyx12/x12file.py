@@ -305,6 +305,7 @@ class x12file:
         """
         At EOF, check for missing loop trailers
         """
+        self.err_list = []
         if self.loops:
             for (seg, id1) in self.loops: 
                 if seg == 'ST':
