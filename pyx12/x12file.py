@@ -108,6 +108,7 @@ class x12file:
                     line = line.replace('\n','').replace('\r','')
                     if line != '':
                         break
+                # We have not yet incremented cur_line
                 if line[-1] == self.ele_term:
                     err_str = 'Segment contains trailing element terminators'
                     self._seg_error('SEG1', err_str, None, src_line=self.cur_line+1)
