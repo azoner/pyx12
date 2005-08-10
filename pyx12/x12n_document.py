@@ -30,10 +30,11 @@ from types import *
 
 # Intrapackage imports
 import pyx12
-import error_handler
-import error_997
-import error_debug
-import error_html
+#import error_handler
+#import error_997
+#import error_debug
+#import error_html
+import errh_xml
 from errors import *
 #import codes
 import map_index
@@ -65,7 +66,8 @@ def x12n_document(param, src_file, fd_997, fd_html, fd_xmldoc=None):
     map_path = param.get('map_path')
     logger = logging.getLogger('pyx12')
     logger.debug('MAP PATH: %s' % (map_path))
-    errh = error_handler.err_handler()
+    #errh = error_handler.err_handler()
+    errh = errh_xml.errh_list()
     #errh.register()
     #param.set('checkdate', None)
     
@@ -87,10 +89,10 @@ def x12n_document(param, src_file, fd_997, fd_html, fd_xmldoc=None):
     icvn = fic = vriic = tspc = None
     #XXX Generate TA1 if needed.
 
-    if fd_html:
-        html = error_html.error_html(errh, fd_html, src.get_term())
-        html.header()
-        err_iter = error_handler.err_iter(errh)
+    #if fd_html:
+    #    html = error_html.error_html(errh, fd_html, src.get_term())
+    #    html.header()
+    #    err_iter = error_handler.err_iter(errh)
     if fd_xmldoc:
         logger.debug('xmlout: %s' % (param.get('xmlout')))
         if param.get('xmlout') == 'simple':
@@ -101,6 +103,8 @@ def x12n_document(param, src_file, fd_997, fd_html, fd_xmldoc=None):
             xmldoc = x12xml_idtagqual.x12xml_idtagqual(fd_xmldoc, param.get('idtagqual_dtd'))
         else:
             xmldoc = x12xml_simple.x12xml_simple(fd_xmldoc, param.get('simple_dtd'))
+
+    erx = errh_xml.err_handler('errors.xml')
 
     valid = True
     for seg in src:
@@ -195,31 +199,38 @@ def x12n_document(param, src_file, fd_997, fd_html, fd_xmldoc=None):
                 errh.add_seg(node, seg, src.get_seg_count(), src.get_cur_line(), src.get_ls_id())
 
             valid &= node.is_valid(seg, errh)
-            errh.handle_errors(src.get_errors())
+            #errh.handle_errors(src.get_errors())
+            erx.handleErrors(src.get_errors())
+            erx.handleErrors(errh.get_errors())
+            errh.reset()
 
-        if fd_html:
-            if node is not None and node.is_first_seg_in_loop():
-                html.loop(node.get_parent())
-            err_node_list = []
+        #if fd_html:
+        #    if node is not None and node.is_first_seg_in_loop():
+        #        html.loop(node.get_parent())
+        #    err_node_list = []
             #cur_line = src.cur_line
-            while 1:
-                try:
-                    err_iter.next()
-                    err_node = err_iter.get_cur_node()
-                    err_node_list.append(err_node)
-                except IterOutOfBounds:
-                    break
-            html.gen_seg(seg, src, err_node_list)
+        #    while 1:
+        #        try:
+        #            err_iter.next()
+        #            err_node = err_iter.get_cur_node()
+        #            err_node_list.append(err_node)
+        #        except IterOutOfBounds:
+        #            break
+        #    html.gen_seg(seg, src, err_node_list)
 
         if fd_xmldoc:
             xmldoc.seg(node, seg)
 
+        erx.Write(src.cur_line)
+
     src.cleanup() #Catch any skipped loop trailers
-    errh.handle_errors(src.get_errors())
+    #errh.handle_errors(src.get_errors())
+    erx.handleErrors(src.get_errors())
+    erx.handleErrors(errh.get_errors())
     
-    if fd_html:
-        html.footer()
-        del html
+    #if fd_html:
+    #    html.footer()
+    #    del html
 
     if fd_xmldoc:
         del xmldoc
@@ -228,13 +239,13 @@ def x12n_document(param, src_file, fd_997, fd_html, fd_xmldoc=None):
     #errh.accept(visit_debug)
 
     #If this transaction is not a 997, generate one.
-    if not (vriic=='004010' and fic=='FA'):
+    #if not (vriic=='004010' and fic=='FA'):
         #fd_997 = open(filename_997, 'w')
         #fd_997 = sys.stdout
-        if fd_997:
-            visit_997 = error_997.error_997_visitor(fd_997, src.get_term())
-            errh.accept(visit_997)
-            del visit_997
+    #    if fd_997:
+    #        visit_997 = error_997.error_997_visitor(fd_997, src.get_term())
+    #        errh.accept(visit_997)
+    #        del visit_997
     del node
     del src
     del control_map
