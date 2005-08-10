@@ -96,8 +96,7 @@ class err_handler:
                 self.writer.elem(u"code", err_cde)
                 self.writer.elem(u"desc", err_str)
                 if err_val:
-                    self.writer.push(u"value", err_val)
-                    self.writer.pop()
+                    self.writer.elem(u"errval", err_val)
                 #self.writer.push(u"seg", {u'line': '%i'%(cur_line)})
                         #self.writer.elem(u'ele', seg_data.get_value('%02i' % (i+1)), 
                         #    attrs={u'id': child_node.id})
@@ -134,6 +133,11 @@ class errh_list:
         """
         return self.cur_line
 
+    def set_cur_line(self, cur_line):
+        """
+        """
+        self.cur_line = cur_line
+
 #    def get_id(self):
 #        """
 #        @return: Error node type
@@ -144,7 +148,8 @@ class errh_list:
     def add_isa_loop(self, seg, src):
         """
         """
-        raise ErrorErrhNull, 'add_isa loop'
+        #raise ErrorErrhNull, 'add_isa loop'
+        pass
         
     def add_gs_loop(self, seg, src):
         """
@@ -174,6 +179,10 @@ class errh_list:
         @type err_str: string
         """
         self.errors.append(('isa', err_cde, err_str, None, None))
+        sout = ''
+        sout += 'Line:%i ' % (self.cur_line)
+        sout += 'ISA:%s - %s' % (err_cde, err_str)
+        logger.error(sout)
 
     def gs_error(self, err_cde, err_str):
         """
@@ -183,6 +192,10 @@ class errh_list:
         @type err_str: string
         """
         self.errors.append(('gs', err_cde, err_str, None, None))
+        sout = ''
+        sout += 'Line:%i ' % (self.cur_line)
+        sout += 'GS:%s - %s' % (err_cde, err_str)
+        logger.error(sout)
         
     def st_error(self, err_cde, err_str):
         """
@@ -192,6 +205,10 @@ class errh_list:
         @type err_str: string
         """
         self.errors.append(('st', err_cde, err_str, None, None))
+        sout = ''
+        sout += 'Line:%i ' % (self.cur_line)
+        sout += 'ST:%s - %s' % (err_cde, err_str)
+        logger.error(sout)
         
     def seg_error(self, err_cde, err_str, err_value=None, src_line=None):
         """
@@ -201,6 +218,12 @@ class errh_list:
         @type err_str: string
         """
         self.errors.append(('seg', err_cde, err_str, err_value, src_line))
+        sout = ''
+        sout += 'Line:%i ' % (self.cur_line)
+        sout += 'SEG:%s - %s' % (err_cde, err_str)
+        if err_value:
+            sout += ' (%s)' % err_value
+        logger.error(sout)
         
     def ele_error(self, err_cde, err_str, bad_value):
         """
@@ -210,6 +233,12 @@ class errh_list:
         @type err_str: string
         """
         self.errors.append(('ele', err_cde, err_str, bad_value, None))
+        sout = ''
+        sout += 'Line:%i ' % (self.cur_line)
+        sout += 'ELE:%s - %s' % (err_cde, err_str)
+        if bad_value:
+            sout += ' (%s)' % (bad_value)
+        logger.error(sout)
 
     def close_isa_loop(self, node, seg, src):
         """
@@ -258,8 +287,3 @@ class errh_list:
         @rtype: boolean
         """
         return True
-            
-#    def __repr__(self):
-#        """
-#        """
-#        return '%i: %s' % (-1, self.id)

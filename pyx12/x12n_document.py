@@ -198,6 +198,7 @@ def x12n_document(param, src_file, fd_997, fd_html, fd_xmldoc=None):
             else:
                 errh.add_seg(node, seg, src.get_seg_count(), src.get_cur_line(), src.get_ls_id())
 
+            errh.set_cur_line(src.get_cur_line())
             valid &= node.is_valid(seg, errh)
             #errh.handle_errors(src.get_errors())
             erx.handleErrors(src.get_errors())
