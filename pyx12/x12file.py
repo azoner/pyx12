@@ -247,10 +247,6 @@ class x12file:
         return seg
 
     def get_errors(self):
-        """
-        @param err_list: list[(err_type, err_cde, err_str, line_no)]
-        @type err_list: list[(string, string, string, int)]
-        """
         return self.err_list
 
     def _isa_error(self, err_cde, err_str):

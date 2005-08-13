@@ -34,9 +34,6 @@ class ErrorItem:
         @type err_cde: string
         @param err_str: Description of the error
         @type err_str: string
-
-        @param 
-        @type 
         """
         self.err_cde = err_cde
         self.err_str = err_str

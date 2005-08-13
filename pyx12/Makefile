@@ -3,7 +3,8 @@ CFLAGS=-Wall  # c++ compiler flags
 #LDFLAGS=-Wall   # linker flags
 LDFLAGS = -lm -Wall
 #-I /usr/local/include -L /usr/local/lib 
-DOCTARGET = ../doc/epydoc
+#DOCTARGET = ../doc/epydoc
+DOCTARGET = ../../pyx12-web/doc/epydoc
 
 all:
 	test_csegment
@@ -28,4 +29,4 @@ clean:
 	rm -f *.o *.core
 
 doc:
-	epydoc --html --name Pyx12 --no-frames -o $(DOCTARGET) .
+	epydoc --check --html --name Pyx12 -u http://pyx12.sourceforge.net/ --no-frames -o $(DOCTARGET) .
