@@ -9507,7 +9507,7 @@
     </loop>
 <!--End of GS loop-->
     <segment xid="TA1">
-      <name>Interchange Achnowledgement</name>
+      <name>Interchange Acknowledgement</name>
       <usage>S</usage>
       <pos>020</pos>
       <element xid="TA101">
@@ -9539,7 +9539,7 @@
       </element>
       <element xid="TA104">
         <data_ele>I17</data_ele>
-        <name>Interchange Achnowledgement Code</name>
+        <name>Interchange Acknowledgement Code</name>
         <usage>R</usage>
         <seq>04</seq>
         <data_type>ID</data_type>
