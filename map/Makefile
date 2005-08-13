@@ -7,7 +7,7 @@
 # $Id$
 
 XSLT=/usr/local/bin/xsltproc
-MAPDIR=./
+MAPDIR=.
 OUTPUTDIR=../../pyx12-web/maps
 MAPS=270 271 276 277 278 820 835 837D 837I 837P 841 834 997
 
