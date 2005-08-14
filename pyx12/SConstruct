@@ -3,6 +3,16 @@
 #CXXFLAGS = $(GCCFLAGS)
 #LDFLAGS = -lm
 
+#boost:
+#Don't forget to add -pthread to your linker options when linking your code.
+#You have built the Boost.Python library. You have to add the following
+#options when building your own code:
+#Compiler options:
+#   -I/usr/local/include/python2.4 -I/usr/local/include
+#Linker options:
+#   -L/usr/local/lib/python2.4 -L/usr/local/lib -lboost_python -lpython2.4
+      
+
 
 ############################
 # GCC settings (special)
@@ -17,7 +27,7 @@ epydoc = Builder(action = 'epydoc --html --name Pyx12 --no-frames -o ../doc/epyd
     src_suffix = '.py',
     suffix = '.html')
 #/usr/local/lib/gcc/i386-portbld-freebsd4.10/3.4.4/include/c++/
-env = Environment(CC = 'g++', CCFLAGS = '-g -O2 -W -Wall -ansi -Wwrite-strings -Wstrict-prototypes -Wmissing-prototypes -pedantic')
+env = Environment(CC = 'g++', CCFLAGS = '-g -O2 -W -Wall -ansi -Wwrite-strings -pedantic')
 env.Append(BUILDERS = {'Doc' : epydoc})
 #Program(['test1.cxx', 'segment.cxx', 'errors.cxx'])
 #includes = Dir(['.', '/usr/include', 'usr/local/include'])

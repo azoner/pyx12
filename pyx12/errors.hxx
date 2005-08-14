@@ -18,10 +18,10 @@ $Id$
 
 namespace Pyx12 {
     /* Class for XML Reader errors */
-    class XML_Reader_Error : std::exception {
-    public:
-        XML_Reader_Error(whatString) {};
-    };
+//    class XML_Reader_Error : std::exception {
+//    public:
+//        XML_Reader_Error(whatString) {};
+//    };
 
     /* Base class for X12N format errors*/
     class x12Error {
@@ -39,6 +39,7 @@ namespace Pyx12 {
     class EngineError {
     public:
         EngineError(std::string err_str_);
+        std::string what();
     private:
         std::string err_str;
     };

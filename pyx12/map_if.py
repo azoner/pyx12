@@ -1298,7 +1298,7 @@ class element_if(x12_node):
                     return True
         if self.usage == 'N' and elem.get_value() != '':
             err_str = 'Data element "%s" (%s) is marked as Not Used' % (self.name, self.refdes)
-            self._error(errh, err_str, '5', None)
+            self._error(errh, err_str, '10', None)
             return False
 
         elem_val = elem.get_value()
