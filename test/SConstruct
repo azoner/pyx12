@@ -1,4 +1,22 @@
+#boost:
+#Don't forget to add -pthread to your linker options when linking your code.
+#You have built the Boost.Python library. You have to add the following
+#options when building your own code:
+#Compiler options:
+#   -I/usr/local/include/python2.4 -I/usr/local/include
+#Linker options:
+#   -L/usr/local/lib/python2.4 -L/usr/local/lib -lboost_python -lpython2.4
+
+#Program('t1', 't1.cxx', \
+#    CPPPATH = ['.', '/usr/include', '/usr/local/include', \
+#        '/usr/local/include/python2.4'], \
+#    LIBS=['boost_unit_test_framework', 'libc_r'], \
+#    LIBPATH=['.', '/usr/lib', '/usr/local/lib', '/usr/local/lib/python2.4', \
+#        'boost_python', 'python2.4'])
 Program('test_csegment', 'test_csegment.cxx', \
-    CPPPATH = ['.', '../pyx12', '/usr/include', '/usr/local/include'], \
+    CPPPATH = ['.', '../pyx12', '/usr/include', '/usr/local/include', \
+        '/usr/local/include/python2.4'], \
     LIBS=['pyx12', 'boost_unit_test_framework', 'libc_r'], \
-    LIBPATH=['.', '../pyx12', '/usr/lib', '/usr/local/lib'])
+    LIBPATH=['.', '../pyx12', '/usr/lib', '/usr/local/lib', \
+    '/usr/local/lib/python2.4', 'boost_python', 'python2.4']
+    )
