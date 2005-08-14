@@ -192,7 +192,10 @@ const Pyx12::element& Pyx12::composite::operator[](size_t i) const {
 
 ///////////////////////////////////////////////////////////////////////////
 //  SEGMENT CLASS
+//
+//  Encapsulates an X12 segment.  Contains composites.
 ///////////////////////////////////////////////////////////////////////////
+
 Pyx12::segment::segment() {}
 
 Pyx12::segment::segment(const string& seg_str, const char seg_term_ = '~',
@@ -276,7 +279,7 @@ string Pyx12::segment::get_seg_id() {
     return seg_id;
 }
 
-string Pyx12::segment::get_value_by_ref_des(const string& ref_des) {
+string Pyx12::segment::get_value(const string& ref_des) {
     typedef string::const_iterator iter;
     int ele_idx, comp_idx;
 
@@ -345,21 +348,58 @@ const Pyx12::composite& Pyx12::segment::operator[](size_t i) const {
     return elements[i]; 
 }
 
-Pyx12::composite& Pyx12::segment::get_item(size_t i) { 
+Pyx12::composite& Pyx12::segment::get(size_t i) { 
     return elements[i]; 
 }
 
-const Pyx12::composite& Pyx12::segment::get_item(size_t i) const { 
+const Pyx12::composite& Pyx12::segment::get(size_t i) const { 
     return elements[i];
 }
 
-void Pyx12::segment::set_item(size_t i, string val) { 
+void Pyx12::segment::set(size_t i, string val) { 
     elements[i] = composite(val, subele_term);
 }
 
+/**
+ * Get the element and sub-element indexes
+ * Format of ref_des:
+ *   - a simple element: TST02
+ *   - a composite: TST03 where TST03 is a composite
+ *   - a sub-element: TST03-2
+ *   - or any of the above with the segment ID omitted (02, 03, 03-1)
 
-
-
+ * @param ref_des X12 Reference Designator
+ * @exception EngineError If the given ref_des does not match the segment ID
+ *   or if the indexes are not valid integers
+ */
+vector<int> Pyx12::segment::parse_refdes(string ref_des) {
+    typedef string::const_iterator iter;
+    int ele_idx, comp_idx;
+    if(ref_des=="")
+        throw Pyx12::EngineError("Blank Reference Designator");
+    if(ref_des.substr(0, seg_id.size()) != seg_id)
+        throw Pyx12::EngineError("Invalid ref_des: " + ref_des + ", seg_id: " + seg_id);
+    string rest;
+    if(isalpha(ref_des[0])) {
+        if(ref_des.substr(0, seg_id.length()) != seg_id)
+            throw Pyx12::EngineError("Invalid Reference Designator: " 
+                    + ref_des + ", seg_id: " + seg_id);
+        rest = ref_des.substr(seg_id.length(), ref_des.size()-seg_id.length());
+    }
+    else {
+        rest = ref_des;
+    }
+    string::size_type dash = ref_des.find('-');
+    if(dash == string::npos) {
+        ele_idx = atoi(rest.c_str()) - 1;
+        comp_idx = 0;
+    }
+    else {
+        ele_idx = atoi(rest.substr(0, dash).c_str()) - 1;
+        comp_idx = atoi(rest.substr(dash, rest.size()-dash).c_str()) - 1;
+    }
+    return vector<int>(ele_idx, comp_idx);
+}
 
 ostream & Pyx12::operator << (ostream & out, Pyx12::element & e)
 {

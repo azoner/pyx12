@@ -80,6 +80,7 @@ namespace Pyx12 {
         string seg_id;
         vector<composite> elements;
         vector<string> split(const string& ele_str);
+        vector<int> parse_refdes(string ref_des);
 
     public:
         segment();
@@ -87,13 +88,13 @@ namespace Pyx12 {
             const char ele_term_, const char subele_term_);
         composite& operator[](size_t i);
         const composite& operator[](size_t i) const;
-        composite& get_item(size_t i);
-        const composite& get_item(size_t i) const;
-        void set_item(size_t i, string val);
+        composite& get(size_t i);
+        const composite& get(size_t i) const;
+        void set(size_t i, string val);
         void append(const string& ele_str);
         size_t length();
         string get_seg_id();
-        string get_value_by_ref_des(const string& ref_des);
+        string get_value(const string& ref_des);
         void set_seg_term(const char seg_term_);
         void set_ele_term(const char ele_term_);
         void set_subele_term(const char subele_term_);
