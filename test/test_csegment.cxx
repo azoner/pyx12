@@ -17,21 +17,21 @@ using boost::unit_test_framework::test_suite;
 //////////////////////////////////////////////////////////////////////////////
 void Identity1() {
     std::string seg_str("TST*AA*1*Y*BB:5*ZZ");
-    Pyx12::segment seg_data(seg_str, '~', '*', ':'));
+    Pyx12::segment seg_data(seg_str, '~', '*', ':');
     BOOST_CHECK_EQUAL(seg_data.format(), seg_str + '~'); 
 }
 
 void Identity2() {
     std::string seg_str("ISA*00*          *00*          *ZZ*ZZ000          *");
-    seg_str += "ZZ*ZZ001          *030828*1128*U*00401*000010121*0*T*:");
+    seg_str += "ZZ*ZZ001          *030828*1128*U*00401*000010121*0*T*:";
     seg_str += '\n';
-    Pyx12::segment seg_data(seg_str, '~', '*', ':'));
+    Pyx12::segment seg_data(seg_str, '~', '*', ':');
     BOOST_CHECK(seg_data.format() == seg_str + '~'); 
 }
 
 void Identity3() {
     std::string seg_str("TST*AA*1*Y*BB:5*ZZ~");
-    Pyx12::segment seg_data(seg_str, '~', '*', ':'));
+    Pyx12::segment seg_data(seg_str, '~', '*', ':');
     BOOST_CHECK(seg_data.format() == seg_str); 
 }
 
