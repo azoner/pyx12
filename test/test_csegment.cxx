@@ -15,62 +15,71 @@ using boost::unit_test_framework::test_suite;
 //////////////////////////////////////////////////////////////////////////////
 // Test Identity Transforms
 //////////////////////////////////////////////////////////////////////////////
-void Identity1() {
+void Identity1()
+{
     std::string seg_str("TST*AA*1*Y*BB:5*ZZ");
-    Pyx12::segment seg_data(seg_str, '~', '*', ':');
+    Pyx12::Segment seg_data(seg_str, '~', '*', ':');
     BOOST_CHECK_EQUAL(seg_data.format(), seg_str + '~'); 
 }
 
-void Identity2() {
+void Identity2()
+{
     std::string seg_str("ISA*00*          *00*          *ZZ*ZZ000          *");
     seg_str += "ZZ*ZZ001          *030828*1128*U*00401*000010121*0*T*:";
     seg_str += '\n';
-    Pyx12::segment seg_data(seg_str, '~', '*', ':');
+    Pyx12::Segment seg_data(seg_str, '~', '*', ':');
     BOOST_CHECK(seg_data.format() == seg_str + '~'); 
 }
 
-void Identity3() {
+void Identity3()
+{
     std::string seg_str("TST*AA*1*Y*BB:5*ZZ~");
-    Pyx12::segment seg_data(seg_str, '~', '*', ':');
+    Pyx12::Segment seg_data(seg_str, '~', '*', ':');
     BOOST_CHECK(seg_data.format() == seg_str); 
 }
 
 //////////////////////////////////////////////////////////////////////////////
 // Test Arbitrary Delimiters
 //////////////////////////////////////////////////////////////////////////////
-void ArbitraryIdentity() {
+void ArbitraryIdentity()
+{
     std::string seg_str("TST&AA!1!1&BB!5&ZZ");
-    Pyx12::segment seg_data(seg_str, '+', '&', '!');
+    Pyx12::Segment seg_data(seg_str, '+', '&', '!');
     BOOST_CHECK(seg_data.format() == seg_str + '+'); 
 }
 
-void ArbitraryGetSegID() {
+void ArbitraryGetSegID()
+{
     std::string seg_str("TST&AA!1!1&BB!5&ZZ");
-    Pyx12::segment seg_data(seg_str, '+', '&', '!');
-    BOOST_CHECK(seg_data.get_seg_id() == "TST"); 
+    Pyx12::Segment seg_data(seg_str, '+', '&', '!');
+    BOOST_CHECK(seg_data.getSegId() == "TST"); 
 }
 
-void ArbitraryLength() {
+void ArbitraryLength()
+{
     std::string seg_str("TST&AA!1!1&BB!5&ZZ");
-    Pyx12::segment seg_data(seg_str, '+', '&', '!');
+    Pyx12::Segment seg_data(seg_str, '+', '&', '!');
     BOOST_CHECK(seg_data.length() == 3); 
 }
 
-void ArbitraryGetItem3() {
+void ArbitraryGetItem3()
+{
     std::string seg_str("TST&AA!1!1&BB!5&ZZ");
-    Pyx12::segment seg_data(seg_str, '+', '&', '!');
-    BOOST_CHECK(seg_data.get_value("TST03") == "ZZ"); 
+    Pyx12::Segment seg_data(seg_str, '+', '&', '!');
+    BOOST_CHECK(seg_data.getValue("TST03") == "ZZ"); 
 }
 
-void ArbitraryGetItem1() {
+void ArbitraryGetItem1()
+{
     std::string seg_str("TST&AA!1!1&BB!5&ZZ");
-    Pyx12::segment seg_data(seg_str, '+', '&', '!');
+    Pyx12::Segment seg_data(seg_str, '+', '&', '!');
     BOOST_CHECK(seg_data.format("TST01") == "AA!1!1"); 
 }
 
-void ArbitraryOtherTerms() {
+void ArbitraryOtherTerms()
+{
     std::string seg_str("TST&AA!1!1&BB!5&ZZ");
-    Pyx12::segment seg_data(seg_str, '+', '&', '!');
+    Pyx12::Segment seg_data(seg_str, '+', '&', '!');
     BOOST_CHECK(seg_data.format('~', '*', ':') == "TST*AA:1:1*BB:5*ZZ~");
 }
 
@@ -78,58 +87,63 @@ void ArbitraryOtherTerms() {
 //////////////////////////////////////////////////////////////////////////////
 // Test Alter
 //////////////////////////////////////////////////////////////////////////////
-void AlterElement() {
+void AlterElement()
+{
     std::string seg_str("TST*AA:1:1*BB:5*ZZ");
-    Pyx12::segment seg_data( Pyx12::segment(seg_str, '~', '*', ':'));
+    Pyx12::Segment seg_data( Pyx12::Segment(seg_str, '~', '*', ':'));
     seg_data.set("TST03", "YY");
     BOOST_CHECK_EQUAL(seg_data.format(), "TST*AA:1:1*BB:5*YY~");
 }
 
-void AlterExtendElementBlank() {
+void AlterExtendElementBlank()
+{
     std::string seg_str("TST*AA:1:1*BB:5*ZZ");
-    Pyx12::segment seg_data( Pyx12::segment(seg_str, '~', '*', ':'));
+    Pyx12::Segment seg_data( Pyx12::Segment(seg_str, '~', '*', ':'));
     seg_data.set("TST05", "");
     BOOST_CHECK_EQUAL(seg_data.format(), "TST*AA:1:1*BB:5*ZZ~");
 }
 
-void AlterExtendElement() {
+void AlterExtendElement()
+{
     std::string seg_str("TST*AA:1:1*BB:5*ZZ");
-    Pyx12::segment seg_data( Pyx12::segment(seg_str, '~', '*', ':'));
+    Pyx12::Segment seg_data( Pyx12::Segment(seg_str, '~', '*', ':'));
     seg_data.set("TST05", "AR");
     BOOST_CHECK_EQUAL(seg_data.format(), "TST*AA:1:1*BB:5*ZZ**AR~");
 }
 
-void AlterComposite() {
+void AlterComposite()
+{
     std::string seg_str("TST*AA:1:1*BB:5*ZZ~");
-    Pyx12::segment seg_data( Pyx12::segment(seg_str, '~', '*', ':'));
+    Pyx12::Segment seg_data( Pyx12::Segment(seg_str, '~', '*', ':'));
     seg_data.set("TST02", "CC:2");
     BOOST_CHECK_EQUAL(seg_data.format(), "TST*AA:1:1*CC:2*ZZ~");
 }
 
-void AlterExtendComposite() {
+void AlterExtendComposite()
+{
     std::string seg_str("TST*AA:1:1*BB:5*ZZ~");
-    Pyx12::segment seg_data( Pyx12::segment(seg_str, '~', '*', ':'));
+    Pyx12::Segment seg_data( Pyx12::Segment(seg_str, '~', '*', ':'));
     seg_data.set("TST02-4", "T");
     BOOST_CHECK_EQUAL(seg_data.format(), "TST*AA:1:1*BB:5::T*ZZ~");
 }
 
 void AlterExtendComposite2() {
     std::string seg_str("TST*AA:1:1*BB:5*ZZ~");
-    Pyx12::segment seg_data( Pyx12::segment(seg_str, '~', '*', ':'));
+    Pyx12::Segment seg_data( Pyx12::Segment(seg_str, '~', '*', ':'));
     seg_data.set("TST05-2", "T");
     BOOST_CHECK_EQUAL(seg_data.format(), "TST*AA:1:1*BB:5*ZZ**:T~");
 }
 
 void AlterExtendCompositeBlank1() {
     std::string seg_str("TST*AA:1:1*BB:5*ZZ~");
-    Pyx12::segment seg_data( Pyx12::segment(seg_str, '~', '*', ':'));
+    Pyx12::Segment seg_data( Pyx12::Segment(seg_str, '~', '*', ':'));
     seg_data.set("TST02-4", "");
     BOOST_CHECK_EQUAL(seg_data.format(), "TST*AA:1:1*BB:5*ZZ~");
 }
 
 void AlterExtendCompositeBlank2() {
     std::string seg_str("TST*AA:1:1*BB:5*ZZ~");
-    Pyx12::segment seg_data( Pyx12::segment(seg_str, '~', '*', ':'));
+    Pyx12::Segment seg_data( Pyx12::Segment(seg_str, '~', '*', ':'));
     seg_data.set("TST05-4", "");
     BOOST_CHECK_EQUAL(seg_data.format(), "TST*AA:1:1*BB:5*ZZ~");
 }
@@ -140,23 +154,23 @@ void AlterExtendCompositeBlank2() {
 //////////////////////////////////////////////////////////////////////////////
 void CompositeIsA() {
     std::string seg_str("TST*AA:1:1*BB:5*ZZ~");
-    Pyx12::segment seg_data( Pyx12::segment(seg_str, '~', '*', ':'));
-    BOOST_CHECK(seg_data.is_composite("TST01"));
-    BOOST_CHECK(!seg_data.is_element("TST01"));
+    Pyx12::Segment seg_data( Pyx12::Segment(seg_str, '~', '*', ':'));
+    BOOST_CHECK(seg_data.getComposite("TST01").isComposite());
+    BOOST_CHECK(!seg_data.getComposite("TST01").isComposite());
 }
     
 void CompositeLength() {
     std::string seg_str("TST*AA:1:1*BB:5*ZZ~");
-    Pyx12::segment seg_data( Pyx12::segment(seg_str, '~', '*', ':'));
-    BOOST_CHECK_EQUAL(len(seg_data.get("01")), 3);
+    Pyx12::Segment seg_data( Pyx12::Segment(seg_str, '~', '*', ':'));
+    BOOST_CHECK_EQUAL(seg_data.getComposite("01").length(), 3);
 }
 
 void CompositeIndexing() {
     std::string seg_str("TST*AA:1:1*BB:5*ZZ~");
-    Pyx12::segment seg_data( Pyx12::segment(seg_str, '~', '*', ':'));
-    BOOST_CHECK_EQUAL(seg_data.get_value("TST01-1"), "AA");
-    BOOST_CHECK_EQUAL(seg_data.get_value("TST01-3"), "Y");
-    BOOST_CHECK_EQUAL(seg_data.get_value("TST01-4"), NULL);
+    Pyx12::Segment seg_data( Pyx12::Segment(seg_str, '~', '*', ':'));
+    BOOST_CHECK_EQUAL(seg_data.getValue("TST01-1"), "AA");
+    BOOST_CHECK_EQUAL(seg_data.getValue("TST01-3"), "Y");
+    BOOST_CHECK_EQUAL(seg_data.getValue("TST01-4"), NULL);
 }
 
 
@@ -165,32 +179,32 @@ void CompositeIndexing() {
 //////////////////////////////////////////////////////////////////////////////
 void SimpleIsA() {
     std::string seg_str("TST*AA*1*Y*BB:5*ZZ");
-    Pyx12::segment seg_data( Pyx12::segment(seg_str, '~', '*', ':'));
-    BOOST_CHECK(seg_data.is_element("TST01"));
-    BOOST_CHECK(!seg_data.is_composite("TST01"));
+    Pyx12::Segment seg_data( Pyx12::Segment(seg_str, '~', '*', ':'));
+    BOOST_CHECK(seg_data.getComposite("TST01").isElement());
+    BOOST_CHECK(!seg_data.getComposite("TST01").isComposite());
 }
     
 void SimpleLength() {
     std::string seg_str("TST*AA*1*Y*BB:5*ZZ");
-    Pyx12::segment seg_data( Pyx12::segment(seg_str, '~', '*', ':'));
-    BOOST_CHECK_EQUAL(len(seg_data.get("01")), 1);
+    Pyx12::Segment seg_data( Pyx12::Segment(seg_str, '~', '*', ':'));
+    BOOST_CHECK_EQUAL(seg_data.getComposite("01").length(), 1);
 }
 
 void SimpleIndexing() {
     std::string seg_str("TST*AA*1*Y*BB:5*ZZ");
-    Pyx12::segment seg_data( Pyx12::segment(seg_str, '~', '*', ':'));
-    BOOST_CHECK_EQUAL(seg_data.get_value("TST01"), "AA");
-    BOOST_CHECK_EQUAL(seg_data.get_value("TST02"), "1");
-    BOOST_CHECK_EQUAL(seg_data.get_value("TST03"), "Y");
-    BOOST_CHECK_EQUAL(seg_data.get_value("TST05"), "ZZ");
-    BOOST_CHECK_EQUAL(seg_data.get_value("TST06"), NULL);
+    Pyx12::Segment seg_data( Pyx12::Segment(seg_str, '~', '*', ':'));
+    BOOST_CHECK_EQUAL(seg_data.getValue("TST01"), "AA");
+    BOOST_CHECK_EQUAL(seg_data.getValue("TST02"), "1");
+    BOOST_CHECK_EQUAL(seg_data.getValue("TST03"), "Y");
+    BOOST_CHECK_EQUAL(seg_data.getValue("TST05"), "ZZ");
+    BOOST_CHECK_EQUAL(seg_data.getValue("TST06"), NULL);
 }
 
 void SimpleSpaces() {
     std::string seg_str("TST*AA*      *BB~");
-    Pyx12::segment seg_data( Pyx12::segment(seg_str, '~', '*', ':'));
-    BOOST_CHECK_EQUAL(len(seg_data.get_value("TST02")), 10);
-    BOOST_CHECK_EQUAL(seg_data.get_value("TST02"), "      ");
+    Pyx12::Segment seg_data( Pyx12::Segment(seg_str, '~', '*', ':'));
+    BOOST_CHECK_EQUAL(seg_data.getValue("TST02").length(), 10);
+    BOOST_CHECK_EQUAL(seg_data.getValue("TST02"), "      ");
 }
 
 //////////////////////////////////////////////////////////////////////////////
@@ -198,19 +212,19 @@ void SimpleSpaces() {
 //////////////////////////////////////////////////////////////////////////////
 void getElementValueOK() {
     std::string seg_str("TST*AA*1*Y*BB:5*ZZ");
-    Pyx12::segment seg_data( Pyx12::segment(seg_str, '~', '*', ':'));
-    BOOST_CHECK_EQUAL(seg_data.get_value("TST01"), seg_data.get("TST01").format());
-    BOOST_CHECK_EQUAL(seg_data.get_value("TST04"), seg_data.get("TST04").format());
-    BOOST_CHECK_EQUAL(seg_data.get_value("TST03"), seg_data.get("TST03").format());
-    BOOST_CHECK_EQUAL(seg_data.get_value("TST05"), seg_data.get("TST05").format());
-    BOOST_CHECK_EQUAL(seg_data.get_value("TST06"), seg_data.get("TST06").format());
+    Pyx12::Segment seg_data( Pyx12::Segment(seg_str, '~', '*', ':'));
+    BOOST_CHECK_EQUAL(seg_data.getValue("TST01"), seg_data.getComposite("TST01").format());
+    BOOST_CHECK_EQUAL(seg_data.getValue("TST04"), seg_data.getComposite("TST04").format());
+    BOOST_CHECK_EQUAL(seg_data.getValue("TST03"), seg_data.getComposite("TST03").format());
+    BOOST_CHECK_EQUAL(seg_data.getValue("TST05"), seg_data.getComposite("TST05").format());
+    BOOST_CHECK_EQUAL(seg_data.getValue("TST06"), seg_data.getComposite("TST06").format());
 }
     
 void getCompositeValueOK() {
     std::string seg_str("TST*AA*1*Y*BB:5*ZZ");
-    Pyx12::segment seg_data( Pyx12::segment(seg_str, '~', '*', ':'));
-    BOOST_CHECK_EQUAL(seg_data.get_value("TST04-1"), seg_data.get("TST04-1").format());
-    BOOST_CHECK_EQUAL(seg_data.get_value("TST04-2"), seg_data.get("TST04-2").format());
+    Pyx12::Segment seg_data( Pyx12::Segment(seg_str, '~', '*', ':'));
+    BOOST_CHECK_EQUAL(seg_data.getValue("TST04-1"), seg_data.getElement("TST04-1").format());
+    BOOST_CHECK_EQUAL(seg_data.getValue("TST04-2"), seg_data.getElement("TST04-2").format());
 }
 
 
@@ -219,52 +233,52 @@ void getCompositeValueOK() {
 //////////////////////////////////////////////////////////////////////////////
 void RefDesSimple1() {
     std::string seg_str("TST*AA*1*Y*BB:5*ZZ");
-    Pyx12::segment seg_data( Pyx12::segment(seg_str, '~', '*', ':'));
-    BOOST_CHECK_EQUAL(seg_data.get_value("TST01"), "AA");
-    BOOST_CHECK_EQUAL(seg_data.get_value("01"), "AA");
+    Pyx12::Segment seg_data( Pyx12::Segment(seg_str, '~', '*', ':'));
+    BOOST_CHECK_EQUAL(seg_data.getValue("TST01"), "AA");
+    BOOST_CHECK_EQUAL(seg_data.getValue("01"), "AA");
 }
 
 //void RefDesFailSegId() {
 //    std::string seg_str("TST*AA*1*Y*BB:5*ZZ");
-//    Pyx12::segment seg_data( Pyx12::segment(seg_str, '~', '*', ':'));
-//    BOOST_CHECKRaises(EngineError, seg_data.get_value, "XXX01");
+//    Pyx12::Segment seg_data( Pyx12::Segment(seg_str, '~', '*', ':'));
+//    BOOST_CHECKRaises(EngineError, seg_data.getValue, "XXX01");
 //}
 
 void RefDesSimple2() {
     std::string seg_str("TST*AA*1*Y*BB:5*ZZ");
-    Pyx12::segment seg_data( Pyx12::segment(seg_str, '~', '*', ':'));
-    BOOST_CHECK_EQUAL(seg_data.get_value("TST02"), "1");
-    BOOST_CHECK_EQUAL(seg_data.get_value("02"), "1");
+    Pyx12::Segment seg_data( Pyx12::Segment(seg_str, '~', '*', ':'));
+    BOOST_CHECK_EQUAL(seg_data.getValue("TST02"), "1");
+    BOOST_CHECK_EQUAL(seg_data.getValue("02"), "1");
 }
 
 void RefDesComposite1() {
     std::string seg_str("TST*AA*1*Y*BB:5*ZZ");
-    Pyx12::segment seg_data( Pyx12::segment(seg_str, '~', '*', ':'));
-    BOOST_CHECK_EQUAL(seg_data.get_value("TST04-2"), "5");
-    BOOST_CHECK_EQUAL(seg_data.get_value("04-2"), "5");
+    Pyx12::Segment seg_data( Pyx12::Segment(seg_str, '~', '*', ':'));
+    BOOST_CHECK_EQUAL(seg_data.getValue("TST04-2"), "5");
+    BOOST_CHECK_EQUAL(seg_data.getValue("04-2"), "5");
 }
 
 void RefDesComposite2() {
     std::string seg_str("TST*AA*1*Y*BB:5*ZZ");
-    Pyx12::segment seg_data( Pyx12::segment(seg_str, '~', '*', ':'));
-    BOOST_CHECK_EQUAL(seg_data.get_value("TST04-1"), "BB");
-    BOOST_CHECK_EQUAL(seg_data.get_value("04-1"), "BB");
+    Pyx12::Segment seg_data( Pyx12::Segment(seg_str, '~', '*', ':'));
+    BOOST_CHECK_EQUAL(seg_data.getValue("TST04-1"), "BB");
+    BOOST_CHECK_EQUAL(seg_data.getValue("04-1"), "BB");
 }
 
 void RefDesComposite3() {
     std::string seg_str("TST*AA*1*Y*BB:5*ZZ");
-    Pyx12::segment seg_data( Pyx12::segment(seg_str, '~', '*', ':'));
-    BOOST_CHECK_EQUAL(seg_data.get_value("TST04"), "BB:5");
-    BOOST_CHECK_EQUAL(seg_data.get_value("04"), "BB:5");
+    Pyx12::Segment seg_data( Pyx12::Segment(seg_str, '~', '*', ':'));
+    BOOST_CHECK_EQUAL(seg_data.getValue("TST04"), "BB:5");
+    BOOST_CHECK_EQUAL(seg_data.getValue("04"), "BB:5");
 }
 
 void RefDesNone() {
     std::string seg_str("TST*AA*1*Y*BB:5*ZZ");
-    Pyx12::segment seg_data( Pyx12::segment(seg_str, '~', '*', ':'));
-    BOOST_CHECK_EQUAL(seg_data.get_value("TST15"), NULL);
-    BOOST_CHECK_EQUAL(seg_data.get_value("15"), NULL);
-    BOOST_CHECK_EQUAL(seg_data.get_value("TST15-2"), NULL);
-    BOOST_CHECK_EQUAL(seg_data.get_value("15-2"), NULL);
+    Pyx12::Segment seg_data( Pyx12::Segment(seg_str, '~', '*', ':'));
+    BOOST_CHECK_EQUAL(seg_data.getValue("TST15"), NULL);
+    BOOST_CHECK_EQUAL(seg_data.getValue("15"), NULL);
+    BOOST_CHECK_EQUAL(seg_data.getValue("TST15-2"), NULL);
+    BOOST_CHECK_EQUAL(seg_data.getValue("15-2"), NULL);
 }
 
 
@@ -273,50 +287,50 @@ void RefDesNone() {
 //////////////////////////////////////////////////////////////////////////////
 void EmptySeg() {
     std::string seg_str("AAA");
-    Pyx12::segment seg_data( Pyx12::segment(seg_str, '~', '*', ':'));
-    BOOST_CHECK(seg_data.is_empty());
+    Pyx12::Segment seg_data( Pyx12::Segment(seg_str, '~', '*', ':'));
+    BOOST_CHECK(seg_data.isEmpty());
 }
 
 void EmptySegBad1() {
     std::string seg_str("AAA*1~");
-    Pyx12::segment seg_data( Pyx12::segment(seg_str, '~', '*', ':'));
-    BOOST_CHECK(!seg_data.is_empty());
+    Pyx12::Segment seg_data( Pyx12::Segment(seg_str, '~', '*', ':'));
+    BOOST_CHECK(!seg_data.isEmpty());
 }
 
 void EmptySegBad2() {
     std::string seg_str("AAA*:1~");
-    Pyx12::segment seg_data( Pyx12::segment(seg_str, '~', '*', ':'));
-    BOOST_CHECK(!seg_data.is_empty());
+    Pyx12::Segment seg_data( Pyx12::Segment(seg_str, '~', '*', ':'));
+    BOOST_CHECK(!seg_data.isEmpty());
 }
 
 void EmptyComp1() {
     std::string comp_str("");
-    Pyx12::composite comp_data( Pyx12::composite(comp_str, ':'));
-    BOOST_CHECK(comp_data.is_empty());
+    Pyx12::Composite comp_data( Pyx12::Composite(comp_str, ':'));
+    BOOST_CHECK(comp_data.isEmpty());
 }
 
 void EmptyComp2() {
     std::string comp_str("::");
-    Pyx12::composite comp_data( Pyx12::composite(comp_str, ':'));
-    BOOST_CHECK(comp_data.is_empty());
+    Pyx12::Composite comp_data( Pyx12::Composite(comp_str, ':'));
+    BOOST_CHECK(comp_data.isEmpty());
 }
 
 void EmptyCompBad1() {
     std::string comp_str("1::a");
-    Pyx12::composite comp_data( Pyx12::composite(comp_str, ':'));
-    BOOST_CHECK(!comp_data.is_empty());
+    Pyx12::Composite comp_data( Pyx12::Composite(comp_str, ':'));
+    BOOST_CHECK(!comp_data.isEmpty());
 }
 
 void EmptyCompBad2() {
     std::string comp_str("::a");
-    Pyx12::composite comp_data( Pyx12::composite(comp_str, ':'));
-    BOOST_CHECK(!comp_data.is_empty());
+    Pyx12::Composite comp_data( Pyx12::Composite(comp_str, ':'));
+    BOOST_CHECK(!comp_data.isEmpty());
 }
 
 void EmptyCompBad3() {
     std::string comp_str("a");
-    Pyx12::composite comp_data( Pyx12::composite(comp_str, ':'));
-    BOOST_CHECK(!comp_data.is_empty());
+    Pyx12::Composite comp_data( Pyx12::Composite(comp_str, ':'));
+    BOOST_CHECK(!comp_data.isEmpty());
 }
 
 
@@ -325,26 +339,26 @@ void EmptyCompBad3() {
 //////////////////////////////////////////////////////////////////////////////
 void IndexSimple_1() {
     std::string seg_str("TST*AA*1*Y*BB:5*ZZ");
-    Pyx12::segment seg_data( Pyx12::segment(seg_str, '~', '*', ':'));
-    BOOST_CHECK_EQUAL(seg_data.get_value("TST01"), "AA");
+    Pyx12::Segment seg_data( Pyx12::Segment(seg_str, '~', '*', ':'));
+    BOOST_CHECK_EQUAL(seg_data.getValue("TST01"), "AA");
 }
 
 void IndexSimple_2() {
     std::string seg_str("TST*AA*1*Y*BB:5*ZZ");
-    Pyx12::segment seg_data( Pyx12::segment(seg_str, '~', '*', ':'));
-    BOOST_CHECK_EQUAL(seg_data.get_value("TST01-1"), "AA");
+    Pyx12::Segment seg_data( Pyx12::Segment(seg_str, '~', '*', ':'));
+    BOOST_CHECK_EQUAL(seg_data.getValue("TST01-1"), "AA");
 }
 
 void IndexComposite_1() {
     std::string seg_str("TST*AA*1*Y*BB:5*ZZ");
-    Pyx12::segment seg_data( Pyx12::segment(seg_str, '~', '*', ':'));
-    BOOST_CHECK_EQUAL(seg_data.get_value("TST04-1"), "BB");
+    Pyx12::Segment seg_data( Pyx12::Segment(seg_str, '~', '*', ':'));
+    BOOST_CHECK_EQUAL(seg_data.getValue("TST04-1"), "BB");
 }
 
 void IndexComposite_2() {
     std::string seg_str("TST*AA*1*Y*BB:5*ZZ");
-    Pyx12::segment seg_data( Pyx12::segment(seg_str, '~', '*', ':'));
-    BOOST_CHECK_EQUAL(seg_data.get_value("TST04-2"), "5");
+    Pyx12::Segment seg_data( Pyx12::Segment(seg_str, '~', '*', ':'));
+    BOOST_CHECK_EQUAL(seg_data.getValue("TST04-2"), "5");
 }
             
 
@@ -353,26 +367,26 @@ void IndexComposite_2() {
 //////////////////////////////////////////////////////////////////////////////
 void ValidSegId() {
     std::string seg_str("AAA");
-    Pyx12::segment seg_data( Pyx12::segment(seg_str, '~', '*', ':'));
-    BOOST_CHECK(seg_data.is_seg_id_valid());
+    Pyx12::Segment seg_data( Pyx12::Segment(seg_str, '~', '*', ':'));
+    BOOST_CHECK(seg_data.isSegIdValid());
 }
 
 void SegIDEmptySeg() {
     std::string seg_str("");
-    Pyx12::segment seg_data( Pyx12::segment(seg_str, '~', '*', ':'));
-    BOOST_CHECK(!seg_data.is_seg_id_valid());
+    Pyx12::Segment seg_data( Pyx12::Segment(seg_str, '~', '*', ':'));
+    BOOST_CHECK(!seg_data.isSegIdValid());
 }
 
 void SegIdTooLong() {
     std::string seg_str("AAAA*1~");
-    Pyx12::segment seg_data( Pyx12::segment(seg_str, '~', '*', ':'));
-    BOOST_CHECK(!seg_data.is_seg_id_valid());
+    Pyx12::Segment seg_data( Pyx12::Segment(seg_str, '~', '*', ':'));
+    BOOST_CHECK(!seg_data.isSegIdValid());
 }
 
 void SegIdTooShort() {
     std::string seg_str("A*1~");
-    Pyx12::segment seg_data( Pyx12::segment(seg_str, '~', '*', ':'));
-    BOOST_CHECK(!seg_data.is_seg_id_valid());
+    Pyx12::Segment seg_data( Pyx12::Segment(seg_str, '~', '*', ':'));
+    BOOST_CHECK(!seg_data.isSegIdValid());
 }
 
 test_suite*

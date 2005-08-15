@@ -28,110 +28,192 @@ $Id$
 
 using namespace std;
 
-namespace Pyx12 {
-    class element {
-    private:
-        string value;
-        
+namespace Pyx12
+{
+/*
+    class DataItem
+    {
     public:
-        element();
-        element(const string& ele_str);
-        size_t length();
+        virtual size_t length();
+        virtual string format();
+        virtual string getValue();
+        //virtual void setValue(string);
+        virtual bool isComposite();
+        virtual bool isElement();
+        virtual bool isEmpty();
+    }
+*/
+
+    /** Element Class
+     * Contains X12 element and sub-element values
+     */
+    class Element //: public DataItem
+    {
+    public:
+        Element();
+        Element(const string& ele_str);
+        size_t length() const;
         string format();
-        string get_value();
-        void set_value(string ele_str);
-        bool is_composite();
-        bool is_element();
-        bool is_empty();
-        friend ostream & operator << (ostream & out, Pyx12::element & e);
+        string getValue();
+        void setValue(const string& ele_str);
+        bool isComposite();
+        bool isElement();
+        bool isEmpty();
+        friend ostream & operator << (ostream & out, Pyx12::Element & e);
+        
+    private:
+        /// The element value
+        string value;
     };
 
 
-    class composite {
-    private:
-        vector<element> elements;
-        char subele_term, subele_term_orig;
-        vector<string> split(const string& ele_str);
-
+    /** Composite Class
+     * Contains X12 Composites(including simple elements)
+     */
+    class Composite //: public DataItem
+    {
     public:
-        composite();
-        composite(const string& ele_str, const char subele_term_);
-        element& operator[](size_t);
-        const element& operator[](size_t) const;
-        size_t length();
+        Composite();
+        Composite(const string& ele_str, const char subele_term_);
+        Element& operator[](size_t);
+        const Element& operator[](size_t) const;
+        size_t length() const;
         string format();
         string format(const char subele_term_);
-        string get_value();
-        void set_subele_term(const char subele_term_);
-        bool is_composite();
-        bool is_element();
-        bool is_empty();
-        friend ostream & operator << (ostream & out, Pyx12::composite & c);
+        string getValue();
+        void setValue(const string& ref_des, const string& val);
+        void setValue(const size_t comp_idx, const string& val);
+        void setSubeleTerm(const char subele_term_);
+        bool isComposite();
+        bool isElement();
+        bool isEmpty();
+        friend ostream & operator << (ostream & out, Pyx12::Composite & c);
 //        bool not_delim(char c);
 //        bool delim(char c);
+//
+    private:
+        /// The elements making up this segment
+        vector<Element> elements;
+        
+        /// Current sub-element delimiter
+        char subele_term;
+        
+        /// Original sub-element delimiter
+        char subele_term_orig;
+        
+        /** Split a composite string into elements
+         *
+         * @param ele_str A composite as a string
+         */
+        vector<string> split(const string& ele_str);
     };
 
 
-    class segment {
-    private:
-        char seg_term, seg_term_orig;
-        char ele_term, ele_term_orig;
-        char subele_term, subele_term_orig;
-        string seg_id;
-        vector<composite> elements;
-        vector<string> split(const string& ele_str);
-        vector<int> parse_refdes(string ref_des);
-
+    /** Contains X12 Segments
+     * A segment is comprised of a segment identifier and a sequence of elements.
+     * 
+     * An element can be a simple element or a composite.  A simple element is
+     * treated as a composite element with one sub-element.
+     * 
+     * All indexing is zero based.
+     */
+    class Segment
+    {
     public:
-        segment();
-        segment(const string& seg_str, const char seg_term_, 
+        Segment();
+        Segment(const string& seg_str, const char seg_term_, 
             const char ele_term_, const char subele_term_);
-        composite& operator[](size_t i);
-        const composite& operator[](size_t i) const;
-        composite& get(size_t i);
-        const composite& get(size_t i) const;
-        void set(size_t i, string val);
+        Composite& operator[](size_t i);
+        const Composite& operator[](size_t i) const;
+        Composite& getComposite(const string& ref_des);
+        const Composite& getComposite(const string& ref_des) const;
+        Element& getElement(const string& ref_des);
+        const Element& getElement(const string& ref_des) const;
+        void setValue(const string& ref_des, const string& val);
+        void setValue(const size_t comp_idx, const string& val);
         void append(const string& ele_str);
-        size_t length();
-        string get_seg_id();
-        string get_value(const string& ref_des);
-        void set_seg_term(const char seg_term_);
-        void set_ele_term(const char ele_term_);
-        void set_subele_term(const char subele_term_);
+        size_t length() const;
+        string getSegId();
+        string getValue(const string& ref_des);
+        void setSegTerm(const char seg_term_);
+        void setEleTerm(const char ele_term_);
+        void setSubeleTerm(const char subele_term_);
+
+        /** Get a formatted representation of the segment.
+         */
         string format();
+
+        /** Get a formatted representation of the segment, using other delimiters.
+         */
         string format(const char seg_term_, const char ele_term_, const char subele_term_);
         vector<string> format_ele_list(vector<string> str_elems, const char subele_term_);
-        bool is_empty();
+        bool isSegIdValid();
+        bool isEmpty();
 //        bool not_delim(char c);
 //        bool delim(char c);
+        friend ostream & operator << (ostream & os, Pyx12::Segment & seg);
+        
+    private:
+        /// Current segment delimiter
+        char seg_term;
+        
+        /// Original segment delimiter
+        char seg_term_orig;
+        
+        /// Current element delimiter
+        char ele_term;
+        
+        /// Original element delimiter
+        char ele_term_orig;
+        
+        /// Current sub-element delimiter
+        char subele_term;
+        
+        /// Original sub-element delimiter
+        char subele_term_orig;
+        
+        /// Segment ID
+        string seg_id;
+        
+        /// The composites making up this segment
+        vector<Composite> elements;
 
-        friend ostream & operator << (ostream & os, Pyx12::segment & seg);
+        /** Split a segment string into elements
+         *
+         * @param ele_str A segment as a string
+         */
+        vector<string> split(const string& ele_str);
+        pair<size_t, size_t> parseRefDes(const std::string& ref_des);
     };
 
 
-    class IsDelim {
-    private:
-        char term;
-
+    class IsDelim
+    {
     public:
         IsDelim(const char c) : term(c) {}
 
-        bool operator() (const char c) {
+        bool operator() (const char c)
+        {
             return (term == c);
         };
+        
+    private:
+        char term;
     };
 
 
-    class IsNotDelim {
-    private:
-        char term;
-
+    class IsNotDelim
+    {
     public:
         IsNotDelim(const char c) : term(c) {}
 
-        bool operator() (const char c) {
+        bool operator() (const char c)
+        {
             return (term != c);
         }
+        
+    private:
+        char term;
     };
 }
 #endif // PYX12_SEGMENT_HXX_

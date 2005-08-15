@@ -31,13 +31,11 @@ $Id$
 
 using namespace std;
 
-Pyx12::x12file::x12file(const string& src_filename) //, errh)
 /** Initialize the file
  *
- * @param src_file absolute path of source file
- * @type src_file string
- * @param errh L{error_handler.err_handler}
+ * @param src_filename absolute path of source file
  */
+Pyx12::x12file::x12file(const string& src_filename) //, errh)
 {
     //errh = errh
     string line;
@@ -80,8 +78,12 @@ Pyx12::x12file::x12file(const string& src_filename) //, errh)
     //buffer += fd.read(DEFAULT_BUFSIZE)
     src_fs.seekg(0);
 }
-        
-string Pyx12::x12file::read_seg() {
+
+/** Read next segment
+ */
+string 
+Pyx12::x12file::read_seg()
+{
     string ret("");
     char ch;
     while(!src_fs.eof()) {
@@ -93,7 +95,11 @@ string Pyx12::x12file::read_seg() {
     }
 }
 
-vector<string> Pyx12::x12file::next() {
+/** Find next line
+ */
+vector<string>
+Pyx12::x12file::next()
+{
     vector<string> seg;
     string line;
     string err_str;
@@ -276,23 +282,45 @@ list<string> Pyx12::x12file::get_term()
     return (seg_term, ele_term, subele_term, '\n')
 */
 
-string Pyx12::x12file::get_isa_id() const {
+/** Get current ISA ID
+ */
+string 
+Pyx12::x12file::get_isa_id() const 
+{
     x12file::get_id("ISA");
 }
 
-string Pyx12::x12file::get_gs_id() const {
+/** Get current GS ID
+ */
+string 
+Pyx12::x12file::get_gs_id() const
+{
     x12file::get_id("GS");
 }
 
-string Pyx12::x12file::get_st_id() const {
+/** Get current ST ID
+ */
+string
+Pyx12::x12file::get_st_id() const
+{
     x12file::get_id("ST");
 }
 
-string Pyx12::x12file::get_ls_id() const {
+/** Get current LS ID
+ */
+string
+Pyx12::x12file::get_ls_id() const 
+{
     x12file::get_id("LS");
 }
 
-string Pyx12::x12file::get_id(string id) const {
+/** Get specified ID
+ *
+ * @param id ID type to return
+ */
+string 
+Pyx12::x12file::get_id(string id) const 
+{
     for(list<pair<string,string> >::const_itererator iter = loops.begin();
          iter != loops.end(); ++iter) {
         if(iter->first == id)
@@ -301,7 +329,11 @@ string Pyx12::x12file::get_id(string id) const {
     return "";
 }
 
-list<string> Pyx12::x12file::get_term() const {
+/** Get list of delimiters
+ */
+list<string>
+Pyx12::x12file::get_term() const
+{
     list<string> ret;
     ret.push_back(seg_term);
     ret.push_back(ele_term);
@@ -310,7 +342,15 @@ list<string> Pyx12::x12file::get_term() const {
     return ret;
 }
 
-void Pyx12::x12file::isa_error(const string err_cde, const string err_str) {
+/** Create ISA level error
+ *
+ * @param err_cde The error code
+ * @param err_str Error Description
+ */
+void
+Pyx12::x12file::isa_error(const string err_cde, 
+        const string err_str) 
+{
     list<string, string, string> tmp;
     tmp.push_back("isa");
     tmp.push_back(err_cde);
@@ -318,7 +358,15 @@ void Pyx12::x12file::isa_error(const string err_cde, const string err_str) {
     err_list.push_back(tmp)
 }
 
-void Pyx12::x12file::gs_error(const string err_cde, const string err_str) {
+/** Create GS level error
+ *
+ * @param err_cde The error code
+ * @param err_str Error Description
+ */
+void
+Pyx12::x12file::gs_error(const string err_cde, 
+        const string err_str)
+{
     list<string, string, string> tmp;
     tmp.push_back("gs");
     tmp.push_back(err_cde);
@@ -326,7 +374,15 @@ void Pyx12::x12file::gs_error(const string err_cde, const string err_str) {
     err_list.push_back(tmp)
 }
 
-void Pyx12::x12file::st_error(const string err_cde, const string err_str) {
+/** Create ST level error
+ *
+ * @param err_cde The error code
+ * @param err_str Error Description
+ */
+void
+Pyx12::x12file::st_error(const string err_cde,
+        const string err_str)
+{
     list<string, string, string> tmp;
     tmp.push_back("st");
     tmp.push_back(err_cde);
@@ -334,8 +390,19 @@ void Pyx12::x12file::st_error(const string err_cde, const string err_str) {
     err_list.push_back(tmp)
 }
 
-void Pyx12::x12file::seg_error(const string err_cde, 
-        const string err_str, const string err_val, const int src_line) {
+/** Create segment level error
+ *
+ * @param err_cde The error code
+ * @param err_str Error Description
+ * @param err_val Value causing the error
+ * @param src_line Line number
+ */
+void
+Pyx12::x12file::seg_error(const string err_cde, 
+        const string err_str, 
+        const string err_val, 
+        const int src_line)
+{
     list<string, string, string, string, int> tmp;
     tmp.push_back("seg");
     tmp.push_back(err_cde);

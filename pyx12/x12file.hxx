@@ -33,7 +33,28 @@ $Id$
 using namespace std;
 
 namespace Pyx12 {
+
+    /** Interface to an X12 data file.
+     * 
+     * Efficiently handles large files.
+     * Tracks end of explicit loops.
+     * Tracks segment/line/loop counts.
+     */
     class x12file {
+    public:
+        x12file(const string& src_filename); //, errh)
+        vector<string> next();
+        //void cleanup();
+        //void print_seg(vector<string>);
+        string get_isa_id() const;
+        string get_gs_id() const;
+        string get_st_id() const;
+        string get_ls_id() const;
+        int get_seg_count() const {return seg_count;};
+        int get_cur_line() const {return cur_line;};
+        list<string> get_term() const;
+        list<list<string, string, string, string, int> > get_errors() const;
+        
     private:
         list<pair<string, string> > loops;
         stack<int> hl_stack;
@@ -52,25 +73,10 @@ namespace Pyx12 {
         ifstream src_fs;
         string get_id(string id) const;
         string read_seg();
-        void isa_error(const string, const string);
-        void gs_error(const string, const string);
-        void st_error(const string, const string);
-        void seg_error(const string, const string, const string, const int);
-
-    public:
-        x12file(const string& src_filename); //, errh)
-        vector<string> next();
-        void cleanup();
-        void print_seg(vector<string>);
-        string get_isa_id() const;
-        string get_gs_id() const;
-        string get_st_id() const;
-        string get_ls_id() const;
-        int get_seg_count() const {return seg_count;};
-        int get_cur_line() const {return cur_line;};
-        list<string> get_term() const;
-        list<list<string, string, string, string, int> > get_errors() const;
-        
+        void isa_error(const string err_cde, const string err_str);
+        void gs_error(const string err_cde, const string err_str);
+        void st_error(const string err_cde, const string err_str);
+        void seg_error(const string err_cde, const string err_str, const string err_val, const int src_line);
     //    ostream& operator<<(ostream&, x12file&);
     };
 /*
