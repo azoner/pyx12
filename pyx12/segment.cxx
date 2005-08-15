@@ -277,6 +277,8 @@ Pyx12::Segment::Segment(const string& seg_str, const char seg_term_ = '~',
     iter i = elems.begin() + 1;
     while(i != elems.end()){
         if(seg_id=="ISA")
+            // Special handling for ISA segment
+            // guarantee subele_term will not be matched
             elements.push_back(Composite((*i), ele_term));
         else
             elements.push_back(Composite((*i), subele_term));
@@ -480,7 +482,7 @@ Pyx12::Segment::setValue(const string& ref_des, const string& val)
     Pyx12::CompElements_sz comp_idx = idx.second;
     while(elements.size() <= ele_idx) 
         elements.push_back(Pyx12::Composite("", subele_term));
-    if(comp_idx != NULL)
+    if(comp_idx == NULL)
         elements[ele_idx] = Pyx12::Composite(val, subele_term);
     else
         elements[ele_idx].setValue(comp_idx, val);
@@ -516,7 +518,7 @@ Pyx12::Segment::getElement(const string& ref_des)
     Pyx12::CompElements_sz comp_idx = idx.second;
     if(ele_idx >= elements.size())
         throw Pyx12::EngineError("Invalid RefDes" + ref_des);
-    if(comp_idx==NULL)
+    if(comp_idx == NULL)
         return elements[ele_idx][0];
     else
     {
