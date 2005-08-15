@@ -66,7 +66,9 @@ namespace Pyx12
         string value;
     };
 
-
+    typedef vector<Element> CompElements;
+    typedef CompElements::size_type CompElements_sz;
+    
     /** Composite Class
      * Contains X12 Composites(including simple elements)
      */
@@ -75,14 +77,14 @@ namespace Pyx12
     public:
         Composite();
         Composite(const string& ele_str, const char subele_term_);
-        Element& operator[](size_t);
-        const Element& operator[](size_t) const;
-        size_t length() const;
+        Element& operator[](CompElements_sz);
+        const Element& operator[](CompElements_sz) const;
+        CompElements_sz length() const;
         string format();
         string format(const char subele_term_);
         string getValue();
         void setValue(const string& ref_des, const string& val);
-        void setValue(const size_t comp_idx, const string& val);
+        void setValue(const CompElements_sz comp_idx, const string& val);
         void setSubeleTerm(const char subele_term_);
         bool isComposite();
         bool isElement();
@@ -93,7 +95,7 @@ namespace Pyx12
 //
     private:
         /// The elements making up this segment
-        vector<Element> elements;
+        CompElements elements;
         
         /// Current sub-element delimiter
         char subele_term;
@@ -109,6 +111,9 @@ namespace Pyx12
     };
 
 
+    typedef vector<Composite> SegComposites;
+    typedef SegComposites::size_type SegComposites_sz;
+    
     /** Contains X12 Segments
      * A segment is comprised of a segment identifier and a sequence of elements.
      * 
@@ -123,16 +128,16 @@ namespace Pyx12
         Segment();
         Segment(const string& seg_str, const char seg_term_, 
             const char ele_term_, const char subele_term_);
-        Composite& operator[](size_t i);
-        const Composite& operator[](size_t i) const;
+        Composite& operator[](SegComposites_sz i);
+        const Composite& operator[](SegComposites_sz i) const;
         Composite& getComposite(const string& ref_des);
         const Composite& getComposite(const string& ref_des) const;
         Element& getElement(const string& ref_des);
         const Element& getElement(const string& ref_des) const;
         void setValue(const string& ref_des, const string& val);
-        void setValue(const size_t comp_idx, const string& val);
+        void setValue(const SegComposites_sz comp_idx, const string& val);
         void append(const string& ele_str);
-        size_t length() const;
+        SegComposites_sz length() const;
         string getSegId();
         string getValue(const string& ref_des);
         void setSegTerm(const char seg_term_);
@@ -176,14 +181,14 @@ namespace Pyx12
         string seg_id;
         
         /// The composites making up this segment
-        vector<Composite> elements;
+        SegComposites elements;
 
         /** Split a segment string into elements
          *
          * @param ele_str A segment as a string
          */
         vector<string> split(const string& ele_str);
-        pair<size_t, size_t> parseRefDes(const std::string& ref_des);
+        pair<SegComposites_sz, SegComposites_sz> parseRefDes(const std::string& ref_des);
     };
 
 
