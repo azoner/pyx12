@@ -453,7 +453,7 @@ void
 Pyx12::Segment::format_ele_list(vector<string> str_elems)
 {
    // vector<string> ret;
-    Pyx12::SegComposites::reviterator j = elements.rbegin();
+    Pyx12::SegComposites::reverse_iterator j = elements.rbegin();
     // Find last non-empty composite
     while(j != elements.rend())
         if(!j.empty())
@@ -476,7 +476,7 @@ void
 Pyx12::Segment::format_ele_list(vector<string> str_elems, const char subele_term_)
 {
    // vector<string> ret;
-    Pyx12::SegComposites::reviterator j = elements.rbegin();
+    Pyx12::SegComposites::reverse_iterator j = elements.rbegin();
     // Find last non-empty composite
     while(j != elements.rend())
         if(!j.empty())
