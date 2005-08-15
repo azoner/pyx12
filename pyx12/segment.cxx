@@ -453,13 +453,16 @@ void
 Pyx12::Segment::format_ele_list(vector<string> str_elems)
 {
    // vector<string> ret;
-    Pyx12::SegComposites::reverse_iterator j = elements.rbegin();
-    // Find last non-empty composite
-    while(j != elements.rend())
-        if(!j.empty())
-            break;
+    Pyx12::SegComposites::iterator last_it;
     Pyx12::SegComposites::iterator i = elements.begin();
-    while(i != j) {  //elements.end()) {
+    // Find last non-empty composite
+    while(i != elements.rend()) {
+        if(!i.isEmpty())
+            last_it = i;
+        ++i;
+    }
+    i = elements.begin();
+    while(i != last_it) {  //elements.end()) {
         str_elems.push_back(i->format(subele_term));
         ++i;
     }
@@ -476,13 +479,16 @@ void
 Pyx12::Segment::format_ele_list(vector<string> str_elems, const char subele_term_)
 {
    // vector<string> ret;
-    Pyx12::SegComposites::reverse_iterator j = elements.rbegin();
-    // Find last non-empty composite
-    while(j != elements.rend())
-        if(!j.empty())
-            break;
+    Pyx12::SegComposites::iterator last_it;
     Pyx12::SegComposites::iterator i = elements.begin();
-    while(i != j) {  //elements.end()) {
+    // Find last non-empty composite
+    while(i != elements.rend()) {
+        if(!i.isEmpty())
+            last_it = i;
+        ++i;
+    }
+    i = elements.begin();
+    while(i != last_it) {  //elements.end()) {
         str_elems.push_back(i->format(subele_term_));
         ++i;
     }
