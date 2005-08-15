@@ -386,8 +386,10 @@ class segment:
     def format_ele_list(self, str_elems, subele_term=None):
         """
         Modifies the parameter str_elems
+        Strips trailing empty composites
         """
         if subele_term is None: subele_term = self.subele_term
+        # Find last non-empty composite
         for i in range(len(self.elements)-1, -1, -1):
             if not self.elements[i].is_empty():
                 break

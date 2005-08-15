@@ -444,16 +444,49 @@ Pyx12::Segment::format(const char seg_term_, const char ele_term_, const char su
     return ret;
 }
 
-vector<string>
-Pyx12::Segment::format_ele_list(vector<string> str_elems, const char subele_term_)
+/** Modifies the parameter str_elems, appending formatted composites.
+ * Strips trailing empty composites
+ *
+ * @param str_elems vector to modify
+ */
+void
+Pyx12::Segment::format_ele_list(vector<string> str_elems)
 {
-    vector<string> ret;
+   // vector<string> ret;
+    Pyx12::SegComposites::reviterator j = elements.rbegin();
+    // Find last non-empty composite
+    while(j != elements.rend())
+        if(!j.empty())
+            break;
     Pyx12::SegComposites::iterator i = elements.begin();
-    while(i != elements.end()) {
-        ret.push_back(i->format(subele_term_));
+    while(i != j) {  //elements.end()) {
+        str_elems.push_back(i->format(subele_term));
         ++i;
     }
-    return ret;
+    //return ret;
+}
+
+/** Modifies the parameter str_elems, appending formatted composites.
+ * Strips trailing empty composites
+ *
+ * @param str_elems vector to modify
+ * @param subele_term_ Sub-element terminator to use
+ */
+void
+Pyx12::Segment::format_ele_list(vector<string> str_elems, const char subele_term_)
+{
+   // vector<string> ret;
+    Pyx12::SegComposites::reviterator j = elements.rbegin();
+    // Find last non-empty composite
+    while(j != elements.rend())
+        if(!j.empty())
+            break;
+    Pyx12::SegComposites::iterator i = elements.begin();
+    while(i != j) {  //elements.end()) {
+        str_elems.push_back(i->format(subele_term_));
+        ++i;
+    }
+    //return ret;
 }
 
 Pyx12::Composite&

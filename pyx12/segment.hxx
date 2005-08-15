@@ -151,7 +151,8 @@ namespace Pyx12
         /** Get a formatted representation of the segment, using other delimiters.
          */
         string format(const char seg_term_, const char ele_term_, const char subele_term_);
-        vector<string> format_ele_list(vector<string> str_elems, const char subele_term_);
+        void format_ele_list(vector<string> str_elems);
+        void format_ele_list(vector<string> str_elems, const char subele_term_);
         bool isSegIdValid();
         bool isEmpty();
 //        bool not_delim(char c);
