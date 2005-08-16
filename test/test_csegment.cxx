@@ -203,7 +203,7 @@ void SimpleIndexing() {
 void SimpleSpaces() {
     std::string seg_str("TST*AA*      *BB~");
     Pyx12::Segment seg_data( Pyx12::Segment(seg_str, '~', '*', ':'));
-    BOOST_CHECK_EQUAL(seg_data.getValue("TST02").length(), 10);
+    BOOST_CHECK_EQUAL(seg_data.getValue("TST02").length(), 6);
     BOOST_CHECK_EQUAL(seg_data.getValue("TST02"), "      ");
 }
 

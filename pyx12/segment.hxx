@@ -130,10 +130,10 @@ namespace Pyx12
             const char ele_term_, const char subele_term_);
         Composite& operator[](SegComposites_sz i);
         const Composite& operator[](SegComposites_sz i) const;
-        Composite& getComposite(const string& ref_des);
-        const Composite& getComposite(const string& ref_des) const;
-        Element& getElement(const string& ref_des);
-        const Element& getElement(const string& ref_des) const;
+        Composite getComposite(const string& ref_des);
+        const Composite getComposite(const string& ref_des) const;
+        Element getElement(const string& ref_des);
+        const Element getElement(const string& ref_des) const;
         void setValue(const string& ref_des, const string& val);
         void setValue(const SegComposites_sz comp_idx, const string& val);
         void append(const string& ele_str);

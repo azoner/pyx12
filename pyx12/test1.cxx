@@ -7,11 +7,15 @@ using namespace std;
 
 int main()
 {
-    std::string seg_str("TST*AA*1*Y*BB:5:4:AA*ZZ~");
+    std::string seg_str("TST*AA:1*1:2:3*Y~");
     //cout << seg_str << endl;
     Pyx12::Segment seg_data(seg_str, '~', '*', ':');
-    cout << seg_data << endl;
-    cout << seg_data.getValue("TST01") << endl;
-    cout << seg_data.getValue("01") << endl;
+    cerr << seg_data << endl;
+    seg_data.setValue("TST05-2", "AR");
+    //cerr << "TEST1: After set" << endl;
+    cerr << seg_data << endl;
+    //cerr << "TEST1: ostream" << endl;
+    cerr << seg_data.format() << endl;
+    //cerr << "TEST1: After format" << endl;
     return 1;
 }

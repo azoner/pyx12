@@ -166,16 +166,16 @@ Pyx12::Composite::format(const char subele_term_)
 {
     typedef Pyx12::CompElements::iterator iter;
     string ret;
-    char term = subele_term_;
-    if(!elements.empty())
-        ret += elements[0].format();
-    iter i = elements.begin() + 1;
-    while(i != elements.end())
-    {
-        ret += term;
+    iter i = elements.begin();
+    while(i != elements.end()) {
         ret += i->format();
+        ret += subele_term_;
         ++i;
     }
+    while(ret.length() > 0 && 
+            ret.substr(ret.length()-1) == string(1, subele_term_))
+        ret.erase(ret.length()-1);
+        //ret = ret.substr(0, ret.length()-1);
     return ret;
 }
 
@@ -382,7 +382,7 @@ Pyx12::Segment::getSegId()
 string
 Pyx12::Segment::getValue(const string& ref_des)
 {
-    Pyx12::Composite& comp_data = getComposite(ref_des);
+    Pyx12::Composite comp_data = getComposite(ref_des);
     return comp_data.format();
  /*
     typedef string::const_iterator iter;
@@ -440,17 +440,19 @@ string
 Pyx12::Segment::format(const char seg_term_, const char ele_term_, const char subele_term_)
 {
     string ret = seg_id + ele_term_;
-    Pyx12::SegComposites::iterator i = elements.begin();
-    if (i != elements.end()) {
+    //Pyx12::SegComposites::iterator i = elements.begin();
+    for(Pyx12::SegComposites::iterator i = elements.begin();
+            i != elements.end(); ++i) {
         ret += i->format(subele_term_);
-        ++i;
-    }
-    while(i != elements.end()) {
         ret += ele_term_;
-        ret += i->format(subele_term_);
-        ++i;
+        //cerr << "ret: " << ret << endl;
     }
-    ret += seg_term_;
+    //Strip trailing element delimiter
+    while(ret.length() > 0 && 
+            ret.substr(ret.length()-1) == string(1, ele_term_))
+        ret.erase(ret.length()-1);
+    ret += seg_term_; // Add segment delimiter
+    //cerr << ret << endl;
     return ret;
 }
 
@@ -515,21 +517,25 @@ Pyx12::Segment::setValue(const string& ref_des, const string& val)
     pair<Pyx12::SegComposites_sz, Pyx12::CompElements_sz> idx = parseRefDes(ref_des);
     Pyx12::SegComposites_sz ele_idx = idx.first;
     Pyx12::CompElements_sz comp_idx = idx.second;
-    while(elements.size() <= ele_idx) 
+    while(elements.size() < ele_idx) 
         elements.push_back(Pyx12::Composite("", subele_term));
-    if(comp_idx == NULL)
-        elements[ele_idx] = Pyx12::Composite(val, subele_term);
-    else
+    if(comp_idx == 0) {
+        elements.push_back(Pyx12::Composite(val, subele_term));
+    }
+    else {
+        elements.push_back(Pyx12::Composite("", subele_term));
         elements[ele_idx].setValue(comp_idx, val);
+    }
 }
 
-Pyx12::Composite&
+Pyx12::Composite
 Pyx12::Segment::getComposite(const string& ref_des)
 {
     pair<Pyx12::SegComposites_sz, Pyx12::CompElements_sz> idx = parseRefDes(ref_des);
     Pyx12::SegComposites_sz ele_idx = idx.first;
     if(ele_idx >= elements.size())
-        throw Pyx12::EngineError("Invalid RefDes" + ref_des);
+        //throw Pyx12::EngineError("Invalid RefDes" + ref_des);
+        return Pyx12::Composite("", subele_term);
     return elements[ele_idx];
 }
 
@@ -545,20 +551,22 @@ Pyx12::Segment::getComposite(const string& ref_des) const
 }
 */
 
-Pyx12::Element&
+Pyx12::Element
 Pyx12::Segment::getElement(const string& ref_des)
 {
     pair<Pyx12::SegComposites_sz, Pyx12::CompElements_sz> idx = parseRefDes(ref_des);
     Pyx12::SegComposites_sz ele_idx = idx.first;
     Pyx12::CompElements_sz comp_idx = idx.second;
     if(ele_idx >= elements.size())
-        throw Pyx12::EngineError("Invalid RefDes" + ref_des);
-    if(comp_idx == NULL)
+        return Pyx12::Element("");
+        //throw Pyx12::EngineError("Invalid RefDes" + ref_des);
+    if(comp_idx == 0)
         return elements[ele_idx][0];
     else
     {
         if(comp_idx >= elements[ele_idx].length())
-            throw Pyx12::EngineError("Invalid RefDes" + ref_des);
+            return Pyx12::Element("");
+            //throw Pyx12::EngineError("Invalid RefDes" + ref_des);
         return elements[ele_idx][comp_idx];
     }
 }
@@ -572,7 +580,7 @@ Pyx12::Segment::getElement(const string& ref_des) const
     Pyx12::CompElements_sz comp_idx = idx.second;
     if(ele_idx >= length())
         throw Pyx12::EngineError("Invalid RefDes" + ref_des);
-    if(comp_idx==NULL)
+    if(comp_idx == 0)
         return elements[ele_idx][0];
     else
     {
@@ -620,13 +628,13 @@ Pyx12::Segment::parseRefDes(const std::string& ref_des)
     string::size_type dash = ref_des.find('-');
     if(dash == string::npos) {
         ele_idx = atoi(rest.c_str()) - 1;
-        comp_idx = NULL;
+        comp_idx = 0;
     }
     else {
         ele_idx = atoi(rest.substr(0, dash).c_str()) - 1;
         comp_idx = atoi(rest.substr(dash, rest.size()-dash).c_str()) - 1;
     }
-    cerr << ref_des << '\t' << ele_idx << '\t' << comp_idx << '\n';
+    //cerr << ref_des << '\t' << ele_idx << '\t' << comp_idx << '\n';
     return make_pair(ele_idx, comp_idx);
 }
 
