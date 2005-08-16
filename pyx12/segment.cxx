@@ -31,6 +31,11 @@ $Id$
 */ 
 using namespace std;
 
+///////////////////////////////////////////////////////////////////////////
+//  ELEMENT CLASS
+//
+//  Encapsulates an X12 Element.  String values
+///////////////////////////////////////////////////////////////////////////
 Pyx12::Element::Element() {}
 
 Pyx12::Element::Element(const string& ele_str)
@@ -85,6 +90,11 @@ Pyx12::Element::isEmpty()
 
 
 
+///////////////////////////////////////////////////////////////////////////
+//  COMPOSITE CLASS
+//
+//  Encapsulates an X12 Composite. Contains X12 Elements.
+///////////////////////////////////////////////////////////////////////////
 Pyx12::Composite::Composite() {}
 
 Pyx12::Composite::Composite(const string& ele_str, const char subele_term_)
@@ -452,21 +462,7 @@ Pyx12::Segment::format(const char seg_term_, const char ele_term_, const char su
 void
 Pyx12::Segment::format_ele_list(vector<string> str_elems)
 {
-   // vector<string> ret;
-    Pyx12::SegComposites::iterator last_it;
-    Pyx12::SegComposites::iterator i = elements.begin();
-    // Find last non-empty composite
-    while(i != elements.rend()) {
-        if(!i.isEmpty())
-            last_it = i;
-        ++i;
-    }
-    i = elements.begin();
-    while(i != last_it) {  //elements.end()) {
-        str_elems.push_back(i->format(subele_term));
-        ++i;
-    }
-    //return ret;
+    format_ele_list(str_elems, subele_term);
 }
 
 /** Modifies the parameter str_elems, appending formatted composites.
@@ -482,8 +478,8 @@ Pyx12::Segment::format_ele_list(vector<string> str_elems, const char subele_term
     Pyx12::SegComposites::iterator last_it;
     Pyx12::SegComposites::iterator i = elements.begin();
     // Find last non-empty composite
-    while(i != elements.rend()) {
-        if(!i.isEmpty())
+    while(i != elements.end()) {
+        if(!i->isEmpty())
             last_it = i;
         ++i;
     }
@@ -609,8 +605,8 @@ Pyx12::Segment::parseRefDes(const std::string& ref_des)
     Pyx12::CompElements_sz comp_idx;
     if(ref_des=="")
         throw Pyx12::EngineError("Blank Reference Designator");
-    if(ref_des.substr(0, seg_id.size()) != seg_id)
-        throw Pyx12::EngineError("Invalid ref_des: " + ref_des + ", seg_id: " + seg_id);
+    //if(ref_des.substr(0, seg_id.size()) != seg_id)
+    //    throw Pyx12::EngineError("Invalid ref_des: " + ref_des + ", seg_id: " + seg_id);
     string rest;
     if(isalpha(ref_des[0])) {
         if(ref_des.substr(0, seg_id.length()) != seg_id)
@@ -630,6 +626,7 @@ Pyx12::Segment::parseRefDes(const std::string& ref_des)
         ele_idx = atoi(rest.substr(0, dash).c_str()) - 1;
         comp_idx = atoi(rest.substr(dash, rest.size()-dash).c_str()) - 1;
     }
+    cerr << ref_des << '\t' << ele_idx << '\t' << comp_idx << '\n';
     return make_pair(ele_idx, comp_idx);
 }
 

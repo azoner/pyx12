@@ -7,16 +7,11 @@
 #Linker options:
 #   -L/usr/local/lib/python2.4 -L/usr/local/lib -lboost_python -lpython2.4
 
-#Program('t1', 't1.cxx', \
-#    CPPPATH = ['.', '/usr/include', '/usr/local/include', \
-#        '/usr/local/include/python2.4'], \
-#    LIBS=['boost_unit_test_framework', 'libc_r'], \
-#    LIBPATH=['.', '/usr/lib', '/usr/local/lib', '/usr/local/lib/python2.4', \
-#        'boost_python', 'python2.4'])
-Program('test_csegment', 'test_csegment.cxx', \
-    CPPPATH = ['.', '../pyx12', '/usr/include', '/usr/local/include', \
-        '/usr/local/include/python2.4'], \
-    LIBS=['pyx12', 'boost_unit_test_framework', 'libc_r'], \
-    LIBPATH=['.', '../pyx12', '/usr/lib', '/usr/local/lib', \
-    '/usr/local/lib/python2.4', 'boost_python', 'python2.4']
-    )
+env = Environment(CC = 'g++', CCFLAGS = '-g -O2 -W -Wall -ansi -Wwrite-strings -pedantic')
+env.Replace(CPPPATH = ['.', '../pyx12', '/usr/include', '/usr/local/include', \
+    '/usr/local/include/python2.4'])
+env.Replace(LIBS = ['pyx12', 'boost_unit_test_framework', 'boost_python', 'python2.4', 'libc_r'])
+env.Replace(LIBPATH = ['.', '../pyx12', '/usr/lib', '/usr/local/lib', '/usr/local/lib/python2.4'])
+
+env.Program('t1', 't1.cxx')
+env.Program('test_csegment', 'test_csegment.cxx')

@@ -11,5 +11,7 @@ int main()
     //cout << seg_str << endl;
     Pyx12::Segment seg_data(seg_str, '~', '*', ':');
     cout << seg_data << endl;
+    cout << seg_data.getValue("TST01") << endl;
+    cout << seg_data.getValue("01") << endl;
     return 1;
 }

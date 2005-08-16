@@ -22,16 +22,19 @@
 #CXX =  $(GCCDIR)/bin/g++
 #CXXFLAGS = $(GCCFLAGS)
 #LDFLAGS = -L$(LIBCPPDIR) -Wl,--rpath -Wl,$(LIBCPPDIR) -lm
+libs = ['pyx12', 'boost_python', 'python2.4']
+libpath = ['.', '/usr/lib', '/usr/local/lib', '/usr/local/lib/python2.4']
 
 epydoc = Builder(action = 'epydoc --html --name Pyx12 --no-frames -o ../doc/epydoc .', 
     src_suffix = '.py',
     suffix = '.html')
 #/usr/local/lib/gcc/i386-portbld-freebsd4.10/3.4.4/include/c++/
 env = Environment(CC = 'g++', CCFLAGS = '-g -O2 -W -Wall -ansi -Wwrite-strings -pedantic')
+    #LDMODULEFLAGS='pthread')
 env.Append(BUILDERS = {'Doc' : epydoc})
 #Program(['test1.cxx', 'segment.cxx', 'errors.cxx'])
 #includes = Dir(['.', '/usr/include', 'usr/local/include'])
-env.Program('test1', 'test1.cxx', LIBS=['pyx12'], LIBPATH=['.', '/usr/lib', '/usr/local/lib'])
+env.Program('test1', 'test1.cxx', LIBS=libs, LIBPATH=libpath) #, LINKFLAGS='-pthread')
 env.Doc('../doc/epydoc/index.html')
 #Object('x12file.cxx')
 #Object('segment.cxx')
@@ -39,3 +42,13 @@ env.Doc('../doc/epydoc/index.html')
 env.Library('pyx12', ['segment.cxx', 'errors.cxx'])
 #StaticLibrary('foo', ['f1.c', 'f2.c', 'f3.c'])
 #SharedLibrary('pyx12', ['segment.cxx', 'errors.cxx'])
+dict = env.Dictionary()
+#for key in dict.keys():
+    #if key[0].find('LINK') != -1:
+#    print key, dict[key]
+
+#print env.subst('$ARCOM')
+#print env.subst('$AR')
+#print env.subst('$ARFLAGS')
+#print env.subst('$RANLIB')
+#print env.subst('$RANLIBFLAGS')
