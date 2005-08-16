@@ -11,11 +11,9 @@ int main()
     //cout << seg_str << endl;
     Pyx12::Segment seg_data(seg_str, '~', '*', ':');
     cerr << seg_data << endl;
-    seg_data.setValue("TST05-1", "AR");
+    seg_data.setValue("TST05-2", "AR");
     cerr << "TEST1: After set" << endl;
     cerr << seg_data << endl;
-    cerr << "TEST1: ostream" << endl;
-    cerr << seg_data.format() << endl;
     //cerr << "TEST1: After format" << endl;
     return 1;
 }

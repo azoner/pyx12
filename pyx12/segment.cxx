@@ -694,14 +694,14 @@ Pyx12::Segment::parseRefDes(const std::string& ref_des)
         rest = ref_des;
     }
     int ele_idx, comp_idx;
-    string::size_type dash = ref_des.find('-');
+    string::size_type dash = rest.find('-');
     if(dash == string::npos) {
         ele_idx = atoi(rest.c_str()) - 1;
         comp_idx = -1;
     }
     else {
         ele_idx = atoi(rest.substr(0, dash).c_str()) - 1;
-        comp_idx = atoi(rest.substr(dash, rest.size()-dash).c_str()) - 1;
+        comp_idx = atoi(rest.substr(dash+1, rest.size()-dash).c_str()) - 1;
     }
     //cerr << ref_des << '\t' << ele_idx << '\t' << comp_idx << '\n';
     return make_pair(ele_idx, comp_idx);
