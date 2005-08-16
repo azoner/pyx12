@@ -83,6 +83,7 @@ namespace Pyx12
         string format();
         string format(const char subele_term_);
         string getValue();
+        Element getElement(int comp_idx);
         void setValue(const string& ref_des, const string& val);
         void setValue(const CompElements_sz comp_idx, const string& val);
         void setSubeleTerm(const char subele_term_);
@@ -189,7 +190,8 @@ namespace Pyx12
          * @param ele_str A segment as a string
          */
         vector<string> split(const string& ele_str);
-        pair<SegComposites_sz, SegComposites_sz> parseRefDes(const std::string& ref_des);
+        //pair<SegComposites_sz, SegComposites_sz> parseRefDes(const std::string& ref_des);
+        pair<int, int> parseRefDes(const std::string& ref_des);
     };
 
 
