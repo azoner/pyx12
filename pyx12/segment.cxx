@@ -131,6 +131,10 @@ Pyx12::Composite::delim(char c)
 }
 */
 
+/** Split a composite string into elements
+ *
+ * @param ele_str A composite as a string
+ */
 vector<string>
 Pyx12::Composite::split(const string& ele_str)
 {
@@ -180,16 +184,15 @@ Pyx12::Composite::format(const char subele_term_)
 }
 
 Pyx12::Element
-Pyx12::Composite::getElement(unsigned int comp_idx)
+Pyx12::Composite::getElement(string subele_pos)
 {
-    if(comp_idx == -1)
+    if(subele_pos=="")
         return elements[0];
+    int subele_idx = getIdx(subele_pos);
+    if(subele_idx < 0 || (elements.begin() + subele_idx) >= elements.end())
+        return Pyx12::Element("");
     else
-    {
-        if(elements.end() <= elements.begin() + comp_idx)
-            return Pyx12::Element("");
-        return elements[comp_idx];
-    }
+        return elements[subele_idx];
 }
 
 string
@@ -202,19 +205,13 @@ Pyx12::Composite::getValue()
 }
 
 string
-Pyx12::Composite::getValue(unsigned int comp_idx)
-{
-    if(comp_idx < 0 || comp_idx >= elements.size())
-        return "";
-    else
-        return elements.at(comp_idx).getValue();
-}
-
-string
 Pyx12::Composite::getValue(string pos)
 {   
-    unsigned int comp_idx = parseSubelePos(pos);
-    return elements[comp_idx].getValue();
+    int subele_idx = getIdx(pos);
+    if(subele_idx < 0 || (elements.begin() + subele_idx) >= elements.end())
+        return "";
+    else
+        return elements[subele_idx].getValue();
 }
 
 /** Set the value of an element or subelement identified by the
@@ -240,11 +237,12 @@ Pyx12::Composite::setValue(const string& comp_des, const string& val)
  *   @param val New value
  */
 void
-Pyx12::Composite::setValue(const Pyx12::CompElements_sz comp_idx, const string& val)
+Pyx12::Composite::setValue(const string& subele_pos, const string& val)
 {
-    while(elements.size() <= comp_idx)
+    int subele_idx = getIdx(subele_pos);
+    while((elements.begin() + subele_idx) < elements.end())
         elements.push_back(Pyx12::Element(""));
-    elements[comp_idx] = Pyx12::Element(val);
+    elements[subele_idx] = Pyx12::Element(val);
 }
 
 void
@@ -284,20 +282,20 @@ Pyx12::Composite::operator[](Pyx12::CompElements_sz i) const
     return elements[i]; 
 }
 
-/** Get the element and sub-element indexes.
+/** Get the sub-element index.
  *
  * @param pos Position of subelement
  * @exception EngineError If the given ref_des does not match the segment ID
  *   or if the indexes are not valid integers
  */
-unsigned int
-Pyx12::Composite::parseSubelePos(const std::string& pos)
+int
+Pyx12::Composite::getIdx(const std::string& pos)
 {
-    unsigned int comp_idx = atoi(pos.c_str()) - 1;
-    if(comp_idx < 0 || elements.begin() + comp_idx >= elements.end())
+    int subele_idx = atoi(pos.c_str()) - 1;
+    if(subele_idx < 0 || elements.begin() + subele_idx >= elements.end())
         return 0;
     else
-        return comp_idx;
+        return subele_idx;
 }
 
 
@@ -408,6 +406,8 @@ Pyx12::Segment::length() const
 }
 
 /** Append a new composite to the segment
+ *
+ * @param ele_str The Composite string
  */
 void
 Pyx12::Segment::append(const string& ele_str)
@@ -428,11 +428,11 @@ Pyx12::Segment::getSegId()
 string
 Pyx12::Segment::getValue(const string& ref_des)
 {
-    pair<unsigned int, unsigned int> idx = parseRefDes(ref_des);
-    unsigned int ele_idx = idx.first;
-    unsigned int comp_idx = idx.second;
+    pair<string, string> pos = parseRefDes(ref_des);
+    //string comp_pos = pos.first;
+    string subele_pos = pos.second;
     Pyx12::Composite comp_data = getComposite(ref_des);
-    return comp_data.getValue(comp_idx);
+    return comp_data.getValue(subele_pos);
  /*
     typedef string::const_iterator iter;
     Pyx12::SegComposites_sz ele_idx, comp_idx;
@@ -526,7 +526,7 @@ void
 Pyx12::Segment::format_ele_list(vector<string> str_elems, const char subele_term_)
 {
    // vector<string> ret;
-    Pyx12::SegComposites::iterator last_it;
+    Pyx12::SegComposites::iterator last_it = elements.end();
     Pyx12::SegComposites::iterator i = elements.begin();
     // Find last non-empty composite
     while(i != elements.end()) {
@@ -534,6 +534,7 @@ Pyx12::Segment::format_ele_list(vector<string> str_elems, const char subele_term
             last_it = i;
         ++i;
     }
+    //str_elems.erase();
     i = elements.begin();
     while(i != last_it) {  //elements.end()) {
         str_elems.push_back(i->format(subele_term_));
@@ -542,6 +543,7 @@ Pyx12::Segment::format_ele_list(vector<string> str_elems, const char subele_term
     //return ret;
 }
 
+/*
 Pyx12::Composite&
 Pyx12::Segment::operator[](Pyx12::SegComposites_sz i)
 {
@@ -553,6 +555,7 @@ Pyx12::Segment::operator[](Pyx12::SegComposites_sz i) const
 {
     return elements[i]; 
 }
+*/
 
 /** Set the value of an element or subelement identified by the
  *      Reference Designator.
@@ -566,25 +569,29 @@ Pyx12::Segment::setValue(const string& ref_des, const string& val)
     //pair<Pyx12::SegComposites_sz, Pyx12::CompElements_sz> idx = parseRefDes(ref_des);
     //Pyx12::SegComposites_sz ele_idx = idx.first;
     //Pyx12::CompElements_sz comp_idx = idx.second;
-    pair<unsigned int, unsigned int> idx = parseRefDes(ref_des);
-    unsigned int ele_idx = idx.first;
-    unsigned int comp_idx = idx.second;
+    pair<string, string> idx = parseRefDes(ref_des);
+    string comp_pos = idx.first;
+    const string subele_pos = idx.second;
+    int ele_idx = atoi(comp_pos.c_str()) - 1; 
     while(elements.end() <= elements.begin() + ele_idx) 
         elements.push_back(Pyx12::Composite("", subele_term));
-    if(comp_idx == -1) {
-        elements[ele_idx] = Pyx12::Composite(val, subele_term);
+    Pyx12::Composite& comp_data = getComposite(ref_des);
+    if(subele_pos == "") {
+        comp_data = Pyx12::Composite(val, subele_term);
     }
     else 
-        elements[ele_idx].setValue(comp_idx, val);
+        comp_data.setValue(subele_pos, val);
 }
 
 Pyx12::Composite
 Pyx12::Segment::getComposite(const string& ref_des)
 {
-    pair<unsigned int, unsigned int> idx = parseRefDes(ref_des);
-    unsigned int ele_idx = idx.first;
+    pair<string, string> idx = parseRefDes(ref_des);
+    string comp_pos = idx.first;
+    //string subele_pos = idx.second;
     //pair<Pyx12::SegComposites_sz, Pyx12::CompElements_sz> idx = parseRefDes(ref_des);
     //Pyx12::SegComposites_sz ele_idx = idx.first;
+    int ele_idx = atoi(comp_pos.c_str()) - 1; 
     if(elements.end() <= elements.begin() + ele_idx)
         //throw Pyx12::EngineError("Invalid RefDes" + ref_des);
         return Pyx12::Composite("", subele_term);
@@ -606,13 +613,14 @@ Pyx12::Segment::getComposite(const string& ref_des) const
 Pyx12::Element
 Pyx12::Segment::getElement(const string& ref_des)
 {
-    pair<unsigned int, unsigned int> idx = parseRefDes(ref_des);
-    unsigned int ele_idx = idx.first;
-    unsigned int comp_idx = idx.second;
+    pair<string, string> idx = parseRefDes(ref_des);
+    string comp_pos = idx.first;
+    string subele_pos = idx.first;
+    int ele_idx = atoi(comp_pos.c_str()) - 1; 
     if(elements.end() <= elements.begin() + ele_idx)
         return Pyx12::Element("");
         //throw Pyx12::EngineError("Invalid RefDes" + ref_des);
-    return elements[ele_idx].getElement(comp_idx);
+    return elements[ele_idx].getElement(comp_pos);
     /*
     if(comp_idx == -1)
         return elements[ele_idx][0];
@@ -708,7 +716,9 @@ Pyx12::Segment::parseRefDes(const std::string& ref_des)
  *   - a sub-element: TST03-2
  *   - or any of the above with the segment ID omitted (02, 03, 03-1)
  */
-pair<unsigned int, unsigned int>
+
+/*
+pair<string, string>
 Pyx12::Segment::parseRefDes(const std::string& ref_des)
 {
     typedef string::const_iterator iter;
@@ -726,7 +736,7 @@ Pyx12::Segment::parseRefDes(const std::string& ref_des)
     else {
         rest = ref_des;
     }
-    unsigned int ele_idx, comp_idx;
+    string ele_idx, comp_idx;
     string::size_type dash = rest.find('-');
     if(dash == string::npos) {
         ele_idx = atoi(rest.c_str()) - 1;
@@ -738,6 +748,51 @@ Pyx12::Segment::parseRefDes(const std::string& ref_des)
     }
     //cerr << ref_des << '\t' << ele_idx << '\t' << comp_idx << '\n';
     return make_pair(ele_idx, comp_idx);
+}
+*/
+/** Get the element and sub-element position indexes.
+ *
+ * @param ref_des X12 Reference Designator
+ * @exception EngineError If the given ref_des does not match the segment ID
+ *   or if the indexes are not valid integers
+ * @return pair<composite_position, sub-element position>
+ *      sub-element = "" if not specified
+ *
+ * Format of ref_des: 
+ *   - a simple element: TST02
+ *   - a composite: TST03 where TST03 is a composite
+ *   - a sub-element: TST03-2
+ *   - or any of the above with the segment ID omitted (02, 03, 03-1)
+ */
+pair<string, string>
+Pyx12::Segment::parseRefDes(const std::string& ref_des)
+{
+    typedef string::const_iterator iter;
+    if(ref_des=="")
+        throw Pyx12::EngineError("Blank Reference Designator");
+    //if(ref_des.substr(0, seg_id.size()) != seg_id)
+    //    throw Pyx12::EngineError("Invalid ref_des: " + ref_des + ", seg_id: " + seg_id);
+    string rest;
+    if(isalpha(ref_des[0])) {
+        if(ref_des.substr(0, seg_id.length()) != seg_id)
+            throw Pyx12::EngineError("Invalid Reference Designator: " 
+                    + ref_des + ", seg_id: " + seg_id);
+        rest = ref_des.substr(seg_id.length(), ref_des.size()-seg_id.length());
+    }
+    else {
+        rest = ref_des;
+    }
+    string ele_pos, comp_pos;
+    string::size_type dash = rest.find('-');
+    if(dash == string::npos) {
+        comp_pos = rest;
+        ele_pos = "";
+    }
+    else {
+        comp_pos = rest.substr(0, dash);
+        ele_pos = rest.substr(dash+1, rest.size()-dash);
+    }
+    return make_pair(comp_pos, ele_pos);
 }
 
 ostream &

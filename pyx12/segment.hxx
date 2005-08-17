@@ -42,7 +42,7 @@ namespace Pyx12
         virtual bool isElement();
         virtual bool isEmpty();
         virtual ~DataItem() {};
-    }
+    };
 
 
     /** Element Class
@@ -84,11 +84,11 @@ namespace Pyx12
         string format();
         string format(const char subele_term_);
         string getValue();
-        string getValue(unsigned int comp_idx);
+        //string getValue(unsigned int comp_idx);
         string getValue(string pos);
-        Element getElement(unsigned int comp_idx);
+        Element getElement(string subele_pos);
         void setValue(const string& ref_des, const string& val);
-        void setValue(const CompElements_sz comp_idx, const string& val);
+        //void setValue(const CompElements_sz comp_idx, const string& val);
         void setSubeleTerm(const char subele_term_);
         bool isComposite();
         bool isElement();
@@ -98,21 +98,12 @@ namespace Pyx12
 //        bool delim(char c);
 //
     private:
-        /// The elements making up this segment
-        CompElements elements;
+        CompElements elements; /// The elements making up this segment
+        char subele_term; /// Current sub-element delimiter
+        char subele_term_orig; /// Original sub-element delimiter
         
-        /// Current sub-element delimiter
-        char subele_term;
-        
-        /// Original sub-element delimiter
-        char subele_term_orig;
-        
-        /** Split a composite string into elements
-         *
-         * @param ele_str A composite as a string
-         */
         vector<string> split(const string& ele_str);
-        unsigned int parseSubelePos(const string& pos);
+        int getIdx(const string& pos);
     };
 
 
@@ -124,8 +115,6 @@ namespace Pyx12
      * 
      * An element can be a simple element or a composite.  A simple element is
      * treated as a composite element with one sub-element.
-     * 
-     * All indexing is zero based.
      */
     class Segment
     {
@@ -133,8 +122,8 @@ namespace Pyx12
         Segment();
         Segment(const string& seg_str, const char seg_term_, 
             const char ele_term_, const char subele_term_);
-        Composite& operator[](SegComposites_sz i);
-        const Composite& operator[](SegComposites_sz i) const;
+        //Composite& operator[](SegComposites_sz i);
+        //const Composite& operator[](SegComposites_sz i) const;
         Composite getComposite(const string& ref_des);
         const Composite getComposite(const string& ref_des) const;
         Element getElement(const string& ref_des);
@@ -165,29 +154,14 @@ namespace Pyx12
         friend ostream & operator << (ostream & os, Pyx12::Segment & seg);
         
     private:
-        /// Current segment delimiter
-        char seg_term;
-        
-        /// Original segment delimiter
-        char seg_term_orig;
-        
-        /// Current element delimiter
-        char ele_term;
-        
-        /// Original element delimiter
-        char ele_term_orig;
-        
-        /// Current sub-element delimiter
-        char subele_term;
-        
-        /// Original sub-element delimiter
-        char subele_term_orig;
-        
-        /// Segment ID
-        string seg_id;
-        
-        /// The composites making up this segment
-        SegComposites elements;
+        char seg_term; /// Current segment delimiter
+        char seg_term_orig; /// Original segment delimiter
+        char ele_term; /// Current element delimiter
+        char ele_term_orig; /// Original element delimiter
+        char subele_term; /// Current sub-element delimiter
+        char subele_term_orig; /// Original sub-element delimiter
+        string seg_id; /// Segment ID
+        SegComposites elements; /// The composites making up this segment
 
         /** Split a segment string into elements
          *
@@ -195,7 +169,9 @@ namespace Pyx12
          */
         vector<string> split(const string& ele_str);
         //pair<SegComposites_sz, SegComposites_sz> parseRefDes(const std::string& ref_des);
-        pair<unsigned int, unsigned int> parseRefDes(const std::string& ref_des);
+        //pair<unsigned int, unsigned int> parseRefDes(const std::string& ref_des);
+        pair<string, string> parseRefDes(const std::string& ref_des);
+
     };
 
     class IsDelim

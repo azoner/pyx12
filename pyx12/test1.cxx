@@ -13,6 +13,5 @@ int main()
     cerr << seg_data << endl;
     //seg_data.setValue("TST05-2", "AR");
     cerr << seg_data.getValue("TST02-2") << endl;
-    //cerr << "TEST1: After format" << endl;
     return 1;
 }
