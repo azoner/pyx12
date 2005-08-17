@@ -30,19 +30,20 @@ using namespace std;
 
 namespace Pyx12
 {
-/*
+
     class DataItem
     {
     public:
         virtual size_t length();
-        virtual string format();
-        virtual string getValue();
+        virtual string format() = 0;
+        virtual string getValue() = 0;
         //virtual void setValue(string);
         virtual bool isComposite();
         virtual bool isElement();
         virtual bool isEmpty();
+        virtual ~DataItem() {};
     }
-*/
+
 
     /** Element Class
      * Contains X12 element and sub-element values
