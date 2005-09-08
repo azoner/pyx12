@@ -35,8 +35,8 @@ import os.path
 libs = ['pyx12', 'boost_python', 'python2.4']
 libpath = ['.', '/usr/lib', '/usr/local/lib', '/usr/local/lib/python2.4']
 linkflags = ''
-if os.path.isfile('/usr/include/pthread.h'):
-    linkflags += ' -pthread'
+#if os.path.isfile('/usr/include/pthread.h'):
+#    linkflags += ' -pthread'
 
 epydoc = Builder(action = 'epydoc --html --name Pyx12 --no-frames -o ../doc/epydoc .', 
     src_suffix = '.py',

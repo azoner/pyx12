@@ -240,7 +240,7 @@ void
 Pyx12::Composite::setValue(const string& subele_pos, const string& val)
 {
     int subele_idx = getIdx(subele_pos);
-    while((elements.begin() + subele_idx) < elements.end())
+    while((elements.begin() + subele_idx) >= elements.end())
         elements.push_back(Pyx12::Element(""));
     elements[subele_idx] = Pyx12::Element(val);
 }
@@ -575,12 +575,12 @@ Pyx12::Segment::setValue(const string& ref_des, const string& val)
     int ele_idx = atoi(comp_pos.c_str()) - 1; 
     while(elements.end() <= elements.begin() + ele_idx) 
         elements.push_back(Pyx12::Composite("", subele_term));
-    Pyx12::Composite& comp_data = getComposite(ref_des);
+    //Pyx12::Composite* comp_data = getComposite(ref_des);
     if(subele_pos == "") {
-        comp_data = Pyx12::Composite(val, subele_term);
+        elements[ele_idx] = Pyx12::Composite(val, subele_term);
     }
     else 
-        comp_data.setValue(subele_pos, val);
+        elements[ele_idx].setValue(subele_pos, val);
 }
 
 Pyx12::Composite
