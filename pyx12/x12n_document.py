@@ -224,6 +224,7 @@ def x12n_document(param, src_file, fd_997, fd_html, fd_xmldoc=None):
 
         erx.Write(src.cur_line)
 
+    erx.handleErrors(src.get_errors())
     src.cleanup() #Catch any skipped loop trailers
     #errh.handle_errors(src.get_errors())
     erx.handleErrors(src.get_errors())

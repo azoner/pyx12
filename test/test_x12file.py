@@ -23,6 +23,7 @@ class x12fileTestCase(unittest.TestCase):
         src = pyx12.x12file.x12file(fd.name)
         for seg in src:
             errors.extend(src.get_errors())
+        errors.extend(src.get_errors())
         src.cleanup()
         errors.extend(src.get_errors())
         if len(errors) > 0:
