@@ -247,7 +247,12 @@ class x12file:
         return seg
 
     def get_errors(self):
-        return self.err_list
+        raise EngineError, 'x12file.get_errors is no longer used'
+        
+    def pop_errors(self):
+        tmp = self.err_list
+        self.err_list = []
+        return tmp
 
     def _isa_error(self, err_cde, err_str):
         """
@@ -302,7 +307,7 @@ class x12file:
         """
         At EOF, check for missing loop trailers
         """
-        self.err_list = []
+        #self.err_list = []
         if self.loops:
             for (seg, id1) in self.loops: 
                 if seg == 'ST':

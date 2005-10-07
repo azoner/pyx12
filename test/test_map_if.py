@@ -581,7 +581,7 @@ class ElementRequirement(unittest.TestCase):
         seg_data = pyx12.segment.segment('REF*87*004010X098A1*Description*~', '~', '*', ':')
         result = node.is_valid(seg_data, self.errh)
         self.failIf(result)
-        self.assertEqual(self.errh.err_cde, '5')
+        self.assertEqual(self.errh.err_cde, '10')
 
     def test_ele_required_ok1(self):
         self.errh.err_cde = None

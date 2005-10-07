@@ -22,10 +22,10 @@ class x12fileTestCase(unittest.TestCase):
         err_str = None
         src = pyx12.x12file.x12file(fd.name)
         for seg in src:
-            errors.extend(src.get_errors())
-        errors.extend(src.get_errors())
+            errors.extend(src.pop_errors())
+        errors.extend(src.pop_errors())
         src.cleanup()
-        errors.extend(src.get_errors())
+        errors.extend(src.pop_errors())
         if len(errors) > 0:
             err_cde = errors[0][1]
             err_str = errors[0][2]
@@ -47,7 +47,7 @@ class Delimiters(unittest.TestCase):
         errors = []
         src = pyx12.x12file.x12file(fd.name)
         for seg in src:
-            errors.extend(src.get_errors())
+            errors.extend(src.pop_errors())
         err_cde = None
         if len(errors) > 0: err_cde = errors[0][1]
         self.assertEqual(err_cde, None)
@@ -73,7 +73,7 @@ class Delimiters(unittest.TestCase):
         errors = []
         src = pyx12.x12file.x12file(fd.name)
         for seg in src:
-            errors.extend(src.get_errors())
+            errors.extend(src.pop_errors())
         err_cde = None
         if len(errors) > 0: err_cde = errors[0][1]
         self.assertEqual(err_cde, None)
@@ -92,7 +92,7 @@ class Delimiters(unittest.TestCase):
         err_str = None
         for seg in src:
             if seg.get_seg_id() == 'ZZ':
-                errors = src.get_errors()
+                errors = src.pop_errors()
                 if len(errors) > 0:
                     err_cde = errors[0][1]
                     err_str = errors[0][2]
