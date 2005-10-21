@@ -1,4 +1,4 @@
-#! /usr/bin/env /usr/local/bin/python
+#! /usr/bin/env python
 
 ######################################################################
 # Copyright (c) 2001-2005 Kalamazoo Community Mental Health Services,

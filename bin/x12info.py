@@ -1,4 +1,4 @@
-#! /usr/bin/env /usr/local/bin/python
+#! /usr/bin/env python
 
 import pyx12.x12file
 import pyx12.error_handler
