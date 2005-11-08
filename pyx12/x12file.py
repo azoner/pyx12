@@ -19,21 +19,22 @@ Tracks segment/line/loop counts.
 
 import sys
 #import string
-from types import *
+#from types import *
 import logging
 #import pdb
 
 # Intrapackage imports
-from errors import *
+import pyx12.errors
 import pyx12.segment
 
 DEFAULT_BUFSIZE = 8*1024
+ISA_LEN = 106
 
 logger = logging.getLogger('pyx12.x12file')
 #logger.setLevel(logging.DEBUG)
 #logger.setLevel(logging.ERROR)
 
-class x12file:
+class X12file:
     """
     Interface to an X12 data file
     """
@@ -66,14 +67,13 @@ class x12file:
 
         #self.logger = logging.getLogger('pyx12')
 
-        ISA_len = 106
-        line = self.fd.read(ISA_len)
+        line = self.fd.read(ISA_LEN)
         if line[:3] != 'ISA': 
             err_str = "First line does not begin with 'ISA': %s" % line[:3]
-            raise x12Error, err_str
-        if len(line) != ISA_len:
+            raise pyx12.X12Error, err_str
+        if len(line) != ISA_LEN:
             err_str = 'ISA line is only %i characters' % len(line)
-            raise x12Error, err_str
+            raise pyx12.X12Error, err_str
         self.seg_term = line[-1]
         self.ele_term = line[3]
         self.subele_term = line[-2]
@@ -111,16 +111,20 @@ class x12file:
                 # We have not yet incremented cur_line
                 if line[-1] == self.ele_term:
                     err_str = 'Segment contains trailing element terminators'
-                    self._seg_error('SEG1', err_str, None, src_line=self.cur_line+1)
+                    self._seg_error('SEG1', err_str, None, 
+                        src_line=self.cur_line+1)
                 #seg = string.split(line, self.ele_term)
                 seg = pyx12.segment.segment(line, self.seg_term, self.ele_term, \
                     self.subele_term)
                 if seg.is_empty():
                     err_str = 'Segment "%s" is empty' % (line)
-                    self._seg_error('8', err_str, None, src_line=self.cur_line+1)
+                    self._seg_error('8', err_str, None, 
+                        src_line=self.cur_line+1)
                 if not seg.is_seg_id_valid():
-                    err_str = 'Segment identifier "%s" is invalid' % (seg.get_seg_id())
-                    self._seg_error('1', err_str, None, src_line=self.cur_line+1)
+                    err_str = 'Segment identifier "%s" is invalid' % (
+                        seg.get_seg_id())
+                    self._seg_error('1', err_str, None, 
+                        src_line=self.cur_line+1)
                 else:
                     break # Found valid segment, so can stop looking
         except:
@@ -132,11 +136,13 @@ class x12file:
             #        seg[i] = seg[i].split(self.subele_term) # Split composite
             if seg.get_seg_id() == 'ISA': 
                 if len(seg) != 16:
-                    raise x12Error, 'The ISA segment must have 16 elements (%s)' % (seg)
+                    raise pyx12.X12Error, \
+                        'The ISA segment must have 16 elements (%s)' % (seg)
                 #seg[-1] = self.subele_term
                 interchange_control_number = seg.get_value('ISA13')
                 if interchange_control_number in self.isa_ids:
-                    err_str = 'ISA Interchange Control Number %s not unique within file' \
+                    err_str = 'ISA Interchange Control Number '
+                    err_str += '%s not unique within file' \
                         % (interchange_control_number)
                     self._isa_error('025', err_str)
                 self.loops.append(('ISA', interchange_control_number))
@@ -162,7 +168,8 @@ class x12file:
             elif seg.get_seg_id() == 'GS': 
                 group_control_number = seg.get_value('GS06')
                 if group_control_number in self.gs_ids:
-                    err_str = 'GS Interchange Control Number %s not unique within file' \
+                    err_str = 'GS Interchange Control Number '
+                    err_str += '%s not unique within file' \
                         % (group_control_number)
                     self._gs_error('6', err_str)
                 self.gs_count += 1
@@ -180,7 +187,7 @@ class x12file:
                         (seg.get_value('GE02'), self.loops[-1][1])
                     self._gs_error('4', err_str)
                 if self._int(seg.get_value('GE01')) != self.st_count:
-                    err_str = 'GE count of %s for GE02=%s is wrong. I count %i' \
+                    err_str = 'GE count of %s for GE02=%s is wrong. I count %i'\
                         % (seg.get_value('GE01'), \
                         seg.get_value('GE02'), self.st_count)
                     self._gs_error('5', err_str)
@@ -190,7 +197,8 @@ class x12file:
                 self.hl_count = 0
                 transaction_control_number = seg.get_value('ST02')
                 if transaction_control_number in self.st_ids:
-                    err_str = 'ST Interchange Control Number %s not unique within file' \
+                    err_str = 'ST Interchange Control Number '
+                    err_str += '%s not unique within file' \
                         % (transaction_control_number)
                     self._st_error('23', err_str)
                 self.st_count += 1
@@ -200,11 +208,13 @@ class x12file:
                 self.hl_count = 0
             elif seg.get_seg_id() == 'SE': 
                 se_trn_control_num = seg.get_value('SE02')
-                if self.loops[-1][0] != 'ST' or self.loops[-1][1] != se_trn_control_num:
-                    err_str = 'SE id=%s does not match ST id=%s' % (se_trn_control_num, self.loops[-1][1])
+                if self.loops[-1][0] != 'ST' or \
+                        self.loops[-1][1] != se_trn_control_num:
+                    err_str = 'SE id=%s does not match ST id=%s' % \
+                        (se_trn_control_num, self.loops[-1][1])
                     self._st_error('3', err_str)
                 if self._int(seg.get_value('SE01')) != self.seg_count + 1:
-                    err_str = 'SE count of %s for SE02=%s is wrong. I count %i' \
+                    err_str = 'SE count of %s for SE02=%s is wrong. I count %i'\
                         % (seg.get_value('SE01'), \
                             se_trn_control_num, self.seg_count + 1)
                     self._st_error('4', err_str)
@@ -218,7 +228,8 @@ class x12file:
                 self.hl_count += 1
                 hl_count = seg.get_value('HL01')
                 if self.hl_count != self._int(hl_count):
-                    #raise x12Error, 'My HL count %i does not match your HL count %s' \
+                    #raise pyx12.X12Error, \
+                    #   'My HL count %i does not match your HL count %s' \
                     #    % (self.hl_count, seg[1])
                     err_str = 'My HL count %i does not match your HL count %s' \
                         % (self.hl_count, hl_count)
@@ -240,16 +251,24 @@ class x12file:
                 self.seg_count += 1
         except IndexError:
             raise
-            err_str = "Expected element not found': %s" % seg.format()
-            raise x12Error, err_str
+            #err_str = "Expected element not found': %s" % seg.format()
+            #raise pyx12.X12Error, err_str
 
         self.cur_line += 1
         return seg
 
     def get_errors(self):
-        raise EngineError, 'x12file.get_errors is no longer used'
+        """
+        Get Errors
+        DEPRECATED
+        """
+        raise pyx12.EngineError, 'X12file.get_errors is no longer used'
         
     def pop_errors(self):
+        """
+        Pop error list
+        @return: List of errors
+        """
         tmp = self.err_list
         self.err_list = []
         return tmp
@@ -311,16 +330,20 @@ class x12file:
         if self.loops:
             for (seg, id1) in self.loops: 
                 if seg == 'ST':
-                    err_str = 'Mandatory segment "Transaction Set Trailer" (SE=%s) missing' % (id1)
+                    err_str = 'Mandatory segment "Transaction Set Trailer" '
+                    err_str += '(SE=%s) missing' % (id1)
                     self._st_error('2', err_str)
                 elif seg == 'GS':
-                    err_str = 'Mandatory segment "Functional Group Trailer" (GE=%s) missing' % (id1)
+                    err_str = 'Mandatory segment "Functional Group Trailer" '
+                    err_str += '(GE=%s) missing' % (id1)
                     self._gs_error('3', err_str)
                 elif seg == 'ISA':
-                    err_str = 'Mandatory segment "Interchange Control Trailer" (IEA=%s) missing' % (id1)
+                    err_str = 'Mandatory segment "Interchange Control Trailer" '
+                    err_str += '(IEA=%s) missing' % (id1)
                     self._isa_error('023', err_str)
                 #elif self.loops[-1][0] == 'LS':
-                #    err_str = 'LS id=%s was not closed with a LE' % (id1, self.loops[-1][1])
+                #    err_str = 'LS id=%s was not closed with a LE' % \
+                #    (id1, self.loops[-1][1])
         
     def get_isa_id(self): 
         """
@@ -329,7 +352,8 @@ class x12file:
         @rtype: string
         """
         for loop in self.loops:
-            if loop[0] == 'ISA': return loop[1]
+            if loop[0] == 'ISA': 
+                return loop[1]
         return None
 
     def get_gs_id(self): 
@@ -339,7 +363,8 @@ class x12file:
         @rtype: string
         """
         for loop in self.loops:
-            if loop[0] == 'GS': return loop[1]
+            if loop[0] == 'GS': 
+                return loop[1]
         return None
 
     def get_st_id(self): 
@@ -349,7 +374,8 @@ class x12file:
         @rtype: string
         """
         for loop in self.loops:
-            if loop[0] == 'ST': return loop[1]
+            if loop[0] == 'ST': 
+                return loop[1]
         return None
 
     def get_ls_id(self): 
@@ -359,7 +385,8 @@ class x12file:
         @rtype: string
         """
         for loop in self.loops:
-            if loop[0] == 'LS': return loop[1]
+            if loop[0] == 'LS': 
+                return loop[1]
         return None
 
     def get_seg_count(self): 
@@ -385,29 +412,3 @@ class x12file:
         @rtype: tuple(string, string, string, string)
         """
         return (self.seg_term, self.ele_term, self.subele_term, '\n')
-
-#    def format_seg(self, seg, eol='\n'):
-#        """
-#        Format an original representation of the segment
-#
-#        @param seg: Segment object
-#        @type seg: L{segment<segment.segment>}
-#        @rtype: string
-#        """
-#        return '%s' % (self.seg_str(seg, self.seg_term, self.ele_term, self.subele_term, eol))
-
-#    def seg_str(self, seg, seg_term=None, ele_term=None, subele_term=None, eol=''):
-#        """
-#        Format a representation of the segment
-#
-#        @param seg: Segment object
-#        @type seg: L{segment<segment.segment>}
-#        @param seg_term: Segment terminator
-#        @type seg_term: string
-#        @param ele_term: Element terminator
-#        @type ele_term: string
-#        @param subele_term: Sub-element terminator
-#        @type subele_term: string
-#        @return: string
-#        """
-#        return seg.format(seg_term, ele_term, subele_term) + eol

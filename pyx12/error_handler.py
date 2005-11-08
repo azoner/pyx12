@@ -507,8 +507,8 @@ class err_isa(err_node):
         """
         @param seg_data: Segment object
         @type seg_data: L{segment<segment.segment>}
-        @param src: x12file source
-        @type src: L{x12file<x12file.x12file>}
+        @param src: X12file source
+        @type src: L{X12file<x12file.X12file>}
         """
         self.seg_data = seg_data
         self.isa_id = src.get_isa_id()
@@ -612,8 +612,8 @@ class err_gs(err_node):
         """
         @param seg_data: Segment object
         @type seg_data: L{segment<segment.segment>}
-        @param src: x12file source
-        @type src: L{x12file<x12file.x12file>}
+        @param src: X12file source
+        @type src: L{X12file<x12file.X12file>}
 
         """
         self.seg_data = seg_data
@@ -757,8 +757,8 @@ class err_st(err_node):
         """
         @param seg_data: Segment object
         @type seg_data: L{segment<segment.segment>}
-        @param src: x12file source
-        @type src: L{x12file<x12file.x12file>}
+        @param src: X12file source
+        @type src: L{X12file<x12file.X12file>}
         """
         self.seg_data = seg_data
         self.trn_set_control_num = src.get_st_id()

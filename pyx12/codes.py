@@ -21,12 +21,12 @@ import libxml2
 import datetime 
 #import pdb
 from stat import ST_MTIME
-from stat import ST_SIZE
+#from stat import ST_SIZE
 
 # Intrapackage imports
-import errors
+from pyx12.errors import EngineError, XML_Reader_Error
 
-class Codes_Error(Exception):
+class CodesError(Exception):
     """Class for code modules errors."""
 
 NodeType = {'element_start': 1, 'element_end': 15, 'attrib': 2, 'text': 3, \
@@ -64,25 +64,25 @@ class ExternalCodes:
         else:
             self.exclude_list = exclude.split(',')
 
+        base_level = 0
         # init the map of codes from the pickled file codes.pkl
         try:
             if os.stat(code_file)[ST_MTIME] < os.stat(pickle_file)[ST_MTIME]:
                 self.codes = cPickle.load(open(pickle_file))
             else: 
-                raise Codes_Error, "reload codes"
+                raise CodesError, "reload codes"
         except:
             try:
                 reader = libxml2.newTextReaderFilename(code_file)
             except:
-                raise errors.EngineError, 'Code file not found: %s' % (code_file)
+                raise EngineError, 'Code file not found: %s' % (code_file)
             try:
                 ret = reader.Read()
                 if ret == -1:
-                    raise errors.XML_Reader_Error, 'Read Error'
+                    raise XML_Reader_Error, 'Read Error'
                 elif ret == 0:
-                    raise errors.XML_Reader_Error, 'End of Map File'
+                    raise XML_Reader_Error, 'End of Map File'
                 while ret == 1:
-                    #print 'map_if', reader.NodeType(), reader.Depth(), reader.Name()
                     if reader.NodeType() == NodeType['element_start']:
                         cur_name = reader.Name()
                         if cur_name == 'codeset':
@@ -95,17 +95,19 @@ class ExternalCodes:
                             base_name = 'version'
                     elif reader.NodeType() == NodeType['element_end']:
                         if reader.Name() == 'codeset':
-                            self.codes[codeset_id] = (eff_dte, exp_dte, code_list)
+                            self.codes[codeset_id] = (eff_dte, exp_dte, \
+                                code_list)
                             #del code_list
 #                       if reader.Depth() <= base_level:
 #                           ret = reader.Read()
 #                            if ret == -1:
-#                               raise errors.XML_Reader_Error, 'Read Error'
+#                               raise XML_Reader_Error, 'Read Error'
 #                            elif ret == 0:
-#                               raise errors.XML_Reader_Error, 'End of Map File'
+#                               raise XML_Reader_Error, 'End of Map File'
 #                            break
                         cur_name = ''
-                    elif reader.NodeType() == NodeType['text'] and base_level + 1 <= reader.Depth():
+                    elif reader.NodeType() == NodeType['text'] and \
+                            base_level + 1 <= reader.Depth():
                         if cur_name == 'id':
                             if base_name == 'codeset':
                                 codeset_id = reader.Value()
@@ -119,10 +121,10 @@ class ExternalCodes:
 
                     ret = reader.Read()
                     if ret == -1:
-                        raise errors.XML_Reader_Error, 'Read Error'
+                        raise XML_Reader_Error, 'Read Error'
                     elif ret == 0:
-                        raise errors.XML_Reader_Error, 'End of Map File'
-            except errors.XML_Reader_Error:
+                        raise XML_Reader_Error, 'End of Map File'
+            except XML_Reader_Error:
                 pass
 #        try:
 #            cPickle.dump(self.codes, open(pickle_file,'w'))
@@ -130,14 +132,15 @@ class ExternalCodes:
 #            pass
 
 
-    def IsValid(self, key, code, check_dte=None):
+    def isValid(self, key, code, check_dte=None):
         """
         Is the code in the list idenified by key
         @param key: the external codeset identifier
         @type key: string
         @param code: code to be verified
         @type code: string
-        @param check_dte: YYYYMMDD - Date on which to check code validity. eg 20040514
+        @param check_dte: YYYYMMDD - Date on which to 
+            check code validity. eg 20040514
         @type check_dte: string
         @return: True if code is valid, False if not
         @rtype: boolean
@@ -145,23 +148,24 @@ class ExternalCodes:
 
         #if not given a key, do not flag an error
         if not key:
-            raise errors.EngineError, 'bad key %s' % (key)
+            raise EngineError, 'bad key %s' % (key)
             #return True
         #check the code against the list indexed by key
         else:
             if key in self.exclude_list:
                 return True
             if not self.codes.has_key(key):
-                raise errors.EngineError, 'External Code "%s" is not defined' % (key)
-                
+                raise EngineError, 'External Code "%s" is not defined' \
+                    % (key)
             if check_dte is None:
                 code_list = self.codes[key][2]
                 if code in code_list:
                     return True
             else:
                 if len(check_dte) != 8: 
-                    raise errors.EngineError, 'Bad check date %s' & (check_dte)
-                dt_check_dte = datetime.date(int(check_dte[:4]), int(check_dte[4:6]), int(check_dte[-2:]))
+                    raise EngineError, 'Bad check date %s' & (check_dte)
+                dt_check_dte = datetime.date(int(check_dte[:4]), \
+                    int(check_dte[4:6]), int(check_dte[-2:]))
                 eff_dte = self.codes[key][0]
                 exp_dte = self.codes[key][1]
                 code_list = self.codes[key][2]

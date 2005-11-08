@@ -20,7 +20,7 @@ Validate against a map and codeset values.
 import os, os.path
 import sys
 import logging
-from types import *
+#from types import *
 import tempfile
 
 # Intrapackage imports
@@ -70,7 +70,7 @@ def main():
     logger.addHandler(stdout_hdlr)
     logger.setLevel(logging.INFO)
 
-    fd_src = None
+    #fd_src = None
     fd_997 = None
     fd_html = None
 
@@ -79,38 +79,38 @@ def main():
     profile = False
     debug = False
     configfile = None
-    for o, a in opts:
-        if o == '-c':
-            configfile = a
+    for opt, val in opts:
+        if opt == '-c':
+            configfile = val
     if configfile:
-        param = pyx12.params.params('/usr/local/etc/pyx12.conf.xml',\
+        param = pyx12.params.params('/usr/local/etc/pyx12.conf.xml', \
             os.path.expanduser('~/.pyx12.conf.xml'), \
             configfile)
     else:
-        param = pyx12.params.params('/usr/local/etc/pyx12.conf.xml',\
+        param = pyx12.params.params('/usr/local/etc/pyx12.conf.xml', \
             os.path.expanduser('~/.pyx12.conf.xml'))
 
-    for o, a in opts:
-        if o == '-v': logger.setLevel(logging.DEBUG)
-        if o == '-q': logger.setLevel(logging.ERROR)
-        if o == '-d': 
+    for opt, val in opts:
+        if opt == '-v': logger.setLevel(logging.DEBUG)
+        if opt == '-q': logger.setLevel(logging.ERROR)
+        if opt == '-d': 
             param.set('debug', True)
             debug = True
             logger.setLevel(logging.DEBUG)
-        if o == '-x': param.set('exclude_external_codes', a)
-        if o == '-f': param.set('force_map_load', True)
-        if o == '-m': param.set('map_path', a)
-        if o == '-p': param.set('pickle_path', a)
-        if o == '-P': profile = True
-        if o == '-s': param.set('charset', a)
-        if o == '-H': flag_html = True
-        if o == '-l':
+        if opt == '-x': param.set('exclude_external_codes', val)
+        if opt == '-f': param.set('force_map_load', True)
+        if opt == '-m': param.set('map_path', val)
+        if opt == '-p': param.set('pickle_path', val)
+        if opt == '-P': profile = True
+        if opt == '-s': param.set('charset', val)
+        if opt == '-H': flag_html = True
+        if opt == '-l':
             try:
-                hdlr = logging.FileHandler(a)
+                hdlr = logging.FileHandler(val)
                 hdlr.setFormatter(formatter)
                 logger.addHandler(hdlr) 
             except IOError:
-                logger.error('Could not open log file: %s' % (a))
+                logger.error('Could not open log file: %s' % (val))
 
     if not debug:
         try:

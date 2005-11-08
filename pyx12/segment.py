@@ -20,11 +20,11 @@ treated as a composite element with one sub-element.
 All indexing is zero based.
 """
 
-import string
+#import string
 
-from pyx12.errors import *
+from pyx12.errors import EngineError
 
-class element:
+class Element:
     """
     Holds a simple element, which is just a simple string.
     """
@@ -62,6 +62,10 @@ class element:
         return self.value
 
     def set_value(self, elem_str):
+        """
+        @param elem_str: Element string value
+        @type elem_str: string
+        """
         self.value = elem_str
 
     def is_composite(self):
@@ -85,7 +89,7 @@ class element:
         else:
             return True
 
-class composite:
+class Composite:
     """
     Can be a simple element or a composite.
     A simple element is treated as a composite element with one sub-element.
@@ -102,11 +106,11 @@ class composite:
         members = ele_str.split(self.subele_term)
         self.elements = []
         for elem in members:
-            self.elements.append(element(elem))
+            self.elements.append(Element(elem))
         
     def __getitem__(self, idx):
         """
-        returns element instance for idx
+        returns Element instance for idx
         """
         return self.elements[idx]
 
@@ -131,19 +135,33 @@ class composite:
         return self.format(self.subele_term)
 
     def format(self, subele_term=None):
-        if subele_term is None: subele_term = self.subele_term
+        """
+        Format a composite
+
+        @return: string
+        """
+        if subele_term is None: 
+            subele_term = self.subele_term
         for i in range(len(self.elements)-1, -1, -1):
             if not self.elements[i].is_empty():
                 break
-        return '%s' % (string.join(map(element.__repr__, self.elements[:i+1]), subele_term))
+        return '%s' % (subele_term.join(map(Element.__repr__, \
+            self.elements[:i+1])))
             
     def get_value(self):
+        """
+        Get value of simple element
+        """
         if len(self.elements) == 1:
             return self.elements[0].get_value()
         else:
             raise IndexError, 'value of composite is undefined'
 
     def set_subele_term(self, subele_term):
+        """
+        @param subele_term: Sub-element terminator value
+        @type subele_term: string
+        """
         self.subele_term = subele_term
   
     def is_composite(self):
@@ -174,7 +192,7 @@ class composite:
         return True
 
 
-class segment:
+class Segment:
     """
     Encapsulates a X12 segment.  Contains composites.
     """
@@ -192,9 +210,9 @@ class segment:
         self.subele_term_orig = subele_term
         self.seg_id = None
         if seg_str and seg_str[-1] == seg_term:
-            elems = string.split(seg_str[:-1], self.ele_term)
+            elems = seg_str[:-1].split(self.ele_term)
         else:
-            elems = string.split(seg_str, self.ele_term)
+            elems = seg_str.split(self.ele_term)
         self.elements = []
         if elems:
             self.seg_id = elems[0]
@@ -202,9 +220,9 @@ class segment:
             if self.seg_id == 'ISA':
                 #Special handling for ISA segment
                 #guarantee subele_term will not be matched
-                self.elements.append(composite(ele, ele_term))
+                self.elements.append(Composite(ele, ele_term))
             else:
-                self.elements.append(composite(ele, subele_term))
+                self.elements.append(Composite(ele, subele_term))
     
     def __repr__(self):
         """
@@ -221,12 +239,21 @@ class segment:
 #    def __setitem__(self, idx, val):
 #        """
 #        """
-#        self.elements[idx] = composite(val, self.subele_term)
+#        self.elements[idx] = Composite(val, self.subele_term)
 
     def append(self, val):
-        self.elements.append(composite(val, self.subele_term))
+        """
+        Append a composite to the segment
+
+        @param val: String value of composite
+        @type val: string
+        """
+        self.elements.append(Composite(val, self.subele_term))
 
     def __len__(self):
+        """
+        @rtype: int
+        """
         return len(self.elements)
     
     def get_seg_id(self):
@@ -253,8 +280,9 @@ class segment:
             raise EngineError, 'Blank Reference Designator'
         if ref_des[0].isalpha():
             if ref_des[:len(self.seg_id)] != self.seg_id:
-                raise EngineError, 'Invalid Reference Designator: %s, seg_id: %s' \
+                err_str = 'Invalid Reference Designator: %s, seg_id: %s' \
                     % (ref_des, self.seg_id)
+                raise EngineError, err_str
             rest = ref_des[len(self.seg_id):]
         else:
             rest = ref_des
@@ -276,7 +304,7 @@ class segment:
         @param ref_des: X12 Reference Designator
         @type ref_des: string
         @return: Element or Composite
-        @rtype: L{segment.composite}
+        @rtype: L{segment.Composite}
         """
         (ele_idx, comp_idx) = self._parse_refdes(ref_des)
         if ele_idx >= self.__len__():
@@ -319,20 +347,20 @@ class segment:
         """
         (ele_idx, comp_idx) = self._parse_refdes(ref_des)
         while len(self.elements) <= ele_idx:
-            self.elements.append(composite('', self.subele_term))
+            self.elements.append(Composite('', self.subele_term))
         if comp_idx is None:
-            self.elements[ele_idx] = composite(val, self.subele_term)
+            self.elements[ele_idx] = Composite(val, self.subele_term)
         else:
             while len(self.elements[ele_idx]) <= comp_idx:
-                self.elements[ele_idx].elements.append(element(''))
-            self.elements[ele_idx][comp_idx] = element(val)
+                self.elements[ele_idx].elements.append(Element(''))
+            self.elements[ele_idx][comp_idx] = Element(val)
 
     def is_element(self, ref_des):
         """
         @param ref_des: X12 Reference Designator
         @type ref_des: string
         """
-        (ele_idx, comp_idx) = self._parse_refdes(ref_des)
+        ele_idx = self._parse_refdes(ref_des)[0]
         return self.elements[ele_idx].is_element()
 
     def is_composite(self, ref_des):
@@ -340,7 +368,7 @@ class segment:
         @param ref_des: X12 Reference Designator
         @type ref_des: string
         """
-        (ele_idx, comp_idx) = self._parse_refdes(ref_des)
+        ele_idx  = self._parse_refdes(ref_des)[0]
         return self.elements[ele_idx].is_composite()
 
     def ele_len(self, ref_des):
@@ -350,16 +378,28 @@ class segment:
         @return: number of sub-elements in an element or composite
         @rtype: int
         """
-        (ele_idx, comp_idx) = self._parse_refdes(ref_des)
+        ele_idx = self._parse_refdes(ref_des)[0]
         return len(self.elements[ele_idx])
 
     def set_seg_term(self, seg_term):
+        """
+        @param seg_term: Segment terminator
+        @type seg_term: string
+        """
         self.seg_term = seg_term
 
     def set_ele_term(self, ele_term):
+        """
+        @param ele_term: Element terminator
+        @type ele_term: string
+        """
         self.ele_term = ele_term
 
     def set_subele_term(self, subele_term):
+        """
+        @param subele_term: Sub-element terminator
+        @type subele_term: string
+        """
         self.subele_term = subele_term
 
 #    def set_eol(self, eol):
@@ -369,9 +409,12 @@ class segment:
         """
         @rtype: string
         """
-        if seg_term is None: seg_term = self.seg_term
-        if ele_term is None: ele_term = self.ele_term
-        if subele_term is None: subele_term = self.subele_term
+        if seg_term is None: 
+            seg_term = self.seg_term
+        if ele_term is None: 
+            ele_term = self.ele_term
+        if subele_term is None: 
+            subele_term = self.subele_term
         str_elems = []
         for i in range(len(self.elements)-1, -1, -1):
             if not self.elements[i].is_empty():
@@ -380,7 +423,7 @@ class segment:
             str_elems.append(ele.format(subele_term))
         #str_elems
         return '%s%s%s%s' % (self.seg_id, ele_term, \
-            string.join(str_elems, ele_term), \
+            ele_term.join(str_elems), \
             seg_term)
 
     def format_ele_list(self, str_elems, subele_term=None):
@@ -388,7 +431,8 @@ class segment:
         Modifies the parameter str_elems
         Strips trailing empty composites
         """
-        if subele_term is None: subele_term = self.subele_term
+        if subele_term is None: 
+            subele_term = self.subele_term
         # Find last non-empty composite
         for i in range(len(self.elements)-1, -1, -1):
             if not self.elements[i].is_empty():

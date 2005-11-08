@@ -9,7 +9,7 @@ class ArbitraryDelimiters(unittest.TestCase):
 
     def setUp(self):
         self.seg_str = 'TST&AA!1!1&BB!5&ZZ'
-        self.seg = pyx12.segment.segment(self.seg_str, '+', '&', '!')
+        self.seg = pyx12.segment.Segment(self.seg_str, '+', '&', '!')
 
     def test_identity(self):
         self.assertEqual(self.seg_str+'+', self.seg.__repr__())
@@ -37,18 +37,18 @@ class Identity(unittest.TestCase):
 
     def test_identity1(self):
         seg_str = 'TST*AA:1:1*BB:5*ZZ'
-        seg = pyx12.segment.segment(seg_str, '~', '*', ':')
+        seg = pyx12.segment.Segment(seg_str, '~', '*', ':')
         self.assertEqual(seg.__repr__(), seg_str+'~')
 
     def test_identity2(self):
         seg_str = 'ISA*00*          *00*          *ZZ*ZZ000          *'
         seg_str += 'ZZ*ZZ001          *030828*1128*U*00401*000010121*0*T*:\n'
-        seg = pyx12.segment.segment(seg_str, '~', '*', ':')
+        seg = pyx12.segment.Segment(seg_str, '~', '*', ':')
         self.assertEqual(seg.__repr__(), seg_str+'~')
 
     def test_identity3(self):
         seg_str = 'TST*AA:1:1*BB:5*ZZ~'
-        seg = pyx12.segment.segment(seg_str, '~', '*', ':')
+        seg = pyx12.segment.Segment(seg_str, '~', '*', ':')
         self.assertEqual(seg.__repr__(), seg_str)
 
 
@@ -56,49 +56,49 @@ class Alter(unittest.TestCase):
 
     def test_alter_element(self):
         seg_str = 'TST*AA:1:1*BB:5*ZZ'
-        seg = pyx12.segment.segment(seg_str, '~', '*', ':')
+        seg = pyx12.segment.Segment(seg_str, '~', '*', ':')
         seg.set('TST03', 'YY')
         self.assertEqual(seg.format(), 'TST*AA:1:1*BB:5*YY~')
 
     def test_extend_element_blank(self):
         seg_str = 'TST*AA:1:1*BB:5*ZZ'
-        seg = pyx12.segment.segment(seg_str, '~', '*', ':')
+        seg = pyx12.segment.Segment(seg_str, '~', '*', ':')
         seg.set('TST05', '')
         self.assertEqual(seg.format(), 'TST*AA:1:1*BB:5*ZZ~')
 
     def test_extend_element(self):
         seg_str = 'TST*AA:1:1*BB:5*ZZ'
-        seg = pyx12.segment.segment(seg_str, '~', '*', ':')
+        seg = pyx12.segment.Segment(seg_str, '~', '*', ':')
         seg.set('TST05', 'AR')
         self.assertEqual(seg.format(), 'TST*AA:1:1*BB:5*ZZ**AR~')
 
     def test_alter_composite(self):
         seg_str = 'TST*AA:1:1*BB:5*ZZ~'
-        seg = pyx12.segment.segment(seg_str, '~', '*', ':')
+        seg = pyx12.segment.Segment(seg_str, '~', '*', ':')
         seg.set('TST02', 'CC:2')
         self.assertEqual(seg.format(), 'TST*AA:1:1*CC:2*ZZ~')
 
     def test_extend_composite(self):
         seg_str = 'TST*AA:1:1*BB:5*ZZ~'
-        seg = pyx12.segment.segment(seg_str, '~', '*', ':')
+        seg = pyx12.segment.Segment(seg_str, '~', '*', ':')
         seg.set('TST02-4', 'T')
         self.assertEqual(seg.format(), 'TST*AA:1:1*BB:5::T*ZZ~')
 
     def test_extend_composite2(self):
         seg_str = 'TST*AA:1:1*BB:5*ZZ~'
-        seg = pyx12.segment.segment(seg_str, '~', '*', ':')
+        seg = pyx12.segment.Segment(seg_str, '~', '*', ':')
         seg.set('TST05-2', 'T')
         self.assertEqual(seg.format(), 'TST*AA:1:1*BB:5*ZZ**:T~')
 
     def test_extend_composite_blank1(self):
         seg_str = 'TST*AA:1:1*BB:5*ZZ~'
-        seg = pyx12.segment.segment(seg_str, '~', '*', ':')
+        seg = pyx12.segment.Segment(seg_str, '~', '*', ':')
         seg.set('TST02-4', '')
         self.assertEqual(seg.format(), 'TST*AA:1:1*BB:5*ZZ~')
 
     def test_extend_composite_blank2(self):
         seg_str = 'TST*AA:1:1*BB:5*ZZ~'
-        seg = pyx12.segment.segment(seg_str, '~', '*', ':')
+        seg = pyx12.segment.Segment(seg_str, '~', '*', ':')
         seg.set('TST05-4', '')
         self.assertEqual(seg.format(), 'TST*AA:1:1*BB:5*ZZ~')
 
@@ -107,7 +107,7 @@ class Composite(unittest.TestCase):
 
     def setUp(self):
         seg_str = 'TST*AA:1:Y*BB:5*ZZ'
-        self.seg = pyx12.segment.segment(seg_str, '~', '*', ':')
+        self.seg = pyx12.segment.Segment(seg_str, '~', '*', ':')
 
     def test_composite_is_a(self):
         self.failUnless(self.seg.is_composite('TST01'))
@@ -127,7 +127,7 @@ class Simple(unittest.TestCase):
 
     def setUp(self):
         seg_str = 'TST*AA*1*Y*BB:5*ZZ'
-        self.seg = pyx12.segment.segment(seg_str, '~', '*', ':')
+        self.seg = pyx12.segment.Segment(seg_str, '~', '*', ':')
 
     def test_simple_is_a(self):
         self.failUnless(self.seg.is_element('TST01'))
@@ -146,7 +146,7 @@ class Simple(unittest.TestCase):
 
     def test_simple_spaces(self):
         seg_str = 'TST*AA*          *BB~'
-        seg = pyx12.segment.segment(seg_str, '~', '*', ':')
+        seg = pyx12.segment.Segment(seg_str, '~', '*', ':')
         self.assertEqual(len(seg.get_value('TST02')), 10)
         self.assertEqual(seg.get_value('TST02'), '          ')
 
@@ -155,7 +155,7 @@ class GetValue(unittest.TestCase):
 
     def setUp(self):
         seg_str = 'TST*AA*1*Y*BB:5*ZZ'
-        self.seg = pyx12.segment.segment(seg_str, '~', '*', ':')
+        self.seg = pyx12.segment.Segment(seg_str, '~', '*', ':')
 
     def getElementValueOK(self):
         self.assertEqual(self.seg.get_value('TST01'), self.seg.get('TST01').format())
@@ -173,7 +173,7 @@ class RefDes(unittest.TestCase):
 
     def setUp(self):
         seg_str = 'TST*AA*1*Y*BB:5*ZZ'
-        self.seg = pyx12.segment.segment(seg_str, '~', '*', ':')
+        self.seg = pyx12.segment.Segment(seg_str, '~', '*', ':')
 
     def test_simple1(self):
         self.assertEqual(self.seg.get_value('TST01'), 'AA')
@@ -209,42 +209,42 @@ class IsEmpty(unittest.TestCase):
 
     def test_empty_seg(self):
         seg_str = 'AAA'
-        seg = pyx12.segment.segment(seg_str, '~', '*', ':')
+        seg = pyx12.segment.Segment(seg_str, '~', '*', ':')
         self.failUnless(seg.is_empty())
 
     def test_empty_seg_bad1(self):
         seg_str = 'AAA*1~'
-        seg = pyx12.segment.segment(seg_str, '~', '*', ':')
+        seg = pyx12.segment.Segment(seg_str, '~', '*', ':')
         self.failIf(seg.is_empty())
 
     def test_empty_seg_bad2(self):
         seg_str = 'AAA*:1~'
-        seg = pyx12.segment.segment(seg_str, '~', '*', ':')
+        seg = pyx12.segment.Segment(seg_str, '~', '*', ':')
         self.failIf(seg.is_empty())
 
     def test_empty_comp1(self):
         comp_str = ''
-        comp = pyx12.segment.composite(comp_str, ':')
+        comp = pyx12.segment.Composite(comp_str, ':')
         self.failUnless(comp.is_empty())
 
     def test_empty_comp2(self):
         comp_str = '::'
-        comp = pyx12.segment.composite(comp_str, ':')
+        comp = pyx12.segment.Composite(comp_str, ':')
         self.failUnless(comp.is_empty())
 
     def test_empty_comp_bad1(self):
         comp_str = '1::a'
-        comp = pyx12.segment.composite(comp_str, ':')
+        comp = pyx12.segment.Composite(comp_str, ':')
         self.failIf(comp.is_empty())
 
     def test_empty_comp_bad2(self):
         comp_str = '::a'
-        comp = pyx12.segment.composite(comp_str, ':')
+        comp = pyx12.segment.Composite(comp_str, ':')
         self.failIf(comp.is_empty())
 
     def test_empty_comp_bad3(self):
         comp_str = 'a'
-        comp = pyx12.segment.composite(comp_str, ':')
+        comp = pyx12.segment.Composite(comp_str, ':')
         self.failIf(comp.is_empty())
 
 
@@ -252,7 +252,7 @@ class Indexing(unittest.TestCase):
 
     def setUp(self):
         seg_str = 'TST*AA*1*Y*BB:5*ZZ'
-        self.seg = pyx12.segment.segment(seg_str, '~', '*', ':')
+        self.seg = pyx12.segment.Segment(seg_str, '~', '*', ':')
 
     def test_index_simple_1(self):
         self.assertEqual(self.seg.get_value('TST01'), 'AA')
@@ -271,22 +271,22 @@ class IsValidSegID(unittest.TestCase):
 
     def test_valid_seg_id(self):
         seg_str = 'AAA'
-        seg = pyx12.segment.segment(seg_str, '~', '*', ':')
+        seg = pyx12.segment.Segment(seg_str, '~', '*', ':')
         self.failUnless(seg.is_seg_id_valid())
 
     def test_empty_seg(self):
         seg_str = ''
-        seg = pyx12.segment.segment(seg_str, '~', '*', ':')
+        seg = pyx12.segment.Segment(seg_str, '~', '*', ':')
         self.failIf(seg.is_seg_id_valid())
 
     def test_seg_id_too_long(self):
         seg_str = 'AAAA*1~'
-        seg = pyx12.segment.segment(seg_str, '~', '*', ':')
+        seg = pyx12.segment.Segment(seg_str, '~', '*', ':')
         self.failIf(seg.is_seg_id_valid())
 
     def test_seg_id_too_short(self):
         seg_str = 'A*1~'
-        seg = pyx12.segment.segment(seg_str, '~', '*', ':')
+        seg = pyx12.segment.Segment(seg_str, '~', '*', ':')
         self.failIf(seg.is_seg_id_valid())
 
 

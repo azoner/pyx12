@@ -16,16 +16,16 @@
 class XML_Reader_Error(Exception):
     """Class for XML Reader errors."""
 
-class x12Error(Exception):
+class X12Error(Exception):
     """Base class for X12N format errors."""
 
-#class ISAError(x12Error):
+#class ISAError(X12Error):
 #    """Errors in the ISA or IEA segements."""
 
-class GSError(x12Error):
+class GSError(X12Error):
     """Errors in the GS or GE segements."""
 
-#class STError(x12Error):
+#class STError(X12Error):
 #    """Errors in the ST or SE segements."""
 
 #class WEDIError(Exception):

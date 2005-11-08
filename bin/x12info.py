@@ -8,7 +8,7 @@ def main():
     for src_file in sys.argv[1:]:
         try:
             sys.stdout.write('Source filename: %s\n' % (src_file))
-            src = pyx12.x12file.x12file(src_file)
+            src = pyx12.x12file.X12file(src_file)
             state = ''
             for c in src:
                 if c.get_seg_id() == 'ISA':

@@ -1378,7 +1378,7 @@ class element_if(x12_node):
         if elem_val in self.valid_codes:
             bValidCode = True
         if self.external_codes is not None and \
-            self.root.ext_codes.IsValid(self.external_codes, elem_val, check_dte):
+            self.root.ext_codes.isValid(self.external_codes, elem_val, check_dte):
             bValidCode = True
         if not bValidCode:
             err_str = '(%s) is not a valid code for %s (%s)' % (elem_val, self.name, self.refdes)

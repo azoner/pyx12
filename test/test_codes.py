@@ -16,6 +16,7 @@ map_path = os.path.join(string.join(os.path.abspath(
 if not os.path.isdir(map_path):
     map_path = None
 
+
 class TestExternal(unittest.TestCase):
     """
     """
@@ -27,24 +28,24 @@ class TestExternal(unittest.TestCase):
             self.param.get('exclude_external_codes'))
 
     def test_valid_state1(self):
-        self.failUnless(self.ext_codes.IsValid('states', 'MI', '20031001'))
+        self.failUnless(self.ext_codes.isValid('states', 'MI', '20031001'))
 
     def test_valid_state2(self):
-        self.failUnless(self.ext_codes.IsValid('states', 'NV'))
+        self.failUnless(self.ext_codes.isValid('states', 'NV'))
 
     def test_invalid_state1(self):
-        self.failIf(self.ext_codes.IsValid('states', 'AN', '20031001'))
+        self.failIf(self.ext_codes.isValid('states', 'AN', '20031001'))
 
     def test_exclude_state_code(self):
         self.param.set('exclude_external_codes', 'states')
         ext_codes = pyx12.codes.ExternalCodes(self.param.get('map_path'), \
             self.param.get('exclude_external_codes'))
-        self.failUnless(ext_codes.IsValid('states', 'ZZ'))
+        self.failUnless(ext_codes.isValid('states', 'ZZ'))
 
     def test_noexclude_state_code(self):
         ext_codes = pyx12.codes.ExternalCodes(self.param.get('map_path'), \
             self.param.get('exclude_external_codes'))
-        self.failIf(ext_codes.IsValid('states', 'ZZ'))
+        self.failIf(ext_codes.isValid('states', 'ZZ'))
 
 
 def suite():

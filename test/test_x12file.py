@@ -11,7 +11,7 @@ import pyx12.error_handler
 from pyx12.errors import *
 import pyx12.x12file
 
-class x12fileTestCase(unittest.TestCase):
+class X12fileTestCase(unittest.TestCase):
 
     def _get_first_error(self, x12str):
         fd = tempfile.NamedTemporaryFile()
@@ -20,7 +20,7 @@ class x12fileTestCase(unittest.TestCase):
         errors = []
         err_cde = None
         err_str = None
-        src = pyx12.x12file.x12file(fd.name)
+        src = pyx12.x12file.X12file(fd.name)
         for seg in src:
             errors.extend(src.pop_errors())
         errors.extend(src.pop_errors())
@@ -45,7 +45,7 @@ class Delimiters(unittest.TestCase):
         fd.write(str)
         fd.seek(0)
         errors = []
-        src = pyx12.x12file.x12file(fd.name)
+        src = pyx12.x12file.X12file(fd.name)
         for seg in src:
             errors.extend(src.pop_errors())
         err_cde = None
@@ -71,7 +71,7 @@ class Delimiters(unittest.TestCase):
         fd.write(str)
         fd.seek(0)
         errors = []
-        src = pyx12.x12file.x12file(fd.name)
+        src = pyx12.x12file.X12file(fd.name)
         for seg in src:
             errors.extend(src.pop_errors())
         err_cde = None
@@ -87,7 +87,7 @@ class Delimiters(unittest.TestCase):
         fd = tempfile.NamedTemporaryFile()
         fd.write(str)
         fd.seek(0)
-        src = pyx12.x12file.x12file(fd.name)
+        src = pyx12.x12file.X12file(fd.name)
         err_cde = None
         err_str = None
         for seg in src:
@@ -99,19 +99,19 @@ class Delimiters(unittest.TestCase):
         self.assertEqual(err_cde, 'SEG1', err_str)
 
                     
-class ISA_header(x12fileTestCase):
+class ISA_header(X12fileTestCase):
 
     def test_starts_with_ISA(self):
         fd = tempfile.NamedTemporaryFile()
         fd.write(' ISA~')
         fd.seek(0)
-        self.failUnlessRaises(pyx12.x12file.x12Error, pyx12.x12file.x12file, fd.name)
+        self.failUnlessRaises(pyx12.x12file.X12Error, pyx12.x12file.X12file, fd.name)
 
     def test_at_least_ISA_len(self):
         fd = tempfile.NamedTemporaryFile()
         fd.write('ISA~')
         fd.seek(0)
-        self.failUnlessRaises(pyx12.x12file.x12Error, pyx12.x12file.x12file, fd.name)
+        self.failUnlessRaises(pyx12.x12file.X12Error, pyx12.x12file.X12file, fd.name)
 
     def test_repeat_ISA_loops(self):
         str = 'ISA*00*          *00*          *ZZ*ZZ000          *ZZ*ZZ001          *030828*1128*U*00401*000010121*0*T*:~\n'
@@ -131,7 +131,7 @@ class ISA_header(x12fileTestCase):
         self.assertEqual(err_cde, '025', err_str)
 
 
-class IEA_Checks(x12fileTestCase):
+class IEA_Checks(X12fileTestCase):
 
     def test_IEA_id_match_ISA_id(self):
         seg = None
@@ -160,7 +160,7 @@ class IEA_Checks(x12fileTestCase):
         self.assertEqual(err_cde, '023', err_str)
 
 
-class GE_Checks(x12fileTestCase):
+class GE_Checks(X12fileTestCase):
 
     def test_GE_id_match_GS_id(self):
         seg = None
@@ -198,7 +198,7 @@ class GE_Checks(x12fileTestCase):
         self.assertEqual(err_cde, '024', err_str)
 
 
-class SE_Checks(x12fileTestCase):
+class SE_Checks(X12fileTestCase):
 
     def test_SE_id_match_ST_id(self):
         seg = None
@@ -246,7 +246,7 @@ class SE_Checks(x12fileTestCase):
         self.assertEqual(err_cde, '3', err_str)
 
 
-class HL_Checks(x12fileTestCase):
+class HL_Checks(X12fileTestCase):
     """
     We can do minimal HL parent checks here
     """
@@ -342,7 +342,7 @@ class Formatting(unittest.TestCase):
         fd = tempfile.NamedTemporaryFile()
         fd.write(str)
         fd.seek(0)
-        src = pyx12.x12file.x12file(fd.name)
+        src = pyx12.x12file.X12file(fd.name)
         str_out = ''
         for seg in src:
             str_out += seg.format() + '\n'
@@ -362,7 +362,7 @@ class Formatting(unittest.TestCase):
         fd = tempfile.NamedTemporaryFile()
         fd.write(str)
         fd.seek(0)
-        src = pyx12.x12file.x12file(fd.name)
+        src = pyx12.x12file.X12file(fd.name)
         str_out = ''
         for seg in src:
             str_out += seg.format()
@@ -370,7 +370,7 @@ class Formatting(unittest.TestCase):
         self.assertEqual(str, str_out)
  
 
-class Segment_ID_Checks(x12fileTestCase):
+class Segment_ID_Checks(X12fileTestCase):
 
     def test_segment_id_short(self):
         str = 'ISA*00*          *00*          *ZZ*ZZ000          *ZZ*ZZ001          *030828*1128*U*00401*000010121*0*T*:~\n'
@@ -385,7 +385,7 @@ class Segment_ID_Checks(x12fileTestCase):
         fd.write(str)
         fd.seek(0)
         val = None
-        src = pyx12.x12file.x12file(fd.name)
+        src = pyx12.x12file.X12file(fd.name)
         for seg in src:
             if seg.get_seg_id() == 'ZZ':
                 val = seg.get('ZZ01').format()
