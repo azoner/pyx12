@@ -10217,15 +10217,7 @@
                       <data_type>AN</data_type>
                       <min_len>1</min_len>
                       <max_len>30</max_len>
-                      <valid_codes>
-                        <code>24</code>
-                        <code>25</code>
-                        <code>26</code>
-                        <code>27</code>
-                        <code>28</code>
-                        <code>29</code>
-                        <code>30</code>
-                      </valid_codes>
+                      <valid_codes/>
                     </element>
                     <element xid="HI01-03">
                       <data_ele>1250</data_ele>
@@ -10298,15 +10290,7 @@
                       <data_type>AN</data_type>
                       <min_len>1</min_len>
                       <max_len>30</max_len>
-                      <valid_codes>
-                        <code>24</code>
-                        <code>25</code>
-                        <code>26</code>
-                        <code>27</code>
-                        <code>28</code>
-                        <code>29</code>
-                        <code>30</code>
-                      </valid_codes>
+                      <valid_codes/>
                     </element>
                     <element xid="HI02-03">
                       <data_ele>1250</data_ele>
@@ -10379,15 +10363,7 @@
                       <data_type>AN</data_type>
                       <min_len>1</min_len>
                       <max_len>30</max_len>
-                      <valid_codes>
-                        <code>24</code>
-                        <code>25</code>
-                        <code>26</code>
-                        <code>27</code>
-                        <code>28</code>
-                        <code>29</code>
-                        <code>30</code>
-                      </valid_codes>
+                      <valid_codes/>
                     </element>
                     <element xid="HI03-03">
                       <data_ele>1250</data_ele>
@@ -10460,15 +10436,7 @@
                       <data_type>AN</data_type>
                       <min_len>1</min_len>
                       <max_len>30</max_len>
-                      <valid_codes>
-                        <code>24</code>
-                        <code>25</code>
-                        <code>26</code>
-                        <code>27</code>
-                        <code>28</code>
-                        <code>29</code>
-                        <code>30</code>
-                      </valid_codes>
+                      <valid_codes/>
                     </element>
                     <element xid="HI04-03">
                       <data_ele>1250</data_ele>
@@ -10541,15 +10509,7 @@
                       <data_type>AN</data_type>
                       <min_len>1</min_len>
                       <max_len>30</max_len>
-                      <valid_codes>
-                        <code>24</code>
-                        <code>25</code>
-                        <code>26</code>
-                        <code>27</code>
-                        <code>28</code>
-                        <code>29</code>
-                        <code>30</code>
-                      </valid_codes>
+                      <valid_codes/>
                     </element>
                     <element xid="HI05-03">
                       <data_ele>1250</data_ele>
@@ -10622,15 +10582,7 @@
                       <data_type>AN</data_type>
                       <min_len>1</min_len>
                       <max_len>30</max_len>
-                      <valid_codes>
-                        <code>24</code>
-                        <code>25</code>
-                        <code>26</code>
-                        <code>27</code>
-                        <code>28</code>
-                        <code>29</code>
-                        <code>30</code>
-                      </valid_codes>
+                      <valid_codes/>
                     </element>
                     <element xid="HI06-03">
                       <data_ele>1250</data_ele>
@@ -10703,15 +10655,7 @@
                       <data_type>AN</data_type>
                       <min_len>1</min_len>
                       <max_len>30</max_len>
-                      <valid_codes>
-                        <code>24</code>
-                        <code>25</code>
-                        <code>26</code>
-                        <code>27</code>
-                        <code>28</code>
-                        <code>29</code>
-                        <code>30</code>
-                      </valid_codes>
+                      <valid_codes/>
                     </element>
                     <element xid="HI07-03">
                       <data_ele>1250</data_ele>
@@ -10784,15 +10728,7 @@
                       <data_type>AN</data_type>
                       <min_len>1</min_len>
                       <max_len>30</max_len>
-                      <valid_codes>
-                        <code>24</code>
-                        <code>25</code>
-                        <code>26</code>
-                        <code>27</code>
-                        <code>28</code>
-                        <code>29</code>
-                        <code>30</code>
-                      </valid_codes>
+                      <valid_codes/>
                     </element>
                     <element xid="HI08-03">
                       <data_ele>1250</data_ele>
@@ -10865,15 +10801,7 @@
                       <data_type>AN</data_type>
                       <min_len>1</min_len>
                       <max_len>30</max_len>
-                      <valid_codes>
-                        <code>24</code>
-                        <code>25</code>
-                        <code>26</code>
-                        <code>27</code>
-                        <code>28</code>
-                        <code>29</code>
-                        <code>30</code>
-                      </valid_codes>
+                      <valid_codes/>
                     </element>
                     <element xid="HI09-03">
                       <data_ele>1250</data_ele>
@@ -10946,15 +10874,7 @@
                       <data_type>AN</data_type>
                       <min_len>1</min_len>
                       <max_len>30</max_len>
-                      <valid_codes>
-                        <code>24</code>
-                        <code>25</code>
-                        <code>26</code>
-                        <code>27</code>
-                        <code>28</code>
-                        <code>29</code>
-                        <code>30</code>
-                      </valid_codes>
+                      <valid_codes/>
                     </element>
                     <element xid="HI10-03">
                       <data_ele>1250</data_ele>
@@ -11027,15 +10947,7 @@
                       <data_type>AN</data_type>
                       <min_len>1</min_len>
                       <max_len>30</max_len>
-                      <valid_codes>
-                        <code>24</code>
-                        <code>25</code>
-                        <code>26</code>
-                        <code>27</code>
-                        <code>28</code>
-                        <code>29</code>
-                        <code>30</code>
-                      </valid_codes>
+                      <valid_codes/>
                     </element>
                     <element xid="HI11-03">
                       <data_ele>1250</data_ele>
@@ -11108,15 +11020,7 @@
                       <data_type>AN</data_type>
                       <min_len>1</min_len>
                       <max_len>30</max_len>
-                      <valid_codes>
-                        <code>24</code>
-                        <code>25</code>
-                        <code>26</code>
-                        <code>27</code>
-                        <code>28</code>
-                        <code>29</code>
-                        <code>30</code>
-                      </valid_codes>
+                      <valid_codes/>
                     </element>
                     <element xid="HI12-03">
                       <data_ele>1250</data_ele>
@@ -33259,15 +33163,7 @@
                         <data_type>AN</data_type>
                         <min_len>1</min_len>
                         <max_len>30</max_len>
-                        <valid_codes>
-                          <code>24</code>
-                          <code>25</code>
-                          <code>26</code>
-                          <code>27</code>
-                          <code>28</code>
-                          <code>29</code>
-                          <code>30</code>
-                        </valid_codes>
+                        <valid_codes/>
                       </element>
                       <element xid="HI01-03">
                         <data_ele>1250</data_ele>
@@ -33340,15 +33236,7 @@
                         <data_type>AN</data_type>
                         <min_len>1</min_len>
                         <max_len>30</max_len>
-                        <valid_codes>
-                          <code>24</code>
-                          <code>25</code>
-                          <code>26</code>
-                          <code>27</code>
-                          <code>28</code>
-                          <code>29</code>
-                          <code>30</code>
-                        </valid_codes>
+                        <valid_codes/>
                       </element>
                       <element xid="HI02-03">
                         <data_ele>1250</data_ele>
@@ -33421,15 +33309,7 @@
                         <data_type>AN</data_type>
                         <min_len>1</min_len>
                         <max_len>30</max_len>
-                        <valid_codes>
-                          <code>24</code>
-                          <code>25</code>
-                          <code>26</code>
-                          <code>27</code>
-                          <code>28</code>
-                          <code>29</code>
-                          <code>30</code>
-                        </valid_codes>
+                        <valid_codes/>
                       </element>
                       <element xid="HI03-03">
                         <data_ele>1250</data_ele>
@@ -33502,15 +33382,7 @@
                         <data_type>AN</data_type>
                         <min_len>1</min_len>
                         <max_len>30</max_len>
-                        <valid_codes>
-                          <code>24</code>
-                          <code>25</code>
-                          <code>26</code>
-                          <code>27</code>
-                          <code>28</code>
-                          <code>29</code>
-                          <code>30</code>
-                        </valid_codes>
+                        <valid_codes/>
                       </element>
                       <element xid="HI04-03">
                         <data_ele>1250</data_ele>
@@ -33583,15 +33455,7 @@
                         <data_type>AN</data_type>
                         <min_len>1</min_len>
                         <max_len>30</max_len>
-                        <valid_codes>
-                          <code>24</code>
-                          <code>25</code>
-                          <code>26</code>
-                          <code>27</code>
-                          <code>28</code>
-                          <code>29</code>
-                          <code>30</code>
-                        </valid_codes>
+                        <valid_codes/>
                       </element>
                       <element xid="HI05-03">
                         <data_ele>1250</data_ele>
@@ -33664,15 +33528,7 @@
                         <data_type>AN</data_type>
                         <min_len>1</min_len>
                         <max_len>30</max_len>
-                        <valid_codes>
-                          <code>24</code>
-                          <code>25</code>
-                          <code>26</code>
-                          <code>27</code>
-                          <code>28</code>
-                          <code>29</code>
-                          <code>30</code>
-                        </valid_codes>
+                        <valid_codes/>
                       </element>
                       <element xid="HI06-03">
                         <data_ele>1250</data_ele>
@@ -33745,15 +33601,7 @@
                         <data_type>AN</data_type>
                         <min_len>1</min_len>
                         <max_len>30</max_len>
-                        <valid_codes>
-                          <code>24</code>
-                          <code>25</code>
-                          <code>26</code>
-                          <code>27</code>
-                          <code>28</code>
-                          <code>29</code>
-                          <code>30</code>
-                        </valid_codes>
+                        <valid_codes/>
                       </element>
                       <element xid="HI07-03">
                         <data_ele>1250</data_ele>
@@ -33826,15 +33674,7 @@
                         <data_type>AN</data_type>
                         <min_len>1</min_len>
                         <max_len>30</max_len>
-                        <valid_codes>
-                          <code>24</code>
-                          <code>25</code>
-                          <code>26</code>
-                          <code>27</code>
-                          <code>28</code>
-                          <code>29</code>
-                          <code>30</code>
-                        </valid_codes>
+                        <valid_codes/>
                       </element>
                       <element xid="HI08-03">
                         <data_ele>1250</data_ele>
@@ -33907,15 +33747,7 @@
                         <data_type>AN</data_type>
                         <min_len>1</min_len>
                         <max_len>30</max_len>
-                        <valid_codes>
-                          <code>24</code>
-                          <code>25</code>
-                          <code>26</code>
-                          <code>27</code>
-                          <code>28</code>
-                          <code>29</code>
-                          <code>30</code>
-                        </valid_codes>
+                        <valid_codes/>
                       </element>
                       <element xid="HI09-03">
                         <data_ele>1250</data_ele>
@@ -33988,15 +33820,7 @@
                         <data_type>AN</data_type>
                         <min_len>1</min_len>
                         <max_len>30</max_len>
-                        <valid_codes>
-                          <code>24</code>
-                          <code>25</code>
-                          <code>26</code>
-                          <code>27</code>
-                          <code>28</code>
-                          <code>29</code>
-                          <code>30</code>
-                        </valid_codes>
+                        <valid_codes/>
                       </element>
                       <element xid="HI10-03">
                         <data_ele>1250</data_ele>
@@ -34069,15 +33893,7 @@
                         <data_type>AN</data_type>
                         <min_len>1</min_len>
                         <max_len>30</max_len>
-                        <valid_codes>
-                          <code>24</code>
-                          <code>25</code>
-                          <code>26</code>
-                          <code>27</code>
-                          <code>28</code>
-                          <code>29</code>
-                          <code>30</code>
-                        </valid_codes>
+                        <valid_codes/>
                       </element>
                       <element xid="HI11-03">
                         <data_ele>1250</data_ele>
@@ -34150,15 +33966,7 @@
                         <data_type>AN</data_type>
                         <min_len>1</min_len>
                         <max_len>30</max_len>
-                        <valid_codes>
-                          <code>24</code>
-                          <code>25</code>
-                          <code>26</code>
-                          <code>27</code>
-                          <code>28</code>
-                          <code>29</code>
-                          <code>30</code>
-                        </valid_codes>
+                        <valid_codes/>
                       </element>
                       <element xid="HI12-03">
                         <data_ele>1250</data_ele>
