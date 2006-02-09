@@ -17,7 +17,7 @@ Interface to create a XML rendering of the X12 document
 # Intrapackage imports
 from errors import *
 
-class x12xml:
+class x12xml(object):
     def __init__(self):
         pass
 

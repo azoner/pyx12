@@ -30,7 +30,7 @@ logger = logging.getLogger('pyx12.error_html')
 logger.setLevel(logging.DEBUG)
 #logger.setLevel(logging.ERROR)
 
-class error_html:
+class error_html(object):
     """
     """
     def __init__(self, errh, fd, term=('~', '*', '~', '\n')): 

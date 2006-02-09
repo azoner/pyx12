@@ -64,7 +64,7 @@ def is_first_seg_match2(child, seg_data):
     return False
 
 
-class walk_tree:
+class walk_tree(object):
     """
     Walks a map_if tree.  Tracks loop/segment counting, missing loop/segment.
     """

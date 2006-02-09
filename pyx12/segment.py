@@ -24,7 +24,7 @@ All indexing is zero based.
 
 from pyx12.errors import EngineError
 
-class Element:
+class Element(object):
     """
     Holds a simple element, which is just a simple string.
     """
@@ -89,7 +89,7 @@ class Element:
         else:
             return True
 
-class Composite:
+class Composite(object):
     """
     Can be a simple element or a composite.
     A simple element is treated as a composite element with one sub-element.
@@ -192,7 +192,7 @@ class Composite:
         return True
 
 
-class Segment:
+class Segment(object):
     """
     Encapsulates a X12 segment.  Contains composites.
     """

@@ -22,7 +22,7 @@ isa_errors = ('000' ,'001' ,'002' ,'003' ,'004' ,'005' ,'006' ,'007' ,'008' ,
 seg_errors = ('1', '2', '3', '4', '5', '6', '7', '8')
 ele_errors = ('1', '2', '3', '4', '5', '6', '7', '8', '9', '10')
 
-class ErrorItem:
+class ErrorItem(object):
     """
     Wrap an X12 validation error
     """

@@ -9,7 +9,7 @@
 import sys
 import codecs
 
-class XMLWriter:
+class XMLWriter(object):
     """
     Doctest:
 

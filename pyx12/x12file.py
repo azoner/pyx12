@@ -34,7 +34,7 @@ logger = logging.getLogger('pyx12.x12file')
 #logger.setLevel(logging.DEBUG)
 #logger.setLevel(logging.ERROR)
 
-class X12file:
+class X12file(object):
     """
     Interface to an X12 data file
     """

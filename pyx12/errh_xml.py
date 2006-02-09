@@ -32,7 +32,7 @@ logger = logging.getLogger('pyx12.errh_xml')
 #logger.setLevel(logging.DEBUG)
 #logger.setLevel(logging.ERROR)
 
-class err_handler:
+class err_handler(object):
     """
     The interface to the error handling structures.
     """
@@ -107,7 +107,7 @@ class err_handler:
 class ErrorErrhNull(Exception):
     """Class for errh_null errors."""
 
-class errh_list:
+class errh_list(object):
     """
     A null error object - used for testing.
     Stores the current error in simple variables.

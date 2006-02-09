@@ -19,7 +19,7 @@ import libxml2
 import errors
 
 
-class map_override:
+class map_override(object):
     """
     Apply local overrides to the current map. Overrides defined in a xml document.
     """

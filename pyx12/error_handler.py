@@ -30,7 +30,7 @@ logger = logging.getLogger('pyx12.error_handler')
 #logger.setLevel(logging.DEBUG)
 #logger.setLevel(logging.ERROR)
 
-class err_iter:
+class err_iter(object):
     def __init__(self, errh):
         """
         @param errh: Error_handler instance
@@ -109,7 +109,7 @@ class err_iter:
 
            
 
-class err_handler:
+class err_handler(object):
     """
     The interface to the error handling structures.
     """
@@ -415,7 +415,7 @@ class err_handler:
         return '%i: %s' % (-1, self.id)
          
 
-class err_node:
+class err_node(object):
     def __init__(self, parent): 
         """
         """
@@ -995,7 +995,7 @@ class err_ele(err_node):
 class ErrorErrhNull(Exception):
     """Class for errh_null errors."""
 
-class errh_null:
+class errh_null(object):
     """
     A null error object - used for testing.
     Stores the current error in simple variables.

@@ -34,7 +34,7 @@ NodeType = {'element_start': 1, 'element_end': 15, 'attrib': 2, 'text': 3, \
     'doc': 9, 'dtd': 10, 'doc_frag': 11, 'notation': 12}
 
 
-class ExternalCodes:
+class ExternalCodes(object):
     """
     Validates an ID against an external list of codes
     """

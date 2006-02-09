@@ -27,7 +27,7 @@ NodeType = {'element_start': 1, 'element_end': 15, 'attrib': 2, 'text': 3,
     'CData': 4, 'entity_ref': 5, 'entity_decl':6, 'pi': 7, 'comment': 8,
     'doc': 9, 'dtd': 10, 'doc_frag': 11, 'notation': 12}
 
-class params:
+class params(object):
     def __init__(self, *config_files):
         self.logger = logging.getLogger('pyx12.params')
         self.params = {}
