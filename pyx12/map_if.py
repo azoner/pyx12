@@ -677,7 +677,7 @@ class loop_if(x12_node):
 
     def is_match(self, seg_data):
         """
-        @type seg_data: L{segment<segment.segment>}
+        @type seg_data: L{segment.Segment.segment>}
         @return: Is the segment a match to this loop?
         @rtype: boolean
         """
@@ -959,7 +959,7 @@ class segment_if(x12_node):
     def is_valid(self, seg_data, errh):
         """
         @param seg_data: data segment instance
-        @type seg_data: L{segment<segment.segment>}
+        @type seg_data: L{segment.Segment.segment>}
         @param errh: instance of error_handler
         @rtype: boolean
         """
@@ -1270,7 +1270,7 @@ class element_if(x12_node):
         Is this a valid element?
 
         @param elem: element instance
-        @type elem: L{segment<segment.element>}
+        @type elem: L{segment.Segment.Element>}
         @param errh: instance of error_handler
         @param check_dte: date string to check against (YYYYMMDD)
         @param type_list: Optional data/time type list
@@ -1632,7 +1632,7 @@ def is_syntax_valid(seg_data, syn):
     """
     Verifies the segment against the syntax
     @param seg_data: data segment instance
-    @type seg_data: L{segment<segment.segment>}
+    @type seg_data: L{segment.Segment.segment>}
     @param syn: list containing the syntax type, and the indices of elements
     @type syn: list[string]
     @rtype: tuple(boolean, error string)

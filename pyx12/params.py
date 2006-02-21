@@ -125,7 +125,10 @@ class params(object):
         @param value: Parameter value
         @type value: string
         """
-        self.params[option] = value
+        if value == '':
+            self.params[option] = None
+        else:
+            self.params[option] = value
 
 #    def __repr__(self):
 #        pass

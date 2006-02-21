@@ -32,7 +32,7 @@ class ElementIsValidDate(unittest.TestCase):
 
     def test_date_bad1(self):
         self.errh.err_cde = None
-        seg_data = pyx12.segment.segment('DTP*434*D8*20041340~', '~', '*', ':')
+        seg_data = pyx12.segment.Segment('DTP*434*D8*20041340~', '~', '*', ':')
         #node = self.node.get_child_node_by_idx(2) 
         node = self.node.getnodebypath('DTP[434]')
         result = node.is_valid(seg_data, self.errh)
@@ -41,7 +41,7 @@ class ElementIsValidDate(unittest.TestCase):
 
     def test_date_ok1(self):
         self.errh.err_cde = None
-        seg_data = pyx12.segment.segment('DTP*434*D8*20040110~', '~', '*', ':')
+        seg_data = pyx12.segment.Segment('DTP*434*D8*20040110~', '~', '*', ':')
         #node = self.node.get_child_node_by_idx(2) 
         node = self.node.getnodebypath('DTP[434]')
         result = node.is_valid(seg_data, self.errh)
@@ -50,7 +50,7 @@ class ElementIsValidDate(unittest.TestCase):
 
     def test_time_bad1(self):
         self.errh.err_cde = None
-        seg_data = pyx12.segment.segment('DTP*096*TM*2577~', '~', '*', ':')
+        seg_data = pyx12.segment.Segment('DTP*096*TM*2577~', '~', '*', ':')
         #node = self.node.get_child_node_by_idx(1) 
         node = self.node.getnodebypath('DTP[096]')
         result = node.is_valid(seg_data, self.errh)
@@ -59,7 +59,7 @@ class ElementIsValidDate(unittest.TestCase):
 
     def test_time_ok1(self):
         self.errh.err_cde = None
-        seg_data = pyx12.segment.segment('DTP*096*TM*1215~', '~', '*', ':')
+        seg_data = pyx12.segment.Segment('DTP*096*TM*1215~', '~', '*', ':')
         #node = self.node.get_child_node_by_idx(1) 
         node = self.node.getnodebypath('DTP[096]')
         result = node.is_valid(seg_data, self.errh)
@@ -68,7 +68,7 @@ class ElementIsValidDate(unittest.TestCase):
 
     def test_date_1251_ok1(self):
         self.errh.err_cde = None
-        seg_data = pyx12.segment.segment('DMG*D8*20040110*M~', '~', '*', ':')
+        seg_data = pyx12.segment.Segment('DMG*D8*20040110*M~', '~', '*', ':')
         node = self.map.getnodebypath('/ISA_LOOP/GS_LOOP/ST_LOOP/DETAIL/2000A/2000B/2010BA/DMG')
         self.assertNotEqual(node, None)
         result = node.is_valid(seg_data, self.errh)
@@ -77,7 +77,7 @@ class ElementIsValidDate(unittest.TestCase):
 
     def test_date_1251_bad1(self):
         self.errh.err_cde = None
-        seg_data = pyx12.segment.segment('DMG*D8*20042110*M~', '~', '*', ':')
+        seg_data = pyx12.segment.Segment('DMG*D8*20042110*M~', '~', '*', ':')
         node = self.map.getnodebypath('/ISA_LOOP/GS_LOOP/ST_LOOP/DETAIL/2000A/2000B/2010BA/DMG')
         self.assertNotEqual(node, None)
         result = node.is_valid(seg_data, self.errh)
@@ -86,7 +86,7 @@ class ElementIsValidDate(unittest.TestCase):
 
     def test_date_1251_bad2(self):
         self.errh.err_cde = None
-        seg_data = pyx12.segment.segment('DMG*D8*20040109-20040110*M~', '~', '*', ':')
+        seg_data = pyx12.segment.Segment('DMG*D8*20040109-20040110*M~', '~', '*', ':')
         node = self.map.getnodebypath('/ISA_LOOP/GS_LOOP/ST_LOOP/DETAIL/2000A/2000B/2010BA/DMG')
         self.assertNotEqual(node, None)
         result = node.is_valid(seg_data, self.errh)
@@ -95,7 +95,7 @@ class ElementIsValidDate(unittest.TestCase):
 
     def test_date_1251_ok2(self):
         self.errh.err_cde = None
-        seg_data = pyx12.segment.segment('CR6*4*20050204*RD8*20050101-20050220*20050104*N*N*I*********D~', '~', '*', ':')
+        seg_data = pyx12.segment.Segment('CR6*4*20050204*RD8*20050101-20050220*20050104*N*N*I*********D~', '~', '*', ':')
         node = self.map.getnodebypath('/ISA_LOOP/GS_LOOP/ST_LOOP/DETAIL/2000A/2000B/2300/CR6')
         self.assertNotEqual(node, None)
         result = node.is_valid(seg_data, self.errh)
@@ -118,7 +118,7 @@ class SegmentIsValid(unittest.TestCase):
 
     def test_segment_length(self):
         self.errh.err_cde = None
-        seg_data = pyx12.segment.segment('DTP*434*D8*20040101*R~', '~', '*', ':')
+        seg_data = pyx12.segment.Segment('DTP*434*D8*20040101*R~', '~', '*', ':')
         #node = self.node.get_child_node_by_idx(2) 
         node = self.node.getnodebypath('DTP[434]')
         result = node.is_valid(seg_data, self.errh)
@@ -145,19 +145,19 @@ class ElementIsValid(unittest.TestCase):
         self.assertEqual(node.id, 'CLM12')
         self.assertEqual(node.base_name, 'element')
 
-        #elem = pyx12.segment.element('1')
+        #elem = pyx12.segment.Element('1')
         #result = node.is_valid(elem, self.errh)
         #self.failIf(result)
         #self.assertEqual(self.errh.err_cde, '4')
 
         self.errh.err_cde = None
-        elem = pyx12.segment.element('01')
+        elem = pyx12.segment.Element('01')
         result = node.is_valid(elem, self.errh)
         self.failUnless(result)
         self.assertEqual(self.errh.err_cde, None)
 
         #self.errh.err_cde = None
-        #elem = pyx12.segment.element('01010')
+        #elem = pyx12.segment.Element('01010')
         #result = node.is_valid(elem, self.errh)
         #self.failIf(result)
         #self.assertEqual(self.errh.err_cde, '5')
@@ -170,19 +170,19 @@ class ElementIsValid(unittest.TestCase):
         self.assertEqual(node.base_name, 'element')
 
         self.errh.err_cde = None
-        elem = pyx12.segment.element('-5.2344')
+        elem = pyx12.segment.Element('-5.2344')
         result = node.is_valid(elem, self.errh)
         self.failUnless(result)
         self.assertEqual(self.errh.err_cde, None)
 
         self.errh.err_cde = None
-        elem = pyx12.segment.element('-5.23442673245673345')
+        elem = pyx12.segment.Element('-5.23442673245673345')
         result = node.is_valid(elem, self.errh)
         self.failUnless(result)
         self.assertEqual(self.errh.err_cde, None)
 
         self.errh.err_cde = None
-        elem = pyx12.segment.element('-5.234426732456733454')
+        elem = pyx12.segment.Element('-5.234426732456733454')
         result = node.is_valid(elem, self.errh)
         self.failIf(result)
         self.assertEqual(self.errh.err_cde, '5')
@@ -195,7 +195,7 @@ class ElementIsValid(unittest.TestCase):
         self.assertEqual(node.base_name, 'element')
 
         self.errh.err_cde = None
-        elem = pyx12.segment.element('-5.AB4')
+        elem = pyx12.segment.Element('-5.AB4')
         result = node.is_valid(elem, self.errh)
         self.failIf(result)
         self.assertEqual(self.errh.err_cde, '6')
@@ -219,7 +219,7 @@ class ElementIsValid(unittest.TestCase):
         self.assertNotEqual(node, None)
         self.assertEqual(node.id, 'CLM05-01')
         self.assertEqual(node.base_name, 'element')
-        elem = pyx12.segment.element('11')
+        elem = pyx12.segment.Element('11')
         result = node.is_valid(elem, self.errh)
         self.failUnless(result)
         self.assertEqual(self.errh.err_cde, None)
@@ -231,7 +231,7 @@ class ElementIsValid(unittest.TestCase):
         self.assertNotEqual(node, None)
         self.assertEqual(node.id, 'CLM05-01')
         self.assertEqual(node.base_name, 'element')
-        elem = pyx12.segment.element('02')
+        elem = pyx12.segment.Element('02')
         result = node.is_valid(elem, self.errh)
         self.failIf(result)
         self.assertEqual(self.errh.err_cde, '7')
@@ -244,7 +244,7 @@ class ElementIsValid(unittest.TestCase):
         self.assertNotEqual(node, None)
         self.assertEqual(node.id, 'SV101-01')
         self.assertEqual(node.base_name, 'element')
-        elem = pyx12.segment.element('  ')
+        elem = pyx12.segment.Element('  ')
         result = node.is_valid(elem, self.errh)
         self.failIf(result)
         self.assertEqual(self.errh.err_cde, '7')
@@ -257,7 +257,7 @@ class ElementIsValid(unittest.TestCase):
         self.assertNotEqual(node, None)
         self.assertEqual(node.id, 'CLM11-04')
         self.assertEqual(node.base_name, 'element')
-        elem = pyx12.segment.element('MI')
+        elem = pyx12.segment.Element('MI')
         result = node.is_valid(elem, self.errh)
         self.failUnless(result)
         self.assertEqual(self.errh.err_cde, None)
@@ -269,7 +269,7 @@ class ElementIsValid(unittest.TestCase):
         self.assertNotEqual(node, None)
         self.assertEqual(node.id, 'CLM11-04')
         self.assertEqual(node.base_name, 'element')
-        elem = pyx12.segment.element('NA')
+        elem = pyx12.segment.Element('NA')
         result = node.is_valid(elem, self.errh)
         self.failIf(result)
         self.assertEqual(self.errh.err_cde, '7')
@@ -280,7 +280,7 @@ class ElementIsValid(unittest.TestCase):
         self.assertNotEqual(node, None)
         self.assertEqual(node.id, 'CLM01')
         self.assertEqual(node.base_name, 'element')
-        comp = pyx12.segment.composite('NA::1', ':')
+        comp = pyx12.segment.Composite('NA::1', ':')
         result = node.is_valid(comp, self.errh)
         self.failIf(result)
         self.assertEqual(self.errh.err_cde, '6')
@@ -301,7 +301,7 @@ class ElementIsValid(unittest.TestCase):
         self.assertNotEqual(node, None)
         self.assertEqual(node.id, 'CLM03')
         self.assertEqual(node.base_name, 'element')
-        elem = pyx12.segment.element('')
+        elem = pyx12.segment.Element('')
         result = node.is_valid(elem, self.errh)
         self.failUnless(result)
         self.assertEqual(self.errh.err_cde, None)
@@ -322,7 +322,7 @@ class ElementIsValid(unittest.TestCase):
         self.assertNotEqual(node, None)
         self.assertEqual(node.id, 'CLM10')
         self.assertEqual(node.base_name, 'element')
-        elem = pyx12.segment.element('')
+        elem = pyx12.segment.Element('')
         result = node.is_valid(elem, self.errh)
         self.failUnless(result)
         self.assertEqual(self.errh.err_cde, None)
@@ -343,7 +343,7 @@ class ElementIsValid(unittest.TestCase):
         self.assertNotEqual(node, None)
         self.assertEqual(node.id, 'CLM01')
         self.assertEqual(node.base_name, 'element')
-        elem = pyx12.segment.element('')
+        elem = pyx12.segment.Element('')
         result = node.is_valid(elem, self.errh)
         self.failIf(result)
         self.assertEqual(self.errh.err_cde, '1')
@@ -457,7 +457,7 @@ class CompositeRequirement(unittest.TestCase):
         self.assertNotEqual(node, None)
         #self.assertEqual(node.id, 'CLM05', node.id)
         self.assertEqual(node.base_name, 'composite')
-        comp = pyx12.segment.composite('03::1', ':')
+        comp = pyx12.segment.Composite('03::1', ':')
         result = node.is_valid(comp, self.errh)
         self.failUnless(result)
         self.assertEqual(self.errh.err_cde, None)
@@ -470,7 +470,7 @@ class CompositeRequirement(unittest.TestCase):
         node = node.get_child_node_by_idx(0)
         self.assertNotEqual(node, None)
         self.assertEqual(node.base_name, 'composite')
-        comp = pyx12.segment.composite('::1', ':')
+        comp = pyx12.segment.Composite('::1', ':')
         result = node.is_valid(comp, self.errh)
         self.failUnless(result)
         self.assertEqual(self.errh.err_cde, None)
@@ -483,7 +483,7 @@ class CompositeRequirement(unittest.TestCase):
         self.assertNotEqual(node, None)
         self.assertEqual(node.base_name, 'composite')
         #self.assertEqual(node.id, 'SV202')
-        comp = pyx12.segment.composite('', ':')
+        comp = pyx12.segment.Composite('', ':')
         result = node.is_valid(comp, self.errh)
         self.failUnless(result)
         self.assertEqual(self.errh.err_cde, None)
@@ -494,7 +494,7 @@ class CompositeRequirement(unittest.TestCase):
         node = node.get_child_node_by_idx(4)
         self.assertNotEqual(node, None)
         self.assertEqual(node.base_name, 'composite')
-        comp = pyx12.segment.composite('', ':')
+        comp = pyx12.segment.Composite('', ':')
         result = node.is_valid(comp, self.errh)
         self.failIf(result)
         self.assertEqual(self.errh.err_cde, '2')
@@ -508,7 +508,7 @@ class CompositeRequirement(unittest.TestCase):
         self.assertEqual(node.id, 'REF')
         self.assertEqual(node.get_path(), '/ISA_LOOP/GS_LOOP/ST_LOOP/HEADER/REF')
         self.assertEqual(node.base_name, 'segment')
-        seg_data = pyx12.segment.segment('REF*87*004010X098A1**:1~', '~', '*', ':')
+        seg_data = pyx12.segment.Segment('REF*87*004010X098A1**:1~', '~', '*', ':')
         result = node.is_valid(seg_data, self.errh)
         self.failIf(result)
         self.assertEqual(self.errh.err_cde, '5')
@@ -531,7 +531,7 @@ class TrailingSpaces(unittest.TestCase):
         self.assertNotEqual(node, None)
         self.assertEqual(node.id, 'ISA06')
         self.assertEqual(node.base_name, 'element')
-        elem = pyx12.segment.element('TEST           ')
+        elem = pyx12.segment.Element('TEST           ')
         result = node.is_valid(elem, self.errh)
         self.failUnless(result)
         self.assertEqual(self.errh.err_cde, None)
@@ -543,7 +543,7 @@ class TrailingSpaces(unittest.TestCase):
         self.assertNotEqual(node, None)
         self.assertEqual(node.id, 'CLM01')
         self.assertEqual(node.base_name, 'element')
-        elem = pyx12.segment.element('TEST')
+        elem = pyx12.segment.Element('TEST')
         result = node.is_valid(elem, self.errh)
         self.failUnless(result)
         self.assertEqual(self.errh.err_cde, None)
@@ -555,7 +555,7 @@ class TrailingSpaces(unittest.TestCase):
         self.assertNotEqual(node, None)
         self.assertEqual(node.id, 'CLM01')
         self.assertEqual(node.base_name, 'element')
-        elem = pyx12.segment.element('TEST     ')
+        elem = pyx12.segment.Element('TEST     ')
         result = node.is_valid(elem, self.errh)
         self.failIf(result)
         self.assertEqual(self.errh.err_cde, '6', self.errh.err_str)
@@ -578,7 +578,7 @@ class ElementRequirement(unittest.TestCase):
         self.assertEqual(node.id, 'REF')
         self.assertEqual(node.get_path(), '/ISA_LOOP/GS_LOOP/ST_LOOP/HEADER/REF')
         self.assertEqual(node.base_name, 'segment')
-        seg_data = pyx12.segment.segment('REF*87*004010X098A1*Description*~', '~', '*', ':')
+        seg_data = pyx12.segment.Segment('REF*87*004010X098A1*Description*~', '~', '*', ':')
         result = node.is_valid(seg_data, self.errh)
         self.failIf(result)
         self.assertEqual(self.errh.err_cde, '10')
@@ -590,7 +590,7 @@ class ElementRequirement(unittest.TestCase):
         self.assertNotEqual(node, None)
         #self.assertEqual(node.id, 'CLM05', node.id)
         self.assertEqual(node.base_name, 'element')
-        ele_data = pyx12.segment.element('0398090')
+        ele_data = pyx12.segment.Element('0398090')
         result = node.is_valid(ele_data, self.errh)
         self.failUnless(result)
         self.assertEqual(self.errh.err_cde, None)

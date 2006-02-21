@@ -70,10 +70,10 @@ class X12file(object):
         line = self.fd.read(ISA_LEN)
         if line[:3] != 'ISA': 
             err_str = "First line does not begin with 'ISA': %s" % line[:3]
-            raise pyx12.X12Error, err_str
+            raise pyx12.errors.X12Error, err_str
         if len(line) != ISA_LEN:
             err_str = 'ISA line is only %i characters' % len(line)
-            raise pyx12.X12Error, err_str
+            raise pyx12.errors.X12Error, err_str
         self.seg_term = line[-1]
         self.ele_term = line[3]
         self.subele_term = line[-2]
@@ -114,7 +114,7 @@ class X12file(object):
                     self._seg_error('SEG1', err_str, None, 
                         src_line=self.cur_line+1)
                 #seg = string.split(line, self.ele_term)
-                seg = pyx12.segment.segment(line, self.seg_term, self.ele_term, \
+                seg = pyx12.segment.Segment(line, self.seg_term, self.ele_term, \
                     self.subele_term)
                 if seg.is_empty():
                     err_str = 'Segment "%s" is empty' % (line)
@@ -136,7 +136,7 @@ class X12file(object):
             #        seg[i] = seg[i].split(self.subele_term) # Split composite
             if seg.get_seg_id() == 'ISA': 
                 if len(seg) != 16:
-                    raise pyx12.X12Error, \
+                    raise pyx12.errors.X12Error, \
                         'The ISA segment must have 16 elements (%s)' % (seg)
                 #seg[-1] = self.subele_term
                 interchange_control_number = seg.get_value('ISA13')
@@ -228,7 +228,7 @@ class X12file(object):
                 self.hl_count += 1
                 hl_count = seg.get_value('HL01')
                 if self.hl_count != self._int(hl_count):
-                    #raise pyx12.X12Error, \
+                    #raise pyx12.errors.X12Error, \
                     #   'My HL count %i does not match your HL count %s' \
                     #    % (self.hl_count, seg[1])
                     err_str = 'My HL count %i does not match your HL count %s' \
@@ -252,7 +252,7 @@ class X12file(object):
         except IndexError:
             raise
             #err_str = "Expected element not found': %s" % seg.format()
-            #raise pyx12.X12Error, err_str
+            #raise pyx12.errors.X12Error, err_str
 
         self.cur_line += 1
         return seg

@@ -49,7 +49,7 @@ def convert(filename, fd_out):
                     while reader.MoveToNextAttribute():
                         if reader.Name() == 'id':
                             #fd_out.write(reader.Value())
-                            seg_data = pyx12.segment.segment(reader.Value(), \
+                            seg_data = pyx12.segment.Segment(reader.Value(), \
                                 '~', '*', ':')
                 elif cur_name == 'ele':
                     while reader.MoveToNextAttribute():

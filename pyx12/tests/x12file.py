@@ -105,13 +105,13 @@ class ISA_header(X12fileTestCase):
         fd = tempfile.NamedTemporaryFile()
         fd.write(' ISA~')
         fd.seek(0)
-        self.failUnlessRaises(pyx12.x12file.X12Error, pyx12.x12file.X12file, fd.name)
+        self.failUnlessRaises(pyx12.errors.X12Error, pyx12.x12file.X12file, fd.name)
 
     def test_at_least_ISA_len(self):
         fd = tempfile.NamedTemporaryFile()
         fd.write('ISA~')
         fd.seek(0)
-        self.failUnlessRaises(pyx12.x12file.X12Error, pyx12.x12file.X12file, fd.name)
+        self.failUnlessRaises(pyx12.errors.X12Error, pyx12.x12file.X12file, fd.name)
 
     def test_repeat_ISA_loops(self):
         str = 'ISA*00*          *00*          *ZZ*ZZ000          *ZZ*ZZ001          *030828*1128*U*00401*000010121*0*T*:~\n'

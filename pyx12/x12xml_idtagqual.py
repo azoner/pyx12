@@ -54,7 +54,7 @@ class x12xml_idtagqual(x12xml):
         @param seg_node: Map Node 
         @type seg_node: L{node<map_if.x12_node>}
         @param seg_data: Segment object
-        @type seg_data: L{segment<segment.segment>}
+        @type seg_data: L{segment.Segment.segment>}
         """
         if not seg_node.is_segment():
             raise EngineError, 'Node must be a segment'
@@ -103,7 +103,7 @@ class x12xml_idtagqual(x12xml):
         Get a unique node ID string
         @param seg_node: L{node<map_if.segment_if>}
         @param parent: L{node<map_if.segment_if>}
-        @param seg_data: L{node<segment.segment>}
+        @param seg_data: L{node<segment.Segment>}
         @return: Unique node representation
         @rtype: string
         """
