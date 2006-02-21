@@ -42,9 +42,9 @@ class map_index(object):
         while reader.Read():
             #processNode(reader)
             if reader.NodeType() == NodeType['element_start'] and reader.Name() == 'version':
-             while reader.MoveToNextAttribute():
-                    if reader.Name() == 'icvn':
-                        icvn = reader.Value()
+            while reader.MoveToNextAttribute():
+                if reader.Name() == 'icvn':
+                    icvn = reader.Value()
 
             if reader.NodeType() == NodeType['element_end'] and reader.Name() == 'version':
                 icvn = None

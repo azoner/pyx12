@@ -65,3 +65,25 @@ dict = env.Dictionary()
 #print env.subst('$ARFLAGS')
 #print env.subst('$RANLIB')
 #print env.subst('$RANLIBFLAGS')
+
+
+
+# BOOST
+#Compiler options (be sure to append any additional options after these!)
+#-nostdinc -I/usr/local/include/stlport -I/usr/include
+
+#Linker options:
+#-L/usr/local/lib -lstlport_gcc
+
+#You have built the Boost library with thread support.
+#Don't forget to add -pthread to your linker options when linking your code.
+
+#You have built the Boost.Python library. You have to add the following
+#options when building your own code:
+
+#Compiler options:
+#-I/usr/local/include/python2.4 -I/usr/local/include
+
+#Linker options:
+#-L/usr/local/lib/python2.4 -L/usr/local/lib -lboost_python -lpython2.4
+
