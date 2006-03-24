@@ -19,7 +19,7 @@ if not os.path.isdir(map_path):
     map_path = None
 
         
-class Seg1(unittest.TestCase):
+class ConvertToXML(unittest.TestCase):
     def setUp(self):
         param = pyx12.params.params('pyx12.conf.xml')
         if map_path:

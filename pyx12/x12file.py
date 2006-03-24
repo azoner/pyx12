@@ -262,7 +262,7 @@ class X12file(object):
         Get Errors
         DEPRECATED
         """
-        raise pyx12.EngineError, 'X12file.get_errors is no longer used'
+        raise pyx12.errors.EngineError, 'X12file.get_errors is no longer used'
         
     def pop_errors(self):
         """

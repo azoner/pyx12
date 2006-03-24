@@ -32,8 +32,11 @@ import re
 
 from pyx12.errors import *
 
+class IsValidError(Exception):
+    pass
+
 class path(object):
-    """
+   """
     Interface to an x12 path
     """
 
@@ -79,10 +82,10 @@ class path(object):
         """
         #m = re.compile("^-?[0-9]*(\.[0-9]+)?", re.S).search(str_val)
         re_str = '^(?P<seg_id>[A-Z][A-Z0-9]{1,2})(?P<ele_idx>[0-9]{2})?(-(?P<subele_idx>[0-9]+))?$'
-        m = re.compile(re_str, re.S).search(ele_val)
+        m = re.compile(re_str, re.S).search(ele_str)
         if not m:
             raise IsValidError # nothing matched
-        #if m.group(0) != ele_val:  # matched substring != original, bad
+        #if m.group(0) != ele_str:  # matched substring != original, bad
 
         if ele_str.find('-') != -1:
             ele_idx = ele_str[:ele_str.find('-')]

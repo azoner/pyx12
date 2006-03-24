@@ -1,7 +1,7 @@
 #! /usr/bin/env /usr/local/bin/python
 
 import unittest
-import sys
+import sys, os.path 
 
 import pyx12.params
 from pyx12.errors import *
@@ -49,7 +49,8 @@ class SetParamOverride(unittest.TestCase):
 
 class ReadConfigFile(unittest.TestCase):
     def setUp(self):
-        self.param = pyx12.params.params('pyx12test.conf.xml')
+        self.param = pyx12.params.params(os.path.join(pyx12.tests.__path__[0], \
+            'pyx12test.conf.xml'))
 
     def test_changed(self):
         self.assertEqual(self.param.get('map_path'), '/opt1/local/share/pyx12/map')

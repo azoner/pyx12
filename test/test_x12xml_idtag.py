@@ -14,7 +14,7 @@ from pyx12.tests.x12xml_idtag import *
 
 def suite():
     suite = unittest.TestSuite()
-    suite.addTest(unittest.makeSuite(Seg1))
+    suite.addTest(unittest.makeSuite(ConvertToXML))
     return suite
 
 #if __name__ == "__main__":

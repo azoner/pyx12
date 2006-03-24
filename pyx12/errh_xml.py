@@ -91,7 +91,7 @@ class err_handler(object):
         if len(self.errors) > 0:
             self.writer.push(u"seg", attrs={u'line': '%i'%(cur_line)})
             for (err_type, err_cde, err_str, err_val, src_line) in self.errors:
-                self.writer.push(u"err", attrs={u"code", err_cde})
+                self.writer.push(u"err", attrs={u"code": err_cde})
                 #self.writer.elem(u"type", err_type)
                 #self.writer.elem(u"code", err_cde)
                 self.writer.elem(u"desc", err_str)
