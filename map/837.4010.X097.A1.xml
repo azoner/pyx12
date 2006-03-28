@@ -2798,6 +2798,7 @@
                       <min_len>1</min_len>
                       <max_len>2</max_len>
                       <valid_codes>
+                        <code>01</code>
                         <code>03</code>
                         <code>04</code>
                         <code>05</code>
@@ -2806,6 +2807,8 @@
                         <code>08</code>
                         <code>11</code>
                         <code>12</code>
+                        <code>13</code>
+                        <code>14</code>
                         <code>15</code>
                         <code>20</code>
                         <code>21</code>
@@ -2827,6 +2830,7 @@
                         <code>54</code>
                         <code>55</code>
                         <code>56</code>
+                        <code>57</code>
                         <code>60</code>
                         <code>61</code>
                         <code>62</code>
@@ -9249,6 +9253,7 @@
                         <min_len>1</min_len>
                         <max_len>2</max_len>
                         <valid_codes>
+                          <code>01</code>
                           <code>03</code>
                           <code>04</code>
                           <code>05</code>
@@ -9257,6 +9262,8 @@
                           <code>08</code>
                           <code>11</code>
                           <code>12</code>
+                          <code>13</code>
+                          <code>14</code>
                           <code>15</code>
                           <code>20</code>
                           <code>21</code>
@@ -9278,6 +9285,7 @@
                           <code>54</code>
                           <code>55</code>
                           <code>56</code>
+                          <code>57</code>
                           <code>60</code>
                           <code>61</code>
                           <code>62</code>
