@@ -4492,7 +4492,6 @@
                 <data_type>ID</data_type>
                 <min_len>2</min_len>
                 <max_len>2</max_len>
-                <valid_codes external="adjustment_reason"/>
               </element>
               <element xid="PLB03-02">
                 <data_ele>127</data_ele>
@@ -4526,7 +4525,6 @@
                 <data_type>ID</data_type>
                 <min_len>2</min_len>
                 <max_len>2</max_len>
-                <valid_codes external="adjustment_reason"/>
               </element>
               <element xid="PLB05-02">
                 <data_ele>127</data_ele>
@@ -4560,7 +4558,6 @@
                 <data_type>ID</data_type>
                 <min_len>2</min_len>
                 <max_len>2</max_len>
-                <valid_codes external="adjustment_reason"/>
               </element>
               <element xid="PLB07-02">
                 <data_ele>127</data_ele>
@@ -4594,7 +4591,6 @@
                 <data_type>ID</data_type>
                 <min_len>2</min_len>
                 <max_len>2</max_len>
-                <valid_codes external="adjustment_reason"/>
               </element>
               <element xid="PLB09-02">
                 <data_ele>127</data_ele>
@@ -4628,7 +4624,6 @@
                 <data_type>ID</data_type>
                 <min_len>2</min_len>
                 <max_len>2</max_len>
-                <valid_codes external="adjustment_reason"/>
               </element>
               <element xid="PLB11-02">
                 <data_ele>127</data_ele>
@@ -4662,7 +4657,6 @@
                 <data_type>ID</data_type>
                 <min_len>2</min_len>
                 <max_len>2</max_len>
-                <valid_codes external="adjustment_reason"/>
               </element>
               <element xid="PLB13-02">
                 <data_ele>127</data_ele>
