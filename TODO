@@ -9,6 +9,8 @@ Windows issues:
   location of map files
   location of config files
   path to code file
+  use registry, not config files
+  do not rename scripts
 
 Wrap scripts in web services
 
@@ -32,6 +34,7 @@ Error Handling
 
 Unit Testing
   x12file - HL counting?
+  HL reset bug
 
 Make C++ Modules
   x12file
