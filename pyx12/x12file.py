@@ -244,8 +244,9 @@ class X12file(object):
                         del self.hl_stack[-1]
                 else:
                     if len(self.hl_stack) != 0:
-                        err_str = 'HL parent is blank, but stack not empty'
-                        self._seg_error('HL2', err_str)
+                        pass
+                        #err_str = 'HL parent is blank, but stack not empty'
+                        #self._seg_error('HL2', err_str)
                 self.hl_stack.append(self.hl_count)
             else:
                 self.seg_count += 1
