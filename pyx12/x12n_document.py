@@ -25,7 +25,6 @@ import logging
 from types import *
 #import StringIO
 #import tempfile
-#import pdb
 #import profile
 
 # Intrapackage imports
