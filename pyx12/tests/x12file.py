@@ -310,7 +310,7 @@ class HL_Checks(X12fileTestCase):
         (err_cde, err_str) = self._get_first_error(str)        
         self.assertEqual(err_cde, 'HL2', err_str)
 
-    def test_HL_parent_bad_blank(self):
+    def xtest_HL_parent_bad_blank(self):
         seg = None
         str = 'ISA*00*          *00*          *ZZ*ZZ000          *ZZ*ZZ001          *030828*1128*U*00401*000010121*0*T*:~\n'
         str += 'GS*HC*ZZ000*ZZ001*20030828*1128*17*X*004010X098~\n'
