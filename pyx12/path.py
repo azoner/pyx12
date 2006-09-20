@@ -36,7 +36,7 @@ class IsValidError(Exception):
     pass
 
 class path(object):
-   """
+    """
     Interface to an x12 path
     """
 
