@@ -13,5 +13,5 @@ env.Replace(CPPPATH = ['.', '../pyx12', '/usr/include', '/usr/local/include', \
 env.Replace(LIBS = ['pyx12', 'boost_unit_test_framework', 'boost_python', 'python2.4']) #, 'libc_r'])
 env.Replace(LIBPATH = ['.', '../pyx12', '/usr/lib', '/usr/local/lib', '/usr/local/lib/python2.4'])
 
-env.Program('t1', 't1.cxx') #, LINKFLAGS='-pthread')
-env.Program('test_csegment', 'test_csegment.cxx') #, LINKFLAGS='-pthread')
+env.Program('t1', 't1.cxx', LINKFLAGS='-pthread')
+#env.Program('test_csegment', 'test_csegment.cxx') #, LINKFLAGS='-pthread')

@@ -36,7 +36,7 @@ libs = ['pyx12', 'boost_python', 'python2.4']
 libpath = ['.', '/usr/lib', '/usr/local/lib', '/usr/local/lib/python2.4']
 linkflags = ''
 #if os.path.isfile('/usr/include/pthread.h'):
-#    linkflags += ' -pthread'
+linkflags += ' -pthread'
 
 epydoc = Builder(action = 'epydoc --html --name Pyx12 --no-frames -o ../doc/epydoc .', 
     src_suffix = '.py',
@@ -47,7 +47,7 @@ env = Environment(CC = 'g++', CCFLAGS = '-ggdb -O2 -W -Wall -ansi -Wwrite-string
 env.Append(BUILDERS = {'Doc' : epydoc})
 #Program(['test1.cxx', 'segment.cxx', 'errors.cxx'])
 #includes = Dir(['.', '/usr/include', 'usr/local/include'])
-env.Program('test1', 'test1.cxx', LIBS=libs, LIBPATH=libpath, LINKFLAGS=linkflags)
+env.Program('c_test1', 'c_test1.cxx', LIBS=libs, LIBPATH=libpath, LINKFLAGS=linkflags)
 env.Doc('../doc/epydoc/index.html')
 #Object('x12file.cxx')
 #Object('segment.cxx')
