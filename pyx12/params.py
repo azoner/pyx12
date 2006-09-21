@@ -19,6 +19,7 @@ Order of precedence:
  3. self.params - Defaults
 """
 import os.path
+import sys
 #import StringIO
 import libxml2
 import logging
@@ -27,8 +28,11 @@ NodeType = {'element_start': 1, 'element_end': 15, 'attrib': 2, 'text': 3,
     'CData': 4, 'entity_ref': 5, 'entity_decl':6, 'pi': 7, 'comment': 8,
     'doc': 9, 'dtd': 10, 'doc_frag': 11, 'notation': 12}
 
-class params(object):
-    def __init__(self, *config_files):
+class ParamsBase(object):
+    """
+    Base class for parameters
+    """
+    def __init__(self):
         self.logger = logging.getLogger('pyx12.params')
         self.params = {}
         self.params['map_path'] = '/usr/local/share/pyx12/map'
@@ -47,13 +51,43 @@ class params(object):
         self.params['xmlout'] = 'simple'
         #self.params['xmlout'] = 'idtag'
         
+    def get(self, option):
+        """
+        Get the value of the parameter specified by option
+        @param option: Option name
+        @type option: string
+        """
+        if option in self.params.keys():
+            return self.params[option]
+        else:
+            return None
+
+    def set(self, option, value):
+        """
+        Set the value of the parameter specified by option
+        @param option: Option name
+        @type option: string
+        @param value: Parameter value
+        @type value: string
+        """
+        if value == '':
+            self.params[option] = None
+        else:
+            self.params[option] = value
+
+    
+class ParamsUnix(ParamsBase):
+    """
+    Read options from XML configuration files
+    """
+    def __init__(self, *config_files):
+        ParamsBase.__init__(self)
+        self.params['map_path'] = '/usr/local/share/pyx12/map'
+        self.params['pickle_path'] = '/usr/local/share/pyx12/map'
+        
         for filename in config_files:
             self.logger.debug('Read param file: %s' % (filename))
             self._read_config_file(filename)
-        #self._read_config_file('/usr/local/etc/pyx12.conf.xml')
-        #self._read_config_file(os.path.expanduser('~/.pyx12.conf.xml'))
-        #if config_file:
-        #    self._read_config_file(config_file)
 
     def _read_config_file(self, filename):
         """
@@ -80,22 +114,7 @@ class params(object):
                                     option = reader.Value()
                     elif tmpNodeType == NodeType['element_end']:
                         if option is not None:
-                            if value == '':
-                                value = None
-                            if valtype == 'boolean':
-                                if value in ('False', 'F'):
-                                    self.params[option] = False
-                                else:
-                                    self.params[option] = True
-                            else:
-                                try:
-                                    if self.params[option] != value:
-                                        self.params[option] = value
-                                        self.logger.debug('Params: option "%s": "%s"' % (option, self.params[option]))
-                                except:
-                                    self.params[option] = value
-                                    self.logger.debug('Params: option "%s": "%s"' % (option, self.params[option]))
-                            self.logger.debug('Params: option "%s": "%s"' % (option, self.params[option]))
+                            self._set_option(option, value, valtype)
                     elif tmpNodeType == NodeType['text']:
                         if cur_name == 'value':
                             value = reader.Value()
@@ -103,32 +122,52 @@ class params(object):
                             valtype = reader.Value()
                     ret = reader.Read()
         except:
-            self.logger.error('Read of configuration file "%s" failed' % (filename))
+            self.logger.error('Read of configuration file "%s" failed' % \
+                (filename))
             raise
 
-    def get(self, option):
-        """
-        Get the value of the parameter specified by option
-        @param option: Option name
-        @type option: string
-        """
-        if option in self.params.keys():
-            return self.params[option]
-        else:
-            return None
-
-    def set(self, option, value):
+    def _set_option(self, option, value, valtype):
         """
         Set the value of the parameter specified by option
         @param option: Option name
         @type option: string
         @param value: Parameter value
         @type value: string
+        @param valtype: Parameter type
+        @type valtype: string
         """
         if value == '':
-            self.params[option] = None
+            value = None
+        if valtype == 'boolean':
+            if value in ('False', 'F'):
+                self.params[option] = False
+            else:
+                self.params[option] = True
         else:
-            self.params[option] = value
+            try:
+                if self.params[option] != value:
+                    self.params[option] = value
+                    #self.logger.debug('Params: option "%s": "%s"' % \
+                    #    (option, self.params[option]))
+            except:
+                self.params[option] = value
+                #self.logger.debug('Params: option "%s": "%s"' % \
+                #   (option, self.params[option]))
+        #self.logger.debug('Params: option "%s": "%s"' % \
+        #    (option, self.params[option]))
 
-#    def __repr__(self):
-#        pass
+
+class ParamsWindows(ParamsBase):
+    """
+    Read options from the Windows registry
+    """
+    def __init__(self):
+        ParamsBase.__init__(self)
+        self.params['map_path'] = '/usr/local/share/pyx12/map'
+        self.params['pickle_path'] = '/usr/local/share/pyx12/map'
+        # Read from Registry
+
+if sys.platform == 'win32':
+    params = ParamsWindows
+else:
+    params = ParamsUnix
