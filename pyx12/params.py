@@ -166,6 +166,9 @@ class ParamsWindows(ParamsBase):
         self.params['map_path'] = '/usr/local/share/pyx12/map'
         self.params['pickle_path'] = '/usr/local/share/pyx12/map'
         # Read from Registry
+        import _winreg
+        #option = Key(key=HKEY.CURRENT_USER, sub_key='Software\\pyx12').values
+
 
 if sys.platform == 'win32':
     params = ParamsWindows
