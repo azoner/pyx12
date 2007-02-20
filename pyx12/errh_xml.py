@@ -36,16 +36,23 @@ class err_handler(object):
     """
     The interface to the error handling structures.
     """
-    def __init__(self, xml_out=None):
+    def __init__(self, xml_out=None, basedir=None):
         """
         @param xml_out: Output filename, if None, will dump to tempfile
+        @param basedir: working directory, where file will be created
         """
         if xml_out:
             self.filename = xml_out
             fd = open(xml_out, 'w')
         else:
-            fd = tempfile.NamedTemporaryFile()
-            self.filename = fd.name
+            try:
+                (fd, self.filename) = mkstemp()
+                #fd = tempfile.NamedTemporaryFile()
+                #self.filename = fd.name
+            except:
+                #self.filename = '997.tmp.xml'
+                (fd, self.filename) = mkstemp(dir=basedir)
+                #fd = file(os.path.join(basedir, self.filename), 'w')
         self.cur_line = None
         self.errors = []
         self.writer = XMLWriter(fd)

@@ -103,7 +103,8 @@ def x12n_document(param, src_file, fd_997, fd_html, fd_xmldoc=None):
         else:
             xmldoc = x12xml_simple.x12xml_simple(fd_xmldoc, param.get('simple_dtd'))
 
-    erx = errh_xml.err_handler('errors.xml')
+    basedir = os.path.dirname(src_file)
+    erx = errh_xml.err_handler(basedir=basedir)
 
     valid = True
     for seg in src:
