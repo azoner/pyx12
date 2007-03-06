@@ -75,8 +75,6 @@ kw = {
         'CHANGELOG.txt', 'INSTALL.txt']),
         ('share/examples/pyx12/test', TEST_FILES),
         ('share/examples/pyx12/test/files', TEST_DATA),
-        ('share/examples/pyx12', ['bin/pyx12.conf.xml.sample']),
-        ('etc', ['bin/pyx12.conf.xml.sample']),
         ('share/doc/pyx12/view', ['view/Makefile', 'view/codes.xsl', \
             'view/loop.css', 'view/loop.xsl', 'view/map_seg.xsl', \
             'view/map_sum.xsl', 'view/seg.css', 'view/sum.css',
@@ -84,6 +82,12 @@ kw = {
     ],
       #package_dir = {'': ''},
 }
+
+if sys.platform == 'win32':
+    # Update registry
+else:
+    kw['data_files'].append(('share/examples/pyx12', ['bin/pyx12.conf.xml.sample']))
+    kw['data_files'].append(('etc', ['bin/pyx12.conf.xml.sample']))
 
 if (hasattr(core, 'setup_keywords') and
     'classifiers' in core.setup_keywords):
