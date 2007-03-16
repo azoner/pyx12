@@ -18,6 +18,8 @@ import logging
 from types import *
 import pdb
 import tempfile
+import lxml
+import os
 
 # Intrapackage imports
 from errors import *
@@ -46,15 +48,19 @@ class err_handler(object):
             fd = open(xml_out, 'w')
         else:
             try:
-                (fd, self.filename) = mkstemp()
+                (fdesc, self.filename) = tempfile.mkstemp('.xml', 'pyx12_')
+                fd = os.fdopen(fdesc, 'w+b')
                 #fd = tempfile.NamedTemporaryFile()
                 #self.filename = fd.name
             except:
                 #self.filename = '997.tmp.xml'
-                (fd, self.filename) = mkstemp(dir=basedir)
+                (fdesc, self.filename) = tempfile.mkstemp(suffix='.xml', prefix='pyx12_', dir=basedir)
+                fd = os.fdopen(fdesc, 'w+b')
                 #fd = file(os.path.join(basedir, self.filename), 'w')
         self.cur_line = None
         self.errors = []
+        if not fd:
+            raise EngineError, 'Could not open temp error xml file'
         self.writer = XMLWriter(fd)
         #self.writer.doctype(
         #    u"x12simple", u"-//J Holland//DTD XML X12 Document Conversion1.0//EN//XML",

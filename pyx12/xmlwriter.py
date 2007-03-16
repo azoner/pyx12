@@ -60,8 +60,7 @@ class XMLWriter(object):
         self.out = wrapper(out)
         self.stack = []
         self.indent = indent
-        self.out.write(u'<?xml version="1.0" encoding="%s"?>\n' \
-                       % encoding)
+        self.out.write(u'<?xml version="1.0" encoding="%s"?>\n' % encoding)
 
     def doctype(self, root, pubid, sysid):
         """
