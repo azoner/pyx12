@@ -15,8 +15,7 @@ Generates error debug output
 Visitor - Visits an error_handler composite
 """
 
-from types import *
-#import pdb
+#from types import *
 
 # Intrapackage imports
 from errors import *

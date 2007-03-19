@@ -16,7 +16,7 @@ Parse a ANSI X12N data file.  Validate against a map and codeset values.
 Create XML, HTML, and 997 documents based on the data file.
 """
 
-import os, os.path
+import os, os.path, sys
 import logging
 #from types import *
 
@@ -180,9 +180,9 @@ def x12n_document(param, src_file, fd_997, fd_html, fd_xmldoc=None):
                 errh.add_seg(node, seg, src.get_seg_count(), \
                     src.get_cur_line(), src.get_ls_id())
 
+            errh.handle_errors(src.pop_errors())
             #errh.set_cur_line(src.get_cur_line())
             valid &= node.is_valid(seg, errh)
-            #errh.handle_errors(src.pop_errors())
             #erx.handleErrors(src.pop_errors())
             #erx.handleErrors(errh.get_errors())
             #errh.reset()
@@ -207,7 +207,7 @@ def x12n_document(param, src_file, fd_997, fd_html, fd_xmldoc=None):
 
     #erx.handleErrors(src.pop_errors())
     src.cleanup() #Catch any skipped loop trailers
-    #errh.handle_errors(src.pop_errors())
+    errh.handle_errors(src.pop_errors())
     #erx.handleErrors(src.pop_errors())
     #erx.handleErrors(errh.get_errors())
     
@@ -218,8 +218,8 @@ def x12n_document(param, src_file, fd_997, fd_html, fd_xmldoc=None):
     if fd_xmldoc:
         del xmldoc
 
-    #visit_debug = error_debug.error_debug_visitor(sys.stdout)
-    #errh.accept(visit_debug)
+    visit_debug = error_debug.error_debug_visitor(sys.stdout)
+    errh.accept(visit_debug)
 
     #If this transaction is not a 997, generate one.
     if not (vriic=='004010' and fic=='FA'):
