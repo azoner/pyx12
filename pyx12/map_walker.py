@@ -53,7 +53,7 @@ def is_first_seg_match2(child, seg_data):
     @param child: child node
     @type child: L{node<map_if.x12_node>}
     @param seg_data: Segment object
-    @type seg_data: L{segment.Segment.segment>}
+    @type seg_data: L{<segment.Segment>}
     @rtype: boolean
     """
     if child.is_segment():
@@ -85,7 +85,7 @@ class walk_tree(object):
         @param node: Starting node
         @type node: L{node<map_if.x12_node>}
         @param seg_data: Segment object
-        @type seg_data: L{segment.Segment.segment>}
+        @type seg_data: L{<segment.Segment>}
         @param seg_count: Count of current segment in the ST Loop
         @type seg_count: int
         @param cur_line: Current line number in the file
@@ -185,7 +185,7 @@ class walk_tree(object):
         @param orig_node: Original starting node
         @type orig_node: L{node<map_if.x12_node>}
         @param seg_data: Segment object
-        @type seg_data: L{segment.Segment.segment>}
+        @type seg_data: L{<segment.Segment>}
         @param errh: Error handler
         @type errh: L{error_handler.err_handler}
         """
@@ -246,7 +246,7 @@ class walk_tree(object):
         @param loop_node: Loop Node
         @type loop_node: L{node<map_if.loop_if>}
         @param seg_data: Segment object
-        @type seg_data: L{segment.Segment.segment>}
+        @type seg_data: L{<segment.Segment>}
         @param errh: Error handler
         @type errh: L{error_handler.err_handler}
 
@@ -294,7 +294,7 @@ class walk_tree(object):
         @param loop_node: The starting loop node. 
         @type loop_node: L{node<map_if.loop_if>}
         @param seg_data: Segment object
-        @type seg_data: L{segment.Segment.segment>}
+        @type seg_data: L{<segment.Segment>}
         @param errh: Error handler
         @type errh: L{error_handler.err_handler}
         @param seg_count: Current segment count for ST loop

@@ -26,7 +26,7 @@ class ErrorItem(object):
     """
     Wrap an X12 validation error
     """
-    def __init__(self, err_cde, err_str):
+    def __init__(self, err_type, err_cde, err_str):
         """
         @param err_type: At what level did the error occur
         @type err_type: string
@@ -47,7 +47,7 @@ class ErrorItem(object):
 
 class ISAError(ErrorItem):
     def __init__(self, err_cde, err_str):
-        ErrorItem.__init__(self, err_cde, err_str)
+        ErrorItem.__init__(self, 'isa', err_cde, err_str)
         if self.err_cde not in isa_errors:
             raise errors.EngineError, 'Invalid ISA level error code "%s"' % \
                 (self.err_cde) 
@@ -55,7 +55,7 @@ class ISAError(ErrorItem):
 
 class SegError(ErrorItem):
     def __init__(self, err_cde, err_str, err_val=None):
-        ErrorItem.__init__(self, err_cde, err_str)
+        ErrorItem.__init__(self, 'seg', err_cde, err_str)
         self.err_val = err_val
         if self.err_cde not in seg_errors:
             raise errors.EngineError, 'Invalid segment level error code "%s"' % \
@@ -66,7 +66,7 @@ class SegError(ErrorItem):
 
 
 class EleError(ErrorItem):
-    def __init__(self, err_cde, err_str, ele_idx, subele_idx=None, 
+    def __init__(self, 'ele', err_cde, err_str, ele_idx, subele_idx=None, 
             err_val=None):
         ErrorItem.__init__(self, err_cde, err_str)
         self.err_val = err_val
