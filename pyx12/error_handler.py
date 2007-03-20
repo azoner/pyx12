@@ -628,8 +628,8 @@ class err_gs(err_node):
 
         # From GE loop
         self.ack_code = None # AK901
-        self.st_count_orig = None # AK902
-        self.st_count_recv = None # AK903
+        self.st_count_orig = 0 # AK902
+        self.st_count_recv = 0 # AK903
         #self.st_count_accept = None # AK904
 
         self.parent = parent
@@ -742,6 +742,7 @@ class err_gs(err_node):
     def __repr__(self):
         return '%i: %s' % (self.get_cur_line(), self.id)
 
+
 class err_st(err_node):
     """
     ST loops
@@ -792,10 +793,19 @@ class err_st(err_node):
         """
         self.errors.append((err_cde, err_str))
  
-    def close(self, node, seg, src):
+    def close(self, node, seg_data, src):
         """
+        Close ST loop
+
+        @param node: SE node
+        @type node: L{node<map_if.x12_node>}
+        @param seg_data: Segment object
+        @type seg_data: L{segment.Segment.segment>}
+        @param src: X12file source
+        @type src: L{X12file<x12file.X12file>}
         """
         self.cur_line_se = src.get_cur_line()
+        #pdb.set_trace()
         if self.err_count() > 0:
             self.ack_code = 'R'
         else:
@@ -803,6 +813,8 @@ class err_st(err_node):
         
     def err_count(self):
         """
+        @return: Count of ST/SE loop errors
+        @rtype: int
         """
         seg_err_ct = 0
         if self.child_err_count() > 0:
