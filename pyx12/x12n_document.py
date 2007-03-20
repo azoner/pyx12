@@ -110,7 +110,7 @@ def x12n_document(param, src_file, fd_997, fd_html, fd_xmldoc=None):
             try:
                 node = walker.walk(node, seg, errh, src.get_seg_count(), \
                     src.get_cur_line(), src.get_ls_id())
-            except EngineError:
+            except errors.EngineError:
                 logger.error('Source file line %i' % (src.get_cur_line()))
                 raise
         if node is None:
@@ -119,7 +119,9 @@ def x12n_document(param, src_file, fd_997, fd_html, fd_xmldoc=None):
             if seg.get_seg_id() == 'ISA':
                 errh.add_isa_loop(seg, src)
                 icvn = seg.get_value('ISA12')
+                errh.handle_errors(src.pop_errors())
             elif seg.get_seg_id() == 'IEA':
+                errh.handle_errors(src.pop_errors())
                 errh.close_isa_loop(node, seg, src)
                 # Generate 997
                 #XXX Generate TA1 if needed.
@@ -149,6 +151,7 @@ def x12n_document(param, src_file, fd_997, fd_html, fd_xmldoc=None):
                     node.reset_cur_count()
                     node.incr_cur_count()
                 errh.add_gs_loop(seg, src)
+                errh.handle_errors(src.pop_errors())
             elif seg.get_seg_id() == 'BHT':
                 if vriic in ('004010X094', '004010X094A1'):
                     tspc = seg.get_value('BHT02')
@@ -170,17 +173,21 @@ def x12n_document(param, src_file, fd_997, fd_html, fd_xmldoc=None):
                         node = cur_map.getnodebypath('/ISA_LOOP/GS_LOOP/ST_LOOP/HEADER/BHT')
                 errh.add_seg(node, seg, src.get_seg_count(), \
                     src.get_cur_line(), src.get_ls_id())
+                errh.handle_errors(src.pop_errors())
             elif seg.get_seg_id() == 'GE':
+                errh.handle_errors(src.pop_errors())
                 errh.close_gs_loop(node, seg, src)
             elif seg.get_seg_id() == 'ST':
                 errh.add_st_loop(seg, src)
+                errh.handle_errors(src.pop_errors())
             elif seg.get_seg_id() == 'SE':
+                errh.handle_errors(src.pop_errors())
                 errh.close_st_loop(node, seg, src)
             else:
                 errh.add_seg(node, seg, src.get_seg_count(), \
                     src.get_cur_line(), src.get_ls_id())
+                errh.handle_errors(src.pop_errors())
 
-            errh.handle_errors(src.pop_errors())
             #errh.set_cur_line(src.get_cur_line())
             valid &= node.is_valid(seg, errh)
             #erx.handleErrors(src.pop_errors())
@@ -218,8 +225,8 @@ def x12n_document(param, src_file, fd_997, fd_html, fd_xmldoc=None):
     if fd_xmldoc:
         del xmldoc
 
-    visit_debug = error_debug.error_debug_visitor(sys.stdout)
-    errh.accept(visit_debug)
+    #visit_debug = error_debug.error_debug_visitor(sys.stdout)
+    #errh.accept(visit_debug)
 
     #If this transaction is not a 997, generate one.
     if not (vriic=='004010' and fic=='FA'):
