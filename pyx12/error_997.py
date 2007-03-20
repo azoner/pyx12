@@ -68,7 +68,8 @@ class error_997_visitor(error_visitor.error_visitor):
 
         #logger.info('\n'+seg.format())
         #pdb.set_trace()
-        isa_seg = pyx12.segment.Segment('ISA*00*          *00*          ', '~', '*', ':')
+        isa_seg = pyx12.segment.Segment('ISA*00*          *00*          ', \
+            self.seg_term, self.ele_term, self.subele_term)
         isa_seg.append(seg.get_value('ISA07'))
         isa_seg.append(seg.get_value('ISA08'))
         isa_seg.append(seg.get_value('ISA05'))
@@ -242,7 +243,6 @@ class error_997_visitor(error_visitor.error_visitor):
             raise EngineError, 'err_st.ack_cde variable not set'
 #        self.ack_code = None # AK501
         seg_data = pyx12.segment.Segment('AK5', '~', '*', ':')
-        #seg = ['AK5']
 #        self.err_cde = [] # AK502-6
         err_codes = []
         if err_st.child_err_count() > 0:
@@ -318,6 +318,9 @@ class error_997_visitor(error_visitor.error_visitor):
         @param seg_data: Data segment instance
         @type seg_data: L{segment.Segment}
         """
-        self.fd.write('%s\n' % (seg_data.format(self.seg_term, self.ele_term, \
-            self.subele_term)))
+        sout = seg_data.format(self.seg_term, self.ele_term, self.subele_term)
+        if seg_data.get_seg_id() == 'ISA':
+            sout = sout[:-1] + self.ele_term + self.subele_term \
+                + self.seg_term
+        self.fd.write('%s\n' % (sout))
         self.seg_count += 1
