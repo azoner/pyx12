@@ -3545,7 +3545,7 @@
                         <seq>07</seq>
                         <data_type>AN</data_type>
                         <min_len>1</min_len>
-                        <max_len>0</max_len>
+                        <max_len>30</max_len>
                       </element>
                     </composite>
                     <composite>

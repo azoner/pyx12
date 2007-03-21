@@ -19030,7 +19030,7 @@
                           <name>Procedure Code Description</name>
                           <usage>S</usage>
                           <seq>07</seq>
-                          <data_type>N</data_type>
+                          <data_type>AN</data_type>
                           <min_len>1</min_len>
                           <max_len>80</max_len>
                         </element>
@@ -35540,7 +35540,7 @@
                             <name>Procedure Code Description</name>
                             <usage>S</usage>
                             <seq>07</seq>
-                            <data_type>N</data_type>
+                            <data_type>AN</data_type>
                             <min_len>1</min_len>
                             <max_len>80</max_len>
                           </element>

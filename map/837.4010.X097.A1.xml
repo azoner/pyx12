@@ -5361,7 +5361,7 @@
                       <name>Credit/Debit Flag Code</name>
                       <usage>N</usage>
                       <seq>03</seq>
-                      <data_type>D</data_type>
+                      <data_type>ID</data_type>
                       <min_len>1</min_len>
                       <max_len>1</max_len>
                     </element>
@@ -11817,7 +11817,7 @@
                         <name>Credit/Debit Flag Code</name>
                         <usage>N</usage>
                         <seq>03</seq>
-                        <data_type>D</data_type>
+                        <data_type>ID</data_type>
                         <min_len>1</min_len>
                         <max_len>1</max_len>
                       </element>
