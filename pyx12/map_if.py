@@ -917,7 +917,7 @@ class segment_if(x12_node):
 
     def is_match(self, seg):
         """
-        is segment given a match to this node?
+        Is data segment given a match to this segment node?
         @param seg: data segment instance
         @return: boolean
         @rtype: boolean
@@ -925,6 +925,7 @@ class segment_if(x12_node):
         if seg.get_seg_id() == self.id:
             if self.children[0].is_element() \
                 and self.children[0].data_type == 'ID' \
+                and self.children[0].usage == 'R' \
                 and len(self.children[0].valid_codes) > 0 \
                 and seg.get_value('01') not in self.children[0].valid_codes:
                 #logger.debug('is_match: %s %s' % (seg.get_seg_id(), seg[1]), self.children[0].valid_codes)

@@ -255,18 +255,6 @@ class SegmentWalk(unittest.TestCase):
         node = self.walker.walk(node, seg_data, self.errh, 5, 4, None)
         self.assertEqual(seg_data.get_seg_id(), node.id)
     
-    def test_match_ID_segment2(self):
-        node = self.map.getnodebypath('/ISA_LOOP/GS_LOOP/ST_LOOP/DETAIL/2000A/2000B/2300/CLM')
-        seg_data = pyx12.segment.Segment('DTP*454*D8*20040101', '~', '*', ':')
-        node = self.walker.walk(node, seg_data, self.errh, 5, 4, None)
-        self.assertEqual(seg_data.get_seg_id(), node.id)
-    
-#    def test_fail_ID_segment(self):
-#        node = self.map.getnodebypath('/ISA_LOOP/GS_LOOP/ST_LOOP/DETAIL/2000A/2000B/2300/CLM')
-#        seg_data = ['DTP', '999', 'D8', '20040201']
-#        node = self.walker.walk(node, seg_data, self.errh, 5, 4, None)
-#        self.assertNotEqual(seg_data.get_seg_id(), node.id)
-
     def test_segment_required_fail1(self):
         """
         Skipped required segment
@@ -466,3 +454,13 @@ class CountOrdinal(unittest.TestCase):
         seg_data = pyx12.segment.Segment('REF*17*A232~', '~', '*', ':')
         node = self.walker.walk(node, seg_data, self.errh, 5, 4, None)
         self.assertEqual(self.errh.err_cde, '1', self.errh.err_str)
+
+    def test_lui_ok(self):
+        node = self.map.getnodebypath('/ISA_LOOP/GS_LOOP/ST_LOOP/DETAIL/2000/2100A/NM1')
+        node.parent.cur_count = 1 # Loop 2100A
+        node.cur_count = 1 # NM1
+        self.assertNotEqual(node, None)
+        seg_data = pyx12.segment.Segment('LUI***ES~', '~', '*', ':')
+        node = self.walker.walk(node, seg_data, self.errh, 5, 4, None)
+        self.assertNotEqual(node, None)
+        self.assertEqual(self.errh.err_cde, None, self.errh.err_str)

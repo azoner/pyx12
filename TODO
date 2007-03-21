@@ -1,4 +1,4 @@
-DTD script for idtag and idtagqual forms
+XML schema (relax) for idtag and idtagqual forms
 
 Add test for x12 > xml > x12 for all xml mappings
 

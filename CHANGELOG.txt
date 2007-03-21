@@ -1,3 +1,6 @@
+FIX 834/LUI matching - only care about ID element for segment matching if
+element is required
+
 Remove errh object from x12file. Return errors as list
 
 RELEASE 1.2.0
