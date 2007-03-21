@@ -219,8 +219,10 @@ class X12file(object):
                     self._st_error('4', err_str)
                 del self.loops[-1]
             elif seg.get_seg_id() == 'LS': 
+                self.seg_count += 1
                 self.loops.append(('LS', seg.get_value('LS06')))
             elif seg.get_seg_id() == 'LE': 
+                self.seg_count += 1
                 del self.loops[-1]
             elif seg.get_seg_id() == 'HL': 
                 self.seg_count += 1
