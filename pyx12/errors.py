@@ -50,3 +50,9 @@ class IterOutOfBounds(Exception):
 class IterDone(Exception):
     """Iterator is Complete"""
         
+class IsValidError(Exception):
+    """
+    Exception for invalid X12 type errors
+    """
+    pass
+

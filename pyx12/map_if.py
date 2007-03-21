@@ -26,6 +26,7 @@ from stat import ST_SIZE
 
 # Intrapackage imports
 import errors
+from errors import IsValidError
 import codes
 
 #Global Variables
@@ -194,6 +195,7 @@ class map_if(x12_node):
         #global codes
         self.ext_codes = codes.ExternalCodes(param.get('map_path'), \
             param.get('exclude_external_codes'))
+        self.data_elements = dataele.DataElements(param.get('map_path'))
         try:
             map_path = param.get('map_path')
             self.reader = libxml2.newTextReaderFilename(os.path.join(map_path, \
@@ -900,10 +902,6 @@ class segment_if(x12_node):
             ret = '/' + self.path
         else:
             ret = parent_path + '/' + self.path
-        #if self.children[0].is_element() \
-        #    and self.children[0].data_type == 'ID' \
-        #    and len(self.children[0].valid_codes) > 0:
-        #    ret += '[%s]' % (self.children[0].valid_codes[0])
         return ret
 
     def is_first_seg_in_loop(self):
@@ -1213,15 +1211,7 @@ class element_if(x12_node):
             out += '  usage: %s' % (self.usage)
         if self.seq: 
             out += '  seq: %i' % (self.seq)
-        #if self.refdes: 
-        #    out += '  refdes: %s' % (self.refdes)
-        #if self.data_type: 
-        #    out += '  data_type: %s' % (self.data_type)
         out += '  %s(%s, %s)' % (self.data_type, self.min_len, self.max_len)
-        #if self.min_len: 
-        #    out += '  min_len: %s' % (self.min_len)
-        #if self.max_len: 
-        #    out += '  max_len: %s' % (self.max_len)
         if self.external_codes: 
             out += '   external codes: %s' % (self.external_codes)
         #if self.valid_codes:
@@ -1740,13 +1730,6 @@ def syntax_ele_id_str(seg_id, ele_pos_list):
     return output
         
     
-class IsValidError(Exception):
-    """
-    Exception for invalid X12 type errors
-    """
-    pass
-
-
 def IsValidDataType(str_val, data_type, charset = 'B'):
     """
     Is str_val a valid X12 data value

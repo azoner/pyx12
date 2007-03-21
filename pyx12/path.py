@@ -32,9 +32,6 @@ import re
 
 from pyx12.errors import *
 
-class IsValidError(Exception):
-    pass
-
 class path(object):
     """
     Interface to an x12 path
