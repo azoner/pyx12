@@ -1294,6 +1294,8 @@ class element_if(x12_node):
 
         elem_val = elem.get_value()
         valid = True
+# Validate based on data_elem_num
+# Then, validate on more specific criteria
         if (not self.data_type is None) and (self.data_type == 'R' or self.data_type[0] == 'N'):
             elem_strip = string.replace(string.replace(elem_val, '-', ''), '.', '')
             if len(elem_strip) < int(self.min_len):
