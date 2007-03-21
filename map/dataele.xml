@@ -1,0 +1,286 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+######################################################################
+# Copyright (c) 2001-2007 Kalamazoo Community Mental Health Services,
+#   John Holland <jholland@kazoocmh.org> <john@zoner.org>
+# All rights reserved.
+#
+# This software is licensed as described in the file LICENSE.txt, which
+# you should have received as part of this distribution.
+#
+######################################################################
+
+#    $Id: codes.xml 936 2007-03-21 14:49:16Z johnholland $
+-->
+<data_elements>
+  <data_ele ele_num="100" data_type="ID" min_len="3" max_len="3" name="Currency Code"/>
+  <data_ele ele_num="1004" data_type="ID" min_len="1" max_len="2" name="Percent Qualifier"/>
+  <data_ele ele_num="1005" data_type="ID" min_len="4" max_len="4" name="Hierarchical Structure Code"/>
+  <data_ele ele_num="1018" data_type="R" min_len="1" max_len="15" name="Exponent"/>
+  <data_ele ele_num="102" data_type="ID" min_len="1" max_len="1" name="Ownership Code"/>
+  <data_ele ele_num="1028" data_type="AN" min_len="1" max_len="38" name="Claim Submitter's Identifier"/>
+  <data_ele ele_num="1029" data_type="ID" min_len="1" max_len="2" name="Claim Status Code"/>
+  <data_ele ele_num="103" data_type="AN" min_len="3" max_len="5" name="Packaging Code"/>
+  <data_ele ele_num="1032" data_type="ID" min_len="1" max_len="2" name="Claim Filing Indicator Code"/>
+  <data_ele ele_num="1033" data_type="ID" min_len="1" max_len="2" name="Claim Adjustment Group Code"/>
+  <data_ele ele_num="1034" data_type="ID" min_len="1" max_len="5" name="Claim Adjustment Reason Code"/>
+  <data_ele ele_num="1035" data_type="AN" min_len="1" max_len="35" name="Name Last or Organization Name"/>
+  <data_ele ele_num="1036" data_type="AN" min_len="1" max_len="25" name="Name First"/>
+  <data_ele ele_num="1037" data_type="AN" min_len="1" max_len="25" name="Name Middle"/>
+  <data_ele ele_num="1038" data_type="AN" min_len="1" max_len="10" name="Name Prefix"/>
+  <data_ele ele_num="1039" data_type="AN" min_len="1" max_len="10" name="Name Suffix"/>
+  <data_ele ele_num="1048" data_type="ID" min_len="1" max_len="3" name="Business Function Code"/>
+  <data_ele ele_num="1065" data_type="ID" min_len="1" max_len="1" name="Entity Type Qualifier"/>
+  <data_ele ele_num="1066" data_type="ID" min_len="1" max_len="2" name="Citizenship Status Code"/>
+  <data_ele ele_num="1067" data_type="ID" min_len="1" max_len="1" name="Marital Status Code"/>
+  <data_ele ele_num="1068" data_type="ID" min_len="1" max_len="1" name="Gender Code"/>
+  <data_ele ele_num="1069" data_type="ID" min_len="2" max_len="2" name="Individual Relationship Code"/>
+  <data_ele ele_num="107" data_type="ID" min_len="1" max_len="2" name="Payment Method Code"/>
+  <data_ele ele_num="1073" data_type="ID" min_len="1" max_len="1" name="Yes/No Condition or Response Code"/>
+  <data_ele ele_num="1074" data_type="ID" min_len="2" max_len="2" name="Type of Real Estate Asset Code"/>
+  <data_ele ele_num="1095" data_type="N0" min_len="4" max_len="4" name="Year"/>
+  <data_ele ele_num="1109" data_type="ID" min_len="1" max_len="1" name="Race or Ethnicity Code"/>
+  <data_ele ele_num="1129" data_type="ID" min_len="1" max_len="2" name="Adjustment Reason Code Characteristic"/>
+  <data_ele ele_num="1130" data_type="ID" min_len="1" max_len="1" name="Primary or Contingent Code"/>
+  <data_ele ele_num="1136" data_type="ID" min_len="2" max_len="2" name="Code Category"/>
+  <data_ele ele_num="1137" data_type="AN" min_len="1" max_len="15" name="Medical Code Value"/>
+  <data_ele ele_num="1138" data_type="ID" min_len="1" max_len="1" name="Payer Responsibility Sequence Number Code"/>
+  <data_ele ele_num="1143" data_type="ID" min_len="1" max_len="1" name="Coordination of Benefits Code"/>
+  <data_ele ele_num="1146" data_type="ID" min_len="1" max_len="1" name="Disability Type Code"/>
+  <data_ele ele_num="1149" data_type="ID" min_len="4" max_len="6" name="Occupation Code"/>
+  <data_ele ele_num="1154" data_type="ID" min_len="1" max_len="1" name="Work Intensity Code"/>
+  <data_ele ele_num="116" data_type="ID" min_len="3" max_len="15" name="Postal Code"/>
+  <data_ele ele_num="1161" data_type="ID" min_len="1" max_len="2" name="Product Option Code"/>
+  <data_ele ele_num="1165" data_type="ID" min_len="1" max_len="1" name="Confidentiality Code"/>
+  <data_ele ele_num="1166" data_type="ID" min_len="2" max_len="2" name="Contract Type Code"/>
+  <data_ele ele_num="1167" data_type="R" min_len="1" max_len="6" name="Sample Selection Modulus"/>
+  <data_ele ele_num="1176" data_type="ID" min_len="2" max_len="3" name="Employment Class Code"/>
+  <data_ele ele_num="118" data_type="R" min_len="1" max_len="9" name="Rate"/>
+  <data_ele ele_num="1186" data_type="ID" min_len="2" max_len="2" name="Type of Income Code"/>
+  <data_ele ele_num="1187" data_type="ID" min_len="2" max_len="2" name="Type of Account Code"/>
+  <data_ele ele_num="1188" data_type="ID" min_len="2" max_len="2" name="Type of Personal or Business Asset Code"/>
+  <data_ele ele_num="1201" data_type="ID" min_len="1" max_len="1" name="Information Status Code"/>
+  <data_ele ele_num="1202" data_type="ID" min_len="1" max_len="1" name="Flexible Spending Account Selection Code"/>
+  <data_ele ele_num="1203" data_type="ID" min_len="2" max_len="3" name="Maintenance Reason Code"/>
+  <data_ele ele_num="1204" data_type="AN" min_len="1" max_len="50" name="Plan Coverage Description"/>
+  <data_ele ele_num="1205" data_type="ID" min_len="2" max_len="3" name="Insurance Line Code"/>
+  <data_ele ele_num="1207" data_type="ID" min_len="3" max_len="3" name="Coverage Level Code"/>
+  <data_ele ele_num="1209" data_type="ID" min_len="1" max_len="1" name="Underwriting Decision Code"/>
+  <data_ele ele_num="1211" data_type="ID" min_len="2" max_len="3" name="Drug House Code"/>
+  <data_ele ele_num="1212" data_type="ID" min_len="1" max_len="1" name="Health-Related Code"/>
+  <data_ele ele_num="1213" data_type="ID" min_len="1" max_len="1" name="Current Health Condition Code"/>
+  <data_ele ele_num="1214" data_type="AN" min_len="1" max_len="5" name="Salary Grade"/>
+  <data_ele ele_num="1215" data_type="ID" min_len="1" max_len="1" name="Identification Card Type Code"/>
+  <data_ele ele_num="1216" data_type="ID" min_len="1" max_len="1" name="Benefit Status Code"/>
+  <data_ele ele_num="1218" data_type="ID" min_len="1" max_len="1" name="Medicare Plan Code"/>
+  <data_ele ele_num="1219" data_type="ID" min_len="1" max_len="2" name="Consolidated Omnibus Budget Reconciliation Act (COBRA) Qualifying"/>
+  <data_ele ele_num="1220" data_type="ID" min_len="1" max_len="1" name="Student Status Code"/>
+  <data_ele ele_num="1221" data_type="ID" min_len="1" max_len="3" name="Provider Code"/>
+  <data_ele ele_num="1222" data_type="AN" min_len="1" max_len="3" name="Provider Specialty Code"/>
+  <data_ele ele_num="1223" data_type="ID" min_len="3" max_len="3" name="Provider Organization Code"/>
+  <data_ele ele_num="1224" data_type="ID" min_len="2" max_len="2" name="Contribution Code"/>
+  <data_ele ele_num="1250" data_type="ID" min_len="2" max_len="3" name="Date Time Period Format Qualifier"/>
+  <data_ele ele_num="1251" data_type="AN" min_len="1" max_len="35" name="Date Time Period"/>
+  <data_ele ele_num="1253" data_type="ID" min_len="3" max_len="6" name="Immunization Type Code"/>
+  <data_ele ele_num="1254" data_type="ID" min_len="1" max_len="2" name="Immunization Status Code"/>
+  <data_ele ele_num="127" data_type="AN" min_len="1" max_len="30" name="Reference Identification"/>
+  <data_ele ele_num="1270" data_type="ID" min_len="1" max_len="3" name="Code List Qualifier Code"/>
+  <data_ele ele_num="1271" data_type="AN" min_len="1" max_len="30" name="Industry Code"/>
+  <data_ele ele_num="128" data_type="ID" min_len="2" max_len="3" name="Reference Identification Qualifier"/>
+  <data_ele ele_num="1295" data_type="ID" min_len="1" max_len="2" name="Participant Status Code"/>
+  <data_ele ele_num="1296" data_type="AN" min_len="1" max_len="6" name="Special Processing Type"/>
+  <data_ele ele_num="1303" data_type="ID" min_len="1" max_len="2" name="Use of Language Indicator"/>
+  <data_ele ele_num="1314" data_type="ID" min_len="1" max_len="1" name="Admission Source Code"/>
+  <data_ele ele_num="1315" data_type="ID" min_len="1" max_len="1" name="Admission Type Code"/>
+  <data_ele ele_num="1316" data_type="ID" min_len="1" max_len="1" name="Ambulance Transport Code"/>
+  <data_ele ele_num="1317" data_type="ID" min_len="1" max_len="1" name="Ambulance Transport Reason Code"/>
+  <data_ele ele_num="1318" data_type="ID" min_len="1" max_len="1" name="Approval Code"/>
+  <data_ele ele_num="1319" data_type="ID" min_len="1" max_len="2" name="Basis of Cost Determination Code"/>
+  <data_ele ele_num="1320" data_type="ID" min_len="1" max_len="1" name="Basis of Days Supply Determination Code"/>
+  <data_ele ele_num="1321" data_type="ID" min_len="2" max_len="2" name="Condition Indicator"/>
+  <data_ele ele_num="1322" data_type="ID" min_len="1" max_len="1" name="Certification Type Code"/>
+  <data_ele ele_num="1325" data_type="ID" min_len="1" max_len="1" name="Claim Frequency Type Code"/>
+  <data_ele ele_num="1327" data_type="ID" min_len="1" max_len="1" name="Copay Status Code"/>
+  <data_ele ele_num="1328" data_type="N0" min_len="1" max_len="2" name="Diagnosis Code Pointer"/>
+  <data_ele ele_num="1329" data_type="ID" min_len="1" max_len="1" name="Dispense as Written Code"/>
+  <data_ele ele_num="1330" data_type="ID" min_len="2" max_len="2" name="Dosage Form Code"/>
+  <data_ele ele_num="1331" data_type="AN" min_len="1" max_len="2" name="Facility Code Value"/>
+  <data_ele ele_num="1332" data_type="ID" min_len="1" max_len="2" name="Facility Code Qualifier"/>
+  <data_ele ele_num="1333" data_type="ID" min_len="1" max_len="2" name="Record Format Code"/>
+  <data_ele ele_num="1334" data_type="ID" min_len="1" max_len="1" name="Health Care Professional Shortage Area Code"/>
+  <data_ele ele_num="1335" data_type="ID" min_len="1" max_len="1" name="Insulin Dependent Code"/>
+  <data_ele ele_num="1336" data_type="ID" min_len="1" max_len="3" name="Insurance Type Code"/>
+  <data_ele ele_num="1337" data_type="ID" min_len="1" max_len="1" name="Level of Care Code"/>
+  <data_ele ele_num="1338" data_type="ID" min_len="1" max_len="3" name="Level of Service Code"/>
+  <data_ele ele_num="1339" data_type="AN" min_len="2" max_len="2" name="Procedure Modifier"/>
+  <data_ele ele_num="1340" data_type="ID" min_len="1" max_len="2" name="Multiple Procedure Code"/>
+  <data_ele ele_num="1341" data_type="AN" min_len="1" max_len="2" name="National or Local Assigned Review Value"/>
+  <data_ele ele_num="1342" data_type="ID" min_len="1" max_len="1" name="Nature of Condition Code"/>
+  <data_ele ele_num="1343" data_type="ID" min_len="1" max_len="2" name="Non-Institutional Claim Type Code"/>
+  <data_ele ele_num="1344" data_type="ID" min_len="1" max_len="1" name="Non-Visit Code"/>
+  <data_ele ele_num="1345" data_type="ID" min_len="1" max_len="1" name="Nursing Home Residential Status Code"/>
+  <data_ele ele_num="1346" data_type="ID" min_len="1" max_len="1" name="Nutrient Administration Method Code"/>
+  <data_ele ele_num="1347" data_type="ID" min_len="1" max_len="1" name="Nutrient Administration Technique Code"/>
+  <data_ele ele_num="1348" data_type="ID" min_len="1" max_len="1" name="Oxygen Equipment Type Code"/>
+  <data_ele ele_num="1349" data_type="ID" min_len="1" max_len="1" name="Oxygen Test Condition Code"/>
+  <data_ele ele_num="1350" data_type="ID" min_len="1" max_len="1" name="Oxygen Test Findings Code"/>
+  <data_ele ele_num="1351" data_type="ID" min_len="1" max_len="1" name="Patient Signature Source Code"/>
+  <data_ele ele_num="1352" data_type="ID" min_len="1" max_len="2" name="Patient Status Code"/>
+  <data_ele ele_num="1354" data_type="ID" min_len="1" max_len="4" name="Diagnosis Related Group (DRG) Code"/>
+  <data_ele ele_num="1355" data_type="ID" min_len="2" max_len="2" name="Prescription Denial Override Code"/>
+  <data_ele ele_num="1356" data_type="ID" min_len="1" max_len="1" name="Prescription Origin Code"/>
+  <data_ele ele_num="1357" data_type="ID" min_len="1" max_len="1" name="Prior Authorization Type Code"/>
+  <data_ele ele_num="1358" data_type="ID" min_len="1" max_len="1" name="Prosthesis"/>
+  <data_ele ele_num="1359" data_type="ID" min_len="1" max_len="1" name="Provider Accept Assignment Code"/>
+  <data_ele ele_num="1360" data_type="ID" min_len="1" max_len="1" name="Provider Agreement Code"/>
+  <data_ele ele_num="1361" data_type="ID" min_len="1" max_len="3" name="Oral Cavity Designation Code"/>
+  <data_ele ele_num="1362" data_type="ID" min_len="2" max_len="3" name="Related-Causes Code"/>
+  <data_ele ele_num="1363" data_type="ID" min_len="1" max_len="1" name="Release of Information Code"/>
+  <data_ele ele_num="1364" data_type="ID" min_len="1" max_len="2" name="Review Code"/>
+  <data_ele ele_num="1365" data_type="ID" min_len="1" max_len="2" name="Service Type Code"/>
+  <data_ele ele_num="1366" data_type="ID" min_len="2" max_len="3" name="Special Program Code"/>
+  <data_ele ele_num="1367" data_type="ID" min_len="2" max_len="3" name="Subluxation Level Code"/>
+  <data_ele ele_num="1368" data_type="ID" min_len="1" max_len="2" name="Tooth Status Code"/>
+  <data_ele ele_num="1369" data_type="ID" min_len="1" max_len="2" name="Tooth Surface Code"/>
+  <data_ele ele_num="1370" data_type="ID" min_len="1" max_len="1" name="Unit Dose Code"/>
+  <data_ele ele_num="1371" data_type="R" min_len="1" max_len="10" name="Unit Rate"/>
+  <data_ele ele_num="1373" data_type="ID" min_len="2" max_len="4" name="Measurement Method or Device"/>
+  <data_ele ele_num="1382" data_type="ID" min_len="1" max_len="1" name="Oxygen Delivery System Code"/>
+  <data_ele ele_num="1383" data_type="ID" min_len="2" max_len="2" name="Claim Submission Reason Code"/>
+  <data_ele ele_num="1384" data_type="ID" min_len="1" max_len="1" name="Patient Location Code"/>
+  <data_ele ele_num="1390" data_type="ID" min_len="1" max_len="2" name="Eligibility or Benefit Information"/>
+  <data_ele ele_num="1403" data_type="ID" min_len="1" max_len="1" name="Implant Type Code"/>
+  <data_ele ele_num="1404" data_type="ID" min_len="1" max_len="1" name="Implant Status Code"/>
+  <data_ele ele_num="1429" data_type="ID" min_len="1" max_len="2" name="Construction Type"/>
+  <data_ele ele_num="143" data_type="ID" min_len="3" max_len="3" name="Transaction Set Identifier Code"/>
+  <data_ele ele_num="1470" data_type="N0" min_len="1" max_len="9" name="Number"/>
+  <data_ele ele_num="1473" data_type="ID" min_len="2" max_len="2" name="Pricing Methodology"/>
+  <data_ele ele_num="1476" data_type="ID" min_len="1" max_len="1" name="Language Proficiency Indicator"/>
+  <data_ele ele_num="151" data_type="AN" min_len="1" max_len="20" name="Authority"/>
+  <data_ele ele_num="1514" data_type="ID" min_len="1" max_len="2" name="Delay Reason Code"/>
+  <data_ele ele_num="1525" data_type="ID" min_len="1" max_len="2" name="Request Category Code"/>
+  <data_ele ele_num="1526" data_type="ID" min_len="1" max_len="2" name="Policy Compliance Code"/>
+  <data_ele ele_num="1527" data_type="ID" min_len="1" max_len="2" name="Exception Code"/>
+  <data_ele ele_num="156" data_type="ID" min_len="2" max_len="2" name="State or Province Code"/>
+  <data_ele ele_num="166" data_type="AN" min_len="1" max_len="55" name="Address Information"/>
+  <data_ele ele_num="1685" data_type="ID" min_len="1" max_len="2" name="Tax Treatment Code"/>
+  <data_ele ele_num="1687" data_type="R" min_len="1" max_len="15" name="Earnings Rate of Pay"/>
+  <data_ele ele_num="183" data_type="R" min_len="1" max_len="8" name="Volume"/>
+  <data_ele ele_num="184" data_type="ID" min_len="1" max_len="1" name="Volume Unit Qualifier"/>
+  <data_ele ele_num="188" data_type="ID" min_len="1" max_len="1" name="Weight Unit Code"/>
+  <data_ele ele_num="19" data_type="AN" min_len="2" max_len="30" name="City Name"/>
+  <data_ele ele_num="212" data_type="R" min_len="1" max_len="17" name="Unit Price"/>
+  <data_ele ele_num="22" data_type="AN" min_len="1" max_len="30" name="Commodity Code"/>
+  <data_ele ele_num="23" data_type="ID" min_len="1" max_len="1" name="Commodity Code Qualifier"/>
+  <data_ele ele_num="234" data_type="AN" min_len="1" max_len="48" name="Product/Service ID"/>
+  <data_ele ele_num="235" data_type="ID" min_len="2" max_len="2" name="Product/Service ID Qualifier"/>
+  <data_ele ele_num="236" data_type="ID" min_len="3" max_len="3" name="Price Identifier Code"/>
+  <data_ele ele_num="26" data_type="ID" min_len="2" max_len="3" name="Country Code"/>
+  <data_ele ele_num="280" data_type="R" min_len="4" max_len="10" name="Exchange Rate"/>
+  <data_ele ele_num="289" data_type="N0" min_len="1" max_len="2" name="Multiple Price Quantity"/>
+  <data_ele ele_num="305" data_type="ID" min_len="1" max_len="2" name="Transaction Handling Code"/>
+  <data_ele ele_num="306" data_type="ID" min_len="1" max_len="2" name="Action Code"/>
+  <data_ele ele_num="309" data_type="ID" min_len="1" max_len="2" name="Location Qualifier"/>
+  <data_ele ele_num="310" data_type="AN" min_len="1" max_len="30" name="Location Identifier"/>
+  <data_ele ele_num="329" data_type="AN" min_len="4" max_len="9" name="Transaction Set Control Number"/>
+  <data_ele ele_num="332" data_type="R" min_len="1" max_len="6" name="Percent"/>
+  <data_ele ele_num="337" data_type="TM" min_len="4" max_len="8" name="Time"/>
+  <data_ele ele_num="338" data_type="R" min_len="1" max_len="6" name="Terms Discount Percent"/>
+  <data_ele ele_num="349" data_type="ID" min_len="1" max_len="1" name="Item Description Type"/>
+  <data_ele ele_num="350" data_type="AN" min_len="1" max_len="20" name="Assigned Identification"/>
+  <data_ele ele_num="352" data_type="AN" min_len="1" max_len="80" name="Description"/>
+  <data_ele ele_num="353" data_type="ID" min_len="2" max_len="2" name="Transaction Set Purpose Code"/>
+  <data_ele ele_num="355" data_type="ID" min_len="2" max_len="2" name="Unit or Basis for Measurement Code"/>
+  <data_ele ele_num="358" data_type="R" min_len="1" max_len="10" name="Quantity Invoiced"/>
+  <data_ele ele_num="363" data_type="ID" min_len="3" max_len="3" name="Note Reference Code"/>
+  <data_ele ele_num="364" data_type="AN" min_len="1" max_len="80" name="Communication Number"/>
+  <data_ele ele_num="365" data_type="ID" min_len="2" max_len="2" name="Communication Number Qualifier"/>
+  <data_ele ele_num="366" data_type="ID" min_len="2" max_len="2" name="Contact Function Code"/>
+  <data_ele ele_num="373" data_type="DT" min_len="8" max_len="8" name="Date"/>
+  <data_ele ele_num="374" data_type="ID" min_len="3" max_len="3" name="Date/Time Qualifier"/>
+  <data_ele ele_num="380" data_type="R" min_len="1" max_len="15" name="Quantity"/>
+  <data_ele ele_num="426" data_type="ID" min_len="2" max_len="2" name="Adjustment Reason Code"/>
+  <data_ele ele_num="429" data_type="AN" min_len="1" max_len="16" name="Check Number"/>
+  <data_ele ele_num="443" data_type="AN" min_len="1" max_len="20" name="Contact Inquiry Reference"/>
+  <data_ele ele_num="447" data_type="AN" min_len="1" max_len="6" name="Loop Identifier Code"/>
+  <data_ele ele_num="449" data_type="AN" min_len="1" max_len="80" name="Fixed Format Information"/>
+  <data_ele ele_num="478" data_type="ID" min_len="1" max_len="1" name="Credit/Debit Flag Code"/>
+  <data_ele ele_num="481" data_type="ID" min_len="1" max_len="2" name="Trace Type Code"/>
+  <data_ele ele_num="482" data_type="ID" min_len="2" max_len="2" name="Payment Action Code"/>
+  <data_ele ele_num="499" data_type="AN" min_len="1" max_len="10" name="Condition Value"/>
+  <data_ele ele_num="506" data_type="ID" min_len="2" max_len="2" name="(DFI) ID Number Qualifier"/>
+  <data_ele ele_num="507" data_type="AN" min_len="3" max_len="12" name="(DFI) Identification Number"/>
+  <data_ele ele_num="508" data_type="AN" min_len="1" max_len="35" name="Account Number"/>
+  <data_ele ele_num="509" data_type="AN" min_len="10" max_len="10" name="Originating Company Identifier"/>
+  <data_ele ele_num="510" data_type="AN" min_len="9" max_len="9" name="Originating Company Supplemental Code"/>
+  <data_ele ele_num="522" data_type="ID" min_len="1" max_len="3" name="Amount Qualifier Code"/>
+  <data_ele ele_num="539" data_type="AN" min_len="1" max_len="25" name="Vehicle Identification Number"/>
+  <data_ele ele_num="554" data_type="N0" min_len="1" max_len="6" name="Assigned Number"/>
+  <data_ele ele_num="559" data_type="ID" min_len="2" max_len="2" name="Agency Qualifier Code"/>
+  <data_ele ele_num="569" data_type="ID" min_len="1" max_len="3" name="Account Number Qualifier"/>
+  <data_ele ele_num="584" data_type="ID" min_len="2" max_len="2" name="Employment Status Code"/>
+  <data_ele ele_num="591" data_type="ID" min_len="3" max_len="3" name="Payment Method Code"/>
+  <data_ele ele_num="594" data_type="ID" min_len="1" max_len="1" name="Frequency Code"/>
+  <data_ele ele_num="609" data_type="N0" min_len="1" max_len="9" name="Count"/>
+  <data_ele ele_num="61" data_type="AN" min_len="1" max_len="30" name="Free-Form Message"/>
+  <data_ele ele_num="610" data_type="N2" min_len="1" max_len="15" name="Amount"/>
+  <data_ele ele_num="615" data_type="ID" min_len="1" max_len="2" name="Time Period Qualifier"/>
+  <data_ele ele_num="616" data_type="N0" min_len="1" max_len="3" name="Number of Periods"/>
+  <data_ele ele_num="623" data_type="ID" min_len="2" max_len="2" name="Time Code"/>
+  <data_ele ele_num="628" data_type="AN" min_len="1" max_len="12" name="Hierarchical ID Number"/>
+  <data_ele ele_num="639" data_type="ID" min_len="2" max_len="2" name="Basis of Unit Price Code"/>
+  <data_ele ele_num="640" data_type="ID" min_len="2" max_len="2" name="Transaction Type Code"/>
+  <data_ele ele_num="648" data_type="ID" min_len="3" max_len="3" name="Price Multiplier Qualifier"/>
+  <data_ele ele_num="649" data_type="R" min_len="1" max_len="10" name="Multiplier"/>
+  <data_ele ele_num="65" data_type="R" min_len="1" max_len="8" name="Height"/>
+  <data_ele ele_num="659" data_type="ID" min_len="1" max_len="2" name="Basis of Verification Code"/>
+  <data_ele ele_num="66" data_type="ID" min_len="1" max_len="2" name="Identification Code Qualifier"/>
+  <data_ele ele_num="662" data_type="ID" min_len="1" max_len="1" name="Relationship Code"/>
+  <data_ele ele_num="669" data_type="ID" min_len="3" max_len="3" name="Currency Market/Exchange Code"/>
+  <data_ele ele_num="67" data_type="AN" min_len="2" max_len="80" name="Identification Code"/>
+  <data_ele ele_num="673" data_type="ID" min_len="2" max_len="2" name="Quantity Qualifier"/>
+  <data_ele ele_num="678" data_type="ID" min_len="1" max_len="2" name="Ship/Delivery or Calendar Pattern Code"/>
+  <data_ele ele_num="679" data_type="ID" min_len="1" max_len="1" name="Ship/Delivery Pattern Time Code"/>
+  <data_ele ele_num="687" data_type="ID" min_len="2" max_len="2" name="Class of Trade Code"/>
+  <data_ele ele_num="689" data_type="ID" min_len="2" max_len="2" name="Occupancy Code"/>
+  <data_ele ele_num="704" data_type="ID" min_len="1" max_len="2" name="Paperwork/Report Action Code"/>
+  <data_ele ele_num="706" data_type="ID" min_len="2" max_len="2" name="Entity Relationship Code"/>
+  <data_ele ele_num="734" data_type="AN" min_len="1" max_len="12" name="Hierarchical Parent ID Number"/>
+  <data_ele ele_num="735" data_type="ID" min_len="1" max_len="2" name="Hierarchical Level Code"/>
+  <data_ele ele_num="736" data_type="ID" min_len="1" max_len="1" name="Hierarchical Child Code"/>
+  <data_ele ele_num="737" data_type="ID" min_len="2" max_len="2" name="Measurement Reference ID Code"/>
+  <data_ele ele_num="738" data_type="ID" min_len="1" max_len="3" name="Measurement Qualifier"/>
+  <data_ele ele_num="739" data_type="R" min_len="1" max_len="20" name="Measurement Value"/>
+  <data_ele ele_num="740" data_type="R" min_len="1" max_len="20" name="Range Minimum"/>
+  <data_ele ele_num="741" data_type="R" min_len="1" max_len="20" name="Range Maximum"/>
+  <data_ele ele_num="750" data_type="ID" min_len="2" max_len="3" name="Product/Process Characteristic Code"/>
+  <data_ele ele_num="751" data_type="AN" min_len="1" max_len="12" name="Product Description Code"/>
+  <data_ele ele_num="752" data_type="ID" min_len="2" max_len="2" name="Surface/Layer/Position Code"/>
+  <data_ele ele_num="754" data_type="AN" min_len="1" max_len="7" name="Packaging Description Code"/>
+  <data_ele ele_num="755" data_type="ID" min_len="2" max_len="2" name="Report Type Code"/>
+  <data_ele ele_num="756" data_type="ID" min_len="1" max_len="2" name="Report Transmission Code"/>
+  <data_ele ele_num="757" data_type="N0" min_len="1" max_len="2" name="Report Copies Needed"/>
+  <data_ele ele_num="782" data_type="R" min_len="1" max_len="18" name="Monetary Amount"/>
+  <data_ele ele_num="786" data_type="ID" min_len="2" max_len="2" name="Security Level Code"/>
+  <data_ele ele_num="799" data_type="AN" min_len="1" max_len="30" name="Version Identifier"/>
+  <data_ele ele_num="81" data_type="R" min_len="1" max_len="10" name="Weight"/>
+  <data_ele ele_num="812" data_type="ID" min_len="1" max_len="10" name="Payment Format Code"/>
+  <data_ele ele_num="819" data_type="ID" min_len="2" max_len="3" name="Language Code"/>
+  <data_ele ele_num="82" data_type="R" min_len="1" max_len="8" name="Length"/>
+  <data_ele ele_num="821" data_type="ID" min_len="3" max_len="3" name="Safety Characteristic/Hazard Code"/>
+  <data_ele ele_num="822" data_type="AN" min_len="1" max_len="15" name="Source Subqualifier"/>
+  <data_ele ele_num="875" data_type="ID" min_len="3" max_len="3" name="Maintenance Type Code"/>
+  <data_ele ele_num="889" data_type="ID" min_len="1" max_len="1" name="Follow-up Action Code"/>
+  <data_ele ele_num="9" data_type="ID" min_len="2" max_len="2" name="Late Reason Code"/>
+  <data_ele ele_num="901" data_type="ID" min_len="2" max_len="2" name="Reject Reason Code"/>
+  <data_ele ele_num="921" data_type="ID" min_len="2" max_len="2" name="Discipline Type Code"/>
+  <data_ele ele_num="923" data_type="ID" min_len="1" max_len="1" name="Prognosis Code"/>
+  <data_ele ele_num="93" data_type="AN" min_len="1" max_len="60" name="Name"/>
+  <data_ele ele_num="933" data_type="AN" min_len="1" max_len="264" name="Free-Form Message Text"/>
+  <data_ele ele_num="934" data_type="ID" min_len="2" max_len="2" name="Printer Carriage Control Code"/>
+  <data_ele ele_num="935" data_type="ID" min_len="2" max_len="2" name="Measurement Significance Code"/>
+  <data_ele ele_num="936" data_type="ID" min_len="2" max_len="2" name="Measurement Attribute Code"/>
+  <data_ele ele_num="954" data_type="R" min_len="1" max_len="10" name="Percent"/>
+  <data_ele ele_num="96" data_type="N0" min_len="1" max_len="10" name="Number of Included Segments"/>
+  <data_ele ele_num="98" data_type="ID" min_len="2" max_len="3" name="Entity Identifier Code"/>
+</data_elements>
