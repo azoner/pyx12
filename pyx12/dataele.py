@@ -12,6 +12,11 @@
 
 """
 Interface to normalized Data Elements
+
+Validates element values based on data element number
+
+Check length, charset, invalid characters for type, 
+valid dates and times.
 """
 
 import os, os.path
@@ -124,7 +129,8 @@ class DataElements(object):
         @type val: string
         @param charset: [optional] - 'B' for Basic X12 character set, 'E' for extended
         @type charset: string
-        @return: None if valid, raise exception on no match
+        @return: True if matched, False if not
+        @rtype: boolean
         """
         if short_data_type == 'N':
             rec = self.rec_N
@@ -134,10 +140,10 @@ class DataElements(object):
             raise EngineError, 'Unknown data type %s' % (short_data_type)
         m = rec.search(val)
         if not m:
-            raise IsValidError # nothing matched
+            return False
         if m.group(0) != val:  # matched substring != original, bad
-            raise IsValidError # nothing matched
-        return None
+            return False # nothing matched
+        return True
  
     def __not_match_re(self, short_data_type, val, charset = 'B'):
         """
@@ -147,7 +153,8 @@ class DataElements(object):
         @type val: string
         @param charset: [optional] - 'B' for Basic X12 character set, 'E' for extended
         @type charset: string
-        @return: None if valid, raise exception on no match
+        @return: True if found invalid characters, False if none
+        @rtype: boolean
         """
         if short_data_type in ('ID', 'AN'):
             if charset == 'E':  # extended charset
@@ -162,8 +169,8 @@ class DataElements(object):
             raise EngineError, 'Unknown data type %s' % (short_data_type)
         m = rec.search(val)
         if m and m.group(0):
-            raise IsValidError # Invalid char matched
-        return None
+            return True # Invalid char matched
+        return False
 
     def __is_valid_date(self, data_type, val):
         """
@@ -254,11 +261,15 @@ class DataElements(object):
         if type(val) is not StringType:
             raise EngineError, 'Value is not a string'
 
+        # RE/value checks
+        # length checks - min_len, max_len
         try:
             if data_type[0] == 'N':
-                self.__match_re('N', val)
+                if not self.__match_re('N', val):
+                    err_str = 'Data element error: (%s) contained invalid characters for element number %s' % (val, 'N')
             elif data_type == 'R':
-                self.__match_re('R', val)
+                if not self.__match_re('R', val):
+                    err_str = 'Data element error: (%s) contained invalid characters for element number %s' % (val, 'R')
             elif data_type in ('ID', 'AN'):
                 self.__not_match_re('ID', val, charset)
             elif data_type == 'RD8':
