@@ -20,6 +20,7 @@ import os.path
 #import pdb
 import string
 import sys
+import re
 from types import *
 from stat import ST_MTIME
 from stat import ST_SIZE
@@ -28,6 +29,7 @@ from stat import ST_SIZE
 import errors
 from errors import IsValidError
 import codes
+import dataele
 
 #Global Variables
 NodeType = {'element_start': 1, 'element_end': 15, 'attrib': 2, 'text': 3, 
@@ -627,18 +629,18 @@ class loop_if(x12_node):
                         id_val = pathl[0][pathl[0].find('[')+1:pathl[0].find(']')]
                         if seg_id == child.id:
                             if child.children[0].is_element() \
-                                and child.children[0].data_type == 'ID' \
+                                and child.children[0].get_data_type() == 'ID' \
                                 and len(child.children[0].valid_codes) > 0 \
                                 and id_val in child.children[0].valid_codes:
                                 return child
                             # Special Case for 820
                             elif seg_id == 'ENT' and child.children[1].is_element() \
-                                and child.children[1].data_type == 'ID' \
+                                and child.children[1].get_data_type() == 'ID' \
                                 and len(child.children[1].valid_codes) > 0 \
                                 and id_val in child.children[1].valid_codes:
                                 return child
                             elif child.children[0].is_composite() \
-                                and child.children[0].children[0].data_type == 'ID' \
+                                and child.children[0].children[0].get_data_type() == 'ID' \
                                 and len(child.children[0].children[0].valid_codes) > 0 \
                                 and id_val in child.children[0].children[0].valid_codes:
                                 return child
@@ -922,7 +924,7 @@ class segment_if(x12_node):
         """
         if seg.get_seg_id() == self.id:
             if self.children[0].is_element() \
-                and self.children[0].data_type == 'ID' \
+                and self.children[0].get_data_type() == 'ID' \
                 and self.children[0].usage == 'R' \
                 and len(self.children[0].valid_codes) > 0 \
                 and seg.get_value('01') not in self.children[0].valid_codes:
@@ -931,13 +933,13 @@ class segment_if(x12_node):
             # Special Case for 820
             elif seg.get_seg_id() == 'ENT' \
                 and self.children[1].is_element() \
-                and self.children[1].data_type == 'ID' \
+                and self.children[1].get_data_type() == 'ID' \
                 and len(self.children[1].valid_codes) > 0 \
                 and seg.get_value('02') not in self.children[1].valid_codes:
                 #logger.debug('is_match: %s %s' % (seg.get_seg_id(), seg[1]), self.children[0].valid_codes)
                 return False
             elif self.children[0].is_composite() \
-                and self.children[0].children[0].data_type == 'ID' \
+                and self.children[0].children[0].get_data_type() == 'ID' \
                 and len(self.children[0].children[0].valid_codes) > 0 \
                 and seg.get_value('01-1') not in self.children[0].children[0].valid_codes:
                 return False
@@ -1071,6 +1073,8 @@ class element_if(x12_node):
     """
     Element Interface
     """
+    #data_elements = dataele.DataElements(map_path)
+
     def __init__(self, root, parent):
         """
         @requires: Must be entered with a libxml2 element node current
@@ -1095,8 +1099,8 @@ class element_if(x12_node):
         self.data_ele = None
         self.seq = None
         self.refdes = None
-        self.data_type = None
-        self.min_len = None
+        #self.data_type = None
+        #self.min_len = None
         #self.max_len = None
 
         self.valid_codes = []
@@ -1174,12 +1178,12 @@ class element_if(x12_node):
                 #elif cur_name == 'refdes':
                 #    self.refdes = reader.Value()
                 #    self.id = self.refdes
-                elif cur_name == 'data_type':
-                    self.data_type = reader.Value()
-                elif cur_name == 'min_len':
-                    self.min_len = reader.Value()
-                elif cur_name == 'max_len':
-                    self.max_len = reader.Value()
+                #elif cur_name == 'data_type':
+                #    self.data_type = reader.Value()
+                #elif cur_name == 'min_len':
+                #    self.min_len = reader.Value()
+                #elif cur_name == 'max_len':
+                #    self.max_len = reader.Value()
                 #elif cur_name == 'max_use':
                 #    self.max_use= reader.Value()
                 elif cur_name == 'code':
@@ -1202,6 +1206,7 @@ class element_if(x12_node):
         """
         @rtype: string
         """
+        (data_type, min_len, max_len) = self.root.data_elements.get_by_elem_num(self.data_ele)
         out = '%s%s "%s"' % (str(' '*self.base_level), self.refdes, self.name)
         if self.data_ele: 
             out += '  data_ele: %s' % (self.data_ele)
@@ -1211,7 +1216,7 @@ class element_if(x12_node):
             out += '  usage: %s' % (self.usage)
         if self.seq: 
             out += '  seq: %i' % (self.seq)
-        out += '  %s(%s, %s)' % (self.data_type, self.min_len, self.max_len)
+        out += '  %s(%i, %i)' % (data_type, min_len, max_len)
         if self.external_codes: 
             out += '   external codes: %s' % (self.external_codes)
         #if self.valid_codes:
@@ -1293,35 +1298,36 @@ class element_if(x12_node):
             return False
 
         elem_val = elem.get_value()
+        (data_type, min_len, max_len) = self.root.data_elements.get_by_elem_num(self.data_ele)
         valid = True
 # Validate based on data_elem_num
 # Then, validate on more specific criteria
-        if (not self.data_type is None) and (self.data_type == 'R' or self.data_type[0] == 'N'):
+        if (not data_type is None) and (data_type == 'R' or data_type[0] == 'N'):
             elem_strip = string.replace(string.replace(elem_val, '-', ''), '.', '')
-            if len(elem_strip) < int(self.min_len):
+            if len(elem_strip) < min_len:
                 err_str = 'Data element "%s" (%s) is too short: "%s" should be at least %i characters' % \
-                    (self.name, self.refdes, elem_val, int(self.min_len))
+                    (self.name, self.refdes, elem_val, min_len)
                 self._error(errh, err_str, '4', elem_val)
                 valid = False
-            if len(elem_strip) > int(self.max_len):
+            if len(elem_strip) > max_len:
                 err_str = 'Element "%s" (%s) is too long: "%s" should only be %i characters' % \
-                    (self.name, self.refdes, elem_val, int(self.max_len))
+                    (self.name, self.refdes, elem_val, max_len)
                 self._error(errh, err_str, '5', elem_val)
                 valid = False
         else:
-            if len(elem_val) < int(self.min_len):
+            if len(elem_val) < min_len:
                 err_str = 'Data element "%s" (%s) is too short: "%s" should be at least %i characters' % \
-                    (self.name, self.refdes, elem_val, int(self.min_len))
+                    (self.name, self.refdes, elem_val, min_len)
                 self._error(errh, err_str, '4', elem_val)
                 valid = False
-            if len(elem_val) > int(self.max_len):
+            if len(elem_val) > max_len:
                 err_str = 'Element "%s" (%s) is too long: "%s" should only be %i characters' % \
-                    (self.name, self.refdes, elem_val, int(self.max_len))
+                    (self.name, self.refdes, elem_val, max_len)
                 self._error(errh, err_str, '5', elem_val)
                 valid = False
 
-        if self.data_type in ['AN', 'ID'] and elem_val[-1] == ' ':
-            if len(elem_val.rstrip()) >= int(self.min_len):
+        if data_type in ['AN', 'ID'] and elem_val[-1] == ' ':
+            if len(elem_val.rstrip()) >= min_len:
                 err_str = 'Element "%s" (%s) has unnecessary trailing spaces. (%s)' % \
                     (self.name, self.refdes, elem_val)
                 self._error(errh, err_str, '6', elem_val)
@@ -1329,20 +1335,20 @@ class element_if(x12_node):
             
         if not self._is_valid_code(elem_val, errh, check_dte):
             valid = False
-        if not IsValidDataType(elem_val, self.data_type, self.root.param.get('charset')):
-            if self.data_type in ('RD8', 'DT', 'D8', 'D6'):
+        if not IsValidDataType(elem_val, data_type, self.root.param.get('charset')):
+            if data_type in ('RD8', 'DT', 'D8', 'D6'):
                 err_str = 'Data element "%s" (%s) contains an invalid date (%s)' % \
                     (self.name, self.refdes, elem_val)
                 self._error(errh, err_str, '8', elem_val)
                 valid = False
-            elif self.data_type == 'TM':
+            elif data_type == 'TM':
                 err_str = 'Data element "%s" (%s) contains an invalid time (%s)' % \
                     (self.name, self.refdes, elem_val)
                 self._error(errh, err_str, '9', elem_val)
                 valid = False
             else:
                 err_str = 'Data element "%s" (%s) is type %s, contains an invalid character(%s)' % \
-                    (self.name, self.refdes, self.data_type, elem_val)
+                    (self.name, self.refdes, data_type, elem_val)
                 self._error(errh, err_str, '6', elem_val)
                 valid = False
         if len(type_list) > 0:
@@ -1379,6 +1385,11 @@ class element_if(x12_node):
             return False
         return True
         
+    def get_data_type(self):
+        """
+        """
+        (data_type, min_len, max_len) = self.root.data_elements.get_by_elem_num(self.data_ele)
+        return data_type
 
     def get_seg_count(self):
         """
@@ -1731,7 +1742,6 @@ def syntax_ele_id_str(seg_id, ele_pos_list):
             output += ', %s%02i' % (seg_id, ele_pos_list[i+1])
     return output
         
-    
 def IsValidDataType(str_val, data_type, charset = 'B'):
     """
     Is str_val a valid X12 data value
@@ -1744,8 +1754,6 @@ def IsValidDataType(str_val, data_type, charset = 'B'):
     @type charset: string
     @rtype: boolean
     """
-    import re
-    #print str_val, data_type, charset
     if not data_type:
         return True
     if type(str_val) is not StringType:
@@ -1753,26 +1761,14 @@ def IsValidDataType(str_val, data_type, charset = 'B'):
 
     try:
         if data_type[0] == 'N':
-            m = re.compile("^-?[0-9]+", re.S).search(str_val)
-            if not m:
-                raise IsValidError # nothing matched
-            if m.group(0) != str_val:  # matched substring != original, bad
-                raise IsValidError # nothing matched
+            if not match_re('N', str_val):
+                raise IsValidError # not a number
         elif data_type == 'R':
-            m = re.compile("^-?[0-9]*(\.[0-9]+)?", re.S).search(str_val)
-            if not m: 
-                raise IsValidError # nothing matched
-            if m.group(0) != str_val:  # matched substring != original, bad
-                raise IsValidError 
+            if not match_re('R', str_val):
+                raise IsValidError  # not a number
         elif data_type in ('ID', 'AN'):
-            if charset == 'E':  # extended charset
-                m = re.compile("[^A-Z0-9!\"&'()*+,\-\\\./:;?=\sa-z%~@\[\]_{}\\\|<>#$\s]", re.S).search(str_val)
-                if m and m.group(0):
-                    raise IsValidError 
-            elif charset == 'B':  # basic charset:
-                m = re.compile("[^A-Z0-9!\"&'()*+,\-\\\./:;?=\s]", re.S).search(str_val)
-                if m and m.group(0):  # invalid string found
-                    raise IsValidError 
+            if not_match_re('ID', str_val, charset):
+                raise IsValidError 
         elif data_type == 'RD8':
             if '-' in str_val:
                 (start, end) = str_val.split('-')
@@ -1780,67 +1776,147 @@ def IsValidDataType(str_val, data_type, charset = 'B'):
             else:
                 return False
         elif data_type in ('DT', 'D8', 'D6'):
-            if data_type == 'D8' and len(str_val) != 8:
+            if not is_valid_date(data_type, str_val):
                 raise IsValidError
-            if data_type == 'D6' and len(str_val) != 6:
-                raise IsValidError
-            m = re.compile("[^0-9]+", re.S).search(str_val)  # first test date for non-numeric chars
-            if m:  # invalid string found
-                raise IsValidError 
-            if len(str_val) in (6, 8, 12): # valid lengths for date
-                try:
-                    if 6 == len(str_val):  # if 2 digit year, add CC
-                        if str_val[0:2] < 50:
-                            str_val = '20' + str_val
-                        else:
-                            str_val = '19' + str_val
-                    month = int(str_val[4:6])  # check month
-                    if month < 1 or month > 12:
-                        raise IsValidError
-                    day = int(str_val[6:8])  # check day
-                    if month in (1, 3, 5, 7, 8, 10, 12):  # 31 day month
-                        if day < 1 or day > 31:
-                            raise IsValidError
-                    elif month in (4, 6, 9, 11):  # 30 day month
-                        if day < 1 or day > 30:
-                            raise IsValidError
-                    else: # else 28 day
-                        year = int(str_val[0:4])  # get year
-                        if not year%4 and not (not year%100 and year%400):
-                        #if not (year % 4) and ((year % 100) or (not (year % 400)) ):  # leap year
-                            if day < 1 or day > 29:
-                                raise IsValidError
-                        elif day < 1 or day > 28:
-                            raise IsValidError
-                    if len(str_val) == 12:
-                        if not IsValidDataType(str_val[8:12], 'TM', charset):
-                            raise IsValidError
-                except TypeError:
-                    raise IsValidError
-            else:
-                raise IsValidError 
         elif data_type == 'TM':
-            m = re.compile("[^0-9]+", re.S).search(str_val)  # first test time for non-numeric chars
-            if m:  # invalid string found
+            if not is_valid_time(str_val):
                 raise IsValidError 
-            elif str_val[0:2] > '23' or str_val[2:4] > '59':  # check hour, minute segment
-                raise IsValidError 
-            elif len(str_val) > 4:  # time contains seconds
-                if len(str_val) < 6:  # length is munted
-                    raise IsValidError 
-                elif str_val[4:6] > '59':  # check seconds
-                    raise IsValidError 
-                # check decimal seconds here in the future
-                elif len(str_val) > 8:
-                    # print 'unhandled decimal seconds encountered'
-                    raise IsValidError 
         elif data_type == 'B':
             pass
         else:
             raise IsValidError, 'Unknown data type %s' % data_type
     except IsValidError:
         return False
-    #    else:  
-    #        # print 'data_type parameter is not valid, abort'
-    #        return 1
+    return True
+
+rec_N = re.compile("^-?[0-9]+", re.S)
+rec_R = re.compile("^-?[0-9]*(\.[0-9]+)?", re.S)
+rec_ID_E = re.compile("[^A-Z0-9!\"&'()*+,\-\\\./:;?=\sa-z%~@\[\]_{}\\\|<>#$\s]", re.S)
+rec_ID_B = re.compile("[^A-Z0-9!\"&'()*+,\-\\\./:;?=\s]", re.S)
+rec_DT = re.compile("[^0-9]+", re.S)
+rec_TM = re.compile("[^0-9]+", re.S)
+
+def match_re(short_data_type, val):
+    """
+    @param short_data_type: simplified data type
+    @type short_data_type: string
+    @param val: data value to be verified
+    @type val: string
+    @param charset: [optional] - 'B' for Basic X12 character set, 'E' for extended
+    @type charset: string
+    @return: True if matched, False if not
+    @rtype: boolean
+    """
+    if short_data_type == 'N':
+        rec = rec_N
+    elif short_data_type == 'R':
+        rec = rec_R
+    else:
+        raise errors.EngineError, 'Unknown data type %s' % (short_data_type)
+    m = rec.search(val)
+    if not m:
+        return False
+    if m.group(0) != val:  # matched substring != original, bad
+        return False # nothing matched
+    return True
+
+def not_match_re(short_data_type, val, charset = 'B'):
+    """
+    @param short_data_type: simplified data type
+    @type short_data_type: string
+    @param val: data value to be verified
+    @type val: string
+    @param charset: [optional] - 'B' for Basic X12 character set, 'E' for extended
+    @type charset: string
+    @return: True if found invalid characters, False if none
+    @rtype: boolean
+    """
+    if short_data_type in ('ID', 'AN'):
+        if charset == 'E':  # extended charset
+            rec = rec_ID_E
+        elif charset == 'B':  # basic charset:
+            rec = rec_ID_B
+    elif short_data_type == 'DT':
+        rec = rec_DT
+    elif short_data_type == 'TM':
+        rec = rec_TM
+    else:
+        raise errors.EngineError, 'Unknown data type %s' % (short_data_type)
+    m = rec.search(val)
+    if m and m.group(0):
+        return True # Invalid char matched
+    return False
+
+def is_valid_date(data_type, val):
+    """
+    @param data_type: Date type
+    @type data_type: string
+    @param val: data value to be verified
+    @type val: string
+    @return: True if valid, False if not
+    @rtype: boolean
+    """
+    try:
+        if data_type == 'D8' and len(val) != 8:
+            raise IsValidError
+        if data_type == 'D6' and len(val) != 6:
+            raise IsValidError
+        if not_match_re('DT', val):
+            raise IsValidError
+        if len(val) in (6, 8, 12): # valid lengths for date
+            try:
+                if 6 == len(val):  # if 2 digit year, add CC
+                    if val[0:2] < 50:
+                        val = '20' + val
+                    else:
+                        val = '19' + val
+                month = int(val[4:6])  # check month
+                if month < 1 or month > 12:
+                    raise IsValidError
+                day = int(val[6:8])  # check day
+                if month in (1, 3, 5, 7, 8, 10, 12):  # 31 day month
+                    if day < 1 or day > 31:
+                        raise IsValidError
+                elif month in (4, 6, 9, 11):  # 30 day month
+                    if day < 1 or day > 30:
+                        raise IsValidError
+                else: # else 28 day
+                    year = int(val[0:4])  # get year
+                    if not year%4 and not (not year%100 and year%400):
+                    #if not (year % 4) and ((year % 100) or (not (year % 400)) ):  # leap year
+                        if day < 1 or day > 29:
+                            raise IsValidError
+                    elif day < 1 or day > 28:
+                        raise IsValidError
+                if len(val) == 12:
+                    if not is_valid_time(val[8:12]):
+                        raise IsValidError
+            except TypeError:
+                raise IsValidError
+        else:
+            raise IsValidError
+    except IsValidError:
+        return False
+    return True
+
+def is_valid_time(val):
+    """
+    @param val: time value to be verified
+    @type val: string
+    """
+    try:
+        not_match_re('TM', val)
+        if val[0:2] > '23' or val[2:4] > '59':  # check hour, minute segment
+            raise IsValidError
+        elif len(val) > 4:  # time contains seconds
+            if len(val) < 6:  # length is munted
+                raise IsValidError
+            elif val[4:6] > '59':  # check seconds
+                raise IsValidError
+            # check decimal seconds here in the future
+            elif len(val) > 8:
+                # print 'unhandled decimal seconds encountered'
+                raise IsValidError
+    except IsValidError:
+        return False
     return True

@@ -8,7 +8,7 @@
 
 XSLT=/usr/local/bin/xsltproc
 LINT=/usr/local/bin/xmllint
-XSL=loop_id.xsl
+XSL=rmtypes.xsl
 XFLAGS=
 LFLAGS=--format
 

@@ -30,9 +30,6 @@
         <name>Authorization Information Qualifier</name>
         <usage>R</usage>
         <seq>01</seq>
-        <data_type>ID</data_type>
-        <min_len>2</min_len>
-        <max_len>2</max_len>
         <valid_codes>
           <code>00</code>
           <code>03</code>
@@ -43,18 +40,12 @@
         <name>Authorization Information</name>
         <usage>R</usage>
         <seq>02</seq>
-        <data_type>AN</data_type>
-        <min_len>10</min_len>
-        <max_len>10</max_len>
       </element>
       <element xid="ISA03">
         <data_ele>I03</data_ele>
         <name>Security Information Qualifier</name>
         <usage>R</usage>
         <seq>03</seq>
-        <data_type>ID</data_type>
-        <min_len>2</min_len>
-        <max_len>2</max_len>
         <valid_codes>
           <code>00</code>
           <code>01</code>
@@ -65,18 +56,12 @@
         <name>Security Information</name>
         <usage>R</usage>
         <seq>04</seq>
-        <data_type>AN</data_type>
-        <min_len>10</min_len>
-        <max_len>10</max_len>
       </element>
       <element xid="ISA05">
         <data_ele>I05</data_ele>
         <name>Interchange ID Qualifier</name>
         <usage>R</usage>
         <seq>05</seq>
-        <data_type>ID</data_type>
-        <min_len>2</min_len>
-        <max_len>2</max_len>
         <valid_codes>
           <code>01</code>
           <code>14</code>
@@ -94,18 +79,12 @@
         <name>Interchange Sender ID</name>
         <usage>R</usage>
         <seq>06</seq>
-        <data_type>AN</data_type>
-        <min_len>15</min_len>
-        <max_len>15</max_len>
       </element>
       <element xid="ISA07">
         <data_ele>I05</data_ele>
         <name>Interchange ID Qualifier</name>
         <usage>R</usage>
         <seq>07</seq>
-        <data_type>ID</data_type>
-        <min_len>2</min_len>
-        <max_len>2</max_len>
         <valid_codes>
           <code>01</code>
           <code>14</code>
@@ -123,36 +102,24 @@
         <name>Interchange Receiver ID</name>
         <usage>R</usage>
         <seq>08</seq>
-        <data_type>AN</data_type>
-        <min_len>15</min_len>
-        <max_len>15</max_len>
       </element>
       <element xid="ISA09">
         <data_ele>I08</data_ele>
         <name>Interchange Date</name>
         <usage>R</usage>
         <seq>09</seq>
-        <data_type>DT</data_type>
-        <min_len>6</min_len>
-        <max_len>6</max_len>
       </element>
       <element xid="ISA10">
         <data_ele>I09</data_ele>
         <name>Interchange Time</name>
         <usage>R</usage>
         <seq>10</seq>
-        <data_type>TM</data_type>
-        <min_len>4</min_len>
-        <max_len>4</max_len>
       </element>
       <element xid="ISA11">
         <data_ele>I10</data_ele>
         <name>Interchange Control Standards Identifier</name>
         <usage>R</usage>
         <seq>11</seq>
-        <data_type>ID</data_type>
-        <min_len>1</min_len>
-        <max_len>1</max_len>
         <valid_codes>
           <code>U</code>
         </valid_codes>
@@ -162,9 +129,6 @@
         <name>Interchange Control Version Number</name>
         <usage>R</usage>
         <seq>12</seq>
-        <data_type>ID</data_type>
-        <min_len>5</min_len>
-        <max_len>5</max_len>
         <valid_codes>
           <code>00401</code>
         </valid_codes>
@@ -174,18 +138,12 @@
         <name>Interchange Control Number</name>
         <usage>R</usage>
         <seq>13</seq>
-        <data_type>N0</data_type>
-        <min_len>9</min_len>
-        <max_len>9</max_len>
       </element>
       <element xid="ISA14">
         <data_ele>I13</data_ele>
         <name>Acknowledgment Requested</name>
         <usage>R</usage>
         <seq>14</seq>
-        <data_type>ID</data_type>
-        <min_len>1</min_len>
-        <max_len>1</max_len>
         <valid_codes>
           <code>0</code>
           <code>1</code>
@@ -196,9 +154,6 @@
         <name>Usage Indicator</name>
         <usage>R</usage>
         <seq>15</seq>
-        <data_type>ID</data_type>
-        <min_len>1</min_len>
-        <max_len>1</max_len>
         <valid_codes>
           <code>P</code>
           <code>T</code>
@@ -209,9 +164,6 @@
         <name>Component Element Separator</name>
         <usage>R</usage>
         <seq>16</seq>
-        <data_type>AN</data_type>
-        <min_len>1</min_len>
-        <max_len>1</max_len>
       </element>
     </segment>
 <!--End of ISA segment-->
@@ -230,9 +182,6 @@
           <name>Functional Identifier Code</name>
           <usage>R</usage>
           <seq>01</seq>
-          <data_type>ID</data_type>
-          <min_len>2</min_len>
-          <max_len>2</max_len>
           <valid_codes>
             <code>HI</code>
             <code>HC</code>
@@ -251,54 +200,36 @@
           <name>Application Sender's Code</name>
           <usage>R</usage>
           <seq>02</seq>
-          <data_type>AN</data_type>
-          <min_len>2</min_len>
-          <max_len>15</max_len>
         </element>
         <element xid="GS03">
           <data_ele>124</data_ele>
           <name>Application Receiver's Code</name>
           <usage>R</usage>
           <seq>03</seq>
-          <data_type>AN</data_type>
-          <min_len>2</min_len>
-          <max_len>15</max_len>
         </element>
         <element xid="GS04">
           <data_ele>373</data_ele>
           <name>Date</name>
           <usage>R</usage>
           <seq>04</seq>
-          <data_type>DT</data_type>
-          <min_len>8</min_len>
-          <max_len>8</max_len>
         </element>
         <element xid="GS05">
           <data_ele>337</data_ele>
           <name>Time</name>
           <usage>R</usage>
           <seq>05</seq>
-          <data_type>TM</data_type>
-          <min_len>4</min_len>
-          <max_len>8</max_len>
         </element>
         <element xid="GS06">
           <data_ele>28</data_ele>
           <name>Group Control Number</name>
           <usage>R</usage>
           <seq>06</seq>
-          <data_type>N0</data_type>
-          <min_len>1</min_len>
-          <max_len>9</max_len>
         </element>
         <element xid="GS07">
           <data_ele>455</data_ele>
           <name>Responsible Agency Code</name>
           <usage>R</usage>
           <seq>07</seq>
-          <data_type>ID</data_type>
-          <min_len>1</min_len>
-          <max_len>2</max_len>
           <valid_codes>
             <code>X</code>
           </valid_codes>
@@ -308,9 +239,6 @@
           <name>Version / Release / Industry Identifier Code</name>
           <usage>R</usage>
           <seq>08</seq>
-          <data_type>AN</data_type>
-          <min_len>1</min_len>
-          <max_len>12</max_len>
           <valid_codes>
             <code>004010</code>
             <code>004010X061</code>
@@ -341,9 +269,6 @@
             <name>Transaction Set Identifier Code</name>
             <usage>R</usage>
             <seq>01</seq>
-            <data_type>ID</data_type>
-            <min_len>3</min_len>
-            <max_len>3</max_len>
             <valid_codes>
               <code>997</code>
             </valid_codes>
@@ -353,9 +278,6 @@
             <name>Transaction Set Control Number</name>
             <usage>R</usage>
             <seq>02</seq>
-            <data_type>AN</data_type>
-            <min_len>4</min_len>
-            <max_len>9</max_len>
           </element>
         </segment>
 <!--End of ST segment-->
@@ -374,9 +296,6 @@
               <name>Functional Identifier Code</name>
               <usage>R</usage>
               <seq>01</seq>
-              <data_type>ID</data_type>
-              <min_len>2</min_len>
-              <max_len>2</max_len>
               <valid_codes>
                 <code>BE</code>
                 <code>HB</code>
@@ -394,9 +313,6 @@
               <name>Group Control Number</name>
               <usage>R</usage>
               <seq>02</seq>
-              <data_type>N0</data_type>
-              <min_len>1</min_len>
-              <max_len>9</max_len>
             </element>
           </segment>
 <!--End of AK1 segment-->
@@ -415,9 +331,6 @@
                 <name>Transaction Set Identifier Code</name>
                 <usage>R</usage>
                 <seq>01</seq>
-                <data_type>ID</data_type>
-                <min_len>3</min_len>
-                <max_len>3</max_len>
                 <valid_codes>
                   <code>270</code>
                   <code>271</code>
@@ -435,9 +348,6 @@
                 <name>Transaction Set Control Number</name>
                 <usage>R</usage>
                 <seq>02</seq>
-                <data_type>AN</data_type>
-                <min_len>4</min_len>
-                <max_len>9</max_len>
               </element>
             </segment>
 <!--End of AK2 segment-->
@@ -456,36 +366,24 @@
                   <name>Segment ID Code</name>
                   <usage>R</usage>
                   <seq>01</seq>
-                  <data_type>ID</data_type>
-                  <min_len>2</min_len>
-                  <max_len>3</max_len>
                 </element>
                 <element xid="AK302">
                   <data_ele>719</data_ele>
                   <name>Segment Position in Transaction Set</name>
                   <usage>R</usage>
                   <seq>02</seq>
-                  <data_type>N0</data_type>
-                  <min_len>1</min_len>
-                  <max_len>6</max_len>
                 </element>
                 <element xid="AK303">
                   <data_ele>447</data_ele>
                   <name>Loop Identifier Code</name>
                   <usage>S</usage>
                   <seq>03</seq>
-                  <data_type>AN</data_type>
-                  <min_len>1</min_len>
-                  <max_len>6</max_len>
                 </element>
                 <element xid="AK304">
                   <data_ele>720</data_ele>
                   <name>Segment Syntax Error Code</name>
                   <usage>S</usage>
                   <seq>04</seq>
-                  <data_type>ID</data_type>
-                  <min_len>1</min_len>
-                  <max_len>3</max_len>
                   <valid_codes>
                     <code>1</code>
                     <code>2</code>
@@ -514,18 +412,12 @@
                     <name>Element Position in Segment</name>
                     <usage>R</usage>
                     <seq>01</seq>
-                    <data_type>N0</data_type>
-                    <min_len>1</min_len>
-                    <max_len>2</max_len>
                   </element>
                   <element xid="AK401-02">
                     <data_ele>1528</data_ele>
                     <name>Component Data Element Position in Composite</name>
                     <usage>S</usage>
                     <seq>02</seq>
-                    <data_type>N0</data_type>
-                    <min_len>1</min_len>
-                    <max_len>2</max_len>
                   </element>
                 </composite>
                 <element xid="AK402">
@@ -533,18 +425,12 @@
                   <name>Data Element Reference Number</name>
                   <usage>S</usage>
                   <seq>02</seq>
-                  <data_type>N0</data_type>
-                  <min_len>1</min_len>
-                  <max_len>4</max_len>
                 </element>
                 <element xid="AK403">
                   <data_ele>723</data_ele>
                   <name>Data Element Syntax Error Code</name>
                   <usage>R</usage>
                   <seq>03</seq>
-                  <data_type>ID</data_type>
-                  <min_len>1</min_len>
-                  <max_len>3</max_len>
                   <valid_codes>
                     <code>1</code>
                     <code>2</code>
@@ -563,9 +449,6 @@
                   <name>Copy of Bad Data Element</name>
                   <usage>S</usage>
                   <seq>04</seq>
-                  <data_type>AN</data_type>
-                  <min_len>1</min_len>
-                  <max_len>99</max_len>
                 </element>
               </segment>
 <!--End of AK4 segment-->
@@ -581,9 +464,6 @@
                 <name>Transaction Set Acknowledgment Code</name>
                 <usage>R</usage>
                 <seq>01</seq>
-                <data_type>ID</data_type>
-                <min_len>1</min_len>
-                <max_len>1</max_len>
                 <valid_codes>
                   <code>A</code>
                   <code>E</code>
@@ -598,9 +478,6 @@
                 <name>Transaction Set Syntax Error Code</name>
                 <usage>S</usage>
                 <seq>02</seq>
-                <data_type>ID</data_type>
-                <min_len>1</min_len>
-                <max_len>3</max_len>
                 <valid_codes>
                   <code>1</code>
                   <code>2</code>
@@ -630,9 +507,6 @@
                 <name>Transaction Set Syntax Error Code</name>
                 <usage>S</usage>
                 <seq>03</seq>
-                <data_type>ID</data_type>
-                <min_len>1</min_len>
-                <max_len>3</max_len>
                 <valid_codes>
                   <code>1</code>
                   <code>2</code>
@@ -662,9 +536,6 @@
                 <name>Transaction Set Syntax Error Code</name>
                 <usage>S</usage>
                 <seq>04</seq>
-                <data_type>ID</data_type>
-                <min_len>1</min_len>
-                <max_len>3</max_len>
                 <valid_codes>
                   <code>1</code>
                   <code>2</code>
@@ -694,9 +565,6 @@
                 <name>Transaction Set Syntax Error Code</name>
                 <usage>S</usage>
                 <seq>05</seq>
-                <data_type>ID</data_type>
-                <min_len>1</min_len>
-                <max_len>3</max_len>
                 <valid_codes>
                   <code>1</code>
                   <code>2</code>
@@ -726,9 +594,6 @@
                 <name>Transaction Set Syntax Error Code</name>
                 <usage>S</usage>
                 <seq>06</seq>
-                <data_type>ID</data_type>
-                <min_len>1</min_len>
-                <max_len>3</max_len>
                 <valid_codes>
                   <code>1</code>
                   <code>2</code>
@@ -767,9 +632,6 @@
               <name>Functional Group Acknowledge Code</name>
               <usage>R</usage>
               <seq>01</seq>
-              <data_type>ID</data_type>
-              <min_len>1</min_len>
-              <max_len>1</max_len>
               <valid_codes>
                 <code>A</code>
                 <code>E</code>
@@ -785,36 +647,24 @@
               <name>Number of Transaction Sets Included</name>
               <usage>R</usage>
               <seq>02</seq>
-              <data_type>N0</data_type>
-              <min_len>1</min_len>
-              <max_len>6</max_len>
             </element>
             <element xid="AK903">
               <data_ele>123</data_ele>
               <name>Number of Received Transaction Sets</name>
               <usage>R</usage>
               <seq>03</seq>
-              <data_type>N0</data_type>
-              <min_len>1</min_len>
-              <max_len>6</max_len>
             </element>
             <element xid="AK904">
               <data_ele>2</data_ele>
               <name>Number of Accepted Transaction Sets</name>
               <usage>R</usage>
               <seq>04</seq>
-              <data_type>N0</data_type>
-              <min_len>1</min_len>
-              <max_len>6</max_len>
             </element>
             <element xid="AK905">
               <data_ele>716</data_ele>
               <name>Functional Group Syntax Error Code</name>
               <usage>S</usage>
               <seq>05</seq>
-              <data_type>ID</data_type>
-              <min_len>1</min_len>
-              <max_len>3</max_len>
               <valid_codes>
                 <code>1</code>
                 <code>2</code>
@@ -842,9 +692,6 @@
               <name>Functional Group Syntax Error Code</name>
               <usage>S</usage>
               <seq>06</seq>
-              <data_type>ID</data_type>
-              <min_len>1</min_len>
-              <max_len>3</max_len>
               <valid_codes>
                 <code>1</code>
                 <code>2</code>
@@ -872,9 +719,6 @@
               <name>Functional Group Syntax Error Code</name>
               <usage>S</usage>
               <seq>07</seq>
-              <data_type>ID</data_type>
-              <min_len>1</min_len>
-              <max_len>3</max_len>
               <valid_codes>
                 <code>1</code>
                 <code>2</code>
@@ -902,9 +746,6 @@
               <name>Functional Group Syntax Error Code</name>
               <usage>S</usage>
               <seq>08</seq>
-              <data_type>ID</data_type>
-              <min_len>1</min_len>
-              <max_len>3</max_len>
               <valid_codes>
                 <code>1</code>
                 <code>2</code>
@@ -932,9 +773,6 @@
               <name>Functional Group Syntax Error Code</name>
               <usage>S</usage>
               <seq>09</seq>
-              <data_type>ID</data_type>
-              <min_len>1</min_len>
-              <max_len>3</max_len>
               <valid_codes>
                 <code>1</code>
                 <code>2</code>
@@ -985,18 +823,12 @@
             <name>Number of Included Segments</name>
             <usage>R</usage>
             <seq>01</seq>
-            <data_type>N0</data_type>
-            <min_len>1</min_len>
-            <max_len>10</max_len>
           </element>
           <element xid="SE02">
             <data_ele>329</data_ele>
             <name>Transaction Set Control Number</name>
             <usage>R</usage>
             <seq>02</seq>
-            <data_type>AN</data_type>
-            <min_len>4</min_len>
-            <max_len>9</max_len>
           </element>
         </segment>
 <!--End of SE segment-->
@@ -1012,18 +844,12 @@
           <name>Number of Transaction Sets Included</name>
           <usage>R</usage>
           <seq>01</seq>
-          <data_type>N0</data_type>
-          <min_len>1</min_len>
-          <max_len>6</max_len>
         </element>
         <element xid="GE02">
           <data_ele>28</data_ele>
           <name>Group Control Number</name>
           <usage>R</usage>
           <seq>02</seq>
-          <data_type>N0</data_type>
-          <min_len>1</min_len>
-          <max_len>9</max_len>
         </element>
       </segment>
 <!--End of GE segment-->
@@ -1038,36 +864,24 @@
         <name>Interchange Control Number</name>
         <usage>R</usage>
         <seq>01</seq>
-        <data_type>N0</data_type>
-        <min_len>9</min_len>
-        <max_len>9</max_len>
       </element>
       <element xid="TA102">
         <data_ele>I08</data_ele>
         <name>Interchange Date</name>
         <usage>R</usage>
         <seq>02</seq>
-        <data_type>DT</data_type>
-        <min_len>6</min_len>
-        <max_len>6</max_len>
       </element>
       <element xid="TA103">
         <data_ele>I09</data_ele>
         <name>Interchange Time</name>
         <usage>R</usage>
         <seq>03</seq>
-        <data_type>TM</data_type>
-        <min_len>4</min_len>
-        <max_len>4</max_len>
       </element>
       <element xid="TA104">
         <data_ele>I17</data_ele>
         <name>Interchange Acknowledgement Code</name>
         <usage>R</usage>
         <seq>04</seq>
-        <data_type>ID</data_type>
-        <min_len>1</min_len>
-        <max_len>1</max_len>
         <valid_codes>
           <code>A</code>
           <code>E</code>
@@ -1079,9 +893,6 @@
         <name>Interchange Note Code</name>
         <usage>R</usage>
         <seq>05</seq>
-        <data_type>ID</data_type>
-        <min_len>3</min_len>
-        <max_len>3</max_len>
         <valid_codes>
           <code>000</code>
           <code>001</code>
@@ -1129,18 +940,12 @@
         <name>Number of Included Functional Groups</name>
         <usage>R</usage>
         <seq>01</seq>
-        <data_type>N0</data_type>
-        <min_len>1</min_len>
-        <max_len>5</max_len>
       </element>
       <element xid="IEA02">
         <data_ele>I12</data_ele>
         <name>Interchange Control Number</name>
         <usage>R</usage>
         <seq>02</seq>
-        <data_type>N0</data_type>
-        <min_len>9</min_len>
-        <max_len>9</max_len>
       </element>
     </segment>
 <!--End of IEA segment-->

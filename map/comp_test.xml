@@ -12,32 +12,26 @@
       <seq>05</seq>
       <element>
         <name>Facility Type Code</name>
+        <data_ele>98</data_ele>
         <usage>S</usage>
         <seq>01</seq>
         <refdes>TST05-01</refdes>
-        <data_type>ID</data_type>
-        <min_len>2</min_len>
-        <max_len>3</max_len>
         <max_use>1</max_use>
       </element>
       <element>
         <name>Facility Type Code</name>
+        <data_ele>1221</data_ele>
         <usage>S</usage>
         <seq>02</seq>
         <refdes>TST05-02</refdes>
-        <data_type>ID</data_type>
-        <min_len>1</min_len>
-        <max_len>3</max_len>
         <max_use>1</max_use>
       </element>
       <element>
         <name>Facility Type Code</name>
+        <data_ele>1221</data_ele>
         <usage>S</usage>
         <seq>03</seq>
         <refdes>TST05-03</refdes>
-        <data_type>ID</data_type>
-        <min_len>1</min_len>
-        <max_len>3</max_len>
         <max_use>1</max_use>
       </element>
     </composite>
@@ -49,32 +43,26 @@
     <max_use>1</max_use>
     <element>
       <name>Element 1</name>
+      <data_ele>98</data_ele>
       <usage>S</usage>
       <seq>01</seq>
       <refdes>UNU01</refdes>
-      <data_type>ID</data_type>
-      <min_len>2</min_len>
-      <max_len>3</max_len>
       <max_use>1</max_use>
     </element>
     <element>
       <name>Element 2</name>
+      <data_ele>1221</data_ele>
       <usage>S</usage>
       <seq>02</seq>
       <refdes>UNU02</refdes>
-      <data_type>ID</data_type>
-      <min_len>1</min_len>
-      <max_len>3</max_len>
       <max_use>1</max_use>
     </element>
     <element>
       <name>Element 3</name>
+      <data_ele>1221</data_ele>
       <usage>S</usage>
       <seq>03</seq>
       <refdes>UNU03</refdes>
-      <data_type>ID</data_type>
-      <min_len>1</min_len>
-      <max_len>3</max_len>
       <max_use>1</max_use>
     </element>
   </segment>

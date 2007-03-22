@@ -110,12 +110,12 @@ class x12xml_idtagqual(x12xml):
         if len(parent.pos_map[seg_node.pos]) > 1:
             id_val = seg_data.get_value('01')
             if seg_node.children[0].is_element() \
-                    and seg_node.children[0].data_type == 'ID' \
+                    and seg_node.children[0].get_data_type() == 'ID' \
                     and len(seg_node.children[0].valid_codes) > 0 \
                     and id_val in seg_node.children[0].valid_codes:
                 return seg_node.id + '_' + id_val
             elif seg_node.children[0].is_composite() \
-                    and seg_node.children[0].children[0].data_type == 'ID' \
+                    and seg_node.children[0].children[0].get_data_type() == 'ID' \
                     and len(seg_node.children[0].children[0].valid_codes) > 0 \
                     and id_val in seg_node.children[0].children[0].valid_codes:
                 return seg_node.id + '_' + id_val

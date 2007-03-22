@@ -30,9 +30,6 @@
         <name>Authorization Information Qualifier</name>
         <usage>R</usage>
         <seq>01</seq>
-        <data_type>ID</data_type>
-        <min_len>2</min_len>
-        <max_len>2</max_len>
         <valid_codes>
           <code>00</code>
           <code>03</code>
@@ -43,18 +40,12 @@
         <name>Authorization Information</name>
         <usage>R</usage>
         <seq>02</seq>
-        <data_type>AN</data_type>
-        <min_len>10</min_len>
-        <max_len>10</max_len>
       </element>
       <element xid="ISA03">
         <data_ele>I03</data_ele>
         <name>Security Information Qualifier</name>
         <usage>R</usage>
         <seq>03</seq>
-        <data_type>ID</data_type>
-        <min_len>2</min_len>
-        <max_len>2</max_len>
         <valid_codes>
           <code>00</code>
           <code>01</code>
@@ -65,18 +56,12 @@
         <name>Security Information</name>
         <usage>R</usage>
         <seq>04</seq>
-        <data_type>AN</data_type>
-        <min_len>10</min_len>
-        <max_len>10</max_len>
       </element>
       <element xid="ISA05">
         <data_ele>I05</data_ele>
         <name>Interchange ID Qualifier</name>
         <usage>R</usage>
         <seq>05</seq>
-        <data_type>ID</data_type>
-        <min_len>2</min_len>
-        <max_len>2</max_len>
         <valid_codes>
           <code>01</code>
           <code>14</code>
@@ -94,18 +79,12 @@
         <name>Interchange Sender ID</name>
         <usage>R</usage>
         <seq>06</seq>
-        <data_type>AN</data_type>
-        <min_len>15</min_len>
-        <max_len>15</max_len>
       </element>
       <element xid="ISA07">
         <data_ele>I05</data_ele>
         <name>Interchange ID Qualifier</name>
         <usage>R</usage>
         <seq>07</seq>
-        <data_type>ID</data_type>
-        <min_len>2</min_len>
-        <max_len>2</max_len>
         <valid_codes>
           <code>01</code>
           <code>14</code>
@@ -123,18 +102,12 @@
         <name>Interchange Receiver ID</name>
         <usage>R</usage>
         <seq>08</seq>
-        <data_type>AN</data_type>
-        <min_len>15</min_len>
-        <max_len>15</max_len>
       </element>
       <element xid="ISA09">
         <data_ele>I08</data_ele>
         <name>Interchange Date</name>
         <usage>R</usage>
         <seq>09</seq>
-        <data_type>DT</data_type>
-        <min_len>6</min_len>
-        <max_len>6</max_len>
         <format>D6</format>
       </element>
       <element xid="ISA10">
@@ -142,9 +115,6 @@
         <name>Interchange Time</name>
         <usage>R</usage>
         <seq>10</seq>
-        <data_type>TM</data_type>
-        <min_len>4</min_len>
-        <max_len>4</max_len>
         <format>TM</format>
       </element>
       <element xid="ISA11">
@@ -152,9 +122,6 @@
         <name>Interchange Control Standards Identifier</name>
         <usage>R</usage>
         <seq>11</seq>
-        <data_type>ID</data_type>
-        <min_len>1</min_len>
-        <max_len>1</max_len>
         <valid_codes>
           <code>U</code>
         </valid_codes>
@@ -164,9 +131,6 @@
         <name>Interchange Control Version Number</name>
         <usage>R</usage>
         <seq>12</seq>
-        <data_type>ID</data_type>
-        <min_len>5</min_len>
-        <max_len>5</max_len>
         <valid_codes>
           <code>00401</code>
         </valid_codes>
@@ -176,18 +140,12 @@
         <name>Interchange Control Number</name>
         <usage>R</usage>
         <seq>13</seq>
-        <data_type>N0</data_type>
-        <min_len>9</min_len>
-        <max_len>9</max_len>
       </element>
       <element xid="ISA14">
         <data_ele>I13</data_ele>
         <name>Acknowledgment Requested</name>
         <usage>R</usage>
         <seq>14</seq>
-        <data_type>ID</data_type>
-        <min_len>1</min_len>
-        <max_len>1</max_len>
         <valid_codes>
           <code>0</code>
           <code>1</code>
@@ -198,9 +156,6 @@
         <name>Usage Indicator</name>
         <usage>R</usage>
         <seq>15</seq>
-        <data_type>ID</data_type>
-        <min_len>1</min_len>
-        <max_len>1</max_len>
         <valid_codes>
           <code>P</code>
           <code>T</code>
@@ -211,9 +166,6 @@
         <name>Component Element Separator</name>
         <usage>R</usage>
         <seq>16</seq>
-        <data_type>AN</data_type>
-        <min_len>1</min_len>
-        <max_len>1</max_len>
       </element>
     </segment>
 <!--End of ISA segment-->
@@ -232,9 +184,6 @@
           <name>Functional Identifier Code</name>
           <usage>R</usage>
           <seq>01</seq>
-          <data_type>ID</data_type>
-          <min_len>2</min_len>
-          <max_len>2</max_len>
           <valid_codes>
             <code>HN</code>
             <code>HR</code>
@@ -253,27 +202,18 @@
           <name>Application Sender's Code</name>
           <usage>R</usage>
           <seq>02</seq>
-          <data_type>AN</data_type>
-          <min_len>2</min_len>
-          <max_len>15</max_len>
         </element>
         <element xid="GS03">
           <data_ele>124</data_ele>
           <name>Application Receiver's Code</name>
           <usage>R</usage>
           <seq>03</seq>
-          <data_type>AN</data_type>
-          <min_len>2</min_len>
-          <max_len>15</max_len>
         </element>
         <element xid="GS04">
           <data_ele>373</data_ele>
           <name>Date</name>
           <usage>R</usage>
           <seq>04</seq>
-          <data_type>DT</data_type>
-          <min_len>8</min_len>
-          <max_len>8</max_len>
           <format>D8</format>
         </element>
         <element xid="GS05">
@@ -281,27 +221,18 @@
           <name>Time</name>
           <usage>R</usage>
           <seq>05</seq>
-          <data_type>TM</data_type>
-          <min_len>4</min_len>
-          <max_len>8</max_len>
         </element>
         <element xid="GS06">
           <data_ele>28</data_ele>
           <name>Group Control Number</name>
           <usage>R</usage>
           <seq>06</seq>
-          <data_type>N0</data_type>
-          <min_len>1</min_len>
-          <max_len>9</max_len>
         </element>
         <element xid="GS07">
           <data_ele>455</data_ele>
           <name>Responsible Agency Code</name>
           <usage>R</usage>
           <seq>07</seq>
-          <data_type>ID</data_type>
-          <min_len>1</min_len>
-          <max_len>2</max_len>
           <valid_codes>
             <code>X</code>
           </valid_codes>
@@ -311,9 +242,6 @@
           <name>Version / Release / Industry Identifier Code</name>
           <usage>R</usage>
           <seq>08</seq>
-          <data_type>AN</data_type>
-          <min_len>1</min_len>
-          <max_len>12</max_len>
           <valid_codes>
             <code>004010</code>
             <code>004010X070</code>
@@ -348,18 +276,12 @@
           <name>Number of Transaction Sets Included</name>
           <usage>R</usage>
           <seq>01</seq>
-          <data_type>N0</data_type>
-          <min_len>1</min_len>
-          <max_len>6</max_len>
         </element>
         <element xid="GE02">
           <data_ele>28</data_ele>
           <name>Group Control Number</name>
           <usage>R</usage>
           <seq>02</seq>
-          <data_type>N0</data_type>
-          <min_len>1</min_len>
-          <max_len>9</max_len>
         </element>
       </segment>
 <!--End of GE segment-->
@@ -374,36 +296,24 @@
         <name>Interchange Control Number</name>
         <usage>R</usage>
         <seq>01</seq>
-        <data_type>N0</data_type>
-        <min_len>9</min_len>
-        <max_len>9</max_len>
       </element>
       <element xid="TA102">
         <data_ele>I08</data_ele>
         <name>Interchange Date</name>
         <usage>R</usage>
         <seq>02</seq>
-        <data_type>DT</data_type>
-        <min_len>6</min_len>
-        <max_len>6</max_len>
       </element>
       <element xid="TA103">
         <data_ele>I09</data_ele>
         <name>Interchange Time</name>
         <usage>R</usage>
         <seq>03</seq>
-        <data_type>TM</data_type>
-        <min_len>4</min_len>
-        <max_len>4</max_len>
       </element>
       <element xid="TA104">
         <data_ele>I17</data_ele>
         <name>Interchange Acknowledgement Code</name>
         <usage>R</usage>
         <seq>04</seq>
-        <data_type>ID</data_type>
-        <min_len>1</min_len>
-        <max_len>1</max_len>
         <valid_codes>
           <code>A</code>
           <code>E</code>
@@ -415,9 +325,6 @@
         <name>Interchange Note Code</name>
         <usage>R</usage>
         <seq>05</seq>
-        <data_type>ID</data_type>
-        <min_len>3</min_len>
-        <max_len>3</max_len>
         <valid_codes>
           <code>000</code>
           <code>001</code>
@@ -464,18 +371,12 @@
         <name>Number of Included Functional Groups</name>
         <usage>R</usage>
         <seq>01</seq>
-        <data_type>N0</data_type>
-        <min_len>1</min_len>
-        <max_len>5</max_len>
       </element>
       <element xid="IEA02">
         <data_ele>I12</data_ele>
         <name>Interchange Control Number</name>
         <usage>R</usage>
         <seq>02</seq>
-        <data_type>N0</data_type>
-        <min_len>9</min_len>
-        <max_len>9</max_len>
       </element>
     </segment>
 <!--End of IEA segment-->

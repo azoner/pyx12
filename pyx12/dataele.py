@@ -92,7 +92,7 @@ class DataElements(object):
                                     name is None:
                                 raise EngineError, 'Invalid Data Element %s' \
                                     % (ele_num)
-                            self.dataele[ele_num] = (data_type, min_len, max_len, name)
+                            self.dataele[ele_num] = (data_type, min_len, max_len) #, name)
                     elif reader.NodeType() == NodeType['element_end']:
                         if cur_name == 'data_ele':
                             ele_num = None

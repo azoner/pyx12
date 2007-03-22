@@ -30,9 +30,6 @@
         <name>Authorization Information Qualifier</name>
         <usage>R</usage>
         <seq>01</seq>
-        <data_type>ID</data_type>
-        <min_len>2</min_len>
-        <max_len>2</max_len>
         <valid_codes>
           <code>00</code>
           <code>03</code>
@@ -43,18 +40,12 @@
         <name>Authorization Information</name>
         <usage>R</usage>
         <seq>02</seq>
-        <data_type>AN</data_type>
-        <min_len>10</min_len>
-        <max_len>10</max_len>
       </element>
       <element xid="ISA03">
         <data_ele>I03</data_ele>
         <name>Security Information Qualifier</name>
         <usage>R</usage>
         <seq>03</seq>
-        <data_type>ID</data_type>
-        <min_len>2</min_len>
-        <max_len>2</max_len>
         <valid_codes>
           <code>00</code>
           <code>01</code>
@@ -65,18 +56,12 @@
         <name>Security Information</name>
         <usage>R</usage>
         <seq>04</seq>
-        <data_type>AN</data_type>
-        <min_len>10</min_len>
-        <max_len>10</max_len>
       </element>
       <element xid="ISA05">
         <data_ele>I05</data_ele>
         <name>Interchange ID Qualifier</name>
         <usage>R</usage>
         <seq>05</seq>
-        <data_type>ID</data_type>
-        <min_len>2</min_len>
-        <max_len>2</max_len>
         <valid_codes>
           <code>01</code>
           <code>14</code>
@@ -94,18 +79,12 @@
         <name>Interchange Sender ID</name>
         <usage>R</usage>
         <seq>06</seq>
-        <data_type>AN</data_type>
-        <min_len>15</min_len>
-        <max_len>15</max_len>
       </element>
       <element xid="ISA07">
         <data_ele>I05</data_ele>
         <name>Interchange ID Qualifier</name>
         <usage>R</usage>
         <seq>07</seq>
-        <data_type>ID</data_type>
-        <min_len>2</min_len>
-        <max_len>2</max_len>
         <valid_codes>
           <code>01</code>
           <code>14</code>
@@ -123,18 +102,12 @@
         <name>Interchange Receiver ID</name>
         <usage>R</usage>
         <seq>08</seq>
-        <data_type>AN</data_type>
-        <min_len>15</min_len>
-        <max_len>15</max_len>
       </element>
       <element xid="ISA09">
         <data_ele>I08</data_ele>
         <name>Interchange Date</name>
         <usage>R</usage>
         <seq>09</seq>
-        <data_type>DT</data_type>
-        <min_len>6</min_len>
-        <max_len>6</max_len>
         <valid_codes>
       </valid_codes>
       </element>
@@ -143,9 +116,6 @@
         <name>Interchange Time</name>
         <usage>R</usage>
         <seq>10</seq>
-        <data_type>TM</data_type>
-        <min_len>4</min_len>
-        <max_len>4</max_len>
         <valid_codes>
       </valid_codes>
       </element>
@@ -154,9 +124,6 @@
         <name>Interchange Control Standards Identifier</name>
         <usage>R</usage>
         <seq>11</seq>
-        <data_type>ID</data_type>
-        <min_len>1</min_len>
-        <max_len>1</max_len>
         <valid_codes>
           <code>U</code>
         </valid_codes>
@@ -166,9 +133,6 @@
         <name>Interchange Control Version Number</name>
         <usage>R</usage>
         <seq>12</seq>
-        <data_type>ID</data_type>
-        <min_len>5</min_len>
-        <max_len>5</max_len>
         <valid_codes>
           <code>00401</code>
         </valid_codes>
@@ -178,18 +142,12 @@
         <name>Interchange Control Number</name>
         <usage>R</usage>
         <seq>13</seq>
-        <data_type>N0</data_type>
-        <min_len>9</min_len>
-        <max_len>9</max_len>
       </element>
       <element xid="ISA14">
         <data_ele>I13</data_ele>
         <name>Acknowledgment Requested</name>
         <usage>R</usage>
         <seq>14</seq>
-        <data_type>ID</data_type>
-        <min_len>1</min_len>
-        <max_len>1</max_len>
         <valid_codes>
           <code>0</code>
           <code>1</code>
@@ -200,9 +158,6 @@
         <name>Usage Indicator</name>
         <usage>R</usage>
         <seq>15</seq>
-        <data_type>ID</data_type>
-        <min_len>1</min_len>
-        <max_len>1</max_len>
         <valid_codes>
           <code>P</code>
           <code>T</code>
@@ -213,9 +168,6 @@
         <name>Component Element Separator</name>
         <usage>R</usage>
         <seq>16</seq>
-        <data_type>AN</data_type>
-        <min_len>1</min_len>
-        <max_len>1</max_len>
       </element>
     </segment>
 <!--End of ISA segment-->
@@ -234,9 +186,6 @@
           <name>Functional Identifier Code</name>
           <usage>R</usage>
           <seq>01</seq>
-          <data_type>ID</data_type>
-          <min_len>2</min_len>
-          <max_len>2</max_len>
           <valid_codes>
             <code>HP</code>
           </valid_codes>
@@ -246,27 +195,18 @@
           <name>Application Sender's Code</name>
           <usage>R</usage>
           <seq>02</seq>
-          <data_type>AN</data_type>
-          <min_len>2</min_len>
-          <max_len>15</max_len>
         </element>
         <element xid="GS03">
           <data_ele>124</data_ele>
           <name>Application Receiver's Code</name>
           <usage>R</usage>
           <seq>03</seq>
-          <data_type>AN</data_type>
-          <min_len>2</min_len>
-          <max_len>15</max_len>
         </element>
         <element xid="GS04">
           <data_ele>373</data_ele>
           <name>Date</name>
           <usage>R</usage>
           <seq>04</seq>
-          <data_type>DT</data_type>
-          <min_len>8</min_len>
-          <max_len>8</max_len>
           <valid_codes>
       </valid_codes>
         </element>
@@ -275,9 +215,6 @@
           <name>Time</name>
           <usage>R</usage>
           <seq>05</seq>
-          <data_type>TM</data_type>
-          <min_len>4</min_len>
-          <max_len>8</max_len>
           <valid_codes>
       </valid_codes>
         </element>
@@ -286,18 +223,12 @@
           <name>Group Control Number</name>
           <usage>R</usage>
           <seq>06</seq>
-          <data_type>N0</data_type>
-          <min_len>1</min_len>
-          <max_len>9</max_len>
         </element>
         <element xid="GS07">
           <data_ele>455</data_ele>
           <name>Responsible Agency Code</name>
           <usage>R</usage>
           <seq>07</seq>
-          <data_type>ID</data_type>
-          <min_len>1</min_len>
-          <max_len>2</max_len>
           <valid_codes>
             <code>X</code>
           </valid_codes>
@@ -307,9 +238,6 @@
           <name>Version / Release / Industry Identifier Code</name>
           <usage>R</usage>
           <seq>08</seq>
-          <data_type>AN</data_type>
-          <min_len>1</min_len>
-          <max_len>12</max_len>
           <valid_codes>
             <code>004010X091A1</code>
           </valid_codes>
@@ -331,9 +259,6 @@
             <name>Transaction Set Identifier Code</name>
             <usage>R</usage>
             <seq>01</seq>
-            <data_type>ID</data_type>
-            <min_len>3</min_len>
-            <max_len>3</max_len>
             <valid_codes>
               <code>835</code>
             </valid_codes>
@@ -343,9 +268,6 @@
             <name>Transaction Set Control Number</name>
             <usage>R</usage>
             <seq>02</seq>
-            <data_type>AN</data_type>
-            <min_len>4</min_len>
-            <max_len>9</max_len>
           </element>
         </segment>
 <!--End of ST segment-->
@@ -364,9 +286,6 @@
               <name>Transaction Handling Code</name>
               <usage>R</usage>
               <seq>01</seq>
-              <data_type>ID</data_type>
-              <min_len>1</min_len>
-              <max_len>2</max_len>
               <valid_codes>
                 <code>C</code>
                 <code>D</code>
@@ -382,18 +301,12 @@
               <name>Total Actual Provider Payment Amount</name>
               <usage>R</usage>
               <seq>02</seq>
-              <data_type>R</data_type>
-              <min_len>1</min_len>
-              <max_len>18</max_len>
             </element>
             <element xid="BPR03">
               <data_ele>478</data_ele>
               <name>Credit or Debit Flag Code</name>
               <usage>R</usage>
               <seq>03</seq>
-              <data_type>ID</data_type>
-              <min_len>1</min_len>
-              <max_len>1</max_len>
               <valid_codes>
                 <code>C</code>
                 <code>D</code>
@@ -404,9 +317,6 @@
               <name>Payment Method Code</name>
               <usage>R</usage>
               <seq>04</seq>
-              <data_type>ID</data_type>
-              <min_len>3</min_len>
-              <max_len>3</max_len>
               <valid_codes>
                 <code>ACH</code>
                 <code>BOP</code>
@@ -420,9 +330,6 @@
               <name>Payment Format Code</name>
               <usage>S</usage>
               <seq>05</seq>
-              <data_type>ID</data_type>
-              <min_len>1</min_len>
-              <max_len>10</max_len>
               <valid_codes>
                 <code>CCP</code>
                 <code>CTX</code>
@@ -433,9 +340,6 @@
               <name>Depository Financial Institution (DFI) Identification Number Qualifier</name>
               <usage>S</usage>
               <seq>06</seq>
-              <data_type>ID</data_type>
-              <min_len>2</min_len>
-              <max_len>2</max_len>
               <valid_codes>
                 <code>01</code>
                 <code>04</code>
@@ -446,18 +350,12 @@
               <name>Sender DFI Identifier</name>
               <usage>S</usage>
               <seq>07</seq>
-              <data_type>AN</data_type>
-              <min_len>3</min_len>
-              <max_len>12</max_len>
             </element>
             <element xid="BPR08">
               <data_ele>569</data_ele>
               <name>Account Number Qualifier</name>
               <usage>S</usage>
               <seq>08</seq>
-              <data_type>ID</data_type>
-              <min_len>1</min_len>
-              <max_len>3</max_len>
               <valid_codes>
                 <code>DA</code>
               </valid_codes>
@@ -467,36 +365,24 @@
               <name>Sender Bank Account Number</name>
               <usage>S</usage>
               <seq>09</seq>
-              <data_type>AN</data_type>
-              <min_len>1</min_len>
-              <max_len>35</max_len>
             </element>
             <element xid="BPR10">
               <data_ele>509</data_ele>
               <name>Payer Identifier</name>
               <usage>S</usage>
               <seq>10</seq>
-              <data_type>AN</data_type>
-              <min_len>10</min_len>
-              <max_len>10</max_len>
             </element>
             <element xid="BPR11">
               <data_ele>510</data_ele>
               <name>Originating Company Supplemental Code</name>
               <usage>S</usage>
               <seq>11</seq>
-              <data_type>AN</data_type>
-              <min_len>9</min_len>
-              <max_len>9</max_len>
             </element>
             <element xid="BPR12">
               <data_ele>506</data_ele>
               <name>Depository Financial Institution (DFI) Identification Number Qualifier</name>
               <usage>S</usage>
               <seq>12</seq>
-              <data_type>ID</data_type>
-              <min_len>2</min_len>
-              <max_len>2</max_len>
               <valid_codes>
                 <code>01</code>
                 <code>04</code>
@@ -507,18 +393,12 @@
               <name>Receiver or Provider Bank ID Number</name>
               <usage>S</usage>
               <seq>13</seq>
-              <data_type>AN</data_type>
-              <min_len>3</min_len>
-              <max_len>12</max_len>
             </element>
             <element xid="BPR14">
               <data_ele>569</data_ele>
               <name>Account Number Qualifier</name>
               <usage>S</usage>
               <seq>14</seq>
-              <data_type>ID</data_type>
-              <min_len>1</min_len>
-              <max_len>3</max_len>
               <valid_codes>
                 <code>DA</code>
                 <code>SG</code>
@@ -529,63 +409,42 @@
               <name>Receiver or Provider Account Number</name>
               <usage>S</usage>
               <seq>15</seq>
-              <data_type>AN</data_type>
-              <min_len>1</min_len>
-              <max_len>35</max_len>
             </element>
             <element xid="BPR16">
               <data_ele>373</data_ele>
               <name>Check Issue or EFT Effective Date</name>
               <usage>R</usage>
               <seq>16</seq>
-              <data_type>DT</data_type>
-              <min_len>8</min_len>
-              <max_len>8</max_len>
             </element>
             <element xid="BPR17">
               <data_ele>1048</data_ele>
               <name>Business Function Code</name>
               <usage>N</usage>
               <seq>17</seq>
-              <data_type>ID</data_type>
-              <min_len>1</min_len>
-              <max_len>3</max_len>
             </element>
             <element xid="BPR18">
               <data_ele>506</data_ele>
               <name>(DFI) ID Number Qualifier</name>
               <usage>N</usage>
               <seq>18</seq>
-              <data_type>ID</data_type>
-              <min_len>2</min_len>
-              <max_len>2</max_len>
             </element>
             <element xid="BPR19">
               <data_ele>507</data_ele>
               <name>(DFI) Identification Number</name>
               <usage>N</usage>
               <seq>19</seq>
-              <data_type>AN</data_type>
-              <min_len>3</min_len>
-              <max_len>12</max_len>
             </element>
             <element xid="BPR20">
               <data_ele>569</data_ele>
               <name>Account Number Qualifier</name>
               <usage>N</usage>
               <seq>20</seq>
-              <data_type>ID</data_type>
-              <min_len>1</min_len>
-              <max_len>3</max_len>
             </element>
             <element xid="BPR21">
               <data_ele>508</data_ele>
               <name>Account Number</name>
               <usage>N</usage>
               <seq>21</seq>
-              <data_type>AN</data_type>
-              <min_len>1</min_len>
-              <max_len>35</max_len>
             </element>
           </segment>
 <!--End of BPR segment-->
@@ -599,9 +458,6 @@
               <name>Trace Type Code</name>
               <usage>R</usage>
               <seq>01</seq>
-              <data_type>ID</data_type>
-              <min_len>1</min_len>
-              <max_len>2</max_len>
               <valid_codes>
                 <code>1</code>
               </valid_codes>
@@ -611,27 +467,18 @@
               <name>Check or EFT Trace Number</name>
               <usage>R</usage>
               <seq>02</seq>
-              <data_type>AN</data_type>
-              <min_len>1</min_len>
-              <max_len>30</max_len>
             </element>
             <element xid="TRN03">
               <data_ele>509</data_ele>
               <name>Payer Identifier</name>
               <usage>R</usage>
               <seq>03</seq>
-              <data_type>AN</data_type>
-              <min_len>10</min_len>
-              <max_len>10</max_len>
             </element>
             <element xid="TRN04">
               <data_ele>127</data_ele>
               <name>Originating Company Supplemental Code</name>
               <usage>S</usage>
               <seq>04</seq>
-              <data_type>AN</data_type>
-              <min_len>1</min_len>
-              <max_len>30</max_len>
             </element>
           </segment>
 <!--End of TRN segment-->
@@ -645,9 +492,6 @@
               <name>Entity Identifier Code</name>
               <usage>R</usage>
               <seq>01</seq>
-              <data_type>ID</data_type>
-              <min_len>2</min_len>
-              <max_len>3</max_len>
               <valid_codes>
                 <code>PR</code>
               </valid_codes>
@@ -657,180 +501,120 @@
               <name>Currency Code</name>
               <usage>R</usage>
               <seq>02</seq>
-              <data_type>ID</data_type>
-              <min_len>3</min_len>
-              <max_len>3</max_len>
             </element>
             <element xid="CUR03">
               <data_ele>280</data_ele>
               <name>Exchange Rate</name>
               <usage>S</usage>
               <seq>03</seq>
-              <data_type>R</data_type>
-              <min_len>4</min_len>
-              <max_len>10</max_len>
             </element>
             <element xid="CUR04">
               <data_ele>98</data_ele>
               <name>Entity Identifier Code</name>
               <usage>N</usage>
               <seq>04</seq>
-              <data_type>ID</data_type>
-              <min_len>2</min_len>
-              <max_len>3</max_len>
             </element>
             <element xid="CUR05">
               <data_ele>100</data_ele>
               <name>Currency Code</name>
               <usage>N</usage>
               <seq>05</seq>
-              <data_type>ID</data_type>
-              <min_len>3</min_len>
-              <max_len>3</max_len>
             </element>
             <element xid="CUR06">
               <data_ele>669</data_ele>
               <name>Currency Market/Exchange Code</name>
               <usage>N</usage>
               <seq>06</seq>
-              <data_type>ID</data_type>
-              <min_len>3</min_len>
-              <max_len>3</max_len>
             </element>
             <element xid="CUR07">
               <data_ele>374</data_ele>
               <name>Date/Time Qualifier</name>
               <usage>N</usage>
               <seq>07</seq>
-              <data_type>ID</data_type>
-              <min_len>3</min_len>
-              <max_len>3</max_len>
             </element>
             <element xid="CUR08">
               <data_ele>373</data_ele>
               <name>Date</name>
               <usage>N</usage>
               <seq>08</seq>
-              <data_type>DT</data_type>
-              <min_len>8</min_len>
-              <max_len>8</max_len>
             </element>
             <element xid="CUR09">
               <data_ele>337</data_ele>
               <name>Time</name>
               <usage>N</usage>
               <seq>09</seq>
-              <data_type>TM</data_type>
-              <min_len>4</min_len>
-              <max_len>8</max_len>
             </element>
             <element xid="CUR10">
               <data_ele>374</data_ele>
               <name>Date/Time Qualifier</name>
               <usage>N</usage>
               <seq>10</seq>
-              <data_type>ID</data_type>
-              <min_len>3</min_len>
-              <max_len>3</max_len>
             </element>
             <element xid="CUR11">
               <data_ele>373</data_ele>
               <name>Date</name>
               <usage>N</usage>
               <seq>11</seq>
-              <data_type>DT</data_type>
-              <min_len>8</min_len>
-              <max_len>8</max_len>
             </element>
             <element xid="CUR12">
               <data_ele>337</data_ele>
               <name>Time</name>
               <usage>N</usage>
               <seq>12</seq>
-              <data_type>TM</data_type>
-              <min_len>4</min_len>
-              <max_len>8</max_len>
             </element>
             <element xid="CUR13">
               <data_ele>374</data_ele>
               <name>Date/Time Qualifier</name>
               <usage>N</usage>
               <seq>13</seq>
-              <data_type>ID</data_type>
-              <min_len>3</min_len>
-              <max_len>3</max_len>
             </element>
             <element xid="CUR14">
               <data_ele>373</data_ele>
               <name>Date</name>
               <usage>N</usage>
               <seq>14</seq>
-              <data_type>DT</data_type>
-              <min_len>8</min_len>
-              <max_len>8</max_len>
             </element>
             <element xid="CUR15">
               <data_ele>337</data_ele>
               <name>Time</name>
               <usage>N</usage>
               <seq>15</seq>
-              <data_type>TM</data_type>
-              <min_len>4</min_len>
-              <max_len>8</max_len>
             </element>
             <element xid="CUR16">
               <data_ele>374</data_ele>
               <name>Date/Time Qualifier</name>
               <usage>N</usage>
               <seq>16</seq>
-              <data_type>ID</data_type>
-              <min_len>3</min_len>
-              <max_len>3</max_len>
             </element>
             <element xid="CUR17">
               <data_ele>373</data_ele>
               <name>Date</name>
               <usage>N</usage>
               <seq>17</seq>
-              <data_type>DT</data_type>
-              <min_len>8</min_len>
-              <max_len>8</max_len>
             </element>
             <element xid="CUR18">
               <data_ele>337</data_ele>
               <name>Time</name>
               <usage>N</usage>
               <seq>18</seq>
-              <data_type>TM</data_type>
-              <min_len>4</min_len>
-              <max_len>8</max_len>
             </element>
             <element xid="CUR19">
               <data_ele>374</data_ele>
               <name>Date/Time Qualifier</name>
               <usage>N</usage>
               <seq>19</seq>
-              <data_type>ID</data_type>
-              <min_len>3</min_len>
-              <max_len>3</max_len>
             </element>
             <element xid="CUR20">
               <data_ele>373</data_ele>
               <name>Date</name>
               <usage>N</usage>
               <seq>20</seq>
-              <data_type>DT</data_type>
-              <min_len>8</min_len>
-              <max_len>8</max_len>
             </element>
             <element xid="CUR21">
               <data_ele>337</data_ele>
               <name>Time</name>
               <usage>N</usage>
               <seq>21</seq>
-              <data_type>TM</data_type>
-              <min_len>4</min_len>
-              <max_len>8</max_len>
             </element>
           </segment>
 <!--End of CUR segment-->
@@ -844,9 +628,6 @@
               <name>Reference Identification Qualifier</name>
               <usage>R</usage>
               <seq>01</seq>
-              <data_type>ID</data_type>
-              <min_len>2</min_len>
-              <max_len>3</max_len>
               <valid_codes>
                 <code>EV</code>
               </valid_codes>
@@ -856,18 +637,12 @@
               <name>Receiver Identifier</name>
               <usage>R</usage>
               <seq>02</seq>
-              <data_type>AN</data_type>
-              <min_len>1</min_len>
-              <max_len>30</max_len>
             </element>
             <element xid="REF03">
               <data_ele>352</data_ele>
               <name>Description</name>
               <usage>N</usage>
               <seq>03</seq>
-              <data_type>AN</data_type>
-              <min_len>1</min_len>
-              <max_len>80</max_len>
             </element>
             <composite>
               <data_ele>C040</data_ele>
@@ -887,9 +662,6 @@
               <name>Reference Identification Qualifier</name>
               <usage>R</usage>
               <seq>01</seq>
-              <data_type>ID</data_type>
-              <min_len>2</min_len>
-              <max_len>3</max_len>
               <valid_codes>
                 <code>F2</code>
               </valid_codes>
@@ -899,18 +671,12 @@
               <name>Version Identification Code</name>
               <usage>R</usage>
               <seq>02</seq>
-              <data_type>AN</data_type>
-              <min_len>1</min_len>
-              <max_len>30</max_len>
             </element>
             <element xid="REF03">
               <data_ele>352</data_ele>
               <name>Description</name>
               <usage>N</usage>
               <seq>03</seq>
-              <data_type>AN</data_type>
-              <min_len>1</min_len>
-              <max_len>80</max_len>
             </element>
             <composite>
               <data_ele>C040</data_ele>
@@ -930,9 +696,6 @@
               <name>Date Time Qualifier</name>
               <usage>R</usage>
               <seq>01</seq>
-              <data_type>ID</data_type>
-              <min_len>3</min_len>
-              <max_len>3</max_len>
               <valid_codes>
                 <code>405</code>
               </valid_codes>
@@ -942,9 +705,6 @@
               <name>Production Date</name>
               <usage>R</usage>
               <seq>02</seq>
-              <data_type>DT</data_type>
-              <min_len>8</min_len>
-              <max_len>8</max_len>
               <valid_codes>
       </valid_codes>
             </element>
@@ -953,36 +713,24 @@
               <name>Time</name>
               <usage>N</usage>
               <seq>03</seq>
-              <data_type>TM</data_type>
-              <min_len>4</min_len>
-              <max_len>8</max_len>
             </element>
             <element xid="DTM04">
               <data_ele>623</data_ele>
               <name>Time Code</name>
               <usage>N</usage>
               <seq>04</seq>
-              <data_type>ID</data_type>
-              <min_len>2</min_len>
-              <max_len>2</max_len>
             </element>
             <element xid="DTM05">
               <data_ele>1250</data_ele>
               <name>Date Time Period Format Qualifier</name>
               <usage>N</usage>
               <seq>05</seq>
-              <data_type>ID</data_type>
-              <min_len>2</min_len>
-              <max_len>3</max_len>
             </element>
             <element xid="DTM06">
               <data_ele>1251</data_ele>
               <name>Date Time Period</name>
               <usage>N</usage>
               <seq>06</seq>
-              <data_type>AN</data_type>
-              <min_len>1</min_len>
-              <max_len>35</max_len>
             </element>
           </segment>
 <!--End of DTM segment-->
@@ -1001,9 +749,6 @@
                 <name>Entity Identifier Code</name>
                 <usage>R</usage>
                 <seq>01</seq>
-                <data_type>ID</data_type>
-                <min_len>2</min_len>
-                <max_len>3</max_len>
                 <valid_codes>
                   <code>PR</code>
                 </valid_codes>
@@ -1013,18 +758,12 @@
                 <name>Payer Name</name>
                 <usage>S</usage>
                 <seq>02</seq>
-                <data_type>AN</data_type>
-                <min_len>1</min_len>
-                <max_len>60</max_len>
               </element>
               <element xid="N103">
                 <data_ele>66</data_ele>
                 <name>Identification Code Qualifier</name>
                 <usage>S</usage>
                 <seq>03</seq>
-                <data_type>ID</data_type>
-                <min_len>1</min_len>
-                <max_len>2</max_len>
                 <valid_codes>
                   <code>XV</code>
                 </valid_codes>
@@ -1034,27 +773,18 @@
                 <name>Payer Identifier</name>
                 <usage>S</usage>
                 <seq>04</seq>
-                <data_type>AN</data_type>
-                <min_len>2</min_len>
-                <max_len>80</max_len>
               </element>
               <element xid="N105">
                 <data_ele>706</data_ele>
                 <name>Entity Relationship Code</name>
                 <usage>N</usage>
                 <seq>05</seq>
-                <data_type>ID</data_type>
-                <min_len>2</min_len>
-                <max_len>2</max_len>
               </element>
               <element xid="N106">
                 <data_ele>98</data_ele>
                 <name>Entity Identifier Code</name>
                 <usage>N</usage>
                 <seq>06</seq>
-                <data_type>ID</data_type>
-                <min_len>2</min_len>
-                <max_len>3</max_len>
               </element>
             </segment>
 <!--End of N1 segment-->
@@ -1068,18 +798,12 @@
                 <name>Payer Address Line</name>
                 <usage>R</usage>
                 <seq>01</seq>
-                <data_type>AN</data_type>
-                <min_len>1</min_len>
-                <max_len>55</max_len>
               </element>
               <element xid="N302">
                 <data_ele>166</data_ele>
                 <name>Payer Address Line</name>
                 <usage>S</usage>
                 <seq>02</seq>
-                <data_type>AN</data_type>
-                <min_len>1</min_len>
-                <max_len>55</max_len>
               </element>
             </segment>
 <!--End of N3 segment-->
@@ -1093,18 +817,12 @@
                 <name>Payer City Name</name>
                 <usage>R</usage>
                 <seq>01</seq>
-                <data_type>AN</data_type>
-                <min_len>2</min_len>
-                <max_len>30</max_len>
               </element>
               <element xid="N402">
                 <data_ele>156</data_ele>
                 <name>Payer State Code</name>
                 <usage>R</usage>
                 <seq>02</seq>
-                <data_type>ID</data_type>
-                <min_len>2</min_len>
-                <max_len>2</max_len>
                 <valid_codes external="states"/>
               </element>
               <element xid="N403">
@@ -1112,36 +830,24 @@
                 <name>Payer Postal Zone or ZIP Code</name>
                 <usage>R</usage>
                 <seq>03</seq>
-                <data_type>ID</data_type>
-                <min_len>3</min_len>
-                <max_len>15</max_len>
               </element>
               <element xid="N404">
                 <data_ele>26</data_ele>
                 <name>Country Code</name>
                 <usage>N</usage>
                 <seq>04</seq>
-                <data_type>ID</data_type>
-                <min_len>2</min_len>
-                <max_len>3</max_len>
               </element>
               <element xid="N405">
                 <data_ele>309</data_ele>
                 <name>Location Qualifier</name>
                 <usage>N</usage>
                 <seq>05</seq>
-                <data_type>ID</data_type>
-                <min_len>1</min_len>
-                <max_len>2</max_len>
               </element>
               <element xid="N406">
                 <data_ele>310</data_ele>
                 <name>Location Identifier</name>
                 <usage>N</usage>
                 <seq>06</seq>
-                <data_type>AN</data_type>
-                <min_len>1</min_len>
-                <max_len>30</max_len>
               </element>
             </segment>
 <!--End of N4 segment-->
@@ -1155,9 +861,6 @@
                 <name>Reference Identification Qualifier</name>
                 <usage>R</usage>
                 <seq>01</seq>
-                <data_type>ID</data_type>
-                <min_len>2</min_len>
-                <max_len>3</max_len>
                 <valid_codes>
                   <code>2U</code>
                   <code>EO</code>
@@ -1170,18 +873,12 @@
                 <name>Additional Payer Identifier</name>
                 <usage>R</usage>
                 <seq>02</seq>
-                <data_type>AN</data_type>
-                <min_len>1</min_len>
-                <max_len>30</max_len>
               </element>
               <element xid="REF03">
                 <data_ele>352</data_ele>
                 <name>Description</name>
                 <usage>N</usage>
                 <seq>03</seq>
-                <data_type>AN</data_type>
-                <min_len>1</min_len>
-                <max_len>80</max_len>
               </element>
               <composite>
                 <data_ele>C040</data_ele>
@@ -1201,9 +898,6 @@
                 <name>Contact Function Code</name>
                 <usage>R</usage>
                 <seq>01</seq>
-                <data_type>ID</data_type>
-                <min_len>2</min_len>
-                <max_len>2</max_len>
                 <valid_codes>
                   <code>CX</code>
                 </valid_codes>
@@ -1213,18 +907,12 @@
                 <name>Payer Contact Name</name>
                 <usage>S</usage>
                 <seq>02</seq>
-                <data_type>AN</data_type>
-                <min_len>1</min_len>
-                <max_len>60</max_len>
               </element>
               <element xid="PER03">
                 <data_ele>365</data_ele>
                 <name>Communication Number Qualifier</name>
                 <usage>S</usage>
                 <seq>03</seq>
-                <data_type>ID</data_type>
-                <min_len>2</min_len>
-                <max_len>2</max_len>
                 <valid_codes>
                   <code>EM</code>
                   <code>FX</code>
@@ -1236,18 +924,12 @@
                 <name>Payer Contact Communication Number</name>
                 <usage>S</usage>
                 <seq>04</seq>
-                <data_type>AN</data_type>
-                <min_len>1</min_len>
-                <max_len>80</max_len>
               </element>
               <element xid="PER05">
                 <data_ele>365</data_ele>
                 <name>Communication Number Qualifier</name>
                 <usage>S</usage>
                 <seq>05</seq>
-                <data_type>ID</data_type>
-                <min_len>2</min_len>
-                <max_len>2</max_len>
                 <valid_codes>
                   <code>EM</code>
                   <code>EX</code>
@@ -1260,18 +942,12 @@
                 <name>Payer Contact Communication Number</name>
                 <usage>S</usage>
                 <seq>06</seq>
-                <data_type>AN</data_type>
-                <min_len>1</min_len>
-                <max_len>80</max_len>
               </element>
               <element xid="PER07">
                 <data_ele>365</data_ele>
                 <name>Communication Number Qualifier</name>
                 <usage>S</usage>
                 <seq>07</seq>
-                <data_type>ID</data_type>
-                <min_len>2</min_len>
-                <max_len>2</max_len>
                 <valid_codes>
                   <code>EX</code>
                 </valid_codes>
@@ -1281,18 +957,12 @@
                 <name>Payer Contact Communication Number</name>
                 <usage>S</usage>
                 <seq>08</seq>
-                <data_type>AN</data_type>
-                <min_len>1</min_len>
-                <max_len>80</max_len>
               </element>
               <element xid="PER09">
                 <data_ele>443</data_ele>
                 <name>Contact Inquiry Reference</name>
                 <usage>N</usage>
                 <seq>09</seq>
-                <data_type>AN</data_type>
-                <min_len>1</min_len>
-                <max_len>20</max_len>
               </element>
             </segment>
 <!--End of PER segment-->
@@ -1313,9 +983,6 @@
                 <name>Entity Identifier Code</name>
                 <usage>R</usage>
                 <seq>01</seq>
-                <data_type>ID</data_type>
-                <min_len>2</min_len>
-                <max_len>3</max_len>
                 <valid_codes>
                   <code>PE</code>
                 </valid_codes>
@@ -1325,18 +992,12 @@
                 <name>Payee Name</name>
                 <usage>S</usage>
                 <seq>02</seq>
-                <data_type>AN</data_type>
-                <min_len>1</min_len>
-                <max_len>60</max_len>
               </element>
               <element xid="N103">
                 <data_ele>66</data_ele>
                 <name>Identification Code Qualifier</name>
                 <usage>R</usage>
                 <seq>03</seq>
-                <data_type>ID</data_type>
-                <min_len>1</min_len>
-                <max_len>2</max_len>
                 <valid_codes>
                   <code>FI</code>
                   <code>XX</code>
@@ -1347,27 +1008,18 @@
                 <name>Payee Identification Code</name>
                 <usage>R</usage>
                 <seq>04</seq>
-                <data_type>AN</data_type>
-                <min_len>2</min_len>
-                <max_len>80</max_len>
               </element>
               <element xid="N105">
                 <data_ele>706</data_ele>
                 <name>Entity Relationship Code</name>
                 <usage>N</usage>
                 <seq>05</seq>
-                <data_type>ID</data_type>
-                <min_len>2</min_len>
-                <max_len>2</max_len>
               </element>
               <element xid="N106">
                 <data_ele>98</data_ele>
                 <name>Entity Identifier Code</name>
                 <usage>N</usage>
                 <seq>06</seq>
-                <data_type>ID</data_type>
-                <min_len>2</min_len>
-                <max_len>3</max_len>
               </element>
             </segment>
 <!--End of N1 segment-->
@@ -1381,18 +1033,12 @@
                 <name>Payee Address Line</name>
                 <usage>R</usage>
                 <seq>01</seq>
-                <data_type>AN</data_type>
-                <min_len>1</min_len>
-                <max_len>55</max_len>
               </element>
               <element xid="N302">
                 <data_ele>166</data_ele>
                 <name>Payee Address Line</name>
                 <usage>S</usage>
                 <seq>02</seq>
-                <data_type>AN</data_type>
-                <min_len>1</min_len>
-                <max_len>55</max_len>
               </element>
             </segment>
 <!--End of N3 segment-->
@@ -1406,18 +1052,12 @@
                 <name>Payee City Name</name>
                 <usage>R</usage>
                 <seq>01</seq>
-                <data_type>AN</data_type>
-                <min_len>2</min_len>
-                <max_len>30</max_len>
               </element>
               <element xid="N402">
                 <data_ele>156</data_ele>
                 <name>Payee State Code</name>
                 <usage>R</usage>
                 <seq>02</seq>
-                <data_type>ID</data_type>
-                <min_len>2</min_len>
-                <max_len>2</max_len>
                 <valid_codes external="states"/>
               </element>
               <element xid="N403">
@@ -1425,18 +1065,12 @@
                 <name>Payee Postal Zone or ZIP Code</name>
                 <usage>R</usage>
                 <seq>03</seq>
-                <data_type>ID</data_type>
-                <min_len>3</min_len>
-                <max_len>15</max_len>
               </element>
               <element xid="N404">
                 <data_ele>26</data_ele>
                 <name>Country Code</name>
                 <usage>S</usage>
                 <seq>04</seq>
-                <data_type>ID</data_type>
-                <min_len>2</min_len>
-                <max_len>3</max_len>
                 <valid_codes external="country"/>
               </element>
               <element xid="N405">
@@ -1444,18 +1078,12 @@
                 <name>Location Qualifier</name>
                 <usage>N</usage>
                 <seq>05</seq>
-                <data_type>ID</data_type>
-                <min_len>1</min_len>
-                <max_len>2</max_len>
               </element>
               <element xid="N406">
                 <data_ele>310</data_ele>
                 <name>Location Identifier</name>
                 <usage>N</usage>
                 <seq>06</seq>
-                <data_type>AN</data_type>
-                <min_len>1</min_len>
-                <max_len>30</max_len>
               </element>
             </segment>
 <!--End of N4 segment-->
@@ -1469,9 +1097,6 @@
                 <name>Reference Identification Qualifier</name>
                 <usage>R</usage>
                 <seq>01</seq>
-                <data_type>ID</data_type>
-                <min_len>2</min_len>
-                <max_len>3</max_len>
                 <valid_codes>
                   <code>0B</code>
                   <code>1A</code>
@@ -1494,18 +1119,12 @@
                 <name>Additional Payee Identifier</name>
                 <usage>R</usage>
                 <seq>02</seq>
-                <data_type>AN</data_type>
-                <min_len>1</min_len>
-                <max_len>30</max_len>
               </element>
               <element xid="REF03">
                 <data_ele>352</data_ele>
                 <name>Description</name>
                 <usage>N</usage>
                 <seq>03</seq>
-                <data_type>AN</data_type>
-                <min_len>1</min_len>
-                <max_len>80</max_len>
               </element>
               <composite>
                 <data_ele>C040</data_ele>
@@ -1539,9 +1158,6 @@
                 <name>Assigned Number</name>
                 <usage>R</usage>
                 <seq>01</seq>
-                <data_type>N0</data_type>
-                <min_len>1</min_len>
-                <max_len>6</max_len>
               </element>
             </segment>
 <!--End of LX segment-->
@@ -1555,27 +1171,18 @@
                 <name>Provider Identifier</name>
                 <usage>R</usage>
                 <seq>01</seq>
-                <data_type>AN</data_type>
-                <min_len>1</min_len>
-                <max_len>30</max_len>
               </element>
               <element xid="TS302">
                 <data_ele>1331</data_ele>
                 <name>Facility Type Code</name>
                 <usage>R</usage>
                 <seq>02</seq>
-                <data_type>AN</data_type>
-                <min_len>1</min_len>
-                <max_len>2</max_len>
               </element>
               <element xid="TS303">
                 <data_ele>373</data_ele>
                 <name>Fiscal Period Date</name>
                 <usage>R</usage>
                 <seq>03</seq>
-                <data_type>DT</data_type>
-                <min_len>8</min_len>
-                <max_len>8</max_len>
                 <valid_codes>
         </valid_codes>
               </element>
@@ -1584,189 +1191,126 @@
                 <name>Total Claim Count</name>
                 <usage>R</usage>
                 <seq>04</seq>
-                <data_type>R</data_type>
-                <min_len>1</min_len>
-                <max_len>15</max_len>
               </element>
               <element xid="TS305">
                 <data_ele>782</data_ele>
                 <name>Total Claim Charge Amount</name>
                 <usage>R</usage>
                 <seq>05</seq>
-                <data_type>R</data_type>
-                <min_len>1</min_len>
-                <max_len>18</max_len>
               </element>
               <element xid="TS306">
                 <data_ele>782</data_ele>
                 <name>Total Covered Charge Amount</name>
                 <usage>S</usage>
                 <seq>06</seq>
-                <data_type>R</data_type>
-                <min_len>1</min_len>
-                <max_len>18</max_len>
               </element>
               <element xid="TS307">
                 <data_ele>782</data_ele>
                 <name>Total Noncovered Charge Amount</name>
                 <usage>S</usage>
                 <seq>07</seq>
-                <data_type>R</data_type>
-                <min_len>1</min_len>
-                <max_len>18</max_len>
               </element>
               <element xid="TS308">
                 <data_ele>782</data_ele>
                 <name>Total Denied Charge Amount</name>
                 <usage>S</usage>
                 <seq>08</seq>
-                <data_type>R</data_type>
-                <min_len>1</min_len>
-                <max_len>18</max_len>
               </element>
               <element xid="TS309">
                 <data_ele>782</data_ele>
                 <name>Total Provider Payment Amount</name>
                 <usage>S</usage>
                 <seq>09</seq>
-                <data_type>R</data_type>
-                <min_len>1</min_len>
-                <max_len>18</max_len>
               </element>
               <element xid="TS310">
                 <data_ele>782</data_ele>
                 <name>Total Interest Amount</name>
                 <usage>S</usage>
                 <seq>10</seq>
-                <data_type>R</data_type>
-                <min_len>1</min_len>
-                <max_len>18</max_len>
               </element>
               <element xid="TS311">
                 <data_ele>782</data_ele>
                 <name>Total Contractual Adjustment Amount</name>
                 <usage>S</usage>
                 <seq>11</seq>
-                <data_type>R</data_type>
-                <min_len>1</min_len>
-                <max_len>18</max_len>
               </element>
               <element xid="TS312">
                 <data_ele>782</data_ele>
                 <name>Total Gramm-Rudman Reduction Amount</name>
                 <usage>S</usage>
                 <seq>12</seq>
-                <data_type>R</data_type>
-                <min_len>1</min_len>
-                <max_len>18</max_len>
               </element>
               <element xid="TS313">
                 <data_ele>782</data_ele>
                 <name>Total MSP Payer Amount</name>
                 <usage>S</usage>
                 <seq>13</seq>
-                <data_type>R</data_type>
-                <min_len>1</min_len>
-                <max_len>18</max_len>
               </element>
               <element xid="TS314">
                 <data_ele>782</data_ele>
                 <name>Total Blood Deductible Amount</name>
                 <usage>S</usage>
                 <seq>14</seq>
-                <data_type>R</data_type>
-                <min_len>1</min_len>
-                <max_len>18</max_len>
               </element>
               <element xid="TS315">
                 <data_ele>782</data_ele>
                 <name>Total Non-Lab Charge Amount</name>
                 <usage>S</usage>
                 <seq>15</seq>
-                <data_type>R</data_type>
-                <min_len>1</min_len>
-                <max_len>18</max_len>
               </element>
               <element xid="TS316">
                 <data_ele>782</data_ele>
                 <name>Total Coinsurance Amount</name>
                 <usage>S</usage>
                 <seq>16</seq>
-                <data_type>R</data_type>
-                <min_len>1</min_len>
-                <max_len>18</max_len>
               </element>
               <element xid="TS317">
                 <data_ele>782</data_ele>
                 <name>Total HCPCS Reported Charge Amount</name>
                 <usage>S</usage>
                 <seq>17</seq>
-                <data_type>R</data_type>
-                <min_len>1</min_len>
-                <max_len>18</max_len>
               </element>
               <element xid="TS318">
                 <data_ele>782</data_ele>
                 <name>Total HCPCS Payable Amount</name>
                 <usage>S</usage>
                 <seq>18</seq>
-                <data_type>R</data_type>
-                <min_len>1</min_len>
-                <max_len>18</max_len>
               </element>
               <element xid="TS319">
                 <data_ele>782</data_ele>
                 <name>Total Deductible Amount</name>
                 <usage>S</usage>
                 <seq>19</seq>
-                <data_type>R</data_type>
-                <min_len>1</min_len>
-                <max_len>18</max_len>
               </element>
               <element xid="TS320">
                 <data_ele>782</data_ele>
                 <name>Total Professional Component Amount</name>
                 <usage>S</usage>
                 <seq>20</seq>
-                <data_type>R</data_type>
-                <min_len>1</min_len>
-                <max_len>18</max_len>
               </element>
               <element xid="TS321">
                 <data_ele>782</data_ele>
                 <name>Total MSP Patient Liability Met Amount</name>
                 <usage>S</usage>
                 <seq>21</seq>
-                <data_type>R</data_type>
-                <min_len>1</min_len>
-                <max_len>18</max_len>
               </element>
               <element xid="TS322">
                 <data_ele>782</data_ele>
                 <name>Total Patient Reimbursement Amount</name>
                 <usage>S</usage>
                 <seq>22</seq>
-                <data_type>R</data_type>
-                <min_len>1</min_len>
-                <max_len>18</max_len>
               </element>
               <element xid="TS323">
                 <data_ele>380</data_ele>
                 <name>Total PIP Claim Count</name>
                 <usage>S</usage>
                 <seq>23</seq>
-                <data_type>R</data_type>
-                <min_len>1</min_len>
-                <max_len>15</max_len>
               </element>
               <element xid="TS324">
                 <data_ele>782</data_ele>
                 <name>Total PIP Adjustment Amount</name>
                 <usage>S</usage>
                 <seq>24</seq>
-                <data_type>R</data_type>
-                <min_len>1</min_len>
-                <max_len>18</max_len>
               </element>
             </segment>
 <!--End of TS3 segment-->
@@ -1780,171 +1324,114 @@
                 <name>Total DRG Amount</name>
                 <usage>S</usage>
                 <seq>01</seq>
-                <data_type>R</data_type>
-                <min_len>1</min_len>
-                <max_len>18</max_len>
               </element>
               <element xid="TS202">
                 <data_ele>782</data_ele>
                 <name>Total Federal Specific Amount</name>
                 <usage>S</usage>
                 <seq>02</seq>
-                <data_type>R</data_type>
-                <min_len>1</min_len>
-                <max_len>18</max_len>
               </element>
               <element xid="TS203">
                 <data_ele>782</data_ele>
                 <name>Total Hospital Specific Amount</name>
                 <usage>S</usage>
                 <seq>03</seq>
-                <data_type>R</data_type>
-                <min_len>1</min_len>
-                <max_len>18</max_len>
               </element>
               <element xid="TS204">
                 <data_ele>782</data_ele>
                 <name>Total Disproportionate Share Amount</name>
                 <usage>S</usage>
                 <seq>04</seq>
-                <data_type>R</data_type>
-                <min_len>1</min_len>
-                <max_len>18</max_len>
               </element>
               <element xid="TS205">
                 <data_ele>782</data_ele>
                 <name>Total Capital Amount</name>
                 <usage>S</usage>
                 <seq>05</seq>
-                <data_type>R</data_type>
-                <min_len>1</min_len>
-                <max_len>18</max_len>
               </element>
               <element xid="TS206">
                 <data_ele>782</data_ele>
                 <name>Total Indirect Medical Education Amount</name>
                 <usage>S</usage>
                 <seq>06</seq>
-                <data_type>R</data_type>
-                <min_len>1</min_len>
-                <max_len>18</max_len>
               </element>
               <element xid="TS207">
                 <data_ele>380</data_ele>
                 <name>Total Outlier Day Count</name>
                 <usage>S</usage>
                 <seq>07</seq>
-                <data_type>R</data_type>
-                <min_len>1</min_len>
-                <max_len>15</max_len>
               </element>
               <element xid="TS208">
                 <data_ele>782</data_ele>
                 <name>Total Day Outlier Amount</name>
                 <usage>S</usage>
                 <seq>08</seq>
-                <data_type>R</data_type>
-                <min_len>1</min_len>
-                <max_len>18</max_len>
               </element>
               <element xid="TS209">
                 <data_ele>782</data_ele>
                 <name>Total Cost Outlier Amount</name>
                 <usage>S</usage>
                 <seq>09</seq>
-                <data_type>R</data_type>
-                <min_len>1</min_len>
-                <max_len>18</max_len>
               </element>
               <element xid="TS210">
                 <data_ele>380</data_ele>
                 <name>Average DRG Length of Stay</name>
                 <usage>S</usage>
                 <seq>10</seq>
-                <data_type>R</data_type>
-                <min_len>1</min_len>
-                <max_len>15</max_len>
               </element>
               <element xid="TS211">
                 <data_ele>380</data_ele>
                 <name>Total Discharge Count</name>
                 <usage>S</usage>
                 <seq>11</seq>
-                <data_type>R</data_type>
-                <min_len>1</min_len>
-                <max_len>15</max_len>
               </element>
               <element xid="TS212">
                 <data_ele>380</data_ele>
                 <name>Total Cost Report Day Count</name>
                 <usage>S</usage>
                 <seq>12</seq>
-                <data_type>R</data_type>
-                <min_len>1</min_len>
-                <max_len>15</max_len>
               </element>
               <element xid="TS213">
                 <data_ele>380</data_ele>
                 <name>Total Covered Day Count</name>
                 <usage>S</usage>
                 <seq>13</seq>
-                <data_type>R</data_type>
-                <min_len>1</min_len>
-                <max_len>15</max_len>
               </element>
               <element xid="TS214">
                 <data_ele>380</data_ele>
                 <name>Total Noncovered Day Count</name>
                 <usage>S</usage>
                 <seq>14</seq>
-                <data_type>R</data_type>
-                <min_len>1</min_len>
-                <max_len>15</max_len>
               </element>
               <element xid="TS215">
                 <data_ele>782</data_ele>
                 <name>Total MSP Pass-Through Amount</name>
                 <usage>S</usage>
                 <seq>15</seq>
-                <data_type>R</data_type>
-                <min_len>1</min_len>
-                <max_len>18</max_len>
               </element>
               <element xid="TS216">
                 <data_ele>380</data_ele>
                 <name>Average DRG weight</name>
                 <usage>S</usage>
                 <seq>16</seq>
-                <data_type>R</data_type>
-                <min_len>1</min_len>
-                <max_len>15</max_len>
               </element>
               <element xid="TS217">
                 <data_ele>782</data_ele>
                 <name>Total PPS Capital FSP DRG Amount</name>
                 <usage>S</usage>
                 <seq>17</seq>
-                <data_type>R</data_type>
-                <min_len>1</min_len>
-                <max_len>18</max_len>
               </element>
               <element xid="TS218">
                 <data_ele>782</data_ele>
                 <name>Total PPS Capital HSP DRG Amount</name>
                 <usage>S</usage>
                 <seq>18</seq>
-                <data_type>R</data_type>
-                <min_len>1</min_len>
-                <max_len>18</max_len>
               </element>
               <element xid="TS219">
                 <data_ele>782</data_ele>
                 <name>Total PPS DSH DRG Amount</name>
                 <usage>S</usage>
                 <seq>19</seq>
-                <data_type>R</data_type>
-                <min_len>1</min_len>
-                <max_len>18</max_len>
               </element>
             </segment>
 <!--End of TS2 segment-->
@@ -1963,18 +1450,12 @@
                   <name>Patient Control Number</name>
                   <usage>R</usage>
                   <seq>01</seq>
-                  <data_type>AN</data_type>
-                  <min_len>1</min_len>
-                  <max_len>38</max_len>
                 </element>
                 <element xid="CLP02">
                   <data_ele>1029</data_ele>
                   <name>Claim Status Code</name>
                   <usage>R</usage>
                   <seq>02</seq>
-                  <data_type>ID</data_type>
-                  <min_len>1</min_len>
-                  <max_len>2</max_len>
                   <valid_codes external="claim_status"/>
                 </element>
                 <element xid="CLP03">
@@ -1982,36 +1463,24 @@
                   <name>Total Claim Charge Amount</name>
                   <usage>R</usage>
                   <seq>03</seq>
-                  <data_type>R</data_type>
-                  <min_len>1</min_len>
-                  <max_len>18</max_len>
                 </element>
                 <element xid="CLP04">
                   <data_ele>782</data_ele>
                   <name>Claim Payment Amount</name>
                   <usage>R</usage>
                   <seq>04</seq>
-                  <data_type>R</data_type>
-                  <min_len>1</min_len>
-                  <max_len>18</max_len>
                 </element>
                 <element xid="CLP05">
                   <data_ele>782</data_ele>
                   <name>Patient Responsibility Amount</name>
                   <usage>S</usage>
                   <seq>05</seq>
-                  <data_type>R</data_type>
-                  <min_len>1</min_len>
-                  <max_len>18</max_len>
                 </element>
                 <element xid="CLP06">
                   <data_ele>1032</data_ele>
                   <name>Claim Filing Indicator Code</name>
                   <usage>R</usage>
                   <seq>06</seq>
-                  <data_type>ID</data_type>
-                  <min_len>1</min_len>
-                  <max_len>2</max_len>
                   <valid_codes>
                     <code>12</code>
                     <code>13</code>
@@ -2037,27 +1506,18 @@
                   <name>Payer Claim Control Number</name>
                   <usage>S</usage>
                   <seq>07</seq>
-                  <data_type>AN</data_type>
-                  <min_len>1</min_len>
-                  <max_len>30</max_len>
                 </element>
                 <element xid="CLP08">
                   <data_ele>1331</data_ele>
                   <name>Facility Type Code</name>
                   <usage>S</usage>
                   <seq>08</seq>
-                  <data_type>AN</data_type>
-                  <min_len>1</min_len>
-                  <max_len>2</max_len>
                 </element>
                 <element xid="CLP09">
                   <data_ele>1325</data_ele>
                   <name>Claim Frequency Code</name>
                   <usage>S</usage>
                   <seq>09</seq>
-                  <data_type>ID</data_type>
-                  <min_len>1</min_len>
-                  <max_len>1</max_len>
                   <valid_codes>
                     <code>0</code>
                     <code>1</code>
@@ -2094,36 +1554,24 @@
                   <name>Patient Status Code</name>
                   <usage>N</usage>
                   <seq>10</seq>
-                  <data_type>ID</data_type>
-                  <min_len>1</min_len>
-                  <max_len>2</max_len>
                 </element>
                 <element xid="CLP11">
                   <data_ele>1354</data_ele>
                   <name>Diagnosis Related Group (DRG) Code</name>
                   <usage>S</usage>
                   <seq>11</seq>
-                  <data_type>ID</data_type>
-                  <min_len>1</min_len>
-                  <max_len>4</max_len>
                 </element>
                 <element xid="CLP12">
                   <data_ele>380</data_ele>
                   <name>Diagnosis Related Group (DRG) Weight</name>
                   <usage>S</usage>
                   <seq>12</seq>
-                  <data_type>R</data_type>
-                  <min_len>1</min_len>
-                  <max_len>15</max_len>
                 </element>
                 <element xid="CLP13">
                   <data_ele>954</data_ele>
                   <name>Discharge Fraction</name>
                   <usage>S</usage>
                   <seq>13</seq>
-                  <data_type>R</data_type>
-                  <min_len>1</min_len>
-                  <max_len>10</max_len>
                 </element>
               </segment>
 <!--End of CLP segment-->
@@ -2137,9 +1585,6 @@
                   <name>Claim Adjustment Group Code</name>
                   <usage>R</usage>
                   <seq>01</seq>
-                  <data_type>ID</data_type>
-                  <min_len>1</min_len>
-                  <max_len>2</max_len>
                   <valid_codes>
                     <code>CO</code>
                     <code>CR</code>
@@ -2153,9 +1598,6 @@
                   <name>Adjustment Reason Code</name>
                   <usage>R</usage>
                   <seq>02</seq>
-                  <data_type>ID</data_type>
-                  <min_len>1</min_len>
-                  <max_len>5</max_len>
                   <valid_codes external="adjustment_reason"/>
                 </element>
                 <element xid="CAS03">
@@ -2163,27 +1605,18 @@
                   <name>Adjustment Amount</name>
                   <usage>R</usage>
                   <seq>03</seq>
-                  <data_type>R</data_type>
-                  <min_len>1</min_len>
-                  <max_len>18</max_len>
                 </element>
                 <element xid="CAS04">
                   <data_ele>380</data_ele>
                   <name>Adjustment Quantity</name>
                   <usage>S</usage>
                   <seq>04</seq>
-                  <data_type>R</data_type>
-                  <min_len>1</min_len>
-                  <max_len>15</max_len>
                 </element>
                 <element xid="CAS05">
                   <data_ele>1034</data_ele>
                   <name>Adjustment Reason Code</name>
                   <usage>S</usage>
                   <seq>05</seq>
-                  <data_type>ID</data_type>
-                  <min_len>1</min_len>
-                  <max_len>5</max_len>
                   <valid_codes external="adjustment_reason"/>
                 </element>
                 <element xid="CAS06">
@@ -2191,27 +1624,18 @@
                   <name>Adjustment Amount</name>
                   <usage>S</usage>
                   <seq>06</seq>
-                  <data_type>R</data_type>
-                  <min_len>1</min_len>
-                  <max_len>18</max_len>
                 </element>
                 <element xid="CAS07">
                   <data_ele>380</data_ele>
                   <name>Adjustment Quantity</name>
                   <usage>S</usage>
                   <seq>07</seq>
-                  <data_type>R</data_type>
-                  <min_len>1</min_len>
-                  <max_len>15</max_len>
                 </element>
                 <element xid="CAS08">
                   <data_ele>1034</data_ele>
                   <name>Adjustment Reason Code</name>
                   <usage>S</usage>
                   <seq>08</seq>
-                  <data_type>ID</data_type>
-                  <min_len>1</min_len>
-                  <max_len>5</max_len>
                   <valid_codes external="adjustment_reason"/>
                 </element>
                 <element xid="CAS09">
@@ -2219,27 +1643,18 @@
                   <name>Adjustment Amount</name>
                   <usage>S</usage>
                   <seq>09</seq>
-                  <data_type>R</data_type>
-                  <min_len>1</min_len>
-                  <max_len>18</max_len>
                 </element>
                 <element xid="CAS10">
                   <data_ele>380</data_ele>
                   <name>Adjustment Quantity</name>
                   <usage>S</usage>
                   <seq>10</seq>
-                  <data_type>R</data_type>
-                  <min_len>1</min_len>
-                  <max_len>15</max_len>
                 </element>
                 <element xid="CAS11">
                   <data_ele>1034</data_ele>
                   <name>Adjustment Reason Code</name>
                   <usage>S</usage>
                   <seq>11</seq>
-                  <data_type>ID</data_type>
-                  <min_len>1</min_len>
-                  <max_len>5</max_len>
                   <valid_codes external="adjustment_reason"/>
                 </element>
                 <element xid="CAS12">
@@ -2247,27 +1662,18 @@
                   <name>Adjustment Amount</name>
                   <usage>S</usage>
                   <seq>12</seq>
-                  <data_type>R</data_type>
-                  <min_len>1</min_len>
-                  <max_len>18</max_len>
                 </element>
                 <element xid="CAS13">
                   <data_ele>380</data_ele>
                   <name>Adjustment Quantity</name>
                   <usage>S</usage>
                   <seq>13</seq>
-                  <data_type>R</data_type>
-                  <min_len>1</min_len>
-                  <max_len>15</max_len>
                 </element>
                 <element xid="CAS14">
                   <data_ele>1034</data_ele>
                   <name>Adjustment Reason Code</name>
                   <usage>S</usage>
                   <seq>14</seq>
-                  <data_type>ID</data_type>
-                  <min_len>1</min_len>
-                  <max_len>5</max_len>
                   <valid_codes external="adjustment_reason"/>
                 </element>
                 <element xid="CAS15">
@@ -2275,27 +1681,18 @@
                   <name>Adjustment Amount</name>
                   <usage>S</usage>
                   <seq>15</seq>
-                  <data_type>R</data_type>
-                  <min_len>1</min_len>
-                  <max_len>18</max_len>
                 </element>
                 <element xid="CAS16">
                   <data_ele>380</data_ele>
                   <name>Adjustment Quantity</name>
                   <usage>S</usage>
                   <seq>16</seq>
-                  <data_type>R</data_type>
-                  <min_len>1</min_len>
-                  <max_len>15</max_len>
                 </element>
                 <element xid="CAS17">
                   <data_ele>1034</data_ele>
                   <name>Adjustment Reason Code</name>
                   <usage>S</usage>
                   <seq>17</seq>
-                  <data_type>ID</data_type>
-                  <min_len>1</min_len>
-                  <max_len>5</max_len>
                   <valid_codes external="adjustment_reason"/>
                 </element>
                 <element xid="CAS18">
@@ -2303,18 +1700,12 @@
                   <name>Adjustment Amount</name>
                   <usage>S</usage>
                   <seq>18</seq>
-                  <data_type>R</data_type>
-                  <min_len>1</min_len>
-                  <max_len>18</max_len>
                 </element>
                 <element xid="CAS19">
                   <data_ele>380</data_ele>
                   <name>Adjustment Quantity</name>
                   <usage>S</usage>
                   <seq>19</seq>
-                  <data_type>R</data_type>
-                  <min_len>1</min_len>
-                  <max_len>15</max_len>
                 </element>
               </segment>
 <!--End of CAS segment-->
@@ -2328,9 +1719,6 @@
                   <name>Entity Identifier Code</name>
                   <usage>R</usage>
                   <seq>01</seq>
-                  <data_type>ID</data_type>
-                  <min_len>2</min_len>
-                  <max_len>3</max_len>
                   <valid_codes>
                     <code>QC</code>
                   </valid_codes>
@@ -2340,9 +1728,6 @@
                   <name>Entity Type Qualifier</name>
                   <usage>R</usage>
                   <seq>02</seq>
-                  <data_type>ID</data_type>
-                  <min_len>1</min_len>
-                  <max_len>1</max_len>
                   <valid_codes>
                     <code>1</code>
                   </valid_codes>
@@ -2352,54 +1737,36 @@
                   <name>Patient Last Name</name>
                   <usage>R</usage>
                   <seq>03</seq>
-                  <data_type>AN</data_type>
-                  <min_len>1</min_len>
-                  <max_len>35</max_len>
                 </element>
                 <element xid="NM104">
                   <data_ele>1036</data_ele>
                   <name>Patient First Name</name>
                   <usage>R</usage>
                   <seq>04</seq>
-                  <data_type>AN</data_type>
-                  <min_len>1</min_len>
-                  <max_len>25</max_len>
                 </element>
                 <element xid="NM105">
                   <data_ele>1037</data_ele>
                   <name>Patient Middle Name</name>
                   <usage>S</usage>
                   <seq>05</seq>
-                  <data_type>AN</data_type>
-                  <min_len>1</min_len>
-                  <max_len>25</max_len>
                 </element>
                 <element xid="NM106">
                   <data_ele>1038</data_ele>
                   <name>Name Prefix</name>
                   <usage>N</usage>
                   <seq>06</seq>
-                  <data_type>AN</data_type>
-                  <min_len>1</min_len>
-                  <max_len>10</max_len>
                 </element>
                 <element xid="NM107">
                   <data_ele>1039</data_ele>
                   <name>Patient Name Suffix</name>
                   <usage>S</usage>
                   <seq>07</seq>
-                  <data_type>AN</data_type>
-                  <min_len>1</min_len>
-                  <max_len>10</max_len>
                 </element>
                 <element xid="NM108">
                   <data_ele>66</data_ele>
                   <name>Identification Code Qualifier</name>
                   <usage>S</usage>
                   <seq>08</seq>
-                  <data_type>ID</data_type>
-                  <min_len>1</min_len>
-                  <max_len>2</max_len>
                   <valid_codes>
                     <code>34</code>
                     <code>HN</code>
@@ -2413,27 +1780,18 @@
                   <name>Patient Identifier</name>
                   <usage>S</usage>
                   <seq>09</seq>
-                  <data_type>AN</data_type>
-                  <min_len>2</min_len>
-                  <max_len>80</max_len>
                 </element>
                 <element xid="NM110">
                   <data_ele>706</data_ele>
                   <name>Entity Relationship Code</name>
                   <usage>N</usage>
                   <seq>10</seq>
-                  <data_type>ID</data_type>
-                  <min_len>2</min_len>
-                  <max_len>2</max_len>
                 </element>
                 <element xid="NM111">
                   <data_ele>98</data_ele>
                   <name>Entity Identifier Code</name>
                   <usage>N</usage>
                   <seq>11</seq>
-                  <data_type>ID</data_type>
-                  <min_len>2</min_len>
-                  <max_len>3</max_len>
                 </element>
               </segment>
 <!--End of NM1 segment-->
@@ -2447,9 +1805,6 @@
                   <name>Entity Identifier Code</name>
                   <usage>R</usage>
                   <seq>01</seq>
-                  <data_type>ID</data_type>
-                  <min_len>2</min_len>
-                  <max_len>3</max_len>
                   <valid_codes>
                     <code>IL</code>
                   </valid_codes>
@@ -2459,9 +1814,6 @@
                   <name>Entity Type Qualifier</name>
                   <usage>R</usage>
                   <seq>02</seq>
-                  <data_type>ID</data_type>
-                  <min_len>1</min_len>
-                  <max_len>1</max_len>
                   <valid_codes>
                     <code>1</code>
                     <code>2</code>
@@ -2472,54 +1824,36 @@
                   <name>Subscriber Last Name</name>
                   <usage>S</usage>
                   <seq>03</seq>
-                  <data_type>AN</data_type>
-                  <min_len>1</min_len>
-                  <max_len>35</max_len>
                 </element>
                 <element xid="NM104">
                   <data_ele>1036</data_ele>
                   <name>Subscriber First Name</name>
                   <usage>S</usage>
                   <seq>04</seq>
-                  <data_type>AN</data_type>
-                  <min_len>1</min_len>
-                  <max_len>25</max_len>
                 </element>
                 <element xid="NM105">
                   <data_ele>1037</data_ele>
                   <name>Subscriber Middle Name</name>
                   <usage>S</usage>
                   <seq>05</seq>
-                  <data_type>AN</data_type>
-                  <min_len>1</min_len>
-                  <max_len>25</max_len>
                 </element>
                 <element xid="NM106">
                   <data_ele>1038</data_ele>
                   <name>Name Prefix</name>
                   <usage>N</usage>
                   <seq>06</seq>
-                  <data_type>AN</data_type>
-                  <min_len>1</min_len>
-                  <max_len>10</max_len>
                 </element>
                 <element xid="NM107">
                   <data_ele>1039</data_ele>
                   <name>Subscriber Name Suffix</name>
                   <usage>S</usage>
                   <seq>07</seq>
-                  <data_type>AN</data_type>
-                  <min_len>1</min_len>
-                  <max_len>10</max_len>
                 </element>
                 <element xid="NM108">
                   <data_ele>66</data_ele>
                   <name>Identification Code Qualifier</name>
                   <usage>R</usage>
                   <seq>08</seq>
-                  <data_type>ID</data_type>
-                  <min_len>1</min_len>
-                  <max_len>2</max_len>
                   <valid_codes>
                     <code>34</code>
                     <code>HN</code>
@@ -2531,27 +1865,18 @@
                   <name>Subscriber Identifier</name>
                   <usage>R</usage>
                   <seq>09</seq>
-                  <data_type>AN</data_type>
-                  <min_len>2</min_len>
-                  <max_len>80</max_len>
                 </element>
                 <element xid="NM110">
                   <data_ele>706</data_ele>
                   <name>Entity Relationship Code</name>
                   <usage>N</usage>
                   <seq>10</seq>
-                  <data_type>ID</data_type>
-                  <min_len>2</min_len>
-                  <max_len>2</max_len>
                 </element>
                 <element xid="NM111">
                   <data_ele>98</data_ele>
                   <name>Entity Identifier Code</name>
                   <usage>N</usage>
                   <seq>11</seq>
-                  <data_type>ID</data_type>
-                  <min_len>2</min_len>
-                  <max_len>3</max_len>
                 </element>
               </segment>
 <!--End of NM1 segment-->
@@ -2565,9 +1890,6 @@
                   <name>Entity Identifier Code</name>
                   <usage>R</usage>
                   <seq>01</seq>
-                  <data_type>ID</data_type>
-                  <min_len>2</min_len>
-                  <max_len>3</max_len>
                   <valid_codes>
                     <code>74</code>
                   </valid_codes>
@@ -2577,9 +1899,6 @@
                   <name>Entity Type Qualifier</name>
                   <usage>R</usage>
                   <seq>02</seq>
-                  <data_type>ID</data_type>
-                  <min_len>1</min_len>
-                  <max_len>1</max_len>
                   <valid_codes>
                     <code>1</code>
                     <code>2</code>
@@ -2590,54 +1909,36 @@
                   <name>Corrected Patient or Insured Last Name</name>
                   <usage>S</usage>
                   <seq>03</seq>
-                  <data_type>AN</data_type>
-                  <min_len>1</min_len>
-                  <max_len>35</max_len>
                 </element>
                 <element xid="NM104">
                   <data_ele>1036</data_ele>
                   <name>Corrected Patient or Insured First Name</name>
                   <usage>S</usage>
                   <seq>04</seq>
-                  <data_type>AN</data_type>
-                  <min_len>1</min_len>
-                  <max_len>25</max_len>
                 </element>
                 <element xid="NM105">
                   <data_ele>1037</data_ele>
                   <name>Corrected Patient or Insured Middle Name</name>
                   <usage>S</usage>
                   <seq>05</seq>
-                  <data_type>AN</data_type>
-                  <min_len>1</min_len>
-                  <max_len>25</max_len>
                 </element>
                 <element xid="NM106">
                   <data_ele>1038</data_ele>
                   <name>Name Prefix</name>
                   <usage>N</usage>
                   <seq>06</seq>
-                  <data_type>AN</data_type>
-                  <min_len>1</min_len>
-                  <max_len>10</max_len>
                 </element>
                 <element xid="NM107">
                   <data_ele>1039</data_ele>
                   <name>Corrected Patient or Insured Name Suffix</name>
                   <usage>S</usage>
                   <seq>07</seq>
-                  <data_type>AN</data_type>
-                  <min_len>1</min_len>
-                  <max_len>10</max_len>
                 </element>
                 <element xid="NM108">
                   <data_ele>66</data_ele>
                   <name>Identification Code Qualifier</name>
                   <usage>S</usage>
                   <seq>08</seq>
-                  <data_type>ID</data_type>
-                  <min_len>1</min_len>
-                  <max_len>2</max_len>
                   <valid_codes>
                     <code>C</code>
                   </valid_codes>
@@ -2647,27 +1948,18 @@
                   <name>Corrected Insured Identification Indicator</name>
                   <usage>S</usage>
                   <seq>09</seq>
-                  <data_type>AN</data_type>
-                  <min_len>2</min_len>
-                  <max_len>80</max_len>
                 </element>
                 <element xid="NM110">
                   <data_ele>706</data_ele>
                   <name>Entity Relationship Code</name>
                   <usage>N</usage>
                   <seq>10</seq>
-                  <data_type>ID</data_type>
-                  <min_len>2</min_len>
-                  <max_len>2</max_len>
                 </element>
                 <element xid="NM111">
                   <data_ele>98</data_ele>
                   <name>Entity Identifier Code</name>
                   <usage>N</usage>
                   <seq>11</seq>
-                  <data_type>ID</data_type>
-                  <min_len>2</min_len>
-                  <max_len>3</max_len>
                 </element>
               </segment>
 <!--End of NM1 segment-->
@@ -2681,9 +1973,6 @@
                   <name>Entity Identifier Code</name>
                   <usage>R</usage>
                   <seq>01</seq>
-                  <data_type>ID</data_type>
-                  <min_len>2</min_len>
-                  <max_len>3</max_len>
                   <valid_codes>
                     <code>82</code>
                   </valid_codes>
@@ -2693,9 +1982,6 @@
                   <name>Entity Type Qualifier</name>
                   <usage>R</usage>
                   <seq>02</seq>
-                  <data_type>ID</data_type>
-                  <min_len>1</min_len>
-                  <max_len>1</max_len>
                   <valid_codes>
                     <code>1</code>
                     <code>2</code>
@@ -2706,54 +1992,36 @@
                   <name>Rendering Provider Last or Organization Name</name>
                   <usage>S</usage>
                   <seq>03</seq>
-                  <data_type>AN</data_type>
-                  <min_len>1</min_len>
-                  <max_len>35</max_len>
                 </element>
                 <element xid="NM104">
                   <data_ele>1036</data_ele>
                   <name>Rendering Provider First Name</name>
                   <usage>S</usage>
                   <seq>04</seq>
-                  <data_type>AN</data_type>
-                  <min_len>1</min_len>
-                  <max_len>25</max_len>
                 </element>
                 <element xid="NM105">
                   <data_ele>1037</data_ele>
                   <name>Rendering Provider Middle Name</name>
                   <usage>S</usage>
                   <seq>05</seq>
-                  <data_type>AN</data_type>
-                  <min_len>1</min_len>
-                  <max_len>25</max_len>
                 </element>
                 <element xid="NM106">
                   <data_ele>1038</data_ele>
                   <name>Name Prefix</name>
                   <usage>N</usage>
                   <seq>06</seq>
-                  <data_type>AN</data_type>
-                  <min_len>1</min_len>
-                  <max_len>10</max_len>
                 </element>
                 <element xid="NM107">
                   <data_ele>1039</data_ele>
                   <name>Rendering Provider Name Suffix</name>
                   <usage>S</usage>
                   <seq>07</seq>
-                  <data_type>AN</data_type>
-                  <min_len>1</min_len>
-                  <max_len>10</max_len>
                 </element>
                 <element xid="NM108">
                   <data_ele>66</data_ele>
                   <name>Identification Code Qualifier</name>
                   <usage>R</usage>
                   <seq>08</seq>
-                  <data_type>ID</data_type>
-                  <min_len>1</min_len>
-                  <max_len>2</max_len>
                   <valid_codes>
                     <code>BD</code>
                     <code>BS</code>
@@ -2770,27 +2038,18 @@
                   <name>Rendering Provider Identifier</name>
                   <usage>R</usage>
                   <seq>09</seq>
-                  <data_type>AN</data_type>
-                  <min_len>2</min_len>
-                  <max_len>80</max_len>
                 </element>
                 <element xid="NM110">
                   <data_ele>706</data_ele>
                   <name>Entity Relationship Code</name>
                   <usage>N</usage>
                   <seq>10</seq>
-                  <data_type>ID</data_type>
-                  <min_len>2</min_len>
-                  <max_len>2</max_len>
                 </element>
                 <element xid="NM111">
                   <data_ele>98</data_ele>
                   <name>Entity Identifier Code</name>
                   <usage>N</usage>
                   <seq>11</seq>
-                  <data_type>ID</data_type>
-                  <min_len>2</min_len>
-                  <max_len>3</max_len>
                 </element>
               </segment>
 <!--End of NM1 segment-->
@@ -2804,9 +2063,6 @@
                   <name>Entity Identifier Code</name>
                   <usage>R</usage>
                   <seq>01</seq>
-                  <data_type>ID</data_type>
-                  <min_len>2</min_len>
-                  <max_len>3</max_len>
                   <valid_codes>
                     <code>TT</code>
                   </valid_codes>
@@ -2816,9 +2072,6 @@
                   <name>Entity Type Qualifier</name>
                   <usage>R</usage>
                   <seq>02</seq>
-                  <data_type>ID</data_type>
-                  <min_len>1</min_len>
-                  <max_len>1</max_len>
                   <valid_codes>
                     <code>2</code>
                   </valid_codes>
@@ -2828,54 +2081,36 @@
                   <name>Coordination of Benefits Carrier Name</name>
                   <usage>R</usage>
                   <seq>03</seq>
-                  <data_type>AN</data_type>
-                  <min_len>1</min_len>
-                  <max_len>35</max_len>
                 </element>
                 <element xid="NM104">
                   <data_ele>1036</data_ele>
                   <name>Name First</name>
                   <usage>N</usage>
                   <seq>04</seq>
-                  <data_type>AN</data_type>
-                  <min_len>1</min_len>
-                  <max_len>25</max_len>
                 </element>
                 <element xid="NM105">
                   <data_ele>1037</data_ele>
                   <name>Name Middle</name>
                   <usage>N</usage>
                   <seq>05</seq>
-                  <data_type>AN</data_type>
-                  <min_len>1</min_len>
-                  <max_len>25</max_len>
                 </element>
                 <element xid="NM106">
                   <data_ele>1038</data_ele>
                   <name>Name Prefix</name>
                   <usage>N</usage>
                   <seq>06</seq>
-                  <data_type>AN</data_type>
-                  <min_len>1</min_len>
-                  <max_len>10</max_len>
                 </element>
                 <element xid="NM107">
                   <data_ele>1039</data_ele>
                   <name>Name Suffix</name>
                   <usage>N</usage>
                   <seq>07</seq>
-                  <data_type>AN</data_type>
-                  <min_len>1</min_len>
-                  <max_len>10</max_len>
                 </element>
                 <element xid="NM108">
                   <data_ele>66</data_ele>
                   <name>Identification Code Qualifier</name>
                   <usage>R</usage>
                   <seq>08</seq>
-                  <data_type>ID</data_type>
-                  <min_len>1</min_len>
-                  <max_len>2</max_len>
                   <valid_codes>
                     <code>AD</code>
                     <code>FI</code>
@@ -2890,27 +2125,18 @@
                   <name>Coordination of Benefits Carrier Identifier</name>
                   <usage>R</usage>
                   <seq>09</seq>
-                  <data_type>AN</data_type>
-                  <min_len>2</min_len>
-                  <max_len>80</max_len>
                 </element>
                 <element xid="NM110">
                   <data_ele>706</data_ele>
                   <name>Entity Relationship Code</name>
                   <usage>N</usage>
                   <seq>10</seq>
-                  <data_type>ID</data_type>
-                  <min_len>2</min_len>
-                  <max_len>2</max_len>
                 </element>
                 <element xid="NM111">
                   <data_ele>98</data_ele>
                   <name>Entity Identifier Code</name>
                   <usage>N</usage>
                   <seq>11</seq>
-                  <data_type>ID</data_type>
-                  <min_len>2</min_len>
-                  <max_len>3</max_len>
                 </element>
               </segment>
 <!--End of NM1 segment-->
@@ -2924,9 +2150,6 @@
                   <name>Entity Identifier Code</name>
                   <usage>R</usage>
                   <seq>01</seq>
-                  <data_type>ID</data_type>
-                  <min_len>2</min_len>
-                  <max_len>3</max_len>
                   <valid_codes>
                     <code>PR</code>
                   </valid_codes>
@@ -2936,9 +2159,6 @@
                   <name>Entity Type Qualifier</name>
                   <usage>R</usage>
                   <seq>02</seq>
-                  <data_type>ID</data_type>
-                  <min_len>1</min_len>
-                  <max_len>1</max_len>
                   <valid_codes>
                     <code>2</code>
                   </valid_codes>
@@ -2948,54 +2168,36 @@
                   <name>Corrected Priority Payer Name</name>
                   <usage>R</usage>
                   <seq>03</seq>
-                  <data_type>AN</data_type>
-                  <min_len>1</min_len>
-                  <max_len>35</max_len>
                 </element>
                 <element xid="NM104">
                   <data_ele>1036</data_ele>
                   <name>Name First</name>
                   <usage>N</usage>
                   <seq>04</seq>
-                  <data_type>AN</data_type>
-                  <min_len>1</min_len>
-                  <max_len>25</max_len>
                 </element>
                 <element xid="NM105">
                   <data_ele>1037</data_ele>
                   <name>Name Middle</name>
                   <usage>N</usage>
                   <seq>05</seq>
-                  <data_type>AN</data_type>
-                  <min_len>1</min_len>
-                  <max_len>25</max_len>
                 </element>
                 <element xid="NM106">
                   <data_ele>1038</data_ele>
                   <name>Name Prefix</name>
                   <usage>N</usage>
                   <seq>06</seq>
-                  <data_type>AN</data_type>
-                  <min_len>1</min_len>
-                  <max_len>10</max_len>
                 </element>
                 <element xid="NM107">
                   <data_ele>1039</data_ele>
                   <name>Name Suffix</name>
                   <usage>N</usage>
                   <seq>07</seq>
-                  <data_type>AN</data_type>
-                  <min_len>1</min_len>
-                  <max_len>10</max_len>
                 </element>
                 <element xid="NM108">
                   <data_ele>66</data_ele>
                   <name>Identification Code Qualifier</name>
                   <usage>R</usage>
                   <seq>08</seq>
-                  <data_type>ID</data_type>
-                  <min_len>1</min_len>
-                  <max_len>2</max_len>
                   <valid_codes>
                     <code>AD</code>
                     <code>FI</code>
@@ -3010,27 +2212,18 @@
                   <name>Corrected Priority Payer Identification Number</name>
                   <usage>R</usage>
                   <seq>09</seq>
-                  <data_type>AN</data_type>
-                  <min_len>2</min_len>
-                  <max_len>80</max_len>
                 </element>
                 <element xid="NM110">
                   <data_ele>706</data_ele>
                   <name>Entity Relationship Code</name>
                   <usage>N</usage>
                   <seq>10</seq>
-                  <data_type>ID</data_type>
-                  <min_len>2</min_len>
-                  <max_len>2</max_len>
                 </element>
                 <element xid="NM111">
                   <data_ele>98</data_ele>
                   <name>Entity Identifier Code</name>
                   <usage>N</usage>
                   <seq>11</seq>
-                  <data_type>ID</data_type>
-                  <min_len>2</min_len>
-                  <max_len>3</max_len>
                 </element>
               </segment>
 <!--End of NM1 segment-->
@@ -3044,45 +2237,30 @@
                   <name>Covered Days or Visits Count</name>
                   <usage>R</usage>
                   <seq>01</seq>
-                  <data_type>R</data_type>
-                  <min_len>1</min_len>
-                  <max_len>15</max_len>
                 </element>
                 <element xid="MIA02">
                   <data_ele>380</data_ele>
                   <name>PPS Operating Outlier Amount</name>
                   <usage>S</usage>
                   <seq>02</seq>
-                  <data_type>R</data_type>
-                  <min_len>1</min_len>
-                  <max_len>15</max_len>
                 </element>
                 <element xid="MIA03">
                   <data_ele>380</data_ele>
                   <name>Lifetime Psychiatric Days Count</name>
                   <usage>S</usage>
                   <seq>03</seq>
-                  <data_type>R</data_type>
-                  <min_len>1</min_len>
-                  <max_len>15</max_len>
                 </element>
                 <element xid="MIA04">
                   <data_ele>782</data_ele>
                   <name>Claim DRG Amount</name>
                   <usage>S</usage>
                   <seq>04</seq>
-                  <data_type>R</data_type>
-                  <min_len>1</min_len>
-                  <max_len>18</max_len>
                 </element>
                 <element xid="MIA05">
                   <data_ele>127</data_ele>
                   <name>Remark Code</name>
                   <usage>S</usage>
                   <seq>05</seq>
-                  <data_type>AN</data_type>
-                  <min_len>1</min_len>
-                  <max_len>30</max_len>
                   <valid_codes external="remark_code"/>
                 </element>
                 <element xid="MIA06">
@@ -3090,135 +2268,90 @@
                   <name>Claim Disproportionate Share Amount</name>
                   <usage>S</usage>
                   <seq>06</seq>
-                  <data_type>R</data_type>
-                  <min_len>1</min_len>
-                  <max_len>18</max_len>
                 </element>
                 <element xid="MIA07">
                   <data_ele>782</data_ele>
                   <name>Claim MSP Pass-through Amount</name>
                   <usage>S</usage>
                   <seq>07</seq>
-                  <data_type>R</data_type>
-                  <min_len>1</min_len>
-                  <max_len>18</max_len>
                 </element>
                 <element xid="MIA08">
                   <data_ele>782</data_ele>
                   <name>Claim PPS Capital Amount</name>
                   <usage>S</usage>
                   <seq>08</seq>
-                  <data_type>R</data_type>
-                  <min_len>1</min_len>
-                  <max_len>18</max_len>
                 </element>
                 <element xid="MIA09">
                   <data_ele>782</data_ele>
                   <name>PPS-Capital FSP DRG Amount</name>
                   <usage>S</usage>
                   <seq>09</seq>
-                  <data_type>R</data_type>
-                  <min_len>1</min_len>
-                  <max_len>18</max_len>
                 </element>
                 <element xid="MIA10">
                   <data_ele>782</data_ele>
                   <name>PPS-Capital HSP DRG Amount</name>
                   <usage>S</usage>
                   <seq>10</seq>
-                  <data_type>R</data_type>
-                  <min_len>1</min_len>
-                  <max_len>18</max_len>
                 </element>
                 <element xid="MIA11">
                   <data_ele>782</data_ele>
                   <name>PPS-Capital DSH DRG Amount</name>
                   <usage>S</usage>
                   <seq>11</seq>
-                  <data_type>R</data_type>
-                  <min_len>1</min_len>
-                  <max_len>18</max_len>
                 </element>
                 <element xid="MIA12">
                   <data_ele>782</data_ele>
                   <name>Old Capital Amount</name>
                   <usage>S</usage>
                   <seq>12</seq>
-                  <data_type>R</data_type>
-                  <min_len>1</min_len>
-                  <max_len>18</max_len>
                 </element>
                 <element xid="MIA13">
                   <data_ele>782</data_ele>
                   <name>PPS-Capital IME Amount</name>
                   <usage>S</usage>
                   <seq>13</seq>
-                  <data_type>R</data_type>
-                  <min_len>1</min_len>
-                  <max_len>18</max_len>
                 </element>
                 <element xid="MIA14">
                   <data_ele>782</data_ele>
                   <name>PPS-Operating Hospital Specific DRG Amount</name>
                   <usage>S</usage>
                   <seq>14</seq>
-                  <data_type>R</data_type>
-                  <min_len>1</min_len>
-                  <max_len>18</max_len>
                 </element>
                 <element xid="MIA15">
                   <data_ele>380</data_ele>
                   <name>Cost Report Day Count</name>
                   <usage>S</usage>
                   <seq>15</seq>
-                  <data_type>R</data_type>
-                  <min_len>1</min_len>
-                  <max_len>15</max_len>
                 </element>
                 <element xid="MIA16">
                   <data_ele>782</data_ele>
                   <name>PPS-Operating Federal Specific DRG Amount</name>
                   <usage>S</usage>
                   <seq>16</seq>
-                  <data_type>R</data_type>
-                  <min_len>1</min_len>
-                  <max_len>18</max_len>
                 </element>
                 <element xid="MIA17">
                   <data_ele>782</data_ele>
                   <name>Claim PPS Capital Outlier Amount</name>
                   <usage>S</usage>
                   <seq>17</seq>
-                  <data_type>R</data_type>
-                  <min_len>1</min_len>
-                  <max_len>18</max_len>
                 </element>
                 <element xid="MIA18">
                   <data_ele>782</data_ele>
                   <name>Claim Indirect Teaching Amount</name>
                   <usage>S</usage>
                   <seq>18</seq>
-                  <data_type>R</data_type>
-                  <min_len>1</min_len>
-                  <max_len>18</max_len>
                 </element>
                 <element xid="MIA19">
                   <data_ele>782</data_ele>
                   <name>Nonpayable Professional Component Amount</name>
                   <usage>S</usage>
                   <seq>19</seq>
-                  <data_type>R</data_type>
-                  <min_len>1</min_len>
-                  <max_len>18</max_len>
                 </element>
                 <element xid="MIA20">
                   <data_ele>127</data_ele>
                   <name>Remark Code</name>
                   <usage>S</usage>
                   <seq>20</seq>
-                  <data_type>AN</data_type>
-                  <min_len>1</min_len>
-                  <max_len>30</max_len>
                   <valid_codes external="remark_code"/>
                 </element>
                 <element xid="MIA21">
@@ -3226,9 +2359,6 @@
                   <name>Remark Code</name>
                   <usage>S</usage>
                   <seq>21</seq>
-                  <data_type>AN</data_type>
-                  <min_len>1</min_len>
-                  <max_len>30</max_len>
                   <valid_codes external="remark_code"/>
                 </element>
                 <element xid="MIA22">
@@ -3236,9 +2366,6 @@
                   <name>Remark Code</name>
                   <usage>S</usage>
                   <seq>22</seq>
-                  <data_type>AN</data_type>
-                  <min_len>1</min_len>
-                  <max_len>30</max_len>
                   <valid_codes external="remark_code"/>
                 </element>
                 <element xid="MIA23">
@@ -3246,9 +2373,6 @@
                   <name>Remark Code</name>
                   <usage>S</usage>
                   <seq>23</seq>
-                  <data_type>AN</data_type>
-                  <min_len>1</min_len>
-                  <max_len>30</max_len>
                   <valid_codes external="remark_code"/>
                 </element>
                 <element xid="MIA24">
@@ -3256,9 +2380,6 @@
                   <name>PPS-Capital Exception Amount</name>
                   <usage>S</usage>
                   <seq>24</seq>
-                  <data_type>R</data_type>
-                  <min_len>1</min_len>
-                  <max_len>18</max_len>
                 </element>
               </segment>
 <!--End of MIA segment-->
@@ -3272,27 +2393,18 @@
                   <name>Reimbursement Rate</name>
                   <usage>S</usage>
                   <seq>01</seq>
-                  <data_type>R</data_type>
-                  <min_len>1</min_len>
-                  <max_len>10</max_len>
                 </element>
                 <element xid="MOA02">
                   <data_ele>782</data_ele>
                   <name>Claim HCPCS Payable Amount</name>
                   <usage>S</usage>
                   <seq>02</seq>
-                  <data_type>R</data_type>
-                  <min_len>1</min_len>
-                  <max_len>18</max_len>
                 </element>
                 <element xid="MOA03">
                   <data_ele>127</data_ele>
                   <name>Remark Code</name>
                   <usage>S</usage>
                   <seq>03</seq>
-                  <data_type>AN</data_type>
-                  <min_len>1</min_len>
-                  <max_len>30</max_len>
                   <valid_codes external="remark_code"/>
                 </element>
                 <element xid="MOA04">
@@ -3300,9 +2412,6 @@
                   <name>Remark Code</name>
                   <usage>S</usage>
                   <seq>04</seq>
-                  <data_type>AN</data_type>
-                  <min_len>1</min_len>
-                  <max_len>30</max_len>
                   <valid_codes external="remark_code"/>
                 </element>
                 <element xid="MOA05">
@@ -3310,9 +2419,6 @@
                   <name>Remark Code</name>
                   <usage>S</usage>
                   <seq>05</seq>
-                  <data_type>AN</data_type>
-                  <min_len>1</min_len>
-                  <max_len>30</max_len>
                   <valid_codes external="remark_code"/>
                 </element>
                 <element xid="MOA06">
@@ -3320,9 +2426,6 @@
                   <name>Remark Code</name>
                   <usage>S</usage>
                   <seq>06</seq>
-                  <data_type>AN</data_type>
-                  <min_len>1</min_len>
-                  <max_len>30</max_len>
                   <valid_codes external="remark_code"/>
                 </element>
                 <element xid="MOA07">
@@ -3330,9 +2433,6 @@
                   <name>Remark Code</name>
                   <usage>S</usage>
                   <seq>07</seq>
-                  <data_type>AN</data_type>
-                  <min_len>1</min_len>
-                  <max_len>30</max_len>
                   <valid_codes external="remark_code"/>
                 </element>
                 <element xid="MOA08">
@@ -3340,18 +2440,12 @@
                   <name>Claim ESRD Payment Amount</name>
                   <usage>S</usage>
                   <seq>08</seq>
-                  <data_type>R</data_type>
-                  <min_len>1</min_len>
-                  <max_len>18</max_len>
                 </element>
                 <element xid="MOA09">
                   <data_ele>782</data_ele>
                   <name>Nonpayable Professional Component Amount</name>
                   <usage>S</usage>
                   <seq>09</seq>
-                  <data_type>R</data_type>
-                  <min_len>1</min_len>
-                  <max_len>18</max_len>
                 </element>
               </segment>
 <!--End of MOA segment-->
@@ -3365,9 +2459,6 @@
                   <name>Reference Identification Qualifier</name>
                   <usage>R</usage>
                   <seq>01</seq>
-                  <data_type>ID</data_type>
-                  <min_len>2</min_len>
-                  <max_len>3</max_len>
                   <valid_codes>
                     <code>1L</code>
                     <code>1W</code>
@@ -3389,18 +2480,12 @@
                   <name>Other Claim Related Identifier</name>
                   <usage>R</usage>
                   <seq>02</seq>
-                  <data_type>AN</data_type>
-                  <min_len>1</min_len>
-                  <max_len>30</max_len>
                 </element>
                 <element xid="REF03">
                   <data_ele>352</data_ele>
                   <name>Description</name>
                   <usage>N</usage>
                   <seq>03</seq>
-                  <data_type>AN</data_type>
-                  <min_len>1</min_len>
-                  <max_len>80</max_len>
                 </element>
                 <composite>
                   <data_ele>C040</data_ele>
@@ -3420,9 +2505,6 @@
                   <name>Reference Identification Qualifier</name>
                   <usage>R</usage>
                   <seq>01</seq>
-                  <data_type>ID</data_type>
-                  <min_len>2</min_len>
-                  <max_len>3</max_len>
                   <valid_codes>
                     <code>1A</code>
                     <code>1B</code>
@@ -3439,18 +2521,12 @@
                   <name>Rendering Provider Secondary Identifier</name>
                   <usage>R</usage>
                   <seq>02</seq>
-                  <data_type>AN</data_type>
-                  <min_len>1</min_len>
-                  <max_len>30</max_len>
                 </element>
                 <element xid="REF03">
                   <data_ele>352</data_ele>
                   <name>Description</name>
                   <usage>N</usage>
                   <seq>03</seq>
-                  <data_type>AN</data_type>
-                  <min_len>1</min_len>
-                  <max_len>80</max_len>
                 </element>
                 <composite>
                   <data_ele>C040</data_ele>
@@ -3470,9 +2546,6 @@
                   <name>Date Time Qualifier</name>
                   <usage>R</usage>
                   <seq>01</seq>
-                  <data_type>ID</data_type>
-                  <min_len>3</min_len>
-                  <max_len>3</max_len>
                   <valid_codes>
                     <code>036</code>
                     <code>050</code>
@@ -3485,9 +2558,6 @@
                   <name>Claim Date</name>
                   <usage>R</usage>
                   <seq>02</seq>
-                  <data_type>DT</data_type>
-                  <min_len>8</min_len>
-                  <max_len>8</max_len>
                   <valid_codes>
           </valid_codes>
                 </element>
@@ -3496,36 +2566,24 @@
                   <name>Time</name>
                   <usage>N</usage>
                   <seq>03</seq>
-                  <data_type>TM</data_type>
-                  <min_len>4</min_len>
-                  <max_len>8</max_len>
                 </element>
                 <element xid="DTM04">
                   <data_ele>623</data_ele>
                   <name>Time Code</name>
                   <usage>N</usage>
                   <seq>04</seq>
-                  <data_type>ID</data_type>
-                  <min_len>2</min_len>
-                  <max_len>2</max_len>
                 </element>
                 <element xid="DTM05">
                   <data_ele>1250</data_ele>
                   <name>Date Time Period Format Qualifier</name>
                   <usage>N</usage>
                   <seq>05</seq>
-                  <data_type>ID</data_type>
-                  <min_len>2</min_len>
-                  <max_len>3</max_len>
                 </element>
                 <element xid="DTM06">
                   <data_ele>1251</data_ele>
                   <name>Date Time Period</name>
                   <usage>N</usage>
                   <seq>06</seq>
-                  <data_type>AN</data_type>
-                  <min_len>1</min_len>
-                  <max_len>35</max_len>
                 </element>
               </segment>
 <!--End of DTM segment-->
@@ -3539,9 +2597,6 @@
                   <name>Contact Function Code</name>
                   <usage>R</usage>
                   <seq>01</seq>
-                  <data_type>ID</data_type>
-                  <min_len>2</min_len>
-                  <max_len>2</max_len>
                   <valid_codes>
                     <code>CX</code>
                   </valid_codes>
@@ -3551,18 +2606,12 @@
                   <name>Claim Contact Name</name>
                   <usage>S</usage>
                   <seq>02</seq>
-                  <data_type>AN</data_type>
-                  <min_len>1</min_len>
-                  <max_len>60</max_len>
                 </element>
                 <element xid="PER03">
                   <data_ele>365</data_ele>
                   <name>Communication Number Qualifier</name>
                   <usage>S</usage>
                   <seq>03</seq>
-                  <data_type>ID</data_type>
-                  <min_len>2</min_len>
-                  <max_len>2</max_len>
                   <valid_codes>
                     <code>EM</code>
                     <code>FX</code>
@@ -3574,18 +2623,12 @@
                   <name>Claim Contact Communications Number</name>
                   <usage>S</usage>
                   <seq>04</seq>
-                  <data_type>AN</data_type>
-                  <min_len>1</min_len>
-                  <max_len>80</max_len>
                 </element>
                 <element xid="PER05">
                   <data_ele>365</data_ele>
                   <name>Communication Number Qualifier</name>
                   <usage>S</usage>
                   <seq>05</seq>
-                  <data_type>ID</data_type>
-                  <min_len>2</min_len>
-                  <max_len>2</max_len>
                   <valid_codes>
                     <code>EM</code>
                     <code>EX</code>
@@ -3598,18 +2641,12 @@
                   <name>Claim Contact Communications Number</name>
                   <usage>S</usage>
                   <seq>06</seq>
-                  <data_type>AN</data_type>
-                  <min_len>1</min_len>
-                  <max_len>80</max_len>
                 </element>
                 <element xid="PER07">
                   <data_ele>365</data_ele>
                   <name>Communication Number Qualifier</name>
                   <usage>S</usage>
                   <seq>07</seq>
-                  <data_type>ID</data_type>
-                  <min_len>2</min_len>
-                  <max_len>2</max_len>
                   <valid_codes>
                     <code>EX</code>
                   </valid_codes>
@@ -3619,18 +2656,12 @@
                   <name>Communication Number Extension</name>
                   <usage>S</usage>
                   <seq>08</seq>
-                  <data_type>AN</data_type>
-                  <min_len>1</min_len>
-                  <max_len>80</max_len>
                 </element>
                 <element xid="PER09">
                   <data_ele>443</data_ele>
                   <name>Contact Inquiry Reference</name>
                   <usage>N</usage>
                   <seq>09</seq>
-                  <data_type>AN</data_type>
-                  <min_len>1</min_len>
-                  <max_len>20</max_len>
                 </element>
               </segment>
 <!--End of PER segment-->
@@ -3644,9 +2675,6 @@
                   <name>Amount Qualifier Code</name>
                   <usage>R</usage>
                   <seq>01</seq>
-                  <data_type>ID</data_type>
-                  <min_len>1</min_len>
-                  <max_len>3</max_len>
                   <valid_codes>
                     <code>I</code>
                     <code>T</code>
@@ -3669,18 +2697,12 @@
                   <name>Claim Supplemental Information Amount</name>
                   <usage>R</usage>
                   <seq>02</seq>
-                  <data_type>R</data_type>
-                  <min_len>1</min_len>
-                  <max_len>18</max_len>
                 </element>
                 <element xid="AMT03">
                   <data_ele>478</data_ele>
                   <name>Credit/Debit Flag Code</name>
                   <usage>N</usage>
                   <seq>03</seq>
-                  <data_type>ID</data_type>
-                  <min_len>1</min_len>
-                  <max_len>1</max_len>
                 </element>
               </segment>
 <!--End of AMT segment-->
@@ -3694,9 +2716,6 @@
                   <name>Quantity Qualifier</name>
                   <usage>R</usage>
                   <seq>01</seq>
-                  <data_type>ID</data_type>
-                  <min_len>2</min_len>
-                  <max_len>2</max_len>
                   <valid_codes>
                     <code>CA</code>
                     <code>CD</code>
@@ -3720,9 +2739,6 @@
                   <name>Claim Supplemental Information Quantity</name>
                   <usage>R</usage>
                   <seq>02</seq>
-                  <data_type>R</data_type>
-                  <min_len>1</min_len>
-                  <max_len>15</max_len>
                 </element>
                 <composite>
                   <data_ele>C001</data_ele>
@@ -3735,9 +2751,6 @@
                   <name>Free-Form Message</name>
                   <usage>N</usage>
                   <seq>04</seq>
-                  <data_type>AN</data_type>
-                  <min_len>1</min_len>
-                  <max_len>30</max_len>
                 </element>
               </segment>
 <!--End of QTY segment-->
@@ -3761,9 +2774,6 @@
                       <name>Product or Service ID Qualifier</name>
                       <usage>R</usage>
                       <seq>01</seq>
-                      <data_type>ID</data_type>
-                      <min_len>2</min_len>
-                      <max_len>2</max_len>
                       <valid_codes>
                         <code>AD</code>
                         <code>ER</code>
@@ -3781,54 +2791,36 @@
                       <name>Procedure Code</name>
                       <usage>R</usage>
                       <seq>02</seq>
-                      <data_type>AN</data_type>
-                      <min_len>1</min_len>
-                      <max_len>48</max_len>
                     </element>
                     <element xid="SVC01-03">
                       <data_ele>1339</data_ele>
                       <name>Procedure Modifier</name>
                       <usage>S</usage>
                       <seq>03</seq>
-                      <data_type>AN</data_type>
-                      <min_len>2</min_len>
-                      <max_len>2</max_len>
                     </element>
                     <element xid="SVC01-04">
                       <data_ele>1339</data_ele>
                       <name>Procedure Modifier</name>
                       <usage>S</usage>
                       <seq>04</seq>
-                      <data_type>AN</data_type>
-                      <min_len>2</min_len>
-                      <max_len>2</max_len>
                     </element>
                     <element xid="SVC01-05">
                       <data_ele>1339</data_ele>
                       <name>Procedure Modifier</name>
                       <usage>S</usage>
                       <seq>05</seq>
-                      <data_type>AN</data_type>
-                      <min_len>2</min_len>
-                      <max_len>2</max_len>
                     </element>
                     <element xid="SVC01-06">
                       <data_ele>1339</data_ele>
                       <name>Procedure Modifier</name>
                       <usage>S</usage>
                       <seq>06</seq>
-                      <data_type>AN</data_type>
-                      <min_len>2</min_len>
-                      <max_len>2</max_len>
                     </element>
                     <element xid="SVC01-07">
                       <data_ele>352</data_ele>
                       <name>Procedure Code Description</name>
                       <usage>S</usage>
                       <seq>07</seq>
-                      <data_type>AN</data_type>
-                      <min_len>1</min_len>
-                      <max_len>80</max_len>
                     </element>
                   </composite>
                   <element xid="SVC02">
@@ -3836,36 +2828,24 @@
                     <name>Line Item Charge Amount</name>
                     <usage>R</usage>
                     <seq>02</seq>
-                    <data_type>R</data_type>
-                    <min_len>1</min_len>
-                    <max_len>18</max_len>
                   </element>
                   <element xid="SVC03">
                     <data_ele>782</data_ele>
                     <name>Line Item Provider Payment Amount</name>
                     <usage>R</usage>
                     <seq>03</seq>
-                    <data_type>R</data_type>
-                    <min_len>1</min_len>
-                    <max_len>18</max_len>
                   </element>
                   <element xid="SVC04">
                     <data_ele>234</data_ele>
                     <name>National Uniform Billing Committee Revenue Code</name>
                     <usage>S</usage>
                     <seq>04</seq>
-                    <data_type>AN</data_type>
-                    <min_len>1</min_len>
-                    <max_len>48</max_len>
                   </element>
                   <element xid="SVC05">
                     <data_ele>380</data_ele>
                     <name>Units of Service Paid Count</name>
                     <usage>S</usage>
                     <seq>05</seq>
-                    <data_type>R</data_type>
-                    <min_len>1</min_len>
-                    <max_len>15</max_len>
                   </element>
                   <composite>
                     <data_ele>C003</data_ele>
@@ -3877,9 +2857,6 @@
                       <name>Product or Service ID Qualifier</name>
                       <usage>R</usage>
                       <seq>01</seq>
-                      <data_type>ID</data_type>
-                      <min_len>2</min_len>
-                      <max_len>2</max_len>
                       <valid_codes>
                         <code>AD</code>
                         <code>ER</code>
@@ -3897,54 +2874,36 @@
                       <name>Procedure Code</name>
                       <usage>R</usage>
                       <seq>02</seq>
-                      <data_type>AN</data_type>
-                      <min_len>1</min_len>
-                      <max_len>48</max_len>
                     </element>
                     <element xid="SVC06-03">
                       <data_ele>1339</data_ele>
                       <name>Procedure Modifier</name>
                       <usage>S</usage>
                       <seq>03</seq>
-                      <data_type>AN</data_type>
-                      <min_len>2</min_len>
-                      <max_len>2</max_len>
                     </element>
                     <element xid="SVC06-04">
                       <data_ele>1339</data_ele>
                       <name>Procedure Modifier</name>
                       <usage>S</usage>
                       <seq>04</seq>
-                      <data_type>AN</data_type>
-                      <min_len>2</min_len>
-                      <max_len>2</max_len>
                     </element>
                     <element xid="SVC06-05">
                       <data_ele>1339</data_ele>
                       <name>Procedure Modifier</name>
                       <usage>S</usage>
                       <seq>05</seq>
-                      <data_type>AN</data_type>
-                      <min_len>2</min_len>
-                      <max_len>2</max_len>
                     </element>
                     <element xid="SVC06-06">
                       <data_ele>1339</data_ele>
                       <name>Procedure Modifier</name>
                       <usage>S</usage>
                       <seq>06</seq>
-                      <data_type>AN</data_type>
-                      <min_len>2</min_len>
-                      <max_len>2</max_len>
                     </element>
                     <element xid="SVC06-07">
                       <data_ele>352</data_ele>
                       <name>Procedure Code Description</name>
                       <usage>S</usage>
                       <seq>07</seq>
-                      <data_type>AN</data_type>
-                      <min_len>1</min_len>
-                      <max_len>80</max_len>
                     </element>
                   </composite>
                   <element xid="SVC07">
@@ -3952,9 +2911,6 @@
                     <name>Original Units of Service Count</name>
                     <usage>S</usage>
                     <seq>07</seq>
-                    <data_type>R</data_type>
-                    <min_len>1</min_len>
-                    <max_len>15</max_len>
                   </element>
                 </segment>
 <!--End of SVC segment-->
@@ -3968,9 +2924,6 @@
                     <name>Date Time Qualifier</name>
                     <usage>R</usage>
                     <seq>01</seq>
-                    <data_type>ID</data_type>
-                    <min_len>3</min_len>
-                    <max_len>3</max_len>
                     <valid_codes>
                       <code>150</code>
                       <code>151</code>
@@ -3982,9 +2935,6 @@
                     <name>Service Date</name>
                     <usage>R</usage>
                     <seq>02</seq>
-                    <data_type>DT</data_type>
-                    <min_len>8</min_len>
-                    <max_len>8</max_len>
                     <valid_codes>
             </valid_codes>
                   </element>
@@ -3993,36 +2943,24 @@
                     <name>Time</name>
                     <usage>N</usage>
                     <seq>03</seq>
-                    <data_type>TM</data_type>
-                    <min_len>4</min_len>
-                    <max_len>8</max_len>
                   </element>
                   <element xid="DTM04">
                     <data_ele>623</data_ele>
                     <name>Time Code</name>
                     <usage>N</usage>
                     <seq>04</seq>
-                    <data_type>ID</data_type>
-                    <min_len>2</min_len>
-                    <max_len>2</max_len>
                   </element>
                   <element xid="DTM05">
                     <data_ele>1250</data_ele>
                     <name>Date Time Period Format Qualifier</name>
                     <usage>N</usage>
                     <seq>05</seq>
-                    <data_type>ID</data_type>
-                    <min_len>2</min_len>
-                    <max_len>3</max_len>
                   </element>
                   <element xid="DTM06">
                     <data_ele>1251</data_ele>
                     <name>Date Time Period</name>
                     <usage>N</usage>
                     <seq>06</seq>
-                    <data_type>AN</data_type>
-                    <min_len>1</min_len>
-                    <max_len>35</max_len>
                   </element>
                 </segment>
 <!--End of DTM segment-->
@@ -4036,9 +2974,6 @@
                     <name>Claim Adjustment Group Code</name>
                     <usage>R</usage>
                     <seq>01</seq>
-                    <data_type>ID</data_type>
-                    <min_len>1</min_len>
-                    <max_len>2</max_len>
                     <valid_codes>
                       <code>CO</code>
                       <code>CR</code>
@@ -4052,9 +2987,6 @@
                     <name>Adjustment Reason Code</name>
                     <usage>R</usage>
                     <seq>02</seq>
-                    <data_type>ID</data_type>
-                    <min_len>1</min_len>
-                    <max_len>5</max_len>
                     <valid_codes external="adjustment_reason"/>
                   </element>
                   <element xid="CAS03">
@@ -4062,27 +2994,18 @@
                     <name>Adjustment Amount</name>
                     <usage>R</usage>
                     <seq>03</seq>
-                    <data_type>R</data_type>
-                    <min_len>1</min_len>
-                    <max_len>18</max_len>
                   </element>
                   <element xid="CAS04">
                     <data_ele>380</data_ele>
                     <name>Adjustment Quantity</name>
                     <usage>S</usage>
                     <seq>04</seq>
-                    <data_type>R</data_type>
-                    <min_len>1</min_len>
-                    <max_len>15</max_len>
                   </element>
                   <element xid="CAS05">
                     <data_ele>1034</data_ele>
                     <name>Adjustment Reason Code</name>
                     <usage>S</usage>
                     <seq>05</seq>
-                    <data_type>ID</data_type>
-                    <min_len>1</min_len>
-                    <max_len>5</max_len>
                     <valid_codes external="adjustment_reason"/>
                   </element>
                   <element xid="CAS06">
@@ -4090,27 +3013,18 @@
                     <name>Adjustment Amount</name>
                     <usage>S</usage>
                     <seq>06</seq>
-                    <data_type>R</data_type>
-                    <min_len>1</min_len>
-                    <max_len>18</max_len>
                   </element>
                   <element xid="CAS07">
                     <data_ele>380</data_ele>
                     <name>Adjustment Quantity</name>
                     <usage>S</usage>
                     <seq>07</seq>
-                    <data_type>R</data_type>
-                    <min_len>1</min_len>
-                    <max_len>15</max_len>
                   </element>
                   <element xid="CAS08">
                     <data_ele>1034</data_ele>
                     <name>Adjustment Reason Code</name>
                     <usage>S</usage>
                     <seq>08</seq>
-                    <data_type>ID</data_type>
-                    <min_len>1</min_len>
-                    <max_len>5</max_len>
                     <valid_codes external="adjustment_reason"/>
                   </element>
                   <element xid="CAS09">
@@ -4118,27 +3032,18 @@
                     <name>Adjustment Amount</name>
                     <usage>S</usage>
                     <seq>09</seq>
-                    <data_type>R</data_type>
-                    <min_len>1</min_len>
-                    <max_len>18</max_len>
                   </element>
                   <element xid="CAS10">
                     <data_ele>380</data_ele>
                     <name>Adjustment Quantity</name>
                     <usage>S</usage>
                     <seq>10</seq>
-                    <data_type>R</data_type>
-                    <min_len>1</min_len>
-                    <max_len>15</max_len>
                   </element>
                   <element xid="CAS11">
                     <data_ele>1034</data_ele>
                     <name>Adjustment Reason Code</name>
                     <usage>S</usage>
                     <seq>11</seq>
-                    <data_type>ID</data_type>
-                    <min_len>1</min_len>
-                    <max_len>5</max_len>
                     <valid_codes external="adjustment_reason"/>
                   </element>
                   <element xid="CAS12">
@@ -4146,27 +3051,18 @@
                     <name>Adjustment Amount</name>
                     <usage>S</usage>
                     <seq>12</seq>
-                    <data_type>R</data_type>
-                    <min_len>1</min_len>
-                    <max_len>18</max_len>
                   </element>
                   <element xid="CAS13">
                     <data_ele>380</data_ele>
                     <name>Adjustment Quantity</name>
                     <usage>S</usage>
                     <seq>13</seq>
-                    <data_type>R</data_type>
-                    <min_len>1</min_len>
-                    <max_len>15</max_len>
                   </element>
                   <element xid="CAS14">
                     <data_ele>1034</data_ele>
                     <name>Adjustment Reason Code</name>
                     <usage>S</usage>
                     <seq>14</seq>
-                    <data_type>ID</data_type>
-                    <min_len>1</min_len>
-                    <max_len>5</max_len>
                     <valid_codes external="adjustment_reason"/>
                   </element>
                   <element xid="CAS15">
@@ -4174,27 +3070,18 @@
                     <name>Adjustment Amount</name>
                     <usage>S</usage>
                     <seq>15</seq>
-                    <data_type>R</data_type>
-                    <min_len>1</min_len>
-                    <max_len>18</max_len>
                   </element>
                   <element xid="CAS16">
                     <data_ele>380</data_ele>
                     <name>Adjustment Quantity</name>
                     <usage>S</usage>
                     <seq>16</seq>
-                    <data_type>R</data_type>
-                    <min_len>1</min_len>
-                    <max_len>15</max_len>
                   </element>
                   <element xid="CAS17">
                     <data_ele>1034</data_ele>
                     <name>Adjustment Reason Code</name>
                     <usage>S</usage>
                     <seq>17</seq>
-                    <data_type>ID</data_type>
-                    <min_len>1</min_len>
-                    <max_len>5</max_len>
                     <valid_codes external="adjustment_reason"/>
                   </element>
                   <element xid="CAS18">
@@ -4202,18 +3089,12 @@
                     <name>Adjustment Amount</name>
                     <usage>S</usage>
                     <seq>18</seq>
-                    <data_type>R</data_type>
-                    <min_len>1</min_len>
-                    <max_len>18</max_len>
                   </element>
                   <element xid="CAS19">
                     <data_ele>380</data_ele>
                     <name>Adjustment Quantity</name>
                     <usage>S</usage>
                     <seq>19</seq>
-                    <data_type>R</data_type>
-                    <min_len>1</min_len>
-                    <max_len>15</max_len>
                   </element>
                 </segment>
 <!--End of CAS segment-->
@@ -4227,9 +3108,6 @@
                     <name>Reference Identification Qualifier</name>
                     <usage>R</usage>
                     <seq>01</seq>
-                    <data_type>ID</data_type>
-                    <min_len>2</min_len>
-                    <max_len>3</max_len>
                     <valid_codes>
                       <code>1S</code>
                       <code>6R</code>
@@ -4246,18 +3124,12 @@
                     <name>Provider Identifier</name>
                     <usage>R</usage>
                     <seq>02</seq>
-                    <data_type>AN</data_type>
-                    <min_len>1</min_len>
-                    <max_len>30</max_len>
                   </element>
                   <element xid="REF03">
                     <data_ele>352</data_ele>
                     <name>Description</name>
                     <usage>N</usage>
                     <seq>03</seq>
-                    <data_type>AN</data_type>
-                    <min_len>1</min_len>
-                    <max_len>80</max_len>
                   </element>
                   <composite>
                     <data_ele>C040</data_ele>
@@ -4277,9 +3149,6 @@
                     <name>Reference Identification Qualifier</name>
                     <usage>R</usage>
                     <seq>01</seq>
-                    <data_type>ID</data_type>
-                    <min_len>2</min_len>
-                    <max_len>3</max_len>
                     <valid_codes>
                       <code>1A</code>
                       <code>1B</code>
@@ -4298,18 +3167,12 @@
                     <name>Rendering Provider Identifier</name>
                     <usage>R</usage>
                     <seq>02</seq>
-                    <data_type>AN</data_type>
-                    <min_len>1</min_len>
-                    <max_len>30</max_len>
                   </element>
                   <element xid="REF03">
                     <data_ele>352</data_ele>
                     <name>Description</name>
                     <usage>N</usage>
                     <seq>03</seq>
-                    <data_type>AN</data_type>
-                    <min_len>1</min_len>
-                    <max_len>80</max_len>
                   </element>
                   <composite>
                     <data_ele>C040</data_ele>
@@ -4329,9 +3192,6 @@
                     <name>Amount Qualifier Code</name>
                     <usage>R</usage>
                     <seq>01</seq>
-                    <data_type>ID</data_type>
-                    <min_len>1</min_len>
-                    <max_len>3</max_len>
                     <valid_codes>
                       <code>B6</code>
                       <code>DY</code>
@@ -4351,18 +3211,12 @@
                     <name>Service Supplemental Amount</name>
                     <usage>R</usage>
                     <seq>02</seq>
-                    <data_type>R</data_type>
-                    <min_len>1</min_len>
-                    <max_len>18</max_len>
                   </element>
                   <element xid="AMT03">
                     <data_ele>478</data_ele>
                     <name>Credit/Debit Flag Code</name>
                     <usage>N</usage>
                     <seq>03</seq>
-                    <data_type>ID</data_type>
-                    <min_len>1</min_len>
-                    <max_len>1</max_len>
                   </element>
                 </segment>
 <!--End of AMT segment-->
@@ -4376,9 +3230,6 @@
                     <name>Quantity Qualifier</name>
                     <usage>R</usage>
                     <seq>01</seq>
-                    <data_type>ID</data_type>
-                    <min_len>2</min_len>
-                    <max_len>2</max_len>
                     <valid_codes>
                       <code>NE</code>
                       <code>ZK</code>
@@ -4393,9 +3244,6 @@
                     <name>Service Supplemental Quantity Count</name>
                     <usage>R</usage>
                     <seq>02</seq>
-                    <data_type>R</data_type>
-                    <min_len>1</min_len>
-                    <max_len>15</max_len>
                   </element>
                   <composite>
                     <data_ele>C001</data_ele>
@@ -4408,9 +3256,6 @@
                     <name>Free-Form Message</name>
                     <usage>N</usage>
                     <seq>04</seq>
-                    <data_type>AN</data_type>
-                    <min_len>1</min_len>
-                    <max_len>30</max_len>
                   </element>
                 </segment>
 <!--End of QTY segment-->
@@ -4424,9 +3269,6 @@
                     <name>Code List Qualifier Code</name>
                     <usage>R</usage>
                     <seq>01</seq>
-                    <data_type>ID</data_type>
-                    <min_len>1</min_len>
-                    <max_len>3</max_len>
                     <valid_codes>
                       <code>HE</code>
                       <code>RX</code>
@@ -4437,9 +3279,6 @@
                     <name>Remark Code</name>
                     <usage>R</usage>
                     <seq>02</seq>
-                    <data_type>AN</data_type>
-                    <min_len>1</min_len>
-                    <max_len>30</max_len>
                   </element>
                 </segment>
 <!--End of LQ segment-->
@@ -4466,18 +3305,12 @@
               <name>Provider Identifier</name>
               <usage>R</usage>
               <seq>01</seq>
-              <data_type>AN</data_type>
-              <min_len>1</min_len>
-              <max_len>30</max_len>
             </element>
             <element xid="PLB02">
               <data_ele>373</data_ele>
               <name>Fiscal Period Date</name>
               <usage>R</usage>
               <seq>02</seq>
-              <data_type>DT</data_type>
-              <min_len>8</min_len>
-              <max_len>8</max_len>
             </element>
             <composite>
               <data_ele>C042</data_ele>
@@ -4489,18 +3322,12 @@
                 <name>Adjustment Reason Code</name>
                 <usage>R</usage>
                 <seq>01</seq>
-                <data_type>ID</data_type>
-                <min_len>2</min_len>
-                <max_len>2</max_len>
               </element>
               <element xid="PLB03-02">
                 <data_ele>127</data_ele>
                 <name>Provider Adjustment Identifier</name>
                 <usage>S</usage>
                 <seq>02</seq>
-                <data_type>AN</data_type>
-                <min_len>1</min_len>
-                <max_len>30</max_len>
               </element>
             </composite>
             <element xid="PLB04">
@@ -4508,9 +3335,6 @@
               <name>Provider Adjustment Amount</name>
               <usage>R</usage>
               <seq>04</seq>
-              <data_type>R</data_type>
-              <min_len>1</min_len>
-              <max_len>18</max_len>
             </element>
             <composite>
               <data_ele>C042</data_ele>
@@ -4522,18 +3346,12 @@
                 <name>Adjustment Reason Code</name>
                 <usage>R</usage>
                 <seq>01</seq>
-                <data_type>ID</data_type>
-                <min_len>2</min_len>
-                <max_len>2</max_len>
               </element>
               <element xid="PLB05-02">
                 <data_ele>127</data_ele>
                 <name>Provider Adjustment Identifier</name>
                 <usage>S</usage>
                 <seq>02</seq>
-                <data_type>AN</data_type>
-                <min_len>1</min_len>
-                <max_len>30</max_len>
               </element>
             </composite>
             <element xid="PLB06">
@@ -4541,9 +3359,6 @@
               <name>Provider Adjustment Amount</name>
               <usage>S</usage>
               <seq>06</seq>
-              <data_type>R</data_type>
-              <min_len>1</min_len>
-              <max_len>18</max_len>
             </element>
             <composite>
               <data_ele>C042</data_ele>
@@ -4555,18 +3370,12 @@
                 <name>Adjustment Reason Code</name>
                 <usage>R</usage>
                 <seq>01</seq>
-                <data_type>ID</data_type>
-                <min_len>2</min_len>
-                <max_len>2</max_len>
               </element>
               <element xid="PLB07-02">
                 <data_ele>127</data_ele>
                 <name>Provider Adjustment Identifier</name>
                 <usage>S</usage>
                 <seq>02</seq>
-                <data_type>AN</data_type>
-                <min_len>1</min_len>
-                <max_len>30</max_len>
               </element>
             </composite>
             <element xid="PLB08">
@@ -4574,9 +3383,6 @@
               <name>Provider Adjustment Amount</name>
               <usage>S</usage>
               <seq>08</seq>
-              <data_type>R</data_type>
-              <min_len>1</min_len>
-              <max_len>18</max_len>
             </element>
             <composite>
               <data_ele>C042</data_ele>
@@ -4588,18 +3394,12 @@
                 <name>Adjustment Reason Code</name>
                 <usage>R</usage>
                 <seq>01</seq>
-                <data_type>ID</data_type>
-                <min_len>2</min_len>
-                <max_len>2</max_len>
               </element>
               <element xid="PLB09-02">
                 <data_ele>127</data_ele>
                 <name>Provider Adjustment Identifier</name>
                 <usage>S</usage>
                 <seq>02</seq>
-                <data_type>AN</data_type>
-                <min_len>1</min_len>
-                <max_len>30</max_len>
               </element>
             </composite>
             <element xid="PLB10">
@@ -4607,9 +3407,6 @@
               <name>Provider Adjustment Amount</name>
               <usage>S</usage>
               <seq>10</seq>
-              <data_type>R</data_type>
-              <min_len>1</min_len>
-              <max_len>18</max_len>
             </element>
             <composite>
               <data_ele>C042</data_ele>
@@ -4621,18 +3418,12 @@
                 <name>Adjustment Reason Code</name>
                 <usage>R</usage>
                 <seq>01</seq>
-                <data_type>ID</data_type>
-                <min_len>2</min_len>
-                <max_len>2</max_len>
               </element>
               <element xid="PLB11-02">
                 <data_ele>127</data_ele>
                 <name>Provider Adjustment Identifier</name>
                 <usage>S</usage>
                 <seq>02</seq>
-                <data_type>AN</data_type>
-                <min_len>1</min_len>
-                <max_len>30</max_len>
               </element>
             </composite>
             <element xid="PLB12">
@@ -4640,9 +3431,6 @@
               <name>Provider Adjustment Amount</name>
               <usage>S</usage>
               <seq>12</seq>
-              <data_type>R</data_type>
-              <min_len>1</min_len>
-              <max_len>18</max_len>
             </element>
             <composite>
               <data_ele>C042</data_ele>
@@ -4654,18 +3442,12 @@
                 <name>Adjustment Reason Code</name>
                 <usage>R</usage>
                 <seq>01</seq>
-                <data_type>ID</data_type>
-                <min_len>2</min_len>
-                <max_len>2</max_len>
               </element>
               <element xid="PLB13-02">
                 <data_ele>127</data_ele>
                 <name>Provider Adjustment Identifier</name>
                 <usage>S</usage>
                 <seq>02</seq>
-                <data_type>AN</data_type>
-                <min_len>1</min_len>
-                <max_len>30</max_len>
               </element>
             </composite>
             <element xid="PLB14">
@@ -4673,9 +3455,6 @@
               <name>Provider Adjustment Amount</name>
               <usage>S</usage>
               <seq>14</seq>
-              <data_type>R</data_type>
-              <min_len>1</min_len>
-              <max_len>18</max_len>
             </element>
           </segment>
 <!--End of PLB segment-->
@@ -4691,18 +3470,12 @@
             <name>Transaction Segment Count</name>
             <usage>R</usage>
             <seq>01</seq>
-            <data_type>N0</data_type>
-            <min_len>1</min_len>
-            <max_len>10</max_len>
           </element>
           <element xid="SE02">
             <data_ele>329</data_ele>
             <name>Transaction Set Control Number</name>
             <usage>R</usage>
             <seq>02</seq>
-            <data_type>AN</data_type>
-            <min_len>4</min_len>
-            <max_len>9</max_len>
           </element>
         </segment>
 <!--End of SE segment-->
@@ -4718,18 +3491,12 @@
           <name>Number of Transaction Sets Included</name>
           <usage>R</usage>
           <seq>01</seq>
-          <data_type>N0</data_type>
-          <min_len>1</min_len>
-          <max_len>6</max_len>
         </element>
         <element xid="GE02">
           <data_ele>28</data_ele>
           <name>Group Control Number</name>
           <usage>R</usage>
           <seq>02</seq>
-          <data_type>N0</data_type>
-          <min_len>1</min_len>
-          <max_len>9</max_len>
         </element>
       </segment>
 <!--End of GE segment-->
@@ -4744,36 +3511,24 @@
         <name>Interchange Control Number</name>
         <usage>R</usage>
         <seq>01</seq>
-        <data_type>N0</data_type>
-        <min_len>9</min_len>
-        <max_len>9</max_len>
       </element>
       <element xid="TA102">
         <data_ele>I08</data_ele>
         <name>Interchange Date</name>
         <usage>R</usage>
         <seq>02</seq>
-        <data_type>DT</data_type>
-        <min_len>6</min_len>
-        <max_len>6</max_len>
       </element>
       <element xid="TA103">
         <data_ele>I09</data_ele>
         <name>Interchange Time</name>
         <usage>R</usage>
         <seq>03</seq>
-        <data_type>TM</data_type>
-        <min_len>4</min_len>
-        <max_len>4</max_len>
       </element>
       <element xid="TA104">
         <data_ele>I17</data_ele>
         <name>Interchange Acknowledgement Code</name>
         <usage>R</usage>
         <seq>04</seq>
-        <data_type>ID</data_type>
-        <min_len>1</min_len>
-        <max_len>1</max_len>
         <valid_codes>
           <code>A</code>
           <code>E</code>
@@ -4785,9 +3540,6 @@
         <name>Interchange Note Code</name>
         <usage>R</usage>
         <seq>05</seq>
-        <data_type>ID</data_type>
-        <min_len>3</min_len>
-        <max_len>3</max_len>
         <valid_codes>
           <code>000</code>
           <code>001</code>
@@ -4835,18 +3587,12 @@
         <name>Number of Included Functional Groups</name>
         <usage>R</usage>
         <seq>01</seq>
-        <data_type>N0</data_type>
-        <min_len>1</min_len>
-        <max_len>5</max_len>
       </element>
       <element xid="IEA02">
         <data_ele>I12</data_ele>
         <name>Interchange Control Number</name>
         <usage>R</usage>
         <seq>02</seq>
-        <data_type>N0</data_type>
-        <min_len>9</min_len>
-        <max_len>9</max_len>
       </element>
     </segment>
 <!--End of IEA segment-->

@@ -4,7 +4,7 @@
 <element name="data_elements" xmlns="http://relaxng.org/ns/structure/1.0">
     <oneOrMore>
         <element name="data_ele" datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes">
-            <attribute name="ele_num"><data type="unsignedShort"/></attribute>
+            <attribute name="ele_num"><data type="token"><param name="maxLength">4</param></data></attribute>
             <attribute name="data_type">
                 <choice>
                     <value>AN</value>
