@@ -1,7 +1,20 @@
-FIX 834/LUI matching - only care about ID element for segment matching if
+Normalize data element numbers.  Remove remove data_type, min_len, and max_len
+from maps and from map_if
+
+Fix seg counting bug for LS/LE loops
+
+Added new CARC(139) codes
+
+Fix 834/LUI matching - only care about ID element for segment matching if
 element is required
 
+Fix 997 ISA segment
+
 Remove errh object from x12file. Return errors as list
+
+Removed valid code restriction from 837/2300/HI (Condition Codes)
+
+Fix 278 loop structure
 
 RELEASE 1.2.0
 
