@@ -66,9 +66,9 @@ class SegError(ErrorItem):
 
 
 class EleError(ErrorItem):
-    def __init__(self, 'ele', err_cde, err_str, ele_idx, subele_idx=None, 
+    def __init__(self, err_cde, err_str, ele_idx, subele_idx=None, 
             err_val=None):
-        ErrorItem.__init__(self, err_cde, err_str)
+        ErrorItem.__init__(self, 'ele', err_cde, err_str)
         self.err_val = err_val
         self.ele_idx = ele_idx
         self.subele_idx = subele_idx

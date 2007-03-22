@@ -111,11 +111,11 @@ class DataElements(object):
 
     def get_by_elem_num(self, ele_num):
         """
-        Is the value valid based on the data element number
-        @param ele_num: the data element number
+        Get the element characteristics for the indexed element code
+        @param ele_num: the data element code
         @type ele_num: string
-        @return: 
-        @rtype: 
+        @return: (data_type, min_len, max_len)
+        @rtype: (string, int, int)
         """
         if not ele_num:
             raise EngineError, 'Bad data element %s' % (ele_num)

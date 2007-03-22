@@ -1802,8 +1802,6 @@ def match_re(short_data_type, val):
     @type short_data_type: string
     @param val: data value to be verified
     @type val: string
-    @param charset: [optional] - 'B' for Basic X12 character set, 'E' for extended
-    @type charset: string
     @return: True if matched, False if not
     @rtype: boolean
     """

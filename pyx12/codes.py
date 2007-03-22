@@ -134,7 +134,7 @@ class ExternalCodes(object):
 
     def isValid(self, key, code, check_dte=None):
         """
-        Is the code in the list idenified by key
+        Is the code in the list identified by key
         @param key: the external codeset identifier
         @type key: string
         @param code: code to be verified
