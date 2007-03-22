@@ -1,209 +1,50 @@
 import unittest
 import sys
+import os.path
 
-from pyx12.dataele import *
-#from pyx12.errors import *
+#from pyx12.dataele import *
+import pyx12.dataele 
+from pyx12.errors import EngineError
 
-map_path = os.path.join(string.join(os.path.abspath(
-    sys.argv[0]).split('/')[:-2], '/'), 'map')
-if not os.path.isdir(map_path):
-    map_path = None
-DE = dataele.DataElements(map_path)
 
-class BasicNumeric(unittest.TestCase):
-    def testValid(self):
-        self.failUnless(DE.isValid('1095', '2005'))
-        self.failUnless(DE.isValid('96', '1'))
-        self.failUnless(DE.isValid('1328', '-1'))
-        self.failUnless(DE.isValid('1470', '10'))
-        self.failUnless(DE.isValid('289', '-10'))
-        self.failUnless(DE.isValid('554', '0000500'))
-        self.failUnless(DE.isValid('609', '1234567890'))
+class BadDataElem(unittest.TestCase):
+    def setUp(self):
+        map_path = os.path.join('/'.join( \
+            os.path.abspath(sys.argv[0]).split('/')[:-2]), \
+            'map')
+        if not os.path.isdir(map_path):
+            map_path = None
+        self.de = pyx12.dataele.DataElements(map_path)
 
-    def testInvalid(self):
-        self.failIf(DE.isValid('610', '+10'))
-        self.failIf(DE.isValid('616', '1.'))
-        self.failIf(DE.isValid('757', '-1.'))
-        self.failIf(DE.isValid('1095', '205'))
-        self.failIf(DE.isValid('1095', '21005'))
-
-class BasicReal(unittest.TestCase):
-    def testValid(self):
-        self.failUnless(IsValidDataType('-331232', 'R', 'B'))
-        self.failUnless(IsValidDataType('1.325', 'R', 'B'))
-        self.failUnless(IsValidDataType('.024', 'R', 'B'))
-        
-    def testInvalid(self):
-        self.failIf(IsValidDataType('+331232', 'R', 'B'))
-        self.failIf(IsValidDataType('123,456,789.123', 'R', 'B'))
-        self.failIf(IsValidDataType('333.', 'R', 'B'))
-        self.failIf(IsValidDataType('a.603', 'R', 'B'))
-        self.failIf(IsValidDataType('0.0b', 'R', 'B'))
-
-class BasicIdentifier(unittest.TestCase):
-    def testValid(self):
-        self.failUnless(IsValidDataType('10&3', 'ID', 'B'))
-        self.failUnless(IsValidDataType('  XYZ', 'ID', 'B'))
-        
-    def testInvalid(self):
-        self.failIf(IsValidDataType('abc', 'ID', 'B'))
-        self.failIf(IsValidDataType('abc   ', 'ID', 'B'))
-
-class BasicString(unittest.TestCase):
-    def testValid(self):
-        self.failUnless(IsValidDataType('LKJS\\', 'AN', 'B'))
-        self.failUnless(IsValidDataType('THIS IS A TEST ()', 'AN', 'B'))
-        self.failUnless(IsValidDataType(r"""BASIC ABCDEFIGHIJKLMNOPQRSTUVWXYZ 0123456789!"&'()+,-./;:?=""", 'AN', 'B'))
-        
-    def testInvalid(self):
-        self.failIf(IsValidDataType('abd1P', 'AN', 'B'))
-        self.failIf(IsValidDataType(r'extended abcdefghijklmnopqrstuvwxyz%~@[]_{}\|<>#$', 'AN', 'B'))
-        self.failIf(IsValidDataType(r"""Both ABCDEFIGHIJKLMNOPQRSTUVWXYZ 0123456789!"&'()+,-./;:?= abcdefghijklmnopqrstuvwxyz%~@[]_{}\|<>#$""", 'AN', 'B'))
-        self.failIf(IsValidDataType('bad ^`', 'AN', 'B'))
-        self.failIf(IsValidDataType('wharf', 'AN', 'B'))
-
-class BasicDate(unittest.TestCase):
-    def testValid(self):
-        self.failUnless(IsValidDataType('20010418', 'DT', 'B'))
-        self.failUnless(IsValidDataType('20030429', 'DT', 'B'))
-        self.failUnless(IsValidDataType('19040229', 'DT', 'B'))
-        self.failUnless(IsValidDataType('20000229', 'DT', 'B'))
-        self.failUnless(IsValidDataType('20040229', 'DT', 'B'))
-        self.failUnless(IsValidDataType('020414', 'DT', 'B'))
-        self.failUnless(IsValidDataType('960229', 'DT', 'B'))
-        self.failUnless(IsValidDataType('200402020400', 'DT', 'B'))
-        self.failUnless(IsValidDataType('20040430', 'DT', 'B'))
-        self.failUnless(IsValidDataType('20040401-20040430', 'RD8', 'B'))
-        
-    def testInvalid(self):
-        self.failIf(IsValidDataType('990229', 'DT', 'B'))
-        self.failIf(IsValidDataType('20030229', 'DT', 'B'))
-        self.failIf(IsValidDataType('19000229', 'DT', 'B'))
-        self.failIf(IsValidDataType('19992377', 'DT', 'B'))
-        self.failIf(IsValidDataType('19991277', 'DT', 'B'))
-        self.failIf(IsValidDataType('19991301', 'DT', 'B'))
-        self.failIf(IsValidDataType('200204a', 'DT', 'B'))
-        self.failIf(IsValidDataType('2002041a', 'DT', 'B'))
-        self.failIf(IsValidDataType('030732', 'DT', 'B'))
-        self.failIf(IsValidDataType('200402024 00', 'DT', 'B'))
-        self.failIf(IsValidDataType('200422024000', 'DT', 'B'))
-        self.failIf(IsValidDataType('20040222040', 'DT', 'B'))
-        self.failIf(IsValidDataType('2004022204', 'DT', 'B'))
-        self.failIf(IsValidDataType('200402220', 'DT', 'B'))
-        self.failIf(IsValidDataType('20040431', 'DT', 'B'))
-        self.failIf(IsValidDataType('-20040430', 'RD8', 'B'))
-        self.failIf(IsValidDataType('20040430-', 'RD8', 'B'))
-
-class BasicTime(unittest.TestCase):
-    def testValid(self):
-        self.failUnless(IsValidDataType('0731', 'TM', 'B'))
-        self.failUnless(IsValidDataType('000159', 'TM', 'B'))
+    def testNone(self):
+        self.failUnlessRaises(EngineError, self.de.get_by_elem_num, None)
 
     def testInvalid(self):
-        self.failIf(IsValidDataType('07315a', 'TM', 'B'))
-        self.failIf(IsValidDataType('7 31', 'TM', 'B'))
-        self.failIf(IsValidDataType('7:31', 'TM', 'B'))
+        self.failUnlessRaises(EngineError, self.de.get_by_elem_num, '28902')
+        self.failUnlessRaises(EngineError, self.de.get_by_elem_num, '0')
+        self.failUnlessRaises(EngineError, self.de.get_by_elem_num, '99991')
 
-class ExtendedNumeric(unittest.TestCase):
-    def testValid(self):
-        self.failUnless(IsValidDataType('1', 'N', 'E'))
-        self.failUnless(IsValidDataType('-1', 'N', 'E'))
-        self.failUnless(IsValidDataType('10', 'N', 'E'))
-        self.failUnless(IsValidDataType('-10', 'N', 'E'))
-        self.failUnless(IsValidDataType('0000500', 'N', 'E'))
+class LookupDataElem(unittest.TestCase):
 
-    def testInvalid(self):
-        self.failIf(IsValidDataType('+10', 'N', 'E'))
-        self.failIf(IsValidDataType('1.', 'N', 'E'))
-        self.failIf(IsValidDataType('-1.', 'N', 'E'))
+    def setUp(self):
+        map_path = os.path.join('/'.join( \
+            os.path.abspath(sys.argv[0]).split('/')[:-2]), \
+            'map')
+        if not os.path.isdir(map_path):
+            map_path = None
+        self.de = pyx12.dataele.DataElements(map_path)
+    
+    def testOK_AN(self):
+        self.assertEqual(self.de.get_by_elem_num('1204')[:3], ('AN', 1, 50))
 
-class ExtendedReal(unittest.TestCase):
-    def testValid(self):
-        self.failUnless(IsValidDataType('1', 'R', 'E'))
-        self.failUnless(IsValidDataType('-331232', 'R', 'E'))
-        self.failUnless(IsValidDataType('1.325', 'R', 'E'))
-        self.failUnless(IsValidDataType('.024', 'R', 'E'))
-        
-    def testInvalid(self):
-        self.failIf(IsValidDataType('a.603', 'R', 'E'))
-        self.failIf(IsValidDataType('0.0b', 'R', 'E'))
-        self.failIf(IsValidDataType('+331232', 'R', 'E'))
-        self.failIf(IsValidDataType('123,456,789.123', 'R', 'E'))
-        self.failIf(IsValidDataType('333.', 'R', 'E'))
+    def testOK_ID(self):
+        self.assertEqual(self.de.get_by_elem_num('116')[:3], ('ID', 3, 15))
 
-class ExtendedIdentifier(unittest.TestCase):
-    def testValid(self):
-        self.failUnless(IsValidDataType('abc', 'ID', 'E'))
-        self.failUnless(IsValidDataType('10&3', 'ID', 'E'))
-        self.failUnless(IsValidDataType('  XYZ', 'ID', 'E'))
-        self.failUnless(IsValidDataType('abc   ', 'ID', 'E'))
+    def testOK_N(self):
+        self.assertEqual(self.de.get_by_elem_num('554')[:3], ('N0', 1, 6))
 
-class ExtendedString(unittest.TestCase):
-    def testValid(self):
-        self.failUnless(IsValidDataType('LKJS\\', 'AN', 'E'))
-        self.failUnless(IsValidDataType('abd1P', 'AN', 'E'))
-        self.failUnless(IsValidDataType('THIS IS A TEST ()', 'AN', 'E'))
-        self.failUnless(IsValidDataType("""BASIC ABCDEFIGHIJKLMNOPQRSTUVWXYZ 0123456789!"&'()+,-./;:?=""", 'AN', 'E'))
-        self.failUnless(IsValidDataType('extended abcdefghijklmnopqrstuvwxyz%~@[]_{}\|<>#$', 'AN', 'E'))
-        self.failUnless(IsValidDataType("""Both ABCDEFIGHIJKLMNOPQRSTUVWXYZ 0123456789!"&'()+,-./;:?= abcdefghijklmnopqrstuvwxyz%~@[]_{}\|<>#$""", 'AN', 'E'))
-        self.failUnless(IsValidDataType('wharf', 'AN', 'E'))
-        
-    def testInvalid(self):
-        self.failIf(IsValidDataType('bad ^`', 'AN', 'E'))
+    def testOK_DT(self):
+        self.assertEqual(self.de.get_by_elem_num('373')[:3], ('DT', 8, 8))
 
-class ExtendedDate(unittest.TestCase):
-    def testValid(self):
-        self.failUnless(IsValidDataType('20010418', 'DT', 'E'))
-        self.failUnless(IsValidDataType('20030429', 'DT', 'E'))
-        self.failUnless(IsValidDataType('19040229', 'DT', 'E'))
-        self.failUnless(IsValidDataType('20000229', 'DT', 'E'))
-        self.failUnless(IsValidDataType('20040229', 'DT', 'E'))
-        self.failUnless(IsValidDataType('020414', 'DT', 'E'))
-        self.failUnless(IsValidDataType('960229', 'DT', 'E'))
-        self.failUnless(IsValidDataType('200402020400', 'DT', 'B'))
-        self.failUnless(IsValidDataType('20010418', 'D8', 'E'))
-        self.failUnless(IsValidDataType('20030429', 'D8', 'E'))
-        self.failUnless(IsValidDataType('19040229', 'D8', 'E'))
-        self.failUnless(IsValidDataType('20000229', 'D8', 'E'))
-        self.failUnless(IsValidDataType('20040229', 'D8', 'E'))
-        self.failUnless(IsValidDataType('020414', 'D6', 'E'))
-        self.failUnless(IsValidDataType('960229', 'D6', 'E'))
-        self.failUnless(IsValidDataType('20040401-20040430', 'RD8', 'E'))
-        
-    def testInvalid(self):
-        self.failIf(IsValidDataType('990229', 'DT', 'E'))
-        self.failIf(IsValidDataType('030732', 'DT', 'E'))
-        self.failIf(IsValidDataType('19992377', 'DT', 'E'))
-        self.failIf(IsValidDataType('19991277', 'DT', 'E'))
-        self.failIf(IsValidDataType('200204a', 'DT', 'E'))
-        self.failIf(IsValidDataType('2002041a', 'DT', 'E'))
-        self.failIf(IsValidDataType('19000229', 'DT', 'E'))
-        self.failIf(IsValidDataType('20030229', 'DT', 'E'))
-        self.failIf(IsValidDataType('200402024 00', 'DT', 'B'))
-
-        self.failIf(IsValidDataType('990229', 'D6', 'E'))
-        self.failIf(IsValidDataType('030732', 'D6', 'E'))
-        self.failIf(IsValidDataType('19992377', 'D8', 'E'))
-        self.failIf(IsValidDataType('19991277', 'D8', 'E'))
-        self.failIf(IsValidDataType('200204a', 'D8', 'E'))
-        self.failIf(IsValidDataType('2002041a', 'D8', 'E'))
-        self.failIf(IsValidDataType('19000229', 'D8', 'E'))
-        self.failIf(IsValidDataType('20030229', 'D8', 'E'))
-        self.failIf(IsValidDataType('55555555', 'D8', 'E'))
-        self.failIf(IsValidDataType('55555555', 'D8', 'B'))
-        self.failIf(IsValidDataType('200402024 00', 'D8', 'B'))
-        self.failIf(IsValidDataType('020414', 'D8', 'E'))
-        self.failIf(IsValidDataType('20020414', 'D6', 'E'))
-        self.failIf(IsValidDataType('-20040430', 'RD8', 'E'))
-        self.failIf(IsValidDataType('20040430-', 'RD8', 'E'))
-
-
-class ExtendedTime(unittest.TestCase):
-    def testValid(self):
-        self.failUnless(IsValidDataType('0731', 'TM', 'E'))
-        self.failUnless(IsValidDataType('000159', 'TM', 'E'))
-
-    def testInvalid(self):
-        self.failIf(IsValidDataType('07315a', 'TM', 'E'))
-        self.failIf(IsValidDataType('7 31', 'TM', 'B'))
-        self.failIf(IsValidDataType('7:31', 'TM', 'B'))
+    def testOK_TM(self):
+        self.assertEqual(self.de.get_by_elem_num('337')[:3], ('TM', 4, 8))
