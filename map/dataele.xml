@@ -10,7 +10,7 @@
 #
 ######################################################################
 
-#    $Id: codes.xml 936 2007-03-21 14:49:16Z johnholland $
+#    $Id$
 -->
 <data_elements>
   <data_ele ele_num="100" data_type="ID" min_len="3" max_len="3" name="Currency Code"/>
@@ -18,7 +18,7 @@
   <data_ele ele_num="1005" data_type="ID" min_len="4" max_len="4" name="Hierarchical Structure Code"/>
   <data_ele ele_num="1018" data_type="R" min_len="1" max_len="15" name="Exponent"/>
   <data_ele ele_num="102" data_type="ID" min_len="1" max_len="1" name="Ownership Code"/>
-  <data_ele ele_num="1028" data_type="AN" min_len="1" max_len="38" name="Claim Submitter's Identifier"/>
+  <data_ele ele_num="1028" data_type="AN" min_len="1" max_len="38" name="Claim Submitters Identifier"/>
   <data_ele ele_num="1029" data_type="ID" min_len="1" max_len="2" name="Claim Status Code"/>
   <data_ele ele_num="103" data_type="AN" min_len="3" max_len="5" name="Packaging Code"/>
   <data_ele ele_num="1032" data_type="ID" min_len="1" max_len="2" name="Claim Filing Indicator Code"/>
@@ -79,6 +79,7 @@
   <data_ele ele_num="1222" data_type="AN" min_len="1" max_len="3" name="Provider Specialty Code"/>
   <data_ele ele_num="1223" data_type="ID" min_len="3" max_len="3" name="Provider Organization Code"/>
   <data_ele ele_num="1224" data_type="ID" min_len="2" max_len="2" name="Contribution Code"/>
+  <data_ele ele_num="123" data_type="N0" min_len="1" max_len="6" name="Number of Received Transaction Sets"/>
   <data_ele ele_num="124" data_type="AN" min_len="2" max_len="15" name="124"/>
   <data_ele ele_num="1250" data_type="ID" min_len="2" max_len="3" name="Date Time Period Format Qualifier"/>
   <data_ele ele_num="1251" data_type="AN" min_len="1" max_len="35" name="Date Time Period"/>
@@ -152,7 +153,7 @@
   <data_ele ele_num="1390" data_type="ID" min_len="1" max_len="2" name="Eligibility or Benefit Information"/>
   <data_ele ele_num="1403" data_type="ID" min_len="1" max_len="1" name="Implant Type Code"/>
   <data_ele ele_num="1404" data_type="ID" min_len="1" max_len="1" name="Implant Status Code"/>
-  <data_ele ele_num="142" data_type="AN" min_len="2" max_len="15" name="142"/>
+  <data_ele ele_num="142" data_type="AN" min_len="2" max_len="15" name="Application Senders Code"/>
   <data_ele ele_num="1429" data_type="ID" min_len="1" max_len="2" name="Construction Type"/>
   <data_ele ele_num="143" data_type="ID" min_len="3" max_len="3" name="Transaction Set Identifier Code"/>
   <data_ele ele_num="1470" data_type="N0" min_len="1" max_len="9" name="Number"/>
@@ -163,6 +164,7 @@
   <data_ele ele_num="1525" data_type="ID" min_len="1" max_len="2" name="Request Category Code"/>
   <data_ele ele_num="1526" data_type="ID" min_len="1" max_len="2" name="Policy Compliance Code"/>
   <data_ele ele_num="1527" data_type="ID" min_len="1" max_len="2" name="Exception Code"/>
+  <data_ele ele_num="1528" data_type="N0" min_len="1" max_len="2" name="Composite Data Element Position in Composite"/>
   <data_ele ele_num="156" data_type="ID" min_len="2" max_len="2" name="State or Province Code"/>
   <data_ele ele_num="166" data_type="AN" min_len="1" max_len="55" name="Address Information"/>
   <data_ele ele_num="1685" data_type="ID" min_len="1" max_len="2" name="Tax Treatment Code"/>
@@ -171,6 +173,7 @@
   <data_ele ele_num="184" data_type="ID" min_len="1" max_len="1" name="Volume Unit Qualifier"/>
   <data_ele ele_num="188" data_type="ID" min_len="1" max_len="1" name="Weight Unit Code"/>
   <data_ele ele_num="19" data_type="AN" min_len="2" max_len="30" name="City Name"/>
+  <data_ele ele_num="2" data_type="N0" min_len="1" max_len="6" name="Number of Accepted Transaction Sets"/>
   <data_ele ele_num="212" data_type="R" min_len="1" max_len="17" name="Unit Price"/>
   <data_ele ele_num="22" data_type="AN" min_len="1" max_len="30" name="Commodity Code"/>
   <data_ele ele_num="23" data_type="ID" min_len="1" max_len="1" name="Commodity Code Qualifier"/>
@@ -178,7 +181,7 @@
   <data_ele ele_num="235" data_type="ID" min_len="2" max_len="2" name="Product/Service ID Qualifier"/>
   <data_ele ele_num="236" data_type="ID" min_len="3" max_len="3" name="Price Identifier Code"/>
   <data_ele ele_num="26" data_type="ID" min_len="2" max_len="3" name="Country Code"/>
-  <data_ele ele_num="28" data_type="N0" min_len="1" max_len="9" name="28"/>
+  <data_ele ele_num="28" data_type="N0" min_len="1" max_len="9" name="Group Control Number"/>
   <data_ele ele_num="280" data_type="R" min_len="4" max_len="10" name="Exchange Rate"/>
   <data_ele ele_num="289" data_type="N0" min_len="1" max_len="2" name="Multiple Price Quantity"/>
   <data_ele ele_num="305" data_type="ID" min_len="1" max_len="2" name="Transaction Handling Code"/>
@@ -207,10 +210,10 @@
   <data_ele ele_num="443" data_type="AN" min_len="1" max_len="20" name="Contact Inquiry Reference"/>
   <data_ele ele_num="447" data_type="AN" min_len="1" max_len="6" name="Loop Identifier Code"/>
   <data_ele ele_num="449" data_type="AN" min_len="1" max_len="80" name="Fixed Format Information"/>
-  <data_ele ele_num="455" data_type="ID" min_len="1" max_len="2" name="455"/>
+  <data_ele ele_num="455" data_type="ID" min_len="1" max_len="2" name="Responsible Agency Code"/>
   <data_ele ele_num="478" data_type="ID" min_len="1" max_len="1" name="Credit/Debit Flag Code"/>
-  <data_ele ele_num="479" data_type="ID" min_len="2" max_len="2" name="479"/>
-  <data_ele ele_num="480" data_type="AN" min_len="1" max_len="12" name="480"/>
+  <data_ele ele_num="479" data_type="ID" min_len="2" max_len="2" name="Functional Identifier Code"/>
+  <data_ele ele_num="480" data_type="AN" min_len="1" max_len="12" name="Version / Release / Industry Identifier Code"/>
   <data_ele ele_num="481" data_type="ID" min_len="1" max_len="2" name="Trace Type Code"/>
   <data_ele ele_num="482" data_type="ID" min_len="2" max_len="2" name="Payment Action Code"/>
   <data_ele ele_num="499" data_type="AN" min_len="1" max_len="10" name="Condition Value"/>
@@ -251,6 +254,17 @@
   <data_ele ele_num="689" data_type="ID" min_len="2" max_len="2" name="Occupancy Code"/>
   <data_ele ele_num="704" data_type="ID" min_len="1" max_len="2" name="Paperwork/Report Action Code"/>
   <data_ele ele_num="706" data_type="ID" min_len="2" max_len="2" name="Entity Relationship Code"/>
+  <data_ele ele_num="715" data_type="ID" min_len="1" max_len="1" name="Functional Group Acknowledgment Code"/>
+  <data_ele ele_num="716" data_type="ID" min_len="1" max_len="3" name="Functional Group Syntax Error Code"/>
+  <data_ele ele_num="717" data_type="ID" min_len="1" max_len="1" name="Transaction Set Acknowledgment Code"/>
+  <data_ele ele_num="718" data_type="ID" min_len="1" max_len="3" name="Transaction Set Syntax Error Code"/>
+  <data_ele ele_num="719" data_type="N0" min_len="1" max_len="6" name="Segment Position in Transaction Set"/>
+  <data_ele ele_num="720" data_type="ID" min_len="1" max_len="3" name="Segment Syntax Error Code"/>
+  <data_ele ele_num="721" data_type="ID" min_len="2" max_len="3" name="Segment ID Code"/>
+  <data_ele ele_num="722" data_type="N0" min_len="1" max_len="2" name="Element Position in Segment"/>
+  <data_ele ele_num="723" data_type="ID" min_len="1" max_len="3" name="Data Element Syntax Error Code"/>
+  <data_ele ele_num="724" data_type="AN" min_len="1" max_len="99" name="Copy of Bad Data Element"/>
+  <data_ele ele_num="725" data_type="N0" min_len="1" max_len="4" name="Data Element Reference Number"/>
   <data_ele ele_num="734" data_type="AN" min_len="1" max_len="12" name="Hierarchical Parent ID Number"/>
   <data_ele ele_num="735" data_type="ID" min_len="1" max_len="2" name="Hierarchical Level Code"/>
   <data_ele ele_num="736" data_type="ID" min_len="1" max_len="1" name="Hierarchical Child Code"/>
@@ -290,24 +304,22 @@
   <data_ele ele_num="96" data_type="N0" min_len="1" max_len="10" name="Number of Included Segments"/>
   <data_ele ele_num="97" data_type="N0" min_len="1" max_len="6" name="97"/>
   <data_ele ele_num="98" data_type="ID" min_len="2" max_len="3" name="Entity Identifier Code"/>
-<data_ele ele_num="I01" data_type="ID" min_len="2" max_len="2" name="I01"/>
-<data_ele ele_num="I02" data_type="AN" min_len="10" max_len="10" name="I02"/>
-<data_ele ele_num="I03" data_type="ID" min_len="2" max_len="2" name="I03"/>
-<data_ele ele_num="I04" data_type="AN" min_len="10" max_len="10" name="I04"/>
-<data_ele ele_num="I05" data_type="ID" min_len="2" max_len="2" name="I05"/>
-<data_ele ele_num="I06" data_type="AN" min_len="15" max_len="15" name="I06"/>
-<data_ele ele_num="I07" data_type="AN" min_len="15" max_len="15" name="I07"/>
-<data_ele ele_num="I08" data_type="DT" min_len="6" max_len="6" name="I08"/>
-<data_ele ele_num="I09" data_type="TM" min_len="4" max_len="4" name="I09"/>
-<data_ele ele_num="I10" data_type="ID" min_len="1" max_len="1" name="I10"/>
-<data_ele ele_num="I11" data_type="ID" min_len="5" max_len="5" name="I11"/>
-<data_ele ele_num="I12" data_type="N0" min_len="9" max_len="9" name="I12"/>
-<data_ele ele_num="I13" data_type="ID" min_len="1" max_len="1" name="I13"/>
-<data_ele ele_num="I14" data_type="ID" min_len="1" max_len="1" name="I14"/>
-<data_ele ele_num="I15" data_type="AN" min_len="1" max_len="1" name="I15"/>
-<data_ele ele_num="I16" data_type="N0" min_len="1" max_len="5" name="I16"/>
-<data_ele ele_num="I17" data_type="ID" min_len="1" max_len="1" name="I17"/>
-<data_ele ele_num="I18" data_type="ID" min_len="3" max_len="3" name="I18"/>
-
-
+  <data_ele ele_num="I01" data_type="ID" min_len="2" max_len="2" name="I01"/>
+  <data_ele ele_num="I02" data_type="AN" min_len="10" max_len="10" name="I02"/>
+  <data_ele ele_num="I03" data_type="ID" min_len="2" max_len="2" name="I03"/>
+  <data_ele ele_num="I04" data_type="AN" min_len="10" max_len="10" name="I04"/>
+  <data_ele ele_num="I05" data_type="ID" min_len="2" max_len="2" name="I05"/>
+  <data_ele ele_num="I06" data_type="AN" min_len="15" max_len="15" name="I06"/>
+  <data_ele ele_num="I07" data_type="AN" min_len="15" max_len="15" name="I07"/>
+  <data_ele ele_num="I08" data_type="DT" min_len="6" max_len="6" name="I08"/>
+  <data_ele ele_num="I09" data_type="TM" min_len="4" max_len="4" name="I09"/>
+  <data_ele ele_num="I10" data_type="ID" min_len="1" max_len="1" name="I10"/>
+  <data_ele ele_num="I11" data_type="ID" min_len="5" max_len="5" name="I11"/>
+  <data_ele ele_num="I12" data_type="N0" min_len="9" max_len="9" name="I12"/>
+  <data_ele ele_num="I13" data_type="ID" min_len="1" max_len="1" name="I13"/>
+  <data_ele ele_num="I14" data_type="ID" min_len="1" max_len="1" name="I14"/>
+  <data_ele ele_num="I15" data_type="AN" min_len="1" max_len="1" name="I15"/>
+  <data_ele ele_num="I16" data_type="N0" min_len="1" max_len="5" name="I16"/>
+  <data_ele ele_num="I17" data_type="ID" min_len="1" max_len="1" name="I17"/>
+  <data_ele ele_num="I18" data_type="ID" min_len="3" max_len="3" name="I18"/>
 </data_elements>
