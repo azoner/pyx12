@@ -8,8 +8,6 @@ Add test for x12 > xml > x12 for all xml mappings
 
 xmlx12.py - handle idtag and idtagqual types
 
-Mulitple GS loops - test
-
 Windows issues:
   NamedTempFile permissions
   location of map files
