@@ -16,6 +16,6 @@ Validate and transform HIPAA X12 documents
 
 __author__  = "John Holland <jholland@kazoocmh.org> <john@zoner.org>"
 __status__  = "production"
-__version__ = "1.2.0"
-__date__    = "2005-07-25"
+__version__ = "1.3.0"
+__date__    = "2007-03-27"
 __revision__ = ""

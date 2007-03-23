@@ -24,6 +24,7 @@ class map_override(object):
     Apply local overrides to the current map. Overrides defined in a xml document.
     """
     def __init__(self, map_root, override_file, icvn, vriic, fic):
+        map_file = None
         try:
             reader = libxml2.newTextReaderFilename(map_file)
         except:

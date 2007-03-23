@@ -18,7 +18,7 @@ If seg indicates a segment has been entered, returns the segment node.
 """
 
 import logging
-import pdb
+#import pdb
 
 # Intrapackage imports
 from errors import *

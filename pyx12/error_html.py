@@ -24,8 +24,6 @@ import logging
 from errors import *
 #from utils import seg_str, escape_html_chars
 
-__author__  = "John Holland <jholland@kazoocmh.org> <john@zoner.org>"
-
 logger = logging.getLogger('pyx12.error_html')
 logger.setLevel(logging.DEBUG)
 #logger.setLevel(logging.ERROR)

@@ -16,7 +16,7 @@ Uses node IDs as the tag names
 """
 
 import logging
-import pdb
+#import pdb
 #import string
 #import os.path
 

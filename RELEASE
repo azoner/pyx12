@@ -1,4 +1,7 @@
 make packages
+package index
+Upload packages to sf
+python package index
 make port
 install/test port
 run unit/funtional tests on installed port

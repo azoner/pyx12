@@ -16,12 +16,10 @@ Interface to X12 Errors
 
 import logging
 from types import *
-import pdb
+#import pdb
 
 # Intrapackage imports
 from errors import *
-
-__author__  = "John Holland <jholland@kazoocmh.org> <john@zoner.org>"
 
 #class error_node:
 #    def __init__(self)

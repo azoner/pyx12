@@ -20,14 +20,12 @@ Visitor - Visits an error_handler composite
 from types import *
 import time
 import logging
-import pdb
+#import pdb
 
 # Intrapackage imports
 from errors import *
 import error_visitor
 import pyx12.segment
-
-__author__  = "John Holland <jholland@kazoocmh.org> <john@zoner.org>"
 
 logger = logging.getLogger('pyx12.error_997')
 logger.setLevel(logging.DEBUG)

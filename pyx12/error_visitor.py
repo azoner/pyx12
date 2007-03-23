@@ -14,9 +14,6 @@
 Visitor - Visits an error_handler composite
 """
 
-__author__  = "John Holland <jholland@kazoocmh.org> <john@zoner.org>"
-
-
 class error_visitor(object):
     """
     """

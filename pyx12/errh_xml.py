@@ -16,16 +16,14 @@ Capture X12 Errors
 
 import logging
 from types import *
-import pdb
+#import pdb
 import tempfile
-import lxml
+#import lxml
 import os
 
 # Intrapackage imports
 from errors import *
 from xmlwriter import XMLWriter
-
-__author__  = "John Holland <jholland@kazoocmh.org> <john@zoner.org>"
 
 #class error_node:
 #    def __init__(self)

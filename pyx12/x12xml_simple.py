@@ -15,7 +15,7 @@ Create a XML rendering of the X12 document
 """
 
 import logging
-import pdb
+#import pdb
 
 # Intrapackage imports
 from errors import *
