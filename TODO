@@ -9,12 +9,10 @@ Add test for x12 > xml > x12 for all xml mappings
 xmlx12.py - handle idtag and idtagqual types
 
 Windows issues:
-  NamedTempFile permissions
   location of map files
   location of config files
   path to code file
   use registry, not config files
-  do not rename scripts
 
 Wrap scripts in web services
 

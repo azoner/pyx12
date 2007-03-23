@@ -4,6 +4,10 @@ import sys
 import os.path
 import string
 
+"""
+Generate the plist files for the FreeBSD port
+"""
+
 def main():
     manifest = map(string.rstrip, open('MANIFEST').readlines())
     fd_out =  sys.stdout

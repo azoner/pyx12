@@ -1,0 +1,9 @@
+make packages
+make port
+install/test port
+run unit/funtional tests on installed port
+check performance
+release notes
+post release to sf, python-announce, egg
+submit FreeBSD port
+install port on local machines

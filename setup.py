@@ -11,43 +11,19 @@ import pyx12.map_if
 import pyx12.params
 
 map_dir = 'share/pyx12/map'
-map_files = [
-    'map/270.4010.X092.A1.xml',
-    'map/270.4010.X092.xml',
-    'map/271.4010.X092.A1.xml',
-    'map/271.4010.X092.xml',
-    'map/276.4010.X093.A1.xml',
-    'map/276.4010.X093.xml',
-    'map/277.4010.X093.A1.xml',
-    'map/277.4010.X093.xml',
-    'map/277U.4010.X070.xml',
-    'map/277.4020.X104.xml', 
-    'map/278.4010.X094.27.A1.xml',
-    'map/278.4010.X094.27.xml',
-    'map/278.4010.X094.A1.xml',
-    'map/278.4010.X094.xml',
-    'map/820.4010.X061.A1.xml',
-    'map/820.4010.X061.xml',
-    'map/834.4010.X095.A1.xml',
-    'map/835.4010.X091.A1.xml',
-    'map/835.4010.X091.xml',
-    'map/837.4010.X096.A1.xml',
-    'map/837.4010.X096.xml',
-    'map/837.4010.X097.A1.xml',
-    'map/837.4010.X097.xml',
-    'map/837.4010.X098.A1.xml',
-    'map/837.4010.X098.xml',
-    'map/841.4010.XXXC.xml',
-    'map/997.4010.xml',
-    'map/x12.control.00401.xml' 
-]
-
+MAP_FILES = ['map/%s' % (file1) for file1 in 
+    filter(lambda x: x[:4] == 'map' and os.path.splitext(x)[1] == '.xml',
+    os.listdir('map'))]
 mkpath('build/bin')
 SCRIPTS = ('x12_build_pkl', 'x12html', 'x12info', 'x12valid', 
     'x12norm', 'x12sql', 'x12xml', 'xmlx12')
 for filename in SCRIPTS:
+    if sys.platform == 'win32':
+        target_script = filename+'.py'
+    else:
+        target_script = filename
     copy_file(os.path.join('bin', filename+'.py'), 
-        os.path.join('build/bin', filename))
+        os.path.join('build/bin', target_script))
 TEST_FILES = ['test/%s' % (file1) for file1 in 
     filter(lambda x: x[:4] == 'test' and os.path.splitext(x)[1] == '.py',
     os.listdir('test'))]
@@ -60,14 +36,14 @@ kw = {
     'name': "pyx12",
     'version': pyx12.__version__,
     #'description': pyx12.__doc__,
-    'description': "A X12 validator and converter",
+    'description': "An X12 validator and converter",
     'author': "John Holland",
     'author_email': "jholland@kazoocmh.org",
-    'url': "http://www.sourceforge.net/pyx12/",
+    'url': "http://pyx12.sourceforge.net/",
     'packages': ['pyx12'],
     'scripts': ['build/bin/%s' % (script) for script in SCRIPTS],
     'data_files': [
-        (map_dir, map_files),
+        (map_dir, MAP_FILES),
         (map_dir, ['map/README', 'map/codes.xml', 'map/codes.xsd',
         'map/comp_test.xml', 'map/map.xsd', 'map/maps.xml', 
         'map/x12simple.dtd']),
@@ -85,6 +61,8 @@ kw = {
 
 if sys.platform == 'win32':
     # Update registry
+    kw['data_files'].append(('share/examples/pyx12', ['bin/pyx12.conf.xml.sample']))
+    kw['data_files'].append(('etc', ['bin/pyx12.conf.xml.sample']))
 else:
     kw['data_files'].append(('share/examples/pyx12', ['bin/pyx12.conf.xml.sample']))
     kw['data_files'].append(('etc', ['bin/pyx12.conf.xml.sample']))
@@ -98,7 +76,7 @@ if (hasattr(core, 'setup_keywords') and
          ' License :: OSI Approved :: BSD License'],
 
 param = pyx12.params.params()
-for file in map_files:
+for file in MAP_FILES:
     param.set('map_path', 'map')
     map_file = os.path.basename(file)
 
