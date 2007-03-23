@@ -167,7 +167,7 @@ class err_handler(object):
     def add_isa_loop(self, seg_data, src):
         """
         @param seg_data: Segment object
-        @type seg_data: L{<segment.Segment>}
+        @type seg_data: L{segment<segment.Segment>}
         """
         #logger.debug('add_isa loop')
         self.children.append(err_isa(self, seg_data, src))
@@ -178,7 +178,7 @@ class err_handler(object):
     def add_gs_loop(self, seg_data, src):
         """
         @param seg_data: Segment object
-        @type seg_data: L{<segment.Segment>}
+        @type seg_data: L{segment<segment.Segment>}
         """
         #logger.debug('add_gs loop')
         parent = self.cur_isa_node
@@ -190,7 +190,7 @@ class err_handler(object):
     def add_st_loop(self, seg_data, src):
         """
         @param seg_data: Segment object
-        @type seg_data: L{<segment.Segment>}
+        @type seg_data: L{segment<segment.Segment>}
         """
         #logger.debug('add_st loop')
         parent = self.cur_gs_node
@@ -204,7 +204,7 @@ class err_handler(object):
         @param map_node: current segment node
         @type map_node: L{node<map_if.segment_if>}
         @param seg_data: Segment object
-        @type seg_data: L{<segment.Segment>}
+        @type seg_data: L{segment<segment.Segment>}
         @param seg_count: Count of current segment in the ST Loop
         @type seg_count: int
         @param cur_line: Current line number in the file
@@ -506,7 +506,7 @@ class err_isa(err_node):
     def __init__(self, parent, seg_data, src):
         """
         @param seg_data: Segment object
-        @type seg_data: L{<segment.Segment>}
+        @type seg_data: L{segment<segment.Segment>}
         @param src: X12file source
         @type src: L{X12file<x12file.X12file>}
         """
@@ -611,7 +611,7 @@ class err_gs(err_node):
     def __init__(self, parent, seg_data, src):
         """
         @param seg_data: Segment object
-        @type seg_data: L{<segment.Segment>}
+        @type seg_data: L{segment<segment.Segment>}
         @param src: X12file source
         @type src: L{X12file<x12file.X12file>}
 
@@ -757,7 +757,7 @@ class err_st(err_node):
     def __init__(self, parent, seg_data, src):
         """
         @param seg_data: Segment object
-        @type seg_data: L{<segment.Segment>}
+        @type seg_data: L{segment<segment.Segment>}
         @param src: X12file source
         @type src: L{X12file<x12file.X12file>}
         """
@@ -800,7 +800,7 @@ class err_st(err_node):
         @param node: SE node
         @type node: L{node<map_if.x12_node>}
         @param seg_data: Segment object
-        @type seg_data: L{<segment.Segment>}
+        @type seg_data: L{segment<segment.Segment>}
         @param src: X12file source
         @type src: L{X12file<x12file.X12file>}
         """

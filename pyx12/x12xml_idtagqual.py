@@ -54,7 +54,7 @@ class x12xml_idtagqual(x12xml):
         @param seg_node: Map Node 
         @type seg_node: L{node<map_if.x12_node>}
         @param seg_data: Segment object
-        @type seg_data: L{<segment.Segment>}
+        @type seg_data: L{segment<segment.Segment>}
         """
         if not seg_node.is_segment():
             raise EngineError, 'Node must be a segment'
