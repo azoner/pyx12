@@ -1,3 +1,5 @@
+Improve 997 generation - better ISA, GS, and ST loop handling
+
 Normalize data element numbers.  Remove remove data_type, min_len, and max_len
 from maps and from map_if
 
