@@ -104,6 +104,27 @@ class error_997_visitor(error_visitor.error_visitor):
         self.st_loop_count = 0
         self.gs_loop_count += 1
 
+    def __get_isa_errors(self, err_isa):
+        """
+        Build list of TA1 level errors
+        Only the first error is used
+        """
+        isa_ele_err_map = { 1:'010', 2:'011', 3:'012', 4:'013', 5:'005', 6:'006', 
+            7:'007', 8:'008', 9:'014', 10:'015', 11:'016', 12:'017', 13:'018', 
+            14:'019', 15:'020', 16:'027'
+        }
+        iea_ele_err_map = { 1:'021', 2:'018' }
+        err_codes = [err[0] for err in err_isa.errors]
+        for elem in err_isa.elements:
+            for (err_cde, err_str, bad_value) in elem.errors:
+                # Ugly
+                if 'ISA' in err_str:
+                    err_codes.append(isa_ele_err_map[elem.ele_pos])
+                elif 'IEA' in err_str:
+                    err_codes.append(iea_ele_err_map[elem.ele_pos])
+        # return unique codes
+        return list(set(err_codes))
+
     def visit_root_post(self, errh):
         """
         @param errh: Error handler
@@ -123,13 +144,12 @@ class error_997_visitor(error_visitor.error_visitor):
             ta1_seg.append(err_isa.isa_trn_set_id)
             ta1_seg.append(err_isa.orig_date)
             ta1_seg.append(err_isa.orig_time)
-            if err_isa.errors:
-                (err_cde, err_str) = err_isa.errors[0]
-                #seg.extend(['R', err_cde])
+            err_codes = self.__get_isa_errors(err_isa)
+            if err_codes:
+                err_cde = err_codes[0]
                 ta1_seg.append('R')
                 ta1_seg.append(err_cde)
             else:
-                #seg.extend(['A', '000'])
                 ta1_seg.append('A')
                 ta1_seg.append('000')
             self._write(ta1_seg)
@@ -170,7 +190,31 @@ class error_997_visitor(error_visitor.error_visitor):
         self._write(pyx12.segment.Segment('AK1*%s*%s' % \
             (err_gs.fic, err_gs.gs_control_num), '~', '*', ':'))
         
- 
+    def __get_gs_errors(self, err_gs):
+        """
+        Build list of GS level errors
+        """
+        gs_ele_err_map = { 6:'6', 8:'2' }
+        ge_ele_err_map = { 2:'6' }
+        err_codes = [err[0] for err in err_gs.errors]
+        for elem in err_gs.elements:
+            for (err_cde, err_str, bad_value) in elem.errors:
+                # Ugly
+                if 'GS' in err_str:
+                    if elem.ele_pos in gs_ele_err_map.keys():
+                        err_codes.append(gs_ele_err_map[elem.ele_pos])
+                    else:
+                        err_codes.append('1')
+                elif 'GE' in err_str:
+                    if elem.ele_pos in ge_ele_err_map.keys():
+                        err_codes.append(ge_ele_err_map[elem.ele_pos])
+                    else:
+                        err_codes.append('1')
+        # return unique codes
+        ret = list(set(err_codes))
+        ret.sort()
+        return ret
+
     def visit_gs_post(self, err_gs): 
         """
         @param err_gs: GS Loop error handler
@@ -208,7 +252,8 @@ class error_997_visitor(error_visitor.error_visitor):
         #seg = ['AK9', err_gs.ack_code, '%i' % err_gs.st_count_orig, \
         #    '%i' % err_gs.st_count_recv, \
         #    '%i' % (err_gs.st_count_recv - err_gs.count_failed_st())]
-        for (err_cde, err_str) in err_gs.errors:
+        err_codes = self.__get_gs_errors(err_gs)
+        for err_cde in err_codes:
             seg_data.append('%s' % err_cde)
             #seg.append('%s' % err_cde)
         self._write(seg_data)
@@ -234,6 +279,27 @@ class error_997_visitor(error_visitor.error_visitor):
         seg_data.append(err_st.trn_set_control_num.strip())
         self._write(seg_data)
         
+    def __get_st_errors(self, err_st):
+        """
+        Build list of ST level errors
+        """
+        st_ele_err_map = { 1:'6', 2:'7' }
+        se_ele_err_map = { 1:'6', 2:'7' }
+        err_codes = [err[0] for err in err_st.errors]
+        if err_st.child_err_count() > 0:
+            err_codes.append('5')
+        for elem in err_st.elements:
+            for (err_cde, err_str, bad_value) in elem.errors:
+                # Ugly
+                if 'ST' in err_str:
+                    err_codes.append(st_ele_err_map[elem.ele_pos])
+                elif 'SE' in err_str:
+                    err_codes.append(se_ele_err_map[elem.ele_pos])
+        # return unique codes
+        ret = list(set(err_codes))
+        ret.sort()
+        return ret
+
     def visit_st_post(self, err_st):
         """
         @param err_st: ST Loop error handler
@@ -244,14 +310,9 @@ class error_997_visitor(error_visitor.error_visitor):
 #        self.ack_code = None # AK501
         seg_data = pyx12.segment.Segment('AK5', '~', '*', ':')
 #        self.err_cde = [] # AK502-6
-        err_codes = []
-        if err_st.child_err_count() > 0:
-            err_codes.append('5')
-        for (err_cde, err_str) in err_st.errors:
-            err_codes.append(err_cde)
         #seg.append(err_st.ack_code)
         seg_data.append(err_st.ack_code)
-        err_codes.sort()
+        err_codes = self.__get_st_errors(err_st)
         for i in range(min(len(err_codes),5)):
             seg_data.append(err_codes[i])
             #seg.append(err_codes[i])

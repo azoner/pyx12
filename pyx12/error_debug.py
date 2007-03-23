@@ -59,7 +59,9 @@ class error_debug_visitor(error_visitor):
             self.fd.write('  %s %s\n' % err)
         for ele in err_isa.elements:
             self.fd.write('  %s %s\n' % (ele.id, ele.name))
-            
+            print ele.parent
+            for err in ele.errors:
+                self.fd.write('    ERR %s %s (%s)\n' % err)
 
     def visit_isa_post(self, err_isa):
         """
@@ -79,6 +81,8 @@ class error_debug_visitor(error_visitor):
             self.fd.write('  %s %s\n' % err)
         for ele in err_gs.elements:
             self.fd.write('  %s %s\n' % (ele.id, ele.name))
+            for err in ele.errors:
+                self.fd.write('    ERR %s %s (%s)\n' % err)
 
     def visit_gs_post(self, err_gs): 
         """
@@ -106,6 +110,8 @@ class error_debug_visitor(error_visitor):
             self.fd.write('  ERR %s %s\n' % err)
         for ele in err_st.elements:
             self.fd.write('  ST Element:  %s %s\n' % (ele.id, ele.name))
+            for err in ele.errors:
+                self.fd.write('    ERR %s %s (%s)\n' % err)
         
     def visit_st_post(self, err_st):
         """

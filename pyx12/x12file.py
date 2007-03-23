@@ -152,6 +152,7 @@ class X12file(object):
                 self.isa_usage = seg.get_value('ISA15')
             elif seg.get_seg_id() == 'IEA': 
                 if self.loops[-1][0] != 'ISA':
+                    # Unterminated GS loop
                     err_str = 'Unterminated Loop %s' % (self.loops[-1][0])
                     self._isa_error('024', err_str)
                     del self.loops[-1]
