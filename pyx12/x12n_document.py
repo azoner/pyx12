@@ -142,14 +142,10 @@ def x12n_document(param, src_file, fd_997, fd_html, fd_xmldoc=None):
                         cur_map.getnodebypath(path).set_cur_count(ct)
                     cur_map.getnodebypath('/ISA_LOOP').set_cur_count(1)
                     cur_map.getnodebypath('/ISA_LOOP/ISA').set_cur_count(1)
-                    cur_map.getnodebypath('/ISA_LOOP/GS_LOOP').reset_cur_count()
-                    cur_map.getnodebypath('/ISA_LOOP/GS_LOOP').set_cur_count(1)
-                    cur_map.getnodebypath('/ISA_LOOP/GS_LOOP/GS').set_cur_count(1)
-                    node = cur_map.getnodebypath('/ISA_LOOP/GS_LOOP/GS')
-                else:
-                    node = cur_map.getnodebypath('/ISA_LOOP/GS_LOOP/GS')
-                    node.reset_cur_count()
-                    node.incr_cur_count()
+                node = cur_map.getnodebypath('/ISA_LOOP/GS_LOOP/GS')
+                cur_map.getnodebypath('/ISA_LOOP/GS_LOOP').reset_cur_count()
+                cur_map.getnodebypath('/ISA_LOOP/GS_LOOP').set_cur_count(1)
+                cur_map.getnodebypath('/ISA_LOOP/GS_LOOP/GS').set_cur_count(1)
                 errh.add_gs_loop(seg, src)
                 errh.handle_errors(src.pop_errors())
             elif seg.get_seg_id() == 'BHT':
