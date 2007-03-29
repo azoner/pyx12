@@ -66,16 +66,14 @@
 
     <xsl:template match="element">
 	<tr class="element">
-        <td><xsl:value-of select="usage"/></td>
-        <td><xsl:value-of select="refdes"/></td>
-        <td><xsl:value-of select="data_ele"/></td>
+        <td  style="width: 10%"><xsl:value-of select="seq"/></td>
+        <xsl:apply-templates select="data_ele"/>
         <td style="width: 30%"><xsl:value-of select="name"/></td>
-        <td><xsl:value-of select="req_des"/></td>
-        <td><xsl:value-of select="data_type"/><xsl:text> </xsl:text><xsl:value-of select="format"/></td>
-        <td><xsl:value-of select="min_len"/>/<xsl:value-of select="max_len"/></td>
+        <td style="width: 10%"><xsl:value-of select="usage"/></td>
+        <td style="width: 10%"><xsl:value-of select="refdes"/></td>
 	</tr>
 	<!-- <xsl:apply-templates select="valid_codes"/> -->
-	<xsl:apply-templates/>
+	<xsl:apply-templates select="valid_codes"/>
     </xsl:template>
 
     <xsl:template match="composite">
@@ -92,24 +90,22 @@
     <xsl:template match="valid_codes1">
         <xsl:for-each select="code">
 	<tr class="codes">
-	<td colspan="4"></td>
+	<td colspan="6"></td>
 	    <td><xsl:value-of select="."/></td>
-	<td colspan="2"></td>
 	</tr>
         </xsl:for-each>
     </xsl:template>
 
     <xsl:template match="valid_codes">
 	<tr>
-	<td colspan="3"></td>
-	<td class="code">
+	<td colspan="1"></td>
+	<td class="code" colspan="5">
 	<xsl:apply-templates select="@external"/>
         <xsl:for-each select="code">
 	    <!-- <xsl:sort select="code" lang="en" order="ascending" case-order="upper-first"/> -->
 	    <xsl:value-of select="."/><xsl:text> </xsl:text> 
         </xsl:for-each>
 	</td>
-	<td colspan="3"></td>
 	</tr>
     </xsl:template>
 
@@ -117,6 +113,10 @@
 	<xsl:text>External Source: </xsl:text>
 	<a href="codes.html#{.}"><xsl:value-of select="."/></a>
 	<xsl:text> </xsl:text>
+    </xsl:template>
+
+    <xsl:template match="element/data_ele">
+        <td style="width: 10%"><a href="dataele.html#{.}"><xsl:value-of select="."/></a></td>
     </xsl:template>
 
     <xsl:template match="text()|@*"/>

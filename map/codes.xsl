@@ -20,7 +20,7 @@
 	<html>
 	<head>
 	<title>Codes</title>
-	<link rel="stylesheet" type="text/css" href="seg.css" title="stylebasic"/>
+	<link rel="stylesheet" type="text/css" href="codes.css" title="stylebasic"/>
 	</head>
 	<body>
 	<xsl:apply-templates/>
@@ -29,37 +29,36 @@
   </xsl:template>
 
     <xsl:template match="codeset">
-        <a name="{id}"></a>
 	<table>
-	<tr class="element">
-        <td><xsl:value-of select="id"/></td>
-        <td><xsl:value-of select="name"/></td>
-        <td><xsl:value-of select="data_ele"/></td>
-	</tr>
+	<thead>
+        <th>Code ID</th>
+        <th>Code Name</th>
+        <th>Data Element</th>
+	</thead>
 	<tr>
-	<td colspan="1"></td>
-	<td colspan="2" class="code">
-        <xsl:for-each select="code">
-	    <xsl:value-of select="."/><xsl:text> </xsl:text> 
-        </xsl:for-each>
-	</td>
-	<td colspan="3"></td>
+        <td id="{@id}"><xsl:value-of select="id"/></td>
+        <td><xsl:value-of select="name"/></td>
+	    <xsl:apply-templates select="data_ele"/>
 	</tr>
-	<xsl:apply-templates/>
 	</table>
-	<p></p>
+	<table>
+	<xsl:apply-templates select="version"/>
+	</table>
+    <p/>
     </xsl:template>
 
-    <xsl:template match="valid_codes">
+    <xsl:template match="version">
 	<tr>
-	<td colspan="1"></td>
-	<td colspan="2" class="code">
+	<td class="code">
         <xsl:for-each select="code">
 	    <xsl:value-of select="."/><xsl:text> </xsl:text> 
         </xsl:for-each>
 	</td>
-	<td colspan="3"></td>
 	</tr>
+    </xsl:template>
+
+    <xsl:template match="codeset/data_ele">
+        <td><a href="dataele.html#{.}"><xsl:value-of select="."/></a></td>
     </xsl:template>
 
     <xsl:template match="text()|@*"/>

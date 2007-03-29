@@ -8,12 +8,12 @@
 
 XSLT=/usr/local/bin/xsltproc
 MAPDIR=.
-OUTPUTDIR=../../pyx12-web/maps
+OUTPUTDIR=../../pyx12-web/doc/maps
 MAPS=270 271 276 277 278 820 835 837D 837I 837P 841 834 997
 
 LINT=/usr/local/bin/xmllint
 
-all: ${MAPS} codes
+all: ${MAPS} codes dataele
 
 270: 270.sum.html 270.seg.html 270.loop.html 270.A1.sum.html 270.A1.seg.html 270.A1.loop.html
 
@@ -49,6 +49,13 @@ codes.html: ${MAPDIR}/codes.xml
 	${XSLT} -o ${OUTPUTDIR}/codes.html codes.xsl ${MAPDIR}/codes.xml
 
 codes.html: codes.xsl
+
+dataele: dataele.html 
+
+dataele.html: ${MAPDIR}/dataele.xml
+	${XSLT} -o ${OUTPUTDIR}/dataele.html dataele.xsl ${MAPDIR}/dataele.xml
+
+dataele.html: dataele.xsl
 
 270.sum.html: ${MAPDIR}/270.4010.X092.xml
 	${XSLT} -o ${OUTPUTDIR}/270.sum.html map_sum.xsl ${MAPDIR}/270.4010.X092.xml
