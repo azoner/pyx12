@@ -857,7 +857,6 @@
                     <name>Receiver Provider Specialty Code</name>
                     <usage>R</usage>
                     <seq>03</seq>
-                    <valid_codes external="receiver_provider_specialty"/>
                   </element>
                   <element xid="PRV04">
                     <data_ele>156</data_ele>
