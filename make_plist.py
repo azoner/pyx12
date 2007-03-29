@@ -28,9 +28,9 @@ def main():
         manifest)]
     for x in ('CHANGELOG.txt', 'INSTALL.txt', 'LICENSE.txt', 'README.txt'):
         fd_out.write(doc+x+'\n')
-    fd_out.write(doc+'view/Makefile'+'\n')
-    [(fd_out.write(doc+x+'\n')) for x in filter(lambda x: x[:4] == 'view' and x[-4:] == '.xsl', manifest)]
-    [(fd_out.write(doc+x+'\n')) for x in filter(lambda x: x[:4] == 'view' and x[-4:] == '.css', manifest)]
+    #fd_out.write(doc+'view/Makefile'+'\n')
+    #[(fd_out.write(doc+x+'\n')) for x in filter(lambda x: x[:4] == 'view' and x[-4:] == '.xsl', manifest)]
+    #[(fd_out.write(doc+x+'\n')) for x in filter(lambda x: x[:4] == 'view' and x[-4:] == '.css', manifest)]
     maps = filter(lambda x: x[:3] == 'map' and x[-4:] == '.xml', manifest)
     [(fd_out.write(share+x+'\n')) for x in maps]
     [(fd_out.write(share+x[:-4]+'.pkl\n')) for x in filter(lambda x: os.path.basename(x) 
@@ -38,7 +38,7 @@ def main():
     for x in ('map/README', 'map/codes.xsd', 'map/map.xsd', 'map/x12simple.dtd'):
         fd_out.write(share+x+'\n')
 
-    for dir1 in (doc+'view', doc[:-1], share+'map', share[:-1], \
+    for dir1 in (doc[:-1], share+'map', share[:-1], \
             ex+'test/files', ex+'test', ex[:-1], \
             site+'pyx12'):
         fd_out.write('@dirrm '+dir1+'\n')

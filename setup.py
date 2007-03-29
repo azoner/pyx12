@@ -50,11 +50,7 @@ kw = {
         ('share/doc/pyx12', ['README.txt', 'LICENSE.txt',
         'CHANGELOG.txt', 'INSTALL.txt']),
         ('share/examples/pyx12/test', TEST_FILES),
-        ('share/examples/pyx12/test/files', TEST_DATA),
-        ('share/doc/pyx12/view', ['view/Makefile', 'view/codes.xsl', \
-            'view/loop.css', 'view/loop.xsl', 'view/map_seg.xsl', \
-            'view/map_sum.xsl', 'view/seg.css', 'view/sum.css',
-            'view/none.css', 'view/plain.css'])    
+        ('share/examples/pyx12/test/files', TEST_DATA)
     ],
       #package_dir = {'': ''},
 }

@@ -1,4 +1,6 @@
 make packages
+ - python setup.py bdist --formats=gztar,bztar,rpm
+ - python setup.py bdist_wininst
 package index
 Upload packages to sf
 python package index

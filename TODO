@@ -1,3 +1,5 @@
+Data Element XSLT
+
 x12file:
     check invalid seg term (004)
     check invalid ele term (026)
