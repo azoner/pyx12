@@ -40,7 +40,7 @@ kw = {
     'author': "John Holland",
     'author_email': "jholland@kazoocmh.org",
     'url': "http://pyx12.sourceforge.net/",
-    'packages': ['pyx12'],
+    'packages': ['pyx12', 'pyx12.tests'],
     'scripts': ['build/bin/%s' % (script) for script in SCRIPTS],
     'data_files': [
         (map_dir, MAP_FILES),
