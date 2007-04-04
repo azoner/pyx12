@@ -1868,10 +1868,15 @@ def is_valid_date(data_type, val):
                         val = '20' + val
                     else:
                         val = '19' + val
-                month = int(val[4:6])  # check month
+                year = int(val[0:4])  # get year
+                month = int(val[4:6])  
+                day = int(val[6:8])  
+                # Should not have dates before 1/1/1800
+                if year < 1800:
+                    raise IsValidError
+                # check month
                 if month < 1 or month > 12:
                     raise IsValidError
-                day = int(val[6:8])  # check day
                 if month in (1, 3, 5, 7, 8, 10, 12):  # 31 day month
                     if day < 1 or day > 31:
                         raise IsValidError
@@ -1879,10 +1884,6 @@ def is_valid_date(data_type, val):
                     if day < 1 or day > 30:
                         raise IsValidError
                 else: # else 28 day
-                    year = int(val[0:4])  # get year
-                    # Should not have dates before 1/1/1800
-                    if year < 1800:
-                        raise IsValidError
                     if not year%4 and not (not year%100 and year%400):
                     #if not (year % 4) and ((year % 100) or (not (year % 400)) ):  # leap year
                         if day < 1 or day > 29:
