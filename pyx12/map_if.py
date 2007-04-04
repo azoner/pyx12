@@ -1880,6 +1880,9 @@ def is_valid_date(data_type, val):
                         raise IsValidError
                 else: # else 28 day
                     year = int(val[0:4])  # get year
+                    # Should not have dates before 1/1/1800
+                    if year < 1800:
+                        raise IsValidError
                     if not year%4 and not (not year%100 and year%400):
                     #if not (year % 4) and ((year % 100) or (not (year % 400)) ):  # leap year
                         if day < 1 or day > 29:
