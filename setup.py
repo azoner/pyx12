@@ -59,10 +59,10 @@ kw = {
 
 if sys.platform == 'win32':
     # Update registry
-    kw['data_files'].append(('share/examples/pyx12', ['bin/pyx12.conf.xml.sample']))
+    kw['data_files'].append(('share/pyx12', ['bin/pyx12.conf.xml.sample']))
     kw['data_files'].append(('etc', ['bin/pyx12.conf.xml.sample']))
 else:
-    kw['data_files'].append(('share/examples/pyx12', ['bin/pyx12.conf.xml.sample']))
+    kw['data_files'].append(('share/pyx12', ['bin/pyx12.conf.xml.sample']))
     kw['data_files'].append(('etc', ['bin/pyx12.conf.xml.sample']))
 
 if (hasattr(core, 'setup_keywords') and
