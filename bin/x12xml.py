@@ -49,7 +49,6 @@ def usage():
     sys.stderr.write('  -c <file>  XML configuration file\n')
     sys.stderr.write('  -d         Debug mode\n')
     sys.stderr.write('  -f         Force map load.  Do not use the map pickle file\n')
-    sys.stderr.write('  -H         Create HTML output file\n')
     sys.stderr.write('  -l <file>  Output log\n')
     sys.stderr.write('  -m <path>  Path to map files\n')
     sys.stderr.write('  -o <file>  Output file\n')
@@ -64,7 +63,7 @@ def main():
     """Script main program."""
     import getopt
     try:
-        opts, args = getopt.getopt(sys.argv[1:], 'c:dfl:m:o:p:qs:vx:X:Hh')
+        opts, args = getopt.getopt(sys.argv[1:], 'c:dfl:m:o:p:qs:vx:X:h')
     except getopt.error, msg:
         usage()
         raise
@@ -118,7 +117,6 @@ def main():
         if o == '-o': target_xml = a
         if o == '-p': param.set('pickle_path', a)
         if o == '-s': param.set('charset', a)
-        if o == '-H': flag_html = True
         if o == '-l':
             try:
                 hdlr = logging.FileHandler(a)

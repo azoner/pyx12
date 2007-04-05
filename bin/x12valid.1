@@ -1,7 +1,7 @@
 .\" Process this file with
 .\" groff -man -Tascii x12valid.1
 .\"
-.TH X12LINT 1 "DECEMBER 2004" FreeBSD "User Manuals"
+.TH X12VALID 1 "APRIL 2007" FreeBSD "User Manuals"
 .SH NAME
 x12valid \- validate a HIPAA X12 document
 .SH SYNOPSIS
@@ -19,12 +19,12 @@ Debug Mode.  Implies verbose output.
 .IP -f
 Force map load.  Do not use the map pickle file.
 .IP -H
-Create HTML output file
+Create HTML formatted output file
 .IP -l <file>
-Output log
+Output messages to log file
 .IP -m <path>
 Path to map files
-.IP -m <path>
+.IP -p <path>
 Path to pickle files
 .IP -P
 Run a profiler
@@ -40,23 +40,21 @@ Exclude external code from code checks
 .I /usr/local/etc/pyx12.conf.xml
 .RS
 The system wide configuration file. See
-.BR x12valid (5)
+.BR pyx12.conf.xml (5)
 for further details.
 .RE
 .I ~/.pyx12.conf.xml
 .RS
 Per user configuration file. See
-.BR x12conf (5)
+.BR pyx12.conf.xml (5)
 for further details.
 .IR pyx12.conf.xml .
 Overridden by the
 .B -c
 option.
-.SH BUGS
-
 .SH AUTHOR
 John Holland <john at zoner dot org>
 .SH "SEE ALSO"
 .BR x12xml(1),
-.BR pyx12conf (5),
+.BR pyx12.conf.xml(5),
 .BR x12norm (1)
