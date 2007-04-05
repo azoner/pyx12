@@ -22,6 +22,8 @@ def main():
     fd_out.write('etc/pyx12.conf.xml.sample\n')
     fd_out.write(share+'pyx12.conf.xml.sample\n')
     [(fd_out.write(share+x+'\n')) for x in filter(lambda x: x[:4] == 'test' and x[-3:] == '.py', manifest)]
+    #[(fd_out.write(share+x[:-3]+'.pyc\n')) for x in filter(lambda x: x[:4] == 'test' and x[-3:] == '.py', manifest)]
+    #[(fd_out.write(share+x[:-3]+'.pyo\n')) for x in filter(lambda x: x[:4] == 'test' and x[-3:] == '.py', manifest)]
     [(fd_out.write(share+x+'\n')) for x in filter(lambda x: x[:10] == 'test/files' 
         and (x[-4:] == '.txt' or x[-5:] == '.base' or x[-4:] == '.txt' or x[-7:] == '.simple'
         or x[-6:] == '.idtag' or x[-10:] == '.idtagqual'), 
@@ -39,7 +41,7 @@ def main():
         fd_out.write(share+x+'\n')
 
     for dir1 in (share+'map', share+'test/files', share+'test', share[:-1], \
-            site+'pyx12/tests', site+'pyx12'):
+            doc[:-1], site+'pyx12/tests', site+'pyx12'):
         fd_out.write('@dirrm '+dir1+'\n')
    
 

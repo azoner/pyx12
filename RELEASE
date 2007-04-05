@@ -13,6 +13,8 @@ python package index
 make port
  - make_plist.py
  - make makesum
+ - make test
+ - make describe
 install/test port
 run unit/functional tests on installed port
 check performance

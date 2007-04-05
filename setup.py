@@ -42,6 +42,7 @@ kw = {
     'author': "John Holland",
     'author_email': "jholland@kazoocmh.org",
     'url': "http://pyx12.sourceforge.net/",
+    'platforms': 'All',
     'packages': ['pyx12', 'pyx12.tests'],
     'scripts': ['build/bin/%s' % (script) for script in SCRIPTS],
     'data_files': [
@@ -72,10 +73,5 @@ if (hasattr(core, 'setup_keywords') and
          'Environment :: Console (Text Based)',
          'Intended Audience :: Developers, Other Audience',
          ' License :: OSI Approved :: BSD License'],
-
-param = pyx12.params.params()
-for file in MAP_FILES:
-    param.set('map_path', 'map')
-    map_file = os.path.basename(file)
 
 core.setup(**kw)
