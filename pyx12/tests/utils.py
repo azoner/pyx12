@@ -70,22 +70,32 @@ class BasicDate(unittest.TestCase):
         self.failUnless(IsValidDataType('20040430', 'DT', 'B'))
         self.failUnless(IsValidDataType('20040401-20040430', 'RD8', 'B'))
         
-    def testInvalid(self):
+    def testInvalidLeapDate(self):
         self.failIf(IsValidDataType('990229', 'DT', 'B'))
         self.failIf(IsValidDataType('20030229', 'DT', 'B'))
         self.failIf(IsValidDataType('19000229', 'DT', 'B'))
-        self.failIf(IsValidDataType('19992377', 'DT', 'B'))
-        self.failIf(IsValidDataType('19991277', 'DT', 'B'))
-        self.failIf(IsValidDataType('19991301', 'DT', 'B'))
+
+    def testInvalidAlpha(self):
         self.failIf(IsValidDataType('200204a', 'DT', 'B'))
         self.failIf(IsValidDataType('2002041a', 'DT', 'B'))
+
+    def testInvalidMonth(self):
+        self.failIf(IsValidDataType('19991301', 'DT', 'B'))
         self.failIf(IsValidDataType('030732', 'DT', 'B'))
+
+    def testInvalidDay(self):
+        self.failIf(IsValidDataType('19992377', 'DT', 'B'))
+        self.failIf(IsValidDataType('19991277', 'DT', 'B'))
+        self.failIf(IsValidDataType('20040431', 'DT', 'B'))
+
+    def testInvalidLength(self):
         self.failIf(IsValidDataType('200402024 00', 'DT', 'B'))
         self.failIf(IsValidDataType('200422024000', 'DT', 'B'))
         self.failIf(IsValidDataType('20040222040', 'DT', 'B'))
         self.failIf(IsValidDataType('2004022204', 'DT', 'B'))
         self.failIf(IsValidDataType('200402220', 'DT', 'B'))
-        self.failIf(IsValidDataType('20040431', 'DT', 'B'))
+
+    def testInvalidChar(self):
         self.failIf(IsValidDataType('-20040430', 'RD8', 'B'))
         self.failIf(IsValidDataType('20040430-', 'RD8', 'B'))
 
