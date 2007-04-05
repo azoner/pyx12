@@ -12,8 +12,7 @@ import pyx12.params
 
 map_dir = 'share/pyx12/map'
 MAP_FILES = ['map/%s' % (file1) for file1 in 
-    filter(lambda x: x[:4] == 'map' and os.path.splitext(x)[1] == '.xml',
-    os.listdir('map'))]
+    filter(lambda x: os.path.splitext(x)[1] == '.xml', os.listdir('map'))]
 mkpath('build/bin')
 SCRIPTS = ('x12_build_pkl', 'x12html', 'x12info', 'x12valid', 
     'x12norm', 'x12sql', 'x12xml', 'xmlx12')
@@ -24,6 +23,7 @@ for filename in SCRIPTS:
         target_script = filename
     copy_file(os.path.join('bin', filename+'.py'), 
         os.path.join('build/bin', target_script))
+test_dir = 'share/pyx12/test'
 TEST_FILES = ['test/%s' % (file1) for file1 in 
     filter(lambda x: x[:4] == 'test' and os.path.splitext(x)[1] == '.py',
     os.listdir('test'))]
@@ -35,7 +35,9 @@ TEST_DATA = ['test/files/%s' % (file1) for file1 in
 kw = {  
     'name': "pyx12",
     'version': pyx12.__version__,
-    #'description': pyx12.__doc__,
+    'description': pyx12.__doc__,
+    'long_description': pyx12.__doc__,
+    'license': 'BSD',
     'description': "An X12 validator and converter",
     'author': "John Holland",
     'author_email': "jholland@kazoocmh.org",
@@ -46,11 +48,11 @@ kw = {
         (map_dir, MAP_FILES),
         (map_dir, ['map/README', 'map/codes.xml', 'map/codes.xsd',
         'map/comp_test.xml', 'map/map.xsd', 'map/maps.xml', 
-        'map/x12simple.dtd']),
+        'map/x12simple.dtd', 'map/dataele.xml']),
         ('share/doc/pyx12', ['README.txt', 'LICENSE.txt',
         'CHANGELOG.txt', 'INSTALL.txt']),
-        ('share/examples/pyx12/test', TEST_FILES),
-        ('share/examples/pyx12/test/files', TEST_DATA)
+        (test_dir, TEST_FILES),
+        (test_dir+'/files', TEST_DATA)
     ],
       #package_dir = {'': ''},
 }

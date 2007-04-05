@@ -11,6 +11,8 @@ package index
 Upload packages to sf
 python package index
 make port
+ - make_plist.py
+ - make makesum
 install/test port
 run unit/functional tests on installed port
 check performance
