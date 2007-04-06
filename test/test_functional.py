@@ -132,8 +132,7 @@ def test_xml(src_filename, param, xmlout='simple'):
                         sys.stdout.write(line)
                 sys.stdout.write('\n')
             else:
-                sys.stdout.write('ok')
-            sys.stdout.write('\n')
+                sys.stdout.write('ok\n')
 
             # Back to X12
             if xmlout in ('simple'):
@@ -151,8 +150,7 @@ def test_xml(src_filename, param, xmlout='simple'):
                             sys.stdout.write(line)
                     sys.stdout.write('\n')
                 else:
-                    sys.stdout.write('ok')
-            sys.stdout.write('\n')
+                    sys.stdout.write('ok\n')
             del fd_base
             del fd_xml
     except IOError:
