@@ -1,7 +1,7 @@
 .\" Process this file with
 .\" groff -man -Tascii x12norm.1
 .\"
-.TH X12NORM 1 "APRIL 2007" FreeBSD "User Manuals"
+.TH X12NORM 1 "APRIL 2007" pyx12 "pyx12 User Manuals"
 .SH NAME
 x12norm \- Normalize the blocking / formatting / end of lines of X12 documents
 .SH SYNOPSIS
@@ -11,16 +11,15 @@ x12norm \- Normalize the blocking / formatting / end of lines of X12 documents
 .I file
 .B ...
 .SH DESCRIPTION
-.B x12norm
 Remove/insert segment end of line characters.
 .SH OPTIONS
 .IP -h
 Help
 .IP -d
 Debug mode
-.IP-e
+.IP -e
 Add eol to each segment line
-.IP-f
+.IP -f
 Fix.  Try to fix IEA/GE/SE counting errors
 .IP -o <file>
 Output file.
