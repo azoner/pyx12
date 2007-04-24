@@ -1,0 +1,143 @@
+<?xml version="1.0"?>
+<!-- 
+######################################################################
+# Copyright (c) 2001-2007 Kalamazoo Community Mental Health Services,
+#   John Holland <jholland@kazoocmh.org> <john@zoner.org>
+# All rights reserved.
+#
+# This software is licensed as described in the file LICENSE.txt, which
+# you should have received as part of this distribution.
+#
+######################################################################
+
+#    $Id$
+-->
+
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+
+  <xsd:annotation>
+    <xsd:documentation xml:lang="en">
+    XML Schema for pyx12 data validation maps
+    Copyright 2001-2007 Kalamazoo Community Mental Health Services. All rights reserved.
+    </xsd:documentation>
+  </xsd:annotation>
+
+  <xsd:element name="transaction" type="transactionType"/>
+
+  <xsd:complexType name="transactionType">
+    <xsd:sequence>
+      <xsd:element name="id" type="xsd:normalizedString"/>
+      <xsd:element name="name" type="xsd:normalizedString"/>
+      <xsd:element name="loop" type="LoopType" />
+    </xsd:sequence>
+  </xsd:complexType>
+
+  <xsd:complexType name="LoopType">
+    <xsd:sequence>
+      <xsd:element name="name" type="xsd:normalizedString"/>
+      <xsd:element name="usage" type="xsd:normalizedString"/>
+      <xsd:element name="pos" type="xsd:nonNegativeInteger"/>
+      <xsd:element name="repeat" type="xsd:normalizedString"/>
+      <xsd:group ref="LoopChildGroupType" minOccurs="0" maxOccurs="unbounded"/>
+    </xsd:sequence>
+    <xsd:attribute name="xid" type="xsd:normalizedString"/>
+    <xsd:attribute name="type" type="xsd:normalizedString"/>
+  </xsd:complexType>
+  
+  <xsd:group id="LoopChildGroupType" name="LoopChildGroupType">
+    <xsd:choice>
+      <xsd:element name="segment" type="SegmentType"/>
+      <xsd:element name="loop" type="LoopType"/>
+    </xsd:choice>
+  </xsd:group>
+
+  <xsd:group id="SegmentChildGroupType" name="SegmentChildGroupType">
+    <xsd:choice>
+      <xsd:element name="element" type="ElementType"/>
+      <xsd:element name="composite" type="CompositeType"/>
+    </xsd:choice>
+  </xsd:group>
+
+  <xsd:complexType name="SegmentType">
+    <xsd:sequence>
+      <xsd:element name="name" type="xsd:normalizedString"/>
+      <xsd:element name="end_tag" type="xsd:normalizedString" minOccurs="0"/>
+      <xsd:element name="usage" type="xsd:normalizedString"/>
+      <xsd:element name="pos" type="xsd:nonNegativeInteger"/>
+      <xsd:element name="max_use" type="xsd:normalizedString"/>
+      <xsd:element name="syntax" type="xsd:normalizedString" minOccurs="0" maxOccurs="unbounded"/>
+      <xsd:group ref="SegmentChildGroupType" minOccurs="0" maxOccurs="unbounded"/>
+    </xsd:sequence>
+    <xsd:attribute name="xid" type="xsd:normalizedString"/>
+  </xsd:complexType>
+
+  <xsd:complexType name="CompositeType">
+    <xsd:sequence>
+      <xsd:element name="data_ele" type="xsd:normalizedString"/>
+      <xsd:element name="name" type="xsd:normalizedString"/>
+      <xsd:element name="usage" type="xsd:normalizedString"/>
+      <xsd:element name="seq" type="xsd:nonNegativeInteger"/>
+      <xsd:element name="refdes" type="xsd:normalizedString" minOccurs="0"/>
+      <xsd:element name="element" type="ElementType" minOccurs="0" maxOccurs="unbounded"/>
+    </xsd:sequence>
+  </xsd:complexType>
+
+  <xsd:complexType name="ElementType">
+    <xsd:sequence>
+      <xsd:element name="data_ele" type="xsd:normalizedString"/>
+      <xsd:element name="name" type="xsd:normalizedString"/>
+      <xsd:element name="usage" type="usageType"/> <!-- IG usage, -->
+      <xsd:element name="seq" type="xsd:nonNegativeInteger"/>
+      <xsd:element name="refdes" type="xsd:normalizedString" minOccurs="0"/>
+      <xsd:element name="valid_codes" minOccurs="0">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element name="code" type="xsd:normalizedString" minOccurs="0" maxOccurs="unbounded"/>
+          </xsd:sequence>
+          <xsd:attribute name="external" type="xsd:normalizedString"/>
+        </xsd:complexType>
+      </xsd:element>
+    </xsd:sequence>
+    <xsd:attribute name="xid" type="xsd:normalizedString"/>
+  </xsd:complexType>
+  
+  <xsd:simpleType name="formatType">
+    <xsd:restriction base="xsd:normalizedString">
+      <xsd:enumeration value="D8"/> <!-- Date CCYYMMDD -->
+      <xsd:enumeration value="D6"/> <!-- Date YYMMDD -->
+      <xsd:enumeration value="RD8"/> <!-- Date Range CCYYMMDD-CCYYMMDD -->
+      <xsd:enumeration value="TM"/> <!-- Time HHMM -->
+    </xsd:restriction>
+  </xsd:simpleType>
+  
+  <xsd:simpleType name="usageType">
+    <xsd:restriction base="xsd:normalizedString">
+      <xsd:enumeration value="R"/> <!-- Required -->
+      <xsd:enumeration value="S"/> <!-- Situational -->
+      <xsd:enumeration value="N"/> <!-- Not Used -->
+    </xsd:restriction>
+  </xsd:simpleType>
+  
+  <xsd:simpleType name="dataType">
+    <xsd:restriction base="xsd:normalizedString">
+      <xsd:enumeration value="N"/>
+      <xsd:enumeration value="N0"/>
+      <xsd:enumeration value="N1"/>
+      <xsd:enumeration value="N2"/>
+      <xsd:enumeration value="N3"/>
+      <xsd:enumeration value="N4"/>
+      <xsd:enumeration value="N5"/>
+      <xsd:enumeration value="N6"/>
+      <xsd:enumeration value="N7"/>
+      <xsd:enumeration value="N8"/>
+      <xsd:enumeration value="N9"/>
+      <xsd:enumeration value="R"/>
+      <xsd:enumeration value="ID"/>
+      <xsd:enumeration value="AN"/>
+      <xsd:enumeration value="DT"/>
+      <xsd:enumeration value="TM"/>
+      <xsd:enumeration value="B"/>
+    </xsd:restriction>
+  </xsd:simpleType>
+
+</xsd:schema>

@@ -1,0 +1,16 @@
+This document is a description of a mapping from the X12N Implementation Guides to
+an XML document which completely specifies the guides for the purposes of data translation.  
+Some XML elements have been added to support a data translator.  At some point, I will write 
+a XML schema to more precisely define the XML elements and valid values.
+
+usage:  IG Usage field. S=Situational, N=Not Used, R=Required
+data_type: STD type
+min_len/max_len: STD
+pos: segment position number
+id: IG id
+name: IG name
+ref_des: reference designator
+data_ele: Data Element
+ref_des: Reference Designator
+valid_codes: list of valid codes for the element or a pointer to the list
+syntax: STD syntax dependency string, optional

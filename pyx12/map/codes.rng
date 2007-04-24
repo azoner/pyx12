@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<grammar xmlns="http://relaxng.org/ns/structure/1.0">
+<start>
+<element name="codesets" xmlns="http://relaxng.org/ns/structure/1.0">
+    <oneOrMore>
+        <element name="codeset" datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes">
+            <element name="id"><data type="token"><param name="maxLength">20</param></data></element>
+            <element name="name"><data type="string"><param name="maxLength">100</param></data></element>
+            <optional>
+                <element name="data_ele"><data type="token"><param name="maxLength">6</param></data></element>
+            </optional>
+            <oneOrMore>
+                <element name="version">
+                    <element name="id"><data type="token"><param name="maxLength">20</param></data></element>
+                    <element name="eff_dte"><data type="token"/></element>
+                    <oneOrMore>
+                        <element name="code"><data type="token"><param name="maxLength">5</param></data></element>
+                    </oneOrMore>
+                </element> 
+            </oneOrMore>
+        </element> 
+    </oneOrMore>
+</element>
+</start>
+
+</grammar>

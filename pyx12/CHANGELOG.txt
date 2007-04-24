@@ -1,0 +1,88 @@
+Date validation - Dates prior to 1/1/1800 are considered invalid
+
+Improve 997 generation - better ISA, GS, and ST loop handling
+
+Normalize data element numbers.  Remove remove data_type, min_len, and max_len
+from maps and from map_if
+
+Fix seg counting bug for LS/LE loops
+
+Added new CARC(139) codes
+
+Fix 834/LUI matching - only care about ID element for segment matching if
+element is required
+
+Fix 997 ISA segment
+
+Remove errh object from x12file. Return errors as list
+
+Removed valid code restriction from 837/2300/HI (Condition Codes)
+
+Fix 278 loop structure
+
+RELEASE 1.2.0
+
+Handle files with multiple transactions, simplify x12n_document
+
+Correctly distinguish 278 forms
+
+Fixed bug: xmlx12.py is skipping empty elements
+
+segment interface:
+    extend segment and composite, do not print trailing terminators
+
+Added functional tests for XML idtag and idtagqual
+
+Fixed bug: SEG1 showing in AK304
+
+Added a new XML output form: idtagqual.  This form appends the ID value to
+    non-unique segment IDs
+
+Draft map for Unsolicited 277: 277U.4010.X070.xml
+
+Fixed bug: blank element validation
+
+Fixed mis-named xid in 837.4010.X098.xml
+
+Fixed incorrect spelling of xmlout parameter in pyx12.conf.xml.sample
+
+Params can be cleared (values set to '')
+
+Fixed out of order segments bug:
+    If multiple segments with the same position ordinal occur out of order,
+    could get an incorrect required segment missing error.
+
+Base map_if segment children on dictionary
+
+Altered segment interface
+    No more [] indexing
+
+Fixed xml generation bug:
+    An element or composite containing data but marked as "Not Used" will not
+    have an XML node generated.  This would not be a valid file anyway.
+
+    Generation of XML nodes for empty element or composite data is supressed.
+    These are just placeholders and the existence of an empty XML node
+    communicates the same information as no node.
+
+Fixed bug: Match any sub-loop of a containing loop.
+
+RELEASE 1.1.0
+
+Wrap ISA and GS with loops
+
+Restore mandatory_segs_missing caching
+
+Validate Not Used composites and elements
+
+Validate length of D8 and D6 datatypes.
+
+Config file support
+
+Loop walking bug
+
+Refactor interface to segments
+
+Restructure interface to x12file
+
+Removed Taxonomy Codes from codes.xml

@@ -1,0 +1,9 @@
+ no req_des
+ max_use?
+ do not show sub-elements of unused composites
+
+add syntax
+add de-identify
+add inter-segment conditionals
+
+ensure loops relationships are correct
