@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <!-- 
 ######################################################################
-# Copyright (c) 2001-2005 Kalamazoo Community Mental Health Services,
+# Copyright (c) 2001-2007 Kalamazoo Community Mental Health Services,
 #   John Holland <jholland@kazoocmh.org> <john@zoner.org>
 # All rights reserved.
 #
@@ -13,30 +13,62 @@
 #    $Id$
 -->
 
-<!-- NOT YET A VALID SCHEMA -->
-
 <xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-  <xsd:element name="map" type="maptype"/>
+
+  <xsd:annotation>
+    <xsd:documentation xml:lang="en">
+    XML Schema for pyx12 data validation maps
+    Copyright 2001-2007 Kalamazoo Community Mental Health Services. All rights reserved.
+    </xsd:documentation>
+  </xsd:annotation>
+
+  <xsd:element name="transaction" type="transactionType"/>
+
+  <xsd:complexType name="transactionType">
+    <xsd:sequence>
+      <xsd:element name="id" type="xsd:normalizedString"/>
+      <xsd:element name="name" type="xsd:normalizedString"/>
+      <xsd:element name="loop" type="LoopType" />
+    </xsd:sequence>
+  </xsd:complexType>
 
   <xsd:complexType name="LoopType">
     <xsd:sequence>
-      <xsd:element name="segment" type="SegmentType"/>
+      <xsd:element name="name" type="xsd:normalizedString"/>
+      <xsd:element name="usage" type="xsd:normalizedString"/>
+      <xsd:element name="pos" type="xsd:nonNegativeInteger"/>
+      <xsd:element name="repeat" type="xsd:normalizedString"/>
+      <xsd:group ref="LoopChildGroupType" minOccurs="0" maxOccurs="unbounded"/>
     </xsd:sequence>
+    <xsd:attribute name="xid" type="xsd:normalizedString"/>
+    <xsd:attribute name="type" type="xsd:normalizedString"/>
   </xsd:complexType>
   
-  <xsd:complexType name="ValidCodesType"/>
+  <xsd:group id="LoopChildGroupType" name="LoopChildGroupType">
+    <xsd:choice>
+      <xsd:element name="segment" type="SegmentType"/>
+      <xsd:element name="loop" type="LoopType"/>
+    </xsd:choice>
+  </xsd:group>
+
+  <xsd:group id="SegmentChildGroupType" name="SegmentChildGroupType">
+    <xsd:choice>
+      <xsd:element name="element" type="ElementType"/>
+      <xsd:element name="composite" type="CompositeType"/>
+    </xsd:choice>
+  </xsd:group>
 
   <xsd:complexType name="SegmentType">
     <xsd:sequence>
-      <xsd:element name="id" type="xsd:normalizedString"/>
       <xsd:element name="name" type="xsd:normalizedString"/>
       <xsd:element name="end_tag" type="xsd:normalizedString" minOccurs="0"/>
       <xsd:element name="usage" type="xsd:normalizedString"/>
       <xsd:element name="pos" type="xsd:nonNegativeInteger"/>
-      <xsd:element name="syntax" type="xsd:normalizedString" minOccurs="0"/>
-      <xsd:element name="element" type="ElementType" maxOccurs="Unbounded"/>
-      <xsd:element name="composite" type="CompositeType" maxOccurs="Unbounded"/>
+      <xsd:element name="max_use" type="xsd:normalizedString"/>
+      <xsd:element name="syntax" type="xsd:normalizedString" minOccurs="0" maxOccurs="unbounded"/>
+      <xsd:group ref="SegmentChildGroupType" minOccurs="0" maxOccurs="unbounded"/>
     </xsd:sequence>
+    <xsd:attribute name="xid" type="xsd:normalizedString"/>
   </xsd:complexType>
 
   <xsd:complexType name="CompositeType">
@@ -45,7 +77,8 @@
       <xsd:element name="name" type="xsd:normalizedString"/>
       <xsd:element name="usage" type="xsd:normalizedString"/>
       <xsd:element name="seq" type="xsd:nonNegativeInteger"/>
-      <xsd:element name="element" type="ElementType" maxOccurs="Unbounded"/>
+      <xsd:element name="refdes" type="xsd:normalizedString" minOccurs="0"/>
+      <xsd:element name="element" type="ElementType" minOccurs="0" maxOccurs="unbounded"/>
     </xsd:sequence>
   </xsd:complexType>
 
@@ -55,18 +88,17 @@
       <xsd:element name="name" type="xsd:normalizedString"/>
       <xsd:element name="usage" type="usageType"/> <!-- IG usage, -->
       <xsd:element name="seq" type="xsd:nonNegativeInteger"/>
-      <xsd:element name="refdes" type="xsd:normalizedString"/>
-      <xsd:element name="data_type" type="dataType"/>
-      <xsd:element name="min_len" type="xsd:nonNegativeInteger"/>
-      <xsd:element name="max_len" type="xsd:nonNegativeInteger"/>
+      <xsd:element name="refdes" type="xsd:normalizedString" minOccurs="0"/>
       <xsd:element name="valid_codes" minOccurs="0">
         <xsd:complexType>
-          <xsd:element name="code" type="xsd:normalizedString" maxOccurs="unbounded"/>
+          <xsd:sequence>
+            <xsd:element name="code" type="xsd:normalizedString" minOccurs="0" maxOccurs="unbounded"/>
+          </xsd:sequence>
           <xsd:attribute name="external" type="xsd:normalizedString"/>
         </xsd:complexType>
       </xsd:element>
-      <xsd:element name="format" type="formatType"/>
     </xsd:sequence>
+    <xsd:attribute name="xid" type="xsd:normalizedString"/>
   </xsd:complexType>
   
   <xsd:simpleType name="formatType">

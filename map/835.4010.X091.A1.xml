@@ -3506,6 +3506,7 @@
       <name>Interchange Acknowledgement</name>
       <usage>S</usage>
       <pos>020</pos>
+      <max_use>1</max_use>
       <element xid="TA101">
         <data_ele>I12</data_ele>
         <name>Interchange Control Number</name>

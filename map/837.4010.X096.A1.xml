@@ -18060,10 +18060,10 @@
                     <name>Line Pricing/Repricing Information</name>
                     <usage>S</usage>
                     <pos>492</pos>
+                    <max_use>1</max_use>
                     <syntax>R0113</syntax>
                     <syntax>P0910</syntax>
                     <syntax>P1112</syntax>
-                    <max_use>1</max_use>
                     <element xid="HCP01">
                       <data_ele>1473</data_ele>
                       <name>Pricing Methodology</name>
@@ -18636,6 +18636,7 @@
 <!--End of CTP segment-->
                     <segment xid="REF">
                       <name>Prescription Number</name>
+                      <usage>S</usage>
                       <pos>496</pos>
                       <max_use>1</max_use>
                       <element xid="REF01">
@@ -36896,10 +36897,10 @@
                       <name>Line Pricing/Repricing Information</name>
                       <usage>S</usage>
                       <pos>492</pos>
+                      <max_use>1</max_use>
                       <syntax>R0113</syntax>
                       <syntax>P0910</syntax>
                       <syntax>P1112</syntax>
-                      <max_use>1</max_use>
                       <element xid="HCP01">
                         <data_ele>1473</data_ele>
                         <name>Pricing Methodology</name>
@@ -37043,26 +37044,26 @@
                       <name>Drug Identification</name>
                       <usage>S</usage>
                       <pos>494</pos>
-                      <syntax>P0405</syntax>
-                      <syntax>P0607</syntax>
-                      <syntax>P0809</syntax>
-                      <syntax>P1011</syntax>
-                      <syntax>P1213</syntax>
-                      <syntax>P1415</syntax>
-                      <syntax>P1617</syntax>
-                      <syntax>P1819</syntax>
-                      <syntax>P2021</syntax>
-                      <syntax>P2223</syntax>
-                      <syntax>P2425</syntax>
-                      <syntax>P2627</syntax>
-                      <syntax>P2829</syntax>
-                      <syntax>P3031</syntax>
                       <repeat>25</repeat>
                       <segment xid="LIN">
                         <name>Drug Identification</name>
                         <usage>S</usage>
                         <pos>494</pos>
                         <max_use>1</max_use>
+                        <syntax>P0405</syntax>
+                        <syntax>P0607</syntax>
+                        <syntax>P0809</syntax>
+                        <syntax>P1011</syntax>
+                        <syntax>P1213</syntax>
+                        <syntax>P1415</syntax>
+                        <syntax>P1617</syntax>
+                        <syntax>P1819</syntax>
+                        <syntax>P2021</syntax>
+                        <syntax>P2223</syntax>
+                        <syntax>P2425</syntax>
+                        <syntax>P2627</syntax>
+                        <syntax>P2829</syntax>
+                        <syntax>P3031</syntax>
                         <element xid="LIN01">
                           <data_ele>350</data_ele>
                           <name>Assigned Identification</name>
@@ -37298,6 +37299,7 @@
 <!--End of LIN segment-->
                       <segment xid="CTP">
                         <name>Drug Pricing</name>
+                        <usage>S</usage>
                         <pos>495</pos>
                         <max_use>1</max_use>
                         <syntax>P0405</syntax>
@@ -39581,6 +39583,7 @@
       <name>Interchange Acknowledgement</name>
       <usage>S</usage>
       <pos>020</pos>
+      <max_use>1</max_use>
       <element xid="TA101">
         <data_ele>I12</data_ele>
         <name>Interchange Control Number</name>
