@@ -1594,8 +1594,43 @@ class composite_if(x12_node):
 class Pickle_Errors(Exception):
     """Class for map pickling errors."""
 
+def apply_xslt_to_map(map_file, xslt_file):
+    import libxslt
+    styledoc = libxml2.parseFile(xslt_file)
+    style = libxslt.parseStylesheetDoc(styledoc)
+    doc = libxml2.parseFile(map_file)
+    result = style.applyStylesheet(doc, None)
+    style.saveResultToFilename("new.xml", result, 0)
+    style.freeStylesheet()
+    doc.freeDoc()
+    result.freeDoc()
 
-def load_map_file(map_file, param):
+def apply_xslt_to_map_win():
+    #from os import environ
+    import win32com.client
+    xsluri = 'xsl/plainpage.xsl'
+    xmluri = 'website.xml'
+
+    xsl = win32com.client.Dispatch("Msxml2.FreeThreadedDOMDocument.4.0")
+    xml = win32com.client.Dispatch("Msxml2.DOMDocument.4.0")
+    xsl.load(xsluri)
+    xml.load(xmluri)
+
+    xslt = win32com.client.Dispatch("Msxml2.XSLTemplate.4.0")
+    xslt.stylesheet = xsl
+    proc = xslt.createProcessor()
+    proc.input = xml
+
+    #params = {"url":environ['QUERY_STRING'].split("=")[1]}
+    #for i, v in enumerate(environ['QUERY_STRING'].split("/")[1:]):
+    #    params["selected_section%s" % (i + 1)] = "/" + v
+
+    #for param, value in params.items():
+    #        proc.addParameter(param, value)
+    proc.transform()
+    return proc.output
+
+def load_map_file(map_file, param, xslt_files = []):
     """
     Loads the map by pickle if available
     @param map_file: absolute path for file
