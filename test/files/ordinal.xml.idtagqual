@@ -28,7 +28,7 @@
         <GS05>1439</GS05>
         <GS06>1</GS06>
         <GS07>X</GS07>
-        <GS08>004010X096</GS08>
+        <GS08>004010X096A1</GS08>
       </GS>
       <LST_LOOP>
         <ST>
@@ -46,7 +46,7 @@
           </BHT>
           <REF>
             <REF01>87</REF01>
-            <REF02>004010X096</REF02>
+            <REF02>004010X096A1</REF02>
           </REF>
           <L1000A>
             <NM1>
@@ -416,7 +416,7 @@
     </LGS_LOOP>
     <IEA>
       <IEA01>1</IEA01>
-      <IEA2>000484889</IEA2>
+      <IEA02>000484889</IEA02>
     </IEA>
   </LISA_LOOP>
 </x12idtagqual>

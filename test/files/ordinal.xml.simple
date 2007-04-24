@@ -29,7 +29,7 @@
         <ele id='GS05'>1439</ele>
         <ele id='GS06'>1</ele>
         <ele id='GS07'>X</ele>
-        <ele id='GS08'>004010X096</ele>
+        <ele id='GS08'>004010X096A1</ele>
       </seg>
       <loop id='ST_LOOP'>
         <seg id='ST'>
@@ -47,7 +47,7 @@
           </seg>
           <seg id='REF'>
             <ele id='REF01'>87</ele>
-            <ele id='REF02'>004010X096</ele>
+            <ele id='REF02'>004010X096A1</ele>
           </seg>
           <loop id='1000A'>
             <seg id='NM1'>
@@ -417,7 +417,7 @@
     </loop>
     <seg id='IEA'>
       <ele id='IEA01'>1</ele>
-      <ele id='IEA2'>000484889</ele>
+      <ele id='IEA02'>000484889</ele>
     </seg>
   </loop>
 </x12simple>
