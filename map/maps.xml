@@ -21,18 +21,6 @@ vriic - Version / Release / Industry Identifier Code (GS08)
 <maps>
   <version icvn="00401">
     <map vriic="004010X070" fic="HN">277U.4010.X070.xml</map>
-    <map vriic="004010X093" fic="HR">276.4010.X093.xml</map>
-    <map vriic="004010X093" fic="HN">277.4010.X093.xml</map>
-    <map vriic="004010X092" fic="HS">270.4010.X092.xml</map>
-    <map vriic="004010X092" fic="HB">271.4010.X092.xml</map>
-    <map vriic="004010X094" fic="HI" tspc="11">278.4010.X094.27.xml</map>
-    <map vriic="004010X094" fic="HI" tspc="13">278.4010.X094.xml</map>
-    <map vriic="004010X061" fic="RA">820.4010.X061.xml</map>
-    <map vriic="004010X095" fic="BE">834.4010.X095.xml</map>
-    <map vriic="004010X091" fic="HP">835.4010.X091.xml</map>
-    <map vriic="004010X096" fic="HC">837.4010.X096.xml</map>
-    <map vriic="004010X097" fic="HC">837.4010.X097.xml</map>
-    <map vriic="004010X098" fic="HC">837.4010.X098.xml</map>
     <map vriic="004010X093A1" fic="HR">276.4010.X093.A1.xml</map>
     <map vriic="004010X093A1" fic="HN">277.4010.X093.A1.xml</map>
     <map vriic="004010X092A1" fic="HS">270.4010.X092.A1.xml</map>
