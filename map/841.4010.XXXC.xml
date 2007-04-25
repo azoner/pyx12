@@ -272,7 +272,7 @@
             <name>Code List</name>
             <usage>R</usage>
             <pos>010</pos>
-            <count>&gt;1</count>
+            <repeat>&gt;1</repeat>
             <segment xid="SPI">
               <name>Code List</name>
               <usage>R</usage>
@@ -476,7 +476,7 @@
               <name>Code List Source</name>
               <usage>R</usage>
               <pos>010</pos>
-              <count>&gt;1</count>
+              <repeat>&gt;1</repeat>
               <segment xid="N1">
                 <name>Code List Source</name>
                 <usage>S</usage>
@@ -540,7 +540,7 @@
             <name>Code List Header</name>
             <usage>R</usage>
             <pos>010</pos>
-            <count>&gt;1</count>
+            <repeat>&gt;1</repeat>
             <segment xid="HL">
               <name>Code List Header</name>
               <usage>R</usage>
@@ -582,7 +582,7 @@
               <name>Code List Value and Definition</name>
               <usage>R</usage>
               <pos>010</pos>
-              <count>&gt;1</count>
+              <repeat>&gt;1</repeat>
               <segment xid="SPI">
                 <name>Code List Value and Definition</name>
                 <usage>R</usage>
