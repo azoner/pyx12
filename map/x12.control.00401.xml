@@ -12,9 +12,9 @@
 
 #    $Id$
 -->
-<map>
-  <subcommittee>X12N</subcommittee>
-  <version>00401</version>
+<transaction>
+  <id>X12</id>
+  <name>X12 Control</name>
   <loop xid="ISA_LOOP" type="explicit">
     <name>Interchange Control Header</name>
     <usage>R</usage>
@@ -25,6 +25,7 @@
       <end_tag>IEA</end_tag>
       <usage>R</usage>
       <pos>010</pos>
+      <max_use>1</max_use>
       <element xid="ISA01">
         <data_ele>I01</data_ele>
         <name>Authorization Information Qualifier</name>
@@ -108,14 +109,12 @@
         <name>Interchange Date</name>
         <usage>R</usage>
         <seq>09</seq>
-        <format>D6</format>
       </element>
       <element xid="ISA10">
         <data_ele>I09</data_ele>
         <name>Interchange Time</name>
         <usage>R</usage>
         <seq>10</seq>
-        <format>TM</format>
       </element>
       <element xid="ISA11">
         <data_ele>I10</data_ele>
@@ -179,6 +178,7 @@
         <end_tag>GE</end_tag>
         <usage>R</usage>
         <pos>010</pos>
+        <max_use>1</max_use>
         <element xid="GS01">
           <data_ele>479</data_ele>
           <name>Functional Identifier Code</name>
@@ -214,7 +214,6 @@
           <name>Date</name>
           <usage>R</usage>
           <seq>04</seq>
-          <format>D8</format>
         </element>
         <element xid="GS05">
           <data_ele>337</data_ele>
@@ -271,6 +270,7 @@
         <name>Functional Group Trailer</name>
         <usage>R</usage>
         <pos>030</pos>
+        <max_use>1</max_use>
         <element xid="GE01">
           <data_ele>97</data_ele>
           <name>Number of Transaction Sets Included</name>
@@ -291,6 +291,7 @@
       <name>Interchange Acknowledgement</name>
       <usage>S</usage>
       <pos>020</pos>
+      <max_use>1</max_use>
       <element xid="TA101">
         <data_ele>I12</data_ele>
         <name>Interchange Control Number</name>
@@ -366,6 +367,7 @@
       <name>Interchange Control Trailer</name>
       <usage>R</usage>
       <pos>030</pos>
+      <max_use>1</max_use>
       <element xid="IEA01">
         <data_ele>I16</data_ele>
         <name>Number of Included Functional Groups</name>
@@ -382,4 +384,4 @@
 <!--End of IEA segment-->
   </loop>
 <!--End of ISA loop-->
-</map>
+</transaction>

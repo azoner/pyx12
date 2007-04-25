@@ -108,8 +108,7 @@
         <name>Interchange Date</name>
         <usage>R</usage>
         <seq>09</seq>
-        <valid_codes>
-      </valid_codes>
+        <valid_codes/>
       </element>
       <element xid="ISA10">
         <data_ele>I09</data_ele>
