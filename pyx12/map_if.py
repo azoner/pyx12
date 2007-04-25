@@ -15,6 +15,7 @@ Interface to a X12N IG Map
 """
 import cPickle
 import libxml2
+import libxslt
 import logging
 import os.path
 #import pdb
@@ -169,8 +170,9 @@ class map_if(x12_node):
     """
     Map file interface
     """
-    def __init__(self, map_file, param):
+    def __init__(self, reader, param):
         """
+        @param reader: libxml2 TextReader
         @param param: map of parameters
         """
         #codes = codes.ExternalCodes()
@@ -193,17 +195,18 @@ class map_if(x12_node):
 
         self.cur_iter_node = self
 
+        self.reader = reader
         self.param = param
         #global codes
         self.ext_codes = codes.ExternalCodes(param.get('map_path'), \
             param.get('exclude_external_codes'))
         self.data_elements = dataele.DataElements(param.get('map_path'))
-        try:
-            map_path = param.get('map_path')
-            self.reader = libxml2.newTextReaderFilename(os.path.join(map_path, \
-                map_file))
-        except:
-            raise errors.GSError, 'Map file not found: %s' % (map_file)
+        #try:
+        #    map_path = param.get('map_path')
+        #    self.reader = libxml2.newTextReaderFilename(os.path.join(map_path, \
+        #        map_file))
+        #except:
+        #    raise errors.GSError, 'Map file not found: %s' % (map_file)
         try:    
             ret = self.reader.Read()
             if ret == -1:
@@ -223,7 +226,9 @@ class map_if(x12_node):
                     if cur_name == 'transaction':
                         self.base_level = self.reader.Depth()
                         self.base_name = 'transaction'
-                        pass
+                        while reader.MoveToNextAttribute():
+                            if reader.Name() == 'xid':
+                                self.id = reader.Value()
                     elif cur_name == 'segment':
                         seg_node = segment_if(self, self, index)
                         try:
@@ -269,9 +274,9 @@ class map_if(x12_node):
                 
                 elif tmpNodeType == NodeType['text'] and self.base_level + 2 == self.reader.Depth():
                     #print cur_name, self.reader.Value()
-                    if cur_name == 'id' and self.base_name == 'transaction':
-                        self.id = self.reader.Value()
-                    elif cur_name == 'name' and self.base_name == 'transaction':
+                    #if cur_name == 'id' and self.base_name == 'transaction':
+                    #    self.id = self.reader.Value()
+                    if cur_name == 'name' and self.base_name == 'transaction':
                         self.name = self.reader.Value()
 
                 ret = self.reader.Read()
@@ -1594,16 +1599,8 @@ class composite_if(x12_node):
 class Pickle_Errors(Exception):
     """Class for map pickling errors."""
 
-def apply_xslt_to_map(map_file, xslt_file):
-    import libxslt
-    styledoc = libxml2.parseFile(xslt_file)
-    style = libxslt.parseStylesheetDoc(styledoc)
-    doc = libxml2.parseFile(map_file)
-    result = style.applyStylesheet(doc, None)
-    style.saveResultToFilename("new.xml", result, 0)
-    style.freeStylesheet()
-    doc.freeDoc()
-    result.freeDoc()
+class Create_Map_Errors(Exception):
+    """Class for map creation errors."""
 
 def apply_xslt_to_map_win():
     #from os import environ
@@ -1630,41 +1627,63 @@ def apply_xslt_to_map_win():
     proc.transform()
     return proc.output
 
+def cb(ctx, str):
+    sys.stdout.write('%s%s' % (ctx, str))
+
 def load_map_file(map_file, param, xslt_files = []):
     """
-    Loads the map by pickle if available
+    If any XSL transforms are given, apply them and create map_if
+    from transformed map.
+    Else, load the map by pickle if available
     @param map_file: absolute path for file
     @type map_file: string
     @rtype: pyx12.map_if
     """
     logger = logging.getLogger('pyx12.pickler')
     map_path = param.get('map_path')
-    pickle_path = param.get('pickle_path')
-    pickle_file = '%s.%s' % (os.path.splitext(os.path.join(pickle_path, \
-        map_file))[0], 'pkl')
     map_full = os.path.join(map_path, map_file)
-    try:
-        if os.stat(map_full)[ST_MTIME] < os.stat(pickle_file)[ST_MTIME]:
-            imap = cPickle.load(open(pickle_file))
-            if imap.cur_path != '/transaction' or len(imap.children) == 0 \
-                or imap.src_version != '$Revision$':
-                raise Pickle_Errors, "reload map"
-            logger.debug('Map %s loaded from pickle %s' % (map_full, pickle_file))
-        else:
-            raise Pickle_Errors, "reload map"
-    except:
+    schema_file = os.path.join(map_path, 'map.xsd')
+    imap = None
+    if xslt_files:
         try:
-            logger.debug('Create map from %s' % (map_full))
-            imap = map_if(map_file, param)
+            doc = libxml2.parseFile(map_full)
+            for xslt_file in xslt_files:
+                logger.debug('Apply transform to map %s' % (xslt_file))
+                styledoc = libxml2.parseFile(xslt_file)
+                style = libxslt.parseStylesheetDoc(styledoc)
+                doc = style.applyStylesheet(doc, None)
+                style.freeStylesheet()
+            xsdp = libxml2.schemaNewParserCtxt(schema_file)
+            xsds = xsdp.schemaParse()
+            ctx = xsds.schemaNewValidCtxt()
+            libxml2.registerErrorHandler(cb, ctx)
+            if doc.schemaValidateDoc(ctx) != 0:
+                raise Create_Map_Errors, 'Transformed map does not validate agains the schema %s' % (schema_file)
+            reader = doc.readerWalker()
+            imap = map_if(reader, param)
+            doc.freeDoc()
         except:
-            raise errors.EngineError, 'Load of map file failed: %s%s' % \
-                (param.get('map_path'), map_file)
-        #try:
-        #    cPickle.dump(map, open(pickle_file,'w'))
-        #except:
-        #    logger.debug('Pickle of map %s failed' % (map_file))
-            #os.remove(pickle_file)
-            #raise
+            raise Create_Map_Errors, 'Error creating map: %s' % (map_file)
+    else:
+        pickle_path = param.get('pickle_path')
+        pickle_file = '%s.%s' % (os.path.splitext(os.path.join(pickle_path, \
+            map_file))[0], 'pkl')
+        try:
+            if os.stat(map_full)[ST_MTIME] < os.stat(pickle_file)[ST_MTIME]:
+                imap = cPickle.load(open(pickle_file))
+                if imap.cur_path != '/transaction' or len(imap.children) == 0 \
+                    or imap.src_version != '$Revision$':
+                    raise Pickle_Errors, "reload map"
+                logger.debug('Map %s loaded from pickle %s' % (map_full, pickle_file))
+            else:
+                raise Pickle_Errors, "reload map"
+        except:
+            try:
+                logger.debug('Create map from %s' % (map_full))
+                reader = libxml2.newTextReaderFilename(map_full)
+                imap = map_if(reader, param)
+            except:
+                raise errors.EngineError, 'Load of map file failed: %s' % (map_full)
     return imap
 
 def is_syntax_valid(seg_data, syn):

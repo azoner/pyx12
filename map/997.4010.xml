@@ -12,8 +12,7 @@
 
 #    $Id$
 -->
-<transaction>
-  <id>997</id>
+<transaction xid="997">
   <name>HIPAA Functional Acknowledgment 997</name>
   <loop xid="ISA_LOOP" type="explicit">
     <name>Interchange Control Header</name>

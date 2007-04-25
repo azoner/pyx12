@@ -12,8 +12,7 @@
 
 #    $Id$
 -->
-<transaction>
-  <id>X12</id>
+<transaction xid="X12">
   <name>X12 Control</name>
   <loop xid="ISA_LOOP" type="explicit">
     <name>Interchange Control Header</name>

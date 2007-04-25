@@ -26,22 +26,22 @@
 
   <xsd:complexType name="transactionType">
     <xsd:sequence>
-      <xsd:element name="id" type="xsd:normalizedString"/>
-      <xsd:element name="name" type="xsd:normalizedString"/>
+      <xsd:element name="name" type="xsd:token"/>
       <xsd:element name="loop" type="LoopType" />
     </xsd:sequence>
+    <xsd:attribute name="xid" type="xsd:token"/>
   </xsd:complexType>
 
   <xsd:complexType name="LoopType">
     <xsd:sequence>
-      <xsd:element name="name" type="xsd:normalizedString"/>
-      <xsd:element name="usage" type="xsd:normalizedString"/>
+      <xsd:element name="name" type="xsd:token"/>
+      <xsd:element name="usage" type="xsd:token"/>
       <xsd:element name="pos" type="xsd:nonNegativeInteger"/>
-      <xsd:element name="repeat" type="xsd:normalizedString"/>
+      <xsd:element name="repeat" type="xsd:token"/>
       <xsd:group ref="LoopChildGroupType" minOccurs="0" maxOccurs="unbounded"/>
     </xsd:sequence>
-    <xsd:attribute name="xid" type="xsd:normalizedString"/>
-    <xsd:attribute name="type" type="xsd:normalizedString"/>
+    <xsd:attribute name="xid" type="xsd:token"/>
+    <xsd:attribute name="type" type="xsd:token"/>
   </xsd:complexType>
   
   <xsd:group id="LoopChildGroupType" name="LoopChildGroupType">
@@ -60,49 +60,49 @@
 
   <xsd:complexType name="SegmentType">
     <xsd:sequence>
-      <xsd:element name="name" type="xsd:normalizedString"/>
-      <xsd:element name="end_tag" type="xsd:normalizedString" minOccurs="0"/>
-      <xsd:element name="usage" type="xsd:normalizedString"/>
+      <xsd:element name="name" type="xsd:token"/>
+      <xsd:element name="end_tag" type="xsd:token" minOccurs="0"/>
+      <xsd:element name="usage" type="xsd:token"/>
       <xsd:element name="pos" type="xsd:nonNegativeInteger"/>
-      <xsd:element name="max_use" type="xsd:normalizedString"/>
-      <xsd:element name="syntax" type="xsd:normalizedString" minOccurs="0" maxOccurs="unbounded"/>
+      <xsd:element name="max_use" type="xsd:token"/>
+      <xsd:element name="syntax" type="xsd:token" minOccurs="0" maxOccurs="unbounded"/>
       <xsd:group ref="SegmentChildGroupType" minOccurs="0" maxOccurs="unbounded"/>
     </xsd:sequence>
-    <xsd:attribute name="xid" type="xsd:normalizedString"/>
+    <xsd:attribute name="xid" type="xsd:token"/>
   </xsd:complexType>
 
   <xsd:complexType name="CompositeType">
     <xsd:sequence>
-      <xsd:element name="data_ele" type="xsd:normalizedString"/>
-      <xsd:element name="name" type="xsd:normalizedString"/>
-      <xsd:element name="usage" type="xsd:normalizedString"/>
+      <xsd:element name="data_ele" type="xsd:token"/>
+      <xsd:element name="name" type="xsd:token"/>
+      <xsd:element name="usage" type="xsd:token"/>
       <xsd:element name="seq" type="xsd:nonNegativeInteger"/>
-      <xsd:element name="refdes" type="xsd:normalizedString" minOccurs="0"/>
+      <xsd:element name="refdes" type="xsd:token" minOccurs="0"/>
       <xsd:element name="element" type="ElementType" minOccurs="0" maxOccurs="unbounded"/>
     </xsd:sequence>
   </xsd:complexType>
 
   <xsd:complexType name="ElementType">
     <xsd:sequence>
-      <xsd:element name="data_ele" type="xsd:normalizedString"/>
-      <xsd:element name="name" type="xsd:normalizedString"/>
+      <xsd:element name="data_ele" type="xsd:token"/>
+      <xsd:element name="name" type="xsd:token"/>
       <xsd:element name="usage" type="usageType"/> <!-- IG usage, -->
       <xsd:element name="seq" type="xsd:nonNegativeInteger"/>
-      <xsd:element name="refdes" type="xsd:normalizedString" minOccurs="0"/>
+      <xsd:element name="refdes" type="xsd:token" minOccurs="0"/>
       <xsd:element name="valid_codes" minOccurs="0">
         <xsd:complexType>
           <xsd:sequence>
-            <xsd:element name="code" type="xsd:normalizedString" minOccurs="0" maxOccurs="unbounded"/>
+            <xsd:element name="code" type="xsd:token" minOccurs="0" maxOccurs="unbounded"/>
           </xsd:sequence>
-          <xsd:attribute name="external" type="xsd:normalizedString"/>
+          <xsd:attribute name="external" type="xsd:token"/>
         </xsd:complexType>
       </xsd:element>
     </xsd:sequence>
-    <xsd:attribute name="xid" type="xsd:normalizedString"/>
+    <xsd:attribute name="xid" type="xsd:token"/>
   </xsd:complexType>
   
   <xsd:simpleType name="formatType">
-    <xsd:restriction base="xsd:normalizedString">
+    <xsd:restriction base="xsd:token">
       <xsd:enumeration value="D8"/> <!-- Date CCYYMMDD -->
       <xsd:enumeration value="D6"/> <!-- Date YYMMDD -->
       <xsd:enumeration value="RD8"/> <!-- Date Range CCYYMMDD-CCYYMMDD -->
@@ -111,7 +111,7 @@
   </xsd:simpleType>
   
   <xsd:simpleType name="usageType">
-    <xsd:restriction base="xsd:normalizedString">
+    <xsd:restriction base="xsd:token">
       <xsd:enumeration value="R"/> <!-- Required -->
       <xsd:enumeration value="S"/> <!-- Situational -->
       <xsd:enumeration value="N"/> <!-- Not Used -->
@@ -119,7 +119,7 @@
   </xsd:simpleType>
   
   <xsd:simpleType name="dataType">
-    <xsd:restriction base="xsd:normalizedString">
+    <xsd:restriction base="xsd:token">
       <xsd:enumeration value="N"/>
       <xsd:enumeration value="N0"/>
       <xsd:enumeration value="N1"/>

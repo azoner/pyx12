@@ -68,7 +68,7 @@ def x12n_document(param, src_file, fd_997, fd_html, fd_xmldoc=None):
 
     #Get Map of Control Segments
     map_file = 'x12.control.00401.xml'
-    control_map = map_if.map_if(os.path.join(map_path, map_file), param)
+    control_map = map_if.load_map_file(os.path.join(map_path, map_file), param)
     map_index_if = map_index.map_index(os.path.join(map_path, 'maps.xml'))
     node = control_map.getnodebypath('/ISA_LOOP/ISA')
     walker = walk_tree()

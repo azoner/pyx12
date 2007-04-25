@@ -1,3 +1,11 @@
+Map schema - validate, cleanup maps
+
+Remove deprecated maps
+
+Restructure subversion tree
+
+RELEASE 1.3.0
+
 Date validation - Dates prior to 1/1/1800 are considered invalid
 
 Improve 997 generation - better ISA, GS, and ST loop handling

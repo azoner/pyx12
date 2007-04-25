@@ -25,15 +25,11 @@ class GetFilename(unittest.TestCase):
         self.idx = pyx12.map_index.map_index(os.path.join(map_path, 'maps.xml'))
 
     def test_get_837p(self):
-        self.assertEqual(self.idx.get_filename('00401', '004010X098', 'HC'), '837.4010.X098.xml')
         self.assertEqual(self.idx.get_filename('00401', '004010X098A1', 'HC'), '837.4010.X098.A1.xml')
 
     def test_get_278_initial(self):
-        self.assertEqual(self.idx.get_filename('00401', '004010X094', 'HI'), '278.4010.X094.27.xml')
         self.assertEqual(self.idx.get_filename('00401', '004010X094A1', 'HI'), '278.4010.X094.27.A1.xml')
         
     def test_get_278(self):
-        self.assertEqual(self.idx.get_filename('00401', '004010X094', 'HI', '11'), '278.4010.X094.27.xml')
-        self.assertEqual(self.idx.get_filename('00401', '004010X094', 'HI', '13'), '278.4010.X094.xml')
         self.assertEqual(self.idx.get_filename('00401', '004010X094A1', 'HI', '11'), '278.4010.X094.27.A1.xml')
         self.assertEqual(self.idx.get_filename('00401', '004010X094A1', 'HI', '13'), '278.4010.X094.A1.xml')

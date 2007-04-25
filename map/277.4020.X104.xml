@@ -8,8 +8,7 @@
 
     All rights reserved.
 -->
-<transaction>
-  <id>277</id>
+<transaction xid="277">
   <name>HIPAA Health Care Claim Request for Additional Information X104-277</name>
   <loop xid="ISA" type="explicit">
     <name>Interchange Control Header</name>

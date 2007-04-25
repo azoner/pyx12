@@ -477,7 +477,7 @@ class CompositeRequirement(unittest.TestCase):
 
     def test_comp_S_sub_R_ok3(self):
         self.errh.err_cde = None
-        map = pyx12.map_if.load_map_file('837.4010.X096.xml', self.param)
+        map = pyx12.map_if.load_map_file('837.4010.X096.A1.xml', self.param)
         node = map.getnodebypath('/ISA_LOOP/GS_LOOP/ST_LOOP/DETAIL/2000A/2000B/2300/2400/SV2')
         node = node.get_child_node_by_idx(1) #SV202
         self.assertNotEqual(node, None)
@@ -594,4 +594,26 @@ class ElementRequirement(unittest.TestCase):
         result = node.is_valid(ele_data, self.errh)
         self.failUnless(result)
         self.assertEqual(self.errh.err_cde, None)
+
+
+class MapTransform(unittest.TestCase):
+    """
+    Alter a map using XSL transforms
+    """
+    def setUp(self):
+        global map_path
+        param = pyx12.params.params('pyx12.conf.xml')
+        if map_path:
+            param.set('map_path', map_path)
+            param.set('pickle_path', map_path)
+        self.map = pyx12.map_if.load_map_file('835.4010.X091.A1.xml', param)
+        self.errh = pyx12.error_handler.errh_null()
+
+    def test_alter_usage(self):
+        self.errh.err_cde = None
+        node = self.map.getnodebypath('/ISA_LOOP/GS_LOOP/ST_LOOP/HEADER/REF')
+        self.assertNotEqual(node, None)
+        self.assertEqual(node.id, 'REF')
+        self.assertEqual(node.get_path(), '/ISA_LOOP/GS_LOOP/ST_LOOP/HEADER/REF')
+        self.assertEqual(node.base_name, 'segment')
 

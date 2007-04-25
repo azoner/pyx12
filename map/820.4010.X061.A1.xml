@@ -12,8 +12,7 @@
 
 #    $Id$
 -->
-<transaction>
-  <id>820</id>
+<transaction xid="820">
   <name>HIPAA Payment Deducted and Other Group Premium Payment for Insurance Products X061A1-820</name>
   <loop xid="ISA_LOOP" type="explicit">
     <name>Interchange Control Header</name>
