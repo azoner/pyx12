@@ -29,19 +29,19 @@
       <xsd:element name="name" type="xsd:token"/>
       <xsd:element name="loop" type="LoopType" />
     </xsd:sequence>
-    <xsd:attribute name="xid" type="xsd:token"/>
+    <xsd:attribute name="xid" type="xsd:NMTOKEN"/>
   </xsd:complexType>
 
   <xsd:complexType name="LoopType">
     <xsd:sequence>
       <xsd:element name="name" type="xsd:token"/>
-      <xsd:element name="usage" type="xsd:token"/>
+      <xsd:element name="usage" type="usageType"/>
       <xsd:element name="pos" type="xsd:nonNegativeInteger"/>
       <xsd:element name="repeat" type="xsd:token"/>
       <xsd:group ref="LoopChildGroupType" minOccurs="0" maxOccurs="unbounded"/>
     </xsd:sequence>
-    <xsd:attribute name="xid" type="xsd:token"/>
-    <xsd:attribute name="type" type="xsd:token"/>
+    <xsd:attribute name="xid" type="xsd:NMTOKEN"/>
+    <xsd:attribute name="type" type="xsd:NMTOKEN"/>
   </xsd:complexType>
   
   <xsd:group id="LoopChildGroupType" name="LoopChildGroupType">
@@ -62,20 +62,20 @@
     <xsd:sequence>
       <xsd:element name="name" type="xsd:token"/>
       <xsd:element name="end_tag" type="xsd:token" minOccurs="0"/>
-      <xsd:element name="usage" type="xsd:token"/>
+      <xsd:element name="usage" type="usageType"/>
       <xsd:element name="pos" type="xsd:nonNegativeInteger"/>
       <xsd:element name="max_use" type="xsd:token"/>
-      <xsd:element name="syntax" type="xsd:token" minOccurs="0" maxOccurs="unbounded"/>
+      <xsd:element name="syntax" type="syntaxType" minOccurs="0" maxOccurs="unbounded"/>
       <xsd:group ref="SegmentChildGroupType" minOccurs="0" maxOccurs="unbounded"/>
     </xsd:sequence>
-    <xsd:attribute name="xid" type="xsd:token"/>
+    <xsd:attribute name="xid" type="xsd:NMTOKEN"/>
   </xsd:complexType>
 
   <xsd:complexType name="CompositeType">
     <xsd:sequence>
       <xsd:element name="data_ele" type="xsd:token"/>
       <xsd:element name="name" type="xsd:token"/>
-      <xsd:element name="usage" type="xsd:token"/>
+      <xsd:element name="usage" type="usageType"/>
       <xsd:element name="seq" type="xsd:nonNegativeInteger"/>
       <xsd:element name="refdes" type="xsd:token" minOccurs="0"/>
       <xsd:element name="element" type="ElementType" minOccurs="0" maxOccurs="unbounded"/>
@@ -94,11 +94,11 @@
           <xsd:sequence>
             <xsd:element name="code" type="xsd:token" minOccurs="0" maxOccurs="unbounded"/>
           </xsd:sequence>
-          <xsd:attribute name="external" type="xsd:token"/>
+          <xsd:attribute name="external" type="xsd:NMTOKEN"/>
         </xsd:complexType>
       </xsd:element>
     </xsd:sequence>
-    <xsd:attribute name="xid" type="xsd:token"/>
+    <xsd:attribute name="xid" type="xsd:NMTOKEN"/>
   </xsd:complexType>
   
   <xsd:simpleType name="formatType">
@@ -118,6 +118,13 @@
     </xsd:restriction>
   </xsd:simpleType>
   
+  <xsd:simpleType name="syntaxType">
+    <xsd:restriction base="xsd:token">
+      <xsd:pattern value='(E|L|P|C|R)([0-9]{2}){2,20}'/>
+    </xsd:restriction>
+  </xsd:simpleType>
+
+  <!-- No longer defined here 
   <xsd:simpleType name="dataType">
     <xsd:restriction base="xsd:token">
       <xsd:enumeration value="N"/>
@@ -139,5 +146,6 @@
       <xsd:enumeration value="B"/>
     </xsd:restriction>
   </xsd:simpleType>
+-->
 
 </xsd:schema>

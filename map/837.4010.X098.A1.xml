@@ -9894,7 +9894,6 @@
                     <syntax>C0604</syntax>
                     <syntax>L07030506</syntax>
                     <syntax>E0803</syntax>
-                    <syntax/>
                     <element xid="MEA01">
                       <data_ele>737</data_ele>
                       <name>Measurement Reference Identification Code</name>
@@ -17303,7 +17302,6 @@
                       <syntax>L171819</syntax>
                       <syntax>C1817</syntax>
                       <syntax>C1917</syntax>
-                      <syntax/>
                       <element xid="CAS01">
                         <data_ele>1033</data_ele>
                         <name>Claim Adjustment Group Code</name>

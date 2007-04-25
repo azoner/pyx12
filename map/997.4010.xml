@@ -350,7 +350,7 @@
               </element>
             </segment>
 <!--End of AK2 segment-->
-            <loop xid="AK2/AK3">
+            <loop xid="AK3">
               <name>Data Segment Note</name>
               <usage>S</usage>
               <pos>040</pos>
