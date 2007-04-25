@@ -1,0 +1,9 @@
+element params { 
+  attribute version { text },
+  element param { 
+    attribute name { text },
+    element type { text }?,
+    element value { text },
+    element comment { text }
+  }
+}

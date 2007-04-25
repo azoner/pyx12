@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+######################################################################
+# Copyright (c) 2001-2005 Kalamazoo Community Mental Health Services,
+#   John Holland <jholland@kazoocmh.org> <john@zoner.org>
+# All rights reserved.
+#
+# This software is licensed as described in the file LICENSE.txt, which
+# you should have received as part of this distribution.
+#
+######################################################################
+
+#    $Id$
+-->
+
+<!-- pyx12 configuration file
+This file can be copied to the system-wide configuration directory
+(/usr/local/etc), to a user's home directory as ~/.pyx12.conf.xml,
+or can be passed on the command line using the -c option
+-->
+
+<params version="1.0">
+    <param name="map_path">
+        <value>/usr/local/share/pyx12/map</value>
+        <comment>Where to find the xml maps</comment>
+    </param>
+    <param name="pickle_path">
+        <value>/usr/local/share/pyx12/map</value>
+        <comment>Where to find the serialized versions of the xml maps, if compiled</comment>
+    </param>
+    <param name="exclude_external_codes">
+        <!--<value>states</value>-->
+        <value></value>
+        <comment>Comma separated list of external_codes to exclude</comment>
+    </param>
+    <param name="ignore_syntax">
+        <type>boolean</type>
+        <value>False</value>
+        <comment>Ignore syntax validation</comment>
+    </param>
+    <param name="charset">
+        <value>E</value>
+        <comment>E = extended, B = Basic</comment>
+    </param>
+    <param name="ignore_codes">
+        <type>boolean</type>
+        <value>False</value>
+        <comment></comment>
+    </param>
+    <param name="ignore_ext_codes">
+        <type>boolean</type>
+        <value>False</value>
+        <comment></comment>
+    </param>
+    <param name="skip_html">
+        <type>boolean</type>
+        <value>False</value>
+        <comment></comment>
+    </param>
+    <param name="skip_997">
+        <type>boolean</type>
+        <value>False</value>
+        <comment></comment>
+    </param>
+    <param name="simple_dtd">
+        <value>http://www.kazoocmh.org/dtd/x12simple.dtd</value>
+        <comment></comment>
+    </param>
+    <!--
+    <param name="idtag_dtd">
+        <value>http://www.kazoocmh.org/dtd/x12idtag.dtd</value>
+        <comment></comment>
+    </param>
+    <param name="idtagqual_dtd">
+        <value>http://www.kazoocmh.org/dtd/x12idtagqual.dtd</value>
+        <comment></comment>
+    </param>
+    -->
+    <param name="xmlout">
+        <value>simple</value>
+        <comment>Style of XML output</comment>
+    </param>
+</params>
