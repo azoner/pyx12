@@ -31,6 +31,8 @@ def suite(args):
                 suite.addTest(unittest.makeSuite(ElementIsValidDate))
             elif arg == 'SegmentIsValid':
                 suite.addTest(unittest.makeSuite(SegmentIsValid))
+            elif arg == 'MapTransform':
+                suite.addTest(unittest.makeSuite(MapTransform))
     else:
         suite.addTest(unittest.makeSuite(GetNodeByPath))
         suite.addTest(unittest.makeSuite(TrailingSpaces))
@@ -39,6 +41,7 @@ def suite(args):
         suite.addTest(unittest.makeSuite(ElementIsValid))
         suite.addTest(unittest.makeSuite(ElementIsValidDate))
         suite.addTest(unittest.makeSuite(SegmentIsValid))
+        suite.addTest(unittest.makeSuite(MapTransform))
     return suite
                 
 #if __name__ == "__main__":

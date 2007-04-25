@@ -606,14 +606,27 @@ class MapTransform(unittest.TestCase):
         if map_path:
             param.set('map_path', map_path)
             param.set('pickle_path', map_path)
-        self.map = pyx12.map_if.load_map_file('835.4010.X091.A1.xml', param)
+        testfiledir = os.path.abspath('./files')
+        xslt_files = [os.path.join(testfiledir, '835_test.xsl')]
+        self.map = pyx12.map_if.load_map_file('835.4010.X091.A1.xml', param, xslt_files)
         self.errh = pyx12.error_handler.errh_null()
 
     def test_alter_usage(self):
         self.errh.err_cde = None
-        node = self.map.getnodebypath('/ISA_LOOP/GS_LOOP/ST_LOOP/HEADER/REF')
+        node = self.map.getnodebypath('/ISA_LOOP/GS_LOOP/ST_LOOP/HEADER/1000B')
         self.assertNotEqual(node, None)
-        self.assertEqual(node.id, 'REF')
-        self.assertEqual(node.get_path(), '/ISA_LOOP/GS_LOOP/ST_LOOP/HEADER/REF')
-        self.assertEqual(node.base_name, 'segment')
+        self.assertEqual(node.id, '1000B')
+        self.assertEqual(node.get_path(), '/ISA_LOOP/GS_LOOP/ST_LOOP/HEADER/1000B')
+        self.assertEqual(node.base_name, 'loop')
+        self.assertEqual(node.usage, 'S')
 
+    def test_add_valid_code(self):
+        self.errh.err_cde = None
+        node_str = '/ISA_LOOP/GS_LOOP/ST_LOOP/HEADER/BPR'
+        node = self.map.getnodebypath(node_str)
+        node = node.get_child_node_by_idx(0)
+        self.assertNotEqual(node, None)
+        self.assertEqual(node.id, 'BPR01')
+        self.assertEqual(node.get_path(), node_str+'/01')
+        self.assertEqual(node.base_name, 'element')
+        self.failUnless('Z' in node.valid_codes)

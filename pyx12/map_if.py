@@ -1637,6 +1637,8 @@ def load_map_file(map_file, param, xslt_files = []):
     Else, load the map by pickle if available
     @param map_file: absolute path for file
     @type map_file: string
+    @param xslt_files: list of absolute paths of xsl files
+    @type xslt_files: list[string]
     @rtype: pyx12.map_if
     """
     logger = logging.getLogger('pyx12.pickler')
