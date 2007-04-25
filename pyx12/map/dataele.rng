@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<grammar xmlns="http://relaxng.org/ns/structure/1.0">
+<start>
+<element name="data_elements" xmlns="http://relaxng.org/ns/structure/1.0">
+    <oneOrMore>
+        <element name="data_ele" datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes">
+            <attribute name="ele_num"><data type="token"><param name="maxLength">4</param></data></attribute>
+            <attribute name="data_type">
+                <choice>
+                    <value>AN</value>
+                    <value>B</value>
+                    <value>DT</value>
+                    <value>ID</value>
+                    <value>R</value>
+                    <value>TM</value>
+                    <value>N</value>
+                    <value>N0</value>
+                    <value>N1</value>
+                    <value>N2</value>
+                    <value>N3</value>
+                    <value>N4</value>
+                    <value>N5</value>
+                    <value>N6</value>
+                    <value>N7</value>
+                    <value>N8</value>
+                    <value>N9</value>
+                </choice>
+            </attribute>
+            <attribute name="min_len"><data type="unsignedShort"/></attribute>
+            <attribute name="max_len"><data type="unsignedShort"/></attribute>
+            <attribute name="name"><data type="token"/></attribute>
+        </element> 
+    </oneOrMore>
+</element>
+</start>
+
+</grammar>

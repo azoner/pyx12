@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<transaction>
+  <segment xid="TST">
+    <name>TEST</name>
+    <usage>R</usage>
+    <pos>020</pos>
+    <max_use>1</max_use>
+    <composite>
+      <data_ele>C111</data_ele>
+      <name>Place of Service Code</name>
+      <usage>S</usage>
+      <seq>05</seq>
+      <element>
+        <name>Facility Type Code</name>
+        <data_ele>98</data_ele>
+        <usage>S</usage>
+        <seq>01</seq>
+        <refdes>TST05-01</refdes>
+        <max_use>1</max_use>
+      </element>
+      <element>
+        <name>Facility Type Code</name>
+        <data_ele>1221</data_ele>
+        <usage>S</usage>
+        <seq>02</seq>
+        <refdes>TST05-02</refdes>
+        <max_use>1</max_use>
+      </element>
+      <element>
+        <name>Facility Type Code</name>
+        <data_ele>1221</data_ele>
+        <usage>S</usage>
+        <seq>03</seq>
+        <refdes>TST05-03</refdes>
+        <max_use>1</max_use>
+      </element>
+    </composite>
+  </segment>
+  <segment xid="UNU">
+    <name>Unused Segment</name>
+    <usage>N</usage>
+    <pos>030</pos>
+    <max_use>1</max_use>
+    <element>
+      <name>Element 1</name>
+      <data_ele>98</data_ele>
+      <usage>S</usage>
+      <seq>01</seq>
+      <refdes>UNU01</refdes>
+      <max_use>1</max_use>
+    </element>
+    <element>
+      <name>Element 2</name>
+      <data_ele>1221</data_ele>
+      <usage>S</usage>
+      <seq>02</seq>
+      <refdes>UNU02</refdes>
+      <max_use>1</max_use>
+    </element>
+    <element>
+      <name>Element 3</name>
+      <data_ele>1221</data_ele>
+      <usage>S</usage>
+      <seq>03</seq>
+      <refdes>UNU03</refdes>
+      <max_use>1</max_use>
+    </element>
+  </segment>
+</transaction>

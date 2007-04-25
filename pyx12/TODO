@@ -1,0 +1,46 @@
+xsd and rng for maps
+
+xslt map tranforms
+
+Data Element XSLT
+
+x12file:
+    check invalid seg term (004)
+    check invalid ele term (026)
+
+XML schema (relax) for idtag and idtagqual forms
+
+Add test for x12 > xml > x12 for all xml mappings
+
+xmlx12.py - handle idtag and idtagqual types
+
+Windows issues:
+  location of map files
+  location of config files
+  path to code file
+  use registry, not config files
+
+Wrap scripts in web services
+
+Unique path
+
+Path/property local overrides
+
+Filtering/cleanup???
+
+TA1 input
+
+LX index incrementing
+
+For large input files, split html output into parts
+
+Error Handling
+  Remove errh object from map_if, map_walker. Return errors as list
+
+Unit Testing
+  x12file - HL counting?
+  HL reset bug
+
+restructure maps.xml
+  mapfile element
+  map desc ???

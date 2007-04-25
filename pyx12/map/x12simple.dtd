@@ -1,0 +1,16 @@
+<!ELEMENT x12simple (loop)*>
+
+<!ELEMENT loop (loop | seg)*>
+<!ATTLIST loop id CDATA #REQUIRED>
+
+<!ELEMENT seg (ele | comp)*>
+<!ATTLIST seg id CDATA #REQUIRED>
+
+<!ELEMENT comp (subele)*>
+<!ATTLIST comp id CDATA #REQUIRED>
+
+<!ELEMENT ele (#PCDATA)>
+<!ATTLIST ele id CDATA #REQUIRED>
+
+<!ELEMENT subele (#PCDATA)>
+<!ATTLIST subele id CDATA #REQUIRED>

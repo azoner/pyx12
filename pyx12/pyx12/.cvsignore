@@ -1,0 +1,4 @@
+.sconsign
+*.os
+*.pyc
+*.pyo
