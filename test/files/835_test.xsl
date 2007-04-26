@@ -1,5 +1,11 @@
 <?xml version="1.0"?>
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
+<!--
+Stylesheet to alter pyx12 maps
+Should use a match pattern starting with /transaction[@xid='xxx']// to ensure
+the transform only modifies the intended map.
+Applying the transform to another map should be a no-op.
+-->
 
 <xsl:output method="xml" indent="yes"/>
 
@@ -10,20 +16,18 @@
     </xsl:copy>
   </xsl:template>
 
-  <!-- <xsl:template match="/transaction[@xid='835']/*/loop[@xid='1000B']/usage"> -->
   <!--
-  add valid code
   delete valid code
   alter valid code
   -->
 
   <!-- Alter usage -->
-  <xsl:template match="loop[@xid='1000B']/usage">
+  <xsl:template match="/transaction[@xid='835']//loop[@xid='1000B']/usage">
     <usage>S</usage>
   </xsl:template>
 
   <!-- Add a valid code-->
-  <xsl:template match="element[@xid='BPR01']/valid_codes">
+  <xsl:template match="/transaction[@xid='835']//element[@xid='BPR01']/valid_codes">
     <valid_codes>
       <xsl:apply-templates select="code"/>
       <code>Z</code>

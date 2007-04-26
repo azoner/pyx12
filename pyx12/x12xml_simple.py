@@ -31,9 +31,10 @@ class x12xml_simple(x12xml):
     def __init__(self, fd, dtd_urn):
         x12xml.__init__(self)
         self.writer = XMLWriter(fd)
-        self.writer.doctype(
-            u"x12simple", u"-//J Holland//DTD XML X12 Document Conversion1.0//EN//XML",
-            u"%s" % (dtd_urn))
+        if dtd_urn:
+            self.writer.doctype(
+                u"x12simple", u"-//J Holland//DTD XML X12 Document Conversion1.0//EN//XML",
+                u"%s" % (dtd_urn))
         self.writer.push(u"x12simple")
         self.path = '/'
 

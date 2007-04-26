@@ -49,6 +49,7 @@ def usage():
     sys.stderr.write('  -P         Profile script\n')
     sys.stderr.write('  -q         Quiet output\n')
     sys.stderr.write('  -s <b|e>   Specify X12 character set: b=basic, e=extended\n')
+    sys.stderr.write('  -t <file>  XSL Transform, applied to the map.  May be used multiple times.\n')
     sys.stderr.write('  -v         Verbose output\n')
     sys.stderr.write('  -x <tag>   Exclude external code\n')
     
@@ -58,7 +59,7 @@ def main():
     """
     import getopt
     try:
-        opts, args = getopt.getopt(sys.argv[1:], 'c:dfl:m:p:qs:vx:HP')
+        opts, args = getopt.getopt(sys.argv[1:], 'c:dfl:m:p:qs:t:vx:HP')
     except getopt.error, msg:
         usage()
         return False
@@ -79,6 +80,7 @@ def main():
     profile = False
     debug = False
     configfile = None
+    xslt_files = []
     for opt, val in opts:
         if opt == '-c':
             configfile = val
@@ -89,6 +91,11 @@ def main():
     else:
         param = pyx12.params.params('/usr/local/etc/pyx12.conf.xml', \
             os.path.expanduser('~/.pyx12.conf.xml'))
+    for xslt_file in param.get('xslt_files'):
+        if os.path.isfile(xslt_file):
+            xslt_files.append(xslt_file)
+        else:
+            logger.debug("XSL Transform '%s' not found" % (xslt_file))
 
     for opt, val in opts:
         if opt == '-v': logger.setLevel(logging.DEBUG)
@@ -103,6 +110,11 @@ def main():
         if opt == '-p': param.set('pickle_path', val)
         if opt == '-P': profile = True
         if opt == '-s': param.set('charset', val)
+        if opt == '-t': 
+            if os.path.isfile(val):
+                xslt_files.append(val)
+            else:
+                logger.debug("XSL Transform '%s' not found" % (val))
         if opt == '-H': flag_html = True
         if opt == '-l':
             try:
@@ -140,10 +152,11 @@ def main():
 
             if profile:
                 import profile
-                profile.run('pyx12.x12n_document.x12n_document(param, src_filename, fd_997, fd_html)', 
+                profile.run('pyx12.x12n_document.x12n_document(param, src_filename, fd_997, fd_html, None, xslt_files)', 
                     'pyx12.prof')
             else:
-                if pyx12.x12n_document.x12n_document(param, src_filename, fd_997, fd_html):
+                if pyx12.x12n_document.x12n_document(param=param, src_file=src_filename, 
+                        fd_997=fd_997, fd_html=fd_html, fd_xmldoc=None, xslt_files=xslt_files):
                     sys.stderr.write('%s: OK\n' % (src_filename))
                 else:
                     sys.stderr.write('%s: Failure\n' % (src_filename))

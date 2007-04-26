@@ -50,6 +50,7 @@ class ParamsBase(object):
         #self.params['idtag_dtd'] = 'http://www.kazoocmh.org/x12idtag.dtd'
         self.params['xmlout'] = 'simple'
         #self.params['xmlout'] = 'idtag'
+        self.params['xslt_files'] = []
         
     def get(self, option):
         """

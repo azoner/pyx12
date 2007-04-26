@@ -62,4 +62,8 @@ or can be passed on the command line using the -c option
         <value>False</value>
         <comment></comment>
     </param>
+    <param name="simple_dtd">
+        <value></value>
+        <comment></comment>
+    </param>
 </params>

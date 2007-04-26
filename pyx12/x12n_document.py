@@ -37,7 +37,9 @@ import x12xml_idtag
 import x12xml_idtagqual
 #from params import params
 
-def x12n_document(param, src_file, fd_997, fd_html, fd_xmldoc=None):
+def x12n_document(param, src_file, fd_997, fd_html, 
+        fd_xmldoc=None,
+        xslt_files = []):
     """
     Primary X12 validation function
     @param param: pyx12.param instance
@@ -136,7 +138,7 @@ def x12n_document(param, src_file, fd_997, fd_html, fd_xmldoc=None):
                     if map_file is None:
                         raise pyx12.errors.EngineError, "Map not found.  icvn=%s, fic=%s, vriic=%s" % \
                             (icvn, fic, vriic)
-                    cur_map = map_if.load_map_file(map_file, param)
+                    cur_map = map_if.load_map_file(map_file, param, xslt_files)
                     logger.debug('Map file: %s' % (map_file))
                     for (path, ct) in ct_list:
                         cur_map.getnodebypath(path).set_cur_count(ct)
@@ -162,7 +164,7 @@ def x12n_document(param, src_file, fd_997, fd_html, fd_xmldoc=None):
                         if map_file is None:
                             raise pyx12.errors.EngineError, "Map not found.  icvn=%s, fic=%s, vriic=%s, tspc=%s" % \
                                 (icvn, fic, vriic, tspc)
-                        cur_map = map_if.load_map_file(map_file, param)
+                        cur_map = map_if.load_map_file(map_file, param, xslt_files)
                         logger.debug('Map file: %s' % (map_file))
                         for (path, ct) in ct_list:
                             cur_map.getnodebypath(path).set_cur_count(ct)

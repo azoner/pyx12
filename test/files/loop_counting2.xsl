@@ -10,8 +10,8 @@
     </xsl:copy>
   </xsl:template>
 
-  <xsl:template match="/transaction[@xid='837']//loop[@xid='2000C']/usage">
-    <usage>N</usage>
+  <xsl:template match="/transaction[@xid='837']//loop[@xid='2400']/repeat">
+    <repeat>60</repeat>
   </xsl:template>
 
 </xsl:stylesheet>

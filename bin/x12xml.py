@@ -55,6 +55,7 @@ def usage():
     sys.stderr.write('  -p <path>  Path to to pickle files\n')
     sys.stderr.write('  -q         Quiet output\n')
     sys.stderr.write('  -s <b|e>   Specify X12 character set: b=basic, e=extended\n')
+    sys.stderr.write('  -t <file>  XSL Transform, applied to the map.  May be used multiple times.\n')
     sys.stderr.write('  -v         Verbose output\n')
     sys.stderr.write('  -x <tag>   Exclude external code\n')
     sys.stderr.write('  -X <simple|idtag|idtagqual>   XML output format\n')
@@ -82,6 +83,7 @@ def main():
     logger.setLevel(logging.INFO)
     target_xml = None
     configfile = None
+    xslt_files = []
     for o, a in opts:
         if o == '-c':
             configfile = a
@@ -92,6 +94,12 @@ def main():
     else:
         param = pyx12.params.params('/usr/local/etc/pyx12.conf.xml',\
             os.path.expanduser('~/.pyx12.conf.xml'))
+
+    for xslt_file in param.get('xslt_files'):
+        if os.path.isfile(xslt_file):
+            xslt_files.append(xslt_file)
+        else:
+            logger.debug("XSL Transform '%s' not found" % (xslt_file))
 
     #param.set('map_path', os.path.expanduser('~/src/pyx12/map/'))
     debug = False
@@ -117,6 +125,11 @@ def main():
         if o == '-o': target_xml = a
         if o == '-p': param.set('pickle_path', a)
         if o == '-s': param.set('charset', a)
+        if o == '-t':
+            if os.path.isfile(a):
+                xslt_files.append(a)
+            else:
+                logger.debug("XSL Transform '%s' not found" % (a))
         if o == '-l':
             try:
                 hdlr = logging.FileHandler(a)
@@ -149,7 +162,8 @@ def main():
         fd_xml = sys.stdout
 
     try:
-        result = pyx12.x12n_document.x12n_document(param, src_filename, None, None, fd_xml)
+        result = pyx12.x12n_document.x12n_document(param=param, src_file=src_filename,
+            fd_997=None, fd_html=None, fd_xmldoc=fd_xml, xslt_files=xslt_files)
         fd_xml.close()
         if not result:
             logger.error('File %s had errors.' % (src_filename))
@@ -163,10 +177,4 @@ def main():
 
 #profile.run('x12n_document(src_filename)', 'pyx12.prof')
 if __name__ == '__main__':
-    try:
-        import psyco
-        #psyco.full()
-    except ImportError:
-        pass
-
     sys.exit(not main())

@@ -1,15 +1,15 @@
 .\" Process this file with
-.\" groff -man -Tascii x12xml.1
+.\" groff -man -Tascii x12html.1
 .\"
-.TH X12XML 1 "APRIL 2007" pyx12 "pyx12 User Manuals"
+.TH x12html 1 "APRIL 2007" pyx12 "pyx12 User Manuals"
 .SH NAME
-x12xml \- Convert a HIPAA X12 document to XML
+x12html \- Create an annnotated HTML representation of a HIPAA X12 document
 .SH SYNOPSIS
-.B x12xml [options]
+.B x12html [options]
 .I files
 .B ...
 .SH DESCRIPTION
-Convert a valid X12 document to one of several XML representations. 
+Create an annnotated HTML representation of a HIPAA X12 document.
 .SH OPTIONS
 .IP -c <file>
 XML configuration file
@@ -21,10 +21,10 @@ Force map load.  Do not use the map pickle file.
 Output messages to log file
 .IP -m <path>
 Path to map files
-.IP -o <XML file>
-Path to target XML file
 .IP -p <path>
 Path to pickle files
+.IP -P
+Run a profiler
 .IP -q
 Quiet output
 .IP -s <b|e>
@@ -37,8 +37,6 @@ must validate against the XML Schema 'map.xsd'.
 Verbose output
 .IP -x <tag>
 Exclude external code from code checks
-.IP -X <simple|idtag|idtagqual>
-XML output style
 .SH FILES
 .I /usr/local/etc/pyx12.conf.xml
 .RS
@@ -58,6 +56,7 @@ option.
 .SH AUTHOR
 John Holland <john at zoner dot org>
 .SH "SEE ALSO"
+.BR x12xml(1), 
 .BR x12valid(1),
-.BR pyx12.conf.xml(5),
-.BR x12norm (1)
+.BR x12norm (1),
+.BR pyx12.conf.xml(5)

@@ -34,6 +34,9 @@ import pyx12.xmlx12_simple
 
 logger = None
 
+class TesterError(Exception):
+    """Base class for tester engine errors."""
+
 def skip_headers(line1):
     if line1[:3] == 'ISA' or line1[:2] == 'GS':
         return True
@@ -49,22 +52,32 @@ def diff(file1, file2):
         print stderr
     return stout
     
+def get997BaseFilename(src_filename):
+    if os.path.splitext(src_filename)[1] == '.997':
+        filename = src_filename + '.997.base'
+    else:
+        filename = os.path.splitext(src_filename)[0] + '.997.base'
+    if not os.path.isfile(filename):
+        raise TesterError, 'Base 997 not found: %s' % (os.path.basename(filename))
+    return filename
+
+def getXSLTFilenames(src_filename):
+    filename = os.path.splitext(src_filename)[0] + '.xsl'
+    if os.path.isfile(filename):
+        return [filename]
+    else:
+        return []
+
 def test_997(src_filename, param):
     """
-    Compare the 997 output against a known good 997
+    Compare the 997 output against a known 997
     """
     global logger
     try:
-        if os.path.splitext(src_filename)[1] == '.997':
-            base_997 = src_filename + '.997.base'
-        else:
-            base_997 = os.path.splitext(src_filename)[0] + '.997.base'
+        base_997 = get997BaseFilename(src_filename)
         fd_997 = tempfile.NamedTemporaryFile()
-        if not os.path.isfile(base_997):
-            logger.info('Base 997 not found: %s' % (os.path.basename(base_997)))
-            return False
-
-        pyx12.x12n_document.x12n_document(param, src_filename, fd_997, None)
+        xslt_files = getXSLTFilenames(src_filename)
+        pyx12.x12n_document.x12n_document(param, src_filename, fd_997, None, None, xslt_files)
 
         fd_997.seek(0)
         fd_new = tempfile.NamedTemporaryFile()
@@ -98,6 +111,9 @@ def test_997(src_filename, param):
         #sys.exit(2)
     except KeyboardInterrupt:
         print "\n[interrupt]"
+    except:
+        #logger.info('Base xml not found: %s' % (os.path.basename(base_xml)))
+        return False
     return True
 
 def test_xml(src_filename, param, xmlout='simple'):

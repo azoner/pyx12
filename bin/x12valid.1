@@ -31,6 +31,10 @@ Run a profiler
 Quiet output
 .IP -s <b|e>
 Specify X12 character set: b=basic, e=extended
+.IP -t <file>
+An XSL Transform file. The transform is applied to the map, allowing customization of transaction
+validation.  May be used multiple times.  Each XSL file is applied in order.  The resulting map
+must validate against the XML Schema 'map.xsd'.
 .IP -v
 Verbose output
 .IP -x <tag>

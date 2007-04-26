@@ -48,6 +48,7 @@ def usage():
     sys.stdout.write('  -P         Profile script\n')
     sys.stdout.write('  -q         Quiet output\n')
     sys.stdout.write('  -s <b|e>   Specify X12 character set: b=basic, e=extended\n')
+    sys.stderr.write('  -t <file>  XSL Transform, applied to the map.  May be used multiple times.\n')
     sys.stdout.write('  -v         Verbose output\n')
     sys.stdout.write('  -x <tag>   Exclude external code\n')
     
@@ -57,7 +58,7 @@ def main():
     """
     import getopt
     try:
-        opts, args = getopt.getopt(sys.argv[1:], 'c:dfl:m:p:qs:vx:P')
+        opts, args = getopt.getopt(sys.argv[1:], 'c:dfl:m:p:qs:t:vx:P')
     except getopt.error, msg:
         usage()
         return False
@@ -75,6 +76,7 @@ def main():
     profile = False
     debug = False
     configfile = None
+    xslt_files = []
     for o, a in opts:
         if o == '-c':
             configfile = a
@@ -85,6 +87,12 @@ def main():
     else:
         param = pyx12.params.params('/usr/local/etc/pyx12.conf.xml',\
             os.path.expanduser('~/.pyx12.conf.xml'))
+
+    for xslt_file in param.get('xslt_files'):
+        if os.path.isfile(xslt_file):
+            xslt_files.append(xslt_file)
+        else:
+            logger.debug("XSL Transform '%s' not found" % (xslt_file))
 
     for o, a in opts:
         if o == '-v': logger.setLevel(logging.DEBUG)
@@ -99,6 +107,11 @@ def main():
         if o == '-p': param.set('pickle_path', a)
         if o == '-P': profile = True
         if o == '-s': param.set('charset', a)
+        if o == '-t':
+            if os.path.isfile(a):
+                xslt_files.append(a)
+            else:
+                logger.debug("XSL Transform '%s' not found" % (a))
         if o == '-l':
             try:
                 hdlr = logging.FileHandler(a)
@@ -120,10 +133,12 @@ def main():
             fd_html = sys.stdout
             if profile:
                 import profile
-                profile.run('pyx12.x12n_document.x12n_document(param, src_filename, None, fd_html)', 
+                profile.run('pyx12.x12n_document.x12n_document(param, src_filename, None, fd_html, None, xslt_files)', 
                     'pyx12.prof')
             else:
-                pyx12.x12n_document.x12n_document(param, src_filename, None, fd_html)
+                pyx12.x12n_document.x12n_document(param=param, src_file=src_filename,
+                    fd_997=None, fd_html=fd_html, fd_xmldoc=None, xslt_files=xslt_files)
+
         except IOError:
             logger.error('Could not open files')
             usage()
