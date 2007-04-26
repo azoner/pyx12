@@ -29,7 +29,7 @@ TEST_FILES = ['test/%s' % (file1) for file1 in
     os.listdir('test'))]
 TEST_DATA = ['test/files/%s' % (file1) for file1 in 
     filter(lambda x: os.path.splitext(x)[1] 
-        in ('.base', '.txt', '.idtag', '.idtagqual', '.simple'),
+        in ('.base', '.txt', '.idtag', '.idtagqual', '.simple', '.xsl'),
     os.listdir('test/files'))]
     
 kw = {  

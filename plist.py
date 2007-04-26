@@ -26,7 +26,7 @@ def main():
     #[(fd_out.write(share+x[:-3]+'.pyo\n')) for x in filter(lambda x: x[:4] == 'test' and x[-3:] == '.py', manifest)]
     [(fd_out.write(share+x+'\n')) for x in filter(lambda x: x[:10] == 'test/files' 
         and (x[-4:] == '.txt' or x[-5:] == '.base' or x[-4:] == '.txt' or x[-7:] == '.simple'
-        or x[-6:] == '.idtag' or x[-10:] == '.idtagqual'), 
+        or x[-6:] == '.idtag' or x[-10:] == '.idtagqual' or x[-4:] == '.xsl',), 
         manifest)]
     for x in ('CHANGELOG.txt', 'INSTALL.txt', 'LICENSE.txt', 'README.txt'):
         fd_out.write(doc+x+'\n')
