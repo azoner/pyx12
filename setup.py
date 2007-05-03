@@ -24,7 +24,7 @@ for filename in SCRIPTS:
         os.path.join('build/bin', target_script))
 test_dir = 'share/pyx12/test'
 TEST_FILES = ['test/%s' % (file1) for file1 in 
-    filter(lambda x: x[:4] == 'test' and os.path.splitext(x)[1] in ('.py', '.xml'),
+    filter(lambda x: os.path.splitext(x)[1] in ('.py', '.xml'),
     os.listdir('test'))]
 TEST_DATA = ['test/files/%s' % (file1) for file1 in 
     filter(lambda x: os.path.splitext(x)[1] 
