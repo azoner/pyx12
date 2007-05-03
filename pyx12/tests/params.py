@@ -59,6 +59,9 @@ class ReadConfigFile(unittest.TestCase):
         self.assertEqual(self.param.get('charset'), 'B')
 
     def test_unchanged(self):
-        self.assertEqual(self.param.get('pickle_path'), '/usr/local/share/pyx12/map')
+        #self.assertEqual(self.param.get('pickle_path'), '/usr/local/share/pyx12/map')
         self.assertEqual(self.param.get('ignore_codes'), False)
         self.assertEqual(self.param.get('skip_html'), False)
+
+    def test_invalid_file(self):
+        self.failUnlessRaises(pyx12.errors.EngineError, pyx12.params.params, 'nonexistant_file.xml')
