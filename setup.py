@@ -2,7 +2,6 @@
 from distutils import core
 from distutils.file_util import copy_file
 from distutils.dir_util import mkpath
-import cPickle
 import os
 import sys
 
@@ -14,14 +13,14 @@ map_dir = 'share/pyx12/map'
 MAP_FILES = ['map/%s' % (file1) for file1 in 
     filter(lambda x: os.path.splitext(x)[1] == '.xml', os.listdir('map'))]
 mkpath('build/bin')
-SCRIPTS = ('x12_build_pkl', 'x12html', 'x12info', 'x12valid', 
-    'x12norm', 'x12sql', 'x12xml', 'xmlx12')
+SCRIPTS = ('x12_build_pkl.py', 'x12html.py', 'x12info.py', 'x12valid.py', 
+    'x12norm.py', 'x12sql.py', 'x12xml.py', 'xmlx12.py')
 for filename in SCRIPTS:
     if sys.platform == 'win32':
-        target_script = filename+'.py'
-    else:
         target_script = filename
-    copy_file(os.path.join('bin', filename+'.py'), 
+    else:
+        target_script = os.path.splitext(filename)[0]
+    copy_file(os.path.join('bin', filename), 
         os.path.join('build/bin', target_script))
 test_dir = 'share/pyx12/test'
 TEST_FILES = ['test/%s' % (file1) for file1 in 
