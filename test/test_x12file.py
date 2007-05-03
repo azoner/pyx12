@@ -1,7 +1,7 @@
 #! /usr/bin/env /usr/local/bin/python
 
 import unittest
-#import sys
+import sys
 #import StringIO
 import pdb
 import tempfile
@@ -22,6 +22,8 @@ def suite():
     suite.addTest(unittest.makeSuite(HL_Checks))
     suite.addTest(unittest.makeSuite(Formatting))
     suite.addTest(unittest.makeSuite(Segment_ID_Checks))
+    if sys.platform != 'win32':
+        suite.addTest(unittest.makeSuite(FileString))
     return suite
 
 try:

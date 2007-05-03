@@ -25,6 +25,7 @@ from types import *
 import tempfile
 #import difflib
 import subprocess
+import StringIO
 
 # Intrapackage imports
 import pyx12
@@ -75,7 +76,7 @@ def test_997(src_filename, param):
     global logger
     try:
         base_997 = get997BaseFilename(src_filename)
-        fd_997 = tempfile.NamedTemporaryFile()
+        fd_997 = StringIO.StringIO()
         xslt_files = getXSLTFilenames(src_filename)
         pyx12.x12n_document.x12n_document(param, src_filename, fd_997, None, None, xslt_files)
 

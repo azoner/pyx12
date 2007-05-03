@@ -39,17 +39,21 @@ class X12file(object):
     Interface to an X12 data file
     """
 
-    def __init__(self, src_file):
+    def __init__(self, src_file_obj):
         """
         Initialize the file
 
-        @param src_file: absolute path of source file 
-        @type src_file: string
+        @param src_file_obj: absolute path of source file or fd
+        @type src_file_obj: string or open file object
         """
-        if src_file == '-':
-            self.fd = sys.stdin
-        else:
-            self.fd = open(src_file, 'U')
+        try:
+            res = src_file_obj.closed
+            self.fd = src_file_obj
+        except AttributeError:
+            if src_file_obj == '-':
+                self.fd = sys.stdin
+            else:
+                self.fd = open(src_file_obj, 'U')
         self.err_list = []
         self.loops = []
         self.hl_stack = []
