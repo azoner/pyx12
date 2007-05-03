@@ -97,6 +97,7 @@
           <xsd:attribute name="external" type="xsd:NMTOKEN"/>
         </xsd:complexType>
       </xsd:element>
+      <xsd:element name="regex" type="xsd:token" minOccurs="0"/>
     </xsd:sequence>
     <xsd:attribute name="xid" type="xsd:NMTOKEN"/>
   </xsd:complexType>

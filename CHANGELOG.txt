@@ -1,3 +1,6 @@
+XSLT map tranforms - customize validation
+ - optional element regex, see map.xsd
+
 Map schema - validate, cleanup maps
 
 Remove deprecated maps

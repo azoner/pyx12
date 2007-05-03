@@ -630,3 +630,31 @@ class MapTransform(unittest.TestCase):
         self.assertEqual(node.get_path(), node_str+'/01')
         self.assertEqual(node.base_name, 'element')
         self.failUnless('Z' in node.valid_codes)
+
+    def test_add_regex_good(self):
+        self.errh.err_cde = None
+        node_str = '/ISA_LOOP/GS_LOOP/ST_LOOP/DETAIL/2000/2100/CLP'
+        node = self.map.getnodebypath(node_str)
+        node = node.get_child_node_by_idx(6)
+        self.assertNotEqual(node, None)
+        self.assertEqual(node.id, 'CLP07')
+        self.assertEqual(node.get_path(), node_str+'/07')
+        self.assertEqual(node.base_name, 'element')
+        ele_data = pyx12.segment.Element('34573234')
+        result = node.is_valid(ele_data, self.errh)
+        self.failUnless(result)
+        self.assertEqual(self.errh.err_cde, None)
+
+    def test_add_regex_bad(self):
+        self.errh.err_cde = None
+        node_str = '/ISA_LOOP/GS_LOOP/ST_LOOP/DETAIL/2000/2100/CLP'
+        node = self.map.getnodebypath(node_str)
+        node = node.get_child_node_by_idx(6)
+        self.assertNotEqual(node, None)
+        self.assertEqual(node.id, 'CLP07')
+        self.assertEqual(node.get_path(), node_str+'/07')
+        self.assertEqual(node.base_name, 'element')
+        ele_data = pyx12.segment.Element('345A73234Z')
+        result = node.is_valid(ele_data, self.errh)
+        self.failUnless(result)
+        self.assertEqual(self.errh.err_cde, None)

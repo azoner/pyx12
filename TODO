@@ -1,5 +1,3 @@
-xsd and rng for maps
-
 xslt map tranforms
 
 Data Element XSLT
@@ -15,10 +13,10 @@ Add test for x12 > xml > x12 for all xml mappings
 xmlx12.py - handle idtag and idtagqual types
 
 Windows issues:
-  location of map files
-  location of config files
   path to code file
   use registry, not config files
+  location of map files
+  location of config files
 
 Wrap scripts in web services
 

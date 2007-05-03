@@ -1086,7 +1086,6 @@ class element_if(x12_node):
         @param parent: parent node 
         """
 
-        #global reader
         reader = root.reader
         x12_node.__init__(self)
         self.children = []
@@ -1099,28 +1098,14 @@ class element_if(x12_node):
         self.id = None
         self.name = None
         self.usage = None
-        #self.pos = None
-        #self.max_use = None
         self.data_ele = None
         self.seq = None
         self.refdes = None
-        #self.data_type = None
-        #self.min_len = None
-        #self.max_len = None
 
         self.valid_codes = []
         self.external_codes = None
-        #self.logger = logging.getLogger('pyx12')
-
-#        ret = 1 
-#        while ret == 1 and self.cur_level <= reader.Depth():
-#            #print 'ele', reader.NodeType(), reader.Depth(), reader.Name()
-#            ret = reader.Read()
-#            if ret == -1:
-#                raise errors.XML_Reader_Error, 'Read Error'
-#            elif ret == 0:
-#                raise errors.XML_Reader_Error, 'End of Map File'
-#        return
+        self.res = None
+        self.rec = None
 
         self.cur_level = reader.Depth()
         
@@ -1131,28 +1116,18 @@ class element_if(x12_node):
 
         ret = 1 
         while ret == 1:
-            #print '--- segment while'
-            #print 'seg', reader.NodeType(), reader.Depth(), reader.Name()
             tmpNodeType = reader.NodeType()
             if tmpNodeType == NodeType['element_start']:
-                #if reader.Name() in ('map', 'transaction', 'loop', 'segment', 'element'):
-                #    print 's'*reader.Depth(), reader.Depth(),  self.base_level, reader.NodeType(), reader.Name()
                 cur_name = reader.Name()
                 if cur_name == 'element':
                     self.base_level = reader.Depth()
                     self.base_name = 'element'
                 elif cur_name == 'valid_codes':
                     while reader.MoveToNextAttribute():
-                        #sys.stderr.write('attrib: %s - %s' % (reader.Name(), reader.Value()))
                         if reader.Name() == 'external':
                             self.external_codes = reader.Value()
-                #if self.cur_level < reader.Depth():
-                #    self.cur_path = os.path.join(self.cur_path, cur_name)
-                #elif self.cur_level > reader.Depth():
-                #    self.cur_path = os.path.dirname(self.cur_path)
                 self.cur_level = reader.Depth()
             elif tmpNodeType == NodeType['element_end']:
-                #print '--', reader.Name(), self.base_level, reader.Depth(), reader.Depth() <= self.base_level 
                 if reader.Depth() <= self.base_level:
                     ret = reader.Read()
                     if ret == -1:
@@ -1160,15 +1135,9 @@ class element_if(x12_node):
                     elif ret == 0:
                         raise errors.XML_Reader_Error, 'End of Map File'
                     break 
-                #if reader.Name() == 'transaction':
-                #    return
-                #    pass
                 cur_name = ''
                 
             elif tmpNodeType == NodeType['text'] and self.base_level + 2 <= reader.Depth():
-                #print cur_name, reader.Value()
-#                if cur_name == 'id':
-#                    self.id = reader.Value()
                 if cur_name == 'name':
                     self.name = reader.Value()
                 elif cur_name == 'data_ele':
@@ -1178,23 +1147,15 @@ class element_if(x12_node):
                 elif cur_name == 'seq':
                     self.seq = int(reader.Value())
                     self.path = reader.Value()
-                #elif cur_name == 'pos':
-                #    self.pos = reader.Value()
-                #elif cur_name == 'refdes':
-                #    self.refdes = reader.Value()
-                #    self.id = self.refdes
-                #elif cur_name == 'data_type':
-                #    self.data_type = reader.Value()
-                #elif cur_name == 'min_len':
-                #    self.min_len = reader.Value()
-                #elif cur_name == 'max_len':
-                #    self.max_len = reader.Value()
-                #elif cur_name == 'max_use':
-                #    self.max_use= reader.Value()
+                elif cur_name == 'regex':
+                    self.res = reader.Value()
+                    try:
+                        self.rec = re.compile(self.res, re.S)
+                    except:
+                        pass
+                        #logger.error('Element regex "%s" failed to compile' % (reader.Value()))
                 elif cur_name == 'code':
                     self.valid_codes.append(reader.Value())
-#               <valid_codes external="prov_taxonomy"/>
-
 
             ret = reader.Read()
             if ret == -1:
@@ -1215,8 +1176,6 @@ class element_if(x12_node):
         out = '%s%s "%s"' % (str(' '*self.base_level), self.refdes, self.name)
         if self.data_ele: 
             out += '  data_ele: %s' % (self.data_ele)
-        #if self.name: 
-        #    out += '  name: %s' % (self.name)
         if self.usage: 
             out += '  usage: %s' % (self.usage)
         if self.seq: 
@@ -1224,10 +1183,6 @@ class element_if(x12_node):
         out += '  %s(%i, %i)' % (data_type, min_len, max_len)
         if self.external_codes: 
             out += '   external codes: %s' % (self.external_codes)
-        #if self.valid_codes:
-        #    out += '%svalid codes:\n' % (str(' '*(self.base_level+1)))
-        #    for code in self.valid_codes:
-        #        out += '%scode %s\n' % (str(' '*(self.base_level+2)), code)
         out += '\n'
         return out
    
@@ -1369,6 +1324,14 @@ class element_if(x12_node):
                     err_str = 'Data element "%s" (%s) contains an invalid date (%s)' % \
                         (self.name, self.refdes, elem_val)
                     self._error(errh, err_str, '8', elem_val)
+                valid = False
+        if self.rec:
+            m = self.rec.search(elem_val)
+            if not m:
+                err_str = 'Data element "%s" with a value of (%s)' % \
+                    (self.name, elem_val)
+                err_str += ' failed to match the regular expression "%s"' % (self.res)
+                self._error(errh, err_str, '7', elem_val)
                 valid = False
         return valid
 

@@ -34,6 +34,14 @@ Applying the transform to another map should be a no-op.
     </valid_codes>
   </xsl:template>
 
+  <!-- Add a regex to an element-->
+  <xsl:template match="/transaction[@xid='835']//element[@xid='CLP07']">
+    <element xid="CLP07">
+      <xsl:apply-templates/>
+      <regex>[0-9]*</regex>
+    </element>
+  </xsl:template>
+
   <!-- Alter a valid code
   <xsl:template match="element[@xid='BPR04']/valid_codes/code['FWT']">
     <code>XXX</code>
