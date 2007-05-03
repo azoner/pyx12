@@ -35,8 +35,9 @@ class ParamsBase(object):
     def __init__(self):
         self.logger = logging.getLogger('pyx12.params')
         self.params = {}
-        self.params['map_path'] = os.path.join(sys.prefix, 'share/pyx12/map')
-        self.params['pickle_path'] = os.path.join(sys.prefix, 'share/pyx12/map')
+        map_path = os.path.join(sys.prefix, 'share', 'pyx12', 'map')
+        self.params['map_path'] = map_path
+        self.params['pickle_path'] = map_path
         self.params['exclude_external_codes'] = None
         self.params['ignore_syntax'] = False
         self.params['charset'] = 'E'

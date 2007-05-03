@@ -47,7 +47,7 @@ class DataElements(object):
         """
         
         self.dataele = {} 
-        code_file = base_path + '/dataele.xml'
+        code_file = os.path.join(base_path, 'dataele.xml')
         pickle_file = '%s.%s' % (os.path.splitext(code_file)[0], 'pkl')
         
         ele_num = None
