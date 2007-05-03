@@ -44,7 +44,7 @@ class ParamsBase(object):
         self.params['ignore_ext_codes'] = False
         self.params['skip_html'] = False
         self.params['skip_997'] = False
-        self.params['simple_dtd'] = 'http://www.kazoocmh.org/dtd/x12simple.dtd'
+        self.params['simple_dtd'] = ''
         self.params['idtag_dtd'] = ''
         self.params['idtagqual_dtd'] = ''
         #self.params['idtag_dtd'] = 'http://www.kazoocmh.org/x12idtag.dtd'
