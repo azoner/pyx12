@@ -10,7 +10,7 @@
 #
 ######################################################################
 
-#    $Id$
+#    $Id: pyx12.conf.xml.sample 784 2005-07-22 20:53:50Z johnholland $
 -->
 
 <!-- pyx12 configuration file
@@ -22,11 +22,11 @@ or can be passed on the command line using the -c option
 <params version="1.0">
 <!--
     <param name="map_path">
-        <value>/usr/local/share/pyx12/map</value>
+        <value>c:\\python25\\share\\pyx12\\map</value>
         <comment>Where to find the xml maps</comment>
     </param>
     <param name="pickle_path">
-        <value>/usr/local/share/pyx12/map</value>
+        <value>c:\\python25\\share\\pyx12\\map</value>
         <comment>Where to find the serialized versions of the xml maps, if compiled</comment>
     </param>
 -->

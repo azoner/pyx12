@@ -35,8 +35,8 @@ class ParamsBase(object):
     def __init__(self):
         self.logger = logging.getLogger('pyx12.params')
         self.params = {}
-        self.params['map_path'] = '/usr/local/share/pyx12/map'
-        self.params['pickle_path'] = '/usr/local/share/pyx12/map'
+        self.params['map_path'] = os.path.join(sys.prefix), 'share/pyx12/map')
+        self.params['pickle_path'] = os.path.join(sys.prefix), 'share/pyx12/map')
         self.params['exclude_external_codes'] = None
         self.params['ignore_syntax'] = False
         self.params['charset'] = 'E'
@@ -83,8 +83,8 @@ class ParamsUnix(ParamsBase):
     """
     def __init__(self, *config_files):
         ParamsBase.__init__(self)
-        self.params['map_path'] = '/usr/local/share/pyx12/map'
-        self.params['pickle_path'] = '/usr/local/share/pyx12/map'
+        #self.params['map_path'] = '/usr/local/share/pyx12/map'
+        #self.params['pickle_path'] = '/usr/local/share/pyx12/map'
         
         for filename in config_files:
             self.logger.debug('Read param file: %s' % (filename))
@@ -164,14 +164,14 @@ class ParamsWindows(ParamsBase):
     """
     def __init__(self):
         ParamsBase.__init__(self)
-        self.params['map_path'] = '/usr/local/share/pyx12/map'
-        self.params['pickle_path'] = '/usr/local/share/pyx12/map'
+#        self.params['map_path'] = '/usr/local/share/pyx12/map'
+#        self.params['pickle_path'] = '/usr/local/share/pyx12/map'
         # Read from Registry
         import _winreg
         #option = Key(key=HKEY.CURRENT_USER, sub_key='Software\\pyx12').values
 
 
-if sys.platform == 'win32':
-    params = ParamsWindows
-else:
-    params = ParamsUnix
+#if sys.platform == 'win32':
+#    params = ParamsWindows
+#else:
+params = ParamsUnix
