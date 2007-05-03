@@ -5,13 +5,16 @@ import os.path
 #from pyx12.dataele import *
 import pyx12.dataele 
 from pyx12.errors import EngineError
+import pyx12.params
 
 
 class BadDataElem(unittest.TestCase):
     def setUp(self):
-        map_path = os.path.join('/'.join( \
-            os.path.abspath(sys.argv[0]).split('/')[:-2]), \
-            'map')
+        params = pyx12.params.params()
+        map_path = params.get('map_path')
+        #map_path = os.path.join('/'.join( \
+        #    os.path.abspath(sys.argv[0]).split('/')[:-2]), \
+        #    'map')
         if not os.path.isdir(map_path):
             map_path = None
         self.de = pyx12.dataele.DataElements(map_path)
@@ -27,9 +30,8 @@ class BadDataElem(unittest.TestCase):
 class LookupDataElem(unittest.TestCase):
 
     def setUp(self):
-        map_path = os.path.join('/'.join( \
-            os.path.abspath(sys.argv[0]).split('/')[:-2]), \
-            'map')
+        params = pyx12.params.params()
+        map_path = params.get('map_path')
         if not os.path.isdir(map_path):
             map_path = None
         self.de = pyx12.dataele.DataElements(map_path)
