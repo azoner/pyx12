@@ -76,9 +76,6 @@ def isX12Diff(fd1, fd2):
         if seg1.format() != seg2.format() \
                 and (seg1.get_seg_id() not in ('ISA', 'GS', 'ST', 'SE', 'GE', 'IEA') \
                 or seg2.get_seg_id() not in ('ISA', 'GS', 'ST', 'SE', 'GE', 'IEA')):
-            print 
-            print seg1
-            print seg2
             return True
         if done1 and done2:
             return False
