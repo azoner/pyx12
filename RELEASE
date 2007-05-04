@@ -6,6 +6,7 @@ pkg index
 Documentation
  - epydoc (cd pyx12; make doc)
  - map files (cd maps; make all)
+ - man pages (cd bin; make all)
  - update web site (cd htdocs; svn export --force https://pyx12.svn.sourceforge.net/svnroot/pyx12/trunk/pyx12-web/ .)
 
 make packages
