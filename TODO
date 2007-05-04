@@ -1,22 +1,14 @@
-xslt map tranforms
-
-Data Element XSLT
+Data Element XSLT ??
 
 x12file:
     check invalid seg term (004)
     check invalid ele term (026)
 
-XML schema (relax) for idtag and idtagqual forms
+XML schema for idtag and idtagqual forms
 
-Add test for x12 > xml > x12 for all xml mappings
+Add tests for x12 > xml > x12 for all xml mappings
 
 xmlx12.py - handle idtag and idtagqual types
-
-Windows issues:
-  path to code file
-  use registry, not config files
-  location of map files
-  location of config files
 
 Wrap scripts in web services
 
@@ -38,7 +30,3 @@ Error Handling
 Unit Testing
   x12file - HL counting?
   HL reset bug
-
-restructure maps.xml
-  mapfile element
-  map desc ???

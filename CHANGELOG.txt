@@ -1,4 +1,8 @@
-Added man for xmlx12
+XML Schema for dataele.xml
+
+Fixed Windows issues
+
+Added man page for xmlx12
 
 XSLT map tranforms - customize validation
  - optional element regex, see map.xsd
