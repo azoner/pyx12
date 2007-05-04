@@ -1,0 +1,62 @@
+<?xml version="1.0"?>
+<!-- 
+######################################################################
+# Copyright (c) 2001-2007 Kalamazoo Community Mental Health Services,
+#   John Holland <jholland@kazoocmh.org> <john@zoner.org>
+# All rights reserved.
+#
+# This software is licensed as described in the file LICENSE.txt, which
+# you should have received as part of this distribution.
+#
+######################################################################
+
+#    $Id: codes.xsd 664 2004-12-12 20:58:08Z johnholland $
+-->
+
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+
+  <xsd:element name="data_elements" type="DataElementsType"/>
+
+  <xsd:complexType name="DataElementsType">
+    <xsd:sequence>
+      <xsd:element name="data_ele" type="DataElementType" maxOccurs="unbounded"/>
+    </xsd:sequence>
+  </xsd:complexType>
+ 
+  <xsd:complexType name="DataElementType">
+      <xsd:attribute name="ele_num" type="xsd:NMTOKEN"/>
+      <xsd:attribute name="data_type" type="DataType"/>
+      <xsd:attribute name="min_len" type="xsd:nonNegativeInteger"/>
+      <xsd:attribute name="max_len" type="xsd:nonNegativeInteger"/>
+      <xsd:attribute name="name" type="xsd:token"/>
+  </xsd:complexType>
+
+  <xsd:simpleType name="EleNumType">
+    <xsd:restriction base="xsd:NMTOKEN">
+      <xsd:pattern value="[0-9A-Z][0-9]{0,2}"/>
+    </xsd:restriction>  
+  </xsd:simpleType>
+
+  <xsd:simpleType name="DataType">
+    <xsd:restriction base="xsd:NMTOKEN">
+        <xsd:enumeration value="AN"/>
+        <xsd:enumeration value="B"/>
+        <xsd:enumeration value="DT"/>
+        <xsd:enumeration value="ID"/>
+        <xsd:enumeration value="R"/>
+        <xsd:enumeration value="TM"/>
+        <xsd:enumeration value="N"/>
+        <xsd:enumeration value="N0"/>
+        <xsd:enumeration value="N1"/>
+        <xsd:enumeration value="N2"/>
+        <xsd:enumeration value="N3"/>
+        <xsd:enumeration value="N4"/>
+        <xsd:enumeration value="N5"/>
+        <xsd:enumeration value="N6"/>
+        <xsd:enumeration value="N7"/>
+        <xsd:enumeration value="N8"/>
+        <xsd:enumeration value="N9"/>
+    </xsd:restriction>
+  </xsd:simpleType>
+
+</xsd:schema>
