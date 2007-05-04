@@ -1,26 +1,36 @@
 #! /usr/bin/env /usr/local/bin/python
 
-import os, os.path, sys
-import string
+import os, sys
+from os.path import dirname, abspath, join, isdir, isfile
 import unittest
-#import pdb
 
 import pyx12.error_handler
 from pyx12.errors import *
 import pyx12.map_if
 import pyx12.params 
 import pyx12.segment
+from pyx12.tests.support import getMapPath
 
-map_path = os.path.join(string.join(os.path.abspath(
-    sys.argv[0]).split('/')[:-2], '/'), 'map')
-if not os.path.isdir(map_path):
-    map_path = None
+def getMapPath():
+    """
+    First, try relative path
+    Them look in standard installation location
+    """
+    base_dir = dirname(dirname(abspath(sys.argv[0])))
+    map_path = join(base_dir, 'map')
+    if isdir(map_path):
+        return map_path
+    params = pyx12.params.params()
+    map_path = params.get('map_path')
+    if isdir(map_path):
+        return map_path
+    return None
 
 class ElementIsValidDate(unittest.TestCase):
     """
     """
     def setUp(self):
-        global map_path
+        map_path = getMapPath()
         param = pyx12.params.params('pyx12.conf.xml')
         if map_path:
             param.set('map_path', map_path)
@@ -107,7 +117,7 @@ class SegmentIsValid(unittest.TestCase):
     """
     """
     def setUp(self):
-        global map_path
+        map_path = getMapPath()
         param = pyx12.params.params('pyx12.conf.xml')
         if map_path:
             param.set('map_path', map_path)
@@ -130,7 +140,7 @@ class ElementIsValid(unittest.TestCase):
     """
     """
     def setUp(self):
-        global map_path
+        map_path = getMapPath()
         param = pyx12.params.params('pyx12.conf.xml')
         if map_path:
             param.set('map_path', map_path)
@@ -353,7 +363,7 @@ class GetNodeByPath(unittest.TestCase):
     """
     """
     def setUp(self):
-        global map_path
+        map_path = getMapPath()
         self.param = pyx12.params.params('pyx12.conf.xml')
         if map_path:
             self.param.set('map_path', map_path)
@@ -442,7 +452,7 @@ class GetNodeByPath(unittest.TestCase):
 
 class CompositeRequirement(unittest.TestCase):
     def setUp(self):
-        global map_path
+        map_path = getMapPath()
         self.param = pyx12.params.params('pyx12.conf.xml')
         if map_path:
             self.param.set('map_path', map_path)
@@ -516,7 +526,7 @@ class CompositeRequirement(unittest.TestCase):
 
 class TrailingSpaces(unittest.TestCase):
     def setUp(self):
-        global map_path
+        map_path = getMapPath()
         param = pyx12.params.params('pyx12.conf.xml')
         if map_path:
             param.set('map_path', map_path)
@@ -563,7 +573,7 @@ class TrailingSpaces(unittest.TestCase):
 
 class ElementRequirement(unittest.TestCase):
     def setUp(self):
-        global map_path
+        map_path = getMapPath()
         param = pyx12.params.params('pyx12.conf.xml')
         if map_path:
             param.set('map_path', map_path)
@@ -601,13 +611,13 @@ class MapTransform(unittest.TestCase):
     Alter a map using XSL transforms
     """
     def setUp(self):
-        global map_path
+        map_path = getMapPath()
         param = pyx12.params.params('pyx12.conf.xml')
         if map_path:
             param.set('map_path', map_path)
             param.set('pickle_path', map_path)
-        testfiledir = os.path.abspath('./files')
-        xslt_files = [os.path.join(testfiledir, '835_test.xsl')]
+        testfiledir = abspath('./files')
+        xslt_files = [join(testfiledir, '835_test.xsl')]
         self.map = pyx12.map_if.load_map_file('835.4010.X091.A1.xml', param, xslt_files)
         self.errh = pyx12.error_handler.errh_null()
 

@@ -1,28 +1,22 @@
 #! /usr/bin/env /usr/local/bin/python
 
-import os.path, sys, string
+import sys
 import unittest
-#import pdb
+from os.path import dirname, abspath, join, isdir, isfile
 
 import pyx12.map_index
 import pyx12.params
-#from pyx12.errors import *
+from pyx12.tests.support import getMapPath
 
-map_path = os.path.join(string.join(os.path.abspath(
-    sys.argv[0]).split('/')[:-2], '/'), 'map')
-if not os.path.isdir(map_path):
-    map_path = None
-        
 class GetFilename(unittest.TestCase):
     """
     """
     def setUp(self):
-        global map_path
+        map_path = getMapPath()
         param = pyx12.params.params('pyx12.conf.xml')
-        if map_path:
-            param.set('map_path', map_path)
-        map_path = param.get('map_path')
-        self.idx = pyx12.map_index.map_index(os.path.join(map_path, 'maps.xml'))
+        if not map_path:
+            map_path = param.get('map_path')
+        self.idx = pyx12.map_index.map_index(join(map_path, 'maps.xml'))
 
     def test_get_837p(self):
         self.assertEqual(self.idx.get_filename('00401', '004010X098A1', 'HC'), '837.4010.X098.A1.xml')

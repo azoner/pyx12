@@ -1,3 +1,5 @@
+Added man for xmlx12
+
 XSLT map tranforms - customize validation
  - optional element regex, see map.xsd
 

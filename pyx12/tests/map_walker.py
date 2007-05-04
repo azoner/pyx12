@@ -2,29 +2,22 @@
 
 #    $Id$
 
-import sys, string
-import os.path
+import sys
+from os.path import dirname, abspath, join, isdir, isfile
 import unittest
-#import pdb
-#import logging
 
 import pyx12.error_handler
-#from error_handler import ErrorErrhNull
 from pyx12.errors import *
 from pyx12.map_walker import walk_tree
 import pyx12.map_if
 import pyx12.params 
 import pyx12.segment
-
-map_path = os.path.join(string.join(os.path.abspath(
-    sys.argv[0]).split('/')[:-2], '/'), 'map')
-if not os.path.isdir(map_path):
-    map_path = None
+from pyx12.tests.support import getMapPath
 
 class Explicit_Loops(unittest.TestCase):
 
     def setUp(self):
-        global map_path
+        map_path = getMapPath()
         self.walker = walk_tree()
         param = pyx12.params.params('pyx12.conf.xml')
         if map_path:
@@ -125,7 +118,7 @@ class Implicit_Loops(unittest.TestCase):
     """
 
     def setUp(self):
-        global map_path
+        map_path = getMapPath()
         self.walker = walk_tree()
         self.param = pyx12.params.params('pyx12.conf.xml')
         if map_path:
@@ -234,7 +227,7 @@ class Implicit_Loops(unittest.TestCase):
 class SegmentWalk(unittest.TestCase):
 
     def setUp(self):
-        global map_path
+        map_path = getMapPath()
         self.walker = walk_tree()
         self.param = pyx12.params.params('pyx12.conf.xml')
         if map_path:
@@ -288,7 +281,7 @@ class SegmentWalk(unittest.TestCase):
 class Segment_ID_Checks(unittest.TestCase):
 
     def setUp(self):
-        global map_path
+        map_path = getMapPath()
         self.walker = walk_tree()
         param = pyx12.params.params('pyx12.conf.xml')
         if map_path:
@@ -316,7 +309,7 @@ class Segment_ID_Checks(unittest.TestCase):
 class Counting(unittest.TestCase):
 
     def setUp(self):
-        global map_path
+        map_path = getMapPath()
         self.walker = walk_tree()
         param = pyx12.params.params('pyx12.conf.xml')
         if map_path:
@@ -361,7 +354,7 @@ class Counting(unittest.TestCase):
 class LoopCounting(unittest.TestCase):
 
     def setUp(self):
-        global map_path
+        map_path = getMapPath()
         self.walker = walk_tree()
         param = pyx12.params.params('pyx12.conf.xml')
         if map_path:
@@ -394,7 +387,7 @@ class LoopCounting(unittest.TestCase):
 class CountOrdinal(unittest.TestCase):
 
     def setUp(self):
-        global map_path
+        map_path = getMapPath()
         self.walker = walk_tree()
         param = pyx12.params.params('pyx12.conf.xml')
         if map_path:

@@ -1,27 +1,23 @@
 #! /usr/bin/env /usr/local/bin/python
 
 import unittest
-import sys, string
+import sys
 import StringIO
-import os.path
+from os.path import dirname, abspath, join, isdir, isfile
 
 import pyx12.x12xml_idtag
 import pyx12.map_if
 import pyx12.params
 import pyx12.segment
-
 from pyx12.errors import *
+from pyx12.tests.support import getMapPath
 
-
-map_path = os.path.join(string.join(os.path.abspath(
-    sys.argv[0]).split('/')[:-2], '/'), 'map')
-if not os.path.isdir(map_path):
-    map_path = None
-
-        
 class ConvertToXML(unittest.TestCase):
     def setUp(self):
+        map_path = getMapPath()
         param = pyx12.params.params('pyx12.conf.xml')
+        if not map_path:
+            map_path = param.get('map_path')
         if map_path:
             param.set('map_path', map_path)
             param.set('pickle_path', map_path)

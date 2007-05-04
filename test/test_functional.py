@@ -32,6 +32,7 @@ import pyx12
 import pyx12.x12n_document
 import pyx12.params
 import pyx12.xmlx12_simple
+import pyx12.x12file
 
 logger = None
 
@@ -52,6 +53,36 @@ def diff(file1, file2):
     if stderr:
         print stderr
     return stout
+
+def isX12Diff(fd1, fd2):
+    """
+    Just want to know if the important bits of the 997 are different
+    """
+    src1 = pyx12.x12file.X12file(fd1)
+    src2 = pyx12.x12file.X12file(fd2)
+    done1 = False
+    done2 = False
+    while True:
+        try:
+            seg1 = src1.next()
+        except StopIteration:
+            done1 = True
+        try:
+            seg2 = src2.next()
+        except StopIteration:
+            done2 = True
+        id1 = seg1.get_seg_id()
+        id2 = seg2.get_seg_id()
+        if seg1.format() != seg2.format() \
+                and (seg1.get_seg_id() not in ('ISA', 'GS', 'ST', 'SE', 'GE', 'IEA') \
+                or seg2.get_seg_id() not in ('ISA', 'GS', 'ST', 'SE', 'GE', 'IEA')):
+            print 
+            print seg1
+            print seg2
+            return True
+        if done1 and done2:
+            return False
+    return False
     
 def get997BaseFilename(src_filename):
     if os.path.splitext(src_filename)[1] == '.997':
@@ -74,35 +105,24 @@ def test_997(src_filename, param):
     Compare the 997 output against a known 997
     """
     global logger
+    logger.debug(src_filename)
     try:
         base_997 = get997BaseFilename(src_filename)
         fd_997 = StringIO.StringIO()
         xslt_files = getXSLTFilenames(src_filename)
         pyx12.x12n_document.x12n_document(param, src_filename, fd_997, None, None, xslt_files)
-
         fd_997.seek(0)
-        fd_new = tempfile.NamedTemporaryFile()
-        for line in fd_997.readlines():
-            if line[:3] not in ('ISA', 'GS*', 'ST*', 'SE*', 'GE*', 'IEA'):
-                fd_new.write(line)
-        fd_new.seek(0)
-        
-        fd_base = open(base_997, 'r')
-        fd_orig = tempfile.NamedTemporaryFile()
-        for line in fd_base.readlines():
-            if line[:3] not in ('ISA', 'GS*', 'ST*', 'SE*', 'GE*', 'IEA'):
-                fd_orig.write(line)
-        fd_orig.write(fd_base.read())
-        fd_orig.seek(0)
 
-        diff_txt = diff(fd_orig.name, fd_new.name)
+        fd_base = open(base_997, 'r')
+        #diff_txt = diff(fd_orig.name, fd_new.name)
         sys.stdout.write('997: %s ... ' % (os.path.basename(src_filename)))
-        if diff_txt:
-            sys.stdout.write('FAIL\n')
-            for line in diff_txt.splitlines(True):
-                if '/tmp/' not in line:
-                    sys.stdout.write(line)
-            sys.stdout.write('\n')
+        #if diff_txt:
+        if isX12Diff(fd_base, fd_997):
+            sys.stdout.write('FAIL')
+            #for line in diff_txt.splitlines(True):
+            #    if '/tmp/' not in line:
+            #        sys.stdout.write(line)
+            #sys.stdout.write('\n')
         else:
             sys.stdout.write('ok')
         sys.stdout.write('\n')
@@ -226,7 +246,8 @@ def main():
             if tail == '.txt':
                 try:
                     test_997(src_filename, param)
-                    test_xml(src_filename, param)
+                    if sys.platform != 'win32':
+                        test_xml(src_filename, param)
                 except KeyboardInterrupt:
                     print "\n[interrupt]"
                 except IOError:
