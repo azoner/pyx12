@@ -1,5 +1,5 @@
 ######################################################################
-# Copyright (c) 2001-2005 Kalamazoo Community Mental Health Services,
+# Copyright (c) 2001-2007 Kalamazoo Community Mental Health Services,
 #   John Holland <jholland@kazoocmh.org> <john@zoner.org>
 # All rights reserved.
 #
@@ -18,9 +18,8 @@ Order of precedence:
  2. Config files as constructor parameters
  3. self.params - Defaults
 """
-import os.path
+from os.path import dirname, abspath, join, isdir, isfile, expanduser
 import sys
-#import StringIO
 import libxml2
 import logging
 
@@ -37,7 +36,12 @@ class ParamsBase(object):
     def __init__(self):
         self.logger = logging.getLogger('pyx12.params')
         self.params = {}
-        map_path = os.path.join(sys.prefix, 'share', 'pyx12', 'map')
+        #First, try relative path
+        base_dir = dirname(dirname(abspath(sys.argv[0])))
+        map_path = join(base_dir, 'map')
+        #Then look in standard installation location
+        if not isdir(map_path):
+            map_path = join(sys.prefix, 'share', 'pyx12', 'map')
         self.params['map_path'] = map_path
         self.params['pickle_path'] = map_path
         self.params['exclude_external_codes'] = None
@@ -50,7 +54,6 @@ class ParamsBase(object):
         self.params['simple_dtd'] = ''
         self.params['idtag_dtd'] = ''
         self.params['idtagqual_dtd'] = ''
-        #self.params['idtag_dtd'] = 'http://www.kazoocmh.org/x12idtag.dtd'
         self.params['xmlout'] = 'simple'
         #self.params['xmlout'] = 'idtag'
         self.params['xslt_files'] = []
@@ -79,20 +82,6 @@ class ParamsBase(object):
         else:
             self.params[option] = value
 
-    
-class ParamsUnix(ParamsBase):
-    """
-    Read options from XML configuration files
-    """
-    def __init__(self, *config_files):
-        ParamsBase.__init__(self)
-        #self.params['map_path'] = '/usr/local/share/pyx12/map'
-        #self.params['pickle_path'] = '/usr/local/share/pyx12/map'
-        
-        for filename in config_files:
-            self.logger.debug('Read param file: %s' % (filename))
-            self._read_config_file(filename)
-
     def _read_config_file(self, filename):
         """
         Read program configuration from an XML file
@@ -101,7 +90,7 @@ class ParamsUnix(ParamsBase):
         @type filename: string
         @return: None
         """
-        if not os.path.isfile(filename):
+        if not isfile(filename):
             raise EngineError, 'Read of configuration file "%s" failed' % (filename)
         try:
             reader = libxml2.newTextReaderFilename(filename)
@@ -161,21 +150,38 @@ class ParamsUnix(ParamsBase):
         #self.logger.debug('Params: option "%s": "%s"' % \
         #    (option, self.params[option]))
 
+    
+class ParamsUnix(ParamsBase):
+    """
+    Read options from XML configuration files
+    """
+    def __init__(self, config_file):
+        ParamsBase.__init__(self)
+        map_path = 'share', 'pyx12', 'map')
+        config_files = [join(sys.prefix, 'etc/pyx12.conf.xml'), \
+            expanduser('~/.pyx12.conf.xml')]
+        if config_file:
+            config_files.append(config_file)
+        for filename in config_files:
+            if isfile(filename)
+                self.logger.debug('Read param file: %s' % (filename))
+                self._read_config_file(filename)
 
 class ParamsWindows(ParamsBase):
     """
-    Read options from the Windows registry
+    Read options from XML configuration files
     """
     def __init__(self):
         ParamsBase.__init__(self)
-#        self.params['map_path'] = '/usr/local/share/pyx12/map'
-#        self.params['pickle_path'] = '/usr/local/share/pyx12/map'
-        # Read from Registry
-        import _winreg
-        #option = Key(key=HKEY.CURRENT_USER, sub_key='Software\\pyx12').values
+        config_files = [join(sys.prefix, 'etc/pyx12.conf.xml')]
+        if config_file:
+            config_files.append(config_file)
+        for filename in config_files:
+            if isfile(filename)
+                self.logger.debug('Read param file: %s' % (filename))
+                self._read_config_file(filename)
 
-
-#if sys.platform == 'win32':
-#    params = ParamsWindows
-#else:
-params = ParamsUnix
+if sys.platform == 'win32':
+    params = ParamsWindows
+else:
+    params = ParamsUnix
