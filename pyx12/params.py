@@ -157,7 +157,6 @@ class ParamsUnix(ParamsBase):
     """
     def __init__(self, config_file):
         ParamsBase.__init__(self)
-        map_path = 'share', 'pyx12', 'map')
         config_files = [join(sys.prefix, 'etc/pyx12.conf.xml'), \
             expanduser('~/.pyx12.conf.xml')]
         if config_file:
