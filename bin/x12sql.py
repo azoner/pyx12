@@ -1,6 +1,6 @@
 #! /usr/bin/env python
 ######################################################################
-# Copyright (c) 2001-2005 Kalamazoo Community Mental Health Services,
+# Copyright (c) 2001-2007 Kalamazoo Community Mental Health Services,
 #   John Holland <jholland@kazoocmh.org> <john@zoner.org>
 # All rights reserved.
 #
@@ -296,8 +296,6 @@ def main():
     logger.addHandler(stderr_hdlr)
 
     prefix = None
-    #param.set('map_path', os.path.expanduser('/usr/local/share/pyx12/map'))
-    #param.set('pickle_path', os.path.expanduser('/tmp'))
     for o, a in opts:
         if o == '-v': logger.setLevel(logging.DEBUG)
         if o == '-q': logger.setLevel(logging.ERROR)

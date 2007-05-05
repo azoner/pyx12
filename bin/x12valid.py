@@ -84,13 +84,8 @@ def main():
     for opt, val in opts:
         if opt == '-c':
             configfile = val
-    if configfile:
-        param = pyx12.params.params('/usr/local/etc/pyx12.conf.xml', \
-            os.path.expanduser('~/.pyx12.conf.xml'), \
-            configfile)
-    else:
-        param = pyx12.params.params('/usr/local/etc/pyx12.conf.xml', \
-            os.path.expanduser('~/.pyx12.conf.xml'))
+    param = pyx12.params.params(configfile)
+
     for xslt_file in param.get('xslt_files'):
         if os.path.isfile(xslt_file):
             xslt_files.append(xslt_file)

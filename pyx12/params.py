@@ -155,14 +155,14 @@ class ParamsUnix(ParamsBase):
     """
     Read options from XML configuration files
     """
-    def __init__(self, config_file):
+    def __init__(self, config_file=None):
         ParamsBase.__init__(self)
         config_files = [join(sys.prefix, 'etc/pyx12.conf.xml'), \
             expanduser('~/.pyx12.conf.xml')]
         if config_file:
             config_files.append(config_file)
         for filename in config_files:
-            if isfile(filename)
+            if isfile(filename):
                 self.logger.debug('Read param file: %s' % (filename))
                 self._read_config_file(filename)
 
@@ -170,13 +170,13 @@ class ParamsWindows(ParamsBase):
     """
     Read options from XML configuration files
     """
-    def __init__(self):
+    def __init__(self, config_file=None):
         ParamsBase.__init__(self)
         config_files = [join(sys.prefix, 'etc/pyx12.conf.xml')]
         if config_file:
             config_files.append(config_file)
         for filename in config_files:
-            if isfile(filename)
+            if isfile(filename):
                 self.logger.debug('Read param file: %s' % (filename))
                 self._read_config_file(filename)
 
