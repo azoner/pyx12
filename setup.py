@@ -3,6 +3,7 @@ from distutils import core
 from distutils.file_util import copy_file
 from distutils.dir_util import mkpath
 import os
+from os.path import join, splitext
 import sys
 
 import pyx12
@@ -11,26 +12,29 @@ import pyx12.params
 
 map_dir = 'share/pyx12/map'
 MAP_FILES = ['map/%s' % (file1) for file1 in 
-    filter(lambda x: os.path.splitext(x)[1] == '.xml', os.listdir('map'))]
+    filter(lambda x: splitext(x)[1] == '.xml', os.listdir('map'))]
 mkpath('build/bin')
 SCRIPTS = ('x12_build_pkl.py', 'x12html.py', 'x12info.py', 'x12valid.py', 
     'x12norm.py', 'x12sql.py', 'x12xml.py', 'xmlx12.py')
-for filename in SCRIPTS:
-    if sys.platform == 'win32':
-        target_script = filename
-    else:
-        target_script = os.path.splitext(filename)[0]
-    copy_file(os.path.join('bin', filename), 
-        os.path.join('build/bin', target_script))
+if sys.platform == 'win32':
+    for filename in SCRIPTS:
+        copy_file(join('bin', filename), 
+            join('build/bin', filename))
+else:
+    for filename in SCRIPTS:
+        target_script = splitext(filename)[0]
+        copy_file(join('bin', filename), 
+            join('build/bin', target_script))
+    SCRIPTS = [splitext(filename)[0] for filename in SCRIPTS]
 test_dir = 'share/pyx12/test'
 TEST_FILES = ['test/%s' % (file1) for file1 in 
-    filter(lambda x: os.path.splitext(x)[1] in ('.py', '.xml'),
+    filter(lambda x: splitext(x)[1] in ('.py', '.xml'),
     os.listdir('test'))]
 TEST_DATA = ['test/files/%s' % (file1) for file1 in 
-    filter(lambda x: os.path.splitext(x)[1] 
+    filter(lambda x: splitext(x)[1] 
         in ('.base', '.txt', '.idtag', '.idtagqual', '.simple', '.xsl'),
     os.listdir('test/files'))]
-    
+
 kw = {  
     'name': "pyx12",
     'version': pyx12.__version__,

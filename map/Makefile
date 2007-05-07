@@ -153,21 +153,6 @@ dataele.html: dataele.xsl
 278.loop.html: ${MAPDIR}/278.4010.X094.xml
 	${XSLT} -o ${OUTPUTDIR}/278.loop.html loop.xsl ${MAPDIR}/278.4010.X094.xml
 
-820.loop.html: ${MAPDIR}/820.4010.X061.xml
-	${XSLT} -o ${OUTPUTDIR}/820.loop.html loop.xsl ${MAPDIR}/820.4010.X061.xml
-
-835.loop.html: ${MAPDIR}/835.4010.X091.xml
-	${XSLT} -o ${OUTPUTDIR}/835.loop.html loop.xsl ${MAPDIR}/835.4010.X091.xml
-
-837.X096.loop.html: ${MAPDIR}/837.4010.X096.xml
-	${XSLT} -o ${OUTPUTDIR}/837.X096.loop.html loop.xsl ${MAPDIR}/837.4010.X096.xml
-
-837.X097.loop.html: ${MAPDIR}/837.4010.X097.xml
-	${XSLT} -o ${OUTPUTDIR}/837.X097.loop.html loop.xsl ${MAPDIR}/837.4010.X097.xml
-
-837.X098.loop.html: ${MAPDIR}/837.4010.X098.xml
-	${XSLT} -o ${OUTPUTDIR}/837.X098.loop.html loop.xsl ${MAPDIR}/837.4010.X098.xml
-
 841.XXXC.loop.html: ${MAPDIR}/841.4010.XXXC.xml
 	${XSLT} -o ${OUTPUTDIR}/841.XXXC.loop.html loop.xsl ${MAPDIR}/841.4010.XXXC.xml
 

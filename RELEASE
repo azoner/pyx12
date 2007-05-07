@@ -25,6 +25,7 @@ make port
  - make makesum
  - make test
  - make describe
+ - port test
 install/test port
 run unit/functional tests on installed port
 check performance
