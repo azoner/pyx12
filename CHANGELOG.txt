@@ -1,3 +1,5 @@
+RELEASE 1.4.0
+
 XML Schema for dataele.xml
 
 Fixed Windows issues

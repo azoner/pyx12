@@ -52,7 +52,7 @@ kw = {
         (map_dir, MAP_FILES),
         (map_dir, ['map/README', 'map/codes.xml', 'map/codes.xsd',
             'map/comp_test.xml', 'map/map.xsd', 'map/maps.xml', 
-            'map/x12simple.dtd', 'map/dataele.xml']),
+            'map/x12simple.dtd', 'map/dataele.xml', 'map/dataele.xsd']),
         ('share/doc/pyx12', ['README.txt', 'LICENSE.txt',
             'CHANGELOG.txt', 'INSTALL.txt']),
         (test_dir, TEST_FILES),

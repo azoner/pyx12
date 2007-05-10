@@ -1,7 +1,7 @@
 #! /usr/bin/env /usr/local/bin/python
 
 import sys
-from os.path import basename, splitext
+from os.path import basename, splitext, join, dirname
 import string
 
 """
@@ -15,7 +15,8 @@ def ext(filename):
         return ''
 
 def main():
-    manifest = map(string.rstrip, open('MANIFEST').readlines())
+    manfile = join(dirname(sys.argv[0]), 'MANIFEST')
+    manifest = map(string.rstrip, open(manfile).readlines())
     fd_out =  sys.stdout
     site = '%%PYTHON_SITELIBDIR%%/'
     ex = '%%EXAMPLESDIR%%/'
@@ -27,7 +28,7 @@ def main():
     [(fd_out.write(site+x[:-3]+'.pyo\n')) for x in filter(lambda x: x[:5] == 'pyx12' and ext(x) == '.py', manifest)]
     fd_out.write('etc/pyx12.conf.xml.sample\n')
     fd_out.write(share+'pyx12.conf.xml.sample\n')
-    [(fd_out.write(share+x+'\n')) for x in filter(lambda x: x[:4] == 'test' and ext(x) == '.py', manifest)]
+    [(fd_out.write(share+x+'\n')) for x in filter(lambda x: x[:4] == 'test' and ext(x) in ('.py', '.xml'), manifest)]
     [(fd_out.write(share+x+'\n')) for x in filter(lambda x: x[:10] == 'test/files' 
         and ext(x) in ('.txt', '.base', '.simple', '.idtag', '.idtagqual', '.xsl'), manifest)]
     for x in ('CHANGELOG.txt', 'INSTALL.txt', 'LICENSE.txt', 'README.txt'):
