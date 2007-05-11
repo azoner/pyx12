@@ -32,4 +32,9 @@ install/test port
 run unit/functional tests on installed port
 check performance
 submit FreeBSD port
+    [UPDATE] textproc/py-pyx12 to 1.4.0
+    non-critical
+    low
+    maintainer-update
+
 install port on local machines
