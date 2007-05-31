@@ -1,5 +1,5 @@
 ######################################################################
-# Copyright (c) 2001-2005 Kalamazoo Community Mental Health Services,
+# Copyright (c) 2001-2007 Kalamazoo Community Mental Health Services,
 #   John Holland <jholland@kazoocmh.org> <john@zoner.org>
 # All rights reserved.
 #
@@ -15,7 +15,6 @@ Create a XML rendering of the X12 document
 """
 
 import logging
-#import pdb
 
 # Intrapackage imports
 from errors import *
@@ -24,8 +23,6 @@ from xmlwriter import XMLWriter
 from map_walker import pop_to_parent_loop
 
 logger = logging.getLogger('pyx12.x12xml.simple')
-logger.setLevel(logging.DEBUG)
-#logger.setLevel(logging.ERROR)
 
 class x12xml_simple(x12xml):
     def __init__(self, fd, dtd_urn):
@@ -36,11 +33,18 @@ class x12xml_simple(x12xml):
                 u"x12simple", u"-//J Holland//DTD XML X12 Document Conversion1.0//EN//XML",
                 u"%s" % (dtd_urn))
         self.writer.push(u"x12simple")
-        self.path = '/'
+        self.last_path = []
 
     def __del__(self):
         while len(self.writer) > 0:
             self.writer.pop()
+
+    def __path_list(self, path_str):
+        """
+        Get list of path nodes from path string
+        @rtype: list
+        """
+        return filter(lambda x: x!='', path_str.split('/'))
 
     def seg(self, seg_node, seg_data):
         """
@@ -55,16 +59,16 @@ class x12xml_simple(x12xml):
             raise EngineError, 'Node must be a segment'
         parent = pop_to_parent_loop(seg_node) # Get enclosing loop
         # check path for new loops to be added
-        path = parent.get_path()
-        if self.path != path:
-            last_path = filter(lambda x: x!='', self.path.split('/'))
-            cur_path = filter(lambda x: x!='', parent.get_path().split('/'))
-            
+        cur_path = self.__path_list(parent.get_path())
+        if self.last_path != cur_path:
+            last_path = self.last_path
             match_idx = 0
             for i in range(min(len(cur_path), len(last_path))):
                 if cur_path[i] != last_path[i]:
                     break
                 match_idx += 1
+            if seg_node.is_first_seg_in_loop() and len(last_path) > len(cur_path):
+                match_idx -= 1
             for i in range(len(last_path)-1, match_idx-1, -1):
                 self.writer.pop()
             for i in range(match_idx, len(cur_path)):
@@ -93,7 +97,7 @@ class x12xml_simple(x12xml):
             else:
                 raise EngineError, 'Node must be a either an element or a composite'
         self.writer.pop() #end segment
-        self.path = path
+        self.last_path = cur_path
 
 def is_not_blank(x):
     """
