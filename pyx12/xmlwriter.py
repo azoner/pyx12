@@ -110,10 +110,11 @@ class XMLWriter(object):
         """
         Close an element started with the push() method
         """
-        elem=self.stack[-1]
-        del self.stack[-1]
-        self.__indent()
-        self.out.write(u"</%s>\n" % elem)
+        if len(self.stack) > 0:
+            elem=self.stack[-1]
+            del self.stack[-1]
+            self.__indent()
+            self.out.write(u"</%s>\n" % elem)
 
     def __len__(self):
         return len(self.stack)
