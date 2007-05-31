@@ -71,12 +71,12 @@ def main():
         return False
     logger = logging.getLogger('pyx12')
     formatter = logging.Formatter('%(asctime)s %(levelname)s %(module)s %(lineno)d %(message)s')
-    try:
-        hdlr = logging.FileHandler('./run.log')
-        hdlr.setFormatter(formatter)
-        logger.addHandler(hdlr) 
-    except:
-        pass
+    #try:
+    #    hdlr = logging.FileHandler('./run.log')
+    #    hdlr.setFormatter(formatter)
+    #    logger.addHandler(hdlr) 
+    #except:
+    #    pass
     stderr_hdlr = logging.StreamHandler()
     stderr_hdlr.setFormatter(formatter)
     logger.addHandler(stderr_hdlr)

@@ -54,12 +54,12 @@ def main():
         raise
         return False
     logger = logging.getLogger('pyx12')
-    hdlr = logging.FileHandler('./run.log')
+    #hdlr = logging.FileHandler('./run.log')
     stderr_hdlr = logging.StreamHandler()
     formatter = logging.Formatter('%(asctime)s %(levelname)s %(module)s %(lineno)d %(message)s')
-    hdlr.setFormatter(formatter)
+    #hdlr.setFormatter(formatter)
     stderr_hdlr.setFormatter(formatter)
-    logger.addHandler(hdlr) 
+    #logger.addHandler(hdlr) 
     logger.addHandler(stderr_hdlr)
     logger.setLevel(logging.INFO)
     target_x12 = None
