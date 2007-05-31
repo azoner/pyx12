@@ -119,8 +119,9 @@ def main():
             except IOError:
                 logger.error('Could not open log file: %s' % (val))
 
-    if not debug:
+    if not debug and not profile:
         try:
+            #print 'import psyco'
             import psyco
             psyco.full()
         except ImportError:
@@ -128,6 +129,9 @@ def main():
 
     for src_filename in args:
         try:
+            if not os.path.isfile(src_filename):
+                logger.error('Could not open file "%s"' % (src_filename))
+                continue
             #fd_src = open(src_filename, 'U')
             if flag_997:
                 if os.path.splitext(src_filename)[1] == '.txt':
@@ -147,8 +151,11 @@ def main():
 
             if profile:
                 import profile
-                profile.run('pyx12.x12n_document.x12n_document(param, src_filename, fd_997, fd_html, None, xslt_files)', 
-                    'pyx12.prof')
+                prof_str = 'pyx12.x12n_document.x12n_document(param, src_filename, ' \
+                        + 'fd_997, fd_html, None, xslt_files)'
+                print prof_str
+                print param
+                profile.run(prof_str, 'pyx12.prof')
             else:
                 if pyx12.x12n_document.x12n_document(param=param, src_file=src_filename, 
                         fd_997=fd_997, fd_html=fd_html, fd_xmldoc=None, xslt_files=xslt_files):
