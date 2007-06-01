@@ -14,6 +14,7 @@
 Create a XML rendering of the X12 document
 """
 
+import os.path
 import logging
 
 # Intrapackage imports
@@ -67,7 +68,10 @@ class x12xml_simple(x12xml):
                 if cur_path[i] != last_path[i]:
                     break
                 match_idx += 1
-            if seg_node.is_first_seg_in_loop() and len(last_path) > len(cur_path):
+            #root_path = cur_path[:match_idx]
+            root_path = self.__path_list(os.path.commonprefix(
+                ['/'.join(cur_path), '/'.join(last_path)]))
+            if seg_node.is_first_seg_in_loop() and root_path==cur_path:
                 match_idx -= 1
             for i in range(len(last_path)-1, match_idx-1, -1):
                 self.writer.pop()
