@@ -16,11 +16,6 @@ Applying the transform to another map should be a no-op.
     </xsl:copy>
   </xsl:template>
 
-  <!--
-  delete valid code
-  alter valid code
-  -->
-
   <!-- Alter usage -->
   <xsl:template match="/transaction[@xid='835']//loop[@xid='1000B']/usage">
     <usage>S</usage>
@@ -42,10 +37,12 @@ Applying the transform to another map should be a no-op.
     </element>
   </xsl:template>
 
-  <!-- Alter a valid code
-  <xsl:template match="element[@xid='BPR04']/valid_codes/code['FWT']">
+  <!-- Alter a valid code -->
+  <xsl:template match="/transaction[@xid='835']//element[@xid='BPR04']/valid_codes/code[. = 'FWT']">
     <code>XXX</code>
   </xsl:template>
--->
+
+  <!-- Delete a valid code -->
+  <xsl:template match="/transaction[@xid='835']//element[@xid='BPR04']/valid_codes/code[. = 'ACH']"/>
 
 </xsl:stylesheet>
