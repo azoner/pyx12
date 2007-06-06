@@ -182,12 +182,16 @@
   <data_ele ele_num="236" data_type="ID" min_len="3" max_len="3" name="Price Identifier Code"/>
   <data_ele ele_num="26" data_type="ID" min_len="2" max_len="3" name="Country Code"/>
   <data_ele ele_num="28" data_type="N0" min_len="1" max_len="9" name="Group Control Number"/>
+  <data_ele ele_num="29" data_type="DT" min_len="6" max_len="8" name="Date"/>
+  <data_ele ele_num="30" data_type="TM" min_len="4" max_len="4" name="Time"/>
   <data_ele ele_num="280" data_type="R" min_len="4" max_len="10" name="Exchange Rate"/>
   <data_ele ele_num="289" data_type="N0" min_len="1" max_len="2" name="Multiple Price Quantity"/>
   <data_ele ele_num="305" data_type="ID" min_len="1" max_len="2" name="Transaction Handling Code"/>
   <data_ele ele_num="306" data_type="ID" min_len="1" max_len="2" name="Action Code"/>
   <data_ele ele_num="309" data_type="ID" min_len="1" max_len="2" name="Location Qualifier"/>
   <data_ele ele_num="310" data_type="AN" min_len="1" max_len="30" name="Location Identifier"/>
+  <data_ele ele_num="324" data_type="AN" min_len="1" max_len="22" name="Purchase Order Number"/>
+  <data_ele ele_num="328" data_type="AN" min_len="1" max_len="30" name="Release Number"/>
   <data_ele ele_num="329" data_type="AN" min_len="4" max_len="9" name="Transaction Set Control Number"/>
   <data_ele ele_num="332" data_type="R" min_len="1" max_len="6" name="Percent"/>
   <data_ele ele_num="337" data_type="TM" min_len="4" max_len="8" name="Time"/>
@@ -196,6 +200,7 @@
   <data_ele ele_num="350" data_type="AN" min_len="1" max_len="20" name="Assigned Identification"/>
   <data_ele ele_num="352" data_type="AN" min_len="1" max_len="80" name="Description"/>
   <data_ele ele_num="353" data_type="ID" min_len="2" max_len="2" name="Transaction Set Purpose Code"/>
+  <data_ele ele_num="354" data_type="N0" min_len="1" max_len="6" name="Number of Line Items"/>
   <data_ele ele_num="355" data_type="ID" min_len="2" max_len="2" name="Unit or Basis for Measurement Code"/>
   <data_ele ele_num="358" data_type="R" min_len="1" max_len="10" name="Quantity Invoiced"/>
   <data_ele ele_num="363" data_type="ID" min_len="3" max_len="3" name="Note Reference Code"/>
@@ -247,9 +252,14 @@
   <data_ele ele_num="662" data_type="ID" min_len="1" max_len="1" name="Relationship Code"/>
   <data_ele ele_num="669" data_type="ID" min_len="3" max_len="3" name="Currency Market/Exchange Code"/>
   <data_ele ele_num="67" data_type="AN" min_len="2" max_len="80" name="Identification Code"/>
+  <data_ele ele_num="672" data_type="ID" min_len="2" max_len="2" name="Resource Authorization Code"/>
   <data_ele ele_num="673" data_type="ID" min_len="2" max_len="2" name="Quantity Qualifier"/>
+  <data_ele ele_num="675" data_type="ID" min_len="2" max_len="2" name="Schedule Type Qualifier"/>
+  <data_ele ele_num="676" data_type="ID" min_len="1" max_len="1" name="Schedule Quantity Qualifier"/>
   <data_ele ele_num="678" data_type="ID" min_len="1" max_len="2" name="Ship/Delivery or Calendar Pattern Code"/>
   <data_ele ele_num="679" data_type="ID" min_len="1" max_len="1" name="Ship/Delivery Pattern Time Code"/>
+  <data_ele ele_num="680" data_type="ID" min_len="1" max_len="1" name="Forecast Qualifier"/>
+  <data_ele ele_num="681" data_type="ID" min_len="1" max_len="1" name="Forecast Timing Qualifier"/>
   <data_ele ele_num="687" data_type="ID" min_len="2" max_len="2" name="Class of Trade Code"/>
   <data_ele ele_num="689" data_type="ID" min_len="2" max_len="2" name="Occupancy Code"/>
   <data_ele ele_num="704" data_type="ID" min_len="1" max_len="2" name="Paperwork/Report Action Code"/>
