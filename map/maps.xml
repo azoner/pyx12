@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- 
 ######################################################################
-# Copyright (c) 2001-2005 Kalamazoo Community Mental Health Services,
+# Copyright (c) 2001-2007 Kalamazoo Community Mental Health Services,
 #   John Holland <jholland@kazoocmh.org> <john@zoner.org>
 # All rights reserved.
 #
@@ -19,6 +19,9 @@ fic - Functional Identifier Code (GS01)
 vriic - Version / Release / Industry Identifier Code (GS08)
 -->
 <maps>
+  <version icvn="00400">
+    <map vriic="004010" fic="PS">830.4010.PS.xml</map>
+  </version>
   <version icvn="00401">
     <map vriic="004010X070" fic="HN">277U.4010.X070.xml</map>
     <map vriic="004010X093A1" fic="HR">276.4010.X093.A1.xml</map>
@@ -35,6 +38,7 @@ vriic - Version / Release / Industry Identifier Code (GS08)
     <map vriic="004010X098A1" fic="HC">837.4010.X098.A1.xml</map>
     <map vriic="004010XXXC" fic="SP">841.4010.XXXC.xml</map>
     <map vriic="004010" fic="FA">997.4010.xml</map>
+    <map vriic="004010" fic="PS">830.4010.PS.xml</map>
     <map vriic="" fic="">x12.control.00401.xml</map>
   </version>
   <version icvn="00402">
