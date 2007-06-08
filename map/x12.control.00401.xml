@@ -130,7 +130,9 @@
         <usage>R</usage>
         <seq>12</seq>
         <valid_codes>
+          <code>00400</code>
           <code>00401</code>
+          <code>00402</code>
         </valid_codes>
       </element>
       <element xid="ISA13">

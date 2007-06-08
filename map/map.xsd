@@ -122,6 +122,13 @@
   <xsd:simpleType name="syntaxType">
     <xsd:restriction base="xsd:token">
       <xsd:pattern value='(E|L|P|C|R)([0-9]{2}){2,20}'/>
+      <!-- Syntax Codes:
+        P - Paired or Multiple - If any element specified is present, all must be present 
+        R - Required - At least one must be present
+        E - Exclusion - Not more than one specified element may be present
+        C - Conditional - If first is present, all others must be present
+        L - List - If first is present, at least one other must be present
+      -->
     </xsd:restriction>
   </xsd:simpleType>
 
