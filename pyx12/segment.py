@@ -416,6 +416,7 @@ class Segment(object):
         if subele_term is None: 
             subele_term = self.subele_term
         str_elems = []
+        i = 0
         for i in range(len(self.elements)-1, -1, -1):
             if not self.elements[i].is_empty():
                 break
