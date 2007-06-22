@@ -288,3 +288,16 @@ class IsValidSegID(unittest.TestCase):
         seg_str = 'A*1~'
         seg = pyx12.segment.Segment(seg_str, '~', '*', ':')
         self.failIf(seg.is_seg_id_valid())
+
+
+class FormatInvalid(unittest.TestCase):
+
+    def test_empty(self):
+        seg_str = 'AAA'
+        seg = pyx12.segment.Segment(seg_str, '~', '*', ':')
+        self.assertEqual(seg.format(), 'AAA*~')
+
+    def test_empty1(self):
+        seg_str = 'AAA~'
+        seg = pyx12.segment.Segment(seg_str, '~', '*', ':')
+        self.assertEqual(seg.format(), 'AAA*~')

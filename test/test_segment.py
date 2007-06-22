@@ -17,6 +17,7 @@ def suite():
     suite.addTest(unittest.makeSuite(Indexing))
     suite.addTest(unittest.makeSuite(IsEmpty))
     suite.addTest(unittest.makeSuite(IsValidSegID))
+    suite.addTest(unittest.makeSuite(FormatInvalid))
     return suite
 
 #if __name__ == "__main__":
