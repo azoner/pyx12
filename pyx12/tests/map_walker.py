@@ -113,8 +113,6 @@ class Implicit_Loops(unittest.TestCase):
 
     FAIL - loop repeat exceeds max count
     OK - loop repeat does not exceed max count
-    
-
     """
 
     def setUp(self):
@@ -137,10 +135,25 @@ class Implicit_Loops(unittest.TestCase):
         map = pyx12.map_if.load_map_file('841.4010.XXXC.xml', self.param)
         node = map.getnodebypath('/ISA_LOOP/GS_LOOP/ST_LOOP/DETAIL/2000/2100/SPI')
         self.assertNotEqual(node, None, 'Node not found')
+        node.cur_count = 1
         seg_data = pyx12.segment.Segment('SPI*00', '~', '*', ':')
-        node = self.walker.walk(node, seg_data, self.errh, 5, 4, None)
+        errh = pyx12.error_handler.errh_null()
+        node = self.walker.walk(node, seg_data, errh, 5, 4, None)
         self.assertNotEqual(node, None, 'walker failed')
         self.assertEqual(seg_data.get_seg_id(), node.id)
+        self.assertEqual(errh.err_cde, None, errh.err_str)
+
+    def test_repeat_loop_with_one_segment_EQ(self):
+        errh = pyx12.error_handler.errh_null()
+        map = pyx12.map_if.load_map_file('270.4010.X092.A1.xml', self.param)
+        node = map.getnodebypath('/ISA_LOOP/GS_LOOP/ST_LOOP/DETAIL/2000A/2000B/2000C/2100C/2110C/EQ')
+        self.assertNotEqual(node, None, 'Node not found')
+        node.cur_count = 1
+        seg_data = pyx12.segment.Segment('EQ*30**CHD', '~', '*', ':')
+        node = self.walker.walk(node, seg_data, errh, 5, 4, None)
+        self.assertNotEqual(node, None, 'walker failed')
+        self.assertEqual(seg_data.get_seg_id(), node.id)
+        self.assertEqual(errh.err_cde, None, errh.err_str)
 
     def test_loop_required_fail1(self):
         """

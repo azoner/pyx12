@@ -107,7 +107,7 @@ class walk_tree(object):
         node_pos = node.pos # Get original position ordinal of starting node
         if not (node.is_loop() or node.is_map_root()): 
             node = pop_to_parent_loop(node) # Get enclosing loop
-        while 1:
+        while True:
             #logger.debug('seg_data.id % ' % (seg_data.get_seg_id()))
             # Iterate through nodes with position >= current position
             pos_keys = filter(lambda a: a>= node_pos, node.pos_map.keys())
