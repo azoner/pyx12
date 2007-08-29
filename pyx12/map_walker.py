@@ -122,7 +122,7 @@ class walk_tree(object):
                         #logger.debug('id=%s cur_count=%i max_repeat=%i' \
                         #    % (child.id, child.cur_count, child.get_max_repeat()))
                         if child.is_match(seg_data):
-							# Is the matched segment the beginning of a loop?
+                            # Is the matched segment the beginning of a loop?
                             if node.is_loop() \
                                     and self._is_loop_match(node, seg_data, errh, seg_count, cur_line, ls_id):
                                 node1 = self._goto_seg_match(node, seg_data, \
