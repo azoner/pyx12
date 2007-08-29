@@ -122,6 +122,12 @@ class walk_tree(object):
                         #logger.debug('id=%s cur_count=%i max_repeat=%i' \
                         #    % (child.id, child.cur_count, child.get_max_repeat()))
                         if child.is_match(seg_data):
+							# Is the matched segment the beginning of a loop?
+                            if node.is_loop() \
+                                    and self._is_loop_match(node, seg_data, errh, seg_count, cur_line, ls_id):
+                                node1 = self._goto_seg_match(node, seg_data, \
+                                    errh, seg_count, cur_line, ls_id)
+                                #return node1.get_child_node_by_idx(0)
                             child.incr_cur_count()
                             #logger.debug('MATCH segment %s (%s*%s)' % (child.id,\
                             #   seg_data.get_seg_id(), seg_data[0].get_value()))
@@ -136,11 +142,6 @@ class walk_tree(object):
                                     errh.seg_error('5', err_str, None)
                             else:
                                 raise EngineError, 'Usage must be R, S, or N'
-                            if node.is_loop() \
-                                    and self._is_loop_match(node, seg_data, errh, seg_count, cur_line, ls_id):
-                                node1 = self._goto_seg_match(node, seg_data, \
-                                    errh, seg_count, cur_line, ls_id)
-                                #return node1.get_child_node_by_idx(0)
                             # Remove any previously missing errors for this segment
                             self.mandatory_segs_missing = filter(lambda x: x[0]!=child, 
                                 self.mandatory_segs_missing)
