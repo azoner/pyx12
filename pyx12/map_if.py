@@ -80,8 +80,8 @@ class x12_node(object):
                     if child.is_loop():
                         return child.getnodebypath(string.join(pathl[1:],'/'))
                     else:
-                        return None
-        return None
+                        break
+        raise errors.EngineError, 'getnodebypath failed. Path "%s" not found' % path
  
     def get_child_count(self):
         return len(self.children)
@@ -365,7 +365,7 @@ class map_if(x12_node):
                         return child
                     else:
                         return child.getnodebypath(string.join(pathl[1:],'/'))
-        return None
+        raise errors.EngineError, 'getnodebypath failed. Path "%s" not found' % path
             
     def is_map_root(self):
         """
@@ -653,7 +653,7 @@ class loop_if(x12_node):
                                 and len(child.children[2].valid_codes) > 0 \
                                 and id_val in child.children[2].valid_codes:
                                 return child
-        return None
+        raise errors.EngineError, 'getnodebypath failed. Path "%s" not found' % path
 
     def get_child_count(self):
         return self.__len__()

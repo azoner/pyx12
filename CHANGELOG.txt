@@ -1,3 +1,5 @@
+Fixed bug.  Miscount repeating segments where segment is first in a loop.
+
 RELEASE 1.4.0
 
 XML Schema for dataele.xml
