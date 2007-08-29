@@ -18,7 +18,7 @@ If seg indicates a segment has been entered, returns the segment node.
 """
 
 import logging
-#import pdb
+import pdb
 
 # Intrapackage imports
 from errors import *
@@ -127,6 +127,7 @@ class walk_tree(object):
                                     and self._is_loop_match(node, seg_data, errh, seg_count, cur_line, ls_id):
                                 node1 = self._goto_seg_match(node, seg_data, \
                                     errh, seg_count, cur_line, ls_id)
+                                return node1
                                 #return node1.get_child_node_by_idx(0)
                             child.incr_cur_count()
                             #logger.debug('MATCH segment %s (%s*%s)' % (child.id,\
