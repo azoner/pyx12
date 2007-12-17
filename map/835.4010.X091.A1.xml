@@ -3292,7 +3292,7 @@
           <name>Table 3 - Footer</name>
           <usage>S</usage>
           <pos>030</pos>
-          <repeat>1</repeat>
+          <repeat>&gt;1</repeat>
           <segment xid="PLB">
             <name>Provider Adjustment</name>
             <usage>S</usage>
