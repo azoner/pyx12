@@ -2353,9 +2353,6 @@
                       <name>Facility Type Code</name>
                       <usage>R</usage>
                       <seq>01</seq>
-                      <valid_codes>
-                        <code/>
-                      </valid_codes>
                     </element>
                     <element xid="CLM05-02">
                       <data_ele>1332</data_ele>
@@ -21190,9 +21187,6 @@
                         <name>Facility Type Code</name>
                         <usage>R</usage>
                         <seq>01</seq>
-                        <valid_codes>
-                          <code/>
-                        </valid_codes>
                       </element>
                       <element xid="CLM05-02">
                         <data_ele>1332</data_ele>
