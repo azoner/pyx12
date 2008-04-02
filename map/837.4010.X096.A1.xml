@@ -107,18 +107,12 @@
         <name>Interchange Date</name>
         <usage>R</usage>
         <seq>09</seq>
-        <valid_codes>
-          <code/>
-        </valid_codes>
       </element>
       <element xid="ISA10">
         <data_ele>I09</data_ele>
         <name>Interchange Time</name>
         <usage>R</usage>
         <seq>10</seq>
-        <valid_codes>
-          <code/>
-        </valid_codes>
       </element>
       <element xid="ISA11">
         <data_ele>I10</data_ele>
@@ -208,18 +202,12 @@
           <name>Date</name>
           <usage>R</usage>
           <seq>04</seq>
-          <valid_codes>
-            <code/>
-          </valid_codes>
         </element>
         <element xid="GS05">
           <data_ele>337</data_ele>
           <name>Time</name>
           <usage>R</usage>
           <seq>05</seq>
-          <valid_codes>
-            <code/>
-          </valid_codes>
         </element>
         <element xid="GS06">
           <data_ele>28</data_ele>
@@ -314,9 +302,6 @@
               <name>Transaction Set Creation Date</name>
               <usage>R</usage>
               <seq>04</seq>
-              <valid_codes>
-                <code/>
-              </valid_codes>
             </element>
             <element xid="BHT05">
               <data_ele>337</data_ele>
@@ -2495,11 +2480,11 @@
                     <usage>N</usage>
                     <seq>16</seq>
                   </element>
-                  <element xid="CLM07">
+                  <element xid="CLM17">
                     <data_ele>1029</data_ele>
                     <name>Claim Status Code</name>
                     <usage>N</usage>
-                    <seq>7</seq>
+                    <seq>17</seq>
                   </element>
                   <element xid="CLM18">
                     <data_ele>1073</data_ele>
@@ -3411,9 +3396,6 @@
                     <name>Service From Date</name>
                     <usage>R</usage>
                     <seq>02</seq>
-                    <valid_codes>
-                      <code/>
-                    </valid_codes>
                   </element>
                   <element xid="CR603">
                     <data_ele>1250</data_ele>
@@ -3435,9 +3417,6 @@
                     <name>Diagnosis Date</name>
                     <usage>R</usage>
                     <seq>05</seq>
-                    <valid_codes>
-                      <code/>
-                    </valid_codes>
                   </element>
                   <element xid="CR606">
                     <data_ele>1073</data_ele>
@@ -3476,9 +3455,6 @@
                     <name>Surgery Date</name>
                     <usage>S</usage>
                     <seq>09</seq>
-                    <valid_codes>
-                      <code/>
-                    </valid_codes>
                   </element>
                   <element xid="CR610">
                     <data_ele>235</data_ele>
@@ -3501,27 +3477,18 @@
                     <name>Physician Order Date</name>
                     <usage>S</usage>
                     <seq>12</seq>
-                    <valid_codes>
-                      <code/>
-                    </valid_codes>
                   </element>
                   <element xid="CR613">
                     <data_ele>373</data_ele>
                     <name>Last Visit Date</name>
                     <usage>S</usage>
                     <seq>13</seq>
-                    <valid_codes>
-                      <code/>
-                    </valid_codes>
                   </element>
                   <element xid="CR614">
                     <data_ele>373</data_ele>
                     <name>Physician Contact Date</name>
                     <usage>S</usage>
                     <seq>14</seq>
-                    <valid_codes>
-                      <code/>
-                    </valid_codes>
                   </element>
                   <element xid="CR615">
                     <data_ele>1250</data_ele>
@@ -3565,36 +3532,24 @@
                     <name>Diagnosis Date</name>
                     <usage>S</usage>
                     <seq>18</seq>
-                    <valid_codes>
-                      <code/>
-                    </valid_codes>
                   </element>
                   <element xid="CR619">
                     <data_ele>373</data_ele>
                     <name>Diagnosis Date</name>
                     <usage>S</usage>
                     <seq>19</seq>
-                    <valid_codes>
-                      <code/>
-                    </valid_codes>
                   </element>
                   <element xid="CR620">
                     <data_ele>373</data_ele>
                     <name>Diagnosis Date</name>
                     <usage>S</usage>
                     <seq>20</seq>
-                    <valid_codes>
-                      <code/>
-                    </valid_codes>
                   </element>
                   <element xid="CR621">
                     <data_ele>373</data_ele>
                     <name>Diagnosis Date</name>
                     <usage>S</usage>
                     <seq>21</seq>
-                    <valid_codes>
-                      <code/>
-                    </valid_codes>
                   </element>
                 </segment>
 <!--End of CR6 segment-->
@@ -20827,9 +20782,6 @@
                     <name>Unit or Basis for Measurement Code</name>
                     <usage>N</usage>
                     <seq>07</seq>
-                    <valid_codes>
-                      <code/>
-                    </valid_codes>
                   </element>
                   <element xid="PAT08">
                     <data_ele>81</data_ele>
@@ -20842,9 +20794,6 @@
                     <name>Pregnancy Indicator</name>
                     <usage>N</usage>
                     <seq>09</seq>
-                    <valid_codes>
-                      <code/>
-                    </valid_codes>
                   </element>
                 </segment>
 <!--End of PAT segment-->
@@ -21329,11 +21278,11 @@
                       <usage>N</usage>
                       <seq>16</seq>
                     </element>
-                    <element xid="CLM07">
+                    <element xid="CLM17">
                       <data_ele>1029</data_ele>
                       <name>Claim Status Code</name>
                       <usage>N</usage>
-                      <seq>7</seq>
+                      <seq>17</seq>
                     </element>
                     <element xid="CLM18">
                       <data_ele>1073</data_ele>
@@ -22245,9 +22194,6 @@
                       <name>Service From Date</name>
                       <usage>R</usage>
                       <seq>02</seq>
-                      <valid_codes>
-                        <code/>
-                      </valid_codes>
                     </element>
                     <element xid="CR603">
                       <data_ele>1250</data_ele>
@@ -22269,9 +22215,6 @@
                       <name>Diagnosis Date</name>
                       <usage>R</usage>
                       <seq>05</seq>
-                      <valid_codes>
-                        <code/>
-                      </valid_codes>
                     </element>
                     <element xid="CR606">
                       <data_ele>1073</data_ele>
@@ -22310,9 +22253,6 @@
                       <name>Surgery Date</name>
                       <usage>S</usage>
                       <seq>09</seq>
-                      <valid_codes>
-                        <code/>
-                      </valid_codes>
                     </element>
                     <element xid="CR610">
                       <data_ele>235</data_ele>
@@ -22335,27 +22275,18 @@
                       <name>Physician Order Date</name>
                       <usage>S</usage>
                       <seq>12</seq>
-                      <valid_codes>
-                        <code/>
-                      </valid_codes>
                     </element>
                     <element xid="CR613">
                       <data_ele>373</data_ele>
                       <name>Last Visit Date</name>
                       <usage>S</usage>
                       <seq>13</seq>
-                      <valid_codes>
-                        <code/>
-                      </valid_codes>
                     </element>
                     <element xid="CR614">
                       <data_ele>373</data_ele>
                       <name>Physician Contact Date</name>
                       <usage>S</usage>
                       <seq>14</seq>
-                      <valid_codes>
-                        <code/>
-                      </valid_codes>
                     </element>
                     <element xid="CR615">
                       <data_ele>1250</data_ele>
@@ -22399,36 +22330,24 @@
                       <name>Diagnosis Date</name>
                       <usage>S</usage>
                       <seq>18</seq>
-                      <valid_codes>
-                        <code/>
-                      </valid_codes>
                     </element>
                     <element xid="CR619">
                       <data_ele>373</data_ele>
                       <name>Diagnosis Date</name>
                       <usage>S</usage>
                       <seq>19</seq>
-                      <valid_codes>
-                        <code/>
-                      </valid_codes>
                     </element>
                     <element xid="CR620">
                       <data_ele>373</data_ele>
                       <name>Diagnosis Date</name>
                       <usage>S</usage>
                       <seq>20</seq>
-                      <valid_codes>
-                        <code/>
-                      </valid_codes>
                     </element>
                     <element xid="CR621">
                       <data_ele>373</data_ele>
                       <name>Diagnosis Date</name>
                       <usage>S</usage>
                       <seq>21</seq>
-                      <valid_codes>
-                        <code/>
-                      </valid_codes>
                     </element>
                   </segment>
 <!--End of CR6 segment-->
