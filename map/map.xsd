@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <!-- 
 ######################################################################
-# Copyright (c) 2001-2007 Kalamazoo Community Mental Health Services,
+# Copyright (c) 2001-2008 Kalamazoo Community Mental Health Services,
 #   John Holland <jholland@kazoocmh.org> <john@zoner.org>
 # All rights reserved.
 #
@@ -18,7 +18,7 @@
   <xsd:annotation>
     <xsd:documentation xml:lang="en">
     XML Schema for pyx12 data validation maps
-    Copyright 2001-2007 Kalamazoo Community Mental Health Services. All rights reserved.
+    Copyright 2001-2008 Kalamazoo Community Mental Health Services. All rights reserved.
     </xsd:documentation>
   </xsd:annotation>
 
@@ -32,6 +32,7 @@
     <xsd:attribute name="xid" type="xsd:NMTOKEN"/>
   </xsd:complexType>
 
+  <!-- A loop can contain multiple segments and multiple child loops -->
   <xsd:complexType name="LoopType">
     <xsd:sequence>
       <xsd:element name="name" type="xsd:token"/>
@@ -51,6 +52,7 @@
     </xsd:choice>
   </xsd:group>
 
+  <!-- Segments can contain both simple elements and composite elements -->
   <xsd:group id="SegmentChildGroupType" name="SegmentChildGroupType">
     <xsd:choice>
       <xsd:element name="element" type="ElementType"/>
