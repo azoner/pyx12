@@ -10,26 +10,25 @@
 #
 ######################################################################
 -->
-<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema"
-	xmlns:x12="urn:pyx12:maps-schema">
+<xsd:schema 
+    xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+	xmlns:x12="http://pyx12.sourceforge.net/">
 <!-- 	targetNamespace="urn:pyx12:maps-schema" -->
 
-  <xsd:element name="maps" type="CodeSetsType">
+  <xsd:element name="maps" type="MapsType">
   <xsd:annotation>
  	<xsd:documentation xml:lang="en">
 Used to identify the map used for a particular Functional Group
-icvn - Interchange Control Version Number (ISA12)
-fic - Functional Identifier Code (GS01)
-vriic - Version / Release / Industry Identifier Code (GS08) 	
     </xsd:documentation>
-	<xsd:appinfo source="http://example.com/foo/">
-		<bind xmlns="http://example.com/bar/">
+	<xsd:appinfo source="http://pyx12.sourceforge.net/">
+		<bind xmlns="http://pyx12.sourceforge.net/">
 			<class name="Maps"/>
 		</bind>
 	</xsd:appinfo>
-  </xsd:element
+  </xsd:annotation>
+  </xsd:element>
  
-  <xsd:complexType name="CodeSetsType">
+  <xsd:complexType name="MapsType">
     <xsd:sequence>
       <xsd:element name="version" type="VersionType" maxOccurs="unbounded"/>
     </xsd:sequence>
@@ -42,19 +41,56 @@ vriic - Version / Release / Industry Identifier Code (GS08)
           <xsd:simpleContent>
             <xsd:extension base="xsd:token">
               <xsd:attribute name="vriic" type="vriicType"/>
-              <xsd:attribute name="fic" type="xsd:token"/>
-              <xsd:attribute name="tspc" type="xsd:token"/>
+              <xsd:attribute name="fic" type="ficType"/>
+              <xsd:attribute name="tspc" type="tspcType"/>
             </xsd:extension>
           </xsd:simpleContent>
         </xsd:complexType>
       </xsd:element>
     </xsd:sequence>
-    <xsd:attribute name="icvn" type="xsd:token"/>
+    <xsd:attribute name="icvn" type="icvnType"/>
   </xsd:complexType>
 
+  <xsd:simpleType name="icvnType">
+    <xsd:annotation>
+ 	  <xsd:documentation xml:lang="en">
+        Interchange Control Version Number (ISA12)
+      </xsd:documentation>
+    </xsd:annotation>
+    <xsd:restriction base="xsd:NMTOKEN">
+      <xsd:maxLength value="8"/>
+    </xsd:restriction>
+  </xsd:simpleType>
+
   <xsd:simpleType name="vriicType">
+    <xsd:annotation>
+ 	  <xsd:documentation xml:lang="en">
+        Version / Release / Industry Identifier Code (GS08) 	
+      </xsd:documentation>
+    </xsd:annotation>
     <xsd:restriction base="xsd:token">
-      <xsd:maxLength value="32"/>
+      <xsd:maxLength value="15"/>
+    </xsd:restriction>
+  </xsd:simpleType>
+
+  <xsd:simpleType name="ficType">
+    <xsd:annotation>
+ 	  <xsd:documentation xml:lang="en">
+        Functional Identifier Code (GS01)
+      </xsd:documentation>
+    </xsd:annotation>
+    <xsd:restriction base="xsd:token">
+      <xsd:maxLength value="2"/>
+    </xsd:restriction>
+  </xsd:simpleType>
+
+  <xsd:simpleType name="tspcType">
+    <xsd:annotation>
+ 	  <xsd:documentation xml:lang="en">
+      </xsd:documentation>
+    </xsd:annotation>
+    <xsd:restriction base="xsd:token">
+      <xsd:maxLength value="2"/>
     </xsd:restriction>
   </xsd:simpleType>
 
