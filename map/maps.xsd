@@ -25,16 +25,19 @@
 
   <xsd:complexType name="VersionType">
     <xsd:sequence>
-      <xsd:element name="map" type="MapType" maxOccurs="unbounded"/>
+      <xsd:element name="map" maxOccurs="unbounded">
+        <xsd:complexType>
+          <xsd:simpleContent>
+            <xsd:extension base="xsd:token">
+              <xsd:attribute name="vriic" type="xsd:token"/>
+              <xsd:attribute name="fic" type="xsd:token"/>
+              <xsd:attribute name="tspc" type="xsd:token"/>
+            </xsd:extension>
+          </xsd:simpleContent>
+        </xsd:complexType>
+      </xsd:element>
     </xsd:sequence>
-  </xsd:complexType>
-
-  <xsd:complexType name="MapType">
-    <xsd:sequence>
-      <xsd:attribute name="vriic" type="xsd:token"/>
-      <xsd:attribute name="fic" type="xsd:token"/>
-      <xsd:attribute name="tspc" type="xsd:token" maxOccurs="0"/>
-    </xsd:sequence>
+    <xsd:attribute name="icvn" type="xsd:token"/>
   </xsd:complexType>
 
 </xsd:schema>
