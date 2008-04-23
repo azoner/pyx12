@@ -10,12 +10,24 @@
 #
 ######################################################################
 -->
-
 <xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema"
 	xmlns:x12="urn:pyx12:maps-schema">
-<!-- 	targetNamespace="urn:pyx12:codes-schema" -->
+<!-- 	targetNamespace="urn:pyx12:maps-schema" -->
 
-  <xsd:element name="maps" type="CodeSetsType"/>
+  <xsd:element name="maps" type="CodeSetsType">
+  <xsd:annotation>
+ 	<xsd:documentation xml:lang="en">
+Used to identify the map used for a particular Functional Group
+icvn - Interchange Control Version Number (ISA12)
+fic - Functional Identifier Code (GS01)
+vriic - Version / Release / Industry Identifier Code (GS08) 	
+    </xsd:documentation>
+	<xsd:appinfo source="http://example.com/foo/">
+		<bind xmlns="http://example.com/bar/">
+			<class name="Maps"/>
+		</bind>
+	</xsd:appinfo>
+  </xsd:element
  
   <xsd:complexType name="CodeSetsType">
     <xsd:sequence>
@@ -29,7 +41,7 @@
         <xsd:complexType>
           <xsd:simpleContent>
             <xsd:extension base="xsd:token">
-              <xsd:attribute name="vriic" type="xsd:token"/>
+              <xsd:attribute name="vriic" type="vriicType"/>
               <xsd:attribute name="fic" type="xsd:token"/>
               <xsd:attribute name="tspc" type="xsd:token"/>
             </xsd:extension>
@@ -39,5 +51,11 @@
     </xsd:sequence>
     <xsd:attribute name="icvn" type="xsd:token"/>
   </xsd:complexType>
+
+  <xsd:simpleType name="vriicType">
+    <xsd:restriction base="xsd:token">
+      <xsd:maxLength value="32"/>
+    </xsd:restriction>
+  </xsd:simpleType>
 
 </xsd:schema>
