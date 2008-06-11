@@ -85,6 +85,7 @@ class x12xml_idtagqual(x12xml):
     def _get_node_id(self, seg_node, parent, seg_data):
         """
         Get a unique node ID string
+        Override base class function
         @param seg_node: L{node<map_if.segment_if>}
         @param parent: L{node<map_if.segment_if>}
         @param seg_data: L{node<segment.Segment>}

@@ -56,13 +56,14 @@ class x12xml_idtag(x12xml):
                 self.writer.pop()
             for i in range(match_idx, len(cur_path)):
                 self.writer.push('L'+cur_path[i])
-        self.writer.push(seg_node.id)
+        seg_node_id = self._get_node_id(seg_node, parent, seg_data)
+        self.writer.push(seg_node_id)
         for i in range(len(seg_data)):
             child_node = seg_node.get_child_node_by_idx(i)
             if child_node.usage == 'N' or seg_data.get('%02i' % (i+1)).is_empty():
                 pass # Do not try to ouput for invalid or empty elements
             elif child_node.is_composite():
-                self.writer.push(seg_node.id)
+                self.writer.push(seg_node_id)
                 comp_data = seg_data.get('%02i' % (i+1))
                 for j in range(len(comp_data)):
                     subele_node = child_node.get_child_node_by_idx(j)

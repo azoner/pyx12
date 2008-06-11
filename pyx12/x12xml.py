@@ -53,3 +53,10 @@ class x12xml(object):
                 break
             match_idx += 1
         return match_idx
+
+    def _get_node_id(self, seg_node, parent=None, seg_data=None):
+        """
+        Base node id function
+        """
+        return seg_node.id
+
