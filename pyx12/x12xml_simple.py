@@ -58,29 +58,77 @@ class x12xml_simple(x12xml):
             for i in range(len(last_path)-1, match_idx-1, -1):
                 self.writer.pop()
             for i in range(match_idx, len(cur_path)):
-                self.writer.push(u"loop", {u'id': cur_path[i]})
-        self.writer.push(u"seg", {u'id': seg_node.id})
+                (xname, attrib) = self._get_loop_info(cur_path[i])
+                self.writer.push(xname, attrib)
+        seg_node_id = self._get_node_id(seg_node, parent, seg_data)
+        (xname, attrib) = self._get_seg_info(seg_node_id)
+        self.writer.push(xname, attrib)
         for i in range(len(seg_data)):
             child_node = seg_node.get_child_node_by_idx(i)
             if child_node.usage == 'N' or seg_data.get('%02i' % (i+1)).is_empty():
                 pass # Do not try to ouput for invalid or empty elements
             elif child_node.is_composite():
-                self.writer.push(u"comp", {u'id': seg_node.id})
+                (xname, attrib) = self._get_comp_info(seg_node_id)
+                self.writer.push(xname, attrib)
                 comp_data = seg_data.get('%02i' % (i+1))
                 for j in range(len(comp_data)):
                     subele_node = child_node.get_child_node_by_idx(j)
-                    self.writer.elem(u'subele', comp_data[j].get_value(), \
-                        attrs={u'id': subele_node.id})
+                    (xname, attrib) = self._get_subele_info(subele_node.id)
+                    self.writer.elem(xname, comp_data[j].get_value(), attrib)
                 self.writer.pop() #end composite
             elif child_node.is_element():
                 if seg_data.get_value('%02i' % (i+1)) == '':
                     pass
                     #self.writer.empty(u"ele", attrs={u'id': child_node.id})
                 else:
-                    #pdb.set_trace()
-                    self.writer.elem(u'ele', seg_data.get_value('%02i' % (i+1)), 
-                        attrs={u'id': child_node.id})
+                    (xname, attrib) = self._get_ele_info(child_node.id)
+                    self.writer.elem(xname, seg_data.get_value('%02i' % (i+1)), attrib)
             else:
                 raise EngineError, 'Node must be a either an element or a composite'
         self.writer.pop() #end segment
         self.last_path = cur_path
+
+    def _get_loop_info(self, loop_id):
+        """
+        Override loop node value
+        """
+        loop_name = u"loop"
+        attrib = {}
+        attrib[u'id'] = loop_id
+        return (loop_name, attrib)
+
+    def _get_seg_info(self, seg_id):
+        """
+        Override segment node value
+        """
+        seg_name = u"seg"
+        attrib = {}
+        attrib[u'id'] = seg_id
+        return (seg_name, attrib)
+
+    def _get_comp_info(self, comp_id):
+        """
+        Override composite node value
+        """
+        comp_name = u"comp"
+        attrib = {}
+        attrib[u'id'] = comp_id
+        return (comp_name, attrib)
+
+    def _get_ele_info(self, ele_id):
+        """
+        Override element node value
+        """
+        name = u'ele'
+        attrib = {}
+        attrib[u'id'] = ele_id
+        return (name, attrib)
+
+    def _get_subele_info(self, subele_id):
+        """
+        Override sub-element node value
+        """
+        name = u'subele'
+        attrib = {}
+        attrib[u'id'] = subele_id
+        return (name, attrib)

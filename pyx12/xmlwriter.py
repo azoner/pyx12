@@ -78,10 +78,10 @@ class XMLWriter(object):
         """
         Create an element which will have child elements
         """
-        self.__indent()
+        self._indent()
         self.out.write("<" + elem)
         for (a, v) in attrs.items():
-            self.out.write(u" %s='%s'" % (a, self.__escape_attr(v)))
+            self.out.write(u" %s='%s'" % (a, self._escape_attr(v)))
         self.out.write(u">\n")
         self.stack.append(elem)
 
@@ -89,18 +89,18 @@ class XMLWriter(object):
         """
         Create an element with text content only
         """
-        self.__indent()
+        self._indent()
         self.out.write(u"<" + elem)
         for (a, v) in attrs.items():
-            self.out.write(u" %s='%s'" % (a, self.__escape_attr(v)))
+            self.out.write(u" %s='%s'" % (a, self._escape_attr(v)))
         self.out.write(u">%s</%s>\n" \
-                       % (self.__escape_cont(content), elem))
+                       % (self._escape_cont(content), elem))
 
     def empty(self, elem, attrs={}):
         """
         Create an empty element
         """
-        self.__indent()
+        self._indent()
         self.out.write(u"<"+elem)
         for a in attrs.items():
             self.out.write(u" %s='%s'" % a)
@@ -113,22 +113,22 @@ class XMLWriter(object):
         if len(self.stack) > 0:
             elem=self.stack[-1]
             del self.stack[-1]
-            self.__indent()
+            self._indent()
             self.out.write(u"</%s>\n" % elem)
 
     def __len__(self):
         return len(self.stack)
     
-    def __indent(self):
+    def _indent(self):
         self.out.write(self.indent * (len(self.stack) * 2))
     
-    def __escape_cont(self, text):
+    def _escape_cont(self, text):
         if text is None:
             return None
         return text.replace(u"&", u"&amp;")\
             .replace(u"<", u"&lt;").replace(u">", u"&gt;")
 
-    def __escape_attr(self, text):
+    def _escape_attr(self, text):
         if text is None:
             return None
         return text.replace(u"&", u"&amp;") \

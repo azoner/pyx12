@@ -60,3 +60,42 @@ class x12xml(object):
         """
         return seg_node.id
 
+    def _get_loop_info(self, loop_id):
+        """
+        Base loop node value
+        """
+        loop_name = loop_id
+        attrib = {}
+        return (loop_name, attrib)
+
+    def _get_seg_info(self, seg_id):
+        """
+        Base segment node value
+        """
+        seg_name = seg_id
+        attrib = {}
+        return (seg_name, attrib)
+
+    def _get_comp_info(self, comp_id):
+        """
+        Base composite node value
+        """
+        comp_name = comp_id
+        attrib = {}
+        return (comp_name, attrib)
+
+    def _get_ele_info(self, ele_id):
+        """
+        Base element node value
+        """
+        name = ele_id
+        attrib = {}
+        return (name, attrib)
+
+    def _get_subele_info(self, subele_id):
+        """
+        Base sub-element node value
+        """
+        name = subele_id
+        attrib = {}
+        return (name, attrib)
