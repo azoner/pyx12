@@ -1,5 +1,5 @@
 ######################################################################
-# Copyright (c) 2001-2005 Kalamazoo Community Mental Health Services,
+# Copyright (c) 2001-2008 Kalamazoo Community Mental Health Services,
 #   John Holland <jholland@kazoocmh.org> <john@zoner.org>
 # All rights reserved.
 #
@@ -16,10 +16,8 @@ Uses node IDs as the tag names
 Append ID value for non-unique segments IDs
 """
 
+import os.path
 import logging
-#import pdb
-#import string
-#import os.path
 
 # Intrapackage imports
 from errors import *
@@ -28,20 +26,11 @@ from xmlwriter import XMLWriter
 from map_walker import pop_to_parent_loop
 
 logger = logging.getLogger('pyx12.x12xml.idtagqual')
-#logger.setLevel(logging.DEBUG)
-#logger.setLevel(logging.ERROR)
 
 class x12xml_idtagqual(x12xml):
     def __init__(self, fd, dtd_urn=None):
-        x12xml.__init__(self)
-        logger.debug('idtagqual')
-        self.writer = XMLWriter(fd)
-        if dtd_urn:
-            self.writer.doctype(
-                u"x12idtagqual", u"-//J Holland//DTD XML X12 Document Conversion1.0//EN//XML",
-                u"%s" % (dtd_urn))
-        self.writer.push(u"x12idtagqual")
-        self.path = '/'
+        x12xml.__init__(self, fd, u"x12idtagqual", dtd_urn)
+        self.last_path = []
 
     def __del__(self):
         while len(self.writer) > 0:
@@ -51,7 +40,7 @@ class x12xml_idtagqual(x12xml):
         """
         Generate XML for the segment data and matching map node
 
-        @param seg_node: Map Node 
+        @param seg_node: Map Node
         @type seg_node: L{node<map_if.x12_node>}
         @param seg_data: Segment object
         @type seg_data: L{segment<segment.Segment>}
@@ -60,20 +49,15 @@ class x12xml_idtagqual(x12xml):
             raise EngineError, 'Node must be a segment'
         parent = pop_to_parent_loop(seg_node) # Get enclosing loop
         # check path for new loops to be added
-        path = parent.get_path()
-        if self.path != path:
-            last_path = filter(lambda x: x!='', self.path.split('/'))
-            cur_path = filter(lambda x: x!='', parent.get_path().split('/'))
-            match_idx = 0
-            for i in range(min(len(cur_path), len(last_path))):
-                if cur_path[i] != last_path[i]:
-                    break
-                match_idx += 1
+        cur_path = self._path_list(parent.get_path())
+        if self.last_path != cur_path:
+            last_path = self.last_path
+            match_idx = self._get_path_match_idx(last_path, cur_path)
             for i in range(len(last_path)-1, match_idx-1, -1):
                 self.writer.pop()
             for i in range(match_idx, len(cur_path)):
                 self.writer.push('L'+cur_path[i])
-        seg_node_id = self.get_node_id(seg_node, parent, seg_data)
+        seg_node_id = self._get_node_id(seg_node, parent, seg_data)
         self.writer.push(seg_node_id)
         for i in range(len(seg_data)):
             child_node = seg_node.get_child_node_by_idx(i)
@@ -96,9 +80,9 @@ class x12xml_idtagqual(x12xml):
             else:
                 raise EngineError, 'Node must be a either an element or a composite'
         self.writer.pop() #end segment
-        self.path = path
+        self.last_path = cur_path
         
-    def get_node_id(self, seg_node, parent, seg_data):
+    def _get_node_id(self, seg_node, parent, seg_data):
         """
         Get a unique node ID string
         @param seg_node: L{node<map_if.segment_if>}
