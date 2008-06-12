@@ -1,6 +1,6 @@
 #! /usr/bin/env python
 ######################################################################
-# Copyright (c) 2001-2007 Kalamazoo Community Mental Health Services,
+# Copyright (c) 2001-2008 Kalamazoo Community Mental Health Services,
 #   John Holland <jholland@kazoocmh.org> <john@zoner.org>
 # All rights reserved.
 #

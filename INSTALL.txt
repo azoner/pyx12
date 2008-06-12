@@ -15,5 +15,5 @@ startup time.  After installation:
 
 WINDOWS:
 
-To get libxml2 with python 2.4 bindings:
+To get libxml2 with python bindings:
     http://users.skynet.be/sbi/libxml-python/

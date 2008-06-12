@@ -19,8 +19,8 @@ post release to sf, python-announce
 python package index (http://cheeseshop.python.org/)
 Tag tree
     svn copy https://pyx12.svn.sourceforge.net/svnroot/pyx12/pyx12/trunk/ \
-    https://pyx12.svn.sourceforge.net/svnroot/pyx12/pyx12/tags/RELEASE_1_4_0 \
-    -m "Tag release 1.4.0"
+    https://pyx12.svn.sourceforge.net/svnroot/pyx12/pyx12/tags/RELEASE_1_5_0 \
+    -m "Tag release 1.5.0"
 
 FreeBSD Port
 make port
@@ -32,7 +32,7 @@ install/test port
 run unit/functional tests on installed port
 check performance
 submit FreeBSD port
-    [UPDATE] textproc/py-pyx12 to 1.4.0
+    [UPDATE] textproc/py-pyx12 to 1.5.0
     non-critical
     low
     maintainer-update

@@ -1,6 +1,6 @@
 # Builds the html representations of the map summaries and segment detail, as well as supporting files.
 # This file is part of the pyX12 project.
-# Copyright (c) 2001-2005 Kalamazoo Community Mental Health Services,
+# Copyright (c) 2001-2008 Kalamazoo Community Mental Health Services,
 #
 # Uses the xlstproc processor - part of the the Gnome libxlst library
 #
