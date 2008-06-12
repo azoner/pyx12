@@ -1,3 +1,6 @@
+Fixed x12xml idtag and idtagqual loop generation bug.  Refactor x12xml* to
+common code.
+
 Fixed bug.  Miscount repeating segments where segment is first in a loop.
 
 RELEASE 1.4.0

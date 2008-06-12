@@ -153,4 +153,3 @@ class x12xml_idtagqual(x12xml):
         name = subele_id
         attrib = {}
         return (name, attrib)
-
