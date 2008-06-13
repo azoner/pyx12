@@ -29,4 +29,4 @@ clean:
 	rm -f *.o *.core
 
 doc:
-	epydoc --check --html --name Pyx12 -u http://pyx12.sourceforge.net/ --no-frames -o $(DOCTARGET) .
+	epydoc -v --check --html --name Pyx12 --exclude=tests -u http://pyx12.sourceforge.net/ --no-frames -o $(DOCTARGET) .
