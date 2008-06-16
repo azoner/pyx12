@@ -45,6 +45,7 @@ kw = {
     'author': "John Holland",
     'author_email': "jholland@kazoocmh.org",
     'url': "http://pyx12.sourceforge.net/",
+    'download_url': "https://sourceforge.net/project/platformdownload.php?group_id=40379",
     'platforms': 'All',
     'packages': ['pyx12', 'pyx12.tests'],
     'scripts': ['build/bin/%s' % (script) for script in SCRIPTS],
