@@ -1,3 +1,5 @@
+Updated ele 1331 (POS) codes
+
 Fixed x12xml idtag and idtagqual loop generation bug.  Refactor x12xml* to
 common code.
 

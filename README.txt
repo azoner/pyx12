@@ -3,6 +3,16 @@ pyx12-1.5.0 has been released
 What's New:
 ===========
 
+This is a bugfix release:
+
+    Updated ele 1331 (POS) codes
+
+    Fixed x12xml idtag and idtagqual loop generation bug.  Refactor x12xml* to
+    common code.
+
+    Fixed miscount of repeating segments where segment is first in a loop.
+
+
 What is Pyx12?
 ==============
     Pyx12 is a HIPAA X12 document validator and converter.  It parses an ANSI
