@@ -10,10 +10,20 @@ Documentation
  - update web site (cd pyx12/htdocs/; svn export --force https://pyx12.svn.sourceforge.net/svnroot/pyx12/pyx12-web/trunk/ .)
 
 make packages
+ - python setup.py sdist --force-manifest
  - python setup.py sdist --formats=gztar,bztar,zip
  - python setup.py bdist_wininst
 package index
 release notes
+Copy bzip to /usr/ports/distfiles/
+
+FreeBSD Port
+make port
+ - #plist.py > pkg-plist; cp pkg-plist to port
+ - #make makesum
+ - make describe (string should look ok)
+ - port test .
+
 Upload packages to sf
 post release to sf, python-announce
 python package index (http://cheeseshop.python.org/)
@@ -22,13 +32,7 @@ Tag tree
     https://pyx12.svn.sourceforge.net/svnroot/pyx12/pyx12/tags/RELEASE_1_5_0 \
     -m "Tag release 1.5.0"
 
-FreeBSD Port
-make port
- - #make_plist.py
- - #make makesum
- - make describe
- - port test .
-install/test port
+install/test port from sf download
 run unit/functional tests on installed port
 check performance
 submit FreeBSD port

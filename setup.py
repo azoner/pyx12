@@ -84,5 +84,4 @@ if (hasattr(core, 'setup_keywords') and
          'Topic :: Software Development :: Libraries :: Python Modules',
          ]
 
-print kw['classifiers']
 core.setup(**kw)
