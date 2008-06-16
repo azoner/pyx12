@@ -72,9 +72,16 @@ else:
 if (hasattr(core, 'setup_keywords') and
     'classifiers' in core.setup_keywords):
     kw['classifiers'] = \
-        ['Topic :: Communications, Office/Business',
-         'Environment :: Console (Text Based)',
-         'Intended Audience :: Developers, Other Audience',
-         ' License :: OSI Approved :: BSD License'],
+        [
+         'Development Status :: 5 - Production/Stable',
+         'Environment :: Console',
+         'Intended Audience :: Healthcare Industry',
+         'Intended Audience :: Developers',
+         'License :: OSI Approved :: BSD License',
+         'Programming Language :: Python',
+         'Topic :: Office/Business',
+         'Topic :: Software Development :: Libraries :: Python Modules',
+         ]
 
+print kw['classifiers']
 core.setup(**kw)
