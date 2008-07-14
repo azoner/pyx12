@@ -69,7 +69,7 @@ def main():
     src = pyx12.x12file.X12file(file_in)
     for seg_data in src:
         if fix:
-            err_codes = [(x[1]) for x in src.get_errors()]
+            err_codes = [(x[1]) for x in src.pop_errors()]
             if seg_data.get_seg_id() == 'IEA' and '021' in err_codes:
                 seg_data.set('IEA01', '%i' % (src.gs_count))
             elif seg_data.get_seg_id() == 'GE' and '5' in err_codes:
