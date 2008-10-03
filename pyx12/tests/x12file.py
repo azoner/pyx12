@@ -18,7 +18,8 @@ class X12fileTestCase(unittest.TestCase):
         errors = []
         err_cde = None
         err_str = None
-        src = pyx12.x12file.X12file(fd)
+        src = pyx12.x12file.X12FileReader(fd)
+        #src = pyx12.x12file.X12file(fd)
         for seg in src:
             errors.extend(src.pop_errors())
         errors.extend(src.pop_errors())

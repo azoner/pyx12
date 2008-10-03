@@ -23,7 +23,6 @@ import logging
 # Intrapackage imports
 import pyx12.errors
 import pyx12.segment
-import pyx12.rawx12file
 from pyx12.rawx12file import RawX12File
 
 DEFAULT_BUFSIZE = 8*1024
@@ -31,7 +30,8 @@ ISA_LEN = 106
 
 logger = logging.getLogger('pyx12.x12file')
 
-class X12file(object):
+
+class X12FileReader(object):
     """
     Interface to an X12 data file
 
@@ -47,15 +47,15 @@ class X12file(object):
             readable file object
         @type src_file_obj: string or open file object
         """
-        fd_in = None
+        self.fd_in = None
         try:
             res = src_file_obj.closed
-            fd_in = src_file_obj
+            self.fd_in = src_file_obj
         except AttributeError:
             if src_file_obj == '-':
-                fd_in = sys.stdin
+                self.fd_in = sys.stdin
             else:
-                fd_in = open(src_file_obj, 'U')
+                self.fd_in = open(src_file_obj, 'U')
         self.err_list = []
         self.loops = []
         self.hl_stack = []
@@ -71,7 +71,7 @@ class X12file(object):
         self.isa_usage = None
 
         try:
-            self.raw = RawX12File(fd_in)
+            self.raw = RawX12File(self.fd_in)
         except pyx12.errors.X12Error:
             raise
         (seg_term, ele_term, subele_term, eol) = self.raw.get_term()
@@ -85,7 +85,7 @@ class X12file(object):
        
     def __del__(self):
         try:
-            self.fd.close()
+            self.fd_in.close()
         except:
             pass
 
@@ -406,3 +406,308 @@ class X12file(object):
         @rtype: tuple(string, string, string, string)
         """
         return (self.seg_term, self.ele_term, self.subele_term, '\n')
+
+
+class X12FileBase(object):
+    """
+    Base class of X12 Reader and X12 Writer
+    Common X12 validation
+    """
+
+    def __init__(self):
+        """
+        Initialize the file X12 file
+
+        @param src_file_obj: absolute path of source file or an open, 
+            readable file object
+        @type src_file_obj: string or open file object
+        """
+        self.err_list = []
+        self.loops = []
+        self.hl_stack = []
+        self.gs_count = 0
+        self.st_count = 0
+        self.hl_count = 0
+        self.seg_count = 0
+        self.cur_line = 0
+        self.isa_ids = []
+        self.gs_ids = []
+        self.st_ids = []
+        self.isa_usage = None
+        self.seg_term = None
+        self.ele_term = None
+        self.subele_term = None
+       
+    def _parse_segment(self, seg_data):
+        """
+        Catch segment issues common to both readers and writers
+
+        @seg_data: Segment data instance
+        """
+        self.err_list = []
+        # We have not yet incremented cur_line
+        #if line[-1] == self.ele_term:
+        #    err_str = 'Segment contains trailing element terminators'
+        #    self._seg_error('SEG1', err_str, None, 
+        #        src_line=self.cur_line+1)
+        #seg = pyx12.segment.Segment(line, self.seg_term, self.ele_term, \
+        #    self.subele_term)
+        if seg_data.is_empty():
+            err_str = 'Segment "%s" is empty' % (seg_data)
+            self._seg_error('8', err_str, None, 
+                src_line=self.cur_line+1)
+        if not seg_data.is_seg_id_valid():
+            err_str = 'Segment identifier "%s" is invalid' % (
+                seg_data.get_seg_id())
+            self._seg_error('1', err_str, None, 
+                src_line=self.cur_line+1)
+        if seg_data.get_seg_id() == 'ISA': 
+            if len(seg_data) != 16:
+                raise pyx12.errors.X12Error, \
+                    'The ISA segment must have 16 elements (%s)' % (seg_data)
+            interchange_control_number = seg_data.get_value('ISA13')
+            if interchange_control_number in self.isa_ids:
+                err_str = 'ISA Interchange Control Number '
+                err_str += '%s not unique within file' \
+                    % (interchange_control_number)
+                self._isa_error('025', err_str)
+            self.loops.append(('ISA', interchange_control_number))
+            self.isa_ids.append(interchange_control_number)
+            self.gs_count = 0
+            self.gs_ids = []
+            self.isa_usage = seg_data.get_value('ISA15')
+        elif seg_data.get_seg_id() == 'IEA': 
+            if self.loops[-1][0] != 'ISA':
+                # Unterminated GS loop
+                err_str = 'Unterminated Loop %s' % (self.loops[-1][0])
+                self._isa_error('024', err_str)
+                del self.loops[-1]
+            if self.loops[-1][1] != seg_data.get_value('IEA02'):
+                err_str = 'IEA id=%s does not match ISA id=%s' % \
+                    (seg_data.get_value('IEA02'), self.loops[-1][1])
+                self._isa_error('001', err_str)
+            if self._int(seg_data.get_value('IEA01')) != self.gs_count:
+                err_str = 'IEA count for IEA02=%s is wrong' % \
+                    (seg_data.get_value('IEA02'))
+                self._isa_error('021', err_str)
+            del self.loops[-1]
+        elif seg_data.get_seg_id() == 'GS': 
+            group_control_number = seg_data.get_value('GS06')
+            if group_control_number in self.gs_ids:
+                err_str = 'GS Interchange Control Number '
+                err_str += '%s not unique within file' \
+                    % (group_control_number)
+                self._gs_error('6', err_str)
+            self.gs_count += 1
+            self.gs_ids.append(group_control_number)
+            self.loops.append(('GS', group_control_number))
+            self.st_count = 0
+            self.st_ids = []
+        elif seg_data.get_seg_id() == 'GE': 
+            if self.loops[-1][0] != 'GS':
+                err_str = 'Unterminated segment %s' % (self.loops[-1][1])
+                self._gs_error('3', err_str)
+                del self.loops[-1]
+            if self.loops[-1][1] != seg_data.get_value('GE02'):
+                err_str = 'GE id=%s does not match GS id=%s' % \
+                    (seg_data.get_value('GE02'), self.loops[-1][1])
+                self._gs_error('4', err_str)
+            if self._int(seg_data.get_value('GE01')) != self.st_count:
+                err_str = 'GE count of %s for GE02=%s is wrong. I count %i'\
+                    % (seg_data.get_value('GE01'), \
+                    seg_data.get_value('GE02'), self.st_count)
+                self._gs_error('5', err_str)
+            del self.loops[-1]
+        elif seg_data.get_seg_id() == 'ST': 
+            self.hl_stack = []
+            self.hl_count = 0
+            transaction_control_number = seg_data.get_value('ST02')
+            if transaction_control_number in self.st_ids:
+                err_str = 'ST Interchange Control Number '
+                err_str += '%s not unique within file' \
+                    % (transaction_control_number)
+                self._st_error('23', err_str)
+            self.st_count += 1
+            self.st_ids.append(transaction_control_number)
+            self.loops.append(('ST', transaction_control_number))
+            self.seg_count = 1 
+            self.hl_count = 0
+        elif seg_data.get_seg_id() == 'SE': 
+            se_trn_control_num = seg_data.get_value('SE02')
+            if self.loops[-1][0] != 'ST' or \
+                    self.loops[-1][1] != se_trn_control_num:
+                err_str = 'SE id=%s does not match ST id=%s' % \
+                    (se_trn_control_num, self.loops[-1][1])
+                self._st_error('3', err_str)
+            if self._int(seg_data.get_value('SE01')) != self.seg_count + 1:
+                err_str = 'SE count of %s for SE02=%s is wrong. I count %i'\
+                    % (seg_data.get_value('SE01'), \
+                        se_trn_control_num, self.seg_count + 1)
+                self._st_error('4', err_str)
+            del self.loops[-1]
+        elif seg_data.get_seg_id() == 'LS': 
+            self.seg_count += 1
+            self.loops.append(('LS', seg_data.get_value('LS06')))
+        elif seg_data.get_seg_id() == 'LE': 
+            self.seg_count += 1
+            del self.loops[-1]
+        elif seg_data.get_seg_id() == 'HL': 
+            self.seg_count += 1
+            self.hl_count += 1
+            hl_count = seg_data.get_value('HL01')
+            if self.hl_count != self._int(hl_count):
+                #raise pyx12.errors.X12Error, \
+                #   'My HL count %i does not match your HL count %s' \
+                #    % (self.hl_count, seg[1])
+                err_str = 'My HL count %i does not match your HL count %s' \
+                    % (self.hl_count, hl_count)
+                self._seg_error('HL1', err_str)
+            if seg_data.get_value('HL02') != '':
+                hl_parent = self._int(seg_data.get_value('HL02'))
+                if hl_parent not in self.hl_stack:
+                    err_str = 'HL parent (%i) is not a valid parent' \
+                        % (hl_parent)
+                    self._seg_error('HL2', err_str)
+                while self.hl_stack and hl_parent != self.hl_stack[-1]:
+                    del self.hl_stack[-1]
+            else:
+                if len(self.hl_stack) != 0:
+                    pass
+                    #err_str = 'HL parent is blank, but stack not empty'
+                    #self._seg_error('HL2', err_str)
+            self.hl_stack.append(self.hl_count)
+        else:
+            self.seg_count += 1
+        self.cur_line += 1
+        #err_list = self.err_list
+        #self.err_list = []
+        #return err_list
+
+    def pop_errors(self):
+        """
+        Pop error list
+        @return: List of errors
+        """
+        tmp = self.err_list
+        self.err_list = []
+        return tmp
+
+    def _isa_error(self, err_cde, err_str):
+        """
+        @param err_cde: ISA level error code
+        @type err_cde: string
+        @param err_str: Description of the error
+        @type err_str: string
+        """
+        self.err_list.append(('isa', err_cde, err_str, None, None))
+
+    def _gs_error(self, err_cde, err_str):
+        """
+        @param err_cde: GS level error code
+        @type err_cde: string
+        @param err_str: Description of the error
+        @type err_str: string
+        """
+        self.err_list.append(('gs', err_cde, err_str, None, None))
+
+    def _st_error(self, err_cde, err_str):
+        """
+        @param err_cde: Segment level error code
+        @type err_cde: string
+        @param err_str: Description of the error
+        @type err_str: string
+        """
+        self.err_list.append(('st', err_cde, err_str, None, None))
+
+    def _seg_error(self, err_cde, err_str, err_value=None, src_line=None):
+        """
+        @param err_cde: Segment level error code
+        @type err_cde: string
+        @param err_str: Description of the error
+        @type err_str: string
+        """
+        self.err_list.append(('seg', err_cde, err_str, err_value, src_line))
+        
+    def _int(self, str_val):
+        """
+        Converts a string to an integer
+        @type str_val: string
+        @return: Int value if successful, None if not
+        @rtype: int
+        """
+        try:
+            return int(str_val)
+        except ValueError:
+            return None
+        return None
+        
+    def get_isa_id(self): 
+        """
+        Get the current ISA identifier
+
+        @rtype: string
+        """
+        for loop in self.loops:
+            if loop[0] == 'ISA': 
+                return loop[1]
+        return None
+
+    def get_gs_id(self): 
+        """
+        Get the current GS identifier
+
+        @rtype: string
+        """
+        for loop in self.loops:
+            if loop[0] == 'GS': 
+                return loop[1]
+        return None
+
+    def get_st_id(self): 
+        """
+        Get the current ST identifier
+
+        @rtype: string
+        """
+        for loop in self.loops:
+            if loop[0] == 'ST': 
+                return loop[1]
+        return None
+
+    def get_ls_id(self): 
+        """
+        Get the current LS identifier
+
+        @rtype: string
+        """
+        for loop in self.loops:
+            if loop[0] == 'LS': 
+                return loop[1]
+        return None
+
+    def get_seg_count(self): 
+        """
+        Get the current segment count
+
+        @rtype: int
+        """
+        return self.seg_count
+
+    def get_cur_line(self):
+        """
+        Get the current line
+
+        @rtype: int
+        """
+        return self.cur_line
+
+    def get_term(self):
+        """
+        Get the original terminators
+
+        @rtype: tuple(string, string, string, string)
+        """
+        return (self.seg_term, self.ele_term, self.subele_term, '\n')
+
+# Backward compatible name
+X12file = X12FileReader
