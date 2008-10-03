@@ -23,7 +23,7 @@ import pyx12.segment
 DEFAULT_BUFSIZE = 8*1024
 ISA_LEN = 106
 
-class RawX12file(object):
+class RawX12File(object):
     """
     Interface to an X12 data file
     """

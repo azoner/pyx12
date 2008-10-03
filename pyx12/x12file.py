@@ -1,5 +1,5 @@
 ######################################################################
-# Copyright (c) 2001-2005 Kalamazoo Community Mental Health Services,
+# Copyright (c) 2001-2008 Kalamazoo Community Mental Health Services,
 #   John Holland <jholland@kazoocmh.org> <john@zoner.org>
 # All rights reserved.
 #
@@ -18,42 +18,44 @@ Tracks segment/line/loop counts.
 """
 
 import sys
-#import string
-#from types import *
 import logging
-#import pdb
 
 # Intrapackage imports
 import pyx12.errors
 import pyx12.segment
+import pyx12.rawx12file
+from pyx12.rawx12file import RawX12File
 
 DEFAULT_BUFSIZE = 8*1024
 ISA_LEN = 106
 
 logger = logging.getLogger('pyx12.x12file')
-#logger.setLevel(logging.DEBUG)
-#logger.setLevel(logging.ERROR)
 
 class X12file(object):
     """
     Interface to an X12 data file
+
+    Errors found when reading the segment such as loop counting or ID
+        errors can be retrieved using the pop_errors function
     """
 
     def __init__(self, src_file_obj):
         """
-        Initialize the file
+        Initialize the file X12 file reader
 
-        @param src_file_obj: absolute path of source file or fd
+        @param src_file_obj: absolute path of source file or an open, 
+            readable file object
         @type src_file_obj: string or open file object
         """
+        fd_in = None
         try:
             res = src_file_obj.closed
-            self.fd = src_file_obj
+            fd_in = src_file_obj
         except AttributeError:
             if src_file_obj == '-':
-                self.fd = sys.stdin
+                fd_in = sys.stdin
             else:
-                self.fd = open(src_file_obj, 'U')
+                fd_in = open(src_file_obj, 'U')
         self.err_list = []
         self.loops = []
         self.hl_stack = []
@@ -62,31 +64,25 @@ class X12file(object):
         self.hl_count = 0
         self.seg_count = 0
         self.cur_line = 0
-        self.buffer = None
+        #self.buffer = None
         self.isa_ids = []
         self.gs_ids = []
         self.st_ids = []
         self.isa_usage = None
-        #self.errors = []
 
-        #self.logger = logging.getLogger('pyx12')
-
-        line = self.fd.read(ISA_LEN)
-        if line[:3] != 'ISA': 
-            err_str = "First line does not begin with 'ISA': %s" % line[:3]
-            raise pyx12.errors.X12Error, err_str
-        if len(line) != ISA_LEN:
-            err_str = 'ISA line is only %i characters' % len(line)
-            raise pyx12.errors.X12Error, err_str
-        self.seg_term = line[-1]
-        self.ele_term = line[3]
-        self.subele_term = line[-2]
-        logger.debug('seg_term "%s" / ele_term "%s" / subele_term "%s"' % \
-            (self.seg_term, self.ele_term, self.subele_term))
-       
-        self.buffer = line
-        self.buffer += self.fd.read(DEFAULT_BUFSIZE)
+        try:
+            self.raw = RawX12File(fd_in)
+        except pyx12.errors.X12Error:
+            raise
+        (seg_term, ele_term, subele_term, eol) = self.raw.get_term()
         
+        #line = self.raw.next()
+        self.seg_term = seg_term
+        self.ele_term = ele_term
+        self.subele_term = subele_term
+        #logger.debug('seg_term "%s" / ele_term "%s" / subele_term "%s"' % \
+        #    (self.seg_term, self.ele_term, self.subele_term))
+       
     def __del__(self):
         try:
             self.fd.close()
@@ -98,26 +94,17 @@ class X12file(object):
 
     def next(self):
         """
-        Iterate over input file segments
+        Iterate over input segments
         """
         self.err_list = []
-        #self.errors = []
         try:
             while True:
-                if self.buffer.find(self.seg_term) == -1: # Need more data
-                    self.buffer += self.fd.read(DEFAULT_BUFSIZE)
-                while True:
-                    # Get first segment in buffer
-                    (line, self.buffer) = self.buffer.split(self.seg_term, 1) 
-                    line = line.replace('\n','').replace('\r','')
-                    if line != '':
-                        break
                 # We have not yet incremented cur_line
+                line = self.raw.next()
                 if line[-1] == self.ele_term:
                     err_str = 'Segment contains trailing element terminators'
                     self._seg_error('SEG1', err_str, None, 
                         src_line=self.cur_line+1)
-                #seg = string.split(line, self.ele_term)
                 seg = pyx12.segment.Segment(line, self.seg_term, self.ele_term, \
                     self.subele_term)
                 if seg.is_empty():

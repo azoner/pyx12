@@ -7,7 +7,7 @@ import pyx12.error_handler
 from pyx12.errors import *
 import pyx12.rawx12file
 
-class Delimiters(unittest.TestCase):
+class RawDelimiters(unittest.TestCase):
 
     def test_arbitrary_delimiters(self):
         str1 = 'ISA&00&          &00&          &ZZ&ZZ000          &ZZ&ZZ001          &030828&1128&U&00401&000010121&0&T&!+\n'
@@ -19,7 +19,7 @@ class Delimiters(unittest.TestCase):
         str1 += 'IEA&1&000010121+\n'
         fd = StringIO.StringIO(str1)
         fd.seek(0)
-        src = pyx12.x12file.RawX12file(fd)
+        src = pyx12.rawx12file.RawX12File(fd)
         for seg in src:
             pass
         (seg_term, ele_term, subele_term, eol) = src.get_term()
@@ -40,7 +40,7 @@ class Delimiters(unittest.TestCase):
         str1 = str1.replace('!', chr(0x1E))
         fd = StringIO.StringIO(str1)
         fd.seek(0)
-        src = pyx12.x12file.RawX12file(fd)
+        src = pyx12.rawx12file.RawX12File(fd)
         for seg in src:
             pass
         (seg_term, ele_term, subele_term, eol) = src.get_term()
@@ -49,17 +49,17 @@ class Delimiters(unittest.TestCase):
         self.assertEqual(seg_term, chr(0x1D))
 
 
-class ISA_header(X12fileTestCase):
+class RawISA_header(unittest.TestCase):
 
     def test_starts_with_ISA(self):
         fd = StringIO.StringIO(' ISA~')
         fd.seek(0)
-        self.failUnlessRaises(pyx12.errors.X12Error, pyx12.rawx12file.RawX12file, fd)
+        self.failUnlessRaises(pyx12.errors.X12Error, pyx12.rawx12file.RawX12File, fd)
 
     def test_at_least_ISA_len(self):
         fd = StringIO.StringIO('ISA~')
         fd.seek(0)
-        self.failUnlessRaises(pyx12.errors.X12Error, pyx12.rawx12file.RawX12file, fd)
+        self.failUnlessRaises(pyx12.errors.X12Error, pyx12.rawx12file.RawX12File, fd)
 
 
 #class Formatting(unittest.TestCase):
@@ -68,7 +68,7 @@ class ISA_header(X12fileTestCase):
 #        str1 += 'IEA*1*000010121~\n'
 #        fd = StringIO.StringIO(str1)
 #        fd.seek(0)
-#        src = pyx12.rawx12file.RawX12file(fd)
+#        src = pyx12.rawx12file.RawX12File(fd)
 #        str_out = ''
 #        for seg in src:
 #            str_out += seg.format() + '\n'
