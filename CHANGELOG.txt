@@ -1,3 +1,5 @@
+Rename X12file to X12FileReader.  Added an X12FileWriter class.
+
 Updated ele 1331 (POS) codes
 
 Fixed x12xml idtag and idtagqual loop generation bug.  Refactor x12xml* to
