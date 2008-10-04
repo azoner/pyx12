@@ -65,7 +65,7 @@ or can be passed on the command line using the -c option
         <comment></comment>
     </param>
     <param name="simple_dtd">
-        <value><value>
+        <value></value>
         <comment></comment>
     </param>
     <!--
