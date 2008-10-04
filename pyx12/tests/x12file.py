@@ -19,7 +19,7 @@ class X12fileTestCase(unittest.TestCase):
         err_cde = None
         err_str = None
         src = pyx12.x12file.X12FileReader(fd)
-        #src = pyx12.x12file.X12file(fd)
+        #src = pyx12.x12file.X12FileReader(fd)
         for seg in src:
             errors.extend(src.pop_errors())
         errors.extend(src.pop_errors())
@@ -43,7 +43,7 @@ class Delimiters(unittest.TestCase):
         fd = StringIO.StringIO(str1)
         fd.seek(0)
         errors = []
-        src = pyx12.x12file.X12file(fd)
+        src = pyx12.x12file.X12FileReader(fd)
         for seg in src:
             errors.extend(src.pop_errors())
         err_cde = None
@@ -67,7 +67,7 @@ class Delimiters(unittest.TestCase):
         fd = StringIO.StringIO(str1)
         fd.seek(0)
         errors = []
-        src = pyx12.x12file.X12file(fd)
+        src = pyx12.x12file.X12FileReader(fd)
         for seg in src:
             errors.extend(src.pop_errors())
         err_cde = None
@@ -82,7 +82,7 @@ class Delimiters(unittest.TestCase):
         str1 += 'ZZ*1***~\n'
         fd = StringIO.StringIO(str1)
         fd.seek(0)
-        src = pyx12.x12file.X12file(fd)
+        src = pyx12.x12file.X12FileReader(fd)
         err_cde = None
         err_str = None
         for seg in src:
@@ -99,12 +99,12 @@ class ISA_header(X12fileTestCase):
     def test_starts_with_ISA(self):
         fd = StringIO.StringIO(' ISA~')
         fd.seek(0)
-        self.failUnlessRaises(pyx12.errors.X12Error, pyx12.x12file.X12file, fd)
+        self.failUnlessRaises(pyx12.errors.X12Error, pyx12.x12file.X12FileReader, fd)
 
     def test_at_least_ISA_len(self):
         fd = StringIO.StringIO('ISA~')
         fd.seek(0)
-        self.failUnlessRaises(pyx12.errors.X12Error, pyx12.x12file.X12file, fd)
+        self.failUnlessRaises(pyx12.errors.X12Error, pyx12.x12file.X12FileReader, fd)
 
     def test_repeat_ISA_loops(self):
         str1 = 'ISA*00*          *00*          *ZZ*ZZ000          *ZZ*ZZ001          *030828*1128*U*00401*000010121*0*T*:~\n'
@@ -334,7 +334,7 @@ class Formatting(unittest.TestCase):
         str1 += 'IEA*1*000010121~\n'
         fd = StringIO.StringIO(str1)
         fd.seek(0)
-        src = pyx12.x12file.X12file(fd)
+        src = pyx12.x12file.X12FileReader(fd)
         str_out = ''
         for seg in src:
             str_out += seg.format() + '\n'
@@ -345,7 +345,7 @@ class Formatting(unittest.TestCase):
         str1 += 'IEA*1*000010121~\n'
         fd = StringIO.StringIO(str1)
         fd.seek(0)
-        src = pyx12.x12file.X12file(fd)
+        src = pyx12.x12file.X12FileReader(fd)
         str_out = ''
         for seg in src:
             str_out += seg.format()
@@ -367,7 +367,7 @@ class Segment_ID_Checks(X12fileTestCase):
         fd = StringIO.StringIO(str1)
         fd.seek(0)
         val = None
-        src = pyx12.x12file.X12file(fd)
+        src = pyx12.x12file.X12FileReader(fd)
         for seg in src:
             if seg.get_seg_id() == 'ZZ':
                 val = seg.get('ZZ01').format()
@@ -406,7 +406,7 @@ class FileString(unittest.TestCase):
         fd = StringIO.StringIO(str1)
         fd.seek(0)
         errors = []
-        src = pyx12.x12file.X12file(fd)
+        src = pyx12.x12file.X12FileReader(fd)
         for seg in src:
             errors.extend(src.pop_errors())
         err_cde = None

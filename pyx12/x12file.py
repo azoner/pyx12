@@ -19,7 +19,6 @@ Tracks segment/line/loop counts.
 
 import sys
 import logging
-import pdb
 
 # Intrapackage imports
 import pyx12.errors
@@ -382,12 +381,10 @@ class X12FileReader(X12FileBase):
         Iterate over input segments
         """
         self.err_list = []
-        pdb.set_trace()
         try:
             while True:
                 # We have not yet incremented cur_line
                 line = self.raw.next()
-                print line
                 if line[-1] == self.ele_term:
                     err_str = 'Segment contains trailing element terminators'
                     self._seg_error('SEG1', err_str, None, 
@@ -395,9 +392,9 @@ class X12FileReader(X12FileBase):
                 seg_data = pyx12.segment.Segment(line, self.seg_term, self.ele_term, \
                     self.subele_term)
                 self._parse_segment(seg_data)
+                return seg_data
         except:
             raise StopIteration
-        return seg_data
 
     def get_errors(self):
         """
