@@ -58,8 +58,8 @@ def isX12Diff(fd1, fd2):
     """
     Just want to know if the important bits of the 997 are different
     """
-    src1 = pyx12.x12file.X12FileReader(fd1)
-    src2 = pyx12.x12file.X12FileReader(fd2)
+    src1 = pyx12.x12file.X12Reader(fd1)
+    src2 = pyx12.x12file.X12Reader(fd2)
     done1 = False
     done2 = False
     while True:

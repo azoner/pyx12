@@ -66,7 +66,7 @@ def main():
             sys.stderr.write('File %s was not found' % (file_in))
     else:
         file_in = '-'
-    src = pyx12.x12file.X12FileReader(file_in)
+    src = pyx12.x12file.X12Reader(file_in)
     for seg_data in src:
         if fix:
             err_codes = [(x[1]) for x in src.pop_errors()]

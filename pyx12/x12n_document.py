@@ -83,7 +83,7 @@ def x12n_document(param, src_file, fd_997, fd_html,
     
     # Get X12 DATA file
     try:
-        src = x12file.X12FileReader(src_file) 
+        src = x12file.X12Reader(src_file) 
     except pyx12.errors.X12Error:
         logger.error('"%s" does not look like an X12 data file' % (src_file))
         return False

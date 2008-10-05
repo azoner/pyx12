@@ -30,7 +30,7 @@ ISA_LEN = 106
 
 logger = logging.getLogger('pyx12.x12file')
 
-class X12FileBase(object):
+class X12Base(object):
     """
     Base class of X12 Reader and X12 Writer
     Common X12 validation
@@ -59,12 +59,19 @@ class X12FileBase(object):
         self.seg_term = None
         self.ele_term = None
         self.subele_term = None
+
+    def Close(self):
+        """
+        Complete any outstanding tasks
+        """
+        pass
        
     def _parse_segment(self, seg_data):
         """
         Catch segment issues common to both readers and writers
 
-        @seg_data: Segment data instance
+        @param seg_data: Segment data instance
+        @type seg_data: L{segment<segment.Segment>}
         """
         if seg_data.is_empty():
             err_str = 'Segment "%s" is empty' % (seg_data)
@@ -280,9 +287,9 @@ class X12FileBase(object):
         return (self.seg_term, self.ele_term, self.subele_term, '\n')
 
 
-class X12FileReader(X12FileBase):
+class X12Reader(X12Base):
     """
-    Interface to an X12 data file
+    Read an X12 data file
 
     Errors found when reading the segment such as loop counting or ID
         errors can be retrieved using the pop_errors function
@@ -305,7 +312,7 @@ class X12FileReader(X12FileBase):
                 self.fd_in = sys.stdin
             else:
                 self.fd_in = open(src_file_obj, 'U')
-        X12FileBase.__init__(self)
+        X12Base.__init__(self)
         try:
             self.raw = RawX12File(self.fd_in)
         except pyx12.errors.X12Error:
@@ -325,9 +332,10 @@ class X12FileReader(X12FileBase):
         """
         Catch segment issues
 
-        @seg_data: Segment data instance
+        @param seg_data: Segment data instance
+        @type seg_data: L{segment<segment.Segment>}
         """
-        X12FileBase._parse_segment(self, seg_data)
+        X12Base._parse_segment(self, seg_data)
         seg_id = seg_data.get_seg_id()
         if seg_id == 'IEA': 
             if self.loops[-1][0] != 'ISA':
@@ -426,4 +434,141 @@ class X12FileReader(X12FileBase):
                 #    (id1, self.loops[-1][1])
         
 # Backward compatible name
-X12file = X12FileReader
+X12file = X12Reader
+
+class X12Writer(X12Base):
+    """
+    X12 file and stream writer
+    """
+
+    def __init__(self, src_file_obj, segTerm='~', eleTerm='*', subeleTerm=':', eol='\n'):
+        """
+        Initialize the file X12 file writer
+
+        @param src_file_obj: absolute path of source file or an open, 
+            readable file object
+        @type src_file_obj: string or open file object
+        """
+
+        self.segTerm = segTerm
+        self.eleTerm = eleTerm
+        self.subeleTerm = subeleTerm
+        self.eol = eol
+        self.fd_out = None
+        try:
+            res = src_file_obj.write
+# isinstance(f, file)
+            self.fd_out = src_file_obj
+        except AttributeError:
+            if src_file_obj == '-':
+                self.fd_out = sys.stdout
+            else:
+                self.fd_out = open(src_file_obj, 'w')
+        X12Base.__init__(self)
+
+    def Close(self):
+        """
+        End any open loops.  Should be called at the end of writing.
+        """
+        self._popToLoop('ISA')
+        X12Base.Close(self)
+
+    def Write(self, seg_data):
+        """
+        Write the segment to the stream given current seperators
+
+        @param seg_data: Segment data instance
+        @type seg_data: L{segment<segment.Segment>}
+        """
+        self._parse_segment(seg_data)
+        # If we have hit a loop closing segment, generate any missing, containing, closing segments
+        # then generater this closer
+        seg_id = seg_data.get_seg_id()
+        if seg_id == 'IEA':
+            self._popToLoop('ISA')
+        elif seg_id == 'GE':
+            self._popToLoop('GS')
+        elif seg_id == 'SE':
+            self._popToLoop('ST')
+        else:
+            self._write_segment(seg_data)
+
+    def _close_loop(self, loop_type, loop_id):
+        if loop_type == 'ISA':
+            self._close_iea(loop_id)
+        elif loop_type == 'GS':
+            self._close_ge(loop_id)
+        elif loop_type == 'ST':
+            self._close_se(loop_id)
+
+    def _popToLoop(self, loop_type):
+        """
+        Move up the loop open loops, up to and including the given loop
+
+        @param loop_type: The current ending loop
+        @type loop_type: string
+        """
+        while len(self.loops) > 0 and self.loops[-1][0] != loop_type:
+            loop = self.loops.pop()
+            self._close_loop(loop[0], loop[1])
+        if len(self.loops) > 0:
+            loop = self.loops.pop()
+            self._close_loop(loop[0], loop[1])
+
+    def _close_iea(self, id):
+        """
+        Close a ISA/IEA loop, reset GS counter
+
+        @param id: ISA loop ID
+        @type id: string
+        """
+        seg_temp = self._get_trailer_segment('IEA', self.gs_count, id)
+        self._write_segment(seg_temp)
+        self.gs_count = 0
+
+    def _close_ge(self, id):
+        """
+        Close a GS/GE loop, reset ST counter
+
+        @param id: GS loop ID
+        @type id: string
+        """
+        seg_temp = self._get_trailer_segment('GE', self.st_count, id)
+        self._write_segment(seg_temp)
+        self.st_count = 0
+
+    def _close_se(self, id):
+        """
+        Close a ST/SE loop, reset segment counter
+
+        @param id: ST loop ID
+        @type id: string
+        """
+        seg_temp = self._get_trailer_segment('SE', self.seg_count+1, id)
+        self._write_segment(seg_temp)
+        self.seg_count = 0
+
+    def _write_segment(self, seg_data):
+        """
+        Write the given segment, using the current delimeters and end of line
+
+        @param seg_data: segment to write
+        @type seg_data: L{segment<segment.Segment>}
+        """
+        self.fd_out.write(seg_data.format(self.seg_term, self.ele_term, self.subele_term)+self.eol)
+
+    def _get_trailer_segment(self, seg_id, count, id):
+        """
+        Create a loop trailer segment, using the matching loop start and current count
+
+        @param seg_id: end loop segment id
+        @type seg_id: string
+        @param count: count of loop members
+        @type count: non-negative int
+        @param id: loop id, should come from loop header
+        @type id: string
+        """
+        ele_term = self.ele_term
+        seg_str = '%s%s%i%s%s' % (seg_id, ele_term, count, ele_term, id)
+        return pyx12.segment.Segment(seg_str, self.seg_term, self.ele_term, \
+            self.subele_term)

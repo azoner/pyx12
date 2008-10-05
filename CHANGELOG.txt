@@ -1,4 +1,4 @@
-Rename X12file to X12FileReader.  Added an X12FileWriter class.
+Rename X12file to X12Reader.  Added an X12Writer class.
 
 Updated ele 1331 (POS) codes
 

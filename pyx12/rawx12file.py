@@ -13,7 +13,7 @@
 """
 Low level interface to an X12 data input stream.
 Iterates over segment line strings.
-Used by X12FileReader.
+Used by X12Reader.
 """
 
 # Intrapackage imports

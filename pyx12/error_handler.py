@@ -506,7 +506,7 @@ class err_isa(err_node):
         @param seg_data: Segment object
         @type seg_data: L{segment<segment.Segment>}
         @param src: X12file source
-        @type src: L{X12file<x12file.X12FileReader>}
+        @type src: L{X12file<x12file.X12Reader>}
         """
         self.seg_data = seg_data
         self.isa_id = src.get_isa_id()
@@ -611,7 +611,7 @@ class err_gs(err_node):
         @param seg_data: Segment object
         @type seg_data: L{segment<segment.Segment>}
         @param src: X12file source
-        @type src: L{X12file<x12file.X12FileReader>}
+        @type src: L{X12file<x12file.X12Reader>}
 
         """
         self.seg_data = seg_data
@@ -757,7 +757,7 @@ class err_st(err_node):
         @param seg_data: Segment object
         @type seg_data: L{segment<segment.Segment>}
         @param src: X12file source
-        @type src: L{X12file<x12file.X12FileReader>}
+        @type src: L{X12file<x12file.X12Reader>}
         """
         self.seg_data = seg_data
         self.trn_set_control_num = src.get_st_id()
@@ -800,7 +800,7 @@ class err_st(err_node):
         @param seg_data: Segment object
         @type seg_data: L{segment<segment.Segment>}
         @param src: X12file source
-        @type src: L{X12file<x12file.X12FileReader>}
+        @type src: L{X12file<x12file.X12Reader>}
         """
         self.cur_line_se = src.get_cur_line()
         #pdb.set_trace()
