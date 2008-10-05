@@ -441,7 +441,7 @@ class X12Writer(X12Base):
     X12 file and stream writer
     """
 
-    def __init__(self, src_file_obj, segTerm='~', eleTerm='*', subeleTerm=':', eol='\n'):
+    def __init__(self, src_file_obj, seg_term='~', ele_term='*', subele_term=':', eol='\n'):
         """
         Initialize the file X12 file writer
 
@@ -449,15 +449,10 @@ class X12Writer(X12Base):
             readable file object
         @type src_file_obj: string or open file object
         """
-
-        self.segTerm = segTerm
-        self.eleTerm = eleTerm
-        self.subeleTerm = subeleTerm
-        self.eol = eol
         self.fd_out = None
         try:
             res = src_file_obj.write
-# isinstance(f, file)
+            # isinstance(f, file)
             self.fd_out = src_file_obj
         except AttributeError:
             if src_file_obj == '-':
@@ -465,6 +460,10 @@ class X12Writer(X12Base):
             else:
                 self.fd_out = open(src_file_obj, 'w')
         X12Base.__init__(self)
+        self.seg_term = seg_term
+        self.ele_term = ele_term
+        self.subele_term = subele_term
+        self.eol = eol
 
     def Close(self):
         """

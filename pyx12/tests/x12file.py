@@ -416,3 +416,83 @@ class FileString(unittest.TestCase):
         self.assertEqual(src.ele_term, '&')
         self.assertEqual(src.seg_term, '+')
 
+class X12WriterTest(unittest.TestCase):
+
+    def test_identity(self):
+        segs = [
+            'ISA*00*          *00*          *ZZ*ZZ000          *ZZ*ZZ001          *030828*1128*U*00401*000010121*0*T*:',
+            'GS*HC*ZZ000*ZZ001*20030828*1128*17*X*004010X098',
+            'ST*837*11280001',
+            'HL*1**20*1',
+            'HL*2*1*22*1',
+            'HL*3*2*23*1',
+            'HL*4*1*22*1',
+            'SE*6*11280001',
+            'GE*1*17',
+            'IEA*1*000010121'
+        ]
+        fd_out = StringIO.StringIO()
+        wr = pyx12.x12file.X12Writer(fd_out, '~', '*', ':', '\n')
+        output = ''
+        for seg_str in segs:
+            seg_data = pyx12.segment.Segment(seg_str, '~', '*', ':')
+            wr.Write(seg_data)
+            output += seg_str + '~\n'
+        fd_out.seek(0)
+        newval = fd_out.read()
+        self.assertEqual(output, newval)
+
+    def test_fix_se(self):
+        segs = [
+            'ISA*00*          *00*          *ZZ*ZZ000          *ZZ*ZZ001          *030828*1128*U*00401*000010121*0*T*:',
+            'GS*HC*ZZ000*ZZ001*20030828*1128*17*X*004010X098',
+            'ST*837*11280001',
+            'HL*1**20*1',
+            'HL*2*1*22*1',
+            'HL*3*2*23*1',
+            'HL*4*1*22*1',
+            'SE*6*11280001',
+            'GE*1*17',
+            'IEA*1*000010121'
+        ]
+        fd_out = StringIO.StringIO()
+        wr = pyx12.x12file.X12Writer(fd_out, '~', '*', ':', '\n')
+        output = ''
+        for seg_str in segs:
+            seg_data = pyx12.segment.Segment(seg_str, '~', '*', ':')
+            if seg_data.get_seg_id() == 'SE':
+                seg_data.set('SE01', '10')
+                seg_data.set('SE02', 'AAAA')
+            wr.Write(seg_data)
+            output += seg_str + '~\n'
+        fd_out.seek(0)
+        newval = fd_out.read()
+        self.assertEqual(output, newval)
+
+    def test_missing(self):
+        segs = [
+            'ISA*00*          *00*          *ZZ*ZZ000          *ZZ*ZZ001          *030828*1128*U*00401*000010121*0*T*:',
+            'GS*HC*ZZ000*ZZ001*20030828*1128*17*X*004010X098',
+            'ST*837*11280001',
+            'HL*1**20*1',
+            'HL*2*1*22*1',
+            'HL*3*2*23*1',
+            'HL*4*1*22*1',
+            'SE*6*11280001',
+            'GE*1*17',
+            'IEA*1*000010121'
+        ]
+        fd_out = StringIO.StringIO()
+        wr = pyx12.x12file.X12Writer(fd_out, '~', '*', ':', '\n')
+        output = ''
+        for seg_str in segs:
+            output += seg_str + '~\n'
+        for seg_str in segs:
+            seg_data = pyx12.segment.Segment(seg_str, '~', '*', ':')
+            if seg_data.get_seg_id() == 'SE':
+                break
+            wr.Write(seg_data)
+        wr.Close()
+        fd_out.seek(0)
+        newval = fd_out.read()
+        self.assertEqual(output, newval)

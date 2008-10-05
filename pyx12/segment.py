@@ -408,6 +408,7 @@ class Segment(object):
     def format(self, seg_term=None, ele_term=None, subele_term=None):
         """
         @rtype: string
+        @raise EngineError: If a terminator is None and no default
         """
         if seg_term is None: 
             seg_term = self.seg_term
@@ -415,6 +416,12 @@ class Segment(object):
             ele_term = self.ele_term
         if subele_term is None: 
             subele_term = self.subele_term
+        if seg_term is None: 
+            raise EngineError, 'seg_term is None'
+        if ele_term is None: 
+            raise EngineError, 'ele_term is None'
+        if subele_term is None: 
+            raise EngineError, 'subele_term is None'
         str_elems = []
         i = 0
         for i in range(len(self.elements)-1, -1, -1):

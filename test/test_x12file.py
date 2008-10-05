@@ -22,6 +22,7 @@ def suite():
     suite.addTest(unittest.makeSuite(HL_Checks))
     suite.addTest(unittest.makeSuite(Formatting))
     suite.addTest(unittest.makeSuite(Segment_ID_Checks))
+    suite.addTest(unittest.makeSuite(X12WriterTest))
     if sys.platform != 'win32':
         suite.addTest(unittest.makeSuite(FileString))
     return suite
