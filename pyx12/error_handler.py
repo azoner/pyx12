@@ -16,7 +16,6 @@ Interface to X12 Errors
 
 import logging
 from types import *
-#import pdb
 
 # Intrapackage imports
 from errors import *
@@ -25,10 +24,14 @@ from errors import *
 #    def __init__(self)
 
 logger = logging.getLogger('pyx12.error_handler')
-#logger.setLevel(logging.DEBUG)
-#logger.setLevel(logging.ERROR)
 
 class err_iter(object):
+    """
+    Iterate over the error tree
+
+    Implements an odd iterator???
+    """
+
     def __init__(self, errh):
         """
         @param errh: Error_handler instance
@@ -36,16 +39,12 @@ class err_iter(object):
         """
         self.errh = errh
         self.cur_node = errh
-        #self.done = False
         self.visit_stack = []
 
     def first(self):
         self.cur_node = self.errh
     
     def next(self):
-        #pdb.set_trace()
-        #orig_node = self.cur_node
-
         #If at previosly visited branch, do not do children
         if self.cur_node in self.visit_stack:
             node = None
@@ -61,23 +60,19 @@ class err_iter(object):
             else:
                 if not self.cur_node.is_closed():
                     raise IterOutOfBounds
-                #pdb.set_trace()
                 node = self.cur_node.get_parent()
                 if node is None:
                     raise IterOutOfBounds
-                #if node.get_cur_line() < self.src.cur_line:
                 if not node.is_closed():
                     raise IterOutOfBounds
                 if self.cur_node in self.visit_stack:
                     del self.visit_stack[-1]
                 self.cur_node = node
-                #logger.debug(node)
                 if node.id == 'ROOT':
                     raise IterOutOfBounds
                 #    raise IterDone
 
     def next_old(self):
-        #pdb.set_trace()
         start_line = self.cur_node.get_cur_line()
         orig_node = self.cur_node
         if self.done:
@@ -102,10 +97,6 @@ class err_iter(object):
     def get_cur_node(self):
         return self.cur_node
         
-#    def is_done(self):
-#        return self.done
-
-           
 
 class err_handler(object):
     """
