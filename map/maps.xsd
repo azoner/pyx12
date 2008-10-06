@@ -43,6 +43,7 @@ Used to identify the map used for a particular Functional Group
               <xsd:attribute name="vriic" type="vriicType"/>
               <xsd:attribute name="fic" type="ficType"/>
               <xsd:attribute name="tspc" type="tspcType"/>
+              <xsd:attribute name="abbr" type="abbrType"/>
             </xsd:extension>
           </xsd:simpleContent>
         </xsd:complexType>
@@ -91,6 +92,17 @@ Used to identify the map used for a particular Functional Group
     </xsd:annotation>
     <xsd:restriction base="xsd:token">
       <xsd:maxLength value="2"/>
+    </xsd:restriction>
+  </xsd:simpleType>
+
+  <xsd:simpleType name="abbrType">
+    <xsd:annotation>
+ 	  <xsd:documentation xml:lang="en">
+        Informal Transaction Abbreviation string
+      </xsd:documentation>
+    </xsd:annotation>
+    <xsd:restriction base="xsd:token">
+      <xsd:maxLength value="50"/>
     </xsd:restriction>
   </xsd:simpleType>
 

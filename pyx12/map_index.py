@@ -1,5 +1,5 @@
 ######################################################################
-# Copyright (c) 2001-2005 Kalamazoo Community Mental Health Services,
+# Copyright (c) 2001-2008 Kalamazoo Community Mental Health Services,
 #   John Holland <jholland@kazoocmh.org> <john@zoner.org>
 # All rights reserved.
 #
@@ -58,23 +58,28 @@ class map_index(object):
                         fic = reader.Value()
                     elif reader.Name() == 'tspc':
                         tspc = reader.Value()
+                    elif reader.Name() == 'abbr':
+                        abbr = reader.Value()
 
             if reader.NodeType() == NodeType['element_end'] and reader.Name() == 'map':
-                self.maps.append((icvn, vriic, fic, tspc, file_name))
+                self.maps.append((icvn, vriic, fic, tspc, file_name, abbr))
                 vriic = None
                 fic = None
                 tspc = None
+                abbr = None
                 file_name = None
 
             if reader.NodeType() == NodeType['text']:
                 file_name = reader.Value()
 
     
-    def add_map(self, icvn, vriic, fic, tspc, map_file):
-        self.maps.append((icvn, vriic, fic, tspc, map_file))
+    def add_map(self, icvn, vriic, fic, tspc, map_file, abbr):
+        self.maps.append((icvn, vriic, fic, tspc, map_file, abbr))
     
     def get_filename(self, icvn, vriic, fic, tspc=None):
         """
+        Get the map filename associated with the given icvn, vriic, fic, 
+            and tspc values
         @rtype: string
         """
         for a in self.maps:
@@ -83,7 +88,19 @@ class map_index(object):
                 return a[4]
         return None
 
+    def get_abbr(self, icvn, vriic, fic, tspc=None):
+        """
+        Get the informal abbreviation associated with the given icvn, vriic, 
+            fic, and tspc values
+        @rtype: string
+        """
+        for a in self.maps:
+            if a[0] == icvn and a[1] == vriic and a[2] == fic \
+                    and (tspc is None or a[3] == tspc):
+                return a[5]
+        return None
+
     def print_all(self):
         for a in self.maps:
-            print a[0], a[1], a[2], a[3], a[4]
+            print a[0], a[1], a[2], a[3], a[4], a[5]
 
