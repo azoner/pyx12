@@ -37,15 +37,15 @@ from map_walker import walk_tree
 
 class X12ContextReader(object):
 
-    def __init__(self, param, errh, src_file, xslt_files = []):
+    def __init__(self, param, errh, src_file_obj, xslt_files = []):
         """
         Read an X12 input stream
         Keep context when needed
 
         @param param: pyx12.param instance
         @param errh: Error Handler object
-        @param src_file: Source document
-        @type src_file: string
+        @param src_file_obj: Source document
+        @type src_file_obj: string
         @rtype: boolean
         """
         map_path = param.get('map_path')
@@ -58,7 +58,7 @@ class X12ContextReader(object):
         self.tspc = None
         
         # Get X12 DATA file
-        self.src = x12file.X12Reader(src_file) 
+        self.src = x12file.X12Reader(src_file_obj) 
 
         #Get Map of Control Segments
         self.map_file = 'x12.control.00401.xml'
@@ -138,7 +138,8 @@ class X12ContextReader(object):
                     self.errh.handle_errors(self.src.pop_errors())
 
             node_path = self.node.get_path().split('/')[1:]
-            yield (node_path, seg)
+            map_abbr = self.node.get_abbr()
+            yield (map_abbr, node_path, seg)
         
     def _apply_loop_count(self, orig_node, new_map):
         """
