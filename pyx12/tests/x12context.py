@@ -22,7 +22,7 @@ class X12ContextFileTestCase(unittest.TestCase):
         param = pyx12.params.params('pyx12.conf.xml')
         errh = pyx12.error_handler.errh_null()
         src = pyx12.x12context.X12ContextReader(param, errh, fd, xslt_files = [])
-        for (abbr, path, seg) in src:
+        for (abbr, path, node, seg) in src.IterSegments():
             errors.extend(src.pop_errors())
         errors.extend(src.pop_errors())
         src.cleanup()
@@ -48,10 +48,11 @@ class Delimiters(unittest.TestCase):
         param = pyx12.params.params('pyx12.conf.xml')
         errh = pyx12.error_handler.errh_null()
         src = pyx12.x12context.X12ContextReader(param, errh, fd, xslt_files = [])
-        for (abbr, path, seg) in src:
+        for (abbr, path, node, seg) in src.IterSegments():
             errors.extend(src.pop_errors())
         err_cde = None
-        if len(errors) > 0: err_cde = errors[0][1]
+        if len(errors) > 0: 
+            err_cde = errors[0][1]
         self.assertEqual(err_cde, None)
         self.assertEqual(src.subele_term, '!')
         self.assertEqual(src.ele_term, '&')
@@ -74,10 +75,11 @@ class Delimiters(unittest.TestCase):
         param = pyx12.params.params('pyx12.conf.xml')
         errh = pyx12.error_handler.errh_null()
         src = pyx12.x12context.X12ContextReader(param, errh, fd, xslt_files = [])
-        for (abbr, path, seg) in src:
+        for (abbr, path, node, seg) in src.IterSegments():
             errors.extend(src.pop_errors())
         err_cde = None
-        if len(errors) > 0: err_cde = errors[0][1]
+        if len(errors) > 0: 
+            err_cde = errors[0][1]
         self.assertEqual(err_cde, None)
         self.assertEqual(src.subele_term, chr(0x1E))
         self.assertEqual(src.ele_term, chr(0x1C))

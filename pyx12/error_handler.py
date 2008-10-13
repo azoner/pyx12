@@ -1032,7 +1032,8 @@ class errh_null(object):
     def add_isa_loop(self, seg, src):
         """
         """
-        raise ErrorErrhNull, 'add_isa loop'
+        pass
+        #raise ErrorErrhNull, 'add_isa loop'
         
     def add_gs_loop(self, seg, src):
         """
@@ -1148,6 +1149,9 @@ class errh_null(object):
             return 1
         else:
             return 0
+
+    def handle_errors(self, err_list):
+        pass
 
     def is_closed(self):
         """

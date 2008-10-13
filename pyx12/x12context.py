@@ -68,6 +68,7 @@ class X12ContextReader(object):
         self.walker = walk_tree()
 
     def IterSegments(self):
+        map_abbr = 'x12'
         for seg in self.src:
             #find node
             orig_node = self.node
@@ -97,6 +98,7 @@ class X12ContextReader(object):
                     vriic = seg.get_value('GS08')
                     map_file_new = self.map_index_if.get_filename(icvn, vriic, fic)
                     if self.map_file != map_file_new:
+                        map_abbr = self.map_index_if.get_abbr(icvn, vriic, fic)
                         self.map_file = map_file_new
                         if self.map_file is None:
                             raise pyx12.errors.EngineError, "Map not found.  icvn=%s, fic=%s, vriic=%s" % \
@@ -113,7 +115,8 @@ class X12ContextReader(object):
                         tspc = seg.get_value('BHT02')
                         map_file_new = self.map_index_if.get_filename(icvn, vriic, fic, tspc)
                         if self.map_file != map_file_new:
-                            map_file = map_file_new
+                            map_abbr = self.map_index_if.get_abbr(icvn, vriic, fic, tspc)
+                            self.map_file = map_file_new
                             if self.map_file is None:
                                 raise pyx12.errors.EngineError, "Map not found.  icvn=%s, fic=%s, vriic=%s, tspc=%s" % \
                                     (icvn, fic, vriic, tspc)
@@ -138,8 +141,7 @@ class X12ContextReader(object):
                     self.errh.handle_errors(self.src.pop_errors())
 
             node_path = self.node.get_path().split('/')[1:]
-            map_abbr = self.node.get_abbr()
-            yield (map_abbr, node_path, seg)
+            yield (map_abbr, node_path, self.node, seg)
         
     def _apply_loop_count(self, orig_node, new_map):
         """
