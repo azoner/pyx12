@@ -48,7 +48,8 @@ class Delimiters(unittest.TestCase):
         param = pyx12.params.params('pyx12.conf.xml')
         errh = pyx12.error_handler.errh_null()
         src = pyx12.x12context.X12ContextReader(param, errh, fd, xslt_files = [])
-        for (abbr, path, node, seg) in src.IterSegments():
+        for seg_list in src.IterSegments():
+            (abbr, path, node, seg) = seg_list[0]
             errors.extend(src.pop_errors())
         err_cde = None
         if len(errors) > 0: 

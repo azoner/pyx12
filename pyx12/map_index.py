@@ -34,6 +34,7 @@ class map_index(object):
         """
         self.maps = []
         tspc = None
+        abbr = None
         try:
             reader = libxml2.newTextReaderFilename(map_index_file)
         except:

@@ -24,6 +24,7 @@ Notify if an expected segment instance does not exist
 """
 
 import os, os.path
+import pdb
 
 # Intrapackage imports
 import pyx12
@@ -141,7 +142,7 @@ class X12ContextReader(object):
                     self.errh.handle_errors(self.src.pop_errors())
 
             node_path = self.node.get_path().split('/')[1:]
-            yield (map_abbr, node_path, self.node, seg)
+            yield [(map_abbr, node_path, self.node, seg)]
         
     def _apply_loop_count(self, orig_node, new_map):
         """
