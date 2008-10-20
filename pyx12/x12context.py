@@ -35,6 +35,62 @@ import map_if
 import x12file
 from map_walker import walk_tree
 
+class X12DataNode(object):
+    """
+    Capture the segment data and X12 definition for a loop subtree
+    Alter relational data
+    Iterate over contents
+    """
+    def __init__(self, x12_node, seg_data, type='seg'):
+        """
+        """
+        self.node = x12_node
+        self.cur_path = self.node.get_path().split('/')[1:]
+        self.type = type
+        self.seg_data = seg_data
+        self.parent = None
+        self.children = []
+        self.errors = []
+
+    def AddChild(self, x12_node, seg_data):
+        new_seg = X12DataNode(x12_node, seg_data)
+        match_path = x12_node.get_path()
+# Create a new node
+# Find the correct parent
+# If needed, create the loop node
+# Append the node, set parent property
+
+    def _isChildPath(self, root_path, child_path):
+        """
+        Is the child path really a child of the root path?
+        @type root_path: string
+        @type child_path: string
+        """
+        root = root_path.split('/')
+        child = child_path.split('/')
+        if len(root) >= len(child)):
+            return False
+        for i in range(len(root)):
+        if root[i] != child[i]:
+            return False
+        return True
+
+    def _addLoop(self, x12_node):
+        new_loop = X12DataNode(x12_node, None, 'loop')
+# Append the node, set parent property
+
+    def _findParentNode(self, find_path):
+
+    def IterateSegments(self):
+        if self.type == 'loop':
+            yield {'type': 'loop_start', 'id': self.node.id, 'node': self.node}
+        elif self.type == 'seg':
+            yield {'type': 'seg', 'id': self.node.id, 'segment': self.seg_data}
+        for child in self.children:
+            child.IterateSegments()
+        if self.type == 'loop':
+            yield {'type': 'loop_end', 'id': self.node.id, 'node': self.node}
+
 
 class X12ContextReader(object):
 
@@ -68,8 +124,10 @@ class X12ContextReader(object):
         self.node = self.control_map.getnodebypath('/ISA_LOOP/ISA')
         self.walker = walk_tree()
 
-    def IterSegments(self):
+    def IterSegments(self, loop_id=None):
         map_abbr = 'x12'
+        cur_tree = None
+        cur_node = None
         for seg in self.src:
             #find node
             orig_node = self.node
@@ -142,8 +200,24 @@ class X12ContextReader(object):
                     self.errh.handle_errors(self.src.pop_errors())
 
             node_path = self.node.get_path().split('/')[1:]
-            yield [(map_abbr, node_path, self.node, seg)]
+            # If we are in the requested tree, wait until we have the whole thing
+            if loop_id is not None and loop_id in node_path:
+                # Are we at the start of the requested tree? 
+                if node_path == loop_id and self.node.is_first_seg_in_loop():
+                    # Found loop repeat. Close existing, create new tree
+                    yield cur_tree
+                    cur_tree = X12DataNode(self.node, seg)
+                    cur_node = cur_tree
+                else:
+                    #cur_tree.AddSegment(self.node, seg)
+                    cur_node = self._addSegment(cur_node, self.node, seg)
+            else:
+                cur_node = X12DataNode(self.node, seg)
+                yield cur_node
         
+    def _addSegment(self, cur_node, x12_node, seg_data):
+        return new_data_node
+
     def _apply_loop_count(self, orig_node, new_map):
         """
         Apply loop counts to current map
