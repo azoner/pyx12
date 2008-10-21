@@ -17,14 +17,14 @@ Parse a ANSI X12 data file.
 Maintain context state
 Start saving context and segments
 Interface to read and alter segments
-Should have multiple contexts
-Able to save and release independantly
-Notify if an expected segment instance does not exist
+Should have multiple contexts ??
+Able to save and release independantly ??
+Notify if an expected segment instance does not exist ??
 
 """
 
 import os, os.path
-import pdb
+#import pdb
 
 # Intrapackage imports
 import pyx12
@@ -33,7 +33,7 @@ import errors
 import map_index
 import map_if
 import x12file
-from map_walker import walk_tree
+from map_walker import walk_tree, pop_to_parent_loop
 
 class X12DataNode(object):
     """
@@ -44,8 +44,8 @@ class X12DataNode(object):
     def __init__(self, x12_node, seg_data, type='seg'):
         """
         """
-        self.node = x12_node
-        self.cur_path = self.node.get_path().split('/')[1:]
+        self.x12_map_node = x12_node
+        self.cur_path = self.x12_map_node.get_path().split('/')[1:]
         self.type = type
         self.seg_data = seg_data
         self.parent = None
@@ -68,28 +68,34 @@ class X12DataNode(object):
         """
         root = root_path.split('/')
         child = child_path.split('/')
-        if len(root) >= len(child)):
+        if len(root) >= len(child):
             return False
         for i in range(len(root)):
-        if root[i] != child[i]:
-            return False
+            if root[i] != child[i]:
+                return False
         return True
 
     def _addLoop(self, x12_node):
         new_loop = X12DataNode(x12_node, None, 'loop')
 # Append the node, set parent property
 
-    def _findParentNode(self, find_path):
+    #def _findParentNode(self, find_path):
 
-    def IterateSegments(self):
-        if self.type == 'loop':
-            yield {'type': 'loop_start', 'id': self.node.id, 'node': self.node}
-        elif self.type == 'seg':
-            yield {'type': 'seg', 'id': self.node.id, 'segment': self.seg_data}
-        for child in self.children:
-            child.IterateSegments()
-        if self.type == 'loop':
-            yield {'type': 'loop_end', 'id': self.node.id, 'node': self.node}
+def IterateSegments(tree):
+    if tree.type == 'seg':
+        yield {'type': 'seg', 'id': tree.x12_map_node.id, 'segment': tree.seg_data}
+    for child in tree.children:
+        IterateSegments(child)
+
+def IterateLoopSegments(tree):
+    if tree.type == 'loop':
+        yield {'type': 'loop_start', 'id': tree.x12_map_node.id, 'node': tree.x12_map_node}
+    elif tree.type == 'seg':
+        yield {'type': 'seg', 'id': tree.x12_map_node.id, 'segment': tree.seg_data}
+    for child in tree.children:
+        IterateLoopSegments(child)
+    if tree.type == 'loop':
+        yield {'type': 'loop_end', 'id': tree.x12_map_node.id, 'node': tree.x12_map_node}
 
 
 class X12ContextReader(object):
@@ -121,29 +127,29 @@ class X12ContextReader(object):
         self.map_file = 'x12.control.00401.xml'
         self.control_map = map_if.load_map_file(os.path.join(map_path, self.map_file), param)
         self.map_index_if = map_index.map_index(os.path.join(map_path, 'maps.xml'))
-        self.node = self.control_map.getnodebypath('/ISA_LOOP/ISA')
+        self.x12_map_node = self.control_map.getnodebypath('/ISA_LOOP/ISA')
         self.walker = walk_tree()
 
     def IterSegments(self, loop_id=None):
         map_abbr = 'x12'
         cur_tree = None
-        cur_node = None
+        cur_data_node = None
         for seg in self.src:
             #find node
-            orig_node = self.node
+            orig_node = self.x12_map_node
             
             if seg.get_seg_id() == 'ISA':
-                self.node = self.control_map.getnodebypath('/ISA_LOOP/ISA')
+                self.x12_map_node = self.control_map.getnodebypath('/ISA_LOOP/ISA')
             elif seg.get_seg_id() == 'GS':
-                self.node = self.control_map.getnodebypath('/ISA_LOOP/GS_LOOP/GS')
+                self.x12_map_node = self.control_map.getnodebypath('/ISA_LOOP/GS_LOOP/GS')
             else:
                 try:
-                    self.node = self.walker.walk(self.node, seg, self.errh, self.src.get_seg_count(), \
+                    self.x12_map_node = self.walker.walk(self.x12_map_node, seg, self.errh, self.src.get_seg_count(), \
                         self.src.get_cur_line(), self.src.get_ls_id())
                 except errors.EngineError:
                     raise
-            if self.node is None:
-                self.node = orig_node
+            if self.x12_map_node is None:
+                self.x12_map_node = orig_node
             else:
                 if seg.get_seg_id() == 'ISA':
                     self. errh.add_isa_loop(seg, self.src)
@@ -151,7 +157,7 @@ class X12ContextReader(object):
                     self.errh.handle_errors(self.src.pop_errors())
                 elif seg.get_seg_id() == 'IEA':
                     self.errh.handle_errors(self.src.pop_errors())
-                    self.errh.close_isa_loop(self.node, seg, self.src)
+                    self.errh.close_isa_loop(self.x12_map_node, seg, self.src)
                 elif seg.get_seg_id() == 'GS':
                     fic = seg.get_value('GS01')
                     vriic = seg.get_value('GS08')
@@ -166,7 +172,7 @@ class X12ContextReader(object):
                         self._apply_loop_count(orig_node, self.cur_map)
                         self._reset_isa_counts(self.cur_map)
                     self._reset_gs_counts(self.cur_map)
-                    self.node = self.cur_map.getnodebypath('/ISA_LOOP/GS_LOOP/GS')
+                    self.x12_map_node = self.cur_map.getnodebypath('/ISA_LOOP/GS_LOOP/GS')
                     self.errh.add_gs_loop(seg, self.src)
                     self.errh.handle_errors(self.src.pop_errors())
                 elif seg.get_seg_id() == 'BHT':
@@ -180,43 +186,80 @@ class X12ContextReader(object):
                                 raise pyx12.errors.EngineError, "Map not found.  icvn=%s, fic=%s, vriic=%s, tspc=%s" % \
                                     (icvn, fic, vriic, tspc)
                             self.cur_map = map_if.load_map_file(self.map_file, self.param, self.xslt_files)
-                            self._apply_loop_count(self.node, self.cur_map)
-                            self.node = self.cur_map.getnodebypath('/ISA_LOOP/GS_LOOP/ST_LOOP/HEADER/BHT')
-                    self.errh.add_seg(self.node, seg, self.src.get_seg_count(), \
+                            self._apply_loop_count(self.x12_map_node, self.cur_map)
+                            self.x12_map_node = self.cur_map.getnodebypath('/ISA_LOOP/GS_LOOP/ST_LOOP/HEADER/BHT')
+                    self.errh.add_seg(self.x12_map_node, seg, self.src.get_seg_count(), \
                         self.src.get_cur_line(), self.src.get_ls_id())
                     self.errh.handle_errors(self.src.pop_errors())
                 elif seg.get_seg_id() == 'GE':
                     self.errh.handle_errors(self.src.pop_errors())
-                    self.errh.close_gs_loop(self.node, seg, self.src)
+                    self.errh.close_gs_loop(self.x12_map_node, seg, self.src)
                 elif seg.get_seg_id() == 'ST':
                     self.errh.add_st_loop(seg, self.src)
                     self.errh.handle_errors(self.src.pop_errors())
                 elif seg.get_seg_id() == 'SE':
                     self.errh.handle_errors(self.src.pop_errors())
-                    self.errh.close_st_loop(self.node, seg, self.src)
+                    self.errh.close_st_loop(self.x12_map_node, seg, self.src)
                 else:
-                    self.errh.add_seg(self.node, seg, self.src.get_seg_count(), \
+                    self.errh.add_seg(self.x12_map_node, seg, self.src.get_seg_count(), \
                         self.src.get_cur_line(), self.src.get_ls_id())
                     self.errh.handle_errors(self.src.pop_errors())
 
-            node_path = self.node.get_path().split('/')[1:]
+            node_path = self.x12_map_node.get_path().split('/')[1:]
             # If we are in the requested tree, wait until we have the whole thing
             if loop_id is not None and loop_id in node_path:
                 # Are we at the start of the requested tree? 
-                if node_path == loop_id and self.node.is_first_seg_in_loop():
+                if node_path == loop_id and self.x12_map_node.is_first_seg_in_loop():
                     # Found loop repeat. Close existing, create new tree
                     yield cur_tree
-                    cur_tree = X12DataNode(self.node, seg)
-                    cur_node = cur_tree
+                    # Make new tree on parent loop
+                    cur_tree = X12DataNode(self.x12_map_node.parent, None, 'loop')
+                    cur_data_node = cur_tree
+                    cur_data_node = self._addSegment(cur_data_node, self.x12_map_node)
                 else:
-                    #cur_tree.AddSegment(self.node, seg)
-                    cur_node = self._addSegment(cur_node, self.node, seg)
+                    #cur_tree.AddSegment(self.x12_map_node, seg)
+                    cur_data_node = self._addSegment(cur_data_node, self.x12_map_node)
             else:
-                cur_node = X12DataNode(self.node, seg)
-                yield cur_node
+                cur_data_node = X12DataNode(self.x12_map_node, seg)
+                yield cur_data_node
         
-    def _addSegment(self, cur_node, x12_node, seg_data):
-        return new_data_node
+    def _addSegment(self, cur_data_node, segment_x12_node): #, seg_data):
+        """
+        From the last position in the X12 Data Node Tree, find the correct
+        position for the new segment.  Move up or down the tree as appropriate.
+        Do not need to deal with loop repeats
+
+        @param cur_data_node: Current X12 Data Node
+        @type cur_data_node: L{node<x12context.X12DataNode>}
+        @param segment_x12_node: Segment Map Node
+        @type segment_x12_node: L{node<map_if.x12_node>}
+        @return: New X12 Data Node
+        @rtype: L{node<x12context.X12DataNode>}
+        """
+        # Logic copied from x12xml
+        if not segment_x12_node.is_segment():
+            raise errors.EngineError, 'Node must be a segment'
+        parent_x12_node = pop_to_parent_loop(segment_x12_node) # Get enclosing loop
+        # check path for new loops to be added
+        new_path_list = self._path_list(parent_x12_node.get_path())
+        last_path_list = self._path_list(cur_data_node.cur_path)
+        if last_path_list != new_path_list:
+            match_idx = self._get_path_match_idx(last_path_list, new_path_list)
+            root_path = self._path_list(os.path.commonprefix(
+                ['/'.join(new_path_list), '/'.join(last_path_list)]))
+            if segment_x12_node.is_first_seg_in_loop() and root_path == new_path_list:
+                match_idx -= 1
+            for i in range(len(last_path_list)-1, match_idx-1, -1):
+                # pop loop
+                cur_data_node = cur_data_node.parent
+            for i in range(match_idx, len(new_path_list)):
+                # push new loop nodes, if needed
+                self._get_parent_x12_loop(new_path_list[i], segment_x12_node)
+                new_node = X12DataNode(parent_x12_node, None, 'loop')
+                cur_data_node.children.append(new_node)
+                new_node.parent = cur_data_node
+                cur_data_node = new_node
+        return cur_data_node
 
     def _apply_loop_count(self, orig_node, new_map):
         """
@@ -237,3 +280,32 @@ class X12ContextReader(object):
         cur_map.getnodebypath('/ISA_LOOP/GS_LOOP').set_cur_count(1)
         cur_map.getnodebypath('/ISA_LOOP/GS_LOOP/GS').set_cur_count(1)
 
+    def _path_list(self, path_str):
+        """
+        Get list of path nodes from path string
+        @rtype: list
+        """
+        return filter(lambda x: x!='', path_str.split('/'))
+
+    def _get_path_match_idx(self, last_path, cur_path):
+        """
+        Get the index of the last matching path nodes
+        """
+        match_idx = 0
+        for i in range(min(len(cur_path), len(last_path))):
+            if cur_path[i] != last_path[i]:
+                break
+            match_idx += 1
+        return match_idx
+
+    def _get_parent_x12_loop(self, loop_id, start_x12_node):
+        """
+        From a segment X12 node, return the matching parent x12 loop node
+        """
+        x12_node = start_x12_node
+        while not x12_node.is_map_root():
+            if x12_node.id == loop_id:
+                return x12_node
+            else:
+                x12_node = x12_node.parent
+        return None
