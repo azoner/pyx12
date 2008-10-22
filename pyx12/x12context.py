@@ -24,7 +24,6 @@ Notify if an expected segment instance does not exist ??
 """
 
 import os, os.path
-#import pdb
 
 # Intrapackage imports
 import pyx12
@@ -45,7 +44,7 @@ class X12DataNode(object):
         """
         """
         self.x12_map_node = x12_node
-        self.cur_path = self.x12_map_node.get_path().split('/')[1:]
+        self.cur_path = self.x12_map_node.get_path() #.split('/')[1:]
         self.type = type
         self.seg_data = seg_data
         self.parent = None
@@ -81,11 +80,32 @@ class X12DataNode(object):
 
     #def _findParentNode(self, find_path):
 
+    def IterateSegments(self):
+        if self.type == 'seg':
+            yield {'type': 'seg', 'id': self.x12_map_node.id, 'segment': self.seg_data}
+        for child in self.children:
+            print self.type
+            for a in child.IterateSegments():
+                yield a
+
+    def IterateLoopSegments(self):
+        if self.type == 'loop':
+            yield {'type': 'loop_start', 'id': self.x12_map_node.id, 'node': self.x12_map_node}
+        elif self.type == 'seg':
+            yield {'type': 'seg', 'id': self.x12_map_node.id, 'segment': self.seg_data}
+        for child in self.children:
+            for a in child.IterateLoopSegments():
+                yield a
+        if self.type == 'loop':
+            yield {'type': 'loop_end', 'id': self.x12_map_node.id, 'node': self.x12_map_node}
+
+
 def IterateSegments(tree):
     if tree.type == 'seg':
         yield {'type': 'seg', 'id': tree.x12_map_node.id, 'segment': tree.seg_data}
     for child in tree.children:
-        IterateSegments(child)
+        for a in child.IterateSegments():
+            yield a
 
 def IterateLoopSegments(tree):
     if tree.type == 'loop':
@@ -93,7 +113,8 @@ def IterateLoopSegments(tree):
     elif tree.type == 'seg':
         yield {'type': 'seg', 'id': tree.x12_map_node.id, 'segment': tree.seg_data}
     for child in tree.children:
-        IterateLoopSegments(child)
+        for a in child.IterateSegments():
+            yield a
     if tree.type == 'loop':
         yield {'type': 'loop_end', 'id': tree.x12_map_node.id, 'node': tree.x12_map_node}
 
@@ -209,21 +230,29 @@ class X12ContextReader(object):
             # If we are in the requested tree, wait until we have the whole thing
             if loop_id is not None and loop_id in node_path:
                 # Are we at the start of the requested tree? 
-                if node_path == loop_id and self.x12_map_node.is_first_seg_in_loop():
+                #pdb.set_trace()
+                if node_path[-2] == loop_id and self.x12_map_node.is_first_seg_in_loop():
                     # Found loop repeat. Close existing, create new tree
-                    yield cur_tree
+                    if cur_tree is not None:
+                        yield cur_tree
                     # Make new tree on parent loop
                     cur_tree = X12DataNode(self.x12_map_node.parent, None, 'loop')
                     cur_data_node = cur_tree
-                    cur_data_node = self._addSegment(cur_data_node, self.x12_map_node)
+                    cur_data_node = self._addSegment(cur_data_node, self.x12_map_node, seg)
                 else:
                     #cur_tree.AddSegment(self.x12_map_node, seg)
-                    cur_data_node = self._addSegment(cur_data_node, self.x12_map_node)
+                    #pdb.set_trace()
+                    cur_data_node = self._addSegment(cur_data_node, self.x12_map_node, seg)
             else:
+                #if seg.get_seg_id() == 'SE': 
+                    #pdb.set_trace()
+                if cur_tree is not None:
+                    yield cur_tree
+                cur_tree = None
                 cur_data_node = X12DataNode(self.x12_map_node, seg)
                 yield cur_data_node
         
-    def _addSegment(self, cur_data_node, segment_x12_node): #, seg_data):
+    def _addSegment(self, cur_data_node, segment_x12_node, seg_data):
         """
         From the last position in the X12 Data Node Tree, find the correct
         position for the new segment.  Move up or down the tree as appropriate.
@@ -243,6 +272,7 @@ class X12ContextReader(object):
         # check path for new loops to be added
         new_path_list = self._path_list(parent_x12_node.get_path())
         last_path_list = self._path_list(cur_data_node.cur_path)
+        #pdb.set_trace()
         if last_path_list != new_path_list:
             match_idx = self._get_path_match_idx(last_path_list, new_path_list)
             root_path = self._path_list(os.path.commonprefix(
@@ -259,6 +289,10 @@ class X12ContextReader(object):
                 cur_data_node.children.append(new_node)
                 new_node.parent = cur_data_node
                 cur_data_node = new_node
+        new_node = X12DataNode(self.x12_map_node, seg_data, 'seg')
+        cur_data_node.children.append(new_node)
+        new_node.parent = cur_data_node
+        cur_data_node = new_node
         return cur_data_node
 
     def _apply_loop_count(self, orig_node, new_map):
