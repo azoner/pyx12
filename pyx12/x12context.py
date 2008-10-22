@@ -9,7 +9,7 @@
 ######################################################################
 
 #
-#    $Id: x12n_document.py 1312 2008-10-05 02:54:39Z johnholland $
+#    $Id$
 
 """
 Parse a ANSI X12 data file.
@@ -44,41 +44,27 @@ class X12DataNode(object):
         """
         """
         self.x12_map_node = x12_node
-        self.cur_path = self.x12_map_node.get_path() #.split('/')[1:]
         self.type = type
         self.seg_data = seg_data
         self.parent = None
         self.children = []
         self.errors = []
 
+    # Properties
+    def _get_id(self):
+        return self.x12_map_node.id
+
+    id = property(_get_id, None, None)
+
+    def _get_cur_path(self):
+        return self.x12_map_node.get_path()
+
+    cur_path = property(_get_cur_path, None, None)
+
+    # Public Methods
     def AddChild(self, x12_node, seg_data):
         new_seg = X12DataNode(x12_node, seg_data)
         match_path = x12_node.get_path()
-# Create a new node
-# Find the correct parent
-# If needed, create the loop node
-# Append the node, set parent property
-
-    def _isChildPath(self, root_path, child_path):
-        """
-        Is the child path really a child of the root path?
-        @type root_path: string
-        @type child_path: string
-        """
-        root = root_path.split('/')
-        child = child_path.split('/')
-        if len(root) >= len(child):
-            return False
-        for i in range(len(root)):
-            if root[i] != child[i]:
-                return False
-        return True
-
-    def _addLoop(self, x12_node):
-        new_loop = X12DataNode(x12_node, None, 'loop')
-# Append the node, set parent property
-
-    #def _findParentNode(self, find_path):
 
     def IterateSegments(self):
         if self.type == 'seg':
@@ -99,33 +85,35 @@ class X12DataNode(object):
         if self.type == 'loop':
             yield {'type': 'loop_end', 'id': self.x12_map_node.id, 'node': self.x12_map_node}
 
+    # Private Methods
+    def _isChildPath(self, root_path, child_path):
+        """
+        Is the child path really a child of the root path?
+        @type root_path: string
+        @type child_path: string
+        """
+        root = root_path.split('/')
+        child = child_path.split('/')
+        if len(root) >= len(child):
+            return False
+        for i in range(len(root)):
+            if root[i] != child[i]:
+                return False
+        return True
 
-def IterateSegments(tree):
-    if tree.type == 'seg':
-        yield {'type': 'seg', 'id': tree.x12_map_node.id, 'segment': tree.seg_data}
-    for child in tree.children:
-        for a in child.IterateSegments():
-            yield a
-
-def IterateLoopSegments(tree):
-    if tree.type == 'loop':
-        yield {'type': 'loop_start', 'id': tree.x12_map_node.id, 'node': tree.x12_map_node}
-    elif tree.type == 'seg':
-        yield {'type': 'seg', 'id': tree.x12_map_node.id, 'segment': tree.seg_data}
-    for child in tree.children:
-        for a in child.IterateSegments():
-            yield a
-    if tree.type == 'loop':
-        yield {'type': 'loop_end', 'id': tree.x12_map_node.id, 'node': tree.x12_map_node}
+    def _addLoop(self, x12_node):
+        new_loop = X12DataNode(x12_node, None, 'loop')
 
 
 class X12ContextReader(object):
+    """
+    Read an X12 input stream
+    Keep context when needed
+
+    """
 
     def __init__(self, param, errh, src_file_obj, xslt_files = []):
         """
-        Read an X12 input stream
-        Keep context when needed
-
         @param param: pyx12.param instance
         @param errh: Error Handler object
         @param src_file_obj: Source document
