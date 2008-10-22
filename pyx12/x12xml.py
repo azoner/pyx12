@@ -14,6 +14,8 @@
 Interface to create a XML rendering of the X12 document
 """
 
+import os.path
+
 # Intrapackage imports
 from errors import *
 from xmlwriter import XMLWriter
