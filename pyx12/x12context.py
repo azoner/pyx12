@@ -70,8 +70,8 @@ class X12DataNode(object):
     cur_path = property(_get_cur_path, None, None)
 
     # Public Methods
-    #def addChild(self, x12_node, seg_data):
-    #    new_seg = X12DataNode(x12_node, seg_data)
+    #def addSegment(self, x12_node, seg_data):
+    #    new_data_node = X12DataNode(x12_node, seg_data, 'seg')
     #    match_path = x12_node.get_path()
 
     def iterate_segments(self):
@@ -163,6 +163,11 @@ class X12ContextReader(object):
         self.walker = walk_tree()
 
     def iter_segments(self, loop_id=None):
+        """
+        Simple segment or tree iterator
+        @return: X12 Data Node - simple segment or tree
+        @rtype: L{node<x12context.X12DataNode>}
+        """
         #map_abbr = 'x12'
         cur_tree = None
         cur_data_node = None
