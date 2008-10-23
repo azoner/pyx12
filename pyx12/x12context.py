@@ -17,10 +17,10 @@ Parse a ANSI X12 data file.
 Maintain context state
 Start saving context and segments
 Interface to read and alter segments
-Should have multiple contexts ??
-Able to save and release independantly ??
-Notify if an expected segment instance does not exist ??
 
+TODO: 
+    Return loop start and end for segment outside of context tree 
+    Attach errors to returned dicts
 """
 
 import os, os.path
