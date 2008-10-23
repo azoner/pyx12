@@ -88,8 +88,8 @@ class X12DataNode(object):
 
     def iterate_loop_segments(self):
         """
-        Iterate over this node and children, return loop start and end and
-        any segments found 
+        Iterate over this node and children, return loop start and loop end 
+        and any segments found 
         """
         if self.type == 'loop':
             yield {'type': 'loop_start', 'id': self.id, \
@@ -251,7 +251,7 @@ class X12ContextReader(object):
                         self.src.get_cur_line(), self.src.get_ls_id())
                     self.errh.handle_errors(self.src.pop_errors())
 
-            node_path = self._path_list(self.x12_map_node.get_path())
+            node_path = self._get_path_list(self.x12_map_node.get_path())
             # If we are in the requested tree, wait until we have the whole thing
             if loop_id is not None and loop_id in node_path:
                 # Are we at the start of the requested tree? 
@@ -293,15 +293,14 @@ class X12ContextReader(object):
         # Get enclosing loop
         parent_x12_node = pop_to_parent_loop(segment_x12_node) 
         # check path for new loops to be added
-        new_path_list = self._path_list(parent_x12_node.get_path())
-        last_path_list = self._path_list(cur_data_node.cur_path)
+        new_path_list = self._get_path_list(parent_x12_node.get_path())
+        last_path_list = self._get_path_list(cur_data_node.cur_path)
         if last_path_list != new_path_list:
-            match_idx = self._get_path_match_idx(last_path_list, new_path_list)
-            root_path = self._path_list(os.path.commonprefix(
-                ['/'.join(new_path_list), '/'.join(last_path_list)]))
-            if segment_x12_node.is_first_seg_in_loop() \
-                    and root_path == new_path_list:
-                match_idx -= 1
+            match_idx = self._get_path_match_idx(last_path_list, new_path_list, segment_x12_node)
+            #root_path = self._get_root_path(last_path_list, new_path_list)
+            #if segment_x12_node.is_first_seg_in_loop() \
+            #        and root_path == new_path_list:
+            #    match_idx -= 1
             for i in range(len(last_path_list)-1, match_idx-1, -1):
                 # pop loop
                 cur_data_node = cur_data_node.parent
@@ -348,6 +347,60 @@ class X12ContextReader(object):
             curnode = new_map.getnodebypath(path)
             curnode.set_cur_count(ct)
 
+    def _get_path_list(self, path_str):
+        """
+        Get list of path nodes from path string
+        @rtype: list
+        """
+        return filter(lambda x: x!='', path_str.split('/'))
+
+    def _get_path_match_idx(self, last_path, cur_path, seg_x12_node):
+        """
+        Get the index of the last matching path nodes
+        @param last_path: list of map ids
+        @type last_path: list of strings 
+        @param cur_path: list of map ids
+        @type cur_path: list of strings 
+        @param seg_x12_node: Segment Map Node
+        @type seg_x12_node: L{node<map_if.x12_node>}
+        """
+        match_idx = 0
+        for i in range(min(len(cur_path), len(last_path))):
+            if cur_path[i] != last_path[i]:
+                break
+            match_idx += 1
+        root_path = self._get_root_path(last_path, cur_path)
+        if seg_x12_node.is_first_seg_in_loop() \
+                and root_path == cur_path:
+            match_idx -= 1
+        return match_idx
+
+    def _get_parent_x12_loop(self, loop_id, start_x12_node):
+        """
+        From a segment X12 node, return the matching parent x12 loop node
+        """
+        x12_node = start_x12_node
+        while not x12_node.is_map_root():
+            if x12_node.id == loop_id:
+                return x12_node
+            else:
+                x12_node = x12_node.parent
+        return None
+
+    def _get_root_path(self, path_list1, path_list2):
+        """
+        @param path_list1: list of map ids
+        @type path_list1: list of strings 
+        @param path_list2: list of map ids
+        @type path_list2: list of strings 
+        @return: Common path prefix
+        @rtype: list of strings 
+        """
+        return self._get_path_list(os.path.commonprefix(
+            ['/'.join(path_list1), '/'.join(path_list2)]))
+
+    #def _get_loop_pop_list(self, old_path_list, new_path_list):
+
     def _reset_isa_counts(self, cur_map):
         """
         Reset ISA instance counts
@@ -363,32 +416,3 @@ class X12ContextReader(object):
         cur_map.getnodebypath('/ISA_LOOP/GS_LOOP').set_cur_count(1)
         cur_map.getnodebypath('/ISA_LOOP/GS_LOOP/GS').set_cur_count(1)
 
-    def _path_list(self, path_str):
-        """
-        Get list of path nodes from path string
-        @rtype: list
-        """
-        return filter(lambda x: x!='', path_str.split('/'))
-
-    def _get_path_match_idx(self, last_path, cur_path):
-        """
-        Get the index of the last matching path nodes
-        """
-        match_idx = 0
-        for i in range(min(len(cur_path), len(last_path))):
-            if cur_path[i] != last_path[i]:
-                break
-            match_idx += 1
-        return match_idx
-
-    def _get_parent_x12_loop(self, loop_id, start_x12_node):
-        """
-        From a segment X12 node, return the matching parent x12 loop node
-        """
-        x12_node = start_x12_node
-        while not x12_node.is_map_root():
-            if x12_node.id == loop_id:
-                return x12_node
-            else:
-                x12_node = x12_node.parent
-        return None
