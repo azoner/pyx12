@@ -8,7 +8,7 @@
 #
 ######################################################################
 
-#    $Id: x12file.py 1073 2007-05-03 21:06:10Z johnholland $
+#    $Id$
 
 """
 Low level interface to an X12 data input stream.

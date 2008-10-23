@@ -188,7 +188,7 @@ class map_if(x12_node):
         self.base_level = 0
         self.base_name = ''
         self.index = 0
-        self.src_version = '$Revision$'
+        self.src_version = '$Revision: 1149 $'
 
         self.id = None
         self.name = None
@@ -1637,7 +1637,7 @@ def load_map_file(map_file, param, xslt_files = []):
             if os.stat(map_full)[ST_MTIME] < os.stat(pickle_file)[ST_MTIME]:
                 imap = cPickle.load(open(pickle_file))
                 if imap.cur_path != '/transaction' or len(imap.children) == 0 \
-                    or imap.src_version != '$Revision$':
+                    or imap.src_version != '$Revision: 1149 $':
                     raise Pickle_Errors, "reload map"
                 logger.debug('Map %s loaded from pickle %s' % (map_full, pickle_file))
             else:

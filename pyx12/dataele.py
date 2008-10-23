@@ -8,7 +8,7 @@
 #
 ######################################################################
 
-#    $Id: codes.py 896 2006-02-09 22:23:38Z johnholland $
+#    $Id$
 
 """
 Interface to normalized Data Elements

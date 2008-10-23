@@ -8,7 +8,7 @@
 #
 ######################################################################
 
-#    $Id: xmlx12_simple.py 1068 2007-05-03 20:15:24Z johnholland $
+#    $Id$
 
 """
 Create an X12 document from a XML data file in the idtag form
