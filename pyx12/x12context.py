@@ -126,6 +126,19 @@ class X12DataNode(object):
     #def _addLoop(self, x12_node):
     #    new_loop = X12DataNode(x12_node, None, 'loop')
 
+class X12LoopDataNode(X12DataNode):
+    """
+    Capture the X12 definition for a loop subtree
+    Alter relational data
+    Iterate over contents
+    """
+    def __init__(self, x12_node):
+        self.x12_map_node = x12_node
+        self.type = 'loop'
+        self.seg_data = None
+        self.parent = None
+        self.children = []
+        self.errors = []
 
 class X12ContextReader(object):
     """
@@ -280,6 +293,12 @@ class X12ContextReader(object):
                 cur_data_node = X12DataNode(self.x12_map_node, seg)
                 yield cur_data_node
         
+    def register_error_callback(self, callback, err_type):
+        """
+        Future:  Callbacks for X12 validation errors
+        """
+        pass
+
     def _add_segment(self, cur_data_node, segment_x12_node, seg_data):
         """
         From the last position in the X12 Data Node Tree, find the correct
