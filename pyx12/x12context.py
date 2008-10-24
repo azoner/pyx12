@@ -32,7 +32,8 @@ import errors
 import map_index
 import map_if
 import x12file
-from map_walker import walk_tree, pop_to_parent_loop, get_pop_loops, get_push_loops
+from map_walker import walk_tree, pop_to_parent_loop, get_pop_loops, \
+    get_push_loops
 
 class X12DataNode(object):
     """
@@ -312,36 +313,11 @@ class X12ContextReader(object):
                 # push new loop nodes, if needed
                 cur_data_node = self._add_loop_node(loop_id, \
                     cur_data_node, segment_x12_node)
-                #cur_data_node = self._add_loop_node(new_path_list[i], \
-                #    cur_data_node, segment_x12_node)
-                #self._get_parent_x12_loop(new_path_list[i], segment_x12_node)
-                #new_node = X12DataNode(parent_x12_node, None, 'loop')
-                #cur_data_node.children.append(new_node)
-                #new_node.parent = cur_data_node
-                #cur_data_node = new_node
         new_node = X12DataNode(self.x12_map_node, seg_data, 'seg')
         cur_data_node.children.append(new_node)
         new_node.parent = cur_data_node
         cur_data_node = new_node
         return cur_data_node
-
-    def _get_pop_loops(self, last_path, cur_path, seg_x12_node):
-        """
-        Get the index of the last matching path nodes
-        @param last_path: list of map ids
-        @type last_path: list of strings 
-        @param cur_path: list of map ids
-        @type cur_path: list of strings 
-        @param seg_x12_node: Segment Map Node
-        @type seg_x12_node: L{node<map_if.x12_node>}
-        @return: List of nodes to pop
-        @rtype: List of strings
-        """
-        ret = []
-        match_idx = self._get_path_match_idx(last_path, cur_path, seg_x12_node)
-        for i in range(len(last_path)-1, match_idx-1, -1):
-            ret.append(last_path[i])
-        return ret
 
     def _add_loop_node(self, loop_id, cur_data_node, seg_x12_node):
         """
@@ -378,26 +354,26 @@ class X12ContextReader(object):
         """
         return filter(lambda x: x!='', path_str.split('/'))
 
-    def _get_path_match_idx(self, last_path, cur_path, seg_x12_node):
-        """
-        Get the index of the last matching path nodes
-        @param last_path: list of map ids
-        @type last_path: list of strings 
-        @param cur_path: list of map ids
-        @type cur_path: list of strings 
-        @param seg_x12_node: Segment Map Node
-        @type seg_x12_node: L{node<map_if.x12_node>}
-        """
-        match_idx = 0
-        for i in range(min(len(cur_path), len(last_path))):
-            if cur_path[i] != last_path[i]:
-                break
-            match_idx += 1
-        root_path = self._get_root_path(last_path, cur_path)
-        if seg_x12_node.is_first_seg_in_loop() \
-                and root_path == cur_path:
-            match_idx -= 1
-        return match_idx
+#    def _get_path_match_idx(self, last_path, cur_path, seg_x12_node):
+#        """
+#        Get the index of the last matching path nodes
+#        @param last_path: list of map ids
+#        @type last_path: list of strings 
+#        @param cur_path: list of map ids
+#        @type cur_path: list of strings 
+#        @param seg_x12_node: Segment Map Node
+#        @type seg_x12_node: L{node<map_if.x12_node>}
+#        """
+#        match_idx = 0
+#        for i in range(min(len(cur_path), len(last_path))):
+#            if cur_path[i] != last_path[i]:
+#                break
+#            match_idx += 1
+#        root_path = self._get_root_path(last_path, cur_path)
+#        if seg_x12_node.is_first_seg_in_loop() \
+#                and root_path == cur_path:
+#            match_idx -= 1
+#        return match_idx
 
     def _get_parent_x12_loop(self, loop_id, start_x12_node):
         """
@@ -411,17 +387,17 @@ class X12ContextReader(object):
                 x12_node = x12_node.parent
         return None
 
-    def _get_root_path(self, path_list1, path_list2):
-        """
-        @param path_list1: list of map ids
-        @type path_list1: list of strings 
-        @param path_list2: list of map ids
-        @type path_list2: list of strings 
-        @return: Common path prefix
-        @rtype: list of strings 
-        """
-        return self._get_path_list(os.path.commonprefix(
-            ['/'.join(path_list1), '/'.join(path_list2)]))
+#    def _get_root_path(self, path_list1, path_list2):
+#        """
+#        @param path_list1: list of map ids
+#        @type path_list1: list of strings 
+#        @param path_list2: list of map ids
+#        @type path_list2: list of strings 
+#        @return: Common path prefix
+#        @rtype: list of strings 
+#        """
+#        return self._get_path_list(os.path.commonprefix(
+#            ['/'.join(path_list1), '/'.join(path_list2)]))
 
     #def _get_loop_pop_list(self, old_path_list, new_path_list):
 
