@@ -8,7 +8,7 @@ import unittest
 
 import pyx12.error_handler
 from pyx12.errors import *
-from pyx12.map_walker import walk_tree
+from pyx12.map_walker import walk_tree, get_pop_loops, get_push_loops, common_root_node
 import pyx12.map_if
 import pyx12.params 
 import pyx12.segment
@@ -470,3 +470,61 @@ class CountOrdinal(unittest.TestCase):
         node = self.walker.walk(node, seg_data, self.errh, 5, 4, None)
         self.assertNotEqual(node, None)
         self.assertEqual(self.errh.err_cde, None, self.errh.err_str)
+
+class LoopPathPopPush(unittest.TestCase):
+
+    def setUp(self):
+        map_path = getMapPath()
+        self.walker = walk_tree()
+        param = pyx12.params.params('pyx12.conf.xml')
+        if map_path:
+            param.set('map_path', map_path)
+            param.set('pickle_path', map_path)
+        self.map = pyx12.map_if.load_map_file('834.4010.X095.A1.xml', param)
+        self.errh = pyx12.error_handler.errh_null()
+
+    def test_path_same_repeat(self):
+        start = self.map.getnodebypath('/ISA_LOOP/GS_LOOP/ST_LOOP/DETAIL/2000/INS')
+        end = self.map.getnodebypath('/ISA_LOOP/GS_LOOP/ST_LOOP/DETAIL/2000/INS')
+        #self.assertNotEqual(node, None)
+        base = common_root_node(start, end)
+        self.assertEqual(base.get_path(), '/ISA_LOOP/GS_LOOP/ST_LOOP/DETAIL/2000/INS')
+        self.assertEqual(get_pop_loops(start, end), ['2000'])
+        self.assertEqual(get_push_loops(start, end), ['2000'])
+
+    def test_path_in(self):
+        start = self.map.getnodebypath('/ISA_LOOP/GS_LOOP/ST_LOOP/DETAIL/2000/INS')
+        end = self.map.getnodebypath('/ISA_LOOP/GS_LOOP/ST_LOOP/DETAIL/2000/DTP')
+        #self.assertNotEqual(node, None)
+        base = common_root_node(start, end)
+        self.assertEqual(base.get_path(), '/ISA_LOOP/GS_LOOP/ST_LOOP/DETAIL/2000')
+        self.assertEqual(get_pop_loops(start, end), [])
+        self.assertEqual(get_push_loops(start, end), [])
+
+    def test_path_repeat(self):
+        start = self.map.getnodebypath('/ISA_LOOP/GS_LOOP/ST_LOOP/DETAIL/2000/DTP')
+        end = self.map.getnodebypath('/ISA_LOOP/GS_LOOP/ST_LOOP/DETAIL/2000/INS')
+        #self.assertNotEqual(node, None)
+        base = common_root_node(start, end)
+        self.assertEqual(base.get_path(), '/ISA_LOOP/GS_LOOP/ST_LOOP/DETAIL/2000')
+        self.assertEqual(get_pop_loops(start, end), ['2000'])
+        self.assertEqual(get_push_loops(start, end), ['2000'])
+
+    def test_path_up(self):
+        start = self.map.getnodebypath('/ISA_LOOP/GS_LOOP/ST_LOOP/DETAIL/2000/INS')
+        end = self.map.getnodebypath('/ISA_LOOP/GS_LOOP/ST_LOOP/HEADER/1000B/N1')
+        #self.assertNotEqual(node, None)
+        base = common_root_node(start, end)
+        self.assertEqual(base.get_path(), '/ISA_LOOP/GS_LOOP/ST_LOOP')
+        self.assertEqual(get_pop_loops(start, end), ['2000', 'DETAIL'])
+        self.assertEqual(get_push_loops(start, end), ['HEADER', '1000B'])
+
+    def test_path_up2(self):
+        start = self.map.getnodebypath('/ISA_LOOP/GS_LOOP/ST_LOOP/DETAIL/2000/INS')
+        end = self.map.getnodebypath('/ISA_LOOP/GS_LOOP/GS')
+        #self.assertNotEqual(node, None)
+        base = common_root_node(start, end)
+        self.assertEqual(base.get_path(), '/ISA_LOOP/GS_LOOP')
+        self.assertEqual(get_pop_loops(start, end), ['2000', 'DETAIL', 'ST_LOOP'])
+        self.assertEqual(get_push_loops(start, end), [])
+

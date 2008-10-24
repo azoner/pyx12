@@ -32,6 +32,8 @@ def suite(args):
                 suite.addTest(unittest.makeSuite(LoopCounting))
             elif arg == 'CountOrdinal':
                 suite.addTest(unittest.makeSuite(CountOrdinal))
+            elif arg == 'LoopPathPopPush':
+                suite.addTest(unittest.makeSuite(LoopPathPopPush))
     else:
         suite.addTest(unittest.makeSuite(Explicit_Loops))
         suite.addTest(unittest.makeSuite(Implicit_Loops))
@@ -40,6 +42,7 @@ def suite(args):
         suite.addTest(unittest.makeSuite(Counting))
         suite.addTest(unittest.makeSuite(LoopCounting))
         suite.addTest(unittest.makeSuite(CountOrdinal))
+        suite.addTest(unittest.makeSuite(LoopPathPopPush))
     return suite
 
 try:

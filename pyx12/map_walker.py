@@ -59,8 +59,102 @@ def is_first_seg_match2(child, seg_data):
         if child.is_match(seg_data):
             return True
         else:
-            return False # seg does not match the first segment in loop, so not valid
+            # seg does not match the first segment in loop, so not valid
+            return False 
     return False
+
+def get_pop_loops(start_x12_node, end_x12_node):
+    """
+    From the start segment node, determine the loop nodes up to the common root
+    of the end segment x12 node
+    Handle the case where the current node is a repeat of the loop
+
+    @param start_x12_node: Starting X12 map segment node
+    @type start_x12_node: L{node<map_if.segment_if>}
+    @param end_x12_node: Starting X12 map segment node
+    @type end_x12_node: L{node<map_if.segment_if>}
+    @return: List of loop IDs
+    @rtype: List of strings
+    """
+    if not start_x12_node.is_segment():
+        raise EngineError, 'start_x12_node must be a segment'
+    if not end_x12_node.is_segment():
+        raise EngineError, 'end_x12_node must be a segment'
+    start = pop_to_parent_loop(start_x12_node)
+    end = pop_to_parent_loop(end_x12_node)
+    if start == end:
+        if end_x12_node.is_first_seg_in_loop():
+            return [end.id]
+        else:
+            return []
+    else:
+        common = common_root_node(start_x12_node, end_x12_node)
+        ret = []
+        while start != common:
+            ret.append(start.id)
+            start = start.parent
+        return ret
+
+def get_push_loops(start_x12_node, end_x12_node):
+    """
+    From the start segment node, determine the loop nodes from the common root
+    to the end segment x12 node
+    Handle the case where the current node is a repeat of the loop
+
+    @param start_x12_node: Starting X12 map segment node
+    @type start_x12_node: L{node<map_if.segment_if>}
+    @param end_x12_node: Starting X12 map segment node
+    @type end_x12_node: L{node<map_if.segment_if>}
+    @return: List of loop IDs
+    @rtype: List of strings
+    """
+    if not start_x12_node.is_segment():
+        raise EngineError, 'start_x12_node must be a segment'
+    if not end_x12_node.is_segment():
+        raise EngineError, 'end_x12_node must be a segment'
+    start = pop_to_parent_loop(start_x12_node)
+    end = pop_to_parent_loop(end_x12_node)
+    if start == end:
+        if end_x12_node.is_first_seg_in_loop():
+            return [end.id]
+        else:
+            return []
+    else:
+        common = common_root_node(start_x12_node, end_x12_node)
+        ret = []
+        while end != common:
+            ret.append(end.id)
+            end = end.parent
+        ret.reverse()
+        return ret
+
+def common_root_node(x12_node1, x12_node2):
+    """
+    Get the lowest level parent x12 node the two nodes have in common 
+
+    @param x12_node1: Starting X12 map segment node
+    @type x12_node1: L{node<map_if.x12_node>}
+    @param x12_node2: Starting X12 map segment node
+    @type x12_node2: L{node<map_if.x12_node>}
+    @return: Common X12 parent node 
+    @rtype: L{node<map_if.x12_node>}
+    """
+    p1 = filter(lambda x: x!='', x12_node1.get_path().split('/'))
+    p2 = filter(lambda x: x!='', x12_node2.get_path().split('/'))
+    if len(p1) == 0 or len(p2) == 0 or p1[0] != p2[0]:
+        return None
+    if p1 == p2:
+        return x12_node1
+    else:
+        last_match = ''
+        for i in range(min(len(p1), len(p2))):
+            if p1[i] != p2[i]:
+                last_match = p1[i-1]
+                break
+        curr = x12_node1
+        while curr.id != last_match and not curr.is_map_root():
+            curr = curr.parent
+        return curr
 
 
 class walk_tree(object):
@@ -70,7 +164,8 @@ class walk_tree(object):
     def __init__(self):
 #        end_tag_stack = []
         #self.cur_seg_count = 0
-        self.mandatory_segs_missing = []  # Store errors until we know we have an error
+        # Store errors until we know we have an error
+        self.mandatory_segs_missing = []  
         pass
 
     def walk(self, node, seg_data, errh, seg_count, cur_line, ls_id):
