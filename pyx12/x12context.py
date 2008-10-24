@@ -32,7 +32,7 @@ import errors
 import map_index
 import map_if
 import x12file
-from map_walker import walk_tree, pop_to_parent_loop
+from map_walker import walk_tree, pop_to_parent_loop, get_pop_loops, get_push_loops
 
 class X12DataNode(object):
     """
@@ -301,18 +301,19 @@ class X12ContextReader(object):
         new_path_list = self._get_path_list(parent_x12_node.get_path())
         last_path_list = self._get_path_list(cur_data_node.cur_path)
         if last_path_list != new_path_list:
-            match_idx = self._get_path_match_idx(last_path_list, new_path_list, segment_x12_node)
-            #root_path = self._get_root_path(last_path_list, new_path_list)
-            #if segment_x12_node.is_first_seg_in_loop() \
-            #        and root_path == new_path_list:
-            #    match_idx -= 1
-            for i in range(len(last_path_list)-1, match_idx-1, -1):
-                # pop loop
+            #match_idx = self._get_path_match_idx(last_path_list, new_path_list, segment_x12_node)
+            for loop_id in get_pop_loops(cur_data_node.x12_map_node, segment_x12_node):
                 cur_data_node = cur_data_node.parent
-            for i in range(match_idx, len(new_path_list)):
+                if cur_data_node.id != loop_id:
+                    raise errors.EngineError, 'Loop pop: %s != %s' % (cur_data_node.id, loop_id)
+            #for i in range(match_idx, len(new_path_list)):
+            for loop_id in get_push_loops(cur_data_node.x12_map_node, \
+                    segment_x12_node):
                 # push new loop nodes, if needed
-                cur_data_node = self._add_loop_node(new_path_list[i], \
+                cur_data_node = self._add_loop_node(loop_id, \
                     cur_data_node, segment_x12_node)
+                #cur_data_node = self._add_loop_node(new_path_list[i], \
+                #    cur_data_node, segment_x12_node)
                 #self._get_parent_x12_loop(new_path_list[i], segment_x12_node)
                 #new_node = X12DataNode(parent_x12_node, None, 'loop')
                 #cur_data_node.children.append(new_node)
@@ -323,6 +324,24 @@ class X12ContextReader(object):
         new_node.parent = cur_data_node
         cur_data_node = new_node
         return cur_data_node
+
+    def _get_pop_loops(self, last_path, cur_path, seg_x12_node):
+        """
+        Get the index of the last matching path nodes
+        @param last_path: list of map ids
+        @type last_path: list of strings 
+        @param cur_path: list of map ids
+        @type cur_path: list of strings 
+        @param seg_x12_node: Segment Map Node
+        @type seg_x12_node: L{node<map_if.x12_node>}
+        @return: List of nodes to pop
+        @rtype: List of strings
+        """
+        ret = []
+        match_idx = self._get_path_match_idx(last_path, cur_path, seg_x12_node)
+        for i in range(len(last_path)-1, match_idx-1, -1):
+            ret.append(last_path[i])
+        return ret
 
     def _add_loop_node(self, loop_id, cur_data_node, seg_x12_node):
         """
