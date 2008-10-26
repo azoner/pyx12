@@ -73,8 +73,8 @@ def get_pop_loops(start_x12_node, end_x12_node):
     @type start_x12_node: L{node<map_if.segment_if>}
     @param end_x12_node: Starting X12 map segment node
     @type end_x12_node: L{node<map_if.segment_if>}
-    @return: List of loop IDs
-    @rtype: List of strings
+    @return: List of X12 map loop nodes
+    @rtype: List[L{node<map_if.loop_if>}]
     """
     if not start_x12_node.is_segment():
         raise EngineError, 'start_x12_node must be a segment'
@@ -84,14 +84,14 @@ def get_pop_loops(start_x12_node, end_x12_node):
     end = pop_to_parent_loop(end_x12_node)
     if start == end:
         if end_x12_node.is_first_seg_in_loop():
-            return [end.id]
+            return [end]
         else:
             return []
     else:
         common = common_root_node(start_x12_node, end_x12_node)
         ret = []
         while start != common:
-            ret.append(start.id)
+            ret.append(start)
             start = start.parent
         return ret
 
@@ -105,8 +105,8 @@ def get_push_loops(start_x12_node, end_x12_node):
     @type start_x12_node: L{node<map_if.segment_if>}
     @param end_x12_node: Starting X12 map segment node
     @type end_x12_node: L{node<map_if.segment_if>}
-    @return: List of loop IDs
-    @rtype: List of strings
+    @return: List of X12 map loop nodes
+    @rtype: List[L{node<map_if.loop_if>}]
     """
     if not start_x12_node.is_segment():
         raise EngineError, 'start_x12_node must be a segment'
@@ -116,14 +116,14 @@ def get_push_loops(start_x12_node, end_x12_node):
     end = pop_to_parent_loop(end_x12_node)
     if start == end:
         if end_x12_node.is_first_seg_in_loop():
-            return [end.id]
+            return [end]
         else:
             return []
     else:
         common = common_root_node(start_x12_node, end_x12_node)
         ret = []
         while end != common:
-            ret.append(end.id)
+            ret.append(end)
             end = end.parent
         ret.reverse()
         return ret

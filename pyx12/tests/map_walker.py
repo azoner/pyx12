@@ -489,8 +489,8 @@ class LoopPathPopPush(unittest.TestCase):
         #self.assertNotEqual(node, None)
         base = common_root_node(start, end)
         self.assertEqual(base.get_path(), '/ISA_LOOP/GS_LOOP/ST_LOOP/DETAIL/2000/INS')
-        self.assertEqual(get_pop_loops(start, end), ['2000'])
-        self.assertEqual(get_push_loops(start, end), ['2000'])
+        self.assertEqual([l.id for l in get_pop_loops(start, end)], ['2000'])
+        self.assertEqual([l.id for l in get_push_loops(start, end)], ['2000'])
 
     def test_path_in(self):
         start = self.map.getnodebypath('/ISA_LOOP/GS_LOOP/ST_LOOP/DETAIL/2000/INS')
@@ -498,8 +498,8 @@ class LoopPathPopPush(unittest.TestCase):
         #self.assertNotEqual(node, None)
         base = common_root_node(start, end)
         self.assertEqual(base.get_path(), '/ISA_LOOP/GS_LOOP/ST_LOOP/DETAIL/2000')
-        self.assertEqual(get_pop_loops(start, end), [])
-        self.assertEqual(get_push_loops(start, end), [])
+        self.assertEqual([l.id for l in get_pop_loops(start, end)], [])
+        self.assertEqual([l.id for l in get_push_loops(start, end)], [])
 
     def test_path_repeat(self):
         start = self.map.getnodebypath('/ISA_LOOP/GS_LOOP/ST_LOOP/DETAIL/2000/DTP')
@@ -507,8 +507,8 @@ class LoopPathPopPush(unittest.TestCase):
         #self.assertNotEqual(node, None)
         base = common_root_node(start, end)
         self.assertEqual(base.get_path(), '/ISA_LOOP/GS_LOOP/ST_LOOP/DETAIL/2000')
-        self.assertEqual(get_pop_loops(start, end), ['2000'])
-        self.assertEqual(get_push_loops(start, end), ['2000'])
+        self.assertEqual([l.id for l in get_pop_loops(start, end)], ['2000'])
+        self.assertEqual([l.id for l in get_push_loops(start, end)], ['2000'])
 
     def test_path_up(self):
         start = self.map.getnodebypath('/ISA_LOOP/GS_LOOP/ST_LOOP/DETAIL/2000/INS')
@@ -516,8 +516,8 @@ class LoopPathPopPush(unittest.TestCase):
         #self.assertNotEqual(node, None)
         base = common_root_node(start, end)
         self.assertEqual(base.get_path(), '/ISA_LOOP/GS_LOOP/ST_LOOP')
-        self.assertEqual(get_pop_loops(start, end), ['2000', 'DETAIL'])
-        self.assertEqual(get_push_loops(start, end), ['HEADER', '1000B'])
+        self.assertEqual([l.id for l in get_pop_loops(start, end)], ['2000', 'DETAIL'])
+        self.assertEqual([l.id for l in get_push_loops(start, end)], ['HEADER', '1000B'])
 
     def test_path_up2(self):
         start = self.map.getnodebypath('/ISA_LOOP/GS_LOOP/ST_LOOP/DETAIL/2000/INS')
@@ -525,6 +525,6 @@ class LoopPathPopPush(unittest.TestCase):
         #self.assertNotEqual(node, None)
         base = common_root_node(start, end)
         self.assertEqual(base.get_path(), '/ISA_LOOP/GS_LOOP')
-        self.assertEqual(get_pop_loops(start, end), ['2000', 'DETAIL', 'ST_LOOP'])
-        self.assertEqual(get_push_loops(start, end), [])
+        self.assertEqual([l.id for l in get_pop_loops(start, end)], ['2000', 'DETAIL', 'ST_LOOP'])
+        self.assertEqual([l.id for l in get_push_loops(start, end)], [])
 
