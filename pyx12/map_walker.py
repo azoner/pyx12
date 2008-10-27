@@ -78,9 +78,9 @@ def get_pop_loops(start_x12_node, end_x12_node):
     @rtype: List[L{node<map_if.loop_if>}]
     """
     if not start_x12_node.is_segment():
-        raise EngineError, 'start_x12_node must be a segment'
+        raise EngineError, 'start_x12_node must be a segment: %s' % (start_x12_node.id)
     if not end_x12_node.is_segment():
-        raise EngineError, 'end_x12_node must be a segment'
+        raise EngineError, 'end_x12_node must be a segment: %s' % (end_x12_node.id)
     start = pop_to_parent_loop(start_x12_node)
     end = pop_to_parent_loop(end_x12_node)
     if start == end:
@@ -111,9 +111,9 @@ def get_push_loops(start_x12_node, end_x12_node):
     @rtype: List[L{node<map_if.loop_if>}]
     """
     if not start_x12_node.is_segment():
-        raise EngineError, 'start_x12_node must be a segment'
+        raise EngineError, 'start_x12_node must be a segment: %s' % (start_x12_node.id)
     if not end_x12_node.is_segment():
-        raise EngineError, 'end_x12_node must be a segment'
+        raise EngineError, 'end_x12_node must be a segment: %s' % (end_x12_node.id)
     start = pop_to_parent_loop(start_x12_node)
     end = pop_to_parent_loop(end_x12_node)
     if start == end:
