@@ -24,6 +24,7 @@ TODO:
 """
 
 import os, os.path
+#import pdb
 
 # Intrapackage imports
 import pyx12
@@ -338,8 +339,7 @@ class X12ContextReader(object):
                         yield cur_tree
                     # Make new tree on parent loop
                     cur_tree = X12LoopDataNode(self.x12_map_node.parent)
-                    cur_data_node = cur_tree
-                    cur_data_node = self._add_segment(cur_data_node, \
+                    cur_data_node = self._add_segment(cur_tree, \
                         self.x12_map_node, seg)
                 else:
                     cur_data_node = self._add_segment(cur_data_node, \
@@ -383,34 +383,48 @@ class X12ContextReader(object):
         if not segment_x12_node.is_segment():
             raise errors.EngineError, 'Node must be a segment'
         # Get enclosing loop
+        orig_data_node = cur_data_node
         parent_x12_node = pop_to_parent_loop(segment_x12_node) 
+        cur_loop_node = cur_data_node
+        if cur_loop_node.type == 'seg':
+            cur_loop_node = cur_loop_node.parent
         # check path for new loops to be added
         new_path_list = self._get_path_list(parent_x12_node.get_path())
-        last_path_list = self._get_path_list(cur_data_node.cur_path)
+        last_path_list = self._get_path_list(cur_loop_node.cur_path)
         if last_path_list != new_path_list:
-            #match_idx = self._get_path_match_idx(last_path_list, new_path_list, segment_x12_node)
             for x12_loop in get_pop_loops(cur_data_node.x12_map_node, segment_x12_node):
-                cur_data_node = cur_data_node.parent
-                if cur_data_node.id != x12_loop.id:
-                    raise errors.EngineError, 'Loop pop: %s != %s' % (cur_data_node.id, x12_loop.id)
+                if cur_loop_node.id != x12_loop.id:
+                    raise errors.EngineError, 'Loop pop: %s != %s' % (cur_loop_node.id, x12_loop.id)
+                cur_loop_node = cur_loop_node.parent
             #for i in range(match_idx, len(new_path_list)):
             for x12_loop in get_push_loops(cur_data_node.x12_map_node, \
                     segment_x12_node):
                 # push new loop nodes, if needed
-                cur_data_node = self._add_loop_node(x12_loop, cur_data_node)
-        new_node = X12SegmentDataNode(self.x12_map_node, seg_data)
-        cur_data_node.children.append(new_node)
-        new_node.parent = cur_data_node
-        cur_data_node = new_node
-        return cur_data_node
+                cur_loop_node = self._add_loop_node(x12_loop, cur_loop_node)
+        try:
+            new_node = X12SegmentDataNode(self.x12_map_node, seg_data)
+        except:
+            raise errors.EngineError, 'X12SegmentDataNode failed: x12_path=%s, seg_date=%s ' % \
+                (self.x12_map_node.get_path(), seg_data)
+        try:
+            cur_loop_node.children.append(new_node)
+            new_node.parent = cur_loop_node
+        except:
+            err_str = 'X12SegmentDataNode child append failed:'
+            err_str += ' seg_x12_path=%s' % (segment_x12_node.get_path())
+            err_str += ', orig_datanode=%s' % (orig_data_node.cur_path)
+            err_str += ', cur_datanode=%s' % (cur_data_node.cur_path)
+            err_str += ', seg_data=%s' % (seg_data)
+            raise errors.EngineError, err_str
+        return new_node
 
-    def _add_loop_node(self, x12_loop_node, cur_data_node): #, seg_x12_node):
+    def _add_loop_node(self, x12_loop_node, cur_loop_node): #, seg_x12_node):
         """
         Add a loop data node the the current tree location
         @param x12_loop_node: X12 Loop node
         @type x12_loop_node: L{node<map_if.loop_if>}
-        @param cur_data_node: Current X12 Data Node
-        @type cur_data_node: L{node<x12context.X12DataNode>}
+        @param cur_loop_node: Current X12 Loop Data Node
+        @type cur_loop_node: L{node<x12context.X12LoopDataNode>}
         @param seg_x12_node: Segment Map Node
         @type seg_x12_node: L{node<map_if.x12_node>}
         @return: New X12 Data Node
@@ -418,8 +432,11 @@ class X12ContextReader(object):
         """
         #parent_loop = self._get_parent_x12_loop(loop_id, seg_x12_node)
         new_node = X12LoopDataNode(x12_loop_node)
-        cur_data_node.children.append(new_node)
-        new_node.parent = cur_data_node
+        if cur_loop_node.type != 'loop':
+            raise errors.EngineError, 'cur_loop_node must be a loop "%s", "%s"' \
+                % (cur_loop_node.type, cur_loop_node.id)
+        cur_loop_node.children.append(new_node)
+        new_node.parent = cur_loop_node
         return new_node
 
     def _apply_loop_count(self, orig_node, new_map):
