@@ -27,8 +27,7 @@ from stat import ST_MTIME
 from stat import ST_SIZE
 
 # Intrapackage imports
-import errors
-from errors import IsValidError
+from errors import IsValidError, XML_Reader_Error, EngineError
 import codes
 import dataele
 
@@ -58,6 +57,25 @@ class x12_node(object):
 #    def __del__(self):
 #        pass
 
+    def __eq__(self, other):
+        if isinstance(other, x12_node):
+            return self.id == other.id and self.parent.id == other.parent.id 
+        return NotImplemented
+
+    def __ne__(self, other):
+        res = type(self).__eq__(self, other)
+        if res is NotImplemented:
+            return res
+        return not res
+
+    def __lt__(self, other):
+        return NotImplemented
+    
+    __le__ = __lt__
+    __le__ = __lt__
+    __gt__ = __lt__
+    __ge__ = __lt__
+
     def __len__(self):
         return len(self.children)
 
@@ -81,7 +99,7 @@ class x12_node(object):
                         return child.getnodebypath(string.join(pathl[1:],'/'))
                     else:
                         break
-        raise errors.EngineError, 'getnodebypath failed. Path "%s" not found' % path
+        raise EngineError, 'getnodebypath failed. Path "%s" not found' % path
  
     def get_child_count(self):
         return len(self.children)
@@ -206,13 +224,13 @@ class map_if(x12_node):
         #    self.reader = libxml2.newTextReaderFilename(os.path.join(map_path, \
         #        map_file))
         #except:
-        #    raise errors.GSError, 'Map file not found: %s' % (map_file)
+        #    raise GSError, 'Map file not found: %s' % (map_file)
         try:    
             ret = self.reader.Read()
             if ret == -1:
-                raise errors.XML_Reader_Error, 'Read Error'
+                raise XML_Reader_Error, 'Read Error'
             elif ret == 0:
-                raise errors.XML_Reader_Error, 'End of Map File'
+                raise XML_Reader_Error, 'End of Map File'
             while ret == 1:
                 #print 'map_if', self.reader.NodeType(), self.reader.Depth(), self.reader.Name()
                 tmpNodeType = self.reader.NodeType()
@@ -264,9 +282,9 @@ class map_if(x12_node):
                     if self.reader.Depth() <= self.base_level:
                         ret = self.reader.Read()
                         if ret == -1:
-                            raise errors.XML_Reader_Error, 'Read Error'
+                            raise XML_Reader_Error, 'Read Error'
                         elif ret == 0:
-                            raise errors.XML_Reader_Error, 'End of Map File'
+                            raise XML_Reader_Error, 'End of Map File'
                         break 
                     #if cur_name == 'transaction':
                     #    pass
@@ -281,10 +299,10 @@ class map_if(x12_node):
 
                 ret = self.reader.Read()
                 if ret == -1:
-                    raise errors.XML_Reader_Error, 'Read Error'
+                    raise XML_Reader_Error, 'Read Error'
                 elif ret == 0:
-                    raise errors.XML_Reader_Error, 'End of Map File'
-        except errors.XML_Reader_Error:
+                    raise XML_Reader_Error, 'End of Map File'
+        except XML_Reader_Error:
             pass
 
         del self.reader
@@ -299,6 +317,9 @@ class map_if(x12_node):
         for ord1 in pos_keys:
             for node in self.pos_map[ord1]:
                 node.debug_print()
+
+    def __eq__(self, other):
+        return self.id == other.id
 
     def __len__(self):
         i = 0
@@ -346,7 +367,7 @@ class map_if(x12_node):
         """
         @param idx: zero based
         """
-        raise errors.EngineError, 'map_if.get_child_node_by_idx is not a valid call'
+        raise EngineError, 'map_if.get_child_node_by_idx is not a valid call'
             
     def getnodebypath(self, path):
         """
@@ -365,7 +386,7 @@ class map_if(x12_node):
                         return child
                     else:
                         return child.getnodebypath(string.join(pathl[1:],'/'))
-        raise errors.EngineError, 'getnodebypath failed. Path "%s" not found' % path
+        raise EngineError, 'getnodebypath failed. Path "%s" not found' % path
             
     def is_map_root(self):
         """
@@ -499,7 +520,7 @@ class loop_if(x12_node):
                     #    self.children[-2].next_node = self.children[-1]
                     index += 1
                 elif cur_name == 'element':
-                    raise errors.EngineError, 'This should not happen'
+                    raise EngineError, 'This should not happen'
                     #self.children.append(element_if(self.root, self))
                     #if len(self.children) > 1:
                     #    self.children[-1].prev_node = self.children[-2]
@@ -515,9 +536,9 @@ class loop_if(x12_node):
                 if reader.Depth() <= self.base_level:
                     ret = reader.Read()
                     if ret == -1:
-                        raise errors.XML_Reader_Error, 'Read Error'
+                        raise XML_Reader_Error, 'Read Error'
                     elif ret == 0:
-                        raise errors.XML_Reader_Error, 'End of Map File'
+                        raise XML_Reader_Error, 'End of Map File'
                     break
                 #if reader.Name() == 'transaction':
                 #    return
@@ -542,9 +563,9 @@ class loop_if(x12_node):
 
             ret = reader.Read()
             if ret == -1:
-                raise errors.XML_Reader_Error, 'Read Error'
+                raise XML_Reader_Error, 'Read Error'
             elif ret == 0:
-                raise errors.XML_Reader_Error, 'End of Map File'
+                raise XML_Reader_Error, 'End of Map File'
         
     def debug_print(self):
         sys.stdout.write(self.__repr__())
@@ -653,7 +674,7 @@ class loop_if(x12_node):
                                 and len(child.children[2].valid_codes) > 0 \
                                 and id_val in child.children[2].valid_codes:
                                 return child
-        raise errors.EngineError, 'getnodebypath failed. Path "%s" not found' % path
+        raise EngineError, 'getnodebypath failed. Path "%s" not found' % path
 
     def get_child_count(self):
         return self.__len__()
@@ -662,7 +683,7 @@ class loop_if(x12_node):
         """
         @param idx: zero based
         """
-        raise errors.EngineError, 'loop_if.get_child_node_by_idx is not a valid call'
+        raise EngineError, 'loop_if.get_child_node_by_idx is not a valid call'
             
     def get_seg_count(self):
         """
@@ -826,9 +847,9 @@ class segment_if(x12_node):
                 if reader.Depth() <= self.base_level:
                     ret = reader.Read()
                     if ret == -1:
-                        raise errors.XML_Reader_Error, 'Read Error'
+                        raise XML_Reader_Error, 'Read Error'
                     elif ret == 0:
-                        raise errors.XML_Reader_Error, 'End of Map File'
+                        raise XML_Reader_Error, 'End of Map File'
                     break 
                 #if reader.Name() == 'transaction':
                 #    return
@@ -857,9 +878,9 @@ class segment_if(x12_node):
 
             ret = reader.Read()
             if ret == -1:
-                raise errors.XML_Reader_Error, 'Read Error'
+                raise XML_Reader_Error, 'Read Error'
             elif ret == 0:
-                raise errors.XML_Reader_Error, 'End of Map File'
+                raise XML_Reader_Error, 'End of Map File'
         
     def debug_print(self):
         sys.stdout.write(self.__repr__())
@@ -1131,9 +1152,9 @@ class element_if(x12_node):
                 if reader.Depth() <= self.base_level:
                     ret = reader.Read()
                     if ret == -1:
-                        raise errors.XML_Reader_Error, 'Read Error'
+                        raise XML_Reader_Error, 'Read Error'
                     elif ret == 0:
-                        raise errors.XML_Reader_Error, 'End of Map File'
+                        raise XML_Reader_Error, 'End of Map File'
                     break 
                 cur_name = ''
                 
@@ -1159,9 +1180,9 @@ class element_if(x12_node):
 
             ret = reader.Read()
             if ret == -1:
-                raise errors.XML_Reader_Error, 'Read Error'
+                raise XML_Reader_Error, 'Read Error'
             elif ret == 0:
-                raise errors.XML_Reader_Error, 'End of Map File'
+                raise XML_Reader_Error, 'End of Map File'
         
     def debug_print(self):
         sys.stdout.write(self.__repr__())
@@ -1434,9 +1455,9 @@ class composite_if(x12_node):
                 if reader.Depth() <= self.base_level:
                     ret = reader.Read()
                     if ret == -1:
-                        raise errors.XML_Reader_Error, 'Read Error'
+                        raise XML_Reader_Error, 'Read Error'
                     elif ret == 0:
-                        raise errors.XML_Reader_Error, 'End of Map File'
+                        raise XML_Reader_Error, 'End of Map File'
                     break 
                 #if reader.Name() == 'transaction':
                 #    return
@@ -1458,9 +1479,9 @@ class composite_if(x12_node):
 
             ret = reader.Read()
             if ret == -1:
-                raise errors.XML_Reader_Error, 'Read Error'
+                raise XML_Reader_Error, 'Read Error'
             elif ret == 0:
-                raise errors.XML_Reader_Error, 'End of Map File'
+                raise XML_Reader_Error, 'End of Map File'
                 
     def _error(self, errh, err_str, err_cde, elem_val):
         """
@@ -1648,7 +1669,7 @@ def load_map_file(map_file, param, xslt_files = []):
                 reader = libxml2.newTextReaderFilename(map_full)
                 imap = map_if(reader, param)
             except:
-                raise errors.EngineError, 'Load of map file failed: %s' % (map_full)
+                raise EngineError, 'Load of map file failed: %s' % (map_full)
     return imap
 
 def is_syntax_valid(seg_data, syn):
@@ -1736,7 +1757,7 @@ def is_syntax_valid(seg_data, syn):
                 return (True, None)
         else:
             return (True, None)
-    #raise errors.EngineError
+    #raise EngineError
     return (False, 'Syntax Type %s Not Found' % (syntax_str(syn)))
         
 def syntax_str(syntax):
@@ -1829,7 +1850,7 @@ def match_re(short_data_type, val):
     elif short_data_type == 'R':
         rec = rec_R
     else:
-        raise errors.EngineError, 'Unknown data type %s' % (short_data_type)
+        raise EngineError, 'Unknown data type %s' % (short_data_type)
     m = rec.search(val)
     if not m:
         return False
@@ -1858,7 +1879,7 @@ def not_match_re(short_data_type, val, charset = 'B'):
     elif short_data_type == 'TM':
         rec = rec_TM
     else:
-        raise errors.EngineError, 'Unknown data type %s' % (short_data_type)
+        raise EngineError, 'Unknown data type %s' % (short_data_type)
     m = rec.search(val)
     if m and m.group(0):
         return True # Invalid char matched

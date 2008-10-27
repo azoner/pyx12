@@ -190,11 +190,11 @@ class X12SegmentDataNode(X12DataNode):
         and any segments found 
         """
         for loop in self.start_loops:
-            yield {'type': 'loop_start', 'id': loop, 'node': None}
+            yield {'node': loop, 'type': 'loop_start', 'id': loop.id}
         yield {'type': 'seg', 'id': self.id, 'segment': self.seg_data, \
             'start_loops': self.start_loops, 'end_loops': self.end_loops}
         for loop in self.end_loops:
-            yield {'type': 'loop_end', 'id': loop, 'node': None}
+            yield {'node': loop, 'type': 'loop_end', 'id': loop.id}
 
 
 class X12ContextReader(object):
@@ -349,12 +349,15 @@ class X12ContextReader(object):
                     # We have completed a tree
                     yield cur_tree
                     cur_tree = None
-                push_loops = get_push_loops(cur_data_node.x12_map_node, \
-                        self.x12_map_node)
-                pop_loops = get_pop_loops(cur_data_node.x12_map_node, \
-                        self.x12_map_node)
-                cur_data_node = X12SegmentDataNode(self.x12_map_node, seg, \
-                        None, push_loops, pop_loops)
+                if cur_data_node is not None:
+                    push_loops = get_push_loops(cur_data_node.x12_map_node, \
+                            self.x12_map_node)
+                    pop_loops = get_pop_loops(cur_data_node.x12_map_node, \
+                            self.x12_map_node)
+                    cur_data_node = X12SegmentDataNode(self.x12_map_node, seg, \
+                            None, push_loops, pop_loops)
+                else:
+                    cur_data_node = X12SegmentDataNode(self.x12_map_node, seg)
                 yield cur_data_node
         
     def register_error_callback(self, callback, err_type):

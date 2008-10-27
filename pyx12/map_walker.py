@@ -18,6 +18,7 @@ If seg indicates a segment has been entered, returns the segment node.
 """
 
 import logging
+import pdb
 
 # Intrapackage imports
 from errors import *
@@ -90,7 +91,8 @@ def get_pop_loops(start_x12_node, end_x12_node):
     else:
         common = common_root_node(start_x12_node, end_x12_node)
         ret = []
-        while start != common:
+        # while start != common:
+        while start.get_path() != common.get_path():
             ret.append(start)
             start = start.parent
         return ret
@@ -120,9 +122,11 @@ def get_push_loops(start_x12_node, end_x12_node):
         else:
             return []
     else:
+        #pdb.set_trace()
         common = common_root_node(start_x12_node, end_x12_node)
         ret = []
-        while end != common:
+        # while end != common:
+        while end.get_path() != common.get_path():
             ret.append(end)
             end = end.parent
         ret.reverse()
