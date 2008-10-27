@@ -1,27 +1,18 @@
 #! /usr/bin/env /usr/local/bin/python
 
+import sys
 import unittest
-import sys, string
-import StringIO
-import os.path
 
-import pyx12.x12xml_idtag
-import pyx12.map_if
-import pyx12.params
-import pyx12.segment
-from pyx12.errors import *
 from pyx12.tests.x12xml_idtag import *
+from helper import get_testcases, print_testcases, get_suite
 
-def suite():
-    suite = unittest.TestSuite()
-    suite.addTest(unittest.makeSuite(ConvertToXML))
-    return suite
-
-#if __name__ == "__main__":
-#    unittest.main()
 try:
     import psyco
     psyco.full()
 except ImportError:
     pass
-unittest.TextTestRunner(verbosity=2).run(suite())
+ns = pyx12.tests.x12xml_idtag
+if len(sys.argv) > 1 and sys.argv[1] == '-h':
+    print_testcases(ns)
+else:
+    unittest.TextTestRunner(verbosity=2).run(get_suite(ns, sys.argv[1:]))

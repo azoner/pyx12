@@ -1,20 +1,18 @@
 #! /usr/bin/env /usr/local/bin/python
 
-import os.path, sys, string
+import sys
 import unittest
 
-import pyx12.map_index
-import pyx12.params
 from pyx12.tests.map_index import *
-
-def suite():
-    suite = unittest.TestSuite()
-    suite.addTest(unittest.makeSuite(GetFilename))
-    return suite
+from helper import get_testcases, print_testcases, get_suite
 
 try:
     import psyco
     psyco.full()
 except ImportError:
     pass
-unittest.TextTestRunner(verbosity=2).run(suite())
+ns = pyx12.tests.map_index
+if len(sys.argv) > 1 and sys.argv[1] == '-h':
+    print_testcases(ns)
+else:
+    unittest.TextTestRunner(verbosity=2).run(get_suite(ns, sys.argv[1:]))

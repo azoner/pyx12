@@ -1,35 +1,18 @@
 #! /usr/bin/env /usr/local/bin/python
 
-import os, os.path
-import string
+import sys
 import unittest
-#import pdb
 
-import pyx12.error_handler
-from pyx12.errors import *
-import pyx12.map_if
-from pyx12.params import params
-import pyx12.segment
 from pyx12.tests.syntax import *
+from helper import get_testcases, print_testcases, get_suite
 
-def suite():
-    #suite = unittest.makeSuite((Test_getnodebypath, IsValidSyntax, \
-    #    IsValidSyntaxP, IsValidSyntaxR, IsValidSyntaxC, \
-    #    IsValidSyntaxE, IsValidSyntaxL))
-    suite = unittest.TestSuite()
-    suite.addTest(unittest.makeSuite(IsValidSyntax))
-    suite.addTest(unittest.makeSuite(IsValidSyntaxP))
-    suite.addTest(unittest.makeSuite(IsValidSyntaxR))
-    suite.addTest(unittest.makeSuite(IsValidSyntaxC))
-    suite.addTest(unittest.makeSuite(IsValidSyntaxE))
-    suite.addTest(unittest.makeSuite(IsValidSyntaxL))
-    return suite
-                
-#if __name__ == "__main__":
-#    unittest.main()   
 try:
     import psyco
     psyco.full()
 except ImportError:
     pass
-unittest.TextTestRunner(verbosity=2).run(suite())
+ns = pyx12.tests.syntax
+if len(sys.argv) > 1 and sys.argv[1] == '-h':
+    print_testcases(ns)
+else:
+    unittest.TextTestRunner(verbosity=2).run(get_suite(ns, sys.argv[1:]))

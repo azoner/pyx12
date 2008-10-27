@@ -668,3 +668,30 @@ class MapTransform(unittest.TestCase):
         result = node.is_valid(ele_data, self.errh)
         self.failUnless(result)
         self.assertEqual(self.errh.err_cde, None)
+
+
+class NodeEquality(unittest.TestCase):
+    def setUp(self):
+        map_path = getMapPath()
+        param = pyx12.params.params('pyx12.conf.xml')
+        if map_path:
+            param.set('map_path', map_path)
+            param.set('pickle_path', map_path)
+        self.map = pyx12.map_if.load_map_file('837.4010.X098.A1.xml', param)
+        self.errh = pyx12.error_handler.errh_null()
+
+    def test_eq_1(self):
+        self.errh.err_cde = None
+        node1 = self.map.getnodebypath('/ISA_LOOP/GS_LOOP/ST_LOOP/DETAIL/2000A/2000B/2300')
+        self.assertNotEqual(node1, None)
+        node2 = self.map.getnodebypath('/ISA_LOOP/GS_LOOP/ST_LOOP/DETAIL/2000A/2000B/2300')
+        self.assertNotEqual(node2, None)
+        self.failUnless(node1 == node2)
+
+    def test_neq_1(self):
+        self.errh.err_cde = None
+        node1 = self.map.getnodebypath('/ISA_LOOP/GS_LOOP/ST_LOOP/DETAIL/2000A/2000B/2300')
+        self.assertNotEqual(node1, None)
+        node2 = self.map.getnodebypath('/ISA_LOOP/GS_LOOP/ST_LOOP/DETAIL/2000A/2000B/2300/2400')
+        self.assertNotEqual(node2, None)
+        self.failIf(node1 == node2)
