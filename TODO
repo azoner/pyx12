@@ -1,3 +1,11 @@
+http://xmlunit.sourceforge.net/
+Context
+  yield an object (maybe X12DataNode)
+  filter
+  query sub-loops - tree iteration
+  add segment to named loop in tree
+  handle error returns - throw events?
+
 Apply transforms to x12 control also
 
 Data Element XSLT ??
