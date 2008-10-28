@@ -366,6 +366,35 @@ class X12ContextReader(object):
         """
         pass
 
+    # Properties
+    def _get_seg_term(self):
+        """
+        @return: Current X12 segment terminator
+        @rtype: string
+        """
+        return self.src.seg_term
+
+    seg_term = property(_get_seg_term, None, None)
+
+    def _get_ele_term(self):
+        """
+        @return: Current X12 element terminator
+        @rtype: string
+        """
+        return self.src.ele_term
+
+    ele_term = property(_get_ele_term, None, None)
+
+    def _get_subele_term(self):
+        """
+        @return: Current X12 sub-element terminator
+        @rtype: string
+        """
+        return self.src.subele_term
+
+    subele_term = property(_get_subele_term, None, None)
+
+    # Private Methods
     def _add_segment(self, cur_data_node, segment_x12_node, seg_data):
         """
         From the last position in the X12 Data Node Tree, find the correct

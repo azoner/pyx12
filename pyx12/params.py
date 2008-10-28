@@ -88,10 +88,11 @@ class ParamsBase(object):
 
         @param filename: XML file
         @type filename: string
+        @raise EngineError: If the config file is not found or is unreadable
         @return: None
         """
         if not isfile(filename):
-            raise EngineError, 'Read of configuration file "%s" failed' % (filename)
+            raise EngineError, 'Configuration file "%s" does not exist' % (filename)
         try:
             reader = libxml2.newTextReaderFilename(filename)
             ret = reader.Read()
@@ -159,12 +160,13 @@ class ParamsUnix(ParamsBase):
         ParamsBase.__init__(self)
         config_files = [join(sys.prefix, 'etc/pyx12.conf.xml'), \
             expanduser('~/.pyx12.conf.xml')]
-        if config_file:
-            config_files.append(config_file)
         for filename in config_files:
             if isfile(filename):
                 self.logger.debug('Read param file: %s' % (filename))
                 self._read_config_file(filename)
+        if config_file:
+            self.logger.debug('Read param file: %s' % (filename))
+            self._read_config_file(config_file)
 
 class ParamsWindows(ParamsBase):
     """
@@ -173,12 +175,13 @@ class ParamsWindows(ParamsBase):
     def __init__(self, config_file=None):
         ParamsBase.__init__(self)
         config_files = [join(sys.prefix, 'etc/pyx12.conf.xml')]
-        if config_file:
-            config_files.append(config_file)
         for filename in config_files:
             if isfile(filename):
                 self.logger.debug('Read param file: %s' % (filename))
                 self._read_config_file(filename)
+        if config_file:
+            self.logger.debug('Read param file: %s' % (filename))
+            self._read_config_file(config_file)
 
 if sys.platform == 'win32':
     params = ParamsWindows
