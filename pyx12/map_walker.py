@@ -95,6 +95,8 @@ def get_pop_loops(start_x12_node, end_x12_node):
         while start.get_path() != common.get_path():
             ret.append(start)
             start = start.parent
+        #if end_x12_node.is_first_seg_in_loop():
+        #    ret.append(end)
         return ret
 
 def get_push_loops(start_x12_node, end_x12_node):
@@ -126,6 +128,8 @@ def get_push_loops(start_x12_node, end_x12_node):
         common = common_root_node(start_x12_node, end_x12_node)
         ret = []
         # while end != common:
+        #if end_x12_node.is_first_seg_in_loop():
+        #    ret.append(start)
         while end.get_path() != common.get_path():
             ret.append(end)
             end = end.parent
@@ -134,7 +138,9 @@ def get_push_loops(start_x12_node, end_x12_node):
 
 def common_root_node(x12_node1, x12_node2):
     """
-    Get the lowest level parent x12 node the two nodes have in common 
+    Get the lowest level parent x12 node the two nodes have in common.
+    @note: For a loop repeat, do not include the repeated node in the
+    common path.  
 
     @param x12_node1: Starting X12 map segment node
     @type x12_node1: L{node<map_if.x12_node>}
@@ -143,12 +149,22 @@ def common_root_node(x12_node1, x12_node2):
     @return: Common X12 parent node 
     @rtype: L{node<map_if.x12_node>}
     """
+    if not x12_node1.is_segment():
+        raise EngineError, 'start_x12_node must be a segment: %s' % (x12_node1.id)
+    if not x12_node2.is_segment():
+        raise EngineError, 'end_x12_node must be a segment: %s' % (x12_node2.id)
     p1 = filter(lambda x: x!='', x12_node1.get_path().split('/'))
     p2 = filter(lambda x: x!='', x12_node2.get_path().split('/'))
     if len(p1) == 0 or len(p2) == 0 or p1[0] != p2[0]:
         return None
     if p1 == p2:
-        return x12_node1
+        # handle a segment repeat that is also a loop repeat
+        ret = x12_node2.parent
+        if x12_node2.is_first_seg_in_loop():
+            ret = ret.parent
+        if ret is None:
+            raise EngineError, 'Got to None: %s -> %s' % (x12_node1.id, x12_node2.id)
+        return ret
     else:
         last_match = ''
         for i in range(min(len(p1), len(p2))):
@@ -157,6 +173,8 @@ def common_root_node(x12_node1, x12_node2):
                 break
         curr = x12_node1
         while curr.id != last_match and not curr.is_map_root():
+            curr = curr.parent
+        if curr.id in p1 and x12_node2.is_first_seg_in_loop():
             curr = curr.parent
         return curr
 
@@ -242,30 +260,26 @@ class walk_tree(object):
                             else:
                                 raise EngineError, 'Usage must be R, S, or N'
                             # Remove any previously missing errors for this segment
-                            self.mandatory_segs_missing = filter(lambda x: x[0]!=child, 
-                                self.mandatory_segs_missing)
+                            self.mandatory_segs_missing = filter(lambda x: x[0]!=child, self.mandatory_segs_missing)
                             self._flush_mandatory_segs(errh, child.pos)
                             return child
                         elif child.usage == 'R' and child.get_cur_count() < 1:
                             fake_seg = pyx12.segment.Segment('%s'% (child.id), '~', '*', ':')
                             #errh.add_seg(child, fake_seg, seg_count, cur_line, ls_id)
                             err_str = 'Mandatory segment "%s" (%s) missing' % (child.name, child.id)
-                            self.mandatory_segs_missing.append((child, fake_seg,
-                                '3', err_str, seg_count, cur_line, ls_id))
+                            self.mandatory_segs_missing.append((child, fake_seg,'3', err_str, seg_count, cur_line, \
+                                ls_id))
                         #else:
                             #logger.debug('Segment %s is not a match for (%s*%s)' % \
                             #   (child.id, seg_data.get_seg_id(), seg_data[0].get_value()))
                     elif child.is_loop(): 
                         #logger.debug('child_node id=%s' % (child.id))
-                        if self._is_loop_match(child, seg_data, errh, \
-                                seg_count, cur_line, ls_id):
-                            node_seg = self._goto_seg_match(child, seg_data, \
-                                errh, seg_count, cur_line, ls_id)
+                        if self._is_loop_match(child, seg_data, errh, seg_count, cur_line, ls_id):
+                            node_seg = self._goto_seg_match(child, seg_data, errh, seg_count, cur_line, ls_id)
                             #node_seg = child.get_child_node_by_idx(0)
                             return node_seg
             if node.is_map_root(): # If at root and we haven't found the segment yet.
-                self._seg_not_found(orig_node, seg_data, errh, seg_count, \
-                    cur_line, ls_id)
+                self._seg_not_found(orig_node, seg_data, errh, seg_count, cur_line, ls_id)
                 return None
             node_pos = node.pos # Get position ordinal of current node in tree
             node = pop_to_parent_loop(node) # Get enclosing parent loop
@@ -322,14 +336,12 @@ class walk_tree(object):
         @type errh: L{error_handler.err_handler}
         """
         #if self.mandatory_segs_missing: pdb.set_trace()
-        for (seg_node, seg_data, err_cde, err_str, 
-                seg_count, cur_line, ls_id) in self.mandatory_segs_missing:
+        for (seg_node, seg_data, err_cde, err_str, seg_count, cur_line, ls_id) in self.mandatory_segs_missing:
             # Create errors if not also at current position
             if seg_node.pos != cur_pos:
                 errh.add_seg(seg_node, seg_data, seg_count, cur_line, ls_id)
                 errh.seg_error(err_cde, err_str, None)
-        self.mandatory_segs_missing = filter(lambda x: x[0].pos==cur_pos, 
-            self.mandatory_segs_missing)
+        self.mandatory_segs_missing = filter(lambda x: x[0].pos==cur_pos, self.mandatory_segs_missing)
         #self.mandatory_segs_missing = []
 
     #def _is_loop_match(self, loop_node, seg_data, errh, seg_count, cur_line, ls_id):

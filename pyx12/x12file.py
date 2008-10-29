@@ -11,10 +11,10 @@
 #    $Id$
 
 """
-Interface to an X12 data file.
-Efficiently handles large files.
-Tracks end of explicit loops.
-Tracks segment/line/loop counts.
+Interface to an X12 data stream.
+ - Efficiently handles large files.
+ - Tracks end of explicit loops.
+ - Tracks segment/line/loop counts.
 """
 
 import sys
@@ -38,11 +38,7 @@ class X12Base(object):
 
     def __init__(self):
         """
-        Initialize the file X12 file
-
-        @param src_file_obj: absolute path of source file or an open, 
-            readable file object
-        @type src_file_obj: string or open file object
+        Initialize the X12 file
         """
         self.err_list = []
         self.loops = []
@@ -292,7 +288,7 @@ class X12Reader(X12Base):
     Read an X12 data file
 
     Errors found when reading the segment such as loop counting or ID
-        errors can be retrieved using the pop_errors function
+    errors can be retrieved using the pop_errors function
     """
 
     def __init__(self, src_file_obj):

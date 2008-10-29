@@ -80,7 +80,7 @@ class map_index(object):
     def get_filename(self, icvn, vriic, fic, tspc=None):
         """
         Get the map filename associated with the given icvn, vriic, fic, 
-            and tspc values
+        and tspc values
         @rtype: string
         """
         for a in self.maps:
@@ -92,7 +92,7 @@ class map_index(object):
     def get_abbr(self, icvn, vriic, fic, tspc=None):
         """
         Get the informal abbreviation associated with the given icvn, vriic, 
-            fic, and tspc values
+        fic, and tspc values
         @rtype: string
         """
         for a in self.maps:
