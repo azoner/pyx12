@@ -174,7 +174,7 @@ def common_root_node(x12_node1, x12_node2):
         curr = x12_node1
         while curr.id != last_match and not curr.is_map_root():
             curr = curr.parent
-        if curr.id in p1 and x12_node2.is_first_seg_in_loop():
+        if curr == x12_node2.parent and x12_node2.is_first_seg_in_loop():
             curr = curr.parent
         return curr
 
@@ -217,12 +217,15 @@ class walk_tree(object):
         #if seg_data.get_seg_id() == 'LX':
         #    pdb.set_trace()
         #logger.debug('start walk %s' % (node))
+        node_list = []
         orig_node = node
+        node_list = []
         #logger.info('%s seg_count=%i / cur_line=%i' % (node.id, seg_count, cur_line))
         self.mandatory_segs_missing = []
         node_pos = node.pos # Get original position ordinal of starting node
         if not (node.is_loop() or node.is_map_root()): 
             node = pop_to_parent_loop(node) # Get enclosing loop
+            node_list.append(node)
         while True:
             #logger.debug('seg_data.id % ' % (seg_data.get_seg_id()))
             # Iterate through nodes with position >= current position
@@ -235,14 +238,14 @@ class walk_tree(object):
                 for child in node.pos_map[ord1]:
                 #if child.pos >= node_pos:
                     if child.is_segment():
-                        #logger.debug('id=%s cur_count=%i max_repeat=%i' \
-                        #    % (child.id, child.cur_count, child.get_max_repeat()))
+                        #logger.debug('id=%s cur_count=%i max_repeat=%i' % (child.id, child.cur_count, child.get_max_repeat()))
                         if child.is_match(seg_data):
                             # Is the matched segment the beginning of a loop?
                             if node.is_loop() \
                                     and self._is_loop_match(node, seg_data, errh, seg_count, cur_line, ls_id):
                                 node1 = self._goto_seg_match(node, seg_data, \
                                     errh, seg_count, cur_line, ls_id)
+                                node_list.append(node1)
                                 return node1
                                 #return node1.get_child_node_by_idx(0)
                             child.incr_cur_count()
