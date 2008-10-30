@@ -54,36 +54,38 @@ class X12DataNode(object):
         self.errors = []
 
     #{ Public Methods
+    def add_segment(self, x12_node, seg_data):
+        """
+        Add the segment in the correct location
+        """
+        raise FutureWarning, 'Not yet'
+
+    def delete_segment(self, x12_node):
+        """
+        Delete the given segment
+        """
+        raise FutureWarning, 'Not yet'
+
     def iterate_segments(self):
         """
         Iterate over this node and children, return any segments found 
         """
-        raise errors.EngineError, 'old'
-        if self.type == 'seg':
-            yield {'type': 'seg', 'id': self.x12_map_node.id, \
-                'segment': self.seg_data}
-        for child in self.children:
-            for a in child.iterate_segments():
-                yield a
+        raise NotImplementedError, 'Override in sub-class'
 
     def iterate_loop_segments(self):
         """
         Iterate over this node and children, return loop start and loop end 
         and any segments found 
         """
-        raise errors.EngineError, 'old'
-        if self.type == 'loop':
-            yield {'type': 'loop_start', 'id': self.id, \
-                'node': self.x12_map_node}
-        for child in self.children:
-            for a in child.iterate_loop_segments():
-                yield a
-        if self.type == 'loop':
-            yield {'type': 'loop_end', 'id': self.id, \
-                'node': self.x12_map_node}
-        elif self.type == 'seg':
-            yield {'type': 'seg', 'id': self.id, \
-                'segment': self.seg_data}
+        raise NotImplementedError, 'Override in sub-class'
+
+    def get_value(self, x12_path):
+        """
+        @return: the element value at the relative X12 path
+        @rtype: string
+        """
+        raise FutureWarning, 'Not yet'
+        raise NotImplementedError, 'Override in sub-class'
 
     def select(self, x12_path):
         """
@@ -197,12 +199,13 @@ class X12LoopDataNode(X12DataNode):
                 yield a
         yield {'type': 'loop_end', 'id': self.id, 'node': self.x12_map_node}
 
-    def addSegment(self, x12_node, seg_data):
+    def add_segment(self, x12_node, seg_data):
         """
         Add the segment in the correct location
         """
         new_data_node = X12DataNode(x12_node, seg_data, 'seg')
         #match_path = x12_node.get_path()
+        raise FutureWarning, 'Not yet'
 
 
 class X12SegmentDataNode(X12DataNode):
