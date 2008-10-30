@@ -18,9 +18,9 @@ Maintain context state
 Start saving context and segments
 Interface to read and alter segments
 
-
 @todo: Return loop start and end for segment outside of context tree 
 @todo: Attach errors to returned dicts
+@bug: not closing last loop before hitting loop_id
 """
 #G{classtree X12DataNode}
 
@@ -237,12 +237,12 @@ class X12SegmentDataNode(X12DataNode):
         Iterate over this node and children, return loop start and loop end 
         and any segments found 
         """
+        for loop in self.end_loops:
+            yield {'node': loop, 'type': 'loop_end', 'id': loop.id}
         for loop in self.start_loops:
             yield {'node': loop, 'type': 'loop_start', 'id': loop.id}
         yield {'type': 'seg', 'id': self.id, 'segment': self.seg_data, \
             'start_loops': self.start_loops, 'end_loops': self.end_loops}
-        for loop in self.end_loops:
-            yield {'node': loop, 'type': 'loop_end', 'id': loop.id}
 
 
 class X12ContextReader(object):
@@ -404,6 +404,10 @@ class X12ContextReader(object):
                             self.x12_map_node)
                     pop_loops = get_pop_loops(cur_data_node.x12_map_node, \
                             self.x12_map_node)
+                    pop_loops = [x12_node for x12_node in pop_loops if not loop_id in x12_node.get_path()]
+                    if loop_id in [x12.id for x12 in push_loops] or loop_id in [x12.id for x12 in pop_loops]:
+                        pdb.set_trace()
+                        raise errors.EngineError, 'Should not be here'
                     cur_data_node = X12SegmentDataNode(self.x12_map_node, seg, \
                             None, push_loops, pop_loops)
                 else:
