@@ -111,7 +111,7 @@ class X12DataNode(object):
             del path_list[0]
             for c in self.children:
                 if c.id == cur_node_id:
-                    for n in c.self._select(path_list):
+                    for n in c._select(path_list):
                         yield n
 
     def _is_child_path(self, root_path, child_path):
@@ -471,8 +471,8 @@ class X12ContextReader(object):
         last_path_list = self._get_path_list(cur_loop_node.cur_path)
         if last_path_list != new_path_list:
             for x12_loop in get_pop_loops(cur_data_node.x12_map_node, segment_x12_node):
-                if segment_x12_node.id == 'LX':
-                    print 'Pop loop: ' + x12_loop.id
+                #if segment_x12_node.id == 'LX':
+                #    print 'Pop loop: ' + x12_loop.id
                 if cur_loop_node.id != x12_loop.id:
                     raise errors.EngineError, 'Loop pop: %s != %s' % (cur_loop_node.id, x12_loop.id)
                 cur_loop_node = cur_loop_node.parent
@@ -480,7 +480,7 @@ class X12ContextReader(object):
             for x12_loop in get_push_loops(cur_data_node.x12_map_node, \
                     segment_x12_node):
                 #if segment_x12_node.id == 'LX':
-                print 'Push loop: ' + x12_loop.id
+                #print 'Push loop: ' + x12_loop.id
                 if cur_loop_node is None:
                     pdb.set_trace()
                 # push new loop nodes, if needed
