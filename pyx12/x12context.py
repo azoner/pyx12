@@ -18,9 +18,7 @@ Maintain context state
 Start saving context and segments
 Interface to read and alter segments
 
-@todo: Return loop start and end for segment outside of context tree 
 @todo: Attach errors to returned dicts
-@bug: not closing last loop before hitting loop_id
 """
 #G{classtree X12DataNode}
 
@@ -169,7 +167,7 @@ class X12LoopDataNode(X12DataNode):
     Alter relational data
     Iterate over contents
     """
-    def __init__(self, x12_node):
+    def __init__(self, x12_node, end_loops=[]):
         """
         Construct an X12LoopDataNode
         """
@@ -179,6 +177,7 @@ class X12LoopDataNode(X12DataNode):
         self.parent = None
         self.children = []
         self.errors = []
+        self.end_loops = end_loops # we might need to close a preceeding loop
 
     #{ Public Methods
     def iterate_segments(self):
@@ -193,6 +192,8 @@ class X12LoopDataNode(X12DataNode):
         """
         Iterate over this node and children, return loop start and loop end 
         """
+        for loop in self.end_loops:
+            yield {'node': loop, 'type': 'loop_end', 'id': loop.id}
         yield {'type': 'loop_start', 'id': self.id, 'node': self.x12_map_node}
         for child in self.children:
             for a in child.iterate_loop_segments():
@@ -382,38 +383,30 @@ class X12ContextReader(object):
                 # Are we at the start of the requested tree? 
                 if node_path[-2] == loop_id and \
                         self.x12_map_node.is_first_seg_in_loop():
-                    if cur_tree is None:
-                        pop_loops = get_pop_loops(cur_data_node.x12_map_node, \
-                                self.x12_map_node)
-                        cur_data_node.end_loops.append(pop_loops)
-                    else:
+                    if cur_tree is not None:
                         # Found root loop repeat. Yield existing, create new tree
                         yield cur_tree
                     # Make new tree on parent loop
-                    cur_tree = X12LoopDataNode(self.x12_map_node.parent)
-                    cur_data_node = self._add_segment(cur_tree, \
-                        self.x12_map_node, seg)
+                    pop_loops = get_pop_loops(cur_data_node.x12_map_node, self.x12_map_node)
+                    pop_loops = [x12_node for x12_node in pop_loops if not loop_id in x12_node.get_path()]
+                    cur_tree = X12LoopDataNode(self.x12_map_node.parent, pop_loops)
+                    cur_data_node = self._add_segment(cur_tree, self.x12_map_node, seg)
                 else:
                     if cur_data_node is None or self.x12_map_node is None:
                         pdb.set_trace()
-                    cur_data_node = self._add_segment(cur_data_node, \
-                        self.x12_map_node, seg)
+                    cur_data_node = self._add_segment(cur_data_node, self.x12_map_node, seg)
             else:
                 if cur_tree is not None:
                     # We have completed a tree
                     yield cur_tree
                     cur_tree = None
                 if cur_data_node is not None:
-                    push_loops = get_push_loops(cur_data_node.x12_map_node, \
-                            self.x12_map_node)
-                    pop_loops = get_pop_loops(cur_data_node.x12_map_node, \
-                            self.x12_map_node)
+                    push_loops = get_push_loops(cur_data_node.x12_map_node, self.x12_map_node)
+                    pop_loops = get_pop_loops(cur_data_node.x12_map_node, self.x12_map_node)
                     pop_loops = [x12_node for x12_node in pop_loops if not loop_id in x12_node.get_path()]
                     if loop_id in [x12.id for x12 in push_loops] or loop_id in [x12.id for x12 in pop_loops]:
-                        pdb.set_trace()
                         raise errors.EngineError, 'Should not be here'
-                    cur_data_node = X12SegmentDataNode(self.x12_map_node, seg, \
-                            None, push_loops, pop_loops)
+                    cur_data_node = X12SegmentDataNode(self.x12_map_node, seg, None, push_loops, pop_loops)
                 else:
                     cur_data_node = X12SegmentDataNode(self.x12_map_node, seg)
                 yield cur_data_node
