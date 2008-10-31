@@ -382,8 +382,12 @@ class X12ContextReader(object):
                 # Are we at the start of the requested tree? 
                 if node_path[-2] == loop_id and \
                         self.x12_map_node.is_first_seg_in_loop():
-                    # Found root loop repeat. Yield existing, create new tree
-                    if cur_tree is not None:
+                    if cur_tree is None:
+                        pop_loops = get_pop_loops(cur_data_node.x12_map_node, \
+                                self.x12_map_node)
+                        cur_data_node.end_loops.append(pop_loops)
+                    else:
+                        # Found root loop repeat. Yield existing, create new tree
                         yield cur_tree
                     # Make new tree on parent loop
                     cur_tree = X12LoopDataNode(self.x12_map_node.parent)
