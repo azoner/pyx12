@@ -56,3 +56,9 @@ class IsValidError(Exception):
     """
     pass
 
+class X12PathError(Exception):
+    """
+    Exception for invalid X12 path errors
+    """
+    pass
+

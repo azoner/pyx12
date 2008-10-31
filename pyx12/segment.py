@@ -333,7 +333,8 @@ class Segment(object):
         @type ref_des: string
         @attention: Deprecated - use get_value
         """
-        return self.get(ref_des).format()
+        raise DeprecationWarning, 'User Segment.get_value'
+        #return self.get(ref_des).format()
         
     def set(self, ref_des, val):
         """

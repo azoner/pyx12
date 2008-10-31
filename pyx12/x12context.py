@@ -180,6 +180,37 @@ class X12LoopDataNode(X12DataNode):
         self.end_loops = end_loops # we might need to close a preceeding loop
 
     #{ Public Methods
+    def get_value(self, x12_path):
+        """
+        @return: the element value at the relative X12 path
+        @rtype: string
+        @raise X12PathError: On blank or invalid path
+        """
+        if len(x12_path) == 0:
+            raise 'X12PathError', 'Blank X12 Path'
+        elif x12_path.find('/') == -1:
+            try:
+                for seg in [seg for seg in self.children if seg.type == 'seg']:
+                    if x12_path.startswith(seg.id):
+                        return seg.get_value(x12_path)
+                return None
+                    #raise 'X12PathError', 'X12 Path is invalid or was not found: %s' % (x12_path)
+            except errors.EngineError, e:
+                #raise 'X12PathError', e.message
+                raise 'X12PathError', 'X12 Path is invalid or was not found: %s' % (x12_path)
+        else:
+            plist = x12_path.split('/')
+            next_id = plist[0]
+            plist = plist[1:]
+            try:
+                for loop in [loop for loop in self.children if loop.type == 'loop']:
+                    if loop.id == next_id:
+                        return loop.get_value('/'.join(plist))
+                return None
+                    #raise 'X12PathError', 'X12 Path is invalid or was not found: %s' % (x12_path)
+            except errors.EngineError, e:
+                raise 'X12PathError', 'X12 Path is invalid or was not found: %s' % (x12_path)
+
     def iterate_segments(self):
         """
         Iterate over this node and children
@@ -226,6 +257,18 @@ class X12SegmentDataNode(X12DataNode):
         self.errors = []
 
     #{ Public Methods
+    def get_value(self, x12_path):
+        """
+        @return: the element value at the relative X12 path
+        @rtype: string
+        """
+        #plist = x12_path.split('/')
+        try:
+            return self.seg_data.get_value(x12_path)
+        except errors.EngineError:
+            raise
+            #raise 'X12PathError'
+
     def iterate_segments(self):
         """
         Iterate on this node, return the segment
