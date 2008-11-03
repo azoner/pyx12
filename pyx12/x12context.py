@@ -56,7 +56,7 @@ class X12DataNode(object):
         """
         Add the segment in the correct location
         """
-        raise FutureWarning, 'Not yet'
+        raise FutureWarning, 'Wouldn''t this be cool'
 
     def delete_segment(self, x12_node):
         """
@@ -82,7 +82,6 @@ class X12DataNode(object):
         @return: the element value at the relative X12 path
         @rtype: string
         """
-        raise FutureWarning, 'Not yet'
         raise NotImplementedError, 'Override in sub-class'
 
     def select(self, x12_path):
@@ -182,6 +181,10 @@ class X12LoopDataNode(X12DataNode):
     #{ Public Methods
     def get_value(self, x12_path):
         """
+        Returns the element value at the given relative path.  If the path is not a
+        valid relative path or if the given segment index does not exist, the function
+        returns None.  If multiple values exist, this function returns the first.
+
         @return: the element value at the relative X12 path
         @rtype: string
         @raise X12PathError: On blank or invalid path
@@ -431,7 +434,7 @@ class X12ContextReader(object):
                         yield cur_tree
                     # Make new tree on parent loop
                     pop_loops = get_pop_loops(cur_data_node.x12_map_node, self.x12_map_node)
-                    pop_loops = [x12_node for x12_node in pop_loops if not loop_id in x12_node.get_path()]
+                    pop_loops = [x12_node for x12_node in pop_loops if x12_node.get_path().find(loop_id) == -1]
                     cur_tree = X12LoopDataNode(self.x12_map_node.parent, pop_loops)
                     cur_data_node = self._add_segment(cur_tree, self.x12_map_node, seg)
                 else:
@@ -446,7 +449,8 @@ class X12ContextReader(object):
                 if cur_data_node is not None:
                     push_loops = get_push_loops(cur_data_node.x12_map_node, self.x12_map_node)
                     pop_loops = get_pop_loops(cur_data_node.x12_map_node, self.x12_map_node)
-                    pop_loops = [x12_node for x12_node in pop_loops if not loop_id in x12_node.get_path()]
+                    if loop_id:
+                        pop_loops = [x12_node for x12_node in pop_loops if x12_node.get_path().find(loop_id) == -1]
                     if loop_id in [x12.id for x12 in push_loops] or loop_id in [x12.id for x12 in pop_loops]:
                         raise errors.EngineError, 'Should not be here'
                     cur_data_node = X12SegmentDataNode(self.x12_map_node, seg, None, push_loops, pop_loops)
