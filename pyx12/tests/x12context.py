@@ -80,5 +80,31 @@ class TreeGetValue(unittest.TestCase):
     def test_get_no_value(self):
         self.assertEqual(self.loop2300.get_value('2400/SV199'), None)
         self.assertEqual(self.loop2300.get_value('2400'), None)
-#for newtree in datatree.select('2400/SV1'):
-#tot += float(newtree.seg_data.get_value('SV102'))
+
+
+class TreeSelect(unittest.TestCase):
+
+    def setUp(self):
+        fd = open('files/simple_837p.txt')
+        param = pyx12.params.params('pyx12.conf.xml')
+        errh = pyx12.error_handler.errh_null()
+        src = pyx12.x12context.X12ContextReader(param, errh, fd, xslt_files = [])
+        for datatree in src.iter_segments('2300'):
+            if datatree.id == '2300':
+                self.loop2300 = datatree
+                break
+
+    def test_select_loops(self):
+        ct = 0
+        for newtree in self.loop2300.select('2400'):
+            self.assertEqual(newtree.id, '2400')
+            ct += 1
+        self.assertEqual(ct, 2)
+
+    def test_select_seg(self):
+        ct = 0
+        for newtree in self.loop2300.select('2400/SV1'):
+            self.assertEqual(newtree.id, 'SV1')
+            self.assertEqual(newtree.get_value('SV102'), '21')
+            ct += 1
+        self.assertEqual(ct, 2)
