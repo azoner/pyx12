@@ -234,11 +234,26 @@ class X12LoopDataNode(X12DataNode):
                 yield a
         yield {'type': 'loop_end', 'id': self.id, 'node': self.x12_map_node}
 
+    def add_segment(self, segment_string):
+        pass
+
     def add_segment(self, x12_node, seg_data):
         """
-        Add the segment in the correct location
+        Add the segment to this loop node
+        Iif the segment is the anchor for a child loop, also adds the loop
         """
         new_data_node = X12DataNode(x12_node, seg_data, 'seg')
+        idx = x12_node.index
+        for i in range(len(self.children)):
+            pass
+        #match_path = x12_node.get_path()
+        raise FutureWarning, 'Not yet'
+
+    def add_loop(self, loop_data_node):
+        """
+        Add an existing in the correct location
+        """
+        #new_data_node = X12DataNode(x12_node, seg_data, 'seg')
         #match_path = x12_node.get_path()
         raise FutureWarning, 'Not yet'
 
