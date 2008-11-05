@@ -84,6 +84,20 @@ class X12DataNode(object):
         """
         raise NotImplementedError, 'Override in sub-class'
 
+    def exists(self, x12_path):
+        """
+        Does at least one child at the x12-path exist?
+        @param x12_path: Relative X12 path - 2400/2430
+        @type x12_path: string
+        @return: True if found
+        @rtype: boolean
+        """
+        path_list = self._get_path_list(x12_path)
+        for n in self._select(path_list):
+            return True
+        return False
+
+
     def select(self, x12_path):
         """
         Get a slice of sub-nodes at the relative X12 path.
