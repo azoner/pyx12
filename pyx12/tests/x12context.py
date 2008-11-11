@@ -75,6 +75,7 @@ class TreeGetValue(unittest.TestCase):
     def test_get_first_value(self):
         self.assertEqual(self.loop2300.get_value('2400/SV101'), 'HC:H2015:TT')
         self.assertEqual(self.loop2300.get_value('2400/SV101-2'), 'H2015')
+        self.assertEqual(self.loop2300.get_value('2400/REF[6R]02'), '1057296')
         self.assertEqual(self.loop2300.get_value('2400/2430/SVD02'), '21')
 
     def test_get_no_value(self):
