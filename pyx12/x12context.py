@@ -52,12 +52,6 @@ class X12DataNode(object):
         self.errors = []
 
     #{ Public Methods
-    def add_segment(self, x12_node, seg_data):
-        """
-        Add the segment in the correct location
-        """
-        raise FutureWarning, 'Wouldn''t this be cool'
-
     def delete_segment(self, x12_node):
         """
         Delete the given segment
@@ -150,9 +144,6 @@ class X12DataNode(object):
         """
         return filter(lambda x: x!='', path_str.split('/'))
 
-    #def _addLoop(self, x12_node):
-    #    new_loop = X12DataNode(x12_node, None, 'loop')
-
     #{ Property Accessors
     def _get_id(self):
         """
@@ -185,7 +176,7 @@ class X12LoopDataNode(X12DataNode):
         """
         self.x12_map_node = x12_node
         self.type = 'loop'
-        self.seg_data = None
+        #self.seg_data = None
         self.parent = None
         self.children = []
         self.errors = []
@@ -251,30 +242,59 @@ class X12LoopDataNode(X12DataNode):
                 yield a
         yield {'type': 'loop_end', 'id': self.id, 'node': self.x12_map_node}
 
-    #def add_segment(self, segment_string):
-    #    pass
-
-    def add_segment(self, x12_node, seg_data):
+    def add_segment(self, seg_data):
         """
         Add the segment to this loop node
         iif the segment is the anchor for a child loop, also adds the loop
+
+        @return: New segment, or None if failed
+        @rtype: L{node<x12context.X12SegmentDataNode>}
+        @raise pyx12.errors.X12PathError: If invalid segment
+        @todo: Check counts?
         """
-        new_data_node = X12DataNode(x12_node, seg_data, 'seg')
-        idx = x12_node.index
+        seg_data = self._get_segment(seg_data)
+        x12_seg_node = self._get_child_x12_node(seg_data)
+        if x12_seg_node is None:
+            raise errors.X12PathError, 'The segment %s is not a member of loop %s' % \
+                (seg_data.__repr__(), self.id)
+        new_data_node = X12SegmentDataNode(x12_seg_node, seg_data, self)
+        idx = x12_seg_node.index
+        # Iterate over data nodes
         for i in range(len(self.children)):
-            if self.children[i].index > idx:
-                break
-        self.children.insert(i, new_data_node)
-        #match_path = x12_node.get_path()
-        raise FutureWarning, 'Not yet'
+            if self.children[i].x12_map_node.index > idx:
+                self.children.insert(i, new_data_node)
+                return new_data_node
+        self.children.append(new_data_node)
+        return new_data_node
 
     def add_loop(self, loop_data_node):
         """
         Add an existing in the correct location
+        @return: New loop_data_node, or None if failed
+        @rtype: L{node<x12context.X12LoopDataNode>}
         """
-        #new_data_node = X12DataNode(x12_node, seg_data, 'seg')
-        #match_path = x12_node.get_path()
         raise FutureWarning, 'Not yet'
+
+    def _get_child_x12_node(self, seg_data):
+        # This logic should be in map_if
+        for key in self.x12_map_node.pos_map.keys():
+            for child in self.x12_map_node.pos_map[key]:
+                if child.is_segment() and child.is_match(seg_data):
+                    return child
+        return None
+
+    def _get_segment(self, seg_obj):
+        if isinstance(seg_obj, pyx12.segment.Segment):
+            return seg_obj
+        elif isinstance(seg_obj, str):
+            for child in self.children:
+                if isinstance(child, X12SegmentDataNode) and child.seg_data is not None:
+                    seg_term = child.seg_data.seg_term
+                    ele_term = child.seg_data.ele_term
+                    subele_term = child.seg_data.subele_term
+            return pyx12.segment.Segment(seg_obj, seg_term, ele_term, subele_term)
+        else:
+            raise errors.EngineError, 'Unknown type for seg_obj %s' % (seg_obj)
 
 
 class X12SegmentDataNode(X12DataNode):

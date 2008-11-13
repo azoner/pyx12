@@ -452,7 +452,7 @@ class loop_if(x12_node):
         self.root = root
         self.parent = parent
         self.index = my_index
-        self.children = None
+        #self.children = None
         self.pos_map = {}
         self.path = ''
         self.base_name = 'loop'

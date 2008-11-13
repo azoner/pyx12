@@ -124,3 +124,54 @@ class ParseRefDes(unittest.TestCase):
         self.assertEqual(pyx12.x12context.X12SegmentDataNode.get_seg_id('TST[6R]01'), ('TST01', '6R'))
         self.assertEqual(pyx12.x12context.X12SegmentDataNode.get_seg_id('TST[DD]05-1'), ('TST05-1', 'DD'))
         self.assertEqual(pyx12.x12context.X12SegmentDataNode.get_seg_id('TST[EB]02-4'), ('TST02-4', 'EB'))
+
+
+class TreeAddSegment(unittest.TestCase):
+
+    def setUp(self):
+        fd = open('files/simple_837p.txt')
+        param = pyx12.params.params('pyx12.conf.xml')
+        errh = pyx12.error_handler.errh_null()
+        self.src = pyx12.x12context.X12ContextReader(param, errh, fd, xslt_files = [])
+        for datatree in self.src.iter_segments('2300'):
+            if datatree.id == '2300':
+                self.loop2300 = datatree
+                break
+
+    def test_add_new_plain(self):
+        seg_data = pyx12.segment.Segment('HCP*00*7.11~', '~', '*', ':')
+        new_node = self.loop2300.add_segment(seg_data)
+        self.assertNotEqual(new_node, None)
+
+    def test_add_new_id(self):
+        seg_data = pyx12.segment.Segment('REF*F5*6.11~', '~', '*', ':')
+        new_node = self.loop2300.add_segment(seg_data)
+        self.assertNotEqual(new_node, None)
+
+    def test_add_new_not_exists(self):
+        seg_data = pyx12.segment.Segment('ZZZ*00~', '~', '*', ':')
+        self.failUnlessRaises(pyx12.errors.X12PathError, self.loop2300.add_segment, seg_data)
+
+
+class TreeAddSegmentString(unittest.TestCase):
+
+    def setUp(self):
+        fd = open('files/simple_837p.txt')
+        param = pyx12.params.params('pyx12.conf.xml')
+        errh = pyx12.error_handler.errh_null()
+        self.src = pyx12.x12context.X12ContextReader(param, errh, fd, xslt_files = [])
+        for datatree in self.src.iter_segments('2300'):
+            if datatree.id == '2300':
+                self.loop2300 = datatree
+                break
+
+    def test_add_new_plain(self):
+        new_node = self.loop2300.add_segment('HCP*00*7.11~')
+        self.assertNotEqual(new_node, None)
+
+    def test_add_new_id(self):
+        new_node = self.loop2300.add_segment('REF*F5*6.11')
+        self.assertNotEqual(new_node, None)
+
+    def test_add_new_not_exists(self):
+        self.failUnlessRaises(pyx12.errors.X12PathError, self.loop2300.add_segment, 'ZZZ*00~')
