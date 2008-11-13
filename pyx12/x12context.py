@@ -275,7 +275,7 @@ class X12LoopDataNode(X12DataNode):
         """
         raise FutureWarning, 'Not yet'
 
-    def add_loop_node(self, x12_loop_node):
+    def _add_loop_node(self, x12_loop_node):
         """
         Add a loop data node the the current tree location
         @param x12_loop_node: X12 Loop node
@@ -629,7 +629,7 @@ class X12ContextReader(object):
                     raise errors.EngineError, 'cur_loop_node is None. x12_loop: %s' % (x12_loop.id)
                 # push new loop nodes, if needed
                 # cur_loop_node = self._add_loop_node(x12_loop, cur_loop_node)
-                cur_loop_node = cur_loop_node.add_loop_node(x12_loop)
+                cur_loop_node = cur_loop_node._add_loop_node(x12_loop)
         try:
             new_node = X12SegmentDataNode(self.x12_map_node, seg_data)
         except:
