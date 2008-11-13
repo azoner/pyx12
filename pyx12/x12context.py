@@ -267,13 +267,26 @@ class X12LoopDataNode(X12DataNode):
         self.children.append(new_data_node)
         return new_data_node
 
-    def add_loop(self, loop_data_node):
+    def add_loop(self, seg_data):
         """
-        Add an existing in the correct location
+        Add a new loop in the correct location
         @return: New loop_data_node, or None if failed
         @rtype: L{node<x12context.X12LoopDataNode>}
         """
         raise FutureWarning, 'Not yet'
+
+    def add_loop_node(self, x12_loop_node):
+        """
+        Add a loop data node the the current tree location
+        @param x12_loop_node: X12 Loop node
+        @type x12_loop_node: L{node<map_if.loop_if>}
+        @return: New X12 Loop Data Node
+        @rtype: L{node<x12context.X12LoopDataNode>}
+        """
+        new_node = X12LoopDataNode(x12_loop_node)
+        self.children.append(new_node)
+        new_node.parent = self
+        return new_node
 
     def _get_child_x12_node(self, seg_data):
         # This logic should be in map_if
@@ -613,9 +626,10 @@ class X12ContextReader(object):
                 #if segment_x12_node.id == 'LX':
                 #print 'Push loop: ' + x12_loop.id
                 if cur_loop_node is None:
-                    pdb.set_trace()
+                    raise errors.EngineError, 'cur_loop_node is None. x12_loop: %s' % (x12_loop.id)
                 # push new loop nodes, if needed
-                cur_loop_node = self._add_loop_node(x12_loop, cur_loop_node)
+                # cur_loop_node = self._add_loop_node(x12_loop, cur_loop_node)
+                cur_loop_node = cur_loop_node.add_loop_node(x12_loop)
         try:
             new_node = X12SegmentDataNode(self.x12_map_node, seg_data)
         except:
@@ -631,28 +645,6 @@ class X12ContextReader(object):
             err_str += ', cur_datanode=%s' % (cur_data_node.cur_path)
             err_str += ', seg_data=%s' % (seg_data)
             raise errors.EngineError, err_str
-        return new_node
-
-    def _add_loop_node(self, x12_loop_node, cur_loop_node): #, seg_x12_node):
-        """
-        Add a loop data node the the current tree location
-        @param x12_loop_node: X12 Loop node
-        @type x12_loop_node: L{node<map_if.loop_if>}
-        @param cur_loop_node: Current X12 Loop Data Node
-        @type cur_loop_node: L{node<x12context.X12LoopDataNode>}
-        @return: New X12 Data Node
-        @rtype: L{node<x12context.X12DataNode>}
-        """
-        #parent_loop = self._get_parent_x12_loop(loop_id, seg_x12_node)
-        new_node = X12LoopDataNode(x12_loop_node)
-        if cur_loop_node is None:
-            raise errors.EngineError, 'cur_loop_node is None: "%s"' \
-                % (x12_loop_node.id)
-        if cur_loop_node.type != 'loop':
-            raise errors.EngineError, 'cur_loop_node must be a loop "%s", "%s"' \
-                % (cur_loop_node.type, cur_loop_node.id)
-        cur_loop_node.children.append(new_node)
-        new_node.parent = cur_loop_node
         return new_node
 
     def _apply_loop_count(self, orig_node, new_map):
