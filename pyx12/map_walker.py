@@ -378,7 +378,6 @@ class walk_tree(object):
         #first_child_node = loop_node.get_child_node_by_idx(0)
         pos_keys = loop_node.pos_map.keys()
         pos_keys.sort()
-        #min_pos = reduce(min, loop_node.pos_map.keys())
         first_child_node = loop_node.pos_map[pos_keys[0]][0]
         if first_child_node.is_loop():
             #If any loop node matches
