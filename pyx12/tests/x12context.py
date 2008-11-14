@@ -175,3 +175,22 @@ class TreeAddSegmentString(unittest.TestCase):
 
     def test_add_new_not_exists(self):
         self.failUnlessRaises(pyx12.errors.X12PathError, self.loop2300.add_segment, 'ZZZ*00~')
+
+
+class TreeAddLoop(unittest.TestCase):
+
+    def setUp(self):
+        fd = open('files/simple_837p.txt')
+        param = pyx12.params.params('pyx12.conf.xml')
+        errh = pyx12.error_handler.errh_null()
+        self.src = pyx12.x12context.X12ContextReader(param, errh, fd, xslt_files = [])
+        for datatree in self.src.iter_segments('2300'):
+            if datatree.id == '2300':
+                self.loop2300 = datatree
+                break
+
+    def test_add_new_plain(self):
+        seg_data = pyx12.segment.Segment('NM1*82*2*Provider 1*****ZZ*9898798~', '~', '*', ':')
+        new_node = self.loop2300.add_loop(seg_data)
+        self.assertNotEqual(new_node, None)
+

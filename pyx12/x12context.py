@@ -170,14 +170,14 @@ class X12LoopDataNode(X12DataNode):
     Alter relational data
     Iterate over contents
     """
-    def __init__(self, x12_node, end_loops=[]):
+    def __init__(self, x12_node, end_loops=[], parent=None):
         """
         Construct an X12LoopDataNode
         """
         self.x12_map_node = x12_node
         self.type = 'loop'
         #self.seg_data = None
-        self.parent = None
+        self.parent = parent
         self.children = []
         self.errors = []
         self.end_loops = end_loops # we might need to close a preceeding loop
@@ -247,6 +247,8 @@ class X12LoopDataNode(X12DataNode):
         Add the segment to this loop node
         iif the segment is the anchor for a child loop, also adds the loop
 
+        @param seg_data: Segment data
+        @type seg_data: L{node<segment.Segment>} or string
         @return: New segment, or None if failed
         @rtype: L{node<x12context.X12SegmentDataNode>}
         @raise pyx12.errors.X12PathError: If invalid segment
@@ -270,29 +272,56 @@ class X12LoopDataNode(X12DataNode):
     def add_loop(self, seg_data):
         """
         Add a new loop in the correct location
+        @param seg_data: Segment data
+        @type seg_data: L{node<segment.Segment>} or string
         @return: New loop_data_node, or None if failed
         @rtype: L{node<x12context.X12LoopDataNode>}
         """
-        raise FutureWarning, 'Not yet'
+        seg_data = self._get_segment(seg_data)
+        x12_loop_node = self._get_loop_x12_node(seg_data)
+        if x12_loop_node is None:
+            raise errors.X12PathError, 'The segment %s is not a member of loop %s' % \
+                (seg_data.__repr__(), self.id)
+        new_data_loop = self._add_loop_node(x12_loop_node)
+        x12_seg_node = self._get_child_x12_node(seg_data)
+        new_data_node = X12SegmentDataNode(x12_seg_node, seg_data, new_data_loop)
+        return new_data_loop
 
     def _add_loop_node(self, x12_loop_node):
         """
-        Add a loop data node the the current tree location
+        Add a loop data node to the current tree
         @param x12_loop_node: X12 Loop node
         @type x12_loop_node: L{node<map_if.loop_if>}
         @return: New X12 Loop Data Node
         @rtype: L{node<x12context.X12LoopDataNode>}
         """
-        new_node = X12LoopDataNode(x12_loop_node)
+        new_node = X12LoopDataNode(x12_loop_node, parent=self)
+        # Iterate over data nodes
+        idx = x12_loop_node.index
+        for i in range(len(self.children)):
+            if self.children[i].x12_map_node.index > idx:
+                self.children.insert(i, new_node)
+                return new_node
         self.children.append(new_node)
-        new_node.parent = self
         return new_node
 
     def _get_child_x12_node(self, seg_data):
         # This logic should be in map_if
-        for key in self.x12_map_node.pos_map.keys():
+        pos_keys = self.x12_map_node.pos_map.keys()
+        pos_keys.sort()
+        for key in pos_keys:
             for child in self.x12_map_node.pos_map[key]:
                 if child.is_segment() and child.is_match(seg_data):
+                    return child
+        return None
+
+    def _get_loop_x12_node(self, seg_data):
+        # This logic should be in map_if
+        pos_keys = self.x12_map_node.pos_map.keys()
+        pos_keys.sort()
+        for key in pos_keys:
+            for child in self.x12_map_node.pos_map[key]:
+                if child.is_loop() and child.is_match(seg_data):
                     return child
         return None
 
