@@ -290,6 +290,27 @@ class SegmentWalk(unittest.TestCase):
         del self.map
         del self.walker
         
+class SegmentWalk278(unittest.TestCase):
+
+    def setUp(self):
+        map_path = getMapPath()
+        self.walker = walk_tree()
+        self.param = pyx12.params.params('pyx12.conf.xml')
+        if map_path:
+            self.param.set('map_path', map_path)
+            self.param.set('pickle_path', map_path)
+        self.map = pyx12.map_if.load_map_file('278.4010.X094.A1.xml', self.param)
+        self.errh = pyx12.error_handler.errh_null()
+
+    def test_match_regular_segment(self):
+        node = self.map.getnodebypath('/ISA_LOOP/GS_LOOP/ST_LOOP/DETAIL/2000A/2000B/2000C/2000E/2000F/DTP')
+        self.assertNotEqual(node, None)
+        self.assertEqual(node.base_name, 'segment')
+        seg_data = pyx12.segment.Segment('HI*BO:T1017::::382', '~', '*', ':')
+        node = self.walker.walk(node, seg_data, self.errh, 5, 4, None)
+        self.assertNotEqual(node, None, 'Segment not found: %s' % (seg_data.format()))
+        self.assertEqual(seg_data.get_seg_id(), node.id)
+        
 
 class Segment_ID_Checks(unittest.TestCase):
 
@@ -517,7 +538,7 @@ class LoopPathPopPush(unittest.TestCase):
         #self.assertNotEqual(node, None)
         base = common_root_node(start, end)
         desc = '%s => %s' % (start.get_path(), end.get_path())
-        self.assertEqual(base.get_path(), '/ISA_LOOP/GS_LOOP')
+        self.assertEqual(base.get_path(), '/ISA_LOOP/GS_LOOP/ST_LOOP')
         self.assertEqual([l.id for l in get_pop_loops(start, end)], ['2000', 'DETAIL', 'ST_LOOP'])
         self.assertEqual([l.id for l in get_push_loops(start, end)], ['ST_LOOP', 'HEADER', '1000B'])
 
