@@ -114,8 +114,6 @@ class ElementIsValidDate(unittest.TestCase):
 
 
 class SegmentIsValid(unittest.TestCase):
-    """
-    """
     def setUp(self):
         map_path = getMapPath()
         param = pyx12.params.params('pyx12.conf.xml')
@@ -695,3 +693,20 @@ class NodeEquality(unittest.TestCase):
         node2 = self.map.getnodebypath('/ISA_LOOP/GS_LOOP/ST_LOOP/DETAIL/2000A/2000B/2300/2400')
         self.assertNotEqual(node2, None)
         self.failIf(node1 == node2)
+
+
+class LoopIsMatch(unittest.TestCase):
+    def setUp(self):
+        map_path = getMapPath()
+        param = pyx12.params.params('pyx12.conf.xml')
+        if map_path:
+            param.set('map_path', map_path)
+            param.set('pickle_path', map_path)
+        self.map = pyx12.map_if.load_map_file('837.4010.X096.A1.xml', param)
+        self.node = self.map.getnodebypath('/ISA_LOOP/GS_LOOP/ST_LOOP/DETAIL/2000A/2000B/2300')
+        self.errh = pyx12.error_handler.errh_null()
+
+    def test_match_self(self):
+        self.errh.err_cde = None
+        seg_data = pyx12.segment.Segment('CLM*657657*AA**5::1~', '~', '*', ':')
+        self.failUnless(self.node.is_match(seg_data))

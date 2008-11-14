@@ -30,6 +30,7 @@ from stat import ST_SIZE
 from errors import IsValidError, XML_Reader_Error, EngineError
 import codes
 import dataele
+import segment
 
 #Global Variables
 NodeType = {'element_start': 1, 'element_end': 15, 'attrib': 2, 'text': 3, 
@@ -711,8 +712,9 @@ class loop_if(x12_node):
         @return: Is the segment a match to this loop?
         @rtype: boolean
         """
-        #child = self.get_child_node_by_idx(0)
-        child = self.pos_map[self.pos_map.keys[0]][0]
+        pos_keys = self.pos_map.keys()
+        pos_keys.sort()
+        child = self.pos_map[pos_keys[0]][0]
         if child.is_loop():
             return child.is_match(seg_data)
         elif child.is_segment():
