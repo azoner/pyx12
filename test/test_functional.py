@@ -147,7 +147,7 @@ def test_xml(src_filename, param, xmlout='simple'):
             base_xml = os.path.splitext(src_filename)[0] + '.xml.' + xmlout
             if not os.path.isfile(base_xml):
                 #logger.info('Base xml not found: %s' % (os.path.basename(base_xml)))
-                break
+                continue
 
             param.set('xmlout', xmlout)
             result = pyx12.x12n_document.x12n_document(param, src_filename, None, None, fd_xml)
