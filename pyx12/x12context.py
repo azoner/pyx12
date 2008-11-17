@@ -109,15 +109,16 @@ class X12DataNode(object):
     def _select(self, path_list):
         if len(path_list) == 1:
             cur_node_id = path_list[0]
-            for c in self.children:
-                if c.id == cur_node_id:
-                    yield c
+            for child in self.children:
+                if child.id == cur_node_id:
+                    yield child
         elif len(path_list) > 1:
             cur_node_id = path_list[0]
-            del path_list[0]
-            for c in self.children:
-                if c.id == cur_node_id:
-                    for n in c._select(path_list):
+            #del path_list[0]
+            new_path = path_list[1:]
+            for child in self.children:
+                if child.id == cur_node_id:
+                    for n in child._select(new_path):
                         yield n
 
     def _is_child_path(self, root_path, child_path):
@@ -561,7 +562,7 @@ class X12ContextReader(object):
                     cur_data_node = self._add_segment(cur_tree, self.x12_map_node, seg)
                 else:
                     if cur_data_node is None or self.x12_map_node is None:
-                        pdb.set_trace()
+                        raise errors.EngineError, 'Either cur_data_node or self.x12_map_node is None'
                     cur_data_node = self._add_segment(cur_data_node, self.x12_map_node, seg)
             else:
                 if cur_tree is not None:
@@ -620,7 +621,6 @@ class X12ContextReader(object):
         From the last position in the X12 Data Node Tree, find the correct
         position for the new segment; moving up or down the tree as appropriate.
 
-        @note: Do not need to deal with loop repeats
         G{callgraph}
 
         @param cur_data_node: Current X12 Data Node
@@ -629,7 +629,6 @@ class X12ContextReader(object):
         @type segment_x12_node: L{node<map_if.x12_node>}
         @return: New X12 Data Node
         @rtype: L{node<x12context.X12DataNode>}
-        @bug: does not properly handle sub-loop repeats
         """
         if not segment_x12_node.is_segment():
             raise errors.EngineError, 'Node must be a segment'
@@ -644,21 +643,20 @@ class X12ContextReader(object):
         last_path_list = self._get_path_list(cur_loop_node.cur_path)
         if last_path_list != new_path_list:
             for x12_loop in get_pop_loops(cur_data_node.x12_map_node, segment_x12_node):
-                #if segment_x12_node.id == 'LX':
-                #    print 'Pop loop: ' + x12_loop.id
                 if cur_loop_node.id != x12_loop.id:
                     raise errors.EngineError, 'Loop pop: %s != %s' % (cur_loop_node.id, x12_loop.id)
                 cur_loop_node = cur_loop_node.parent
             #for i in range(match_idx, len(new_path_list)):
             for x12_loop in get_push_loops(cur_data_node.x12_map_node, \
                     segment_x12_node):
-                #if segment_x12_node.id == 'LX':
-                #print 'Push loop: ' + x12_loop.id
                 if cur_loop_node is None:
                     raise errors.EngineError, 'cur_loop_node is None. x12_loop: %s' % (x12_loop.id)
                 # push new loop nodes, if needed
-                # cur_loop_node = self._add_loop_node(x12_loop, cur_loop_node)
                 cur_loop_node = cur_loop_node._add_loop_node(x12_loop)
+        else:
+            # handle loop repeat
+            if cur_loop_node.parent is not None and segment_x12_node.is_first_seg_in_loop():
+                cur_loop_node = cur_loop_node.parent._add_loop_node(segment_x12_node.parent)
         try:
             new_node = X12SegmentDataNode(self.x12_map_node, seg_data)
         except:

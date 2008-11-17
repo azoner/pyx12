@@ -194,3 +194,22 @@ class TreeAddLoop(unittest.TestCase):
         new_node = self.loop2300.add_loop(seg_data)
         self.assertNotEqual(new_node, None)
 
+
+class CountRepeatingLoop(unittest.TestCase):
+
+    def setUp(self):
+        fd = open('files/simple_837p.txt')
+        param = pyx12.params.params('pyx12.conf.xml')
+        errh = pyx12.error_handler.errh_null()
+        self.src = pyx12.x12context.X12ContextReader(param, errh, fd, xslt_files = [])
+        for datatree in self.src.iter_segments('2300'):
+            if datatree.id == '2300' and datatree.get_value('CLM01') == '5555':
+                self.loop2300 = datatree
+                break
+
+    def test_repeat_2400(self):
+        ct = 0
+        for loop_2400 in self.loop2300.select('2400'):
+            ct += 1
+        self.assertEqual(ct, 3, 'Found %i 2400 loops.  Should have %i' % (ct, 3))
+
