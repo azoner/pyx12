@@ -1015,6 +1015,13 @@ class errh_null(object):
         self.err_cde = None
         self.err_str = None
 
+    def reset(self):
+        """
+        Clear any errors
+        """
+        self.err_cde = None
+        self.err_str = None
+
     def get_cur_line(self):
         """
         @return: Current file line number

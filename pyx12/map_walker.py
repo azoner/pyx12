@@ -237,7 +237,7 @@ class walk_tree(object):
                             # Is the matched segment the beginning of a loop?
                             if node.is_loop() \
                                     and self._is_loop_match(node, seg_data, errh, seg_count, cur_line, ls_id):
-                                node1 = self._goto_seg_match(node, seg_data, \
+                                (node1, push_node_list) = self._goto_seg_match(node, seg_data, \
                                     errh, seg_count, cur_line, ls_id)
                                 return (node1, pop_node_list, push_node_list) # segment node
                             child.incr_cur_count()
@@ -268,13 +268,14 @@ class walk_tree(object):
                             #   (child.id, seg_data.get_seg_id(), seg_data[0].get_value()))
                     elif child.is_loop(): 
                         if self._is_loop_match(child, seg_data, errh, seg_count, cur_line, ls_id):
-                            node_seg = self._goto_seg_match(child, seg_data, errh, seg_count, cur_line, ls_id)
+                            (node_seg, push_node_list) = self._goto_seg_match(child, seg_data, errh, seg_count, cur_line, ls_id)
                             return (node_seg, pop_node_list, push_node_list) # segment node
             # End for ord1 in pos_keys
             if node.is_map_root(): # If at root and we haven't found the segment yet.
                 self._seg_not_found_error(orig_node, seg_data, errh, seg_count, cur_line, ls_id)
                 return (None, [], [])
             node_pos = node.pos # Get position ordinal of current node in tree
+            pop_node_list.append(node)
             node = pop_to_parent_loop(node) # Get enclosing parent loop
 
         self._seg_not_found_error(orig_node, seg_data, errh, seg_count, cur_line, ls_id)
@@ -407,8 +408,8 @@ class walk_tree(object):
         @type cur_line: int
         @type ls_id: string
 
-        @return: The matching segment node
-        @rtype: L{node<map_if.segment_if>}
+        @return: The matching segment node and a list of the push loop nodes
+        @rtype: (L{node<map_if.segment_if>}, [L{node<map_if.loop_if>}])
         """
         if not loop_node.is_loop(): raise EngineError, \
             "_goto_seg_match failed, node %s is not a loop. seg %s" \
@@ -437,14 +438,16 @@ class walk_tree(object):
             else:
                 raise EngineError, 'Usage must be R, S, or N'
             self._flush_mandatory_segs(errh)
-            return first_child_node
+            return (first_child_node, [loop_node])
         else:
             #for child in loop_node.children:
+            push_node_list = []
             for ord1 in pos_keys:
                 for child in loop_node.pos_map[ord1]:
                     if child.is_loop():
-                        node1 = self._goto_seg_match(child, seg_data, errh, \
+                        (node1, push1) = self._goto_seg_match(child, seg_data, errh, \
                             seg_count, cur_line, ls_id)
+                        push_node_list.extend(push1)
                         if node1:
-                            return node1
-        return None
+                            return (node1, push_node_list)
+        return (None, [])
