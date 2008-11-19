@@ -1,5 +1,5 @@
 ######################################################################
-# Copyright (c) 2001-2005 Kalamazoo Community Mental Health Services,
+# Copyright (c) 2001-2008 Kalamazoo Community Mental Health Services,
 #   John Holland <jholland@kazoocmh.org> <john@zoner.org>
 # All rights reserved.
 #
@@ -208,35 +208,29 @@ class walk_tree(object):
         @type cur_line: int
         @param ls_id: The current LS loop identifier
         @type ls_id: string
-        @return: The matching x12_node
-        @rtype: L{node<map_if.x12_node>}
+        @return: The matching x12 segment node, a list of x12 popped loops, and a list
+            of x12 pushed loops from the start segment to the found segment
+        @rtype: (L{node<map_if.segment_if>}, [L{node<map_if.loop_if>}], [L{node<map_if.loop_if>}])
 
         @todo: check single segment loop repeat
         """
-
-        #if seg_data.get_seg_id() == 'LX':
-        #    pdb.set_trace()
-        #logger.debug('start walk %s' % (node))
-        node_list = []
+        pop_node_list = []
+        push_node_list = []
         orig_node = node
-        node_list = []
         #logger.info('%s seg_count=%i / cur_line=%i' % (node.id, seg_count, cur_line))
         self.mandatory_segs_missing = []
         node_pos = node.pos # Get original position ordinal of starting node
         if not (node.is_loop() or node.is_map_root()): 
             node = pop_to_parent_loop(node) # Get enclosing loop
-            node_list.append(node)
+            #node_list.append(node)
         while True:
-            #logger.debug('seg_data.id % ' % (seg_data.get_seg_id()))
             # Iterate through nodes with position >= current position
             pos_keys = filter(lambda a: a>= node_pos, node.pos_map.keys())
             pos_keys.sort()
             for ord1 in pos_keys:
-            #for child in node.children:
                 #logger.debug('id=%s child.index=%i node_pos=%i' % \
                 #    (child.id, child.index, node_pos))
                 for child in node.pos_map[ord1]:
-                #if child.pos >= node_pos:
                     if child.is_segment():
                         #logger.debug('id=%s cur_count=%i max_repeat=%i' % (child.id, child.cur_count, child.get_max_repeat()))
                         if child.is_match(seg_data):
@@ -245,9 +239,7 @@ class walk_tree(object):
                                     and self._is_loop_match(node, seg_data, errh, seg_count, cur_line, ls_id):
                                 node1 = self._goto_seg_match(node, seg_data, \
                                     errh, seg_count, cur_line, ls_id)
-                                node_list.append(node1)
-                                return node1
-                                #return node1.get_child_node_by_idx(0)
+                                return (node1, pop_node_list, push_node_list) # segment node
                             child.incr_cur_count()
                             #logger.debug('MATCH segment %s (%s*%s)' % (child.id,\
                             #   seg_data.get_seg_id(), seg_data[0].get_value()))
@@ -265,10 +257,9 @@ class walk_tree(object):
                             # Remove any previously missing errors for this segment
                             self.mandatory_segs_missing = filter(lambda x: x[0]!=child, self.mandatory_segs_missing)
                             self._flush_mandatory_segs(errh, child.pos)
-                            return child
+                            return (child, pop_node_list, push_node_list) # segment node
                         elif child.usage == 'R' and child.get_cur_count() < 1:
                             fake_seg = pyx12.segment.Segment('%s'% (child.id), '~', '*', ':')
-                            #errh.add_seg(child, fake_seg, seg_count, cur_line, ls_id)
                             err_str = 'Mandatory segment "%s" (%s) missing' % (child.name, child.id)
                             self.mandatory_segs_missing.append((child, fake_seg,'3', err_str, seg_count, cur_line, \
                                 ls_id))
@@ -276,26 +267,25 @@ class walk_tree(object):
                             #logger.debug('Segment %s is not a match for (%s*%s)' % \
                             #   (child.id, seg_data.get_seg_id(), seg_data[0].get_value()))
                     elif child.is_loop(): 
-                        #logger.debug('child_node id=%s' % (child.id))
                         if self._is_loop_match(child, seg_data, errh, seg_count, cur_line, ls_id):
                             node_seg = self._goto_seg_match(child, seg_data, errh, seg_count, cur_line, ls_id)
-                            #node_seg = child.get_child_node_by_idx(0)
-                            return node_seg
+                            return (node_seg, pop_node_list, push_node_list) # segment node
+            # End for ord1 in pos_keys
             if node.is_map_root(): # If at root and we haven't found the segment yet.
-                self._seg_not_found(orig_node, seg_data, errh, seg_count, cur_line, ls_id)
-                return None
+                self._seg_not_found_error(orig_node, seg_data, errh, seg_count, cur_line, ls_id)
+                return (None, [], [])
             node_pos = node.pos # Get position ordinal of current node in tree
             node = pop_to_parent_loop(node) # Get enclosing parent loop
 
-        self._seg_not_found(orig_node, seg_data, errh, seg_count, cur_line, ls_id)
-        return None
+        self._seg_not_found_error(orig_node, seg_data, errh, seg_count, cur_line, ls_id)
+        return (None, [], [])
 
 #    def _is_loop_repeat(self, node, seg_data):
 #        if not (node.is_loop() or node.is_map_root()): 
 #            node = pop_to_parent_loop(node) # Get enclosing loop
 #        return self._is_first_seg_match(node, seg_data):
 
-    def _seg_not_found(self, orig_node, seg_data, errh, seg_count, cur_line, ls_id):
+    def _seg_not_found_error(self, orig_node, seg_data, errh, seg_count, cur_line, ls_id):
         """
         Create error for not found segments
 

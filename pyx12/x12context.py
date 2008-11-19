@@ -472,9 +472,10 @@ class X12ContextReader(object):
                 self.x12_map_node = self.control_map.getnodebypath(tpath)
             else:
                 try:
-                    self.x12_map_node = self.walker.walk(self.x12_map_node, \
+                    (seg_node, pop_loops, push_loops) = self.walker.walk(self.x12_map_node, \
                         seg, self.errh, self.src.get_seg_count(), \
                         self.src.get_cur_line(), self.src.get_ls_id())
+                    self.x12_map_node = seg_node
                 except errors.EngineError:
                     raise
             if self.x12_map_node is None:

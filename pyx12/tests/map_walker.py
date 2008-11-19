@@ -36,14 +36,14 @@ class Explicit_Loops(unittest.TestCase):
         node = self.map.getnodebypath('/ISA_LOOP/ISA')
         self.assertNotEqual(node, None, 'node not found')
         seg_data = pyx12.segment.Segment('GS*HC', '~', '*', ':')
-        node = self.walker.walk(node, seg_data, self.errh, 5, 4, None)
+        (node, pop, push) = self.walker.walk(node, seg_data, self.errh, 5, 4, None)
         self.assertNotEqual(node, None, 'walker failed')
         self.assertEqual(seg_data.get_seg_id(), node.id)
 
     def test_GS_to_ST(self):
         node = self.map.getnodebypath('/ISA_LOOP/GS_LOOP/GS')
         seg_data = pyx12.segment.Segment('ST*837', '~', '*', ':')
-        node = self.walker.walk(node, seg_data, self.errh, 5, 4, None)
+        (node, pop, push) = self.walker.walk(node, seg_data, self.errh, 5, 4, None)
         self.assertNotEqual(node, None)
         self.assertEqual(seg_data.get_seg_id(), node.id)
 
@@ -51,21 +51,21 @@ class Explicit_Loops(unittest.TestCase):
         node = self.map.getnodebypath('/ISA_LOOP/GS_LOOP/ST_LOOP/SE')
         self.assertNotEqual(node, None)
         seg_data = pyx12.segment.Segment('ST*837', '~', '*', ':')
-        node = self.walker.walk(node, seg_data, self.errh, 5, 4, None)
+        (node, pop, push) = self.walker.walk(node, seg_data, self.errh, 5, 4, None)
         self.assertEqual(seg_data.get_seg_id(), node.id)
 
     def test_SE_to_GE(self):
         node = self.map.getnodebypath('/ISA_LOOP/GS_LOOP/ST_LOOP/SE')
         #node.cur_count = 1 # HACK
         seg_data = pyx12.segment.Segment('GE*1', '~', '*', ':')
-        node = self.walker.walk(node, seg_data, self.errh, 5, 4, None)
+        (node, pop, push) = self.walker.walk(node, seg_data, self.errh, 5, 4, None)
         self.assertNotEqual(node, None)
         self.assertEqual(seg_data.get_seg_id(), node.id)
 
     def test_GE_to_GS(self):
         node = self.map.getnodebypath('/ISA_LOOP/GS_LOOP/GE')
         seg_data = pyx12.segment.Segment('GS*HC', '~', '*', ':')
-        node = self.walker.walk(node, seg_data, self.errh, 5, 4, None)
+        (node, pop, push) = self.walker.walk(node, seg_data, self.errh, 5, 4, None)
         self.assertNotEqual(node, None)
         self.assertEqual(seg_data.get_seg_id(), node.id)
 
@@ -73,7 +73,7 @@ class Explicit_Loops(unittest.TestCase):
         node = self.map.getnodebypath('/ISA_LOOP/GS_LOOP/GE')
         self.assertEqual('GE', node.id)
         seg_data = pyx12.segment.Segment('IEA*1', '~', '*', ':')
-        node = self.walker.walk(node, seg_data, self.errh, 5, 4, None)
+        (node, pop, push) = self.walker.walk(node, seg_data, self.errh, 5, 4, None)
         self.assertNotEqual(node, None)
         self.assertEqual(seg_data.get_seg_id(), node.id)
 
@@ -81,14 +81,14 @@ class Explicit_Loops(unittest.TestCase):
         node = self.map.getnodebypath('/ISA_LOOP/IEA')
         self.assertEqual('IEA', node.id)
         seg_data = pyx12.segment.Segment('ISA*00', '~', '*', ':')
-        node = self.walker.walk(node, seg_data, self.errh, 5, 4, None)
+        (node, pop, push) = self.walker.walk(node, seg_data, self.errh, 5, 4, None)
         self.assertNotEqual(node, None)
         self.assertEqual(seg_data.get_seg_id(), node.id)
 
     def test_ST_to_BHT_fail(self):
         node = self.map.getnodebypath('/ISA_LOOP/GS_LOOP/ST_LOOP/ST')
         seg_data = pyx12.segment.Segment('ZZZ*0019', '~', '*', ':')
-        node = self.walker.walk(node, seg_data, self.errh, 5, 4, None)
+        (node, pop, push) = self.walker.walk(node, seg_data, self.errh, 5, 4, None)
         self.assertEqual(node, None)
 
     def tearDown(self):
@@ -128,7 +128,7 @@ class Implicit_Loops(unittest.TestCase):
     def test_ST_to_BHT(self):
         node = self.map.getnodebypath('/ISA_LOOP/GS_LOOP/ST_LOOP/ST')
         seg_data = pyx12.segment.Segment('BHT*0019', '~', '*', ':')
-        node = self.walker.walk(node, seg_data, self.errh, 5, 4, None)
+        (node, pop, push) = self.walker.walk(node, seg_data, self.errh, 5, 4, None)
         self.assertEqual(seg_data.get_seg_id(), node.id)
 
     def test_repeat_loop_with_one_segment(self):
@@ -138,7 +138,7 @@ class Implicit_Loops(unittest.TestCase):
         node.cur_count = 1
         seg_data = pyx12.segment.Segment('SPI*00', '~', '*', ':')
         errh = pyx12.error_handler.errh_null()
-        node = self.walker.walk(node, seg_data, errh, 5, 4, None)
+        (node, pop, push) = self.walker.walk(node, seg_data, errh, 5, 4, None)
         self.assertNotEqual(node, None, 'walker failed')
         self.assertEqual(seg_data.get_seg_id(), node.id)
         self.assertEqual(errh.err_cde, None, errh.err_str)
@@ -150,7 +150,7 @@ class Implicit_Loops(unittest.TestCase):
         self.assertNotEqual(node, None, 'Node not found')
         node.cur_count = 1
         seg_data = pyx12.segment.Segment('EQ*30**CHD', '~', '*', ':')
-        node = self.walker.walk(node, seg_data, errh, 5, 4, None)
+        (node, pop, push) = self.walker.walk(node, seg_data, errh, 5, 4, None)
         self.assertNotEqual(node, None, 'walker failed')
         self.assertEqual(seg_data.get_seg_id(), node.id)
         self.assertEqual(errh.err_cde, None, errh.err_str)
@@ -166,7 +166,7 @@ class Implicit_Loops(unittest.TestCase):
         result = node.is_valid(seg_data, self.errh)
         seg_data = pyx12.segment.Segment('HL*2*1*22*0~', '~', '*', ':')
         errh = pyx12.error_handler.errh_null()
-        node = self.walker.walk(node, seg_data, errh, 5, 4, None)
+        (node, pop, push) = self.walker.walk(node, seg_data, errh, 5, 4, None)
         #result = node.is_valid(seg_data, self.errh)
         #self.failIf(result)
         self.assertEqual(errh.err_cde, '3', errh.err_str)
@@ -180,7 +180,7 @@ class Implicit_Loops(unittest.TestCase):
         self.assertEqual(node.base_name, 'loop')
         seg_data = pyx12.segment.Segment('HL*1**20*1~', '~', '*', ':')
         errh = pyx12.error_handler.errh_null()
-        node = self.walker.walk(node, seg_data, errh, 5, 4, None)
+        (node, pop, push) = self.walker.walk(node, seg_data, errh, 5, 4, None)
         result = node.is_valid(seg_data, self.errh)
         self.assertEqual(errh.err_cde, None, errh.err_str)
  
@@ -194,12 +194,12 @@ class Implicit_Loops(unittest.TestCase):
         self.assertEqual(node.base_name, 'loop')
         seg_data = pyx12.segment.Segment('HL*1**20*1~', '~', '*', ':')
         errh = pyx12.error_handler.errh_null()
-        node = self.walker.walk(node, seg_data, errh, 5, 4, None)
+        (node, pop, push) = self.walker.walk(node, seg_data, errh, 5, 4, None)
         result = node.is_valid(seg_data, self.errh)
         self.assertEqual(errh.err_cde, None, errh.err_str)
         seg_data = pyx12.segment.Segment('NM1*85*2*Provider Name*****XX*24423423~', '~', '*', ':')
         errh = pyx12.error_handler.errh_null()
-        node = self.walker.walk(node, seg_data, errh, 5, 4, None)
+        (node, pop, push) = self.walker.walk(node, seg_data, errh, 5, 4, None)
         self.assertEqual(errh.err_cde, None, errh.err_str)
         result = node.is_valid(seg_data, self.errh)
         self.failUnless(result)
@@ -228,7 +228,7 @@ class Implicit_Loops(unittest.TestCase):
         self.assertEqual(node.base_name, 'segment')
         node.cur_count = 1
         seg_data = pyx12.segment.Segment('ENT*1*2J*EI*99998707~', '~', '*', ':')
-        node = self.walker.walk(node, seg_data, errh, 5, 4, None)
+        (node, pop, push) = self.walker.walk(node, seg_data, errh, 5, 4, None)
         self.assertEqual(errh.err_cde, None, errh.err_str)
         
     def tearDown(self):
@@ -252,13 +252,13 @@ class SegmentWalk(unittest.TestCase):
     def test_match_regular_segment(self):
         node = self.map.getnodebypath('/ISA_LOOP/GS_LOOP/ST_LOOP/DETAIL/2000A/2010AB/NM1')
         seg_data = pyx12.segment.Segment('N4*Billings*MT*56123', '~', '*', ':')
-        node = self.walker.walk(node, seg_data, self.errh, 5, 4, None)
+        (node, pop, push) = self.walker.walk(node, seg_data, self.errh, 5, 4, None)
         self.assertEqual(seg_data.get_seg_id(), node.id)
     
     def test_match_ID_segment1(self):
         node = self.map.getnodebypath('/ISA_LOOP/GS_LOOP/ST_LOOP/DETAIL/2000A/2000B/2300/CLM')
         seg_data = pyx12.segment.Segment('DTP*454*D8*20040101', '~', '*', ':')
-        node = self.walker.walk(node, seg_data, self.errh, 5, 4, None)
+        (node, pop, push) = self.walker.walk(node, seg_data, self.errh, 5, 4, None)
         self.assertEqual(seg_data.get_seg_id(), node.id)
     
     def test_segment_required_fail1(self):
@@ -270,7 +270,7 @@ class SegmentWalk(unittest.TestCase):
         self.assertEqual(node.base_name, 'segment')
         seg_data = pyx12.segment.Segment('N4*NOWHERE*MA*30001~', '~', '*', ':')
         errh = pyx12.error_handler.errh_null()
-        node = self.walker.walk(node, seg_data, errh, 5, 4, None)
+        (node, pop, push) = self.walker.walk(node, seg_data, errh, 5, 4, None)
         self.assertEqual(errh.err_cde, '3', errh.err_str)
    
     def test_found_unused_segment1(self):
@@ -280,7 +280,7 @@ class SegmentWalk(unittest.TestCase):
         self.assertEqual(node.base_name, 'segment')
         node.cur_count = 1
         seg_data = pyx12.segment.Segment('UNU*AA*B~', '~', '*', ':')
-        node = self.walker.walk(node, seg_data, self.errh, 5, 4, None)
+        (node, pop, push) = self.walker.walk(node, seg_data, self.errh, 5, 4, None)
         #result = node.is_valid(comp, self.errh)
         #self.failUnless(result)
         self.assertEqual(self.errh.err_cde, '2', self.errh.err_str)
@@ -307,7 +307,7 @@ class SegmentWalk278(unittest.TestCase):
         self.assertNotEqual(node, None)
         self.assertEqual(node.base_name, 'segment')
         seg_data = pyx12.segment.Segment('HI*BO:T1017::::382', '~', '*', ':')
-        node = self.walker.walk(node, seg_data, self.errh, 5, 4, None)
+        (node, pop, push) = self.walker.walk(node, seg_data, self.errh, 5, 4, None)
         self.assertNotEqual(node, None, 'Segment not found: %s' % (seg_data.format()))
         self.assertEqual(seg_data.get_seg_id(), node.id)
         
@@ -328,14 +328,14 @@ class Segment_ID_Checks(unittest.TestCase):
     def test_segment_id_short(self):
         node = self.node
         seg_data = pyx12.segment.Segment('Z*0019', '~', '*', ':')
-        node = self.walker.walk(node, seg_data, self.errh, 5, 4, None)
+        (node, pop, push) = self.walker.walk(node, seg_data, self.errh, 5, 4, None)
         self.assertEqual(node, None)
         self.assertEqual(self.errh.err_cde, '1', self.errh.err_str)
 
     def test_segment_id_long(self):
         node = self.node
         seg_data = pyx12.segment.Segment('ZZZZ*0019', '~', '*', ':')
-        node = self.walker.walk(node, seg_data, self.errh, 5, 4, None)
+        (node, pop, push) = self.walker.walk(node, seg_data, self.errh, 5, 4, None)
         self.assertEqual(node, None)
         self.assertEqual(self.errh.err_cde, '1', self.errh.err_str)
 
@@ -362,7 +362,7 @@ class Counting(unittest.TestCase):
         node = self.node
         node.cur_count = 1
         seg_data = pyx12.segment.Segment('PER*IC*Name1*EM*dev@null.com~', '~', '*', ':')
-        node = self.walker.walk(node, seg_data, self.errh, 5, 4, None)
+        (node, pop, push) = self.walker.walk(node, seg_data, self.errh, 5, 4, None)
         self.assertNotEqual(node, None)
         self.assertEqual(self.errh.err_cde, None, self.errh.err_str)
 
@@ -370,7 +370,7 @@ class Counting(unittest.TestCase):
         node = self.node
         node.cur_count = 2 
         seg_data = pyx12.segment.Segment('PER*IC*Name1*EM*dev@null.com~', '~', '*', ':')
-        node = self.walker.walk(node, seg_data, self.errh, 5, 4, None)
+        (node, pop, push) = self.walker.walk(node, seg_data, self.errh, 5, 4, None)
         self.assertNotEqual(node, None)
         self.assertEqual(self.errh.err_cde, None, self.errh.err_str)
 
@@ -381,7 +381,7 @@ class Counting(unittest.TestCase):
         self.assertNotEqual(node, None, 'Node not found')
         self.errh.err_cde = None
         self.errh.err_str = None
-        node = self.walker.walk(node, seg_data, self.errh, 5, 4, None)
+        (node, pop, push) = self.walker.walk(node, seg_data, self.errh, 5, 4, None)
         self.assertEqual(self.errh.err_cde, '5', self.errh.err_str)
 
 
@@ -404,7 +404,7 @@ class LoopCounting(unittest.TestCase):
         seg_data = pyx12.segment.Segment('LX*51~', '~', '*', ':')
         self.errh.err_cde = None
         self.errh.err_str = None
-        node = self.walker.walk(node, seg_data, self.errh, 5, 4, None)
+        (node, pop, push) = self.walker.walk(node, seg_data, self.errh, 5, 4, None)
         self.assertEqual(self.errh.err_cde, None, self.errh.err_str)
 
     def test_max_loop_count_fail1(self):
@@ -414,7 +414,7 @@ class LoopCounting(unittest.TestCase):
         seg_data = pyx12.segment.Segment('LX*51~', '~', '*', ':')
         self.errh.err_cde = None
         self.errh.err_str = None
-        node = self.walker.walk(node, seg_data, self.errh, 5, 4, None)
+        (node, pop, push) = self.walker.walk(node, seg_data, self.errh, 5, 4, None)
         self.assertEqual(self.errh.err_cde, '4', self.errh.err_str)
 
 
@@ -438,48 +438,48 @@ class CountOrdinal(unittest.TestCase):
     def test_ord_ok1(self):
         node = self.node
         seg_data = pyx12.segment.Segment('REF*0F*1234~', '~', '*', ':')
-        node = self.walker.walk(node, seg_data, self.errh, 5, 4, None)
+        (node, pop, push) = self.walker.walk(node, seg_data, self.errh, 5, 4, None)
         self.assertNotEqual(node, None)
         self.assertEqual(self.errh.err_cde, None, self.errh.err_str)
         seg_data = pyx12.segment.Segment('REF*1L*91234~', '~', '*', ':')
-        node = self.walker.walk(node, seg_data, self.errh, 5, 4, None)
+        (node, pop, push) = self.walker.walk(node, seg_data, self.errh, 5, 4, None)
         self.assertNotEqual(node, None)
         self.assertEqual(self.errh.err_cde, None, self.errh.err_str)
 
     def test_ord_ok2(self):
         node = self.node
         seg_data = pyx12.segment.Segment('REF*0F*1234~', '~', '*', ':')
-        node = self.walker.walk(node, seg_data, self.errh, 5, 4, None)
+        (node, pop, push) = self.walker.walk(node, seg_data, self.errh, 5, 4, None)
         self.assertNotEqual(node, None)
         self.assertEqual(self.errh.err_cde, None, self.errh.err_str)
         seg_data = pyx12.segment.Segment('REF*17*A232~', '~', '*', ':')
-        node = self.walker.walk(node, seg_data, self.errh, 5, 4, None)
+        (node, pop, push) = self.walker.walk(node, seg_data, self.errh, 5, 4, None)
         self.assertNotEqual(node, None)
         self.assertEqual(self.errh.err_cde, None, self.errh.err_str)
 
     def test_ord_ok3(self):
         node = self.node
         seg_data = pyx12.segment.Segment('REF*17*1234~', '~', '*', ':')
-        node = self.walker.walk(node, seg_data, self.errh, 5, 4, None)
+        (node, pop, push) = self.walker.walk(node, seg_data, self.errh, 5, 4, None)
         self.assertNotEqual(node, None)
         self.assertEqual(self.errh.err_cde, None, self.errh.err_str)
         seg_data = pyx12.segment.Segment('REF*0F*A232~', '~', '*', ':')
-        node = self.walker.walk(node, seg_data, self.errh, 5, 4, None)
+        (node, pop, push) = self.walker.walk(node, seg_data, self.errh, 5, 4, None)
         self.assertNotEqual(node, None)
         self.assertEqual(self.errh.err_cde, None, self.errh.err_str)
 
     def test_ord_bad1(self):
         node = self.node
         seg_data = pyx12.segment.Segment('REF*0F*1234~', '~', '*', ':')
-        node = self.walker.walk(node, seg_data, self.errh, 5, 4, None)
+        (node, pop, push) = self.walker.walk(node, seg_data, self.errh, 5, 4, None)
         self.assertNotEqual(node, None)
         self.assertEqual(self.errh.err_cde, None, self.errh.err_str)
         seg_data = pyx12.segment.Segment('DTP*297*D8*20040101~', '~', '*', ':')
-        node = self.walker.walk(node, seg_data, self.errh, 5, 4, None)
+        (node, pop, push) = self.walker.walk(node, seg_data, self.errh, 5, 4, None)
         self.assertNotEqual(node, None)
         self.assertEqual(self.errh.err_cde, None, self.errh.err_str)
         seg_data = pyx12.segment.Segment('REF*17*A232~', '~', '*', ':')
-        node = self.walker.walk(node, seg_data, self.errh, 5, 4, None)
+        (node, pop, push) = self.walker.walk(node, seg_data, self.errh, 5, 4, None)
         self.assertEqual(self.errh.err_cde, '1', self.errh.err_str)
 
     def test_lui_ok(self):
@@ -488,7 +488,7 @@ class CountOrdinal(unittest.TestCase):
         node.cur_count = 1 # NM1
         self.assertNotEqual(node, None)
         seg_data = pyx12.segment.Segment('LUI***ES~', '~', '*', ':')
-        node = self.walker.walk(node, seg_data, self.errh, 5, 4, None)
+        (node, pop, push) = self.walker.walk(node, seg_data, self.errh, 5, 4, None)
         self.assertNotEqual(node, None)
         self.assertEqual(self.errh.err_cde, None, self.errh.err_str)
 

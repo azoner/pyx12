@@ -16,7 +16,8 @@ Parse a ANSI X12N data file.  Validate against a map and codeset values.
 Create XML, HTML, and 997 documents based on the data file.
 """
 
-import os, os.path, sys
+import os, os.path
+#import sys
 import logging
 #from types import *
 
@@ -133,8 +134,8 @@ def x12n_document(param, src_file, fd_997, fd_html,
             node = control_map.getnodebypath('/ISA_LOOP/GS_LOOP/GS')
         else:
             try:
-                node = walker.walk(node, seg, errh, src.get_seg_count(), \
-                    src.get_cur_line(), src.get_ls_id())
+                (node, pop_loops, push_loops) = walker.walk(node, seg, errh, \
+                    src.get_seg_count(), src.get_cur_line(), src.get_ls_id())
             except errors.EngineError:
                 logger.error('Source file line %i' % (src.get_cur_line()))
                 raise
