@@ -747,6 +747,26 @@ class loop_if(x12_node):
         else:
             return False
 
+    def get_child_seg_node(self, seg_data):
+        """
+        Return the child segment matching the segment data
+        @todo: unit tests
+        """
+        for child in self.ChildIterator():
+            if child.is_segment() and child.is_match(seg_data):
+                return child
+        return None
+
+    def get_child_loop_node(self, seg_data):
+        """
+        Return the child segment matching the segment data
+        @todo: unit tests
+        """
+        for child in self.ChildIterator():
+            if child.is_loop() and child.is_match(seg_data):
+                return child
+        return None
+
     def get_cur_count(self):
         """
         @return: current count
