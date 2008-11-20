@@ -23,7 +23,6 @@ Interface to read and alter segments
 #G{classtree X12DataNode}
 
 import os, os.path
-import pdb
 
 # Intrapackage imports
 import pyx12
@@ -51,6 +50,14 @@ class X12DataNode(object):
         self.errors = []
 
     #{ Public Methods
+    def add_errors(self, err_list):
+        """
+        Attach errors found when validating to node
+
+        @todo: move errors to parent loops if necessary
+        """
+        self.errors.extend(err_list)
+
     def delete_segment(self, x12_node):
         """
         Delete the given segment
@@ -436,10 +443,8 @@ class X12ContextReader(object):
 
         #Get Map of Control Segments
         self.map_file = 'x12.control.00401.xml'
-        self.control_map = map_if.load_map_file(os.path.join(map_path, \
-            self.map_file), param)
-        self.map_index_if = map_index.map_index(os.path.join(map_path, \
-            'maps.xml'))
+        self.control_map = map_if.load_map_file(os.path.join(map_path, self.map_file), param)
+        self.map_index_if = map_index.map_index(os.path.join(map_path, 'maps.xml'))
         self.x12_map_node = self.control_map.getnodebypath('/ISA_LOOP/ISA')
         self.walker = walk_tree()
 
@@ -476,17 +481,11 @@ class X12ContextReader(object):
                 self.x12_map_node = orig_node
             else:
                 if seg.get_seg_id() == 'ISA':
-                    self. errh.add_isa_loop(seg, self.src)
                     icvn = seg.get_value('ISA12')
-                    self.errh.handle_errors(self.src.pop_errors())
-                elif seg.get_seg_id() == 'IEA':
-                    self.errh.handle_errors(self.src.pop_errors())
-                    self.errh.close_isa_loop(self.x12_map_node, seg, self.src)
                 elif seg.get_seg_id() == 'GS':
                     fic = seg.get_value('GS01')
                     vriic = seg.get_value('GS08')
-                    map_file_new = self.map_index_if.get_filename(icvn, \
-                        vriic, fic)
+                    map_file_new = self.map_index_if.get_filename(icvn, vriic, fic)
                     if self.map_file != map_file_new:
                         #map_abbr = self.map_index_if.get_abbr(icvn, vriic, fic)
                         self.map_file = map_file_new
@@ -494,15 +493,12 @@ class X12ContextReader(object):
                             raise pyx12.errors.EngineError, \
                                 "Map not found.  icvn=%s, fic=%s, vriic=%s" % \
                                 (icvn, fic, vriic)
-                        cur_map = map_if.load_map_file(self.map_file, \
-                            self.param, self.xslt_files)
+                        cur_map = map_if.load_map_file(self.map_file, self.param, self.xslt_files)
                         self._apply_loop_count(orig_node, cur_map)
                         self._reset_isa_counts(cur_map)
                     self._reset_gs_counts(cur_map)
                     tpath = '/ISA_LOOP/GS_LOOP/GS'
                     self.x12_map_node = cur_map.getnodebypath(tpath)
-                    self.errh.add_gs_loop(seg, self.src)
-                    self.errh.handle_errors(self.src.pop_errors())
                 elif seg.get_seg_id() == 'BHT':
                     if vriic in ('004010X094', '004010X094A1'):
                         tspc = seg.get_value('BHT02')
@@ -521,24 +517,7 @@ class X12ContextReader(object):
                             self._apply_loop_count(self.x12_map_node, cur_map)
                             tpath = '/ISA_LOOP/GS_LOOP/ST_LOOP/HEADER/BHT'
                             self.x12_map_node = cur_map.getnodebypath(tpath)
-                    self.errh.add_seg(self.x12_map_node, seg, \
-                        self.src.get_seg_count(), \
-                        self.src.get_cur_line(), self.src.get_ls_id())
-                    self.errh.handle_errors(self.src.pop_errors())
-                elif seg.get_seg_id() == 'GE':
-                    self.errh.handle_errors(self.src.pop_errors())
-                    self.errh.close_gs_loop(self.x12_map_node, seg, self.src)
-                elif seg.get_seg_id() == 'ST':
-                    self.errh.add_st_loop(seg, self.src)
-                    self.errh.handle_errors(self.src.pop_errors())
-                elif seg.get_seg_id() == 'SE':
-                    self.errh.handle_errors(self.src.pop_errors())
-                    self.errh.close_st_loop(self.x12_map_node, seg, self.src)
-                else:
-                    self.errh.add_seg(self.x12_map_node, seg, \
-                        self.src.get_seg_count(), \
-                        self.src.get_cur_line(), self.src.get_ls_id())
-                    self.errh.handle_errors(self.src.pop_errors())
+                err_list = self.src.pop_errors()
 
             node_path = self._get_path_list(self.x12_map_node.get_path())
             # If we are in the requested tree, wait until we have the whole thing
@@ -574,6 +553,7 @@ class X12ContextReader(object):
                     cur_data_node = X12SegmentDataNode(self.x12_map_node, seg, None, push_loops, pop_loops)
                 else:
                     cur_data_node = X12SegmentDataNode(self.x12_map_node, seg)
+                cur_data_node.add_errors(err_list)
                 yield cur_data_node
         
     def register_error_callback(self, callback, err_type):
