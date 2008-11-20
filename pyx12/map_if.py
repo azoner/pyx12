@@ -333,11 +333,18 @@ class map_if(x12_node):
     def get_child_count(self):
         return self.__len__()
 
-    def get_first_seg(self):
+    def get_first_node(self):
         pos_keys = self.pos_map.keys()
         pos_keys.sort()
-        if len(pos_keys) > 0 and self.pos_map[pos_keys[0]][0].is_segment():
+        if len(pos_keys) > 0:
             return self.pos_map[pos_keys[0]][0]
+        else:
+            return None
+
+    def get_first_seg(self):
+        first = self.get_first_node()
+        if first.is_segment():
+            return first
         else:
             return None
 
@@ -615,13 +622,28 @@ class loop_if(x12_node):
     def get_parent(self):
         return self.parent
 
-    def get_first_seg(self):
+    def get_first_node(self):
         pos_keys = self.pos_map.keys()
         pos_keys.sort()
-        if len(pos_keys) > 0 and self.pos_map[pos_keys[0]][0].is_segment():
+        if len(pos_keys) > 0:
             return self.pos_map[pos_keys[0]][0]
         else:
             return None
+
+    def get_first_seg(self):
+        first = self.get_first_node()
+        if first.is_segment():
+            return first
+        else:
+            return None
+
+
+    def ChildIterator(self):
+        pos_keys = self.pos_map.keys()
+        pos_keys.sort()
+        for ord1 in pos_keys:
+            for child in self.pos_map[ord1]:
+                yield child
 
 #    def is_valid(self, seg_data, errh):
 #        pass

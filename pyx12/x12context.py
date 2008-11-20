@@ -32,8 +32,7 @@ import errors
 import map_index
 import map_if
 import x12file
-from map_walker import walk_tree, pop_to_parent_loop, get_pop_loops, \
-    get_push_loops
+from map_walker import walk_tree, pop_to_parent_loop #, get_pop_loops, get_push_loops
 
 class X12DataNode(object):
     """
@@ -308,22 +307,16 @@ class X12LoopDataNode(X12DataNode):
 
     def _get_child_x12_node(self, seg_data):
         # This logic should be in map_if
-        pos_keys = self.x12_map_node.pos_map.keys()
-        pos_keys.sort()
-        for key in pos_keys:
-            for child in self.x12_map_node.pos_map[key]:
-                if child.is_segment() and child.is_match(seg_data):
-                    return child
+        for child in self.x12_map_node.ChildIterator():
+            if child.is_segment() and child.is_match(seg_data):
+                return child
         return None
 
     def _get_loop_x12_node(self, seg_data):
         # This logic should be in map_if
-        pos_keys = self.x12_map_node.pos_map.keys()
-        pos_keys.sort()
-        for key in pos_keys:
-            for child in self.x12_map_node.pos_map[key]:
-                if child.is_loop() and child.is_match(seg_data):
-                    return child
+        for child in self.x12_map_node.ChildIterator():
+            if child.is_loop() and child.is_match(seg_data):
+                return child
         return None
 
     def _get_segment(self, seg_obj):
@@ -457,12 +450,13 @@ class X12ContextReader(object):
         @return: X12 Data Node - simple segment or tree
         @rtype: L{node<x12context.X12DataNode>}
         """
-        #map_abbr = 'x12'
         cur_tree = None
         cur_data_node = None
         for seg in self.src:
             #find node
             orig_node = self.x12_map_node
+            pop_loops = []
+            push_loops = []
             
             if seg.get_seg_id() == 'ISA':
                 tpath = '/ISA_LOOP/ISA'
@@ -557,26 +551,26 @@ class X12ContextReader(object):
                         # Found root loop repeat. Yield existing, create new tree
                         yield cur_tree
                     # Make new tree on parent loop
-                    pop_loops = get_pop_loops(cur_data_node.x12_map_node, self.x12_map_node)
-                    pop_loops = [x12_node for x12_node in pop_loops if x12_node.get_path().find(loop_id) == -1]
+                    #pop_loops = get_pop_loops(cur_data_node.x12_map_node, self.x12_map_node)
+                    #pop_loops = [x12_node for x12_node in pop_loops if x12_node.get_path().find(loop_id) == -1]
                     cur_tree = X12LoopDataNode(self.x12_map_node.parent, pop_loops)
-                    cur_data_node = self._add_segment(cur_tree, self.x12_map_node, seg)
+                    cur_data_node = self._add_segment(cur_tree, self.x12_map_node, seg, pop_loops, push_loops)
                 else:
                     if cur_data_node is None or self.x12_map_node is None:
                         raise errors.EngineError, 'Either cur_data_node or self.x12_map_node is None'
-                    cur_data_node = self._add_segment(cur_data_node, self.x12_map_node, seg)
+                    cur_data_node = self._add_segment(cur_data_node, self.x12_map_node, seg, pop_loops, push_loops)
             else:
                 if cur_tree is not None:
                     # We have completed a tree
                     yield cur_tree
                     cur_tree = None
                 if cur_data_node is not None:
-                    push_loops = get_push_loops(cur_data_node.x12_map_node, self.x12_map_node)
-                    pop_loops = get_pop_loops(cur_data_node.x12_map_node, self.x12_map_node)
-                    if loop_id:
-                        pop_loops = [x12_node for x12_node in pop_loops if x12_node.get_path().find(loop_id) == -1]
-                    if loop_id in [x12.id for x12 in push_loops] or loop_id in [x12.id for x12 in pop_loops]:
-                        raise errors.EngineError, 'Should not be here'
+                    #push_loops = get_push_loops(cur_data_node.x12_map_node, self.x12_map_node)
+                    #pop_loops = get_pop_loops(cur_data_node.x12_map_node, self.x12_map_node)
+                    #if loop_id:
+                    #    pop_loops = [x12_node for x12_node in pop_loops if x12_node.get_path().find(loop_id) == -1]
+                    assert loop_id not in [x12.id for x12 in push_loops], 'Loop ID %s should not be in push loops' % (loop_id)
+                    assert loop_id not in [x12.id for x12 in pop_loops], 'Loop ID %s should not be in pop loops' % (loop_id)
                     cur_data_node = X12SegmentDataNode(self.x12_map_node, seg, None, push_loops, pop_loops)
                 else:
                     cur_data_node = X12SegmentDataNode(self.x12_map_node, seg)
@@ -617,7 +611,7 @@ class X12ContextReader(object):
     subele_term = property(_get_subele_term, None, None)
 
     #{ Private Methods
-    def _add_segment(self, cur_data_node, segment_x12_node, seg_data):
+    def _add_segment(self, cur_data_node, segment_x12_node, seg_data, pop_loops, push_loops):
         """
         From the last position in the X12 Data Node Tree, find the correct
         position for the new segment; moving up or down the tree as appropriate.
@@ -643,13 +637,15 @@ class X12ContextReader(object):
         new_path_list = self._get_path_list(parent_x12_node.get_path())
         last_path_list = self._get_path_list(cur_loop_node.cur_path)
         if last_path_list != new_path_list:
-            for x12_loop in get_pop_loops(cur_data_node.x12_map_node, segment_x12_node):
+            for x12_loop in pop_loops:
+            #for x12_loop in get_pop_loops(cur_data_node.x12_map_node, segment_x12_node):
                 if cur_loop_node.id != x12_loop.id:
                     raise errors.EngineError, 'Loop pop: %s != %s' % (cur_loop_node.id, x12_loop.id)
                 cur_loop_node = cur_loop_node.parent
             #for i in range(match_idx, len(new_path_list)):
-            for x12_loop in get_push_loops(cur_data_node.x12_map_node, \
-                    segment_x12_node):
+            for x12_loop in push_loops:
+            #for x12_loop in get_push_loops(cur_data_node.x12_map_node, \
+            #        segment_x12_node):
                 if cur_loop_node is None:
                     raise errors.EngineError, 'cur_loop_node is None. x12_loop: %s' % (x12_loop.id)
                 # push new loop nodes, if needed
