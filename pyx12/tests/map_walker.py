@@ -8,8 +8,7 @@ import unittest
 
 import pyx12.error_handler
 from pyx12.errors import *
-from pyx12.map_walker import walk_tree, get_pop_loops, get_push_loops, common_root_node, \
-    get_id_list, traverse_path, pop_to_parent_loop
+from pyx12.map_walker import walk_tree, get_id_list, traverse_path, pop_to_parent_loop
 import pyx12.map_if
 import pyx12.params 
 import pyx12.segment
