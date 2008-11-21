@@ -710,3 +710,55 @@ class LoopIsMatch(unittest.TestCase):
         self.errh.err_cde = None
         seg_data = pyx12.segment.Segment('CLM*657657*AA**5::1~', '~', '*', ':')
         self.failUnless(self.node.is_match(seg_data))
+
+
+class GetNodeBySegment(unittest.TestCase):
+    """
+    Find matching child nodes matching a segment
+    """
+    def setUp(self):
+        map_path = getMapPath()
+        param = pyx12.params.params('pyx12.conf.xml')
+        if map_path:
+            param.set('map_path', map_path)
+            param.set('pickle_path', map_path)
+        self.map = pyx12.map_if.load_map_file('834.4010.X095.A1.xml', param)
+        self.errh = pyx12.error_handler.errh_null()
+
+    def test_get_seg_node(self):
+        self.errh.err_cde = None
+        node = self.map.getnodebypath('/ISA_LOOP/GS_LOOP/ST_LOOP/DETAIL/2000')
+        self.assertNotEqual(node, None)
+        self.assertEqual(node.id, '2000')
+        seg_data = pyx12.segment.Segment('INS*Y*18*030*20*A', '~', '*', ':')
+        seg_node = node.get_child_seg_node(seg_data)
+        self.assertNotEqual(seg_node, None)
+        self.assertEqual(seg_node.id, 'INS')
+
+    def test_get_loop_node(self):
+        self.errh.err_cde = None
+        node = self.map.getnodebypath('/ISA_LOOP/GS_LOOP/ST_LOOP/DETAIL/2000')
+        self.assertNotEqual(node, None)
+        self.assertEqual(node.id, '2000')
+        seg_data = pyx12.segment.Segment('NM1*IL*1*User*Test****ZZ*XX1234', '~', '*', ':')
+        loop_node = node.get_child_loop_node(seg_data)
+        self.assertNotEqual(loop_node, None)
+        self.assertEqual(loop_node.id, '2100A')
+
+    def test_get_seg_node_fail(self):
+        self.errh.err_cde = None
+        node = self.map.getnodebypath('/ISA_LOOP/GS_LOOP/ST_LOOP/DETAIL/2000')
+        self.assertNotEqual(node, None)
+        self.assertEqual(node.id, '2000')
+        seg_data = pyx12.segment.Segment('CLM*657657*AA**5::1~', '~', '*', ':')
+        seg_node = node.get_child_seg_node(seg_data)
+        self.assertEqual(seg_node, None)
+
+    def test_get_loop_node_fail(self):
+        self.errh.err_cde = None
+        node = self.map.getnodebypath('/ISA_LOOP/GS_LOOP/ST_LOOP/DETAIL/2000')
+        self.assertNotEqual(node, None)
+        self.assertEqual(node.id, '2000')
+        seg_data = pyx12.segment.Segment('INS*Y*18*030*20*A', '~', '*', ':')
+        loop_node = node.get_child_loop_node(seg_data)
+        self.assertEqual(loop_node, None)

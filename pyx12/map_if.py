@@ -637,7 +637,6 @@ class loop_if(x12_node):
         else:
             return None
 
-
     def ChildIterator(self):
         pos_keys = self.pos_map.keys()
         pos_keys.sort()
@@ -750,7 +749,6 @@ class loop_if(x12_node):
     def get_child_seg_node(self, seg_data):
         """
         Return the child segment matching the segment data
-        @todo: unit tests
         """
         for child in self.ChildIterator():
             if child.is_segment() and child.is_match(seg_data):
@@ -760,7 +758,6 @@ class loop_if(x12_node):
     def get_child_loop_node(self, seg_data):
         """
         Return the child segment matching the segment data
-        @todo: unit tests
         """
         for child in self.ChildIterator():
             if child.is_loop() and child.is_match(seg_data):

@@ -262,7 +262,7 @@ class X12LoopDataNode(X12DataNode):
         @todo: Check counts?
         """
         seg_data = self._get_segment(seg_data)
-        x12_seg_node = self._get_child_x12_node(seg_data)
+        x12_seg_node = self.x12_map_node.get_child_seg_node(seg_data)
         if x12_seg_node is None:
             raise errors.X12PathError, 'The segment %s is not a member of loop %s' % \
                 (seg_data.__repr__(), self.id)
@@ -285,12 +285,12 @@ class X12LoopDataNode(X12DataNode):
         @rtype: L{node<x12context.X12LoopDataNode>}
         """
         seg_data = self._get_segment(seg_data)
-        x12_loop_node = self._get_loop_x12_node(seg_data)
+        x12_loop_node = self.x12_map_node.get_child_loop_node(seg_data)
         if x12_loop_node is None:
             raise errors.X12PathError, 'The segment %s is not a member of loop %s' % \
                 (seg_data.__repr__(), self.id)
         new_data_loop = self._add_loop_node(x12_loop_node)
-        x12_seg_node = self._get_child_x12_node(seg_data)
+        x12_seg_node = self.x12_map_node.get_child_seg_node(seg_data)
         new_data_node = X12SegmentDataNode(x12_seg_node, seg_data, new_data_loop)
         return new_data_loop
 
@@ -311,20 +311,6 @@ class X12LoopDataNode(X12DataNode):
                 return new_node
         self.children.append(new_node)
         return new_node
-
-    def _get_child_x12_node(self, seg_data):
-        # This logic should be in map_if
-        for child in self.x12_map_node.ChildIterator():
-            if child.is_segment() and child.is_match(seg_data):
-                return child
-        return None
-
-    def _get_loop_x12_node(self, seg_data):
-        # This logic should be in map_if
-        for child in self.x12_map_node.ChildIterator():
-            if child.is_loop() and child.is_match(seg_data):
-                return child
-        return None
 
     def _get_segment(self, seg_obj):
         if isinstance(seg_obj, pyx12.segment.Segment):
