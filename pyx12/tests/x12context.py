@@ -213,3 +213,23 @@ class CountRepeatingLoop(unittest.TestCase):
             ct += 1
         self.assertEqual(ct, 3, 'Found %i 2400 loops.  Should have %i' % (ct, 3))
 
+
+class IterateTree(unittest.TestCase):
+
+    def setUp(self):
+        fd = open('files/simple_837p.txt')
+        param = pyx12.params.params('pyx12.conf.xml')
+        errh = pyx12.error_handler.errh_null()
+        self.src = pyx12.x12context.X12ContextReader(param, errh, fd, xslt_files = [])
+
+    def test_iterate_all(self):
+        ct_2000a = 0
+        ct_other = 0
+        for datatree in self.src.iter_segments('2000A'):
+            if datatree.id == '2000A':
+                ct_2000a += 1
+            else:
+                ct_other += 1
+        self.assertEqual(ct_2000a, 1, 'Found %i 2000A loops.  Should have %i' % (ct_2000a, 1))
+        self.assertEqual(ct_other, 11, 'Found %i external segments.  Should have %i' % (ct_other, 11))
+

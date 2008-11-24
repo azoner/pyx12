@@ -532,8 +532,8 @@ class X12ContextReader(object):
                 if cur_data_node is not None:
                     #push_loops = get_push_loops(cur_data_node.x12_map_node, self.x12_map_node)
                     #pop_loops = get_pop_loops(cur_data_node.x12_map_node, self.x12_map_node)
-                    #if loop_id:
-                    #    pop_loops = [x12_node for x12_node in pop_loops if x12_node.get_path().find(loop_id) == -1]
+                    if loop_id:
+                        pop_loops = [x12_node for x12_node in pop_loops if x12_node.get_path().find(loop_id) == -1]
                     assert loop_id not in [x12.id for x12 in push_loops], 'Loop ID %s should not be in push loops' % (loop_id)
                     assert loop_id not in [x12.id for x12 in pop_loops], 'Loop ID %s should not be in pop loops' % (loop_id)
                     cur_data_node = X12SegmentDataNode(self.x12_map_node, seg, None, push_loops, pop_loops)
