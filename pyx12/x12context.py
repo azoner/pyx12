@@ -8,7 +8,6 @@
 #
 ######################################################################
 
-#
 #    $Id$
 
 """
@@ -23,7 +22,7 @@ Interface to read and alter segments
 #G{classtree X12DataNode}
 
 import os, os.path
-import pdb
+# import pdb
 
 # Intrapackage imports
 import pyx12
@@ -343,6 +342,12 @@ class X12LoopDataNode(X12DataNode):
                 return True
         return False
 
+    def add_node(self, loop_data_node):
+        """
+        Add a X12LoopDataNode instance
+        The loop_data_node must be a direct child
+
+        """
     def delete_node(self, x12_path):
         """
         Delete the first node at the given relative path.  If the path is not a
