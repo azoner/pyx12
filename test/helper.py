@@ -10,6 +10,7 @@ def get_testcases(ns):
                     ret.append(ns_dict[key].__name__)
             except:
                 pass
+    ret.sort()
     return ret
 
 def print_testcases(ns):
