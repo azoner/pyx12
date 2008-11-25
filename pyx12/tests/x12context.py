@@ -255,3 +255,25 @@ class TreeDeleteSegment(unittest.TestCase):
     def test_delete_fail(self):
         seg_data = pyx12.segment.Segment('HCP*00*7.11~', '~', '*', ':')
         self.failIf(self.loop2300.delete_segment(seg_data))
+
+
+class TreeDeleteLoop(unittest.TestCase):
+
+    def setUp(self):
+        fd = open('files/simple_837p.txt')
+        param = pyx12.params.params('pyx12.conf.xml')
+        errh = pyx12.error_handler.errh_null()
+        self.src = pyx12.x12context.X12ContextReader(param, errh, fd, xslt_files = [])
+        for datatree in self.src.iter_segments('2300'):
+            if datatree.id == '2300':
+                self.loop2300 = datatree
+                break
+
+    def test_delete(self):
+        self.assertEqual(self.loop2300.get_value('2400/LX01'), '1')
+        self.failUnless(self.loop2300.delete_node('2400'))
+        self.assertEqual(self.loop2300.get_value('2400/LX01'), '2')
+
+    def test_delete_fail(self):
+        self.failIf(self.loop2300.delete_node('2500'))
+

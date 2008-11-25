@@ -330,7 +330,6 @@ class X12LoopDataNode(X12DataNode):
         @todo: Check counts?
         """
         seg_data = self._get_segment(seg_data)
-        #pdb.set_trace()
         x12_seg_node = self.x12_map_node.get_child_seg_node(seg_data)
         if x12_seg_node is None:
             return False
@@ -363,6 +362,9 @@ class X12LoopDataNode(X12DataNode):
                     if self.children[i].type == 'seg' and x12_path.startswith(self.children[i].id):
                         del self.children[i]
                         return True
+                    elif self.children[i].type == 'loop' and self.children[i].id == x12_path:
+                        del self.children[i]
+                        return True
                 return False
             except errors.EngineError, e:
                 raise errors.X12PathError, 'X12 Path is invalid or was not found: %s' % (x12_path)
@@ -375,9 +377,6 @@ class X12LoopDataNode(X12DataNode):
                     if self.children[i].type == 'loop' and self.children[i].id == next_id:
                         if len(plist) > 1:
                             return self.children[i].delete_node('/'.join(plist))
-                        else:
-                            del self.children[i]
-                            return True
                 return False
             except errors.EngineError, e:
                 raise errors.X12PathError, 'X12 Path is invalid or was not found: %s' % (x12_path)
