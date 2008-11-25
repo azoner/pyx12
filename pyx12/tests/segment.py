@@ -301,3 +301,26 @@ class FormatInvalid(unittest.TestCase):
         seg_str = 'AAA~'
         seg = pyx12.segment.Segment(seg_str, '~', '*', ':')
         self.assertEqual(seg.format(), 'AAA*~')
+
+
+class Equality(unittest.TestCase):
+
+    def test_equal1(self):
+        seg1 = pyx12.segment.Segment('TST*AA*1*Y*BB:5*ZZ', '~', '*', ':')
+        seg2 = pyx12.segment.Segment('TST*AA*1*Y*BB:5*ZZ', '~', '*', ':')
+        self.assertEqual(seg1, seg2)
+
+    def test_not_equal1(self):
+        seg1 = pyx12.segment.Segment('TST*AA*1*Y*BB:5*ZZ', '~', '*', ':')
+        seg2 = pyx12.segment.Segment('TTT*AA*1*Y*BB:5*ZZ', '~', '*', ':')
+        self.assertNotEqual(seg1, seg2)
+
+    def test_not_equal2(self):
+        seg1 = pyx12.segment.Segment('TST*AA*1*Y*BB:5*ZZ', '~', '*', ':')
+        seg2 = pyx12.segment.Segment('TST*AA*1*Y*BB:5', '~', '*', ':')
+        self.assertNotEqual(seg1, seg2)
+
+    def test_not_equal3(self):
+        seg1 = pyx12.segment.Segment('TST*AA*1*Y*BB:5*ZZ', '~', '*', ':')
+        seg2 = pyx12.segment.Segment('TST*AA*1*Y*BB:4*ZZ', '~', '*', ':')
+        self.assertNotEqual(seg1, seg2)

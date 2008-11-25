@@ -37,6 +37,25 @@ class Element(object):
         """
         self.value = ele_str
         
+    def __eq__(self, other):
+        if isinstance(other, Element):
+            return self.value == other.value
+        return NotImplemented
+
+    def __ne__(self, other):
+        res = type(self).__eq__(self, other)
+        if res is NotImplemented:
+            return res
+        return not res
+
+    def __lt__(self, other):
+        return NotImplemented
+
+    __le__ = __lt__
+    __le__ = __lt__
+    __gt__ = __lt__
+    __ge__ = __lt__
+
     def __len__(self):
         """
         @rtype: int
@@ -108,6 +127,30 @@ class Composite(object):
         for elem in members:
             self.elements.append(Element(elem))
         
+    def __eq__(self, other):
+        if isinstance(other, Composite):
+            if len(self.elements) != len(other.elements):
+                return False
+            for i in range(len(self.elements)):
+                if self.elements[i] != other.elements[i]:
+                    return False
+            return True
+        return NotImplemented
+
+    def __ne__(self, other):
+        res = type(self).__eq__(self, other)
+        if res is NotImplemented:
+            return res
+        return not res
+
+    def __lt__(self, other):
+        return NotImplemented
+
+    __le__ = __lt__
+    __le__ = __lt__
+    __gt__ = __lt__
+    __ge__ = __lt__
+
     def __getitem__(self, idx):
         """
         returns Element instance for idx
@@ -224,6 +267,32 @@ class Segment(object):
             else:
                 self.elements.append(Composite(ele, subele_term))
     
+    def __eq__(self, other):
+        if isinstance(other, Segment):
+            if self.seg_id != other.seg_id:
+                return False
+            if len(self.elements) != len(other.elements):
+                return False
+            for i in range(len(self.elements)):
+                if self.elements[i] != other.elements[i]:
+                    return False
+            return True
+        return NotImplemented
+
+    def __ne__(self, other):
+        res = type(self).__eq__(self, other)
+        if res is NotImplemented:
+            return res
+        return not res
+
+    def __lt__(self, other):
+        return NotImplemented
+
+    __le__ = __lt__
+    __le__ = __lt__
+    __gt__ = __lt__
+    __ge__ = __lt__
+
     def __repr__(self):
         """
         @rtype: string
