@@ -23,6 +23,7 @@ Interface to read and alter segments
 #G{classtree X12DataNode}
 
 import os, os.path
+import pdb
 
 # Intrapackage imports
 import pyx12
@@ -58,11 +59,16 @@ class X12DataNode(object):
         """
         self.errors.extend(err_list)
 
-    def delete_segment(self, x12_node):
+    def delete(self):
         """
-        Delete the given segment
+        Delete this node.  Mark type as deleted.
         """
-        raise FutureWarning, 'Not yet'
+        self.x12_map_node = None
+        self.type = None
+        self.seg_data = None
+        self.parent = None
+        self.children = []
+        self.errors = []
 
     def iterate_segments(self):
         """
@@ -112,17 +118,23 @@ class X12DataNode(object):
             yield n
 
     #{ Private Methods
+    def _cleanup(self):
+        """
+        Remove deleted nodes
+        """
+        self.children = [x for x in self.children if x.type is not None]
+
     def _select(self, path_list):
         if len(path_list) == 1:
             cur_node_id = path_list[0]
-            for child in self.children:
+            for child in [x for x in self.children if x.type is not None]:
                 if child.id == cur_node_id:
                     yield child
         elif len(path_list) > 1:
             cur_node_id = path_list[0]
             #del path_list[0]
             new_path = path_list[1:]
-            for child in self.children:
+            for child in [x for x in self.children if x.type is not None]:
                 if child.id == cur_node_id:
                     for n in child._select(new_path):
                         yield n
@@ -190,12 +202,21 @@ class X12LoopDataNode(X12DataNode):
         self.end_loops = end_loops # we might need to close a preceeding loop
 
     #{ Public Methods
+    def delete(self):
+        """
+        Delete this node.  Mark type as deleted.
+        """
+        self.end_loops = []
+        X12DataNode.delete(self)
+
     def get_value(self, x12_path):
         """
         Returns the element value at the given relative path.  If the path is not a
         valid relative path or if the given segment index does not exist, the function
         returns None.  If multiple values exist, this function returns the first.
 
+        @param x12_path: Relative X12 Path
+        @type x12_path: string
         @return: the element value at the relative X12 path
         @rtype: string
         @raise X12PathError: On blank or invalid path
@@ -233,7 +254,7 @@ class X12LoopDataNode(X12DataNode):
         """
         Iterate over this node and children
         """
-        for child in self.children:
+        for child in [x for x in self.children if x.type is not None]:
             for a in child.iterate_segments():
                 yield a
 
@@ -244,7 +265,7 @@ class X12LoopDataNode(X12DataNode):
         for loop in self.end_loops:
             yield {'node': loop, 'type': 'loop_end', 'id': loop.id}
         yield {'type': 'loop_start', 'id': self.id, 'node': self.x12_map_node}
-        for child in self.children:
+        for child in [x for x in self.children if x.type is not None]:
             for a in child.iterate_loop_segments():
                 yield a
         yield {'type': 'loop_end', 'id': self.id, 'node': self.x12_map_node}
@@ -269,6 +290,7 @@ class X12LoopDataNode(X12DataNode):
         new_data_node = X12SegmentDataNode(x12_seg_node, seg_data, self)
         idx = x12_seg_node.index
         # Iterate over data nodes
+        self._cleanup()
         for i in range(len(self.children)):
             if self.children[i].x12_map_node.index > idx:
                 self.children.insert(i, new_data_node)
@@ -294,6 +316,72 @@ class X12LoopDataNode(X12DataNode):
         new_data_node = X12SegmentDataNode(x12_seg_node, seg_data, new_data_loop)
         return new_data_loop
 
+    def delete_segment(self, seg_data):
+        """
+        Delete the given segment from this loop node
+         - Do not delete the first segment in a loop
+         - Does not descend into child loops
+         - Only delete the first found matching segment
+
+        @param seg_data: Segment data
+        @type seg_data: L{node<segment.Segment>} or string
+        @return: True if found and deleted, else False
+        @rtype: Boolean
+        @todo: Check counts?
+        """
+        seg_data = self._get_segment(seg_data)
+        #pdb.set_trace()
+        x12_seg_node = self.x12_map_node.get_child_seg_node(seg_data)
+        if x12_seg_node is None:
+            return False
+            #raise errors.X12PathError, 'The segment %s is not a member of loop %s' % \
+            #    (seg_data.__repr__(), self.id)
+        # Iterate over data nodes, except first
+        self._cleanup()
+        for i in range(1,len(self.children)):
+            if self.children[i].type == 'seg' and self.children[i].seg_data == seg_data:
+                del self.children[i]
+                return True
+        return False
+
+    def delete_node(self, x12_path):
+        """
+        Delete the first node at the given relative path.  If the path is not a
+        valid relative path, return False If multiple values exist, this
+        function deletes the first.
+
+        @return: True if found and deleted, else False
+        @rtype: Boolean
+        @raise X12PathError: On blank or invalid path
+        @todo: Check counts?
+        """
+        if len(x12_path) == 0:
+            raise errors.X12PathError, 'Blank X12 Path'
+        elif x12_path.find('/') == -1:
+            try:
+                for i in range(len(self.children)):
+                    if self.children[i].type == 'seg' and x12_path.startswith(self.children[i].id):
+                        del self.children[i]
+                        return True
+                return False
+            except errors.EngineError, e:
+                raise errors.X12PathError, 'X12 Path is invalid or was not found: %s' % (x12_path)
+        else:
+            plist = x12_path.split('/')
+            next_id = plist[0]
+            plist = plist[1:]
+            try:
+                for i in range(len(self.children)):
+                    if self.children[i].type == 'loop' and self.children[i].id == next_id:
+                        if len(plist) > 1:
+                            return self.children[i].delete_node('/'.join(plist))
+                        else:
+                            del self.children[i]
+                            return True
+                return False
+            except errors.EngineError, e:
+                raise errors.X12PathError, 'X12 Path is invalid or was not found: %s' % (x12_path)
+
     def _add_loop_node(self, x12_loop_node):
         """
         Add a loop data node to the current tree
@@ -305,6 +393,7 @@ class X12LoopDataNode(X12DataNode):
         new_node = X12LoopDataNode(x12_loop_node, parent=self)
         # Iterate over data nodes
         idx = x12_loop_node.index
+        self._cleanup()
         for i in range(len(self.children)):
             if self.children[i].x12_map_node.index > idx:
                 self.children.insert(i, new_node)
@@ -343,6 +432,14 @@ class X12SegmentDataNode(X12DataNode):
         self.errors = []
 
     #{ Public Methods
+    def delete(self):
+        """
+        Delete this node.  Mark type as deleted.
+        """
+        self.start_loops = []
+        self.end_loops = []
+        X12DataNode.delete(self)
+
     def get_value(self, x12_path):
         """
         @return: the element value at the relative X12 path
