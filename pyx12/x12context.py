@@ -123,20 +123,23 @@ class X12DataNode(object):
         """
         self.children = [x for x in self.children if x.type is not None]
 
-    def _select(self, path_list):
-        if len(path_list) == 1:
-            cur_node_id = path_list[0]
-            for child in [x for x in self.children if x.type is not None]:
-                if child.id == cur_node_id:
-                    yield child
-        elif len(path_list) > 1:
-            cur_node_id = path_list[0]
-            #del path_list[0]
-            new_path = path_list[1:]
-            for child in [x for x in self.children if x.type is not None]:
-                if child.id == cur_node_id:
-                    for n in child._select(new_path):
-                        yield n
+    def _get_insert_idx(self, x12_node):
+        """
+        Find the index of self.children before which the x12_node belongs
+        """
+        self._cleanup()
+        map_idx = x12_node.index
+        for i in range(len(self.children)):
+            if self.children[i].x12_map_node.index > map_idx:
+                return i
+        return len(self.children)
+
+    def _get_path_list(self, path_str):
+        """
+        Get list of path nodes from path string
+        @rtype: list
+        """
+        return filter(lambda x: x!='', path_str.split('/'))
 
     def _is_child_path(self, root_path, child_path):
         """
@@ -155,12 +158,25 @@ class X12DataNode(object):
                 return False
         return True
 
-    def _get_path_list(self, path_str):
+    def _select(self, path_list):
         """
-        Get list of path nodes from path string
-        @rtype: list
+        Get the child node at the path
+        @param path_list: List of x12_map_node IDs
+        @type path_list: [string]
         """
-        return filter(lambda x: x!='', path_str.split('/'))
+        if len(path_list) == 1:
+            cur_node_id = path_list[0]
+            for child in [x for x in self.children if x.type is not None]:
+                if child.id == cur_node_id:
+                    yield child
+        elif len(path_list) > 1:
+            cur_node_id = path_list[0]
+            #del path_list[0]
+            new_path = path_list[1:]
+            for child in [x for x in self.children if x.type is not None]:
+                if child.id == cur_node_id:
+                    for n in child._select(new_path):
+                        yield n
 
     #{ Property Accessors
     def _get_id(self):
@@ -287,14 +303,18 @@ class X12LoopDataNode(X12DataNode):
             raise errors.X12PathError, 'The segment %s is not a member of loop %s' % \
                 (seg_data.__repr__(), self.id)
         new_data_node = X12SegmentDataNode(x12_seg_node, seg_data, self)
-        idx = x12_seg_node.index
+        #idx = x12_seg_node.index
         # Iterate over data nodes
-        self._cleanup()
-        for i in range(len(self.children)):
-            if self.children[i].x12_map_node.index > idx:
-                self.children.insert(i, new_data_node)
-                return new_data_node
-        self.children.append(new_data_node)
+        #self._cleanup()
+        #child_idx = len(self.children)
+        #for i in range(len(self.children)):
+        #    if self.children[i].x12_map_node.index > idx:
+        #        child_idx = i
+        #        break
+        #self.children.insert(self._get_insert_idx(x12_seg_node), new_data_node)
+        #assert(child_idx==self._get_insert_idx(x12_seg_node))
+        child_idx = self._get_insert_idx(x12_seg_node)
+        self.children.insert(child_idx, new_data_node)
         return new_data_node
 
     def add_loop(self, seg_data):
@@ -345,9 +365,16 @@ class X12LoopDataNode(X12DataNode):
     def add_node(self, loop_data_node):
         """
         Add a X12LoopDataNode instance
-        The loop_data_node must be a direct child
-
+        The x12_map_node of the given loop_data_node must be a direct child of this 
+        object's x12_map_node
+        @param loop_data_node: The child loop node to add
+        @type loop_data_node : L{node<x12context.X12LoopDataNode>}
+        @raise errors.X12PathError: On blank or invalid path
         """
+        if loop_data_node.x12_map_node.parent != self.x12_map_node:
+            raise errors.X12PathError, 'The loop_data_node "%s" is not a child of "%s"' % \
+                (loop_data_node.x12_map_node.id,  self.x12_map_node.id)
+
     def delete_node(self, x12_path):
         """
         Delete the first node at the given relative path.  If the path is not a
@@ -396,13 +423,17 @@ class X12LoopDataNode(X12DataNode):
         """
         new_node = X12LoopDataNode(x12_loop_node, parent=self)
         # Iterate over data nodes
-        idx = x12_loop_node.index
-        self._cleanup()
-        for i in range(len(self.children)):
-            if self.children[i].x12_map_node.index > idx:
-                self.children.insert(i, new_node)
-                return new_node
-        self.children.append(new_node)
+        #idx = x12_loop_node.index
+        #self._cleanup()
+        #child_idx = len(self.children)
+        #for i in range(len(self.children)):
+        #    if self.children[i].x12_map_node.index > idx:
+        #        child_idx = i
+        #        break
+        #self.children.insert(self._get_insert_idx(x12_loop_node), new_node)
+        #assert(child_idx==self._get_insert_idx(x12_loop_node))
+        child_idx = self._get_insert_idx(x12_loop_node)
+        self.children.insert(child_idx, new_node)
         return new_node
 
     def _get_segment(self, seg_obj):
@@ -460,7 +491,6 @@ class X12SegmentDataNode(X12DataNode):
                 return self.seg_data.get_value(x12_path)
         except errors.EngineError:
             raise
-            #raise 'X12PathError'
         return None
 
     @staticmethod
