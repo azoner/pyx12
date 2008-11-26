@@ -195,6 +195,60 @@ class TreeAddLoop(unittest.TestCase):
         self.assertNotEqual(new_node, None)
 
 
+class TreeAddNode(unittest.TestCase):
+
+    def test_add_loop(self):
+        fd = open('files/simple_837p.txt')
+        param = pyx12.params.params('pyx12.conf.xml')
+        errh = pyx12.error_handler.errh_null()
+        self.src = pyx12.x12context.X12ContextReader(param, errh, fd, xslt_files = [])
+        for datatree in self.src.iter_segments('2300'):
+            if datatree.id == '2300':
+                loop2300 = datatree
+                break
+        self.assertEqual(self._get_count(loop2300, '2400'), 2)
+        for node in loop2300.select('2400'):
+            loop2300.add_node(node)
+        self.assertEqual(self._get_count(loop2300, '2400'), 4)
+
+    def test_add_segment(self):
+        fd = open('files/simple_837p.txt')
+        param = pyx12.params.params('pyx12.conf.xml')
+        errh = pyx12.error_handler.errh_null()
+        self.src = pyx12.x12context.X12ContextReader(param, errh, fd, xslt_files = [])
+        for datatree in self.src.iter_segments('2300'):
+            if datatree.id == '2300':
+                loop2300 = datatree
+                break
+        self.assertEqual(self._get_count(loop2300, 'CN1'), 1)
+        for node in loop2300.select('CN1'):
+            loop2300.add_node(node)
+        self.assertEqual(self._get_count(loop2300, 'CN1'), 2)
+
+    def test_fail(self):
+        fd = open('files/simple_837p.txt')
+        param = pyx12.params.params('pyx12.conf.xml')
+        errh = pyx12.error_handler.errh_null()
+        self.src = pyx12.x12context.X12ContextReader(param, errh, fd, xslt_files = [])
+        for datatree in self.src.iter_segments('2300'):
+            if datatree.id == '2300':
+                loop2300 = datatree
+                break
+        for node in loop2300.select('CN1'):
+            cn1 = node
+            break
+        for node in loop2300.select('2400'):
+            n2400 = node
+            break
+        self.failUnlessRaises(pyx12.errors.X12PathError, n2400.add_node, cn1)
+
+    def _get_count(self, node, loop_id):
+        ct = 0
+        for n in node.select(loop_id):
+            ct += 1
+        return ct
+
+
 class CountRepeatingLoop(unittest.TestCase):
 
     def setUp(self):

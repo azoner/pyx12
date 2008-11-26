@@ -335,6 +335,21 @@ class X12LoopDataNode(X12DataNode):
         new_data_node = X12SegmentDataNode(x12_seg_node, seg_data, new_data_loop)
         return new_data_loop
 
+    def add_node(self, data_node):
+        """
+        Add a X12DataNode instance
+        The x12_map_node of the given data_node must be a direct child of this 
+        object's x12_map_node
+        @param data_node: The child loop node to add
+        @type data_node : L{node<x12context.X12DataNode>}
+        @raise errors.X12PathError: On blank or invalid path
+        """
+        if data_node.x12_map_node.parent != self.x12_map_node:
+            raise errors.X12PathError, 'The loop_data_node "%s" is not a child of "%s"' % \
+                (data_node.x12_map_node.id,  self.x12_map_node.id)
+        child_idx = self._get_insert_idx(data_node.x12_map_node)
+        self.children.insert(child_idx, data_node)
+
     def delete_segment(self, seg_data):
         """
         Delete the given segment from this loop node
@@ -361,19 +376,6 @@ class X12LoopDataNode(X12DataNode):
                 del self.children[i]
                 return True
         return False
-
-    def add_node(self, loop_data_node):
-        """
-        Add a X12LoopDataNode instance
-        The x12_map_node of the given loop_data_node must be a direct child of this 
-        object's x12_map_node
-        @param loop_data_node: The child loop node to add
-        @type loop_data_node : L{node<x12context.X12LoopDataNode>}
-        @raise errors.X12PathError: On blank or invalid path
-        """
-        if loop_data_node.x12_map_node.parent != self.x12_map_node:
-            raise errors.X12PathError, 'The loop_data_node "%s" is not a child of "%s"' % \
-                (loop_data_node.x12_map_node.id,  self.x12_map_node.id)
 
     def delete_node(self, x12_path):
         """
