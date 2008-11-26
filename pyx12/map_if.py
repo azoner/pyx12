@@ -644,12 +644,6 @@ class loop_if(x12_node):
             for child in self.pos_map[ord1]:
                 yield child
 
-#    def is_valid(self, seg_data, errh):
-#        pass
-
-#    def parse(self):
-#        pass
-
     def getnodebypath(self, path):
         """
         @param path: remaining path to match
@@ -1038,8 +1032,9 @@ class segment_if(x12_node):
             err_str = 'Too many elements in segment "%s" (%s). Has %i, should have %i' % \
                 (self.name, seg_data.get_seg_id(), len(seg_data), child_count)
             #self.logger.error(err_str)
-            err_value = seg_data.get_value('%02i' % (child_count+1))
-            errh.ele_error('3', err_str, err_value)
+            ref_des = '%02i' % (child_count+1)
+            err_value = seg_data.get_value(ref_des)
+            errh.ele_error('3', err_str, err_value, ref_des)
             valid = False
 
         dtype = []
@@ -1058,7 +1053,7 @@ class segment_if(x12_node):
                     err_str = 'Too many sub-elements in composite "%s" (%s)' % \
                         (subele_node.name, subele_node.refdes)
                     err_value = seg_data.get_value(ref_des)
-                    errh.ele_error('3', err_str, err_value)
+                    errh.ele_error('3', err_str, err_value, ref_des)
                 valid &= child_node.is_valid(comp_data, errh, self.check_dte)
             elif child_node.is_element():
                 # Validate Element
@@ -1083,7 +1078,11 @@ class segment_if(x12_node):
         for syn in self.syntax:
             (bResult, err_str) = is_syntax_valid(seg_data, syn)
             if not bResult:
-                errh.ele_error('2', err_str, None)
+                syn_type = syn[0]
+                if syn_type == 'E':
+                    errh.ele_error('10', err_str, None, syn[1])
+                else:
+                    errh.ele_error('2', err_str, None, syn[1])
                 valid &= False
 
         return valid
@@ -1255,7 +1254,7 @@ class element_if(x12_node):
         """
         Forward the error to an error_handler
         """
-        errh.ele_error(err_cde, err_str, elem_val) #, pos=self.seq, data_ele=self.data_ele)
+        errh.ele_error(err_cde, err_str, elem_val, self.refdes) #, pos=self.seq, data_ele=self.data_ele)
         
     def _valid_code(self, code):
         """
@@ -1528,7 +1527,7 @@ class composite_if(x12_node):
         """
         Forward the error to an error_handler
         """
-        errh.ele_error(err_cde, err_str, elem_val)
+        errh.ele_error(err_cde, err_str, elem_val, self.refdes)
             #, pos=self.seq, data_ele=self.data_ele)
         
     def debug_print(self):
@@ -1580,12 +1579,12 @@ class composite_if(x12_node):
             if not good_flag:
                 err_str = 'At least one component of composite "%s" (%s) is required' % \
                     (self.name, self.refdes)
-                errh.ele_error('2', err_str, None)
+                errh.ele_error('2', err_str, None, self.refdes)
                 return False
 
         if self.usage == 'N' and not comp_data.is_empty():
             err_str = 'Composite "%s" (%s) is marked as Not Used' % (self.name, self.refdes)
-            errh.ele_error('5', err_str, None)
+            errh.ele_error('5', err_str, None, self.refdes)
             return False
 
         #try:
@@ -1593,7 +1592,7 @@ class composite_if(x12_node):
         #except:
         if len(comp_data) > self.get_child_count():
             err_str = 'Too many sub-elements in composite "%s" (%s)' % (self.name, self.refdes)
-            errh.ele_error('3', err_str, None)
+            errh.ele_error('3', err_str, None, self.refdes)
             valid = False
         for i in xrange(min(len(comp_data), self.get_child_count())):
             valid &= self.get_child_node_by_idx(i).is_valid(comp_data[i], errh, check_dte)

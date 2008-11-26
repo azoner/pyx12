@@ -299,7 +299,7 @@ class err_handler(object):
             sout += ' (%s)' % err_value
         logger.error(sout)
         
-    def ele_error(self, err_cde, err_str, bad_value):
+    def ele_error(self, err_cde, err_str, bad_value, refdes=None):
         """
         @param err_cde: Element level error code
         @type err_cde: string
@@ -486,6 +486,7 @@ class err_node(object):
         @rtype: boolean
         """
         return True
+
 
 class err_isa(err_node):
     """
@@ -1102,7 +1103,7 @@ class errh_null(object):
         self.err_cde = err_cde
         self.err_str = err_str
         
-    def ele_error(self, err_cde, err_str, bad_value):
+    def ele_error(self, err_cde, err_str, bad_value, refdes=None):
         """
         @param err_cde: Element level error code
         @type err_cde: string
@@ -1156,6 +1157,141 @@ class errh_null(object):
             return 1
         else:
             return 0
+
+    def handle_errors(self, err_list):
+        pass
+
+    def is_closed(self):
+        """
+        @rtype: boolean
+        """
+        return True
+            
+    def __repr__(self):
+        """
+        """
+        return '%i: %s' % (-1, self.id)
+ 
+
+class errh_list(object):
+    """
+    Capture validation errors in a list
+    Used to refactor away from error_handler
+    """
+    def __init__(self):
+        self.id = 'ROOT'
+        self.cur_node = self
+        self.cur_line = 0
+        self.err_isa = []
+        self.err_gs = []
+        self.err_st = []
+        self.err_seg = []
+        self.err_ele = []
+
+    def reset(self):
+        """
+        Clear any errors
+        """
+        self.err_isa = []
+        self.err_gs = []
+        self.err_st = []
+        self.err_seg = []
+        self.err_ele = []
+
+    def get_cur_line(self):
+        """
+        @return: Current file line number
+        @rtype: int
+        """
+        return self.cur_line
+
+    def get_id(self):
+        """
+        @return: Error node type
+        @rtype: string
+        """
+        return self.id
+
+    def add_isa_loop(self, seg, src):
+        pass
+        
+    def add_gs_loop(self, seg, src):
+        pass
+        
+    def add_st_loop(self, seg, src):
+        pass
+        
+    def add_seg(self, map_node, seg, seg_count, cur_line, ls_id):
+        pass
+        
+    def add_ele(self, map_node):
+        pass
+   
+    def isa_error(self, err_cde, err_str):
+        """
+        @param err_cde: ISA level error code
+        @type err_cde: string
+        @param err_str: Description of the error
+        @type err_str: string
+        """
+        self.err_isa.append((err_cde, err_str))
+
+    def gs_error(self, err_cde, err_str):
+        """
+        @param err_cde: GS level error code
+        @type err_cde: string
+        @param err_str: Description of the error
+        @type err_str: string
+        """
+        self.err_gs.append((err_cde, err_str))
+        
+    def st_error(self, err_cde, err_str):
+        """
+        @param err_cde: Segment level error code
+        @type err_cde: string
+        @param err_str: Description of the error
+        @type err_str: string
+        """
+        self.err_st.append((err_cde, err_str))
+        
+    def seg_error(self, err_cde, err_str, err_value=None, src_line=None):
+        """
+        @param err_cde: Segment level error code
+        @type err_cde: string
+        @param err_str: Description of the error
+        @type err_str: string
+        """
+        self.err_seg.append((err_cde, err_str, err_value))
+        
+    def ele_error(self, err_cde, err_str, bad_value, refdes=None):
+        """
+        @param err_cde: Element level error code
+        @type err_cde: string
+        @param err_str: Description of the error
+        @type err_str: string
+        """
+        self.err_ele.append((err_cde, err_str, bad_value, refdes))
+
+    def close_isa_loop(self, node, seg, src):
+        pass
+        
+    def close_gs_loop(self, node, seg, src):
+        pass
+        
+    def close_st_loop(self, node, seg, src):
+        pass
+        
+    def find_node(self, type):
+        pass
+
+    def get_parent(self):
+        return None
+
+    def get_next_sibling(self):
+        return None
+
+    def get_error_count(self):
+        return len(self.err_isa) + len(self.err_gs) + len(self.err_st) + len(self.err_seg) + len(self.err_ele)
 
     def handle_errors(self, err_list):
         pass

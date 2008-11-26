@@ -550,7 +550,7 @@ class X12ContextReader(object):
         """
         map_path = param.get('map_path')
         self.param = param
-        self.errh = errh
+        self.errh = error_handler.errh_list()
         self.xslt_files = xslt_files
         self.icvn = None
         self.fic = None
@@ -581,6 +581,7 @@ class X12ContextReader(object):
             orig_node = self.x12_map_node
             pop_loops = []
             push_loops = []
+            errh = error_handler.errh_list()
             
             if seg.get_seg_id() == 'ISA':
                 tpath = '/ISA_LOOP/ISA'
@@ -591,7 +592,7 @@ class X12ContextReader(object):
             else:
                 try:
                     (seg_node, pop_loops, push_loops) = self.walker.walk(self.x12_map_node, \
-                        seg, self.errh, self.src.get_seg_count(), \
+                        seg, errh, self.src.get_seg_count(), \
                         self.src.get_cur_line(), self.src.get_ls_id())
                     self.x12_map_node = seg_node
                 except errors.EngineError:
@@ -599,7 +600,8 @@ class X12ContextReader(object):
             if self.x12_map_node is None:
                 self.x12_map_node = orig_node
             else:
-                if seg.get_seg_id() == 'ISA':
+                seg_id = seg.get_seg_id()
+                if seg_id == 'ISA':
                     icvn = seg.get_value('ISA12')
                 elif seg.get_seg_id() == 'GS':
                     fic = seg.get_value('GS01')
@@ -636,6 +638,8 @@ class X12ContextReader(object):
                             self._apply_loop_count(self.x12_map_node, cur_map)
                             tpath = '/ISA_LOOP/GS_LOOP/ST_LOOP/HEADER/BHT'
                             self.x12_map_node = cur_map.getnodebypath(tpath)
+                # Handle errors captured in errh_list
+                # Get error caught by x12Reader
                 err_list = self.src.pop_errors()
 
             node_path = self._get_path_list(self.x12_map_node.get_path())
@@ -672,7 +676,7 @@ class X12ContextReader(object):
                     cur_data_node = X12SegmentDataNode(self.x12_map_node, seg, None, push_loops, pop_loops)
                 else:
                     cur_data_node = X12SegmentDataNode(self.x12_map_node, seg)
-                cur_data_node.add_errors(err_list)
+                #cur_data_node.add_errors(err_list)
                 yield cur_data_node
         
     def register_error_callback(self, callback, err_type):
