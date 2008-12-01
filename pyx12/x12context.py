@@ -26,7 +26,7 @@ import os, os.path
 
 # Intrapackage imports
 import pyx12
-#import error_handler
+import error_handler
 import errors
 import map_index
 import map_if
@@ -50,14 +50,6 @@ class X12DataNode(object):
         self.errors = []
 
     #{ Public Methods
-    def add_errors(self, err_list):
-        """
-        Attach errors found when validating to node
-
-        @todo: move errors to parent loops if necessary
-        """
-        self.errors.extend(err_list)
-
     def delete(self):
         """
         Delete this node.  Mark type as deleted.
@@ -469,6 +461,14 @@ class X12SegmentDataNode(X12DataNode):
         self.errors = []
 
     #{ Public Methods
+    def handle_errh_errors(self, errh):
+        """
+        Attach validation errors to segment node
+
+        @todo: move errors to parent loops if necessary
+        """
+        pass
+
     def delete(self):
         """
         Delete this node.  Mark type as deleted.
@@ -581,7 +581,7 @@ class X12ContextReader(object):
             orig_node = self.x12_map_node
             pop_loops = []
             push_loops = []
-            errh = error_handler.errh_list()
+            errh = pyx12.error_handler.errh_list()
             
             if seg.get_seg_id() == 'ISA':
                 tpath = '/ISA_LOOP/ISA'
@@ -603,7 +603,7 @@ class X12ContextReader(object):
                 seg_id = seg.get_seg_id()
                 if seg_id == 'ISA':
                     icvn = seg.get_value('ISA12')
-                elif seg.get_seg_id() == 'GS':
+                elif seg_id == 'GS':
                     fic = seg.get_value('GS01')
                     vriic = seg.get_value('GS08')
                     map_file_new = self.map_index_if.get_filename(icvn, vriic, fic)
@@ -620,7 +620,7 @@ class X12ContextReader(object):
                     self._reset_gs_counts(cur_map)
                     tpath = '/ISA_LOOP/GS_LOOP/GS'
                     self.x12_map_node = cur_map.getnodebypath(tpath)
-                elif seg.get_seg_id() == 'BHT':
+                elif seg_id == 'BHT':
                     if vriic in ('004010X094', '004010X094A1'):
                         tspc = seg.get_value('BHT02')
                         map_file_new = self.map_index_if.get_filename(icvn, \
@@ -638,9 +638,6 @@ class X12ContextReader(object):
                             self._apply_loop_count(self.x12_map_node, cur_map)
                             tpath = '/ISA_LOOP/GS_LOOP/ST_LOOP/HEADER/BHT'
                             self.x12_map_node = cur_map.getnodebypath(tpath)
-                # Handle errors captured in errh_list
-                # Get error caught by x12Reader
-                err_list = self.src.pop_errors()
 
             node_path = self._get_path_list(self.x12_map_node.get_path())
             # If we are in the requested tree, wait until we have the whole thing
@@ -676,7 +673,10 @@ class X12ContextReader(object):
                     cur_data_node = X12SegmentDataNode(self.x12_map_node, seg, None, push_loops, pop_loops)
                 else:
                     cur_data_node = X12SegmentDataNode(self.x12_map_node, seg)
-                #cur_data_node.add_errors(err_list)
+                # Get errors caught by x12Reader
+                errh.handle_errors(self.src.pop_errors())
+                # Handle errors captured in errh_list
+                cur_data_node.handle_errh_errors(errh)
                 yield cur_data_node
         
     def register_error_callback(self, callback, err_type):
