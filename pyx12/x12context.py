@@ -459,6 +459,11 @@ class X12SegmentDataNode(X12DataNode):
         self.start_loops = start_loops
         self.end_loops = end_loops
         self.errors = []
+        self.err_isa = []
+        self.err_gs = []
+        self.err_st = []
+        self.err_seg = []
+        self.err_ele = []
 
     #{ Public Methods
     def handle_errh_errors(self, errh):
