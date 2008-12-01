@@ -581,7 +581,7 @@ class X12ContextReader(object):
             orig_node = self.x12_map_node
             pop_loops = []
             push_loops = []
-            errh = pyx12.error_handler.errh_list()
+            errh = error_handler.errh_list()
             
             if seg.get_seg_id() == 'ISA':
                 tpath = '/ISA_LOOP/ISA'
