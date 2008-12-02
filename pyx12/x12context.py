@@ -472,7 +472,11 @@ class X12SegmentDataNode(X12DataNode):
 
         @todo: move errors to parent loops if necessary
         """
-        pass
+        self.err_isa.extend(errh.err_isa)
+        self.err_gs.extend(errh.err_gs)
+        self.err_st.extend(errh.err_st)
+        self.err_seg.extend(errh.err_seg)
+        self.err_ele.extend(errh.err_ele)
 
     def delete(self):
         """
@@ -537,6 +541,16 @@ class X12SegmentDataNode(X12DataNode):
             yield {'node': loop, 'type': 'loop_start', 'id': loop.id}
         yield {'type': 'seg', 'id': self.id, 'segment': self.seg_data, \
             'start_loops': self.start_loops, 'end_loops': self.end_loops}
+
+    #{ Property Accessors
+    def _get_err_ct(self):
+        """
+        @return: Count of errors for this segment
+        @rtype: int
+        """
+        return len(self.err_isa) + len(self.err_gs) + len(self.err_st) + len(self.err_seg) + len(self.err_ele)
+
+    err_ct = property(_get_err_ct, None, None)
 
 
 class X12ContextReader(object):
