@@ -3,7 +3,10 @@
 import unittest
 #import sys
 import tempfile
-import StringIO
+try:
+    from io import StringIO
+except:
+    from StringIO import StringIO
 
 import pyx12.error_handler
 #from error_handler import ErrorErrhNull
@@ -21,7 +24,7 @@ class Delimiters(unittest.TestCase):
         str1 += 'SE&3&11280001+\n'
         str1 += 'GE&1&17+\n'
         str1 += 'IEA&1&000010121+\n'
-        fd = StringIO.StringIO(str1)
+        fd = StringIO(str1)
         fd.seek(0)
         param = pyx12.params.params('pyx12.conf.xml')
         errh = pyx12.error_handler.errh_null()
@@ -43,7 +46,7 @@ class Delimiters(unittest.TestCase):
         str1 = str1.replace('&', chr(0x1C))
         str1 = str1.replace('+', chr(0x1D))
         str1 = str1.replace('!', chr(0x1E))
-        fd = StringIO.StringIO(str1)
+        fd = StringIO(str1)
         fd.seek(0)
         errors = []
         param = pyx12.params.params('pyx12.conf.xml')
@@ -78,6 +81,13 @@ class TreeGetValue(unittest.TestCase):
         self.assertEqual(self.loop2300.get_value('2400/REF[6R]02'), '1057296')
         self.assertEqual(self.loop2300.get_value('2400/2430/SVD02'), '21')
         self.assertEqual(self.loop2300.get_value('2400/AMT[AAE]02'), '21')
+
+    def test_get_first_value_2400(self):
+        for loop2400 in self.loop2300.select('2400'):
+            break
+        self.assertEqual(loop2400.get_value('AMT[AAE]02'), '21')
+        self.assertEqual(loop2400.get_value('2430/AMT[AAE]02'), None)
+
 
     def test_get_no_value(self):
         self.assertEqual(self.loop2300.get_value('2400/SV199'), None)

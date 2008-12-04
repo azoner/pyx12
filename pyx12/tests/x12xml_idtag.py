@@ -2,14 +2,18 @@
 
 import unittest
 import sys
-import StringIO
+try:
+    from io import StringIO
+except:
+    from StringIO import StringIO
+
 from os.path import dirname, abspath, join, isdir, isfile
 
 import pyx12.x12xml_idtag
 import pyx12.map_if
 import pyx12.params
 import pyx12.segment
-from pyx12.errors import *
+#from pyx12.errors import *
 from pyx12.tests.support import getMapPath
 
 class ConvertToXML(unittest.TestCase):
@@ -22,7 +26,7 @@ class ConvertToXML(unittest.TestCase):
             param.set('map_path', map_path)
             param.set('pickle_path', map_path)
         self.map = pyx12.map_if.load_map_file('837.4010.X098.A1.xml', param)
-        self.fd = StringIO.StringIO()
+        self.fd = StringIO()
         self.xml = pyx12.x12xml_idtag.x12xml_idtag(self.fd)
 
     def test_valid1(self):

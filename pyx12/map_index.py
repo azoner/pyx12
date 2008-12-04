@@ -103,5 +103,5 @@ class map_index(object):
 
     def print_all(self):
         for a in self.maps:
-            print a[0], a[1], a[2], a[3], a[4], a[5]
+            print(a[0], a[1], a[2], a[3], a[4], a[5])
 

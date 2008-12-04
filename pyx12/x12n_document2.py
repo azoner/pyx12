@@ -90,5 +90,5 @@ def x12n_xml(param, src_file, fd_xmldoc, xslt_files = []):
         else:
             return True
     except:
-        print errh
+        print(errh)
         return False

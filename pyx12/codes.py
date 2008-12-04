@@ -188,5 +188,5 @@ class ExternalCodes(object):
 
     def debug_print(self):
         for key in self.codes.keys():
-            print self.codes[key][:10]
+            print(self.codes[key][:10])
 

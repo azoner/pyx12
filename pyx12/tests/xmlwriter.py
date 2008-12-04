@@ -2,7 +2,11 @@
 
 import os.path, sys, os
 import unittest
-import cStringIO
+try:
+    from io import StringIO
+except:
+    from StringIO import StringIO
+
 import tempfile
 
 from pyx12.xmlwriter import XMLWriter
@@ -14,7 +18,7 @@ class TestWriter(unittest.TestCase):
         self.res = '<?xml version="1.0" encoding="utf-8"?>\n<x12err>\n</x12err>\n'
 
     def test_write1(self):
-        fd = cStringIO.StringIO()
+        fd = StringIO()
         writer = XMLWriter(fd)
         writer.push(u"x12err")
 

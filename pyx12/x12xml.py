@@ -134,7 +134,7 @@ class x12xml(object):
         Get list of path nodes from path string
         @rtype: list
         """
-        return filter(lambda x: x!='', path_str.split('/'))
+        return [x for x in path_str.split('/') if x!='']
 
     def _get_path_match_idx(self, last_path, cur_path):
         """

@@ -77,7 +77,7 @@ def traverse_path(start_node, pop_loops, push_loops):
     Debug function - From the start path, pop up then push down to get a path string
     """
     start_path = pop_to_parent_loop(start_node).get_path()
-    p1 = filter(lambda x: x!='', start_path.split('/'))
+    p1= [p for p in start_path.split('/') if p != '']
     for loop_id in get_id_list(pop_loops):
         assert loop_id == p1[-1], 'Path %s does not contain %s' % (start_path, loop_id)
         p1 = p1[:-1]
@@ -131,9 +131,7 @@ class walk_tree(object):
             #node_list.append(node)
         while True:
             # Iterate through nodes with position >= current position
-            pos_keys = filter(lambda a: a>= node_pos, node.pos_map.keys())
-            pos_keys.sort()
-            for ord1 in pos_keys:
+            for ord1 in [a for a in sorted(node.pos_map) if a>=node_pos]:
                 #logger.debug('id=%s child.index=%i node_pos=%i' % \
                 #    (child.id, child.index, node_pos))
                 for child in node.pos_map[ord1]:
@@ -156,7 +154,7 @@ class walk_tree(object):
                             child.incr_cur_count()
                             self._check_seg_usage(child, seg_data, seg_count, cur_line, ls_id, errh)
                             # Remove any previously missing errors for this segment
-                            self.mandatory_segs_missing = filter(lambda x: x[0]!=child, self.mandatory_segs_missing)
+                            self.mandatory_segs_missing = [x for x in self.mandatory_segs_missing if x[0]!=child]
                             self._flush_mandatory_segs(errh, child.pos)
                             return (child, pop_node_list, push_node_list) # segment node
                         elif child.usage == 'R' and child.get_cur_count() < 1:
@@ -265,7 +263,7 @@ class walk_tree(object):
             if seg_node.pos != cur_pos:
                 errh.add_seg(seg_node, seg_data, seg_count, cur_line, ls_id)
                 errh.seg_error(err_cde, err_str, None)
-        self.mandatory_segs_missing = filter(lambda x: x[0].pos==cur_pos, self.mandatory_segs_missing)
+        self.mandatory_segs_missing = [x for x in self.mandatory_segs_missing if x[0].pos==cur_pos]
         #self.mandatory_segs_missing = []
 
     #def _is_loop_match(self, loop_node, seg_data, errh, seg_count, cur_line, ls_id):

@@ -59,7 +59,7 @@ class error_debug_visitor(error_visitor):
             self.fd.write('  %s %s\n' % err)
         for ele in err_isa.elements:
             self.fd.write('  %s %s\n' % (ele.id, ele.name))
-            print ele.parent
+            print(ele.parent)
             for err in ele.errors:
                 self.fd.write('    ERR %s %s (%s)\n' % err)
 

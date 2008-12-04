@@ -130,7 +130,7 @@ class DataElements(object):
 
     def __repr__(self):
         for ele_num in self.dataele.keys():
-            print self.dataele[ele_num]
+            print(self.dataele[ele_num])
 
     def debug_print(self):
         self.__repr__()

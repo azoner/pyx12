@@ -313,9 +313,7 @@ class map_if(x12_node):
                 
     def debug_print(self):
         sys.stdout.write(self.__repr__())
-        pos_keys = self.pos_map.keys()
-        pos_keys.sort()
-        for ord1 in pos_keys:
+        for ord1 in sorted(self.pos_map):
             for node in self.pos_map[ord1]:
                 node.debug_print()
 
@@ -324,9 +322,7 @@ class map_if(x12_node):
 
     def __len__(self):
         i = 0
-        pos_keys = self.pos_map.keys()
-        pos_keys.sort()
-        for ord1 in pos_keys:
+        for ord1 in sorted(self.pos_map):
             i += len(self.pos_map[ord1])
         return i
 
@@ -334,8 +330,7 @@ class map_if(x12_node):
         return self.__len__()
 
     def get_first_node(self):
-        pos_keys = self.pos_map.keys()
-        pos_keys.sort()
+        pos_keys = sorted(self.pos_map)
         if len(pos_keys) > 0:
             return self.pos_map[pos_keys[0]][0]
         else:
@@ -385,9 +380,7 @@ class map_if(x12_node):
         pathl = path.split('/')[1:]
         if len(pathl) == 0: return None
         #logger.debug('%s %s %s' % (self.base_name, self.id, pathl[1]))
-        pos_keys = self.pos_map.keys()
-        pos_keys.sort()
-        for ord1 in pos_keys:
+        for ord1 in sorted(self.pos_map):
             for child in self.pos_map[ord1]:
                 if child.id.lower() == pathl[0].lower():
                     if len(pathl) == 1:
@@ -406,9 +399,7 @@ class map_if(x12_node):
         """
         Set cur_count of child nodes to zero
         """
-        pos_keys = self.pos_map.keys()
-        pos_keys.sort()
-        for ord1 in pos_keys:
+        for ord1 in sorted(self.pos_map):
             for child in self.pos_map[ord1]:
                 child.reset_cur_count()
 
@@ -577,17 +568,13 @@ class loop_if(x12_node):
         
     def debug_print(self):
         sys.stdout.write(self.__repr__())
-        pos_keys = self.pos_map.keys()
-        pos_keys.sort()
-        for ord1 in pos_keys:
+        for ord1 in sorted(self.pos_map):
             for node in self.pos_map[ord1]:
                 node.debug_print()
 
     def __len__(self):
         i = 0
-        pos_keys = self.pos_map.keys()
-        pos_keys.sort()
-        for ord1 in pos_keys:
+        for ord1 in sorted(self.pos_map):
             i += len(self.pos_map[ord1])
         return i
 
@@ -623,8 +610,7 @@ class loop_if(x12_node):
         return self.parent
 
     def get_first_node(self):
-        pos_keys = self.pos_map.keys()
-        pos_keys.sort()
+        pos_keys = sorted(self.pos_map)
         if len(pos_keys) > 0:
             return self.pos_map[pos_keys[0]][0]
         else:
@@ -638,9 +624,7 @@ class loop_if(x12_node):
             return None
 
     def ChildIterator(self):
-        pos_keys = self.pos_map.keys()
-        pos_keys.sort()
-        for ord1 in pos_keys:
+        for ord1 in sorted(self.pos_map):
             for child in self.pos_map[ord1]:
                 yield child
 
@@ -652,9 +636,7 @@ class loop_if(x12_node):
         """
         pathl = path.split('/')
         if len(pathl) == 0: return None
-        pos_keys = self.pos_map.keys()
-        pos_keys.sort()
-        for ord1 in pos_keys:
+        for ord1 in sorted(self.pos_map):
             for child in self.pos_map[ord1]:
                 if child.is_loop():
                     if child.id.upper() == pathl[0].upper():
@@ -707,9 +689,7 @@ class loop_if(x12_node):
         @rtype: integer
         """
         i = 0
-        pos_keys = self.pos_map.keys()
-        pos_keys.sort()
-        for ord1 in pos_keys:
+        for ord1 in sorted(self.pos_map):
             for child in self.pos_map[ord1]:
                 if child.is_segment():
                     i += 1
@@ -727,8 +707,7 @@ class loop_if(x12_node):
         @return: Is the segment a match to this loop?
         @rtype: boolean
         """
-        pos_keys = self.pos_map.keys()
-        pos_keys.sort()
+        pos_keys = sorted(self.pos_map)
         child = self.pos_map[pos_keys[0]][0]
         if child.is_loop():
             return child.is_match(seg_data)
@@ -772,9 +751,7 @@ class loop_if(x12_node):
         """
         Set cur_count of child nodes to zero
         """
-        pos_keys = self.pos_map.keys()
-        pos_keys.sort()
-        for ord1 in pos_keys:
+        for ord1 in sorted(self.pos_map):
             for child in self.pos_map[ord1]:
                 child.reset_cur_count()
 
@@ -1039,7 +1016,7 @@ class segment_if(x12_node):
 
         dtype = []
         type_list = []
-        for i in xrange(min(len(seg_data), child_count)):
+        for i in range(min(len(seg_data), child_count)):
             #self.logger.debug('i=%i, len(seg_data)=%i / child_count=%i' % \
             #   (i, len(seg_data), self.get_child_count()))
             child_node = self.get_child_node_by_idx(i)
@@ -1070,7 +1047,7 @@ class segment_if(x12_node):
                 else:
                     valid &= child_node.is_valid(ele_data, errh, self.check_dte)
 
-        for i in xrange(min(len(seg_data), child_count), child_count):
+        for i in range(min(len(seg_data), child_count), child_count):
             #missing required elements?
             child_node = self.get_child_node_by_idx(i)
             valid &= child_node.is_valid(None, errh)
@@ -1594,9 +1571,9 @@ class composite_if(x12_node):
             err_str = 'Too many sub-elements in composite "%s" (%s)' % (self.name, self.refdes)
             errh.ele_error('3', err_str, None, self.refdes)
             valid = False
-        for i in xrange(min(len(comp_data), self.get_child_count())):
+        for i in range(min(len(comp_data), self.get_child_count())):
             valid &= self.get_child_node_by_idx(i).is_valid(comp_data[i], errh, check_dte)
-        for i in xrange(min(len(comp_data), self.get_child_count()), \
+        for i in range(min(len(comp_data), self.get_child_count()), \
                 self.get_child_count()): 
             if i < self.get_child_count():
                 #Check missing required elements
