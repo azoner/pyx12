@@ -20,7 +20,10 @@ class RawDelimiters(unittest.TestCase):
         str1 += 'SE&3&11280001+\n'
         str1 += 'GE&1&17+\n'
         str1 += 'IEA&1&000010121+\n'
-        fd = StringIO(str1, encoding='ascii')
+        try:
+            fd = StringIO(str1, encoding='ascii')
+        except:
+            fd = StringIO(str1)
         fd.seek(0)
         src = pyx12.rawx12file.RawX12File(fd)
         for seg in src:
