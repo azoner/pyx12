@@ -58,7 +58,7 @@ class DataElements(object):
         # init the map of dataele from the pickled file dataele.pkl
         try:
             if os.stat(code_file)[ST_MTIME] < os.stat(pickle_file)[ST_MTIME]:
-                self.dataele = cPickle.load(open(pickle_file))
+                self.dataele = cPickle.load(open(pickle_file, 'b'))
             else: 
                 raise DataElementsError, "reload data elements"
         except:

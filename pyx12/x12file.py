@@ -17,6 +17,7 @@ Interface to an X12 data stream.
  - Tracks segment/line/loop counts.
 """
 
+import codecs
 import sys
 import logging
 
@@ -454,7 +455,8 @@ class X12Writer(X12Base):
             if src_file_obj == '-':
                 self.fd_out = sys.stdout
             else:
-                self.fd_out = open(src_file_obj, 'w')
+                self.fd_out = codecs.open(src_file_obj, mode='w', encoding='ascii')
+        assert self.fd_out.encoding in ('ascii', 'US-ASCII'), 'Outfile file must have ASCII encoding, is %s' % (self.fd_out.encoding)
         X12Base.__init__(self)
         self.seg_term = seg_term
         self.ele_term = ele_term
@@ -550,7 +552,8 @@ class X12Writer(X12Base):
         @param seg_data: segment to write
         @type seg_data: L{segment<segment.Segment>}
         """
-        self.fd_out.write(seg_data.format(self.seg_term, self.ele_term, self.subele_term)+self.eol)
+        out = seg_data.format(self.seg_term, self.ele_term, self.subele_term)+self.eol
+        self.fd_out.write(out.decode('ascii'))
 
     def _get_trailer_segment(self, seg_id, count, id):
         """

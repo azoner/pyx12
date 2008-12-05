@@ -26,7 +26,7 @@ class ConvertToXML(unittest.TestCase):
             param.set('map_path', map_path)
             param.set('pickle_path', map_path)
         self.map = pyx12.map_if.load_map_file('837.4010.X098.A1.xml', param)
-        self.fd = StringIO()
+        self.fd = StringIO(encoding='utf-8')
         self.xml = pyx12.x12xml_idtag.x12xml_idtag(self.fd)
 
     def test_valid1(self):

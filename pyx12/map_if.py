@@ -77,6 +77,9 @@ class x12_node(object):
     __gt__ = __lt__
     __ge__ = __lt__
 
+    def __hash__(self):
+        return (self.id+self.parent.id).__hash__()
+
     def __len__(self):
         return len(self.children)
 
@@ -319,6 +322,9 @@ class map_if(x12_node):
 
     def __eq__(self, other):
         return self.id == other.id
+
+    def __hash__(self):
+        return (self.id).__hash__()
 
     def __len__(self):
         i = 0
@@ -1673,7 +1679,7 @@ def load_map_file(map_file, param, xslt_files = []):
             map_file))[0], 'pkl')
         try:
             if os.stat(map_full)[ST_MTIME] < os.stat(pickle_file)[ST_MTIME]:
-                imap = cPickle.load(open(pickle_file))
+                imap = cPickle.load(open(pickle_file, 'b'))
                 if imap.cur_path != '/transaction' or len(imap.children) == 0 \
                     or imap.src_version != '$Revision: 1149 $':
                     raise Pickle_Errors, "reload map"

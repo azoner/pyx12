@@ -1,3 +1,10 @@
+Overriding __eq__ blocks inheritance of __hash__
+raise Exception*(*args)
+except SomeException as e
+e.__traceback__ replaces sys.exc_info()
+next() -> __next__()
+
+
 http://xmlunit.sourceforge.net/
 Context
   yield an object (maybe X12DataNode)

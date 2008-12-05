@@ -22,6 +22,7 @@ import sys
 import logging
 #from types import *
 import tempfile
+import codecs
 
 # Intrapackage imports
 import pyx12
@@ -163,7 +164,8 @@ def main():
                 else:
                     sys.stderr.write('%s: Failure\n' % (src_filename))
             fd_997.seek(0)
-            open(target_997, 'w').write(fd_997.read())
+            codecs.open(target_997, mode='w', encoding='ascii').write(fd_997.read())
+
             if fd_997:
                 fd_997.close()
             if fd_html:

@@ -55,6 +55,7 @@ class Element(object):
     __le__ = __lt__
     __gt__ = __lt__
     __ge__ = __lt__
+    __hash__ = None
 
     def __len__(self):
         """
@@ -150,6 +151,7 @@ class Composite(object):
     __le__ = __lt__
     __gt__ = __lt__
     __ge__ = __lt__
+    __hash__ = None
 
     def __getitem__(self, idx):
         """
@@ -292,6 +294,7 @@ class Segment(object):
     __le__ = __lt__
     __gt__ = __lt__
     __ge__ = __lt__
+    __hash__ = None
 
     def __repr__(self):
         """

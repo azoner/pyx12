@@ -6,6 +6,7 @@ import pyx12.x12file
 import sys
 import getopt
 import os.path
+import codecs
 
 """
 Format a X12 document.  If the option -e is used, it adds newlines.
@@ -56,7 +57,7 @@ def main():
             pass
 
     if file_out:
-        fd_out = open(file_out, 'w')
+        fd_out = codecs.open(file_out, mode='w', encoding='ascii')
     else:
         fd_out =  sys.stdout
     #errh = pyx12.error_handler.errh_null()

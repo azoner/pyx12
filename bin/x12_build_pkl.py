@@ -53,7 +53,7 @@ def main():
             doc = libxml2.parseFile(map_full)
             reader = doc.readerWalker()
             map1 = pyx12.map_if.map_if(reader, param)
-            cPickle.dump(map1, open(os.path.join(pickle_dir, pickle_file),'w'))
+            cPickle.dump(map1, open(os.path.join(pickle_dir, pickle_file),'wb'))
         except:
             print 'Pickle failed for %s' % (map_file)
             raise
@@ -62,7 +62,7 @@ def main():
     print 'Pickling codes.xml'
     try:
         codes = pyx12.codes.ExternalCodes(map_dir, None)
-        cPickle.dump(codes.codes, open(os.path.join(pickle_dir, 'codes.pkl'),'w'))
+        cPickle.dump(codes.codes, open(os.path.join(pickle_dir, 'codes.pkl'),'wb'))
     except:
         print 'Pickle failed for codes.xml'
     return True

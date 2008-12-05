@@ -19,6 +19,7 @@ Create an X12 document from a XML data file
 import os, os.path
 import sys
 import logging
+import codecs
 
 # Intrapackage imports
 import pyx12.segment
@@ -86,7 +87,7 @@ def main():
         src_filename = '-'
     if target_x12:
         try:
-            fd_x12 = open(target_x12, 'w')
+            fd_x12 = codecs.open(target_x12, mode='w', encoding='ascii')
         except:
             logger.error('Could not open file %s' % (target_x12))
             return False

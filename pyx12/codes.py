@@ -68,7 +68,7 @@ class ExternalCodes(object):
         # init the map of codes from the pickled file codes.pkl
         try:
             if os.stat(code_file)[ST_MTIME] < os.stat(pickle_file)[ST_MTIME]:
-                self.codes = cPickle.load(open(pickle_file))
+                self.codes = cPickle.load(open(pickle_file, 'b'))
             else: 
                 raise CodesError, "reload codes"
         except:
@@ -127,7 +127,7 @@ class ExternalCodes(object):
             except XML_Reader_Error:
                 pass
 #        try:
-#            cPickle.dump(self.codes, open(pickle_file,'w'))
+#            cPickle.dump(self.codes, open(pickle_file,'wb'))
 #        except:
 #            pass
 

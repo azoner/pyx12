@@ -199,12 +199,13 @@ class error_997_visitor(error_visitor.error_visitor):
             for (err_cde, err_str, bad_value) in elem.errors:
                 # Ugly
                 if 'GS' in err_str:
-                    if elem.ele_pos in gs_ele_err_map.keys():
+                    #if elem.ele_pos in gs_ele_err_map.keys():
+                    if elem.ele_pos in gs_ele_err_map:
                         err_codes.append(gs_ele_err_map[elem.ele_pos])
                     else:
                         err_codes.append('1')
                 elif 'GE' in err_str:
-                    if elem.ele_pos in ge_ele_err_map.keys():
+                    if elem.ele_pos in ge_ele_err_map:
                         err_codes.append(ge_ele_err_map[elem.ele_pos])
                     else:
                         err_codes.append('1')
