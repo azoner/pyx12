@@ -16,7 +16,10 @@ import pyx12.x12file
 class X12fileTestCase(unittest.TestCase):
 
     def _get_first_error(self, x12str):
-        fd = StringIO(x12str, encoding='ascii')
+        try:
+            fd = StringIO(x12str, encoding='ascii')
+        except:
+            fd = StringIO(x12str)
         fd.seek(0)
         errors = []
         err_cde = None
@@ -43,7 +46,10 @@ class Delimiters(unittest.TestCase):
         str1 += 'SE&3&11280001+\n'
         str1 += 'GE&1&17+\n'
         str1 += 'IEA&1&000010121+\n'
-        fd = StringIO(str1, encoding='ascii')
+        try:
+            fd = StringIO(str1, encoding='ascii')
+        except:
+            fd = StringIO(str1)
         fd.seek(0)
         errors = []
         src = pyx12.x12file.X12Reader(fd)
@@ -67,7 +73,10 @@ class Delimiters(unittest.TestCase):
         str1 = str1.replace('&', chr(0x1C))
         str1 = str1.replace('+', chr(0x1D))
         str1 = str1.replace('!', chr(0x1E))
-        fd = StringIO(str1, encoding='ascii')
+        try:
+            fd = StringIO(str1, encoding='ascii')
+        except:
+            fd = StringIO(str1)
         fd.seek(0)
         errors = []
         src = pyx12.x12file.X12Reader(fd)
@@ -83,7 +92,10 @@ class Delimiters(unittest.TestCase):
     def test_trailing_ele_delim(self):
         str1 = 'ISA*00*          *00*          *ZZ*ZZ000          *ZZ*ZZ001          *030828*1128*U*00401*000010121*0*T*:~\n'
         str1 += 'ZZ*1***~\n'
-        fd = StringIO(str1, encoding='ascii')
+        try:
+            fd = StringIO(str1, encoding='ascii')
+        except:
+            fd = StringIO(str1)
         fd.seek(0)
         src = pyx12.x12file.X12Reader(fd)
         err_cde = None
@@ -100,12 +112,20 @@ class Delimiters(unittest.TestCase):
 class ISA_header(X12fileTestCase):
 
     def test_starts_with_ISA(self):
-        fd = StringIO(' ISA~', encoding='ascii')
+        str1 = ' ISA~'
+        try:
+            fd = StringIO(str1, encoding='ascii')
+        except:
+            fd = StringIO(str1)
         fd.seek(0)
         self.failUnlessRaises(pyx12.errors.X12Error, pyx12.x12file.X12Reader, fd)
 
     def test_at_least_ISA_len(self):
-        fd = StringIO('ISA~', encoding='ascii')
+        str1 = 'ISA~'
+        try:
+            fd = StringIO(str1, encoding='ascii')
+        except:
+            fd = StringIO(str1)
         fd.seek(0)
         self.failUnlessRaises(pyx12.errors.X12Error, pyx12.x12file.X12Reader, fd)
 
@@ -335,7 +355,10 @@ class Formatting(unittest.TestCase):
 #        str1 += 'SE*6*11280001~\n'
 #        str1 += 'GE*1*17~\n'
         str1 += 'IEA*1*000010121~\n'
-        fd = StringIO(str1, encoding='ascii')
+        try:
+            fd = StringIO(str1, encoding='ascii')
+        except:
+            fd = StringIO(str1)
         fd.seek(0)
         src = pyx12.x12file.X12Reader(fd)
         str_out = ''
@@ -346,7 +369,10 @@ class Formatting(unittest.TestCase):
     def test_strip_eol(self):
         str1 = 'ISA*00*          *00*          *ZZ*ZZ000          *ZZ*ZZ001          *030828*1128*U*00401*000010121*0*T*:~\n'
         str1 += 'IEA*1*000010121~\n'
-        fd = StringIO(str1, encoding='ascii')
+        try:
+            fd = StringIO(str1, encoding='ascii')
+        except:
+            fd = StringIO(str1)
         fd.seek(0)
         src = pyx12.x12file.X12Reader(fd)
         str_out = ''
@@ -367,7 +393,10 @@ class Segment_ID_Checks(X12fileTestCase):
     def test_segment_last_space(self):
         str1 = 'ISA*00*          *00*          *ZZ*ZZ000          *ZZ*ZZ001          *030828*1128*U*00401*000010121*0*T*:~\n'
         str1 += 'ZZ*0019 ~\n'
-        fd = StringIO(str1, encoding='ascii')
+        try:
+            fd = StringIO(str1, encoding='ascii')
+        except:
+            fd = StringIO(str1)
         fd.seek(0)
         val = None
         src = pyx12.x12file.X12Reader(fd)
@@ -406,7 +435,10 @@ class FileString(unittest.TestCase):
         str1 += 'SE&3&11280001+\n'
         str1 += 'GE&1&17+\n'
         str1 += 'IEA&1&000010121+\n'
-        fd = StringIO(str1, encoding='ascii')
+        try:
+            fd = StringIO(str1, encoding='ascii')
+        except:
+            fd = StringIO(str1)
         fd.seek(0)
         errors = []
         src = pyx12.x12file.X12Reader(fd)
@@ -434,7 +466,10 @@ class X12WriterTest(unittest.TestCase):
             'GE*1*17',
             'IEA*1*000010121'
         ]
-        fd_out = StringIO(encoding='ascii')
+        try:
+            fd_out = StringIO(encoding='ascii')
+        except:
+            fd_out = StringIO()
         wr = pyx12.x12file.X12Writer(fd_out, '~', '*', ':', '\n')
         output = ''
         for seg_str in segs:
@@ -458,7 +493,10 @@ class X12WriterTest(unittest.TestCase):
             'GE*1*17',
             'IEA*1*000010121'
         ]
-        fd_out = StringIO(encoding='ascii')
+        try:
+            fd_out = StringIO(encoding='ascii')
+        except:
+            fd_out = StringIO()
         wr = pyx12.x12file.X12Writer(fd_out, '~', '*', ':', '\n')
         output = ''
         for seg_str in segs:
@@ -485,7 +523,10 @@ class X12WriterTest(unittest.TestCase):
             'GE*1*17',
             'IEA*1*000010121'
         ]
-        fd_out = StringIO(encoding='ascii')
+        try:
+            fd_out = StringIO(encoding='ascii')
+        except:
+            fd_out = StringIO()
         wr = pyx12.x12file.X12Writer(fd_out, '~', '*', ':', '\n')
         output = ''
         for seg_str in segs:

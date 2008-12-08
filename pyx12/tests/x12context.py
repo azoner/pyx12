@@ -24,7 +24,10 @@ class Delimiters(unittest.TestCase):
         str1 += 'SE&3&11280001+\n'
         str1 += 'GE&1&17+\n'
         str1 += 'IEA&1&000010121+\n'
-        fd = StringIO(str1, encoding='ascii')
+        try:
+            fd = StringIO(str1, encoding='ascii')
+        except:
+            fd = StringIO(str1)
         fd.seek(0)
         param = pyx12.params.params('pyx12.conf.xml')
         errh = pyx12.error_handler.errh_null()
@@ -46,7 +49,10 @@ class Delimiters(unittest.TestCase):
         str1 = str1.replace('&', chr(0x1C))
         str1 = str1.replace('+', chr(0x1D))
         str1 = str1.replace('!', chr(0x1E))
-        fd = StringIO(str1, encoding='ascii')
+        try:
+            fd = StringIO(str1, encoding='ascii')
+        except:
+            fd = StringIO(str1)
         fd.seek(0)
         errors = []
         param = pyx12.params.params('pyx12.conf.xml')

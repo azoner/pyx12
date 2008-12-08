@@ -18,7 +18,10 @@ class TestWriter(unittest.TestCase):
         self.res = '<?xml version="1.0" encoding="utf-8"?>\n<x12err>\n</x12err>\n'
 
     def test_write1(self):
-        fd = StringIO(encoding='ascii')
+        try:
+            fd = StringIO(encoding='ascii')
+        except:
+            fd = StringIO()
         writer = XMLWriter(fd)
         writer.push(u"x12err")
 

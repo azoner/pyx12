@@ -44,7 +44,10 @@ class RawDelimiters(unittest.TestCase):
         str1 = str1.replace('&', chr(0x1C))
         str1 = str1.replace('+', chr(0x1D))
         str1 = str1.replace('!', chr(0x1E))
-        fd = StringIO(str1, encoding='ascii')
+        try:
+            fd = StringIO(str1, encoding='ascii')
+        except:
+            fd = StringIO(str1)
         fd.seek(0)
         src = pyx12.rawx12file.RawX12File(fd)
         for seg in src:
@@ -58,12 +61,18 @@ class RawDelimiters(unittest.TestCase):
 class RawISA_header(unittest.TestCase):
 
     def test_starts_with_ISA(self):
-        fd = StringIO(' ISA~', encoding='ascii')
+        try:
+            fd = StringIO(' ISA~', encoding='ascii')
+        except:
+            fd = StringIO(' ISA~')
         fd.seek(0)
         self.failUnlessRaises(pyx12.errors.X12Error, pyx12.rawx12file.RawX12File, fd)
 
     def test_at_least_ISA_len(self):
-        fd = StringIO('ISA~', encoding='ascii')
+        try:
+            fd = StringIO('ISA~', encoding='ascii')
+        except:
+            fd = StringIO('ISA~')
         fd.seek(0)
         self.failUnlessRaises(pyx12.errors.X12Error, pyx12.rawx12file.RawX12File, fd)
 
