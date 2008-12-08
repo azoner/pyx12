@@ -456,7 +456,7 @@ class X12Writer(X12Base):
                 self.fd_out = sys.stdout
             else:
                 self.fd_out = codecs.open(src_file_obj, mode='w', encoding='ascii')
-        assert self.fd_out.encoding in ('ascii', 'US-ASCII'), 'Outfile file must have ASCII encoding, is %s' % (self.fd_out.encoding)
+        #assert self.fd_out.encoding in ('ascii', 'US-ASCII'), 'Outfile file must have ASCII encoding, is %s' % (self.fd_out.encoding)
         X12Base.__init__(self)
         self.seg_term = seg_term
         self.ele_term = ele_term
