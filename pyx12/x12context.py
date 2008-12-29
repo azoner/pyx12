@@ -22,7 +22,6 @@ Interface to read and alter segments
 #G{classtree X12DataNode}
 
 import os, os.path
-# import pdb
 
 # Intrapackage imports
 import pyx12
@@ -107,6 +106,20 @@ class X12DataNode(object):
         path_list = self._get_path_list(x12_path)
         for n in self._select(path_list):
             yield n
+
+    def count(self, x12_path):
+        """
+        Get a count of sub-nodes at the relative X12 path.
+        @param x12_path: Relative X12 path - 2400/2430
+        @type x12_path: string
+        @return: Count of matching sub-nodes
+        @rtype: int
+        """
+        ct = 0
+        path_list = self._get_path_list(x12_path)
+        for n in self._select(path_list):
+            ct += 1
+        return ct
 
     #{ Private Methods
     def _cleanup(self):
@@ -323,8 +336,10 @@ class X12LoopDataNode(X12DataNode):
             raise errors.X12PathError, 'The segment %s is not a member of loop %s' % \
                 (seg_data.__repr__(), self.id)
         new_data_loop = self._add_loop_node(x12_loop_node)
-        x12_seg_node = self.x12_map_node.get_child_seg_node(seg_data)
+        # Now, add the segment
+        x12_seg_node = new_data_loop.x12_map_node.get_child_seg_node(seg_data)
         new_data_node = X12SegmentDataNode(x12_seg_node, seg_data, new_data_loop)
+        new_data_loop.add_node(new_data_node)
         return new_data_loop
 
     def add_node(self, data_node):
@@ -431,18 +446,28 @@ class X12LoopDataNode(X12DataNode):
         return new_node
 
     def _get_segment(self, seg_obj):
+        """
+        Get a  pyx12.segment.Segment instance, building one from a string
+        """
         if isinstance(seg_obj, pyx12.segment.Segment):
             return seg_obj
         elif isinstance(seg_obj, str):
-            for child in self.children:
-                if isinstance(child, X12SegmentDataNode) and child.seg_data is not None:
-                    seg_term = child.seg_data.seg_term
-                    ele_term = child.seg_data.ele_term
-                    subele_term = child.seg_data.subele_term
+            (seg_term, ele_term, subele_term) = self._get_terminators()
+            assert seg_term is not None, 'seg_term is none, node contains no X12SegmentDataNode children?'
+            assert ele_term is not None, 'seg_term is none, node contains no X12SegmentDataNode children?'
+            assert subele_term is not None, 'seg_term is none, node contains no X12SegmentDataNode children?'
             return pyx12.segment.Segment(seg_obj, seg_term, ele_term, subele_term)
         else:
             raise errors.EngineError, 'Unknown type for seg_obj %s' % (seg_obj)
 
+    def _get_terminators(self):
+        #import pdb
+        #pdb.set_trace()
+        for child in self.children:
+            if isinstance(child, X12SegmentDataNode) and child.seg_data is not None \
+                    and child.seg_data.seg_term is not None:
+                return (child.seg_data.seg_term, child.seg_data.ele_term, child.seg_data.subele_term)
+        return self.parent._get_terminators()
 
 class X12SegmentDataNode(X12DataNode):
     """

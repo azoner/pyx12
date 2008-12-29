@@ -210,6 +210,18 @@ class TreeAddLoop(unittest.TestCase):
         seg_data = pyx12.segment.Segment('NM1*82*2*Provider 1*****ZZ*9898798~', '~', '*', ':')
         new_node = self.loop2300.add_loop(seg_data)
         self.assertNotEqual(new_node, None)
+        self.failUnless(self.loop2300.exists('2310B'))
+        for loop2310b in self.loop2300.select('2310B'):
+            self.failUnless(loop2310b.exists('NM1'))
+
+    def test_add_new_string_seg(self):
+        old_ct = self.loop2300.count('2400')
+        new_node = self.loop2300.add_loop('LX*5~')
+        self.assertNotEqual(new_node, None)
+        self.failUnless(self.loop2300.exists('2400'))
+        self.assertEqual(old_ct + 1, self.loop2300.count('2400'))
+        for loop2400 in self.loop2300.select('2400'):
+            self.failUnless(loop2400.exists('LX'))
 
 
 class TreeAddNode(unittest.TestCase):
