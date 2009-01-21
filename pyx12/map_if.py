@@ -991,7 +991,46 @@ class segment_if(x12_node):
                 and len(self.children[2].valid_codes) > 0 \
                 and seg.get_value('03') not in self.children[2].valid_codes:
                 return False
-            return True
+            else:
+                return True
+        else:
+            return False
+
+    def is_match_qual(self, seg_id, qual_code):
+        """
+        Is segment id and qualifier a match to this segment node?
+        @param seg_id: data segment ID
+        @param qual_code: an ID qualifier code
+        @return: True if a match
+        @rtype: boolean
+        """
+        if seg_id == self.id:
+            if qual_code is None:
+                return True
+            elif self.children[0].is_element() \
+                and self.children[0].get_data_type() == 'ID' \
+                and self.children[0].usage == 'R' \
+                and len(self.children[0].valid_codes) > 0 \
+                and qual_code not in self.children[0].valid_codes:
+                return False
+            # Special Case for 820
+            elif seg_id == 'ENT' \
+                and self.children[1].is_element() \
+                and self.children[1].get_data_type() == 'ID' \
+                and len(self.children[1].valid_codes) > 0 \
+                and qual_code not in self.children[1].valid_codes:
+                return False
+            elif self.children[0].is_composite() \
+                and self.children[0].children[0].get_data_type() == 'ID' \
+                and len(self.children[0].children[0].valid_codes) > 0 \
+                and qual_code not in self.children[0].children[0].valid_codes:
+                return False
+            elif seg_id == 'HL' and self.children[2].is_element() \
+                and len(self.children[2].valid_codes) > 0 \
+                and qual_code not in self.children[2].valid_codes:
+                return False
+            else:
+                return True
         else:
             return False
 
@@ -1263,7 +1302,8 @@ class element_if(x12_node):
         @rtype: boolean
         """
         # match also by ID
-        pass
+        raise NotImplementedError, 'Override in sub-class'
+        #return False
 
     def is_valid(self, elem, errh, check_dte=None, type_list=[]):
         """

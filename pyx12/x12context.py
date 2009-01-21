@@ -22,6 +22,7 @@ Interface to read and alter segments
 #G{classtree X12DataNode}
 
 import os, os.path
+import pdb
 
 # Intrapackage imports
 import pyx12
@@ -170,10 +171,14 @@ class X12DataNode(object):
         @type path_list: [string]
         """
         if len(path_list) == 1:
-            cur_node_id = path_list[0]
+            (cur_node_id, qual) = self._parse_path_id(path_list[0])
             for child in [x for x in self.children if x.type is not None]:
-                if child.id == cur_node_id:
-                    yield child
+                if child.type == 'seg':
+                    if child.x12_map_node.is_match_qual(cur_node_id, qual):
+                        yield child
+                else:
+                    if child.id == cur_node_id:
+                        yield child
         elif len(path_list) > 1:
             cur_node_id = path_list[0]
             #del path_list[0]
@@ -182,6 +187,21 @@ class X12DataNode(object):
                 if child.id == cur_node_id:
                     for n in child._select(new_path):
                         yield n
+
+    def _parse_path_id(self, path_str):
+        """
+        Get the plain id and a segment qualifier from a path string.
+
+        @todo: This functionality should be implemented by a path object
+        """
+        pos1 = path_str.find('[')
+        pos2 = path_str.find(']')
+        if pos1 != -1 and pos2 != -1 and pos1 < pos2:
+            seg_id = path_str[:pos1]
+            qual = path_str[pos1+1:pos2]
+            return (seg_id, qual)
+        else:
+            return (path_str, None)
 
     #{ Property Accessors
     def _get_id(self):

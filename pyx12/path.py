@@ -72,6 +72,9 @@ class path(object):
             del self.loop_list[-1]
         #        raise EngineError, 'Invalid segment path: %s' % (seg_str)
         
+    def is_match(self, path_str):
+        pass
+
     def __parse_ele_path(self, ele_str):
         """
         @param ele_str: An element path in the form '03' or '03-5'
