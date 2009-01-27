@@ -18714,7 +18714,7 @@
                     <segment xid="PRV">
                       <name>Attending Physician Specialty Information</name>
                       <usage>S</usage>
-                      <pos>255</pos>
+                      <pos>505</pos>
                       <max_use>1</max_use>
                       <element xid="PRV01">
                         <data_ele>1221</data_ele>
@@ -18901,7 +18901,7 @@
                     <segment xid="PRV">
                       <name>Operating Physician Specialty Information</name>
                       <usage>S</usage>
-                      <pos>255</pos>
+                      <pos>505</pos>
                       <max_use>1</max_use>
                       <element xid="PRV01">
                         <data_ele>1221</data_ele>
@@ -19089,7 +19089,7 @@
                     <segment xid="PRV">
                       <name>Other Provider Specialty Information</name>
                       <usage>S</usage>
-                      <pos>255</pos>
+                      <pos>505</pos>
                       <max_use>1</max_use>
                       <element xid="PRV01">
                         <data_ele>1221</data_ele>
@@ -37479,7 +37479,7 @@
                       <segment xid="PRV">
                         <name>Attending Physician Specialty Information</name>
                         <usage>S</usage>
-                        <pos>255</pos>
+                        <pos>505</pos>
                         <max_use>1</max_use>
                         <element xid="PRV01">
                           <data_ele>1221</data_ele>
@@ -37666,7 +37666,7 @@
                       <segment xid="PRV">
                         <name>Operating Physician Specialty Information</name>
                         <usage>S</usage>
-                        <pos>255</pos>
+                        <pos>505</pos>
                         <max_use>1</max_use>
                         <element xid="PRV01">
                           <data_ele>1221</data_ele>
@@ -37854,7 +37854,7 @@
                       <segment xid="PRV">
                         <name>Other Provider Specialty Information</name>
                         <usage>S</usage>
-                        <pos>255</pos>
+                        <pos>505</pos>
                         <max_use>1</max_use>
                         <element xid="PRV01">
                           <data_ele>1221</data_ele>
