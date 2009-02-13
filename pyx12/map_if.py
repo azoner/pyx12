@@ -504,6 +504,7 @@ class loop_if(x12_node):
                 cur_name = reader.Name()
                 if cur_name == 'loop' and self.base_level < reader.Depth():
                     loop_node = loop_if(self.root, self, index)
+                    #assert loop_node.pos >= max(self.pos_map.keys()), 'Bad ordinal %s' % (loop_node)
                     try:
                         self.pos_map[loop_node.pos].append(loop_node)
                     except KeyError:
@@ -515,6 +516,7 @@ class loop_if(x12_node):
                     index += 1
                 elif cur_name == 'segment':
                     seg_node = segment_if(self.root, self, index)
+                    #assert seg_node.pos >= max(self.pos_map.keys()), 'Bad ordinal %s' % (seg_node)
                     try:
                         self.pos_map[seg_node.pos].append(seg_node)
                     except KeyError:

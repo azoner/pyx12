@@ -283,6 +283,27 @@ class Implicit_Loops(unittest.TestCase):
         self.assertEqual(get_id_list(push), ['DETAIL', '2000B'])
         self.assertEqual(traverse_path(start_node, pop, push), pop_to_parent_loop(node).get_path())
         
+    def test_837i_2420a(self):
+        map_path = getMapPath()
+        walker = walk_tree()
+        param = pyx12.params.params('pyx12.conf.xml')
+        if map_path:
+            param.set('map_path', map_path)
+            param.set('pickle_path', map_path)
+        map = pyx12.map_if.load_map_file('837.4010.X096.A1.xml', self.param)
+        errh = pyx12.error_handler.errh_null()
+        path = '/ISA_LOOP/GS_LOOP/ST_LOOP/DETAIL/2000A/2000B/2300/2400/DTP'
+        node = map.getnodebypath(path)
+        self.assertNotEqual(node, None)
+        self.assertEqual(node.base_name, 'segment')
+        seg_data = pyx12.segment.Segment('NM1*71*1*TEST*BAR****XX*9999974756~', '~', '*', ':')
+        (node, pop, push) = walker.walk(node, seg_data, errh, 5, 4, None)
+        self.assertNotEqual(node, None, 'walker failed to find %s' % (seg_data))
+        self.assertEqual(seg_data.get_seg_id(), node.id)
+        self.assertEqual(errh.err_cde, None, errh.err_str)
+        self.assertEqual(get_id_list(pop), [])
+        self.assertEqual(get_id_list(push), ['2420A'])
+
     def tearDown(self):
         del self.errh
         del self.map
