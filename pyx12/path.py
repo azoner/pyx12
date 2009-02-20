@@ -16,7 +16,7 @@ Parses an x12 path
 An x12 path is comprised of a sequence of loop identifiers, a segment
 identifier, and element position, and a composite position.
 
-The last loop id might be a segment id.  It is difficult to parse
+The last loop id might be a segment id.
 
 /LOOP_1/LOOP_2
 /LOOP_1/LOOP_2/SEG

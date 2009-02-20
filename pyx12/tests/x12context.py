@@ -100,6 +100,29 @@ class TreeGetValue(unittest.TestCase):
         self.assertEqual(self.loop2300.get_value('2400'), None)
 
 
+class TreeSetValue(unittest.TestCase):
+
+    def setUp(self):
+        fd = open('files/simple_837p.txt')
+        param = pyx12.params.params('pyx12.conf.xml')
+        errh = pyx12.error_handler.errh_null()
+        self.src = pyx12.x12context.X12ContextReader(param, errh, fd, xslt_files = [])
+        for datatree in self.src.iter_segments('2300'):
+            if datatree.id == '2300':
+                self.loop2300 = datatree
+                break
+
+    def test_set_seg_value(self):
+        self.loop2300.set_value('CLM02', '50')
+        self.assertEqual(self.loop2300.get_value('CLM02'), '50')
+
+    def test_get_first_value_2400(self):
+        for loop2400 in self.loop2300.select('2400'):
+            break
+        loop2400.set_value('AMT[AAE]02', '25')
+        self.assertEqual(loop2400.get_value('AMT[AAE]02'), '21')
+
+
 class TreeSelect(unittest.TestCase):
 
     def setUp(self):
@@ -130,17 +153,17 @@ class TreeSelect(unittest.TestCase):
 class ParseRefDes(unittest.TestCase):
 
     def test_plain(self):
-        self.assertEqual(pyx12.x12context.X12SegmentDataNode.get_seg_id('TST01'), ('TST01', None))
-        self.assertEqual(pyx12.x12context.X12SegmentDataNode.get_seg_id('TST05-1'), ('TST05-1', None))
-        self.assertEqual(pyx12.x12context.X12SegmentDataNode.get_seg_id('TST02-4'), ('TST02-4', None))
+        self.assertEqual(pyx12.x12context.X12SegmentDataNode.get_seg_id_part('TST01'), ('TST01', None))
+        self.assertEqual(pyx12.x12context.X12SegmentDataNode.get_seg_id_part('TST05-1'), ('TST05-1', None))
+        self.assertEqual(pyx12.x12context.X12SegmentDataNode.get_seg_id_part('TST02-4'), ('TST02-4', None))
 
     def test_qual(self):
-        self.assertEqual(pyx12.x12context.X12SegmentDataNode.get_seg_id('TST01[6R]'), ('TST01', '6R'))
-        self.assertEqual(pyx12.x12context.X12SegmentDataNode.get_seg_id('TST05-1[DD]'), ('TST05-1', 'DD'))
-        self.assertEqual(pyx12.x12context.X12SegmentDataNode.get_seg_id('TST02-4[EB]'), ('TST02-4', 'EB'))
-        self.assertEqual(pyx12.x12context.X12SegmentDataNode.get_seg_id('TST[6R]01'), ('TST01', '6R'))
-        self.assertEqual(pyx12.x12context.X12SegmentDataNode.get_seg_id('TST[DD]05-1'), ('TST05-1', 'DD'))
-        self.assertEqual(pyx12.x12context.X12SegmentDataNode.get_seg_id('TST[EB]02-4'), ('TST02-4', 'EB'))
+        self.assertEqual(pyx12.x12context.X12SegmentDataNode.get_seg_id_part('TST01[6R]'), ('TST01', '6R'))
+        self.assertEqual(pyx12.x12context.X12SegmentDataNode.get_seg_id_part('TST05-1[DD]'), ('TST05-1', 'DD'))
+        self.assertEqual(pyx12.x12context.X12SegmentDataNode.get_seg_id_part('TST02-4[EB]'), ('TST02-4', 'EB'))
+        self.assertEqual(pyx12.x12context.X12SegmentDataNode.get_seg_id_part('TST[6R]01'), ('TST01', '6R'))
+        self.assertEqual(pyx12.x12context.X12SegmentDataNode.get_seg_id_part('TST[DD]05-1'), ('TST05-1', 'DD'))
+        self.assertEqual(pyx12.x12context.X12SegmentDataNode.get_seg_id_part('TST[EB]02-4'), ('TST02-4', 'EB'))
 
 
 class TreeAddSegment(unittest.TestCase):

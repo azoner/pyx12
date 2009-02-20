@@ -81,6 +81,16 @@ class X12DataNode(object):
         """
         raise NotImplementedError, 'Override in sub-class'
 
+    def set_value(self, x12_path, val):
+        """
+        Set the value of simple element at the first found segment at the given path
+        @param x12_path: An X12 path
+        @type x12_path: string
+        @param val: The new element value
+        @type val: string
+        """
+        raise NotImplementedError, 'Override in sub-class'
+
     def exists(self, x12_path):
         """
         Does at least one child at the x12-path exist?
@@ -139,6 +149,20 @@ class X12DataNode(object):
             if self.children[i].x12_map_node.index > map_idx:
                 return i
         return len(self.children)
+
+    def _get_first_matching_segment(self, x12_path):
+        """
+        Get first found Segment at the given relative path.  If the path is not a
+        valid relative path or if the given segment index does not exist, the function
+        returns None.
+
+        @param x12_path: Relative X12 Path
+        @type x12_path: string
+        @return: First matching data segment
+        @rtype: L{node<segment.Segment>}
+        @raise X12PathError: On blank or invalid path
+        """
+        raise NotImplementedError, 'Override in sub-class'
 
     def _get_path_list(self, path_str):
         """
@@ -261,34 +285,25 @@ class X12LoopDataNode(X12DataNode):
         @rtype: string
         @raise X12PathError: On blank or invalid path
         """
-        if len(x12_path) == 0:
-            raise errors.X12PathError, 'Blank X12 Path'
-        elif x12_path.find('/') == -1:
-            try:
-                for seg in [seg for seg in self.children if seg.type == 'seg']:
-                    if x12_path.startswith(seg.id):
-                        val = seg.get_value(x12_path)
-                        if val is not None:
-                            return val
-                return None
-                    #raise 'X12PathError', 'X12 Path is invalid or was not found: %s' % (x12_path)
-            except errors.EngineError, e:
-                raise
-                #raise X12PathError, e.message
-                raise errors.X12PathError, 'X12 Path is invalid or was not found: %s' % (x12_path)
-        else:
-            plist = x12_path.split('/')
-            next_id = plist[0]
-            plist = plist[1:]
-            try:
-                for loop in [loop for loop in self.children if loop.type == 'loop']:
-                    if loop.id == next_id:
-                        return loop.get_value('/'.join(plist))
-                return None
-                    #raise 'X12PathError', 'X12 Path is invalid or was not found: %s' % (x12_path)
-            except errors.EngineError, e:
-                raise
-                raise errors.X12PathError, 'X12 Path is invalid or was not found: %s' % (x12_path)
+        seg_data = self._get_first_matching_segment(x12_path)
+        if seg_data is None:
+            return None
+        return seg_data.get_value(x12_path)
+
+    def set_value(self, x12_path, val):
+        """
+        Set the value of simple element at the first found segment at the given path
+        @param x12_path: Relative X12 Path
+        @type x12_path: string
+        @param val: The new element value
+        @type val: string
+        """
+        seg_data = self._get_first_matching_segment(x12_path)
+        if seg_data is None:
+            raise errors.X12PathError, 'X12 Path is invalid or was not found: %s' % (x12_path)
+        #ele_idx = self.get_ele_idx(x12_path)
+        #seg_data.set(ele_idx, val)
+        seg_data.set_value(x12_path, val)
 
     def iterate_segments(self):
         """
@@ -465,9 +480,43 @@ class X12LoopDataNode(X12DataNode):
         self.children.insert(child_idx, new_node)
         return new_node
 
+    def _get_first_matching_segment(self, x12_path):
+        """
+        Get first found Segment at the given relative path.  If the path is not a
+        valid relative path or if the given segment index does not exist, the function
+        returns None.
+
+        @param x12_path: Relative X12 Path
+        @type x12_path: string
+        @return: First matching data segment
+        @rtype: L{node<segment.Segment>}
+        @raise X12PathError: On blank or invalid path
+        """
+        if len(x12_path) == 0:
+            raise errors.X12PathError, 'Blank X12 Path'
+        elif x12_path.find('/') == -1:
+            try:
+                for seg in [seg for seg in self.children if seg.type == 'seg']:
+                    if x12_path.startswith(seg.id):
+                        return seg
+                return None
+            except errors.EngineError, e:
+                raise errors.X12PathError, 'X12 Path is invalid or was not found: %s' % (x12_path)
+        else:
+            plist = x12_path.split('/')
+            next_id = plist[0]
+            plist = plist[1:]
+            try:
+                for loop in [loop for loop in self.children if loop.type == 'loop']:
+                    if loop.id == next_id:
+                        return loop._get_first_matching_segment('/'.join(plist))
+                return None
+            except errors.EngineError, e:
+                raise errors.X12PathError, 'X12 Path is invalid or was not found: %s' % (x12_path)
+
     def _get_segment(self, seg_obj):
         """
-        Get a  pyx12.segment.Segment instance, building one from a string
+        Get a pyx12.segment.Segment instance, building one from a string
         """
         if isinstance(seg_obj, pyx12.segment.Segment):
             return seg_obj
@@ -488,6 +537,7 @@ class X12LoopDataNode(X12DataNode):
                     and child.seg_data.seg_term is not None:
                 return (child.seg_data.seg_term, child.seg_data.ele_term, child.seg_data.subele_term)
         return self.parent._get_terminators()
+
 
 class X12SegmentDataNode(X12DataNode):
     """
@@ -536,27 +586,62 @@ class X12SegmentDataNode(X12DataNode):
         @return: the element value at the relative X12 path
         @rtype: string
         """
+        seg_data = self._get_first_matching_segment(x12_path)
+        if seg_data is None:
+            return None
+        return seg_data.get_value(x12_path)
+
+    def set_value(self, x12_path, val):
+        """
+        Set the value of simple element at the first found segment at the given path
+        @param x12_path: Relative X12 Path
+        @type x12_path: string
+        @param val: The new element value
+        @type val: string
+        """
+        seg_data = self._get_first_matching_segment(x12_path)
+        if seg_data is None:
+            raise errors.X12PathError, 'X12 Path is invalid or was not found: %s' % (x12_path)
+        #ele_idx = self.get_ele_idx(x12_path)
+        #seg_data.set(ele_idx, val)
+        seg_data.set(x12_path, val)
+
+    def _get_first_matching_segment(self, x12_path):
+        """
+        Get first found Segment at the given relative path.  If the path is not a
+        valid relative path or if the given segment index does not exist, the function
+        returns None.
+
+        @param x12_path: Relative X12 Path
+        @type x12_path: string
+        @return: First matching data segment
+        @rtype: L{node<segment.Segment>}
+        @raise X12PathError: On blank or invalid path
+        """
         try:
-            (seg_part, qual) = X12SegmentDataNode.get_seg_id(x12_path)
+            (seg_part, qual) = X12SegmentDataNode.get_seg_id_parts(x12_path)
             if qual is not None:
                 if self.seg_data.get_value('01') == qual:
-                    return self.seg_data.get_value(seg_part)
+                    return self.seg_data
                 else:
                     return None
             else:
-                return self.seg_data.get_value(x12_path)
+                return self.seg_data
         except errors.EngineError:
-            raise
+            raise errors.X12PathError, 'X12 Path is invalid or was not found: %s' % (x12_path)
         return None
 
     @staticmethod
-    def get_seg_id(x12_path):
+    def get_seg_id_parts(x12_path):
         """
         Split a X12 segment reference designation into the segment part 
         and the qualifier part.
         @return: (segment part, qualifier part)
         @rtype: (string, string)
+        @raise X12PathError: On blank or invalid path
         """
+        if x12_path.find('/') != -1:
+            raise errors.X12PathError, 'X12 Path is invalid or was not found: %s' % (x12_path)
         pos = x12_path.find('[')
         if pos != -1:
             end = x12_path.find(']')
