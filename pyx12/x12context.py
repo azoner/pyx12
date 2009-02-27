@@ -288,7 +288,8 @@ class X12LoopDataNode(X12DataNode):
         seg_data = self._get_first_matching_segment(x12_path)
         if seg_data is None:
             return None
-        return seg_data.get_value(x12_path)
+        (seg_part, qual) = X12SegmentDataNode.get_seg_id_parts(x12_path)
+        return seg_data.get_value(seg_part)
 
     def set_value(self, x12_path, val):
         """
@@ -303,7 +304,8 @@ class X12LoopDataNode(X12DataNode):
             raise errors.X12PathError, 'X12 Path is invalid or was not found: %s' % (x12_path)
         #ele_idx = self.get_ele_idx(x12_path)
         #seg_data.set(ele_idx, val)
-        seg_data.set_value(x12_path, val)
+        (seg_part, qual) = X12SegmentDataNode.get_seg_id_parts(x12_path)
+        seg_data.set_value(seg_part, val)
 
     def iterate_segments(self):
         """
@@ -641,7 +643,8 @@ class X12SegmentDataNode(X12DataNode):
         @raise X12PathError: On blank or invalid path
         """
         if x12_path.find('/') != -1:
-            raise errors.X12PathError, 'X12 Path is invalid or was not found: %s' % (x12_path)
+            #raise errors.X12PathError, 'X12 Path is invalid or was not found: %s' % (x12_path)
+            x12_path = x12_path[x12_path.rfind('/')+1:]
         pos = x12_path.find('[')
         if pos != -1:
             end = x12_path.find(']')
