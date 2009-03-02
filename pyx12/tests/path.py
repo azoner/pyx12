@@ -5,39 +5,6 @@ import sys, os.path
 import pyx12.path
 from pyx12.errors import *
 
-"""
-Absolute paths:
-    parse path to loop
-    parse path to segment
-    parse path to element
-    parse path to sub-element
-
-Relative path:
-    parse path to loop
-    parse path to segment
-    parse path to element
-    parse path to sub-element
-
-Get list of loops
-
-Get seg ID
-
-Get seg pos
-
-get sub-ele pos
-
-Convert path obj to path string
-
-Get string repr of seg id, pos, ... : SEG03-1
-
-2400/REF[6R]02
-2400/AMT[AAE]02
-AMT[AAE]02
-2430/AMT[AAE]02
-DTP[096]
-DTP[434]
-"""
-
 class AbsPath(unittest.TestCase):
 
     #def setUp(self):
@@ -197,3 +164,57 @@ class AbsolutePath(unittest.TestCase):
             plist = spath.split('/')[1:]
             rd = pyx12.path.X12Path(spath)
             self.assertEqual(rd.loop_list, plist, '%s: %s != %s' % (spath, rd.loop_list, plist))
+
+class Equality(unittest.TestCase):
+    def test_equal1(self):
+        p1 = pyx12.path.X12Path('/ISA_LOOP/GS_LOOP/ST_LOOP/DETAIL/2000A')
+        p2 = pyx12.path.X12Path('/ISA_LOOP/GS_LOOP/ST_LOOP/DETAIL/2000A')
+        self.assertEqual(p1, p2)
+        self.assertEqual(p1.format(), p2.format())        
+    
+    def test_equal2(self):
+        p1 = pyx12.path.X12Path('/ISA_LOOP/GS_LOOP/ST_LOOP/DETAIL/2000A')
+        p2 = pyx12.path.X12Path('/ISA_LOOP/GS_LOOP/ST_LOOP/DETAIL/')
+        p2.loop_list.append('2000A')
+        self.assertEqual(p1, p2)
+        self.assertEqual(p1.format(), p2.format())
+        
+    def test_equal3(self):
+        p1 = pyx12.path.X12Path('/AA/BB/CC/TST[1B5]03-1')
+        p2 = pyx12.path.X12Path('/AA/BB/CC/AAA[1B5]03-1')
+        p2.seg_id = 'TST'
+        self.assertEqual(p1, p2)
+        self.assertEqual(p1.format(), p2.format())
+
+    def test_equal4(self):
+        p1 = pyx12.path.X12Path('1000B/TST03-2')
+        p2 = pyx12.path.X12Path('1000B/TST04-2')
+        p2.ele_idx = 3
+        self.assertEqual(p1, p2)
+        self.assertEqual(p1.format(), p2.format())
+
+class NonEquality(unittest.TestCase):
+    def test_nequal1(self):
+        p1 = pyx12.path.X12Path('/ISA_LOOP/GS_LOOP/ST_LOOP/DETAIL/2000A')
+        p2 = pyx12.path.X12Path('ISA_LOOP/GS_LOOP/ST_LOOP/DETAIL/2000A')
+        self.assertEqual(p1, p2)
+        self.assertEqual(p1.format(), p2.format())        
+    
+    def test_nequal2(self):
+        p1 = pyx12.path.X12Path('/ISA_LOOP/GS_LOOP/ST_LOOP/DETAIL/2000A')
+        p2 = pyx12.path.X12Path('/ISA_LOOP/GS_LOOP/ST_LOOP/DETAIL/')
+        self.assertEqual(p1, p2)
+        self.assertEqual(p1.format(), p2.format())
+        
+    def test_nequal3(self):
+        p1 = pyx12.path.X12Path('/AA/BB/CC/TST[1B5]03-1')
+        p2 = pyx12.path.X12Path('/AA/BB/CC/AAA[1B5]03-1')
+        self.assertEqual(p1, p2)
+        self.assertEqual(p1.format(), p2.format())
+
+    def test_nequal4(self):
+        p1 = pyx12.path.X12Path('1000B/TST03-2')
+        p2 = pyx12.path.X12Path('1000B/TST04-2')
+        self.assertEqual(p1, p2)
+        self.assertEqual(p1.format(), p2.format())
+        

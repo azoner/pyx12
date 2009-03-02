@@ -94,13 +94,14 @@ class X12DataNode(object):
 
     def exists(self, x12_path):
         """
-        Does at least one child at the x12-path exist?
+        Does at least one child at the x12 path exist?
         @param x12_path: Relative X12 path - 2400/2430
         @type x12_path: string
         @return: True if found
         @rtype: boolean
         """
         path_list = self._get_path_list(x12_path)
+        path_list = 
         for n in self._select(path_list):
             return True
         return False

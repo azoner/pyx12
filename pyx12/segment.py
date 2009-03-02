@@ -22,6 +22,7 @@ All indexing is zero based.
 
 #import string
 
+import path
 from pyx12.errors import EngineError
 
 class Element(object):
@@ -334,42 +335,42 @@ class Segment(object):
         """
         return self.seg_id
 
-    def _parse_refdes(self, ref_des):
-        """
-        Format of ref_des:
-            - a simple element: TST02
-            - a composite: TST03 where TST03 is a composite
-            - a sub-element: TST03-2
-            - or any of the above with the segment ID omitted (02, 03, 03-1)
+    # def _parse_refdes(self, ref_des):
+        # """
+        # Format of ref_des:
+            # - a simple element: TST02
+            # - a composite: TST03 where TST03 is a composite
+            # - a sub-element: TST03-2
+            # - or any of the above with the segment ID omitted (02, 03, 03-1)
 
-        @param ref_des: X12 Reference Designator
-        @type ref_des: string
-        @rtype: tuple(ele_idx, subele_idx)
-        @raise EngineError: If the given ref_des does not match the segment ID
-            or if the indexes are not valid integers
-        """
-        if ref_des is None or ref_des == '':
-            raise EngineError, 'Blank Reference Designator'
-        if ref_des[0].isalpha():
-            if ref_des[:len(self.seg_id)] != self.seg_id:
-                err_str = 'Invalid Reference Designator: %s, seg_id: %s' \
-                    % (ref_des, self.seg_id)
-                raise EngineError, err_str
-            rest = ref_des[len(self.seg_id):]
-        else:
-            rest = ref_des
-        dash = rest.find('-')
-        try:
-            if dash == -1:
-                ele_idx = int(rest) - 1
-                comp_idx = None
-            else:
-                ele_idx = int(rest[:dash]) - 1
-                comp_idx = int(rest[dash+1:]) - 1
-        except ValueError:
-            raise EngineError, 'Invalid Reference Designator indexes: %s' \
-                % (ref_des)
-        return (ele_idx, comp_idx)
+        # @param ref_des: X12 Reference Designator
+        # @type ref_des: string
+        # @rtype: tuple(ele_idx, subele_idx)
+        # @raise EngineError: If the given ref_des does not match the segment ID
+            # or if the indexes are not valid integers
+        # """
+        # if ref_des is None or ref_des == '':
+            # raise EngineError, 'Blank Reference Designator'
+        # if ref_des[0].isalpha():
+            # if ref_des[:len(self.seg_id)] != self.seg_id:
+                # err_str = 'Invalid Reference Designator: %s, seg_id: %s' \
+                    # % (ref_des, self.seg_id)
+                # raise EngineError, err_str
+            # rest = ref_des[len(self.seg_id):]
+        # else:
+            # rest = ref_des
+        # dash = rest.find('-')
+        # try:
+            # if dash == -1:
+                # ele_idx = int(rest) - 1
+                # comp_idx = None
+            # else:
+                # ele_idx = int(rest[:dash]) - 1
+                # comp_idx = int(rest[dash+1:]) - 1
+        # except ValueError:
+            # raise EngineError, 'Invalid Reference Designator indexes: %s' \
+                # % (ref_des)
+        # return (ele_idx, comp_idx)
 
     def get(self, ref_des):
         """
@@ -378,7 +379,10 @@ class Segment(object):
         @return: Element or Composite
         @rtype: L{segment.Composite}
         """
-        (ele_idx, comp_idx) = self._parse_refdes(ref_des)
+        xp = path.X12Path(ref_des)
+        ele_idx = xp.ele_idx
+        comp_idx = xp.subele_idx
+        #(ele_idx, comp_idx) = self._parse_refdes(ref_des)
         if ele_idx >= self.__len__():
             return None
         if comp_idx is None:
@@ -418,7 +422,10 @@ class Segment(object):
         @param val: New value
         @type val: string
         """
-        (ele_idx, comp_idx) = self._parse_refdes(ref_des)
+        xp = path.X12Path(ref_des)
+        ele_idx = xp.ele_idx
+        comp_idx = xp.subele_idx
+        #(ele_idx, comp_idx) = self._parse_refdes(ref_des)
         while len(self.elements) <= ele_idx:
             self.elements.append(Composite('', self.subele_term))
         if comp_idx is None:
@@ -433,7 +440,9 @@ class Segment(object):
         @param ref_des: X12 Reference Designator
         @type ref_des: string
         """
-        ele_idx = self._parse_refdes(ref_des)[0]
+        xp = path.X12Path(ref_des)
+        ele_idx = xp.ele_idx
+        #ele_idx = self._parse_refdes(ref_des)[0]
         return self.elements[ele_idx].is_element()
 
     def is_composite(self, ref_des):
@@ -441,7 +450,9 @@ class Segment(object):
         @param ref_des: X12 Reference Designator
         @type ref_des: string
         """
-        ele_idx  = self._parse_refdes(ref_des)[0]
+        xp = path.X12Path(ref_des)
+        ele_idx = xp.ele_idx
+        #ele_idx  = self._parse_refdes(ref_des)[0]
         return self.elements[ele_idx].is_composite()
 
     def ele_len(self, ref_des):
@@ -451,7 +462,9 @@ class Segment(object):
         @return: number of sub-elements in an element or composite
         @rtype: int
         """
-        ele_idx = self._parse_refdes(ref_des)[0]
+        xp = path.X12Path(ref_des)
+        ele_idx = xp.ele_idx
+        #ele_idx = self._parse_refdes(ref_des)[0]
         return len(self.elements[ele_idx])
 
     def set_seg_term(self, seg_term):
