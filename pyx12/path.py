@@ -1,5 +1,5 @@
 ######################################################################
-# Copyright (c) 2005 Kalamazoo Community Mental Health Services,
+# Copyright (c) 2005-2009 Kalamazoo Community Mental Health Services,
 #   John Holland <jholland@kazoocmh.org> <john@zoner.org>
 # All rights reserved.
 #
@@ -56,21 +56,29 @@ class path(object):
             del self.loop_list[0]
         else:
             self.relative = True
-
-        seg_str = self.loop_list[-1]
-        re_seg_id = '(?P<seg_id>[A-Z][A-Z0-9]{1,2})'
-        re_id_val = '(\[(?P<id_val>[A-Z0-9]+)\])?'
-        re_ele_idx = '(?P<ele_idx>[0-9]{2})?'
-        re_subele_idx = '(-(?P<subele_idx>[0-9]+))?'
-        re_str = '^%s%s%s%s$' % (re_seg_id, re_id_val, re_ele_idx, re_subele_idx)
-        m = re.compile(re_str, re.S).search(seg_str)
-        if m is not None:
-            self.seg_id = m.group('seg_id')
-            self.id_val = m.group('id_val')
-            self.ele_idx = m.group('ele_idx')
-            self.subele_idx = m.group('subele_idx')
+        if self.loop_list[-1] == '':
+            # Ended in a /, so no segment
             del self.loop_list[-1]
-        #        raise EngineError, 'Invalid segment path: %s' % (seg_str)
+        else:
+            seg_str = self.loop_list[-1]
+            re_seg_id = '(?P<seg_id>[A-Z][A-Z0-9]{1,2})?'
+            re_id_val = '(\[(?P<id_val>[A-Z0-9]+)\])?'
+            re_ele_idx = '(?P<ele_idx>[0-9]{2})?'
+            re_subele_idx = '(-(?P<subele_idx>[0-9]+))?'
+            re_str = '^%s%s%s%s$' % (re_seg_id, re_id_val, re_ele_idx, re_subele_idx)
+            m = re.compile(re_str, re.S).search(seg_str)
+            if m is not None:
+                self.seg_id = m.group('seg_id')
+                self.id_val = m.group('id_val')
+                if m.group('ele_idx') is not None:
+                    self.ele_idx = int(m.group('ele_idx'))
+                if m.group('subele_idx') is not None:
+                    self.subele_idx = int(m.group('subele_idx'))
+                del self.loop_list[-1]
+                if self.seg_id is None and self.id_val is not None:
+                    raise X12PathError, 'Path "%s" is invalid. Must specify a segment identifier with a qualifier' % (path_str)
+                if self.seg_id is None and (self.ele_idx is not None or self.subele_idx is not None) and len(self.loop_list) > 0:
+                    raise X12PathError, 'Path "%s" is invalid. Must specify a segment identifier' % (path_str)
         
     def is_match(self, path_str):
         pass
@@ -118,16 +126,19 @@ class path(object):
         @rtype: string
         """
         ret = ''
-        if not self.relative: ret += '/'
+        if not self.relative: 
+            ret += '/'
         ret += '/'.join(self.loop_list)
         if self.seg_id:
-            ret += '/' + self.seg_id
+            if ret != '':
+                ret += '/'
+            ret += self.seg_id
             if self.id_val:
                 ret += '[%s]' % self.id_val
-            if self.ele_idx:
-                ret += self.ele_idx
+        if self.ele_idx:
+            ret += '%02i' % (self.ele_idx)
             if self.subele_idx:
-                ret += '-%s' % self.subele_idx
+                ret += '-%i' % self.subele_idx
         return ret
 
     def format(self):

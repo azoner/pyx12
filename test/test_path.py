@@ -4,6 +4,7 @@ import sys
 import unittest
 
 from pyx12.tests.path import *
+from pyx12.errors import *
 from helper import get_testcases, print_testcases, get_suite
 
 try:
