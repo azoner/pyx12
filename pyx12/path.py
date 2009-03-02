@@ -32,7 +32,7 @@ import re
 
 from pyx12.errors import *
 
-class path(object):
+class X12Path(object):
     """
     Interface to an x12 path
     """

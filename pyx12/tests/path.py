@@ -44,14 +44,14 @@ class AbsPath(unittest.TestCase):
 
     def testLoopOK1(self):
         path_str = '/ISA_LOOP/GS_LOOP/ST_LOOP/DETAIL/2000A/2000B/2300/2400'
-        path = pyx12.path.path(path_str)
+        path = pyx12.path.X12Path(path_str)
         self.assertEqual(path_str, path.format())
         self.assertEqual(path.seg_id, None)
         self.assertEqual(path.loop_list[2], 'ST_LOOP')
 
     def testLoopSegOK1(self):
         path_str = '/ISA_LOOP/GS_LOOP/ST_LOOP/DETAIL/2000A/2000B/2300/2400/SV2'
-        path = pyx12.path.path(path_str)
+        path = pyx12.path.X12Path(path_str)
         self.assertEqual(path_str, path.format())
         self.assertEqual(path.seg_id, 'SV2')
 
@@ -60,17 +60,17 @@ class Format(unittest.TestCase):
 
     def test_Format1(self):
         path_str = '/2000A/2000B/2300/2400/SV2'
-        path = pyx12.path.path(path_str)
+        path = pyx12.path.X12Path(path_str)
         self.assertEqual(path_str, path.format())
     
     def test_Format2(self):
         path_str = '/2000A/2000B/2300/2400/SV201'
-        path = pyx12.path.path(path_str)
+        path = pyx12.path.X12Path(path_str)
         self.assertEqual(path_str, path.format())
     
     def test_Format3(self):
         path_str = '/2000A/2000B/2300/2400/SV2[421]01'
-        path = pyx12.path.path(path_str)
+        path = pyx12.path.X12Path(path_str)
         self.assertEqual(path_str, path.format())
 
 
@@ -90,7 +90,7 @@ class RefDes(unittest.TestCase):
             ('N1[372]02-5', 'N1', '372', 2, 5)
         ]
         for (spath, seg_id, qual, eleidx, subeleidx) in tests:
-            rd = pyx12.path.path(spath)
+            rd = pyx12.path.X12Path(spath)
             self.assertEqual(rd.seg_id, seg_id, '%s: %s != %s' % (spath, rd.seg_id, seg_id))
             self.assertEqual(rd.id_val, qual, '%s: %s != %s' % (spath, rd.id_val, qual))
             self.assertEqual(rd.ele_idx, eleidx, '%s: %s != %s' % (spath, rd.ele_idx, eleidx))
@@ -113,7 +113,7 @@ class RelativePath(unittest.TestCase):
             ('BB/CC/N1[372]02-5', 'N1', '372', 2, 5, ['BB', 'CC'])
         ]
         for (spath, seg_id, qual, eleidx, subeleidx, plist) in tests:
-            rd = pyx12.path.path(spath)
+            rd = pyx12.path.X12Path(spath)
             self.assertEqual(rd.relative, True, '%s: %s != %s' % (spath, rd.relative, True))
             self.assertEqual(rd.seg_id, seg_id, '%s: %s != %s' % (spath, rd.seg_id, seg_id))
             self.assertEqual(rd.id_val, qual, '%s: %s != %s' % (spath, rd.id_val, qual))
@@ -128,7 +128,7 @@ class RelativePath(unittest.TestCase):
             'BB/CC/03-2'
         ]
         for spath in bad_paths:
-            self.failUnlessRaises(pyx12.errors.X12PathError, pyx12.path.path, spath)
+            self.failUnlessRaises(pyx12.errors.X12PathError, pyx12.path.X12Path, spath)
 
     def test_plain_loops(self):
         paths = [
@@ -145,7 +145,7 @@ class RelativePath(unittest.TestCase):
         ]
         for spath in paths:
             plist = spath.split('/')
-            rd = pyx12.path.path(spath)
+            rd = pyx12.path.X12Path(spath)
             self.assertEqual(rd.loop_list, plist, '%s: %s != %s' % (spath, rd.loop_list, plist))
 
 
@@ -163,7 +163,7 @@ class AbsolutePath(unittest.TestCase):
             ('/BB/CC/N1[372]02-5', 'N1', '372', 2, 5, ['BB', 'CC'])
         ]
         for (spath, seg_id, qual, eleidx, subeleidx, plist) in tests:
-            rd = pyx12.path.path(spath)
+            rd = pyx12.path.X12Path(spath)
             self.assertEqual(rd.relative, False, '%s: %s != %s' % (spath, rd.relative, False))
             self.assertEqual(rd.seg_id, seg_id, '%s: %s != %s' % (spath, rd.seg_id, seg_id))
             self.assertEqual(rd.id_val, qual, '%s: %s != %s' % (spath, rd.id_val, qual))
@@ -178,7 +178,7 @@ class AbsolutePath(unittest.TestCase):
             '/BB/CC/03-2'
         ]
         for spath in bad_paths:
-            self.failUnlessRaises(pyx12.errors.X12PathError, pyx12.path.path, spath)
+            self.failUnlessRaises(pyx12.errors.X12PathError, pyx12.path.X12Path, spath)
 
     def test_plain_loops(self):
         paths = [
@@ -195,5 +195,5 @@ class AbsolutePath(unittest.TestCase):
         ]
         for spath in paths:
             plist = spath.split('/')[1:]
-            rd = pyx12.path.path(spath)
+            rd = pyx12.path.X12Path(spath)
             self.assertEqual(rd.loop_list, plist, '%s: %s != %s' % (spath, rd.loop_list, plist))

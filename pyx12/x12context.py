@@ -31,6 +31,7 @@ import errors
 import map_index
 import map_if
 import x12file
+import path
 from map_walker import walk_tree, pop_to_parent_loop #, get_pop_loops, get_push_loops
 
 class X12DataNode(object):
@@ -288,7 +289,10 @@ class X12LoopDataNode(X12DataNode):
         seg_data = self._get_first_matching_segment(x12_path)
         if seg_data is None:
             return None
-        (seg_part, qual) = X12SegmentDataNode.get_seg_id_parts(x12_path)
+        xpath = path.X12Path(x12_path)
+        xpath.loop_list = []
+        xpath.id_val = None
+        seg_part = xpath.format()
         return seg_data.get_value(seg_part)
 
     def set_value(self, x12_path, val):
@@ -302,10 +306,11 @@ class X12LoopDataNode(X12DataNode):
         seg_data = self._get_first_matching_segment(x12_path)
         if seg_data is None:
             raise errors.X12PathError, 'X12 Path is invalid or was not found: %s' % (x12_path)
-        #ele_idx = self.get_ele_idx(x12_path)
-        #seg_data.set(ele_idx, val)
-        (seg_part, qual) = X12SegmentDataNode.get_seg_id_parts(x12_path)
-        seg_data.set_value(seg_part, val)
+        xpath = path.X12Path(x12_path)
+        xpath.loop_list = []
+        xpath.id_val = None
+        seg_part = xpath.format()
+        seg_data.set(seg_part, val)
 
     def iterate_segments(self):
         """
@@ -496,22 +501,28 @@ class X12LoopDataNode(X12DataNode):
         """
         if len(x12_path) == 0:
             raise errors.X12PathError, 'Blank X12 Path'
-        elif x12_path.find('/') == -1:
+        xpath = path.X12Path(x12_path)
+        if xpath.seg_id is None:
+            return None
+        if len(xpath.loop_list) == 0:
+            seg_id = xpath.seg_id
+            qual = xpath.id_val
+            #ele_idx = xpath.ele_idx
+            #subele_idx = xpath.subele_idx
             try:
                 for seg in [seg for seg in self.children if seg.type == 'seg']:
-                    if x12_path.startswith(seg.id):
-                        return seg
+                    if seg.x12_map_node.is_match_qual(seg_id, qual):
+                        return seg.seg_data
                 return None
             except errors.EngineError, e:
                 raise errors.X12PathError, 'X12 Path is invalid or was not found: %s' % (x12_path)
         else:
-            plist = x12_path.split('/')
-            next_id = plist[0]
-            plist = plist[1:]
+            next_id = xpath.loop_list[0]
+            del xpath.loop_list[0]
             try:
                 for loop in [loop for loop in self.children if loop.type == 'loop']:
                     if loop.id == next_id:
-                        return loop._get_first_matching_segment('/'.join(plist))
+                        return loop._get_first_matching_segment(xpath.format())
                 return None
             except errors.EngineError, e:
                 raise errors.X12PathError, 'X12 Path is invalid or was not found: %s' % (x12_path)
@@ -620,41 +631,42 @@ class X12SegmentDataNode(X12DataNode):
         @rtype: L{node<segment.Segment>}
         @raise X12PathError: On blank or invalid path
         """
+        xpath = path.X12Path(x12_path)
+        if len(xpath.loop_list) != 0:
+            raise errors.X12PathError, 'This X12 Path should not contain loops: %s' % (x12_path)
+        seg_id = xpath.seg_id
+        qual = xpath.id_val
+        #ele_idx = xpath.ele_idx
+        #subele_idx = xpath.subele_idx
         try:
-            (seg_part, qual) = X12SegmentDataNode.get_seg_id_parts(x12_path)
-            if qual is not None:
-                if self.seg_data.get_value('01') == qual:
-                    return self.seg_data
-                else:
-                    return None
-            else:
+            if self.x12_map_node.is_match_qual(seg_id, qual):
                 return self.seg_data
-        except errors.EngineError:
+            return None
+        except errors.EngineError, e:
             raise errors.X12PathError, 'X12 Path is invalid or was not found: %s' % (x12_path)
         return None
 
-    @staticmethod
-    def get_seg_id_parts(x12_path):
-        """
-        Split a X12 segment reference designation into the segment part 
-        and the qualifier part.
-        @return: (segment part, qualifier part)
-        @rtype: (string, string)
-        @raise X12PathError: On blank or invalid path
-        """
-        if x12_path.find('/') != -1:
-            #raise errors.X12PathError, 'X12 Path is invalid or was not found: %s' % (x12_path)
-            x12_path = x12_path[x12_path.rfind('/')+1:]
-        pos = x12_path.find('[')
-        if pos != -1:
-            end = x12_path.find(']')
-            if end == -1 or end < pos:
-                raise errors.X12PathError, 'Bad X12 path: %s' % (x12_path)
-            qual = x12_path[pos+1:end]
-            seg_part = x12_path[:pos] + x12_path[end+1:]
-            return (seg_part, qual)
-        else:
-            return (x12_path, None)
+#    @staticmethod
+#    def get_seg_id_parts(x12_path):
+#        """
+#        Split a X12 segment reference designation into component parts
+#        @return: (segment ID, qualifier part, index)
+#        @rtype: (string, string, string)
+#        @raise X12PathError: On blank or invalid path
+#        """
+#        if x12_path.find('/') != -1:
+#            x12_path = x12_path[x12_path.rfind('/')+1:]
+#        pos = x12_path.find('[')
+#        if pos != -1:
+#            end = x12_path.find(']')
+#            if end == -1 or end < pos:
+#                raise errors.X12PathError, 'Bad X12 path: %s' % (x12_path)
+#            qual = x12_path[pos+1:end]
+#            seg_id = x12_path[:pos]
+#            idx = x12_path[end+1:]
+#            return (seg_part, qual, idx)
+#        else:
+#            return (x12_path, None)
 
     def iterate_segments(self):
         """
