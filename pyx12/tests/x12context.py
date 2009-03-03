@@ -298,9 +298,11 @@ class TreeAddNode(unittest.TestCase):
         for node in loop2300.select('CN1'):
             cn1 = node
             break
+        n2400 = None
         for node in loop2300.select('2400'):
             n2400 = node
             break
+        assert n2400 is not None, 'Loop 2400 was not matched'
         self.failUnlessRaises(pyx12.errors.X12PathError, n2400.add_node, cn1)
 
     def _get_count(self, node, loop_id):

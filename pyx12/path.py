@@ -83,6 +83,23 @@ class X12Path(object):
     def is_match(self, path_str):
         pass
 
+    def _is_child_path(self, root_path, child_path):
+        """
+        Is the child path really a child of the root path?
+        @type root_path: string
+        @type child_path: string
+        @return: True if a child
+        @rtype: boolean
+        """
+        root = root_path.split('/')
+        child = child_path.split('/')
+        if len(root) >= len(child):
+            return False
+        for i in range(len(root)):
+            if root[i] != child[i]:
+                return False
+        return True
+
     # def __parse_ele_path(self, ele_str):
         # """
         # @param ele_str: An element path in the form '03' or '03-5'
@@ -151,9 +168,20 @@ class X12Path(object):
         if not self.relative: 
             ret += '/'
         ret += '/'.join(self.loop_list)
+        if self.seg_id and ret != '':
+            ret += '/'
+        ret += self.format_refdes()
+        return ret
+
+    def format(self):
+        """
+        @rtype: string
+        """
+        return self.__repr__()
+
+    def format_refdes(self):
+        ret = ''
         if self.seg_id:
-            if ret != '':
-                ret += '/'
             ret += self.seg_id
             if self.id_val:
                 ret += '[%s]' % self.id_val
@@ -162,9 +190,3 @@ class X12Path(object):
             if self.subele_idx:
                 ret += '-%i' % self.subele_idx
         return ret
-
-    def format(self):
-        """
-        @rtype: string
-        """
-        return self.__repr__()

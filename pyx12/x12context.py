@@ -92,44 +92,44 @@ class X12DataNode(object):
         """
         raise NotImplementedError, 'Override in sub-class'
 
-    def exists(self, x12_path):
+    def exists(self, x12_path_str):
         """
         Does at least one child at the x12 path exist?
-        @param x12_path: Relative X12 path - 2400/2430
-        @type x12_path: string
+        @param x12_path_str: Relative X12 path - 2400/2430
+        @type x12_path_str: string
         @return: True if found
         @rtype: boolean
         """
-        path_list = self._get_path_list(x12_path)
-        for n in self._select(path_list):
+        x12path = path.X12Path(x12_path_str)
+        for n in self._select(x12path):
             return True
         return False
 
-    def select(self, x12_path):
+    def select(self, x12_path_str):
         """
         Get a slice of sub-nodes at the relative X12 path.
         @note: All interaction/modification with a X12DataNode tree (having a loop 
         root) is done in place.
-        @param x12_path: Relative X12 path - 2400/2430
-        @type x12_path: string
+        @param x12_path_str: Relative X12 path - 2400/2430
+        @type x12_path_str: string
         @return: Iterator on the matching sub-nodes, relative to the instance.
         @rtype: L{node<x12context.X12DataNode>}
         """
-        path_list = self._get_path_list(x12_path)
-        for n in self._select(path_list):
+        x12path = path.X12Path(x12_path_str)
+        for n in self._select(x12path):
             yield n
 
-    def count(self, x12_path):
+    def count(self, x12_path_str):
         """
         Get a count of sub-nodes at the relative X12 path.
-        @param x12_path: Relative X12 path - 2400/2430
-        @type x12_path: string
+        @param x12_path_str: Relative X12 path - 2400/2430
+        @type x12_path_str: string
         @return: Count of matching sub-nodes
         @rtype: int
         """
         ct = 0
-        path_list = self._get_path_list(x12_path)
-        for n in self._select(path_list):
+        x12path = path.X12Path(x12_path_str)
+        for n in self._select(x12path):
             ct += 1
         return ct
 
@@ -165,38 +165,16 @@ class X12DataNode(object):
         """
         raise NotImplementedError, 'Override in sub-class'
 
-    def _get_path_list(self, path_str):
-        """
-        Get list of path nodes from path string
-        @rtype: list
-        """
-        return [x for x in path_str.split('/') if x!='']
-
-    def _is_child_path(self, root_path, child_path):
-        """
-        Is the child path really a child of the root path?
-        @type root_path: string
-        @type child_path: string
-        @return: True if a child
-        @rtype: boolean
-        """
-        root = root_path.split('/')
-        child = child_path.split('/')
-        if len(root) >= len(child):
-            return False
-        for i in range(len(root)):
-            if root[i] != child[i]:
-                return False
-        return True
-
-    def _select(self, path_list):
+    def _select(self, x12path):
         """
         Get the child node at the path
-        @param path_list: List of x12_map_node IDs
-        @type path_list: [string]
+        @param x12path: x12 map path
+        @type x12path: L{path<path.X12Path>}
         """
-        if len(path_list) == 1:
-            (cur_node_id, qual) = self._parse_path_id(path_list[0])
+        if len(x12path.loop_list) == 0:
+            # Only segment left
+            cur_node_id = x12path.seg_id
+            qual = x12path.id_val
             for child in [x for x in self.children if x.type is not None]:
                 if child.type == 'seg':
                     if child.x12_map_node.is_match_qual(cur_node_id, qual):
@@ -204,31 +182,16 @@ class X12DataNode(object):
                 else:
                     if child.id == cur_node_id:
                         yield child
-        elif len(path_list) > 1:
-            cur_node_id = path_list[0]
-            #del path_list[0]
-            new_path = path_list[1:]
+        else:
+            cur_node_id = x12path.loop_list[0]
+            del x12path.loop_list[0]
             for child in [x for x in self.children if x.type is not None]:
                 if child.id == cur_node_id:
-                    for n in child._select(new_path):
-                        yield n
-
-    def _parse_path_id(self, path_str):
-        """
-        Get the plain id and a segment qualifier from a path string.
-
-        @todo: This functionality should be implemented by a path object
-        """
-        #xp = path.X12Path(path_str)
-        #return (xp.seg_id, xp.id_val)
-        pos1 = path_str.find('[')
-        pos2 = path_str.find(']')
-        if pos1 != -1 and pos2 != -1 and pos1 < pos2:
-            seg_id = path_str[:pos1]
-            qual = path_str[pos1+1:pos2]
-            return (seg_id, qual)
-        else:
-            return (path_str, None)
+                    if x12path.seg_id is None:
+                        yield child
+                    else:
+                        for n in child._select(x12path):
+                            yield n
 
     #{ Property Accessors
     def _get_id(self):
@@ -805,12 +768,12 @@ class X12ContextReader(object):
                             tpath = '/ISA_LOOP/GS_LOOP/ST_LOOP/HEADER/BHT'
                             self.x12_map_node = cur_map.getnodebypath(tpath)
 
-            node_path = self._get_path_list(self.x12_map_node.get_path())
+            node_x12path = self.x12_map_node.x12path
             # If we are in the requested tree, wait until we have the whole thing
-            if loop_id is not None and loop_id in node_path:
+            if loop_id is not None and loop_id in node_x12path.loop_list:
                 #pdb.set_trace()
                 # Are we at the start of the requested tree? 
-                if node_path[-2] == loop_id and \
+                if node_x12path.loop_list[-1] == loop_id and \
                         self.x12_map_node.is_first_seg_in_loop():
                     if cur_tree is not None:
                         # Found root loop repeat. Yield existing, create new tree
@@ -903,18 +866,14 @@ class X12ContextReader(object):
         if cur_loop_node.type == 'seg':
             cur_loop_node = cur_loop_node.parent
         # check path for new loops to be added
-        new_path_list = self._get_path_list(parent_x12_node.get_path())
-        last_path_list = self._get_path_list(cur_loop_node.cur_path)
-        if last_path_list != new_path_list:
+        new_path = parent_x12_node.x12path
+        last_path = cur_loop_node.x12_map_node.x12path
+        if last_path != new_path:
             for x12_loop in pop_loops:
-            #for x12_loop in get_pop_loops(cur_data_node.x12_map_node, segment_x12_node):
                 if cur_loop_node.id != x12_loop.id:
                     raise errors.EngineError, 'Loop pop: %s != %s' % (cur_loop_node.id, x12_loop.id)
                 cur_loop_node = cur_loop_node.parent
-            #for i in range(match_idx, len(new_path_list)):
             for x12_loop in push_loops:
-            #for x12_loop in get_push_loops(cur_data_node.x12_map_node, \
-            #        segment_x12_node):
                 if cur_loop_node is None:
                     raise errors.EngineError, 'cur_loop_node is None. x12_loop: %s' % (x12_loop.id)
                 # push new loop nodes, if needed
@@ -949,60 +908,6 @@ class X12ContextReader(object):
         for (path, ct) in ct_list:
             curnode = new_map.getnodebypath(path)
             curnode.set_cur_count(ct)
-
-    def _get_path_list(self, path_str):
-        """
-        Get list of path nodes from path string
-        @rtype: list
-        """
-        return [x for x in path_str.split('/') if x!='']
-
-#    def _get_path_match_idx(self, last_path, cur_path, seg_x12_node):
-#        """
-#        Get the index of the last matching path nodes
-#        @param last_path: list of map ids
-#        @type last_path: list of strings 
-#        @param cur_path: list of map ids
-#        @type cur_path: list of strings 
-#        @param seg_x12_node: Segment Map Node
-#        @type seg_x12_node: L{node<map_if.x12_node>}
-#        """
-#        match_idx = 0
-#        for i in range(min(len(cur_path), len(last_path))):
-#            if cur_path[i] != last_path[i]:
-#                break
-#            match_idx += 1
-#        root_path = self._get_root_path(last_path, cur_path)
-#        if seg_x12_node.is_first_seg_in_loop() \
-#                and root_path == cur_path:
-#            match_idx -= 1
-#        return match_idx
-
-#    def _get_parent_x12_loop(self, loop_id, start_x12_node):
-#        """
-#        From a segment X12 node, return the matching parent x12 loop node
-#        """
-#        x12_node = start_x12_node
-#        while not x12_node.is_map_root():
-#            if x12_node.id == loop_id:
-#                return x12_node
-#            else:
-#                x12_node = x12_node.parent
-#        return None
-
-#    def _get_root_path(self, path_list1, path_list2):
-#        """
-#        @param path_list1: list of map ids
-#        @type path_list1: list of strings 
-#        @param path_list2: list of map ids
-#        @type path_list2: list of strings 
-#        @return: Common path prefix
-#        @rtype: list of strings 
-#        """
-#        return self._get_path_list(os.path.commonprefix(
-#            ['/'.join(path_list1), '/'.join(path_list2)]))
-
-    #def _get_loop_pop_list(self, old_path_list, new_path_list):
 
     def _reset_isa_counts(self, cur_map):
         """
