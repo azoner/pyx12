@@ -197,24 +197,24 @@ class NonEquality(unittest.TestCase):
     def test_nequal1(self):
         p1 = pyx12.path.X12Path('/ISA_LOOP/GS_LOOP/ST_LOOP/DETAIL/2000A')
         p2 = pyx12.path.X12Path('ISA_LOOP/GS_LOOP/ST_LOOP/DETAIL/2000A')
-        self.assertEqual(p1, p2)
-        self.assertEqual(p1.format(), p2.format())        
+        self.assertNotEqual(p1, p2)
+        self.assertNotEqual(p1.format(), p2.format())        
     
     def test_nequal2(self):
         p1 = pyx12.path.X12Path('/ISA_LOOP/GS_LOOP/ST_LOOP/DETAIL/2000A')
         p2 = pyx12.path.X12Path('/ISA_LOOP/GS_LOOP/ST_LOOP/DETAIL/')
-        self.assertEqual(p1, p2)
-        self.assertEqual(p1.format(), p2.format())
+        self.assertNotEqual(p1, p2)
+        self.assertNotEqual(p1.format(), p2.format())
         
     def test_nequal3(self):
         p1 = pyx12.path.X12Path('/AA/BB/CC/TST[1B5]03-1')
         p2 = pyx12.path.X12Path('/AA/BB/CC/AAA[1B5]03-1')
-        self.assertEqual(p1, p2)
-        self.assertEqual(p1.format(), p2.format())
+        self.assertNotEqual(p1, p2)
+        self.assertNotEqual(p1.format(), p2.format())
 
     def test_nequal4(self):
         p1 = pyx12.path.X12Path('1000B/TST03-2')
         p2 = pyx12.path.X12Path('1000B/TST04-2')
-        self.assertEqual(p1, p2)
-        self.assertEqual(p1.format(), p2.format())
+        self.assertNotEqual(p1, p2)
+        self.assertNotEqual(p1.format(), p2.format())
         

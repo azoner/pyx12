@@ -8,6 +8,7 @@ import pyx12.error_handler
 from pyx12.errors import *
 import pyx12.map_if
 import pyx12.params 
+import pyx12.path
 import pyx12.segment
 from pyx12.tests.support import getMapPath
 
@@ -780,3 +781,24 @@ class MatchSegmentQual(unittest.TestCase):
         self.assertEqual(node.base_name, 'segment')
         self.failUnless(node.is_match_qual('REF', '87'))
 
+
+class X12Path(unittest.TestCase):
+    def setUp(self):
+        map_path = getMapPath()
+        param = pyx12.params.params('pyx12.conf.xml')
+        if map_path:
+            param.set('map_path', map_path)
+            param.set('pickle_path', map_path)
+        self.map = pyx12.map_if.load_map_file('837.4010.X098.A1.xml', param)
+
+    def test_837_paths(self):
+        paths = [
+            '/ISA_LOOP/GS_LOOP/ST_LOOP/DETAIL/2000A/2000B/2300/CLM',
+            '/ISA_LOOP/GS_LOOP/ST_LOOP/DETAIL/2000A/2000B/2300/REF',
+            '/ISA_LOOP/GS_LOOP/ST_LOOP/DETAIL/2000A',
+            '/ISA_LOOP/GS_LOOP/ST_LOOP/DETAIL/2000A/2000B/2300/2400/SV1'
+        ]
+        for p1 in paths:
+            node = self.map.getnodebypath(p1)
+            self.assertEqual(p1, node.get_path())
+            self.assertEqual(pyx12.path.X12Path(p1), node.x12path)

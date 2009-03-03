@@ -335,6 +335,35 @@ class Segment(object):
         """
         return self.seg_id
 
+    def _parse_refdes(self, ref_des):
+        """
+        Format of ref_des:
+            - a simple element: TST02
+            - a composite: TST03 where TST03 is a composite
+            - a sub-element: TST03-2
+            - or any of the above with the segment ID omitted (02, 03, 03-1)
+
+        @param ref_des: X12 Reference Designator
+        @type ref_des: string
+        @rtype: tuple(ele_idx, subele_idx)
+        @raise EngineError: If the given ref_des does not match the segment ID
+            or if the indexes are not valid integers
+        """
+        xp = path.X12Path(ref_des)
+        if xp.seg_id is not None and xp.seg_id != self.seg_id:
+            err_str = 'Invalid Reference Designator: %s, seg_id: %s' \
+                % (ref_des, self.seg_id)
+            raise EngineError, err_str
+        if xp.ele_idx is not None:
+            ele_idx = xp.ele_idx - 1
+        else:
+            ele_idx = None
+        if xp.subele_idx is not None:
+            comp_idx = xp.subele_idx - 1
+        else:
+            comp_idx = None
+        return (ele_idx, comp_idx)
+
     # def _parse_refdes(self, ref_des):
         # """
         # Format of ref_des:
@@ -379,10 +408,7 @@ class Segment(object):
         @return: Element or Composite
         @rtype: L{segment.Composite}
         """
-        xp = path.X12Path(ref_des)
-        ele_idx = xp.ele_idx
-        comp_idx = xp.subele_idx
-        #(ele_idx, comp_idx) = self._parse_refdes(ref_des)
+        (ele_idx, comp_idx) = self._parse_refdes(ref_des)
         if ele_idx >= self.__len__():
             return None
         if comp_idx is None:
@@ -422,10 +448,7 @@ class Segment(object):
         @param val: New value
         @type val: string
         """
-        xp = path.X12Path(ref_des)
-        ele_idx = xp.ele_idx
-        comp_idx = xp.subele_idx
-        #(ele_idx, comp_idx) = self._parse_refdes(ref_des)
+        (ele_idx, comp_idx) = self._parse_refdes(ref_des)
         while len(self.elements) <= ele_idx:
             self.elements.append(Composite('', self.subele_term))
         if comp_idx is None:
@@ -440,9 +463,7 @@ class Segment(object):
         @param ref_des: X12 Reference Designator
         @type ref_des: string
         """
-        xp = path.X12Path(ref_des)
-        ele_idx = xp.ele_idx
-        #ele_idx = self._parse_refdes(ref_des)[0]
+        ele_idx = self._parse_refdes(ref_des)[0]
         return self.elements[ele_idx].is_element()
 
     def is_composite(self, ref_des):
@@ -450,9 +471,7 @@ class Segment(object):
         @param ref_des: X12 Reference Designator
         @type ref_des: string
         """
-        xp = path.X12Path(ref_des)
-        ele_idx = xp.ele_idx
-        #ele_idx  = self._parse_refdes(ref_des)[0]
+        ele_idx  = self._parse_refdes(ref_des)[0]
         return self.elements[ele_idx].is_composite()
 
     def ele_len(self, ref_des):
@@ -462,9 +481,7 @@ class Segment(object):
         @return: number of sub-elements in an element or composite
         @rtype: int
         """
-        xp = path.X12Path(ref_des)
-        ele_idx = xp.ele_idx
-        #ele_idx = self._parse_refdes(ref_des)[0]
+        ele_idx = self._parse_refdes(ref_des)[0]
         return len(self.elements[ele_idx])
 
     def set_seg_term(self, seg_term):

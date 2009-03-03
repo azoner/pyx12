@@ -30,6 +30,7 @@ from stat import ST_SIZE
 from errors import IsValidError, XML_Reader_Error, EngineError
 import codes
 import dataele
+import path
 import segment
 
 #Global Variables
@@ -93,7 +94,8 @@ class x12_node(object):
         """
         """
         pathl = path.split('/')
-        if len(pathl) == 0: return None
+        if len(pathl) == 0: 
+            return None
         for child in self.children:
             if child.id.lower() == pathl[0].lower():
                 if len(pathl) == 1:
@@ -127,6 +129,15 @@ class x12_node(object):
             return '/' + self.path
         else:
             return parent_path + '/' + self.path
+
+    def _get_x12_path(self):
+        """
+        @return: X12 node path
+        @rtype: L{path<path.X12Path>}
+        """
+        return path.X12Path(self.get_path())
+
+    x12path = property(_get_x12_path, None, None)
 
 #    def walk_tree(self, seg):
 #        pass

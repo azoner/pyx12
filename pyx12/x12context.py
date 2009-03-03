@@ -101,7 +101,6 @@ class X12DataNode(object):
         @rtype: boolean
         """
         path_list = self._get_path_list(x12_path)
-        path_list = 
         for n in self._select(path_list):
             return True
         return False
@@ -220,6 +219,8 @@ class X12DataNode(object):
 
         @todo: This functionality should be implemented by a path object
         """
+        #xp = path.X12Path(path_str)
+        #return (xp.seg_id, xp.id_val)
         pos1 = path_str.find('[')
         pos2 = path_str.find(']')
         if pos1 != -1 and pos2 != -1 and pos1 < pos2:
