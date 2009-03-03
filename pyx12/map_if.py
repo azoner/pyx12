@@ -1,5 +1,5 @@
 ######################################################################
-# Copyright (c) 2001-2005 Kalamazoo Community Mental Health Services,
+# Copyright (c) 2001-2009 Kalamazoo Community Mental Health Services,
 #   John Holland <jholland@kazoocmh.org> <john@zoner.org>
 # All rights reserved.
 #
@@ -654,7 +654,8 @@ class loop_if(x12_node):
         @return: matching node, or None is no match
         """
         pathl = path.split('/')
-        if len(pathl) == 0: return None
+        if len(pathl) == 0: 
+            return None
         for ord1 in sorted(self.pos_map):
             for child in self.pos_map[ord1]:
                 if child.is_loop():
@@ -670,6 +671,53 @@ class loop_if(x12_node):
                     else:
                         seg_id = pathl[0][0:pathl[0].find('[')]
                         id_val = pathl[0][pathl[0].find('[')+1:pathl[0].find(']')]
+                        if seg_id == child.id:
+                            if child.children[0].is_element() \
+                                and child.children[0].get_data_type() == 'ID' \
+                                and len(child.children[0].valid_codes) > 0 \
+                                and id_val in child.children[0].valid_codes:
+                                return child
+                            # Special Case for 820
+                            elif seg_id == 'ENT' and child.children[1].is_element() \
+                                and child.children[1].get_data_type() == 'ID' \
+                                and len(child.children[1].valid_codes) > 0 \
+                                and id_val in child.children[1].valid_codes:
+                                return child
+                            elif child.children[0].is_composite() \
+                                and child.children[0].children[0].get_data_type() == 'ID' \
+                                and len(child.children[0].children[0].valid_codes) > 0 \
+                                and id_val in child.children[0].children[0].valid_codes:
+                                return child
+                            elif seg_id == 'HL' and child.children[2].is_element() \
+                                and len(child.children[2].valid_codes) > 0 \
+                                and id_val in child.children[2].valid_codes:
+                                return child
+        raise EngineError, 'getnodebypath failed. Path "%s" not found' % path
+
+    def getnodebypath2(self, path):
+        """
+        @param path: remaining path to match
+        @type path: string
+        @return: matching node, or None is no match
+        """
+        x12path = path.X12Path(path)
+        if x12path.empty():
+            return None
+        for ord1 in sorted(self.pos_map):
+            for child in self.pos_map[ord1]:
+                if child.is_loop() and len(x12path.loop_list) > 0:
+                    if child.id.upper() == x12path.loop_list[0].upper():
+                        if len(x12path.loop_list) == 1 and x12path.seg_id is None:
+                            return child
+                        else:
+                            return child.getnodebypath(x12path.format())
+                elif child.is_segment() and len(x12path.loop_list) ==0 and x12path.seg_id is not None:
+                    if x12path.id_val is None:
+                        if x12path.seg_id == child.id:
+                            return child
+                    else:
+                        seg_id = x12path.seg_id
+                        id_val = x12path.id_val
                         if seg_id == child.id:
                             if child.children[0].is_element() \
                                 and child.children[0].get_data_type() == 'ID' \
@@ -1639,22 +1687,12 @@ class composite_if(x12_node):
                 valid &= self.get_child_node_by_idx(i).is_valid(None, errh)
         return valid
 
-#    def getnodebypath(self, path):
-#        """
-#        """
-#        pathl = path.split('/')
-#        if len(pathl) <=2: return None
-#        for child in self.children:
-#            node = child.getnodebypath(pathl[2:])
-#            if node != None:
-#                return node
-#        return None
-           
     def is_composite(self):
         """
         @rtype: boolean
         """
         return True
+
 
 class Pickle_Errors(Exception):
     """Class for map pickling errors."""
