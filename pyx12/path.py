@@ -43,23 +43,29 @@ class X12Path(object):
         @type path_str: string
         
         """
-        self.loop_list = path_str.split('/')
+        #self.loop_list = 
         self.seg_id = None
         self.id_val = None
         self.ele_idx = None
         self.subele_idx = None
-
-        if len(self.loop_list) == 0:
-            return None
-        if self.loop_list[0] == '':
+        self.relative = None
+        self.loop_list = []
+        if path_str == '':
+            self.relative = True
+            return
+        if path_str[0] == '/':
             self.relative = False
-            del self.loop_list[0]
+            self.loop_list = path_str[1:].split('/')
         else:
             self.relative = True
-        if self.loop_list[-1] == '':
+            self.loop_list = path_str.split('/')
+        if len(self.loop_list) == 0:
+            return
+        if len(self.loop_list) > 0 and self.loop_list[-1] == '':
             # Ended in a /, so no segment
             del self.loop_list[-1]
-        else:
+            return
+        if len(self.loop_list) > 0:
             seg_str = self.loop_list[-1]
             re_seg_id = '(?P<seg_id>[A-Z][A-Z0-9]{1,2})?'
             re_id_val = '(\[(?P<id_val>[A-Z0-9]+)\])?'
@@ -82,6 +88,14 @@ class X12Path(object):
         
     def is_match(self, path_str):
         pass
+
+    def empty(self):
+        """
+        Is the path empty?
+        @return: True if contains no path data
+        @rtype: boolean
+        """
+        return self.relative == True and len(self.loop_list) == 0 and self.seg_id is None and self.ele_idx is None
 
     def _is_child_path(self, root_path, child_path):
         """

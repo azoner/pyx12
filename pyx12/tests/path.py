@@ -193,6 +193,7 @@ class Equality(unittest.TestCase):
         self.assertEqual(p1, p2)
         self.assertEqual(p1.format(), p2.format())
 
+
 class NonEquality(unittest.TestCase):
     def test_nequal1(self):
         p1 = pyx12.path.X12Path('/ISA_LOOP/GS_LOOP/ST_LOOP/DETAIL/2000A')
@@ -218,3 +219,34 @@ class NonEquality(unittest.TestCase):
         self.assertNotEqual(p1, p2)
         self.assertNotEqual(p1.format(), p2.format())
         
+
+class Empty(unittest.TestCase):
+    def test_not_empty_1(self):
+        p1 = '1000B/TST03-2'
+        self.assertFalse(pyx12.path.X12Path(p1).empty(), 'Path "%s" is not empty' % (p1))
+
+    def test_not_empty_2(self):
+        p1 = '/AA/BB/CC/AAA[1B5]03'
+        self.assertFalse(pyx12.path.X12Path(p1).empty(), 'Path "%s" is not empty' % (p1))
+
+    def test_not_empty_3(self):
+        p1 = 'GS_LOOP/ST_LOOP/DETAIL/2000A'
+        self.assertFalse(pyx12.path.X12Path(p1).empty(), 'Path "%s" is not empty' % (p1))
+
+    def test_not_empty_4(self):
+        p1 = '/ISA_LOOP/GS_LOOP/ST_LOOP/DETAIL/2000A'
+        self.assertFalse(pyx12.path.X12Path(p1).empty(), 'Path "%s" is not empty' % (p1))
+
+    def test_not_empty_5(self):
+        p1 = '/'
+        self.assertFalse(pyx12.path.X12Path(p1).empty(), 'Path "%s" is not empty' % (p1))
+
+    def test_not_empty_6(self):
+        p1 = '/ISA_LOOP/GS_LOOP/ST_LOOP/DETAIL/2000A/'
+        self.assertFalse(pyx12.path.X12Path(p1).empty(), 'Path "%s" is not empty' % (p1))
+
+    def test_empty_1(self):
+        p1 = ''
+        a = pyx12.path.X12Path(p1)
+        self.assertTrue(pyx12.path.X12Path(p1).empty(), 'Path "%s" is empty' % (p1))
+
