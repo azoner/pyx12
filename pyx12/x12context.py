@@ -391,7 +391,7 @@ class X12LoopDataNode(X12DataNode):
                 return True
         return False
 
-    def delete_node(self, x12_path):
+    def delete_node(self, x12_path_str):
         """
         Delete the first node at the given relative path.  If the path is not a
         valid relative path, return False If multiple values exist, this
@@ -402,32 +402,11 @@ class X12LoopDataNode(X12DataNode):
         @raise X12PathError: On blank or invalid path
         @todo: Check counts?
         """
-        if len(x12_path) == 0:
-            raise errors.X12PathError, 'Blank X12 Path'
-        elif x12_path.find('/') == -1:
-            try:
-                for i in range(len(self.children)):
-                    if self.children[i].type == 'seg' and x12_path.startswith(self.children[i].id):
-                        del self.children[i]
-                        return True
-                    elif self.children[i].type == 'loop' and self.children[i].id == x12_path:
-                        del self.children[i]
-                        return True
-                return False
-            except errors.EngineError, e:
-                raise errors.X12PathError, 'X12 Path is invalid or was not found: %s' % (x12_path)
-        else:
-            plist = x12_path.split('/')
-            next_id = plist[0]
-            plist = plist[1:]
-            try:
-                for i in range(len(self.children)):
-                    if self.children[i].type == 'loop' and self.children[i].id == next_id:
-                        if len(plist) > 1:
-                            return self.children[i].delete_node('/'.join(plist))
-                return False
-            except errors.EngineError, e:
-                raise errors.X12PathError, 'X12 Path is invalid or was not found: %s' % (x12_path)
+        x12path = path.X12Path(x12_path_str)
+        for n in self._select(x12path):
+            n.delete()
+            return True
+        return False
 
     def _add_loop_node(self, x12_loop_node):
         """
@@ -439,15 +418,6 @@ class X12LoopDataNode(X12DataNode):
         """
         new_node = X12LoopDataNode(x12_loop_node, parent=self)
         # Iterate over data nodes
-        #idx = x12_loop_node.index
-        #self._cleanup()
-        #child_idx = len(self.children)
-        #for i in range(len(self.children)):
-        #    if self.children[i].x12_map_node.index > idx:
-        #        child_idx = i
-        #        break
-        #self.children.insert(self._get_insert_idx(x12_loop_node), new_node)
-        #assert(child_idx==self._get_insert_idx(x12_loop_node))
         child_idx = self._get_insert_idx(x12_loop_node)
         self.children.insert(child_idx, new_node)
         return new_node
@@ -472,8 +442,6 @@ class X12LoopDataNode(X12DataNode):
         if len(xpath.loop_list) == 0:
             seg_id = xpath.seg_id
             qual = xpath.id_val
-            #ele_idx = xpath.ele_idx
-            #subele_idx = xpath.subele_idx
             try:
                 for seg in [seg for seg in self.children if seg.type == 'seg']:
                     if seg.x12_map_node.is_match_qual(seg_id, qual):
@@ -508,8 +476,6 @@ class X12LoopDataNode(X12DataNode):
             raise errors.EngineError, 'Unknown type for seg_obj %s' % (seg_obj)
 
     def _get_terminators(self):
-        #import pdb
-        #pdb.set_trace()
         for child in self.children:
             if isinstance(child, X12SegmentDataNode) and child.seg_data is not None \
                     and child.seg_data.seg_term is not None:
