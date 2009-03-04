@@ -187,7 +187,7 @@ class X12DataNode(object):
             del x12path.loop_list[0]
             for child in [x for x in self.children if x.type is not None]:
                 if child.id == cur_node_id:
-                    if x12path.seg_id is None:
+                    if len(x12path.loop_list) == 0 and x12path.seg_id is None:
                         yield child
                     else:
                         for n in child._select(x12path):
@@ -871,8 +871,8 @@ class X12ContextReader(object):
         """
         ct_list = []
         orig_node.get_counts_list(ct_list)
-        for (path, ct) in ct_list:
-            curnode = new_map.getnodebypath(path)
+        for (path1, ct) in ct_list:
+            curnode = new_map.getnodebypath(path1)
             curnode.set_cur_count(ct)
 
     def _reset_isa_counts(self, cur_map):

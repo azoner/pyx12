@@ -153,6 +153,19 @@ class TreeSelect(unittest.TestCase):
             ct += 1
         self.assertEqual(ct, 2)
 
+    def test_select_from_st(self):
+        fd = open('files/835_simple.txt')
+        param = pyx12.params.params('pyx12.conf.xml')
+        errh = pyx12.error_handler.errh_null()
+        src = pyx12.x12context.X12ContextReader(param, errh, fd, xslt_files = [])
+        ct = 0
+        for datatree in src.iter_segments('ST_LOOP'):
+            if datatree.id == 'ST_LOOP':
+                for claim in datatree.select('DETAIL/2000/2100'):
+                    self.assertEqual(claim.id, '2100')
+                    ct += 1
+        self.assertEqual(ct, 3, 'Should have found 3 claim loops')
+
 
 class TreeAddSegment(unittest.TestCase):
 

@@ -406,6 +406,24 @@ class map_if(x12_node):
                         return child.getnodebypath(string.join(pathl[1:],'/'))
         raise EngineError, 'getnodebypath failed. Path "%s" not found' % path
             
+    def getnodebypath2(self, path_str):
+        """
+        @param path: Path string; /1000/2000/2000A/NM102-3
+        @type path: string
+        """
+        x12path = path.X12Path(path_str)
+        if x12path.empty():
+            return None
+        for ord1 in sorted(self.pos_map):
+            for child in self.pos_map[ord1]:
+                if child.id.upper() == x12path.loop_list[0]:
+                    if len(x12path.loop_list) > 1:
+                        return child
+                    else:
+                        del x12path.loop_list[0]
+                        return child.getnodebypath(x12path.format())
+        raise EngineError, 'getnodebypath failed. Path "%s" not found' % path_str
+            
     def is_map_root(self):
         """
         @rtype: boolean
@@ -515,7 +533,8 @@ class loop_if(x12_node):
                 cur_name = reader.Name()
                 if cur_name == 'loop' and self.base_level < reader.Depth():
                     loop_node = loop_if(self.root, self, index)
-                    #assert loop_node.pos >= max(self.pos_map.keys()), 'Bad ordinal %s' % (loop_node)
+                    if self.pos_map:
+                        assert loop_node.pos >= max(self.pos_map.keys()), 'Bad ordinal %s' % (loop_node)
                     try:
                         self.pos_map[loop_node.pos].append(loop_node)
                     except KeyError:
@@ -527,7 +546,8 @@ class loop_if(x12_node):
                     index += 1
                 elif cur_name == 'segment':
                     seg_node = segment_if(self.root, self, index)
-                    #assert seg_node.pos >= max(self.pos_map.keys()), 'Bad ordinal %s' % (seg_node)
+                    if self.pos_map:
+                        assert seg_node.pos >= max(self.pos_map.keys()), 'Bad ordinal %s' % (seg_node)
                     try:
                         self.pos_map[seg_node.pos].append(seg_node)
                     except KeyError:
@@ -694,13 +714,13 @@ class loop_if(x12_node):
                                 return child
         raise EngineError, 'getnodebypath failed. Path "%s" not found' % path
 
-    def getnodebypath2(self, path):
+    def getnodebypath2(self, path_str):
         """
-        @param path: remaining path to match
-        @type path: string
+        @param path_str: remaining path to match
+        @type path_str: string
         @return: matching node, or None is no match
         """
-        x12path = path.X12Path(path)
+        x12path = path.X12Path(path_str)
         if x12path.empty():
             return None
         for ord1 in sorted(self.pos_map):
@@ -711,7 +731,7 @@ class loop_if(x12_node):
                             return child
                         else:
                             return child.getnodebypath(x12path.format())
-                elif child.is_segment() and len(x12path.loop_list) ==0 and x12path.seg_id is not None:
+                elif child.is_segment() and len(x12path.loop_list) == 0 and x12path.seg_id is not None:
                     if x12path.id_val is None:
                         if x12path.seg_id == child.id:
                             return child
@@ -739,7 +759,7 @@ class loop_if(x12_node):
                                 and len(child.children[2].valid_codes) > 0 \
                                 and id_val in child.children[2].valid_codes:
                                 return child
-        raise EngineError, 'getnodebypath failed. Path "%s" not found' % path
+        raise EngineError, 'getnodebypath failed. Path "%s" not found' % path_str
 
     def get_child_count(self):
         return self.__len__()
@@ -1782,6 +1802,9 @@ def load_map_file(map_file, param, xslt_files = []):
                 logger.debug('Create map from %s' % (map_full))
                 reader = libxml2.newTextReaderFilename(map_full)
                 imap = map_if(reader, param)
+            except AssertionError:
+                logger.error('Load of map file failed: %s' % (map_full))
+                raise
             except:
                 raise EngineError, 'Load of map file failed: %s' % (map_full)
     return imap
