@@ -474,7 +474,7 @@
             <loop xid="1100">
               <name>Code List Source</name>
               <usage>R</usage>
-              <pos>010</pos>
+              <pos>040</pos>
               <repeat>&gt;1</repeat>
               <segment xid="N1">
                 <name>Code List Source</name>
