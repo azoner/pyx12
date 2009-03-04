@@ -101,6 +101,7 @@ class TreeGetValue(unittest.TestCase):
     def test_get_specific_qual(self):
         self.assertEqual(self.loop2300.get_value('2400/REF[6R]02'), '1057296')
         self.assertEqual(self.loop2300.get_value('2400/REF[G1]02'), None)
+        self.assertEqual(self.loop2300.get_value('2400/REF[XX]02'), None)
 
 
 class TreeSetValue(unittest.TestCase):
@@ -237,6 +238,19 @@ class SegmentExists(unittest.TestCase):
             self.failUnless(loop2310b.exists('NM1'))
             self.failUnless(loop2310b.exists('NM1[82]'))
 
+    def test_qual_segment_sub_loop(self):
+        self.failUnless(self.loop2300.exists('2400/2430'))
+        self.failUnless(self.loop2300.exists('2400/2430/DTP[573]'))
+        self.failIf(self.loop2300.exists('2400/2430/DTP[111]'))
+        self.failUnless(self.loop2300.exists('2400/2430/DTP[573]03'))
+
+    def test_qual_segment_select_sub_loop(self):
+        for loop2430 in self.loop2300.select('2400/2430'):
+            self.failUnless(loop2430.exists('DTP'))
+            self.failUnless(loop2430.exists('DTP[573]'))
+            self.failUnless(loop2430.exists('DTP[573]03'))
+            break
+
 
 class TreeAddLoop(unittest.TestCase):
 
@@ -342,6 +356,12 @@ class CountRepeatingLoop(unittest.TestCase):
         for loop_2400 in self.loop2300.select('2400'):
             ct += 1
         self.assertEqual(ct, 3, 'Found %i 2400 loops.  Should have %i' % (ct, 3))
+
+    def test_repeat_2430(self):
+        ct = 0
+        for loop_2430 in self.loop2300.select('2400/2430'):
+            ct += 1
+        self.assertEqual(ct, 2, 'Found %i 2430 loops.  Should have %i' % (ct, 2))
 
 
 class IterateTree(unittest.TestCase):
