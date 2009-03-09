@@ -165,7 +165,20 @@ class TreeSelect(unittest.TestCase):
                 for claim in datatree.select('DETAIL/2000/2100'):
                     self.assertEqual(claim.id, '2100')
                     ct += 1
-        self.assertEqual(ct, 3, 'Should have found 3 claim loops')
+        self.assertEqual(ct, 3, 'Found %i 2100 loops.  Should have %i' % (ct, 3))
+
+    def test_select_from_gs(self):
+        fd = open('files/simple_837i.txt')
+        param = pyx12.params.params('pyx12.conf.xml')
+        errh = pyx12.error_handler.errh_null()
+        src = pyx12.x12context.X12ContextReader(param, errh, fd, xslt_files = [])
+        ct = 0
+        for datatree in src.iter_segments('GS_LOOP'):
+            if datatree.id == 'GS_LOOP':
+                for sub in datatree.select('ST_LOOP/DETAIL/2000A/2000B/2300/2400'):
+                    self.assertEqual(sub.id, '2400')
+                    ct += 1
+        self.assertEqual(ct, 6, 'Found %i 2400 loops.  Should have %i' % (ct, 6))
 
 
 class TreeAddSegment(unittest.TestCase):
@@ -361,7 +374,7 @@ class CountRepeatingLoop(unittest.TestCase):
         ct = 0
         for loop_2430 in self.loop2300.select('2400/2430'):
             ct += 1
-        self.assertEqual(ct, 2, 'Found %i 2430 loops.  Should have %i' % (ct, 2))
+        self.assertEqual(ct, 0, 'Found %i 2430 loops.  Should have %i' % (ct, 0))
 
 
 class IterateTree(unittest.TestCase):

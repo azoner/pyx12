@@ -1,3 +1,7 @@
+node.select('//path'): get all matching sub-loops
+iterate_seg, return an object
+
+
 Overriding __eq__ blocks inheritance of __hash__
 raise Exception*(*args)
 except SomeException as e

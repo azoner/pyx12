@@ -117,6 +117,11 @@ class X12DataNode(object):
         """
         x12path = path.X12Path(x12_path_str)
         for n in self._select(x12path):
+            if x12path.seg_id is not None:
+                assert n.id == x12path.seg_id
+            #else:
+            #    assert len(x12path.loop_list) > 0
+            #    assert n.id == x12path.loop_list[-1]
             yield n
 
     def count(self, x12_path_str):
@@ -184,13 +189,16 @@ class X12DataNode(object):
                         yield child
         else:
             cur_node_id = x12path.loop_list[0]
-            del x12path.loop_list[0]
+            #del x12path.loop_list[0]
+            cur_loop_list = x12path.loop_list[1:]
             for child in [x for x in self.children if x.type is not None]:
                 if child.id == cur_node_id:
-                    if len(x12path.loop_list) == 0 and x12path.seg_id is None:
+                    if len(cur_loop_list) == 0 and x12path.seg_id is None:
                         yield child
                     else:
-                        for n in child._select(x12path):
+                        child_path = path.X12Path(x12path.format())
+                        child_path.loop_list = cur_loop_list
+                        for n in child._select(child_path):
                             yield n
 
     #{ Property Accessors
