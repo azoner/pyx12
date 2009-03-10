@@ -189,7 +189,6 @@ class X12DataNode(object):
                         yield child
         else:
             cur_node_id = x12path.loop_list[0]
-            #del x12path.loop_list[0]
             cur_loop_list = x12path.loop_list[1:]
             for child in [x for x in self.children if x.type is not None]:
                 if child.id == cur_node_id:

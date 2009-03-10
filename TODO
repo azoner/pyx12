@@ -1,4 +1,5 @@
 node.select('//path'): get all matching sub-loops
+node.select('../path'): get parent loops
 iterate_seg, return an object
 
 
