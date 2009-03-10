@@ -119,9 +119,9 @@ class X12DataNode(object):
         for n in self._select(x12path):
             if x12path.seg_id is not None:
                 assert n.id == x12path.seg_id
-            #else:
-            #    assert len(x12path.loop_list) > 0
-            #    assert n.id == x12path.loop_list[-1]
+            else:
+                assert len(x12path.loop_list) > 0
+                assert n.id == x12path.loop_list[-1]
             yield n
 
     def count(self, x12_path_str):
