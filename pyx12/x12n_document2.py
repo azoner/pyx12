@@ -9,7 +9,7 @@
 ######################################################################
 
 #
-#    $Id: x12n_document.py 1368 2008-11-19 21:04:54Z johnholland $
+#    $Id$
 
 """
 Parse a ANSI X12N data file.  Validate against a map and codeset values.
