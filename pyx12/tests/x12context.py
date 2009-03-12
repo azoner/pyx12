@@ -81,6 +81,11 @@ class TreeGetValue(unittest.TestCase):
         self.assertEqual(self.loop2300.get_value('CLM02'), '21')
         self.assertEqual(self.loop2300.get_value('CLM99'), None)
 
+    def test_get_seg_value_idx(self):
+        for clm in self.loop2300.select('CLM'):
+            self.assertEqual(clm.get_value('02'), '21')
+            self.assertEqual(clm.get_value('05-3'), '1')
+
     def test_get_first_value(self):
         self.assertEqual(self.loop2300.get_value('2400/SV101'), 'HC:H2015:TT')
         self.assertEqual(self.loop2300.get_value('2400/SV101-2'), 'H2015')

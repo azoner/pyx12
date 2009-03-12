@@ -574,7 +574,9 @@ class X12SegmentDataNode(X12DataNode):
             raise errors.X12PathError, 'This X12 Path should not contain loops: %s' % (x12_path)
         seg_id = xpath.seg_id
         qual = xpath.id_val
-        #ele_idx = xpath.ele_idx
+        ele_idx = xpath.ele_idx
+        if ele_idx is not None and seg_id is None:
+            return self.seg_data
         #subele_idx = xpath.subele_idx
         try:
             if self.x12_map_node.is_match_qual(seg_id, qual):
