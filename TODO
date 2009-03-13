@@ -1,22 +1,16 @@
-node.select('//path'): get all matching sub-loops
-node.select('../path'): get parent loops
-iterate_seg, return an object
+Python 3
+    Overriding __eq__ blocks inheritance of __hash__
+    raise Exception*(*args)
+    except SomeException as e
+    e.__traceback__ replaces sys.exc_info()
+    next() -> __next__()
 
-
-Overriding __eq__ blocks inheritance of __hash__
-raise Exception*(*args)
-except SomeException as e
-e.__traceback__ replaces sys.exc_info()
-next() -> __next__()
-
-
-http://xmlunit.sourceforge.net/
 Context
-  yield an object (maybe X12DataNode)
-  filter
-  query sub-loops - tree iteration
-  add segment to named loop in tree
-  handle error returns - throw events?
+    yield an object (maybe X12DataNode)
+    filter
+    query sub-loops - tree iteration
+    handle error returns - throw events?
+    node.select('//path'): get all matching sub-loops
 
 Apply transforms to x12 control also
 
@@ -32,13 +26,7 @@ Add tests for x12 > xml > x12 for all xml mappings
 
 xmlx12.py - handle idtag and idtagqual types
 
-Wrap scripts in web services
-
-Unique path
-
 Path/property local overrides
-
-Filtering/cleanup???
 
 TA1 input
 
@@ -47,8 +35,9 @@ LX index incrementing
 For large input files, split html output into parts
 
 Error Handling
-  Remove errh object from map_if, map_walker. Return errors as list
+    Remove errh object from map_if, map_walker. Return errors as list
 
 Unit Testing
-  x12file - HL counting?
-  HL reset bug
+    x12file - HL counting?
+    HL reset bug
+    http://xmlunit.sourceforge.net/
