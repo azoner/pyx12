@@ -81,6 +81,12 @@ class TreeGetValue(unittest.TestCase):
         self.assertEqual(self.loop2300.get_value('CLM02'), '21')
         self.assertEqual(self.loop2300.get_value('CLM99'), None)
 
+    def test_get_parent_value(self):
+        for loop2400 in self.loop2300.select('2400'):
+            break
+        self.assertEqual(loop2400.get_value('../CLM01'), '3215338')
+        self.assertEqual(loop2400.get_value('../2310B/NM109'), '222185735')
+
     def test_get_seg_value_idx(self):
         for clm in self.loop2300.select('CLM'):
             self.assertEqual(clm.get_value('02'), '21')
@@ -102,6 +108,11 @@ class TreeGetValue(unittest.TestCase):
     def test_get_no_value(self):
         self.assertEqual(self.loop2300.get_value('2400/SV199'), None)
         self.assertEqual(self.loop2300.get_value('2400'), None)
+
+    def test_get_parent_no_value(self):
+        for loop2400 in self.loop2300.select('2400'):
+            break
+        self.assertEqual(loop2400.get_value('../2310E/NM109'), None)
 
     def test_get_specific_qual(self):
         self.assertEqual(self.loop2300.get_value('2400/REF[6R]02'), '1057296')
@@ -145,6 +156,16 @@ class TreeSelect(unittest.TestCase):
                 break
 
     def test_select_loops(self):
+        for loop2400 in self.loop2300.select('2400'):
+            break
+        assert loop2400.id == '2400', 'Not in 2400'
+        ct = 0
+        for newtree in loop2400.select('../'):
+            self.assertEqual(newtree.id, '2300')
+            ct += 1
+        self.assertEqual(ct, 1)
+
+    def test_select_loops(self):
         ct = 0
         for newtree in self.loop2300.select('2400'):
             self.assertEqual(newtree.id, '2400')
@@ -158,6 +179,17 @@ class TreeSelect(unittest.TestCase):
             self.assertEqual(newtree.get_value('SV102'), '21')
             ct += 1
         self.assertEqual(ct, 2)
+
+    def test_select_parent_seg(self):
+        for loop2400 in self.loop2300.select('2400'):
+            break
+        assert loop2400.id == '2400', 'Not in 2400'
+        ct = 0
+        for newtree in loop2400.select('../CLM'):
+            self.assertEqual(newtree.id, 'CLM')
+            self.assertEqual(newtree.get_value('CLM01'), '3215338')
+            ct += 1
+        self.assertEqual(ct, 1)
 
     def test_select_from_st(self):
         fd = open('files/835_simple.txt')
