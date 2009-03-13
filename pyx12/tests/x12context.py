@@ -301,6 +301,17 @@ class SegmentExists(unittest.TestCase):
             self.failUnless(loop2430.exists('DTP[573]03'))
             break
 
+    def test_qual_834_dtp(self):
+        fd = open('files/834_lui_id.txt')
+        param = pyx12.params.params('pyx12.conf.xml')
+        errh = pyx12.error_handler.errh_null()
+        src = pyx12.x12context.X12ContextReader(param, errh, fd, xslt_files = [])
+        for datatree in src.iter_segments('2300'):
+            if datatree.id == '2300':
+                loop2300 = datatree
+                break
+        self.failUnless(loop2300.exists('DTP[348]'))
+        self.failIf(loop2300.exists('DTP[349]'))
 
 class TreeAddLoop(unittest.TestCase):
 

@@ -1077,9 +1077,11 @@ class segment_if(x12_node):
         else:
             return False
 
-    def is_match_qual(self, seg_id, qual_code):
+    def is_match_qual(self, seg_data, seg_id, qual_code):
         """
-        Is segment id and qualifier a match to this segment node?
+        Is segment id and qualifier a match to this segment node and to this particulary segment data?
+        @param seg_data: data segment instance
+        @type seg_data: L{segment<segment.Segment>}
         @param seg_id: data segment ID
         @param qual_code: an ID qualifier code
         @return: True if a match
@@ -1089,27 +1091,35 @@ class segment_if(x12_node):
             if qual_code is None:
                 return True
             elif self.children[0].is_element() \
-                and self.children[0].get_data_type() == 'ID' \
-                and self.children[0].usage == 'R' \
-                and len(self.children[0].valid_codes) > 0 \
-                and qual_code not in self.children[0].valid_codes:
-                return False
+                    and self.children[0].get_data_type() == 'ID' \
+                    and self.children[0].usage == 'R' \
+                    and len(self.children[0].valid_codes) > 0:
+                if qual_code in self.children[0].valid_codes and seg_data.get_value('01') == qual_code:
+                    return True
+                else:
+                    return False
             # Special Case for 820
             elif seg_id == 'ENT' \
-                and self.children[1].is_element() \
-                and self.children[1].get_data_type() == 'ID' \
-                and len(self.children[1].valid_codes) > 0 \
-                and qual_code not in self.children[1].valid_codes:
-                return False
+                    and self.children[1].is_element() \
+                    and self.children[1].get_data_type() == 'ID' \
+                    and len(self.children[1].valid_codes) > 0:
+                if qual_code in self.children[1].valid_codes and seg_data.get_value('02') == qual_code:
+                    return True
+                else:
+                    return False
             elif self.children[0].is_composite() \
-                and self.children[0].children[0].get_data_type() == 'ID' \
-                and len(self.children[0].children[0].valid_codes) > 0 \
-                and qual_code not in self.children[0].children[0].valid_codes:
-                return False
+                    and self.children[0].children[0].get_data_type() == 'ID' \
+                    and len(self.children[0].children[0].valid_codes) > 0:
+                if qual_code in self.children[0].children[0].valid_codes and seg_data.get_value('01-1') == qual_code:
+                    return True
+                else:
+                    return False
             elif seg_id == 'HL' and self.children[2].is_element() \
-                and len(self.children[2].valid_codes) > 0 \
-                and qual_code not in self.children[2].valid_codes:
-                return False
+                    and len(self.children[2].valid_codes) > 0:
+                if qual_code in self.children[2].valid_codes and seg_data.get_value('03') == qual_code:
+                    return True
+                else:
+                    return False
             else:
                 return True
         else:

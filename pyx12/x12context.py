@@ -198,7 +198,7 @@ class X12DataNode(object):
             qual = x12path.id_val
             for child in [x for x in self.children if x.type is not None]:
                 if child.type == 'seg':
-                    if child.x12_map_node.is_match_qual(cur_node_id, qual):
+                    if child.x12_map_node.is_match_qual(child.seg_data, cur_node_id, qual):
                         yield child
                 else:
                     if child.id == cur_node_id:
@@ -472,7 +472,7 @@ class X12LoopDataNode(X12DataNode):
             qual = xpath.id_val
             try:
                 for seg in [seg for seg in curr.children if seg.type == 'seg']:
-                    if seg.x12_map_node.is_match_qual(seg_id, qual):
+                    if seg.x12_map_node.is_match_qual(seg.seg_data, seg_id, qual):
                         return seg.seg_data
                 return None
             except errors.EngineError, e:
@@ -604,7 +604,7 @@ class X12SegmentDataNode(X12DataNode):
             return self.seg_data
         #subele_idx = xpath.subele_idx
         try:
-            if curr.x12_map_node.is_match_qual(seg_id, qual):
+            if curr.x12_map_node.is_match_qual(curr.seg_data, seg_id, qual):
                 return curr.seg_data
             return None
         except errors.EngineError, e:
