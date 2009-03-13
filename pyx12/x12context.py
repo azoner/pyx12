@@ -100,9 +100,9 @@ class X12DataNode(object):
         @return: True if found
         @rtype: boolean
         """
-        (curr, x12_path_str) = self._get_start_node(x12_path_str)
-        x12path = path.X12Path(x12_path_str)
-        for n in curr._select(x12path):
+        (curr, new_path) = self._get_start_node(x12_path_str)
+        xpath = path.X12Path(new_path)
+        for n in curr._select(xpath):
             return True
         return False
 
@@ -116,14 +116,15 @@ class X12DataNode(object):
         @return: Iterator on the matching sub-nodes, relative to the instance.
         @rtype: L{node<x12context.X12DataNode>}
         """
-        (curr, x12_path_str) = self._get_start_node(x12_path_str)
-        x12path = path.X12Path(x12_path_str)
-        for n in curr._select(x12path):
-            if x12path.seg_id is not None:
-                assert n.id == x12path.seg_id
+        (curr, new_path) = self._get_start_node(x12_path_str)
+        xpath = path.X12Path(new_path)
+        for n in curr._select(xpath):
+            if xpath.seg_id is not None:
+                assert n.id == xpath.seg_id
             else:
-                assert len(x12path.loop_list) > 0
-                assert n.id == x12path.loop_list[-1]
+                assert len(xpath.loop_list) > 0
+                assert n.id == xpath.loop_list[-1]
+            assert n.parent is not None, 'Node "%s" has no parent' % (n.id)
             yield n
 
     def count(self, x12_path_str):
@@ -135,9 +136,9 @@ class X12DataNode(object):
         @rtype: int
         """
         ct = 0
-        (curr, x12_path_str) = self._get_start_node(x12_path_str)
-        x12path = path.X12Path(x12_path_str)
-        for n in curr._select(x12path):
+        (curr, new_path) = self._get_start_node(x12_path_str)
+        xpath = path.X12Path(new_path)
+        for n in curr._select(xpath):
             ct += 1
         return ct
 
@@ -159,14 +160,14 @@ class X12DataNode(object):
                 return i
         return len(self.children)
 
-    def _get_first_matching_segment(self, x12_path):
+    def _get_first_matching_segment(self, x12_path_str):
         """
         Get first found Segment at the given relative path.  If the path is not a
         valid relative path or if the given segment index does not exist, the function
         returns None.
 
-        @param x12_path: Relative X12 Path
-        @type x12_path: string
+        @param x12_path_str: Relative X12 Path
+        @type x12_path_str: string
         @return: First matching data segment
         @rtype: L{node<segment.Segment>}
         @raise X12PathError: On blank or invalid path
@@ -174,8 +175,13 @@ class X12DataNode(object):
         raise NotImplementedError, 'Override in sub-class'
 
     def _get_start_node(self, x12_path_str):
+        """
+        Move up the tree.  Get the new starting node and the altered path
+        """
         curr = self
         while x12_path_str[:3] == '../':
+            if curr.parent is None:
+                raise errors.X12PathError, 'Current node %s does not have a parent: %s' % (self.id, x12_path_str)
             curr = curr.parent
             x12_path_str = x12_path_str[3:]
         return (curr, x12_path_str)
@@ -268,11 +274,11 @@ class X12LoopDataNode(X12DataNode):
         @rtype: string
         @raise X12PathError: On blank or invalid path
         """
-        (curr, x12_path_str) = self._get_start_node(x12_path_str)
-        seg_data = curr._get_first_matching_segment(x12_path_str)
+        (curr, new_path) = self._get_start_node(x12_path_str)
+        seg_data = curr._get_first_matching_segment(new_path)
         if seg_data is None:
             return None
-        xpath = path.X12Path(x12_path_str)
+        xpath = path.X12Path(new_path)
         xpath.loop_list = []
         xpath.id_val = None
         seg_part = xpath.format()
@@ -286,11 +292,11 @@ class X12LoopDataNode(X12DataNode):
         @param val: The new element value
         @type val: string
         """
-        (curr, new_path_str) = self._get_start_node(x12_path_str)
-        seg_data = curr._get_first_matching_segment(new_path_str)
+        (curr, new_path) = self._get_start_node(x12_path_str)
+        seg_data = curr._get_first_matching_segment(new_path)
         if seg_data is None:
             raise errors.X12PathError, 'X12 Path is invalid or was not found: %s' % (x12_path_str)
-        xpath = path.X12Path(new_path_str)
+        xpath = path.X12Path(new_path)
         xpath.loop_list = []
         xpath.id_val = None
         seg_part = xpath.format()
@@ -380,6 +386,7 @@ class X12LoopDataNode(X12DataNode):
         if data_node.x12_map_node.parent != self.x12_map_node:
             raise errors.X12PathError, 'The loop_data_node "%s" is not a child of "%s"' % \
                 (data_node.x12_map_node.id,  self.x12_map_node.id)
+        data_node.parent = self
         child_idx = self._get_insert_idx(data_node.x12_map_node)
         self.children.insert(child_idx, data_node)
 
@@ -421,9 +428,9 @@ class X12LoopDataNode(X12DataNode):
         @raise X12PathError: On blank or invalid path
         @todo: Check counts?
         """
-        (curr, x12_path_str) = self._get_start_node(x12_path_str)
-        x12path = path.X12Path(x12_path_str)
-        for n in curr._select(x12path):
+        (curr, new_path) = self._get_start_node(x12_path_str)
+        xpath = path.X12Path(new_path)
+        for n in curr._select(xpath):
             n.delete()
             return True
         return False
@@ -456,8 +463,8 @@ class X12LoopDataNode(X12DataNode):
         """
         if len(x12_path_str) == 0:
             raise errors.X12PathError, 'Blank X12 Path'
-        (curr, new_path_str) = self._get_start_node(x12_path_str)
-        xpath = path.X12Path(new_path_str)
+        (curr, new_path) = self._get_start_node(x12_path_str)
+        xpath = path.X12Path(new_path)
         if xpath.seg_id is None:
             return None
         if len(xpath.loop_list) == 0:
@@ -546,30 +553,33 @@ class X12SegmentDataNode(X12DataNode):
         self.end_loops = []
         X12DataNode.delete(self)
 
-    def get_value(self, x12_path):
+    def get_value(self, x12_path_str):
         """
+        Get the value of the first found element at the given path
+        @param x12_path_str: Relative X12 Path
+        @type x12_path_str: string
         @return: the element value at the relative X12 path
         @rtype: string
         """
-        seg_data = self._get_first_matching_segment(x12_path)
+        seg_data = self._get_first_matching_segment(x12_path_str)
         if seg_data is None:
             return None
-        return seg_data.get_value(x12_path)
+        return seg_data.get_value(x12_path_str)
 
-    def set_value(self, x12_path, val):
+    def set_value(self, x12_path_str, val):
         """
         Set the value of simple element at the first found segment at the given path
-        @param x12_path: Relative X12 Path
-        @type x12_path: string
+        @param x12_path_str: Relative X12 Path
+        @type x12_path_str: string
         @param val: The new element value
         @type val: string
         """
-        seg_data = self._get_first_matching_segment(x12_path)
+        seg_data = self._get_first_matching_segment(x12_path_str)
         if seg_data is None:
-            raise errors.X12PathError, 'X12 Path is invalid or was not found: %s' % (x12_path)
-        #ele_idx = self.get_ele_idx(x12_path)
+            raise errors.X12PathError, 'X12 Path is invalid or was not found: %s' % (x12_path_str)
+        #ele_idx = self.get_ele_idx(x12_path_str)
         #seg_data.set(ele_idx, val)
-        seg_data.set(x12_path, val)
+        seg_data.set(x12_path_str, val)
 
     def _get_first_matching_segment(self, x12_path_str):
         """
@@ -771,7 +781,7 @@ class X12ContextReader(object):
                     # Make new tree on parent loop
                     #pop_loops = get_pop_loops(cur_data_node.x12_map_node, self.x12_map_node)
                     #pop_loops = [x12_node for x12_node in pop_loops if x12_node.get_path().find(loop_id) == -1]
-                    cur_tree = X12LoopDataNode(self.x12_map_node.parent, pop_loops)
+                    cur_tree = X12LoopDataNode(x12_node=self.x12_map_node.parent, end_loops=pop_loops) #, parent=cur_data_node)
                     cur_data_node = self._add_segment(cur_tree, self.x12_map_node, seg, pop_loops, push_loops)
                 else:
                     if cur_data_node is None or self.x12_map_node is None:
@@ -789,13 +799,15 @@ class X12ContextReader(object):
                         pop_loops = [x12_node for x12_node in pop_loops if x12_node.get_path().find(loop_id) == -1]
                     assert loop_id not in [x12.id for x12 in push_loops], 'Loop ID %s should not be in push loops' % (loop_id)
                     assert loop_id not in [x12.id for x12 in pop_loops], 'Loop ID %s should not be in pop loops' % (loop_id)
-                    cur_data_node = X12SegmentDataNode(self.x12_map_node, seg, None, push_loops, pop_loops)
+                    cur_data_node = X12SegmentDataNode(self.x12_map_node, seg, push_loops, pop_loops)
                 else:
                     cur_data_node = X12SegmentDataNode(self.x12_map_node, seg)
                 # Get errors caught by x12Reader
                 errh.handle_errors(self.src.pop_errors())
                 # Handle errors captured in errh_list
                 cur_data_node.handle_errh_errors(errh)
+                if cur_data_node.id != 'ISA' and cur_data_node is not None:
+                    assert cur_data_node.parent is not None, 'Node "%s" has no parent' % (cur_data_node.id)
                 yield cur_data_node
         
     def register_error_callback(self, callback, err_type):
@@ -878,8 +890,8 @@ class X12ContextReader(object):
             raise errors.EngineError, 'X12SegmentDataNode failed: x12_path=%s, seg_date=%s ' % \
                 (self.x12_map_node.get_path(), seg_data)
         try:
-            cur_loop_node.children.append(new_node)
             new_node.parent = cur_loop_node
+            cur_loop_node.children.append(new_node)
         except:
             err_str = 'X12SegmentDataNode child append failed:'
             err_str += ' seg_x12_path=%s' % (segment_x12_node.get_path())
