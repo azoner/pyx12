@@ -217,23 +217,25 @@ class X12DataNode(object):
                             yield n
 
     #{ Property Accessors
-    def _get_id(self):
+    @property
+    def id(self):
         """
         @return: x12 node id
         @rtype: string
         """
+        if self.x12_map_node is None:
+            raise errors.EngineError, 'This node has been deleted'
         return self.x12_map_node.id
 
-    id = property(_get_id, None, None)
-
-    def _get_cur_path(self):
+    @property
+    def cur_path(self):
         """
         @return: x12 node path
         @rtype: string
         """
+        if self.x12_map_node is None:
+            raise errors.EngineError, 'This node has been deleted'
         return self.x12_map_node.get_path()
-
-    cur_path = property(_get_cur_path, None, None)
 
 
 class X12LoopDataNode(X12DataNode):
@@ -653,14 +655,13 @@ class X12SegmentDataNode(X12DataNode):
             'start_loops': self.start_loops, 'end_loops': self.end_loops}
 
     #{ Property Accessors
-    def _get_err_ct(self):
+    @property
+    def err_ct(self):
         """
         @return: Count of errors for this segment
         @rtype: int
         """
         return len(self.err_isa) + len(self.err_gs) + len(self.err_st) + len(self.err_seg) + len(self.err_ele)
-
-    err_ct = property(_get_err_ct, None, None)
 
 
 class X12ContextReader(object):
@@ -817,32 +818,29 @@ class X12ContextReader(object):
         pass
 
     #{ Property Accessors
-    def _get_seg_term(self):
+    @property
+    def seg_term(self):
         """
         @return: Current X12 segment terminator
         @rtype: string
         """
         return self.src.seg_term
 
-    seg_term = property(_get_seg_term, None, None)
-
-    def _get_ele_term(self):
+    @property
+    def ele_term(self):
         """
         @return: Current X12 element terminator
         @rtype: string
         """
         return self.src.ele_term
 
-    ele_term = property(_get_ele_term, None, None)
-
-    def _get_subele_term(self):
+    @property
+    def subele_term(self):
         """
         @return: Current X12 sub-element terminator
         @rtype: string
         """
         return self.src.subele_term
-
-    subele_term = property(_get_subele_term, None, None)
 
     #{ Private Methods
     def _add_segment(self, cur_data_node, segment_x12_node, seg_data, pop_loops, push_loops):
