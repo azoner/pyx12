@@ -216,6 +216,12 @@ class X12DataNode(object):
                         for n in child._select(child_path):
                             yield n
 
+    def __copy__(self):
+        """
+        Returns a copy of this node
+        """
+        raise NotImplementedError, 'Override in sub-class'
+
     #{ Property Accessors
     @property
     def id(self):
@@ -511,6 +517,17 @@ class X12LoopDataNode(X12DataNode):
                     and child.seg_data.seg_term is not None:
                 return (child.seg_data.seg_term, child.seg_data.ele_term, child.seg_data.subele_term)
         return self.parent._get_terminators()
+
+    def __copy__(self):
+        """
+        Returns a copy of this node
+        """
+        ret = X12LoopDataNode(self.x12_map_node)
+        ret.end_loops = list(self..end_loops)
+        ret.parent = self.parent
+        for child in self.children:
+            ret.children.append(copy(child))
+        #ret.children = 
 
 
 class X12SegmentDataNode(X12DataNode):
