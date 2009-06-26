@@ -518,16 +518,19 @@ class X12LoopDataNode(X12DataNode):
                 return (child.seg_data.seg_term, child.seg_data.ele_term, child.seg_data.subele_term)
         return self.parent._get_terminators()
 
+    def copy(self):
+        return self.__copy__()
+
     def __copy__(self):
         """
         Returns a copy of this node
         """
         ret = X12LoopDataNode(self.x12_map_node)
-        ret.end_loops = list(self..end_loops)
+        ret.end_loops = list(self.end_loops)
         ret.parent = self.parent
         for child in self.children:
-            ret.children.append(copy(child))
-        #ret.children = 
+            ret.children.append(child.copy())
+        return ret
 
 
 class X12SegmentDataNode(X12DataNode):
@@ -670,6 +673,36 @@ class X12SegmentDataNode(X12DataNode):
             yield {'node': loop, 'type': 'loop_start', 'id': loop.id}
         yield {'type': 'seg', 'id': self.id, 'segment': self.seg_data, \
             'start_loops': self.start_loops, 'end_loops': self.end_loops}
+
+    def copy(self):
+        return self.__copy__()
+
+    def __copy__(self):
+        """
+        Returns a copy of this node
+        """
+        ret = X12SegmentDataNode(self.x12_map_node, self.seg_data, self.parent)
+        ret.start_loops = list(self.start_loops)
+        ret.end_loops = list(self.end_loops)
+        return ret
+
+    def select(self, x12_path_str):
+        """
+        Segment nodes have no sub-nodes so return None
+        @param x12_path_str: Relative X12 path - 2400/2430
+        @type x12_path_str: string
+        @return: Iterator on the matching sub-nodes, relative to the instance.
+        @rtype: L{node<x12context.X12DataNode>}
+        """
+        return []
+
+    def _select(self, x12path):
+        """
+        Empty iter for segment nodes
+        @param x12path: x12 map path
+        @type x12path: L{path<path.X12Path>}
+        """
+        return []
 
     #{ Property Accessors
     @property

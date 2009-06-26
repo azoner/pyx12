@@ -218,6 +218,20 @@ class TreeSelect(unittest.TestCase):
         self.assertEqual(ct, 6, 'Found %i 2400 loops.  Should have %i' % (ct, 6))
 
 
+class TreeSelectFromSegment(unittest.TestCase):
+
+    def test_select_from_seg_fail(self):
+        fd = open('files/835_simple.txt')
+        param = pyx12.params.params('pyx12.conf.xml')
+        errh = pyx12.error_handler.errh_null()
+        src = pyx12.x12context.X12ContextReader(param, errh, fd, xslt_files = [])
+        for datatree in src.iter_segments('ST_LOOP'):
+            if datatree.id == 'GS':
+                #self.failIfRaises(AttributeError, datatree.select, 'DETAIL/2000/2100')
+                for claim in datatree.select('DETAIL/2000/2100'):
+                    pass
+
+
 class TreeAddSegment(unittest.TestCase):
 
     def setUp(self):
