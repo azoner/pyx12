@@ -527,3 +527,39 @@ class NodeDeleteSelf(unittest.TestCase):
         except:
             a = cn1.id
         #self.assertRaises(EngineError, cn1.id)
+
+
+class TreeCopy(unittest.TestCase):
+
+    def test_add_node(self):
+        fd = open('files/835_simple.txt')
+        param = pyx12.params.params('pyx12.conf.xml')
+        errh = pyx12.error_handler.errh_null()
+        src = pyx12.x12context.X12ContextReader(param, errh, fd, xslt_files = [])
+        for datatree in src.iter_segments('2100'):
+            if datatree.id == '2100':
+                for svc in datatree.select('2110'):
+                    new_svc = svc.copy()
+                    new_svc.set_value('SVC01', 'XX:AAAAA')
+                    self.assertTrue(not svc is new_svc)
+                    datatree.add_node(new_svc)
+                #for svc in datatree.select('2110'):
+                #    print svc.get_value('SVC01')
+                break
+
+    def test_copy_seg(self):
+        fd = open('files/835_simple.txt')
+        param = pyx12.params.params('pyx12.conf.xml')
+        errh = pyx12.error_handler.errh_null()
+        src = pyx12.x12context.X12ContextReader(param, errh, fd, xslt_files = [])
+        for datatree in src.iter_segments('2100'):
+            if datatree.id == '2100':
+                for svc in datatree.select('2110'):
+                    new_svc = svc.copy()
+                    self.assertFalse(svc is new_svc)
+                    self.assertEqual(svc.get_value('SVC01'), new_svc.get_value('SVC01'))
+                    new_svc.set_value('SVC01', 'XX:AAAAA')
+                    self.assertFalse(svc is new_svc)
+                    self.assertNotEqual(svc.get_value('SVC01'), new_svc.get_value('SVC01'))
+                    break
+

@@ -571,3 +571,9 @@ class Segment(object):
             return False
         else:
             return True
+
+    def copy(self): 
+        return self.__copy__()
+
+    def __copy__(self): 
+        return Segment(self.format(), self.seg_term, self.ele_term, self.subele_term)

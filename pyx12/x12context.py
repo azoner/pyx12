@@ -681,7 +681,8 @@ class X12SegmentDataNode(X12DataNode):
         """
         Returns a copy of this node
         """
-        ret = X12SegmentDataNode(self.x12_map_node, self.seg_data, self.parent)
+        seg_data = self.seg_data.copy()
+        ret = X12SegmentDataNode(self.x12_map_node, seg_data, self.parent)
         ret.start_loops = list(self.start_loops)
         ret.end_loops = list(self.end_loops)
         return ret

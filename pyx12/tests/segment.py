@@ -324,3 +324,13 @@ class Equality(unittest.TestCase):
         seg1 = pyx12.segment.Segment('TST*AA*1*Y*BB:5*ZZ', '~', '*', ':')
         seg2 = pyx12.segment.Segment('TST*AA*1*Y*BB:4*ZZ', '~', '*', ':')
         self.assertNotEqual(seg1, seg2)
+
+
+class Copy(unittest.TestCase):
+
+    def test_copy1(self):
+        seg1 = pyx12.segment.Segment('TST*AA*1*Y*BB:5*ZZ', '~', '*', ':')
+        seg2 = seg1.copy()
+        self.assertFalse(seg1 is seg2)
+        self.assertEqual(seg1, seg2)
+
