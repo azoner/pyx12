@@ -659,7 +659,7 @@ class X12SegmentDataNode(X12DataNode):
         """
         Iterate on this node, return the segment
         """
-        yield {'type': 'seg', 'id': self.x12_map_node.id, \
+        yield {'type': 'seg', 'id': self.x12_map_node.id, 'path': self.x12_map_node.x12path, \
             'segment': self.seg_data}
 
     def iterate_loop_segments(self):
