@@ -13,6 +13,7 @@ make packages
  - python setup.py sdist --force-manifest
  - python setup.py sdist --formats=gztar,bztar,zip
  - python setup.py bdist_wininst
+ - python setup.py bdist_egg
 package index
 release notes
 Copy bzip to /usr/ports/distfiles/

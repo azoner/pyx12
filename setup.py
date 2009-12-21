@@ -1,4 +1,4 @@
-#from distutils import core
+from setuptools import setup
 from distutils import core
 from distutils.file_util import copy_file
 from distutils.dir_util import mkpath
