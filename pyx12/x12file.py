@@ -15,6 +15,9 @@ Interface to an X12 data stream.
  - Efficiently handles large files.
  - Tracks end of explicit loops.
  - Tracks segment/line/loop counts.
+ - Tracks some transaction specific counters:
+   837 2400/LX
+   837 HL tree
 """
 
 import codecs
@@ -52,6 +55,7 @@ class X12Base(object):
         self.isa_ids = []
         self.gs_ids = []
         self.st_ids = []
+        self.lx_count = 0
         self.isa_usage = None
         self.seg_term = None
         self.ele_term = None
@@ -152,6 +156,14 @@ class X12Base(object):
                     #err_str = 'HL parent is blank, but stack not empty'
                     #self._seg_error('HL2', err_str)
             self.hl_stack.append(self.hl_count)
+        elif seg_id == 'CLM':
+            self.lx_count = 0
+        elif seg_id == 'LX':
+            self.lx_count += 1
+            if seg_data.get_value('LX01') != '%i' % (self.lx_count):
+                err_str = 'Your 2400/LX01 Service Line Number %s does not match my count of %i' % \
+                    (seg_data.get_value('LX01'), self.lx_count)
+                self._seg_error('LX', err_str)
         # all other regular segments
         elif seg_id != 'IEA' and seg_id != 'GE' and seg_id != 'SE':
             self.seg_count += 1
@@ -301,6 +313,7 @@ class X12Reader(X12Base):
         @type src_file_obj: string or open file object
         """
         self.fd_in = None
+        self.need_to_close = False
         try:
             res = src_file_obj.closed
             self.fd_in = src_file_obj
@@ -308,7 +321,8 @@ class X12Reader(X12Base):
             if src_file_obj == '-':
                 self.fd_in = sys.stdin
             else:
-                self.fd_in = open(src_file_obj, 'U')
+                self.fd_in = file(src_file_obj, 'U')
+                self.need_to_close = True
         X12Base.__init__(self)
         try:
             self.raw = RawX12File(self.fd_in)
@@ -321,7 +335,8 @@ class X12Reader(X12Base):
        
     def __del__(self):
         try:
-            self.fd_in.close()
+            if self.need_to_close:
+                self.fd_in.close()
         except:
             pass
 
@@ -472,14 +487,14 @@ class X12Writer(X12Base):
 
     def Write(self, seg_data):
         """
-        Write the segment to the stream given current seperators
+        Write the segment to the stream given current separators
 
         @param seg_data: Segment data instance
         @type seg_data: L{segment<segment.Segment>}
         """
         self._parse_segment(seg_data)
         # If we have hit a loop closing segment, generate any missing, containing, closing segments
-        # then generater this closer
+        # then generate this segment
         seg_id = seg_data.get_seg_id()
         if seg_id == 'IEA':
             self._popToLoop('ISA')
@@ -487,6 +502,10 @@ class X12Writer(X12Base):
             self._popToLoop('GS')
         elif seg_id == 'SE':
             self._popToLoop('ST')
+        elif seg_id == 'LX':
+            # Write our own LX counter
+            seg_data.set_value('01', '%i' % (self.lx_count) )
+            self._write_segment(seg_data)
         else:
             self._write_segment(seg_data)
 
@@ -547,7 +566,7 @@ class X12Writer(X12Base):
 
     def _write_segment(self, seg_data):
         """
-        Write the given segment, using the current delimeters and end of line
+        Write the given segment, using the current delimiters and end of line
 
         @param seg_data: segment to write
         @type seg_data: L{segment<segment.Segment>}
