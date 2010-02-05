@@ -540,3 +540,43 @@ class X12WriterTest(unittest.TestCase):
         fd_out.seek(0)
         newval = fd_out.read()
         self.assertEqual(output, newval)
+
+
+class LX_Checks(X12fileTestCase):
+    """
+    837 2400/LX counting
+    """
+    def test_LX_increment_good(self):
+        seg = None
+        str1 = 'ISA*00*          *00*          *ZZ*ZZ000          *ZZ*ZZ001          *030828*1128*U*00401*000010121*0*T*:~\n'
+        str1 += 'GS*HC*ZZ000*ZZ001*20030828*1128*17*X*004010X098A1~\n'
+        str1 += 'ST*837*11280001~\n'
+        str1 += 'CLM*1~\n'
+        str1 += 'LX*1~\n'
+        str1 += 'LX*2~\n'
+        str1 += 'LX*3~\n'
+        str1 += 'LX*4~\n'
+        str1 += 'LX*5~\n'
+        str1 += 'SE*8*11280001~\n'
+        str1 += 'GE*1*17~\n'
+        str1 += 'IEA*1*000010121~\n'
+        (err_cde, err_str) = self._get_first_error(str1)        
+        self.assertEqual(err_cde, None, err_str)
+
+    def test_LX_increment_bad(self):
+        seg = None
+        str1 = 'ISA*00*          *00*          *ZZ*ZZ000          *ZZ*ZZ001          *030828*1128*U*00401*000010121*0*T*:~\n'
+        str1 += 'GS*HC*ZZ000*ZZ001*20030828*1128*17*X*004010X098A1~\n'
+        str1 += 'ST*837*11280001~\n'
+        str1 += 'CLM*1~\n'
+        str1 += 'LX*1~\n'
+        str1 += 'LX*2~\n'
+        str1 += 'LX*4~\n'
+        str1 += 'LX*5~\n'
+        str1 += 'LX*6~\n'
+        str1 += 'SE*8*11280001~\n'
+        str1 += 'GE*1*17~\n'
+        str1 += 'IEA*1*000010121~\n'
+        (err_cde, err_str) = self._get_first_error(str1)        
+        self.assertEqual(err_cde, 'LX', err_str)
+
