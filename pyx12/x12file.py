@@ -132,7 +132,6 @@ class X12Base(object):
         #    self.seg_count += 1
         #    del self.loops[-1]
         elif seg_id == 'HL': 
-            self.seg_count += 1
             self.hl_count += 1
             hl_count = seg_data.get_value('HL01')
             if self.hl_count != self._int(hl_count):
@@ -164,8 +163,8 @@ class X12Base(object):
                 err_str = 'Your 2400/LX01 Service Line Number %s does not match my count of %i' % \
                     (seg_data.get_value('LX01'), self.lx_count)
                 self._seg_error('LX', err_str)
-        # all other regular segments
-        elif seg_id != 'IEA' and seg_id != 'GE' and seg_id != 'SE':
+        # count all regular segments
+        if seg_id not in ('ISA', 'IEA', 'GS', 'GE', 'ST', 'SE'):
             self.seg_count += 1
         self.cur_line += 1
 
