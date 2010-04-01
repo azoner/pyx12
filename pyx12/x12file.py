@@ -503,7 +503,7 @@ class X12Writer(X12Base):
             self._popToLoop('ST')
         elif seg_id == 'LX':
             # Write our own LX counter
-            seg_data.set_value('01', '%i' % (self.lx_count) )
+            seg_data.set('01', '%i' % (self.lx_count) )
             self._write_segment(seg_data)
         else:
             self._write_segment(seg_data)
