@@ -127,6 +127,21 @@ class X12DataNode(object):
             assert n.parent is not None, 'Node "%s" has no parent' % (n.id)
             yield n
 
+    def first(self, x12_path_str):
+        """
+        Get the first sub-node matching the relative X12 path.
+        @note: All interaction/modification with a X12DataNode tree (having a loop 
+        root) is done in place.
+        @param x12_path_str: Relative X12 path - ie 2400/2430
+        @type x12_path_str: string
+        @return: The matching sub-node, relative to the instance.
+        @rtype: L{node<x12context.X12DataNode>}
+        """
+        if not self.exists(x12_path_str):
+            return None
+        for node in self.select(x12_path_str):
+            return node
+
     def count(self, x12_path_str):
         """
         Get a count of sub-nodes at the relative X12 path.
@@ -509,7 +524,8 @@ class X12LoopDataNode(X12DataNode):
             assert subele_term is not None, 'seg_term is none, node contains no X12SegmentDataNode children?'
             return pyx12.segment.Segment(seg_obj, seg_term, ele_term, subele_term)
         else:
-            raise errors.EngineError, 'Unknown type for seg_obj %s' % (seg_obj)
+            raise errors.EngineError, 'Unknown type %s for seg_obj %i.  Expecting a pyx12.segment.Segment or a str' \
+                % (seg_obj.__class__, seg_obj)
 
     def _get_terminators(self):
         for child in self.children:

@@ -82,8 +82,7 @@ class TreeGetValue(unittest.TestCase):
         self.assertEqual(self.loop2300.get_value('CLM99'), None)
 
     def test_get_parent_value(self):
-        for loop2400 in self.loop2300.select('2400'):
-            break
+        loop2400 = self.loop2300.first('2400')
         self.assertEqual(loop2400.get_value('../CLM01'), '3215338')
         self.assertEqual(loop2400.get_value('../2310B/NM109'), '222185735')
 
@@ -100,8 +99,7 @@ class TreeGetValue(unittest.TestCase):
         self.assertEqual(self.loop2300.get_value('2400/AMT[AAE]02'), '21')
 
     def test_get_first_value_2400(self):
-        for loop2400 in self.loop2300.select('2400'):
-            break
+        loop2400 = self.loop2300.first('2400')
         self.assertEqual(loop2400.get_value('AMT[AAE]02'), '21')
         self.assertEqual(loop2400.get_value('2430/AMT[AAE]02'), None)
 
@@ -110,8 +108,7 @@ class TreeGetValue(unittest.TestCase):
         self.assertEqual(self.loop2300.get_value('2400'), None)
 
     def test_get_parent_no_value(self):
-        for loop2400 in self.loop2300.select('2400'):
-            break
+        loop2400 = self.loop2300.first('2400')
         self.assertEqual(loop2400.get_value('../2310E/NM109'), None)
 
     def test_get_specific_qual(self):
@@ -137,8 +134,7 @@ class TreeSetValue(unittest.TestCase):
         self.assertEqual(self.loop2300.get_value('CLM02'), '50')
 
     def test_set_first_value_2400(self):
-        for loop2400 in self.loop2300.select('2400'):
-            break
+        loop2400 = self.loop2300.first('2400')
         loop2400.set_value('AMT[AAE]02', '25')
         self.assertEqual(loop2400.get_value('AMT[AAE]02'), '25')
 
@@ -156,8 +152,7 @@ class TreeSelect(unittest.TestCase):
                 break
 
     def test_select_loops(self):
-        for loop2400 in self.loop2300.select('2400'):
-            break
+        loop2400 = self.loop2300.first('2400')
         assert loop2400.id == '2400', 'Not in 2400'
         ct = 0
         for newtree in loop2400.select('../'):
@@ -181,8 +176,7 @@ class TreeSelect(unittest.TestCase):
         self.assertEqual(ct, 2)
 
     def test_select_parent_seg(self):
-        for loop2400 in self.loop2300.select('2400'):
-            break
+        loop2400 = self.loop2300.first('2400')
         assert loop2400.id == '2400', 'Not in 2400'
         ct = 0
         for newtree in loop2400.select('../CLM'):
@@ -309,11 +303,10 @@ class SegmentExists(unittest.TestCase):
         self.failUnless(self.loop2300.exists('2400/2430/DTP[573]03'))
 
     def test_qual_segment_select_sub_loop(self):
-        for loop2430 in self.loop2300.select('2400/2430'):
-            self.failUnless(loop2430.exists('DTP'))
-            self.failUnless(loop2430.exists('DTP[573]'))
-            self.failUnless(loop2430.exists('DTP[573]03'))
-            break
+        loop2430 = self.loop2300.first('2400/2430')
+        self.failUnless(loop2430.exists('DTP'))
+        self.failUnless(loop2430.exists('DTP[573]'))
+        self.failUnless(loop2430.exists('DTP[573]03'))
 
     def test_qual_834_dtp(self):
         fd = open('files/834_lui_id.txt')
@@ -516,8 +509,7 @@ class NodeDeleteSelf(unittest.TestCase):
                 break
 
     def test_delete(self):
-        for cn1 in self.loop2300.select('CN1'):
-            break
+        cn1 = self.loop2300.first('CN1')
         assert cn1.id == 'CN1'
         cn1.delete()
         try:
