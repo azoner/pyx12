@@ -1,5 +1,5 @@
-from setuptools import setup
 from distutils import core
+from distutils.core import setup
 from distutils.file_util import copy_file
 from distutils.dir_util import mkpath
 import os
@@ -64,10 +64,10 @@ kw = {
 
 if sys.platform == 'win32':
     # Update registry
-    kw['data_files'].append(('share/pyx12', ['bin/pyx12.conf.xml.sample']))
+    kw['data_files'].append((os.path.join('share','pyx12'), ['bin/pyx12.conf.xml.sample']))
     kw['data_files'].append(('etc', ['bin/pyx12.conf.xml.sample']))
 else:
-    kw['data_files'].append(('share/pyx12', ['bin/pyx12.conf.xml.sample']))
+    kw['data_files'].append((os.path.join('share','pyx12'), ['bin/pyx12.conf.xml.sample']))
     kw['data_files'].append(('etc', ['bin/pyx12.conf.xml.sample']))
 
 if (hasattr(core, 'setup_keywords') and
