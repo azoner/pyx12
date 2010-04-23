@@ -15,7 +15,7 @@ import pyx12.x12file
 
 class X12fileTestCase(unittest.TestCase):
 
-    def _get_first_error(self, x12str):
+    def _get_first_error(self, x12str, ftype=None):
         try:
             fd = StringIO(x12str, encoding='ascii')
         except:
@@ -25,6 +25,8 @@ class X12fileTestCase(unittest.TestCase):
         err_cde = None
         err_str = None
         src = pyx12.x12file.X12Reader(fd)
+        if ftype == '837':
+            src.check_837_lx = True
         #src = pyx12.x12file.X12Reader(fd)
         for seg in src:
             errors.extend(src.pop_errors())
@@ -560,7 +562,7 @@ class LX_Checks(X12fileTestCase):
         str1 += 'SE*8*11280001~\n'
         str1 += 'GE*1*17~\n'
         str1 += 'IEA*1*000010121~\n'
-        (err_cde, err_str) = self._get_first_error(str1)        
+        (err_cde, err_str) = self._get_first_error(str1, '837')
         self.assertEqual(err_cde, None, err_str)
 
     def test_LX_increment_bad(self):
@@ -577,6 +579,6 @@ class LX_Checks(X12fileTestCase):
         str1 += 'SE*8*11280001~\n'
         str1 += 'GE*1*17~\n'
         str1 += 'IEA*1*000010121~\n'
-        (err_cde, err_str) = self._get_first_error(str1)        
+        (err_cde, err_str) = self._get_first_error(str1, '837')
         self.assertEqual(err_cde, 'LX', err_str)
 
