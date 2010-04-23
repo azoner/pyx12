@@ -56,6 +56,7 @@ class X12Base(object):
         self.gs_ids = []
         self.st_ids = []
         self.lx_count = 0
+        self.check_837_lx = False
         self.isa_usage = None
         self.seg_term = None
         self.ele_term = None
@@ -155,9 +156,9 @@ class X12Base(object):
                     #err_str = 'HL parent is blank, but stack not empty'
                     #self._seg_error('HL2', err_str)
             self.hl_stack.append(self.hl_count)
-        elif seg_id == 'CLM':
+        elif self.check_837_lx and seg_id == 'CLM':
             self.lx_count = 0
-        elif seg_id == 'LX':
+        elif self.check_837_lx and seg_id == 'LX':
             self.lx_count += 1
             if seg_data.get_value('LX01') != '%i' % (self.lx_count):
                 err_str = 'Your 2400/LX01 Service Line Number %s does not match my count of %i' % \
@@ -501,7 +502,7 @@ class X12Writer(X12Base):
             self._popToLoop('GS')
         elif seg_id == 'SE':
             self._popToLoop('ST')
-        elif seg_id == 'LX':
+        elif self.check_837_lx and seg_id == 'LX':
             # Write our own LX counter
             seg_data.set('01', '%i' % (self.lx_count) )
             self._write_segment(seg_data)

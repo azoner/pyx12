@@ -812,6 +812,10 @@ class X12ContextReader(object):
                                 "Map not found.  icvn=%s, fic=%s, vriic=%s" % \
                                 (icvn, fic, vriic)
                         cur_map = map_if.load_map_file(self.map_file, self.param, self.xslt_files)
+                        if cur_map.id == '837':
+                            self.src.check_837_lx = True
+                        else:
+                            self.src.check_837_lx = False
                         self._apply_loop_count(orig_node, cur_map)
                         self._reset_isa_counts(cur_map)
                     self._reset_gs_counts(cur_map)
@@ -832,6 +836,10 @@ class X12ContextReader(object):
                                 raise pyx12.errors.EngineError, err_str
                             cur_map = map_if.load_map_file(self.map_file, \
                                 self.param, self.xslt_files)
+                            if cur_map.id == '837':
+                                self.src.check_837_lx = True
+                            else:
+                                self.src.check_837_lx = False
                             self._apply_loop_count(self.x12_map_node, cur_map)
                             tpath = '/ISA_LOOP/GS_LOOP/ST_LOOP/HEADER/BHT'
                             self.x12_map_node = cur_map.getnodebypath(tpath)

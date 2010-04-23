@@ -161,6 +161,10 @@ def x12n_document(param, src_file, fd_997, fd_html,
                         raise pyx12.errors.EngineError, "Map not found.  icvn=%s, fic=%s, vriic=%s" % \
                             (icvn, fic, vriic)
                     cur_map = map_if.load_map_file(map_file, param, xslt_files)
+                    if cur_map.id == '837':
+                        src.check_837_lx = True
+                    else:
+                        src.check_837_lx = False
                     logger.debug('Map file: %s' % (map_file))
                     apply_loop_count(orig_node, cur_map)
                     reset_isa_counts(cur_map)
@@ -181,6 +185,10 @@ def x12n_document(param, src_file, fd_997, fd_html,
                             raise pyx12.errors.EngineError, "Map not found.  icvn=%s, fic=%s, vriic=%s, tspc=%s" % \
                                 (icvn, fic, vriic, tspc)
                         cur_map = map_if.load_map_file(map_file, param, xslt_files)
+                        if cur_map.id == '837':
+                            src.check_837_lx = True
+                        else:
+                            src.check_837_lx = False
                         logger.debug('Map file: %s' % (map_file))
                         apply_loop_count(node, cur_map)
                         node = cur_map.getnodebypath('/ISA_LOOP/GS_LOOP/ST_LOOP/HEADER/BHT')
