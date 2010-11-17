@@ -1,4 +1,4 @@
-from distutils import core
+#from distutils import core
 from distutils.core import setup
 from distutils.file_util import copy_file
 from distutils.dir_util import mkpath
@@ -42,6 +42,7 @@ kw = {
     'long_description': pyx12.__doc__,
     'license': 'BSD',
     'description': "An X12 validator and converter",
+    'keywords': 'x12 hipaa healthcare edi',
     'author': "John Holland",
     'author_email': "jholland@kazoocmh.org",
     'url': "http://pyx12.sourceforge.net/",
@@ -70,18 +71,16 @@ else:
     kw['data_files'].append((os.path.join('share','pyx12'), ['bin/pyx12.conf.xml.sample']))
     kw['data_files'].append(('etc', ['bin/pyx12.conf.xml.sample']))
 
-if (hasattr(core, 'setup_keywords') and
-    'classifiers' in core.setup_keywords):
-    kw['classifiers'] = \
-        [
-         'Development Status :: 5 - Production/Stable',
-         'Environment :: Console',
-         'Intended Audience :: Healthcare Industry',
-         'Intended Audience :: Developers',
-         'License :: OSI Approved :: BSD License',
-         'Programming Language :: Python',
-         'Topic :: Office/Business',
-         'Topic :: Software Development :: Libraries :: Python Modules',
-         ]
+kw['classifiers'] = \
+    [
+     'Development Status :: 5 - Production/Stable',
+     'Environment :: Console',
+     'Intended Audience :: Healthcare Industry',
+     'Intended Audience :: Developers',
+     'License :: OSI Approved :: BSD License',
+     'Programming Language :: Python',
+     'Topic :: Office/Business',
+     'Topic :: Software Development :: Libraries :: Python Modules',
+     ]
 
-core.setup(**kw)
+setup(**kw)
