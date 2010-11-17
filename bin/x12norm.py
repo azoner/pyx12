@@ -7,6 +7,7 @@ import sys
 import getopt
 import os.path
 import codecs
+import tempfile
 
 """
 Format a X12 document.  If the option -e is used, it adds newlines.
@@ -56,32 +57,39 @@ def main():
         except ImportError:
             pass
 
-    if file_out:
-        fd_out = codecs.open(file_out, mode='w', encoding='ascii')
-    else:
-        fd_out =  sys.stdout
-    #errh = pyx12.error_handler.errh_null()
-    if len(args) > 0:
-        file_in = args[0]
+    for file_in in args:
         if not os.path.isfile(file_in):
             sys.stderr.write('File %s was not found' % (file_in))
-    else:
-        file_in = '-'
-    src = pyx12.x12file.X12Reader(file_in)
-    for seg_data in src:
-        if fix:
-            err_codes = [(x[1]) for x in src.pop_errors()]
-            if seg_data.get_seg_id() == 'IEA' and '021' in err_codes:
-                seg_data.set('IEA01', '%i' % (src.gs_count))
-            elif seg_data.get_seg_id() == 'GE' and '5' in err_codes:
-                seg_data.set('GE01', '%i' % (src.st_count))
-            elif seg_data.get_seg_id() == 'SE' and '4' in err_codes:
-                seg_data.set('SE01', '%i' % (src.seg_count+1))
-            elif seg_data.get_seg_id() == 'HL' and 'HL1' in err_codes:
-                seg_data.set('HL01', '%i' % (src.hl_count))
-        fd_out.write(seg_data.format() + eol)
-    if eol == '':
-        fd_out.write('\n')
+
+        if file_out:
+            fd_out = codecs.open(file_out, mode='w', encoding='ascii')
+        else:
+            #fd_out = sys.stdout
+            fd_out = tempfile.TemporaryFile()
+        src = pyx12.x12file.X12Reader(file_in)
+        for seg_data in src:
+            if fix:
+                err_codes = [(x[1]) for x in src.pop_errors()]
+                if seg_data.get_seg_id() == 'IEA' and '021' in err_codes:
+                    seg_data.set('IEA01', '%i' % (src.gs_count))
+                elif seg_data.get_seg_id() == 'GE' and '5' in err_codes:
+                    seg_data.set('GE01', '%i' % (src.st_count))
+                elif seg_data.get_seg_id() == 'SE' and '4' in err_codes:
+                    seg_data.set('SE01', '%i' % (src.seg_count+1))
+                elif seg_data.get_seg_id() == 'HL' and 'HL1' in err_codes:
+                    seg_data.set('HL01', '%i' % (src.hl_count))
+            fd_out.write(seg_data.format() + eol)
+        if eol == '':
+            fd_out.write('\n')
+
+        if not file_out:
+            fd_out.seek(0)
+            if file_in:
+                fd_orig = codecs.open(file_in, mode='w', encoding='ascii')
+                fd_orig.write(fd_out.read())
+                fd_orig.close()
+            else:
+                sys.stdout.write(fd_out.read())
     return True
 
 if __name__ == '__main__':
