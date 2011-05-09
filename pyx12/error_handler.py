@@ -287,13 +287,17 @@ class err_handler(object):
         @param err_str: Description of the error
         @type err_str: string
         """
-        self._add_cur_seg()
-        self.cur_seg_node.add_error(err_cde, err_str, err_value)
         sout = ''
+        try:
+            self._add_cur_seg()
+            self.cur_seg_node.add_error(err_cde, err_str, err_value)
+        except:
+            sout += 'No current segment in error_handler. '
         if src_line:
             sout += 'Line:%i ' % (src_line)
         else:
-            sout += 'Line:%i ' % (self.cur_seg_node.get_cur_line())
+            if self.cur_seg_node is not None:
+                sout += 'Line:%i ' % (self.cur_seg_node.get_cur_line())
         sout += 'SEG:%s - %s' % (err_cde, err_str)
         if err_value:
             sout += ' (%s)' % err_value
