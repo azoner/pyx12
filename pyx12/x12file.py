@@ -455,7 +455,7 @@ class X12Writer(X12Base):
     X12 file and stream writer
     """
 
-    def __init__(self, src_file_obj, seg_term='~', ele_term='*', subele_term=':', eol='\n', repetition_term='^'):
+    def __init__(self, src_file_obj, seg_term='~', ele_term='*', subele_term='\\', eol='\n', repetition_term='^'):
         """
         Initialize the file X12 file writer
 

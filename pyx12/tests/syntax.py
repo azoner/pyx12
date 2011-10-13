@@ -3,11 +3,9 @@
 import os, os.path
 import unittest
 
-import pyx12.error_handler
-from pyx12.errors import *
-import pyx12.map_if
-from pyx12.params import params
+import pyx12.syntax
 import pyx12.segment
+from pyx12.errors import *
 
 class IsValidSyntax(unittest.TestCase):
 
@@ -24,8 +22,6 @@ class IsValidSyntaxP(unittest.TestCase):
     """
     If has one, must have all
     """
-    #def setUp(self):
-    #    self.errh = error_handler.errh_null()
 
     def test_P_ok(self):
         seg1 = ['NM1', '41', '1', 'Smith', 'Sam', '', '', '', '46', 'AAAA']
