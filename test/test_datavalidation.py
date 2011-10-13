@@ -5,9 +5,9 @@
 import unittest
 import sys
 
-from pyx12.map_if import IsValidDataType
+from pyx12.datavalidation import IsValidDataType
 from pyx12.errors import *
-from pyx12.tests.utils import *
+from pyx12.tests.test_datavalidation import *
 
 def suite():
     suite = unittest.TestSuite()

@@ -15,7 +15,7 @@ def suite():
         'test_rawx12file', 
         'test_segment', 
         'test_syntax', 
-        'test_utils', 
+        'test_datavalidation', 
         'test_x12context', 
         'test_x12file', 
         'test_x12xml_idtag', 
