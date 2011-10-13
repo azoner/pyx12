@@ -32,7 +32,7 @@ import codes
 import dataele
 import path
 #import segment
-import datavalidation
+import validation
 
 #Global Variables
 NodeType = {'element_start': 1, 'element_end': 15, 'attrib': 2, 'text': 3, 
@@ -1489,7 +1489,7 @@ class element_if(x12_node):
             
         if not self._is_valid_code(elem_val, errh, check_dte):
             valid = False
-        if not datavalidation.IsValidDataType(elem_val, data_type, self.root.param.get('charset'), self.root.icvn):
+        if not validation.IsValidDataType(elem_val, data_type, self.root.param.get('charset'), self.root.icvn):
             if data_type in ('RD8', 'DT', 'D8', 'D6'):
                 err_str = 'Data element "%s" (%s) contains an invalid date (%s)' % \
                     (self.name, self.refdes, elem_val)
@@ -1508,7 +1508,7 @@ class element_if(x12_node):
         if len(type_list) > 0:
             valid_type = False
             for dtype in type_list:
-                valid_type |= datavalidation.IsValidDataType(elem_val, dtype, self.root.param.get('charset'))
+                valid_type |= validation.IsValidDataType(elem_val, dtype, self.root.param.get('charset'))
             if not valid_type:
                 if 'TM' in type_list:
                     err_str = 'Data element "%s" (%s) contains an invalid time (%s)' % \

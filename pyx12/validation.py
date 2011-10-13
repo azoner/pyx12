@@ -67,9 +67,9 @@ def IsValidDataType(str_val, data_type, charset = 'B', icvn='00401'):
 
 rec_N = re.compile("^-?[0-9]+", re.S)
 rec_R = re.compile("^-?[0-9]*(\.[0-9]+)?", re.S)
-rec_ID_E =  re.compile("[^A-Z0-9!\"&'()*+,\-\\\./:;?=\sa-z%~@\[\]_{}\\\|<>#$\s]", re.S)
-rec_ID_E5 = re.compile("[^A-Z0-9!\"&'()*+,\-\\\./:;?=\sa-z%~@\[\]_{}\\\|<>^`#$\s]", re.S)
-rec_ID_B =  re.compile("[^A-Z0-9!\"&'()*+,\-\\\./:;?=\s]", re.S)
+rec_ID_E =  re.compile("[^A-Z0-9!\"&'()*+,\-\./:;?=\sa-z%~@\[\]_{}\\\|<>#$\s]", re.S)
+rec_ID_E5 = re.compile("[^A-Z0-9!\"&'()*+,\-\./:;?=\sa-z%~@\[\]_{}\\\|<>^`#$\s]", re.S)
+rec_ID_B =  re.compile("[^A-Z0-9!\"&'()*+,\-\./:;?=\s]", re.S)
 rec_DT = re.compile("[^0-9]+", re.S)
 rec_TM = re.compile("[^0-9]+", re.S)
 

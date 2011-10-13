@@ -5,9 +5,9 @@
 import unittest
 import sys
 
-from pyx12.datavalidation import IsValidDataType
+from pyx12.validation import IsValidDataType
 from pyx12.errors import *
-from pyx12.tests.test_datavalidation import *
+from pyx12.tests.validation import *
 
 def suite():
     suite = unittest.TestSuite()
@@ -23,6 +23,8 @@ def suite():
     suite.addTest(unittest.makeSuite(ExtendedString))
     suite.addTest(unittest.makeSuite(ExtendedDate))
     suite.addTest(unittest.makeSuite(ExtendedTime))
+    suite.addTest(unittest.makeSuite(Extendedi5010Identifier))
+    suite.addTest(unittest.makeSuite(Extended5010String))
     return suite
 
 #if __name__ == "__main__":

@@ -5,7 +5,7 @@
 import unittest
 import sys
 
-from pyx12.datavalidation import IsValidDataType
+from pyx12.validation import IsValidDataType
 from pyx12.errors import *
 
 class BasicNumeric(unittest.TestCase):
@@ -22,6 +22,7 @@ class BasicNumeric(unittest.TestCase):
         self.failIf(IsValidDataType('1.', 'N', 'B'))
         self.failIf(IsValidDataType('-1.', 'N', 'B'))
 
+
 class BasicReal(unittest.TestCase):
     def testValid(self):
         self.failUnless(IsValidDataType('-331232', 'R', 'B'))
@@ -35,6 +36,7 @@ class BasicReal(unittest.TestCase):
         self.failIf(IsValidDataType('a.603', 'R', 'B'))
         self.failIf(IsValidDataType('0.0b', 'R', 'B'))
 
+
 class BasicIdentifier(unittest.TestCase):
     def testValid(self):
         self.failUnless(IsValidDataType('10&3', 'ID', 'B'))
@@ -46,7 +48,7 @@ class BasicIdentifier(unittest.TestCase):
 
 class BasicString(unittest.TestCase):
     def testValid(self):
-        self.failUnless(IsValidDataType('LKJS\\', 'AN', 'B'))
+        self.failUnless(IsValidDataType('LKJS', 'AN', 'B'))
         self.failUnless(IsValidDataType('THIS IS A TEST ()', 'AN', 'B'))
         self.failUnless(IsValidDataType(r"""BASIC ABCDEFIGHIJKLMNOPQRSTUVWXYZ 0123456789!"&'()+,-./;:?=""", 'AN', 'B'))
         
@@ -56,6 +58,8 @@ class BasicString(unittest.TestCase):
         self.failIf(IsValidDataType(r"""Both ABCDEFIGHIJKLMNOPQRSTUVWXYZ 0123456789!"&'()+,-./;:?= abcdefghijklmnopqrstuvwxyz%~@[]_{}\|<>#$""", 'AN', 'B'))
         self.failIf(IsValidDataType('bad ^`', 'AN', 'B'))
         self.failIf(IsValidDataType('wharf', 'AN', 'B'))
+        self.failIf(IsValidDataType('\\', 'AN', 'B'))
+
 
 class BasicDate(unittest.TestCase):
     def testValid(self):
@@ -114,6 +118,7 @@ class BasicTime(unittest.TestCase):
         self.failIf(IsValidDataType('7 31', 'TM', 'B'))
         self.failIf(IsValidDataType('7:31', 'TM', 'B'))
 
+
 class ExtendedNumeric(unittest.TestCase):
     def testValid(self):
         self.failUnless(IsValidDataType('1', 'N', 'E'))
@@ -126,6 +131,7 @@ class ExtendedNumeric(unittest.TestCase):
         self.failIf(IsValidDataType('+10', 'N', 'E'))
         self.failIf(IsValidDataType('1.', 'N', 'E'))
         self.failIf(IsValidDataType('-1.', 'N', 'E'))
+
 
 class ExtendedReal(unittest.TestCase):
     def testValid(self):
@@ -141,12 +147,14 @@ class ExtendedReal(unittest.TestCase):
         self.failIf(IsValidDataType('123,456,789.123', 'R', 'E'))
         self.failIf(IsValidDataType('333.', 'R', 'E'))
 
+
 class ExtendedIdentifier(unittest.TestCase):
     def testValid(self):
         self.failUnless(IsValidDataType('abc', 'ID', 'E'))
         self.failUnless(IsValidDataType('10&3', 'ID', 'E'))
         self.failUnless(IsValidDataType('  XYZ', 'ID', 'E'))
         self.failUnless(IsValidDataType('abc   ', 'ID', 'E'))
+
 
 class ExtendedString(unittest.TestCase):
     def testValid(self):
@@ -160,6 +168,7 @@ class ExtendedString(unittest.TestCase):
         
     def testInvalid(self):
         self.failIf(IsValidDataType('bad ^`', 'AN', 'E'))
+
 
 class ExtendedDate(unittest.TestCase):
     def testValid(self):
@@ -223,3 +232,27 @@ class ExtendedTime(unittest.TestCase):
         self.failIf(IsValidDataType('07315a', 'TM', 'E'))
         self.failIf(IsValidDataType('7 31', 'TM', 'B'))
         self.failIf(IsValidDataType('7:31', 'TM', 'B'))
+
+
+class Extendedi5010Identifier(unittest.TestCase):
+    def testValid(self):
+        self.failUnless(IsValidDataType('abc', 'ID', 'E', '00501'))
+        self.failUnless(IsValidDataType('10&3', 'ID', 'E', '00501'))
+        self.failUnless(IsValidDataType('  XYZ', 'ID', 'E', '00501'))
+        self.failUnless(IsValidDataType('abc   ', 'ID', 'E', '00501'))
+
+
+class Extended5010String(unittest.TestCase):
+    def testValid(self):
+        self.failUnless(IsValidDataType('LKJS\\', 'AN', 'E', '00501'))
+        self.failUnless(IsValidDataType('abd1P', 'AN', 'E', '00501'))
+        self.failUnless(IsValidDataType('THIS IS A TEST ()', 'AN', 'E', '00501'))
+        self.failUnless(IsValidDataType("""BASIC ABCDEFIGHIJKLMNOPQRSTUVWXYZ 0123456789!"&'()+,-./;:?=""", 'AN', 'E', '00501'))
+        self.failUnless(IsValidDataType('extended abcdefghijklmnopqrstuvwxyz%~@[]_{}\|<>#$', 'AN', 'E', '00501'))
+        self.failUnless(IsValidDataType("""Both ABCDEFIGHIJKLMNOPQRSTUVWXYZ 0123456789!"&'()+,-./;:?= abcdefghijklmnopqrstuvwxyz%~@[]_{}\|<>#$""", 'AN', 'E', '00501'))
+        self.failUnless(IsValidDataType('wharf', 'AN', 'E', '00501'))
+        self.failUnless(IsValidDataType('_good ^`', 'AN', 'E', '00501'))
+        
+    def testInvalid(self):
+        self.failIf(IsValidDataType('%s'%(chr(0x1D)), 'AN', 'E', '00501'))
+
