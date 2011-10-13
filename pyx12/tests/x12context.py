@@ -4,9 +4,9 @@ import unittest
 #import sys
 import tempfile
 try:
-    from io import StringIO
-except:
     from StringIO import StringIO
+except:
+    from io import StringIO
 
 import pyx12.error_handler
 #from error_handler import ErrorErrhNull
@@ -14,7 +14,23 @@ from pyx12.errors import *
 import pyx12.x12context
 import pyx12.params
 
-class Delimiters(unittest.TestCase):
+class X12fileTestCase(unittest.TestCase):
+    def _makeFd(self, x12str=None):
+        try:
+            if x12str:
+                fd = StringIO(x12str)
+            else:
+                fd = StringIO()
+        except:
+            if x12str:
+                fd = StringIO(x12str, encoding='ascii')
+            else:
+                fd = StringIO(encoding='ascii')
+        fd.seek(0)
+        return fd
+
+
+class Delimiters(X12fileTestCase):
 
     def test_arbitrary_delimiters(self):
         str1 = 'ISA&00&          &00&          &ZZ&ZZ000          &ZZ&ZZ001          &030828&1128&U&00401&000010121&0&T&!+\n'
@@ -24,11 +40,7 @@ class Delimiters(unittest.TestCase):
         str1 += 'SE&3&11280001+\n'
         str1 += 'GE&1&17+\n'
         str1 += 'IEA&1&000010121+\n'
-        try:
-            fd = StringIO(str1, encoding='ascii')
-        except:
-            fd = StringIO(str1)
-        fd.seek(0)
+        fd = self._makeFd(str1)
         param = pyx12.params.params('pyx12.conf.xml')
         errh = pyx12.error_handler.errh_null()
         src = pyx12.x12context.X12ContextReader(param, errh, fd, xslt_files = [])
@@ -49,11 +61,7 @@ class Delimiters(unittest.TestCase):
         str1 = str1.replace('&', chr(0x1C))
         str1 = str1.replace('+', chr(0x1D))
         str1 = str1.replace('!', chr(0x1E))
-        try:
-            fd = StringIO(str1, encoding='ascii')
-        except:
-            fd = StringIO(str1)
-        fd.seek(0)
+        fd = self._makeFd(str1)
         errors = []
         param = pyx12.params.params('pyx12.conf.xml')
         errh = pyx12.error_handler.errh_null()
@@ -320,7 +328,7 @@ class SegmentExists(unittest.TestCase):
         self.failUnless(loop2300.exists('DTP[348]'))
         self.failIf(loop2300.exists('DTP[349]'))
 
-class TreeAddLoop(unittest.TestCase):
+class TreeAddLoop(X12fileTestCase):
 
     def setUp(self):
         fd = open('files/simple_837p.txt')
@@ -359,17 +367,13 @@ class TreeAddLoop(unittest.TestCase):
         str1 += 'SE&4&11280001+\n'
         str1 += 'GE&1&17+\n'
         str1 += 'IEA&1&000010121+\n'
-        try:
-            fd = StringIO(str1, encoding='ascii')
-        except:
-            fd = StringIO(str1)
-        fd.seek(0)
+        fd = self._makeFd(str1)
         errors = []
         param = pyx12.params.params('pyx12.conf.xml')
         errh = pyx12.error_handler.errh_null()
         src = pyx12.x12context.X12ContextReader(param, errh, fd, xslt_files = [])
-        for st_loop in src.select('ST_LOOP'):
-            st_loop.delete('2000')
+        for st_loop in src.iter_segments('ST_LOOP'):
+            st_loop.first('2000').delete()
             st_loop.add_loop('INS&Y&18&30&XN&AE&RT+')
 
 

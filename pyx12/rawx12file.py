@@ -44,9 +44,17 @@ class RawX12File(object):
         if len(line) != ISA_LEN:
             err_str = 'ISA line is only %i characters' % len(line)
             raise pyx12.errors.X12Error, err_str
+        self.icvn = line[84:89]
+        if self.icvn not in ('00401', '00501'):
+            err_str = 'ISA Interchange Control Version Number is unknown: %s' % (self.icvn)
+            raise pyx12.errors.X12Error, err_str
         self.seg_term = line[-1]
         self.ele_term = line[3]
         self.subele_term = line[-2]
+        if self.icvn == '00501':
+            self.repetition_term = line[82]
+        else:
+            self.repetition_term = None
         self.buffer = line
         self.buffer += self.fd.read(DEFAULT_BUFSIZE)
         
@@ -78,5 +86,5 @@ class RawX12File(object):
 
         @rtype: tuple(string, string, string, string)
         """
-        return (self.seg_term, self.ele_term, self.subele_term, '\n')
+        return (self.seg_term, self.ele_term, self.subele_term, '\n', self.repetition_term)
 

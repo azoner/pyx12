@@ -1,5 +1,5 @@
 ######################################################################
-# Copyright (c) 2001-2008 Kalamazoo Community Mental Health Services,
+# Copyright (c) 2001-2011 Kalamazoo Community Mental Health Services,
 #   John Holland <jholland@kazoocmh.org> <john@zoner.org>
 # All rights reserved.
 #
@@ -61,6 +61,7 @@ class X12Base(object):
         self.seg_term = None
         self.ele_term = None
         self.subele_term = None
+        self.repetition_term = None
 
     def Close(self):
         """
@@ -293,7 +294,7 @@ class X12Base(object):
 
         @rtype: tuple(string, string, string, string)
         """
-        return (self.seg_term, self.ele_term, self.subele_term, '\n')
+        return (self.seg_term, self.ele_term, self.subele_term, '\n', self.repetition_term)
 
 
 class X12Reader(X12Base):
@@ -328,10 +329,11 @@ class X12Reader(X12Base):
             self.raw = RawX12File(self.fd_in)
         except pyx12.errors.X12Error:
             raise
-        (seg_term, ele_term, subele_term, eol) = self.raw.get_term()
+        (seg_term, ele_term, subele_term, eol, repetition_term) = self.raw.get_term()
         self.seg_term = seg_term
         self.ele_term = ele_term
         self.subele_term = subele_term
+        self.repetition_term = repetition_term
        
     def __del__(self):
         try:
@@ -453,7 +455,7 @@ class X12Writer(X12Base):
     X12 file and stream writer
     """
 
-    def __init__(self, src_file_obj, seg_term='~', ele_term='*', subele_term=':', eol='\n'):
+    def __init__(self, src_file_obj, seg_term='~', ele_term='*', subele_term=':', eol='\n', repetition_term='^'):
         """
         Initialize the file X12 file writer
 
@@ -476,6 +478,7 @@ class X12Writer(X12Base):
         self.seg_term = seg_term
         self.ele_term = ele_term
         self.subele_term = subele_term
+        self.repetition_term = repetition_term
         self.eol = eol
 
     def Close(self):

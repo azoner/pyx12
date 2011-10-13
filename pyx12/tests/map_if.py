@@ -805,3 +805,19 @@ class X12Path(unittest.TestCase):
             node = self.map.getnodebypath(p1)
             self.assertEqual(p1, node.get_path())
             self.assertEqual(pyx12.path.X12Path(p1), node.x12path)
+
+class X12Version(unittest.TestCase):
+    def setUp(self):
+        map_path = getMapPath()
+        self.param = pyx12.params.params('pyx12.conf.xml')
+        if map_path:
+            self.param.set('map_path', map_path)
+            self.param.set('pickle_path', map_path)
+
+    def test_4010(self):
+        map = pyx12.map_if.load_map_file('834.4010.X095.A1.xml', self.param)
+        self.assertEqual(map.icvn, '00401')
+
+    def test_5010(self):
+        map = pyx12.map_if.load_map_file('834.5010.X220.A1.xml', self.param)
+        self.assertEqual(map.icvn, '00501')

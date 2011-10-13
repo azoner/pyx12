@@ -5,7 +5,7 @@
 import unittest
 import sys
 
-from pyx12.map_if import IsValidDataType
+from pyx12.datavalidation import IsValidDataType
 from pyx12.errors import *
 
 class BasicNumeric(unittest.TestCase):
