@@ -50,4 +50,36 @@ vriic - Version / Release / Industry Identifier Code (GS08)
     <map vriic="004010X098A1" fic="FA" abbr="997">997.4010.xml</map>
     <map vriic="" fic="" abbr="X12">x12.control.00401.xml</map>
   </version>
+  <version icvn="00501">
+  <!--
+    <map vriic="005010X070" fic="HN" abbr="277U">277U.5010.X070.xml</map>
+    <map vriic="005010X093A1" fic="HR" abbr="276">276.5010.X093.A1.xml</map>
+    <map vriic="005010X093A1" fic="HN" abbr="277">277.5010.X093.A1.xml</map>
+    <map vriic="005010X092A1" fic="HS" abbr="270">270.5010.X092.A1.xml</map>
+    <map vriic="005010X092A1" fic="HB" abbr="271">271.5010.X092.A1.xml</map>
+    <map vriic="005010X094A1" fic="HI" tspc="11" abbr="278a">278.5010.X094.27.A1.xml</map>
+    <map vriic="005010X094A1" fic="HI" tspc="13" abbr="278b">278.5010.X094.A1.xml</map>
+    -->
+    <map vriic="005010X218" fic="RA" abbr="820">820.5010.X218.xml</map>
+    <map vriic="005010X220" fic="BE" abbr="834">834.5010.X220.xml</map>
+    <!--
+    <map vriic="005010X091A1" fic="HP" abbr="835">835.5010.X091.A1.xml</map>
+    <map vriic="005010X096A1" fic="HC" abbr="837I">837.5010.X096.A1.xml</map>
+    <map vriic="005010X097A1" fic="HC" abbr="837D">837.5010.X097.A1.xml</map>
+    <map vriic="005010X098A1" fic="HC" abbr="837P">837.5010.X098.A1.xml</map>
+    <map vriic="005010XXXC" fic="SP" abbr="841">841.5010.XXXC.xml</map>
+    <map vriic="005010" fic="FA" abbr="997">997.5010.xml</map>
+    <map vriic="005010X070" fic="FA" abbr="997">997.5010.xml</map>
+    <map vriic="005010X093A1" fic="FA" abbr="997">997.5010.xml</map>
+    <map vriic="005010X092A1" fic="FA" abbr="997">997.5010.xml</map>
+    <map vriic="005010X094A1" fic="FA" abbr="997">997.5010.xml</map>
+    <map vriic="005010X061A1" fic="FA" abbr="997">997.5010.xml</map>
+    <map vriic="005010X095A1" fic="FA" abbr="997">997.5010.xml</map>
+    <map vriic="005010X091A1" fic="FA" abbr="997">997.5010.xml</map>
+    <map vriic="005010X096A1" fic="FA" abbr="997">997.5010.xml</map>
+    <map vriic="005010X097A1" fic="FA" abbr="997">997.5010.xml</map>
+    <map vriic="005010X098A1" fic="FA" abbr="997">997.5010.xml</map>
+    -->
+    <map vriic="" fic="" abbr="X12">x12.control.00501.xml</map>
+  </version>
 </maps>

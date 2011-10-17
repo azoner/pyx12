@@ -85,12 +85,13 @@
   <data_ele ele_num="1251" data_type="AN" min_len="1" max_len="35" name="Date Time Period"/>
   <data_ele ele_num="1253" data_type="ID" min_len="3" max_len="6" name="Immunization Type Code"/>
   <data_ele ele_num="1254" data_type="ID" min_len="1" max_len="2" name="Immunization Status Code"/>
-  <data_ele ele_num="127" data_type="AN" min_len="1" max_len="30" name="Reference Identification"/>
+  <data_ele ele_num="127" data_type="AN" min_len="1" max_len="50" name="Reference Identification"/>
   <data_ele ele_num="1270" data_type="ID" min_len="1" max_len="3" name="Code List Qualifier Code"/>
   <data_ele ele_num="1271" data_type="AN" min_len="1" max_len="30" name="Industry Code"/>
   <data_ele ele_num="128" data_type="ID" min_len="2" max_len="3" name="Reference Identification Qualifier"/>
   <data_ele ele_num="1295" data_type="ID" min_len="1" max_len="2" name="Participant Status Code"/>
   <data_ele ele_num="1296" data_type="AN" min_len="1" max_len="6" name="Special Processing Type"/>
+  <data_ele ele_num="1300" data_type="ID" min_len="4" max_len="4" name="Service, Promotion, Allowance or Charge Code"/>
   <data_ele ele_num="1303" data_type="ID" min_len="1" max_len="2" name="Use of Language Indicator"/>
   <data_ele ele_num="1314" data_type="ID" min_len="1" max_len="1" name="Admission Source Code"/>
   <data_ele ele_num="1315" data_type="ID" min_len="1" max_len="1" name="Admission Type Code"/>
@@ -170,6 +171,7 @@
   <data_ele ele_num="1685" data_type="ID" min_len="1" max_len="2" name="Tax Treatment Code"/>
   <data_ele ele_num="1687" data_type="R" min_len="1" max_len="15" name="Earnings Rate of Pay"/>
   <data_ele ele_num="1705" data_type="AN" min_len="1" max_len="35" name="Implementation Convention Reference"/>
+  <data_ele ele_num="1715" data_type="ID" min_len="1" max_len="3" name="Country Subdivision Code"/>
   <data_ele ele_num="183" data_type="R" min_len="1" max_len="8" name="Volume"/>
   <data_ele ele_num="184" data_type="ID" min_len="1" max_len="1" name="Volume Unit Qualifier"/>
   <data_ele ele_num="188" data_type="ID" min_len="1" max_len="1" name="Weight Unit Code"/>
@@ -181,6 +183,7 @@
   <data_ele ele_num="234" data_type="AN" min_len="1" max_len="48" name="Product/Service ID"/>
   <data_ele ele_num="235" data_type="ID" min_len="2" max_len="2" name="Product/Service ID Qualifier"/>
   <data_ele ele_num="236" data_type="ID" min_len="3" max_len="3" name="Price Identifier Code"/>
+  <data_ele ele_num="248" data_type="ID" min_len="1" max_len="1" name="Allowance or Charge Indicator"/>
   <data_ele ele_num="26" data_type="ID" min_len="2" max_len="3" name="Country Code"/>
   <data_ele ele_num="28" data_type="N0" min_len="1" max_len="9" name="Group Control Number"/>
   <data_ele ele_num="29" data_type="DT" min_len="6" max_len="8" name="Date"/>
@@ -333,4 +336,5 @@
   <data_ele ele_num="I16" data_type="N0" min_len="1" max_len="5" name="I16"/>
   <data_ele ele_num="I17" data_type="ID" min_len="1" max_len="1" name="I17"/>
   <data_ele ele_num="I18" data_type="ID" min_len="3" max_len="3" name="I18"/>
+  <data_ele ele_num="I65" data_type="AN" min_len="1" max_len="1" name="I65"/>
 </data_elements>
