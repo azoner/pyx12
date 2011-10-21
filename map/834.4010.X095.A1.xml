@@ -13,7 +13,7 @@
 #    $Id$
 -->
 <transaction xid="834">
-  <name>HIPAA Benefit Enrollment and Maintenance X220A1-834</name>
+  <name>HIPAA Benefit Enrollment and Maintenance X095A1-834</name>
   <loop xid="ISA_LOOP" type="explicit">
     <name>Interchange Control Header</name>
     <usage>R</usage>
@@ -238,7 +238,7 @@
           <usage>R</usage>
           <seq>08</seq>
           <valid_codes>
-            <code>005010X220A1</code>
+            <code>004010X095A1</code>
           </valid_codes>
         </element>
       </segment>
