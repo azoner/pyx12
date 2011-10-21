@@ -13,7 +13,7 @@
 #    $Id: 834.4010.X095.A1.xml 1055 2007-04-25 20:00:25Z johnholland $
 -->
 <transaction xid="834">
-  <name>HIPAA Benefit Enrollment and Maintenance X220-834</name>
+  <name>HIPAA Benefit Enrollment and Maintenance X220A1-834</name>
   <loop xid="ISA_LOOP" type="explicit">
     <name>Interchange Control Header</name>
     <usage>R</usage>
@@ -235,7 +235,7 @@
           <usage>R</usage>
           <seq>08</seq>
           <valid_codes>
-            <code>005010X220</code>
+            <code>005010X220A1</code>
           </valid_codes>
         </element>
       </segment>
