@@ -18,7 +18,7 @@
   <xsd:annotation>
     <xsd:documentation xml:lang="en">
     XML Schema for pyx12 data validation maps
-    Copyright 2001-2008 Kalamazoo Community Mental Health Services. All rights reserved.
+    Copyright 2001-2011 Kalamazoo Community Mental Health Services. All rights reserved.
     </xsd:documentation>
   </xsd:annotation>
 
@@ -80,6 +80,8 @@
       <xsd:element name="usage" type="usageType"/>
       <xsd:element name="seq" type="xsd:nonNegativeInteger"/>
       <xsd:element name="refdes" type="xsd:token" minOccurs="0"/>
+      <xsd:element name="syntax" type="syntaxType" minOccurs="0" maxOccurs="unbounded"/>
+      <xsd:element name="repeat" type="xsd:nonNegativeInteger" minOccurs="0" maxOccurs="1" />
       <xsd:element name="element" type="ElementType" minOccurs="0" maxOccurs="unbounded"/>
     </xsd:sequence>
   </xsd:complexType>
@@ -91,6 +93,7 @@
       <xsd:element name="usage" type="usageType"/> <!-- IG usage, -->
       <xsd:element name="seq" type="xsd:nonNegativeInteger"/>
       <xsd:element name="refdes" type="xsd:token" minOccurs="0"/>
+      <xsd:element name="repeat" type="xsd:nonNegativeInteger" minOccurs="0" maxOccurs="1" />
       <xsd:element name="valid_codes" minOccurs="0">
         <xsd:complexType>
           <xsd:sequence>
