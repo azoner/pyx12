@@ -1,15 +1,15 @@
 import unittest
+import pdb
 
 def get_testcases(ns):
     ret = []
     ns_dict = ns.__dict__
     for key in ns_dict.keys():
-        if ord(key[0]) >= ord('A') and ord(key[0]) <= ord('Z'):
-            try:
-                if ns_dict[key].__base__.__name__ == 'TestCase':
-                    ret.append(ns_dict[key].__name__)
-            except:
-                pass
+        try:
+            if issubclass(ns_dict[key], unittest.TestCase):
+                ret.append(ns_dict[key].__name__)
+        except:
+            pass
     ret.sort()
     return ret
 

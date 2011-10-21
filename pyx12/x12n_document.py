@@ -90,7 +90,11 @@ def x12n_document(param, src_file, fd_997, fd_html,
         return False
 
     #Get Map of Control Segments
-    map_file = 'x12.control.00401.xml'
+    if src.icvn == '00501':
+        map_file = 'x12.control.00501.xml'
+    else:
+        map_file = 'x12.control.00401.xml'
+    logger.debug('X12 control file: %s' % (map_file))
     control_map = map_if.load_map_file(os.path.join(map_path, map_file), param)
     map_index_if = map_index.map_index(os.path.join(map_path, 'maps.xml'))
     node = control_map.getnodebypath('/ISA_LOOP/ISA')
@@ -123,6 +127,8 @@ def x12n_document(param, src_file, fd_997, fd_html,
     #basedir = os.path.dirname(src_file)
     #erx = errh_xml.err_handler(basedir=basedir)
 
+    #import pdb
+    #pdb.set_trace()
     valid = True
     for seg in src:
         #find node

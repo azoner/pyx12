@@ -49,52 +49,6 @@ class X12fileTestCase(unittest.TestCase):
         return fd
 
 
-class Delimiters(X12fileTestCase):
-
-    def test_arbitrary_delimiters(self):
-        str1 = 'ISA&00&          &00&          &ZZ&ZZ000          &ZZ&ZZ001          &030828&1128&U&00401&000010121&0&T&!+\n'
-        str1 += 'GS&HC&ZZ000&ZZ001&20030828&1128&17&X&004010X098+\n'
-        str1 += 'ST&837&11280001+\n'
-        str1 += 'TST&AA!1!1&BB!5+\n'
-        str1 += 'SE&3&11280001+\n'
-        str1 += 'GE&1&17+\n'
-        str1 += 'IEA&1&000010121+\n'
-        fd = self._makeFd(str1)
-        errors = []
-        src = pyx12.x12file.X12Reader(fd)
-        for seg in src:
-            errors.extend(src.pop_errors())
-        err_cde = None
-        if len(errors) > 0: 
-            err_cde = errors[0][1]
-        self.assertEqual(err_cde, None)
-        self.assertEqual(src.subele_term, '!')
-        self.assertEqual(src.ele_term, '&')
-        self.assertEqual(src.seg_term, '+')
-        self.assertEqual(src.repetition_term, None)
-
-    def test_arbitrary_delimiters_5010(self):
-        str1 = 'ISA&00&          &00&          &ZZ&ZZ000          &ZZ&ZZ001          &030828&1128&^&00501&000010121&0&T&!+\n'
-        str1 += 'GS&HC&ZZ000&ZZ001&20030828&1128&17&X&004010X098+\n'
-        str1 += 'ST&837&11280001+\n'
-        str1 += 'TST&AA!1!1&BB!5+\n'
-        str1 += 'SE&3&11280001+\n'
-        str1 += 'GE&1&17+\n'
-        str1 += 'IEA&1&000010121+\n'
-        fd = self._makeFd(str1)
-        errors = []
-        src = pyx12.x12file.X12Reader(fd)
-        for seg in src:
-            errors.extend(src.pop_errors())
-        err_cde = None
-        if len(errors) > 0: 
-            err_cde = errors[0][1]
-        self.assertEqual(err_cde, None)
-        self.assertEqual(src.subele_term, '!')
-        self.assertEqual(src.ele_term, '&')
-        self.assertEqual(src.seg_term, '+')
-        self.assertEqual(src.repetition_term, '^')
-
     def test_binary_delimiters(self):
         str1 = 'ISA&00&          &00&          &ZZ&ZZ000          &ZZ&ZZ001          &030828&1128&^&00501&000010121&0&T&!+\n'
         str1 += 'GS&HC&ZZ000&ZZ001&20030828&1128&17&X&004010X098+\n'
@@ -573,4 +527,45 @@ class LX_Checks(X12fileTestCase):
         str1 += 'IEA*1*000010121~\n'
         (err_cde, err_str) = self._get_first_error(str1, '837')
         self.assertEqual(err_cde, 'LX', err_str)
+
+
+class InterchangeVersion(X12fileTestCase):
+
+    def test_icvn_4010(self):
+        str1 = 'ISA&00&          &00&          &ZZ&ZZ000          &ZZ&ZZ001          &030828&1128&U&00401&000010121&0&T&!+\n'
+        str1 += 'GS&HC&ZZ000&ZZ001&20030828&1128&17&X&004010X098+\n'
+        str1 += 'ST&837&11280001+\n'
+        str1 += 'TST&AA!1!1&BB!5+\n'
+        str1 += 'SE&3&11280001+\n'
+        str1 += 'GE&1&17+\n'
+        str1 += 'IEA&1&000010121+\n'
+        fd = self._makeFd(str1)
+        errors = []
+        src = pyx12.x12file.X12Reader(fd)
+        self.assertEqual(src.icvn, '00401')
+        for seg in src:
+            errors.extend(src.pop_errors())
+        err_cde = None
+        if len(errors) > 0: 
+            err_cde = errors[0][1]
+        self.assertEqual(err_cde, None)
+
+    def test_icvn_5010(self):
+        str1 = 'ISA&00&          &00&          &ZZ&ZZ000          &ZZ&ZZ001          &030828&1128&^&00501&000010121&0&T&!+\n'
+        str1 += 'GS&HC&ZZ000&ZZ001&20030828&1128&17&X&004010X098+\n'
+        str1 += 'ST&837&11280001+\n'
+        str1 += 'TST&AA!1!1&BB!5+\n'
+        str1 += 'SE&3&11280001+\n'
+        str1 += 'GE&1&17+\n'
+        str1 += 'IEA&1&000010121+\n'
+        fd = self._makeFd(str1)
+        errors = []
+        src = pyx12.x12file.X12Reader(fd)
+        self.assertEqual(src.icvn, '00501')
+        for seg in src:
+            errors.extend(src.pop_errors())
+        err_cde = None
+        if len(errors) > 0: 
+            err_cde = errors[0][1]
+        self.assertEqual(err_cde, None)
 

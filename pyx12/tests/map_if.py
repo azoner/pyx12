@@ -819,5 +819,5 @@ class X12Version(unittest.TestCase):
         self.assertEqual(map.icvn, '00401')
 
     def test_5010(self):
-        map = pyx12.map_if.load_map_file('834.5010.X220.A1.xml', self.param)
+        map = pyx12.map_if.load_map_file('834.5010.X220.xml', self.param)
         self.assertEqual(map.icvn, '00501')

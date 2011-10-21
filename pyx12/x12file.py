@@ -334,6 +334,7 @@ class X12Reader(X12Base):
         self.ele_term = ele_term
         self.subele_term = subele_term
         self.repetition_term = repetition_term
+        self.icvn = self.raw.icvn
        
     def __del__(self):
         try:

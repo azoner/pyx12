@@ -358,6 +358,8 @@ class TreeAddLoop(X12fileTestCase):
         for loop2400 in self.loop2300.select('2400'):
             self.failUnless(loop2400.exists('LX'))
 
+
+class TreeAddLoopDetail(X12fileTestCase):
     def test_add_loops_under_detail(self):
         str1 = 'ISA&00&          &00&          &ZZ&ZZ000          &ZZ&ZZ001          &030828&1128&U&00401&000010121&0&T&!+\n'
         str1 += 'GS&BE&ZZ000&ZZ001&20030828&1128&17&X&004010X095A1+\n'
@@ -373,8 +375,13 @@ class TreeAddLoop(X12fileTestCase):
         errh = pyx12.error_handler.errh_null()
         src = pyx12.x12context.X12ContextReader(param, errh, fd, xslt_files = [])
         for st_loop in src.iter_segments('ST_LOOP'):
-            st_loop.first('2000').delete()
-            st_loop.add_loop('INS&Y&18&30&XN&AE&RT+')
+            if st_loop.id == 'ST_LOOP' and st_loop.exists('DETAIL'):
+                detail = st_loop.first('DETAIL')
+                self.failUnless(detail.exists('2000'))
+                detail.first('2000').delete()
+                self.failIf(detail.exists('2000'))
+                detail.add_loop('INS&Y&18&30&XN&AE&RT+')
+                self.failUnless(detail.exists('2000'))
 
 
 class TreeAddNode(unittest.TestCase):

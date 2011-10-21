@@ -758,7 +758,10 @@ class X12ContextReader(object):
         self.src = x12file.X12Reader(src_file_obj) 
 
         #Get Map of Control Segments
-        self.map_file = 'x12.control.00401.xml'
+        if self.src.icvn == '00501':
+            self.map_file = 'x12.control.00501.xml'
+        else:
+            self.map_file = 'x12.control.00401.xml'
         self.control_map = map_if.load_map_file(os.path.join(map_path, self.map_file), param)
         self.map_index_if = map_index.map_index(os.path.join(map_path, 'maps.xml'))
         self.x12_map_node = self.control_map.getnodebypath('/ISA_LOOP/ISA')
