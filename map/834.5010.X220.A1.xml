@@ -1987,6 +1987,17 @@
                   <name>Marital Status Code</name>
                   <usage>S</usage>
                   <seq>04</seq>
+                  <valid_codes>
+                    <code>B</code>
+                    <code>D</code>
+                    <code>I</code>
+                    <code>M</code>
+                    <code>R</code>
+                    <code>S</code>
+                    <code>U</code>
+                    <code>W</code>
+                    <code>X</code>
+                  </valid_codes>
                 </element>
                 <composite>
                   <data_ele>C056</data_ele>
@@ -2040,6 +2051,15 @@
                   <name>Citizenship Status Code</name>
                   <usage>S</usage>
                   <seq>06</seq>
+                  <valid_codes>
+                    <code>1</code>
+                    <code>2</code>
+                    <code>3</code>
+                    <code>4</code>
+                    <code>5</code>
+                    <code>6</code>
+                    <code>7</code>
+                  </valid_codes>
                 </element>
                 <element xid="DMG07">
                   <data_ele>26</data_ele>
@@ -2064,6 +2084,9 @@
                   <name>Code List Qualifier Code</name>
                   <usage>S</usage>
                   <seq>10</seq>
+                  <valid_codes>
+                    <code>REC</code>
+                  </valid_codes>
                 </element>
                 <element xid="DMG11">
                   <data_ele>1271</data_ele>
@@ -2442,7 +2465,7 @@
               <!--End of N3 segment-->
               <segment xid="N4">
                 <name>Member Employer City, State, Zip</name>
-                <usage>R</usage>
+                <usage>S</usage>
                 <pos>0600</pos>
                 <max_use>1</max_use>
                 <syntax>E0207</syntax>
@@ -2688,7 +2711,7 @@
               <!--End of N3 segment-->
               <segment xid="N4">
                 <name>Member School City, State, Zip</name>
-                <usage>R</usage>
+                <usage>S</usage>
                 <pos>0600</pos>
                 <max_use>1</max_use>
                 <syntax>E0207</syntax>
@@ -2952,7 +2975,7 @@
               <!--End of N3 segment-->
               <segment xid="N4">
                 <name>Custodial Parent City, State, Zip</name>
-                <usage>R</usage>
+                <usage>S</usage>
                 <pos>0600</pos>
                 <max_use>1</max_use>
                 <syntax>E0207</syntax>
@@ -3669,6 +3692,10 @@
                   <name>Late Enrollment</name>
                   <usage>S</usage>
                   <seq>09</seq>
+                  <valid_codes>
+                    <code>N</code>
+                    <code>Y</code>
+                  </valid_codes>
                 </element>
                 <element xid="HD10">
                   <data_ele>1211</data_ele>
@@ -3807,7 +3834,7 @@
               <segment xid="REF">
                 <name>Prior Coverage Months</name>
                 <usage>S</usage>
-                <pos>0290</pos>
+                <pos>2900</pos>
                 <max_use>1</max_use>
                 <syntax>R0203</syntax>
                 <element xid="REF01">
@@ -4020,7 +4047,7 @@
                 <!--End of N3 segment-->
                 <segment xid="N4">
                   <name>Provider City, State, Zip Code</name>
-                  <usage>R</usage>
+                  <usage>S</usage>
                   <pos>3600</pos>
                   <max_use>1</max_use>
                   <syntax>E0207</syntax>
@@ -4339,7 +4366,7 @@
                 <segment xid="DTP">
                   <name>Coordination of Benefits Eligibility Dates</name>
                   <usage>S</usage>
-                  <pos>4500</pos>
+                  <pos>4070</pos>
                   <max_use>2</max_use>
                   <element xid="DTP01">
                     <data_ele>374</data_ele>
@@ -4371,7 +4398,7 @@
                 <loop xid="2330">
                   <name>Coordination of Benefits Related Entity</name>
                   <usage>S</usage>
-                  <pos>0410</pos>
+                  <pos>4100</pos>
                   <repeat>3</repeat>
                   <segment xid="NM1">
                     <name>Coordination of Benefits Related Entity</name>
@@ -4482,7 +4509,7 @@
                   <!--End of N3 segment-->
                   <segment xid="N4">
                     <name>Coordination of Benefits Related Entity City, State, Zip</name>
-                    <usage>R</usage>
+                    <usage>S</usage>
                     <pos>4400</pos>
                     <max_use>1</max_use>
                     <syntax>E0207</syntax>
@@ -4626,7 +4653,7 @@
               </element>
             </segment>
             <!--End of LS segment-->
-            <loop xid="2710">
+            <loop xid="2700">
               <name>Member Reporting Categories</name>
               <usage>S</usage>
               <pos>6881</pos>
@@ -4675,7 +4702,7 @@
                   <name>Reporting Category Reference</name>
                   <usage>S</usage>
                   <pos>6883</pos>
-                  <max_use>16</max_use>
+                  <max_use>1</max_use>
                   <syntax>R0203</syntax>
                   <element xid="REF01">
                     <data_ele>128</data_ele>
@@ -4756,7 +4783,7 @@
               </loop>
               <!--End of 2750 loop-->
             </loop>
-            <!--End of 2710 loop-->
+            <!--End of 2700 loop-->
             <segment xid="LE">
               <name>Loop Trailer</name>
               <usage>S</usage>

@@ -24,8 +24,8 @@
   <data_ele ele_num="1032" data_type="ID" min_len="1" max_len="2" name="Claim Filing Indicator Code"/>
   <data_ele ele_num="1033" data_type="ID" min_len="1" max_len="2" name="Claim Adjustment Group Code"/>
   <data_ele ele_num="1034" data_type="ID" min_len="1" max_len="5" name="Claim Adjustment Reason Code"/>
-  <data_ele ele_num="1035" data_type="AN" min_len="1" max_len="35" name="Name Last or Organization Name"/>
-  <data_ele ele_num="1036" data_type="AN" min_len="1" max_len="25" name="Name First"/>
+  <data_ele ele_num="1035" data_type="AN" min_len="1" max_len="60" name="Name Last or Organization Name"/>
+  <data_ele ele_num="1036" data_type="AN" min_len="1" max_len="35" name="Name First"/>
   <data_ele ele_num="1037" data_type="AN" min_len="1" max_len="25" name="Name Middle"/>
   <data_ele ele_num="1038" data_type="AN" min_len="1" max_len="10" name="Name Prefix"/>
   <data_ele ele_num="1039" data_type="AN" min_len="1" max_len="10" name="Name Suffix"/>
