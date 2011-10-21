@@ -17,12 +17,12 @@
   <loop xid="ISA_LOOP" type="explicit">
     <name>Interchange Control Header</name>
     <usage>R</usage>
-    <pos>001</pos>
+    <pos>0010</pos>
     <repeat>&gt;1</repeat>
     <segment xid="ISA">
       <name>Interchange Control Header</name>
       <usage>R</usage>
-      <pos>010</pos>
+      <pos>0100</pos>
       <max_use>1</max_use>
       <element xid="ISA01">
         <data_ele>I01</data_ele>
@@ -168,12 +168,12 @@
     <loop xid="GS_LOOP" type="explicit">
       <name>Functional Group Header</name>
       <usage>R</usage>
-      <pos>020</pos>
+      <pos>0200</pos>
       <repeat>&gt;1</repeat>
       <segment xid="GS">
         <name>Functional Group Header</name>
         <usage>R</usage>
-        <pos>010</pos>
+        <pos>0100</pos>
         <max_use>1</max_use>
         <element xid="GS01">
           <data_ele>479</data_ele>
@@ -239,12 +239,12 @@
       <loop xid="ST_LOOP" type="explicit">
         <name>Transaction Set Header</name>
         <usage>R</usage>
-        <pos>020</pos>
+        <pos>0200</pos>
         <repeat>&gt;1</repeat>
         <segment xid="ST">
           <name>820 Header</name>
           <usage>R</usage>
-          <pos>010</pos>
+          <pos>0100</pos>
           <max_use>1</max_use>
           <element xid="ST01">
             <data_ele>143</data_ele>
@@ -272,12 +272,12 @@
         <loop xid="HEADER" type="wrapper">
           <name>Table 1 - Header</name>
           <usage>R</usage>
-          <pos>015</pos>
+          <pos>0150</pos>
           <repeat>1</repeat>
           <segment xid="BPR">
             <name>Financial Information</name>
             <usage>R</usage>
-            <pos>020</pos>
+            <pos>0200</pos>
             <max_use>1</max_use>
             <syntax>P0607</syntax>
             <syntax>C0809</syntax>
@@ -458,7 +458,7 @@
           <segment xid="TRN">
             <name>Reassociation Key</name>
             <usage>R</usage>
-            <pos>035</pos>
+            <pos>0350</pos>
             <max_use>1</max_use>
             <element xid="TRN01">
               <data_ele>481</data_ele>
@@ -493,7 +493,7 @@
           <segment xid="CUR">
             <name>Non-US Dollars Currency</name>
             <usage>S</usage>
-            <pos>040</pos>
+            <pos>0400</pos>
             <max_use>1</max_use>
             <element xid="CUR01">
               <data_ele>98</data_ele>
@@ -635,7 +635,7 @@
           <segment xid="REF">
             <name>Premium Receivers Identification Key</name>
             <usage>S</usage>
-            <pos>050</pos>
+            <pos>0500</pos>
             <max_use>&gt;1</max_use>
             <syntax>R0203</syntax>
             <element xid="REF01">
@@ -676,7 +676,7 @@
           <segment xid="DTM">
             <name>Process Date</name>
             <usage>S</usage>
-            <pos>060</pos>
+            <pos>0600</pos>
             <max_use>1</max_use>
             <syntax>R020305</syntax>
             <syntax>C0403</syntax>
@@ -726,7 +726,7 @@
           <segment xid="DTM">
             <name>Delivery Date</name>
             <usage>S</usage>
-            <pos>060</pos>
+            <pos>0600</pos>
             <max_use>1</max_use>
             <syntax>R020305</syntax>
             <syntax>C0403</syntax>
@@ -776,7 +776,7 @@
           <segment xid="DTM">
             <name>Coverage Period</name>
             <usage>S</usage>
-            <pos>060</pos>
+            <pos>0600</pos>
             <max_use>1</max_use>
             <syntax>R020305</syntax>
             <syntax>C0403</syntax>
@@ -828,7 +828,7 @@
           <segment xid="DTM">
             <name>Creation Date</name>
             <usage>S</usage>
-            <pos>060</pos>
+            <pos>0600</pos>
             <max_use>1</max_use>
             <syntax>R020305</syntax>
             <syntax>C0403</syntax>
@@ -880,12 +880,12 @@
           <loop xid="1000A">
             <name>Premium Receiver's Name</name>
             <usage>R</usage>
-            <pos>070</pos>
+            <pos>0700</pos>
             <repeat>1</repeat>
             <segment xid="N1">
               <name>Premium Receiver's Name</name>
               <usage>R</usage>
-              <pos>070</pos>
+              <pos>0700</pos>
               <max_use>1</max_use>
               <syntax>R0203</syntax>
               <syntax>P0304</syntax>
@@ -940,7 +940,7 @@
             <segment xid="N2">
               <name>Premium Receiver Additional Name</name>
               <usage>S</usage>
-              <pos>080</pos>
+              <pos>0800</pos>
               <max_use>1</max_use>
               <element xid="N201">
                 <data_ele>93</data_ele>
@@ -959,7 +959,7 @@
             <segment xid="N3">
               <name>Premium Receiver's Address</name>
               <usage>S</usage>
-              <pos>090</pos>
+              <pos>0900</pos>
               <max_use>1</max_use>
               <element xid="N301">
                 <data_ele>166</data_ele>
@@ -978,7 +978,7 @@
             <segment xid="N4">
               <name>Premium Receiver's City, State, ZIP</name>
               <usage>S</usage>
-              <pos>100</pos>
+              <pos>1000</pos>
               <max_use>1</max_use>
               <syntax>E0207</syntax>
               <syntax>C0605</syntax>
@@ -1032,7 +1032,7 @@
             <segment xid="RDM">
               <name>Premium Receiver's Remittance Delivery Method</name>
               <usage>S</usage>
-              <pos>130</pos>
+              <pos>1300</pos>
               <max_use>1</max_use>
               <element xid="RDM01">
                 <data_ele>756</data_ele>
@@ -1079,12 +1079,12 @@
           <loop xid="1000B">
             <name>Premium Payer's Name</name>
             <usage>R</usage>
-            <pos>070</pos>
+            <pos>0700</pos>
             <repeat>1</repeat>
             <segment xid="N1">
               <name>Premium Payer's Name</name>
               <usage>R</usage>
-              <pos>070</pos>
+              <pos>0700</pos>
               <max_use>1</max_use>
               <syntax>R0203</syntax>
               <syntax>P0304</syntax>
@@ -1142,7 +1142,7 @@
             <segment xid="N2">
               <name>Premium Payer Additional Name</name>
               <usage>S</usage>
-              <pos>080</pos>
+              <pos>0800</pos>
               <max_use>1</max_use>
               <element xid="N201">
                 <data_ele>93</data_ele>
@@ -1161,7 +1161,7 @@
             <segment xid="N3">
               <name>Premium Payer's Address</name>
               <usage>S</usage>
-              <pos>090</pos>
+              <pos>0900</pos>
               <max_use>1</max_use>
               <element xid="N301">
                 <data_ele>166</data_ele>
@@ -1180,7 +1180,7 @@
             <segment xid="N4">
               <name>Premium Payer's City, State, ZIP</name>
               <usage>S</usage>
-              <pos>100</pos>
+              <pos>1000</pos>
               <max_use>1</max_use>
               <syntax>E0207</syntax>
               <syntax>C0605</syntax>
@@ -1234,7 +1234,7 @@
             <segment xid="PER">
               <name>Premium Payer's Administrative Contact</name>
               <usage>S</usage>
-              <pos>120</pos>
+              <pos>1200</pos>
               <max_use>&gt;1</max_use>
               <syntax>P0304</syntax>
               <syntax>P0506</syntax>
@@ -1320,12 +1320,12 @@
           <loop xid="1000C">
             <name>Intermediate Bank Information</name>
             <usage>S</usage>
-            <pos>070</pos>
+            <pos>0700</pos>
             <repeat>14</repeat>
             <segment xid="N1">
               <name>Intermediate Bank Information</name>
               <usage>R</usage>
-              <pos>070</pos>
+              <pos>0700</pos>
               <max_use>1</max_use>
               <syntax>R0203</syntax>
               <syntax>P0304</syntax>
@@ -1397,7 +1397,7 @@
             <segment xid="N2">
               <name>Intermediate Bank Additional Name</name>
               <usage>S</usage>
-              <pos>080</pos>
+              <pos>0800</pos>
               <max_use>1</max_use>
               <element xid="N201">
                 <data_ele>93</data_ele>
@@ -1416,7 +1416,7 @@
             <segment xid="N3">
               <name>Intermediate Bank Address</name>
               <usage>S</usage>
-              <pos>090</pos>
+              <pos>0900</pos>
               <max_use>1</max_use>
               <element xid="N301">
                 <data_ele>166</data_ele>
@@ -1435,7 +1435,7 @@
             <segment xid="N4">
               <name>Intermediate Bank's City, State, ZIP</name>
               <usage>S</usage>
-              <pos>100</pos>
+              <pos>1000</pos>
               <max_use>1</max_use>
               <syntax>E0207</syntax>
               <syntax>C0605</syntax>
@@ -1489,7 +1489,7 @@
             <segment xid="PER">
               <name>Intermediate Bank's Administrative Contact</name>
               <usage>S</usage>
-              <pos>120</pos>
+              <pos>1200</pos>
               <max_use>&gt;1</max_use>
               <syntax>P0304</syntax>
               <syntax>P0506</syntax>
@@ -1577,17 +1577,17 @@
         <loop xid="DETAIL" type="wrapper">
           <name>Table 2 - Detail</name>
           <usage>S</usage>
-          <pos>020</pos>
+          <pos>0200</pos>
           <repeat>&gt;1</repeat>
           <loop xid="2000A">
             <name>Organization Summary Remittance</name>
             <usage>S</usage>
-            <pos>010</pos>
+            <pos>0100</pos>
             <repeat>1</repeat>
             <segment xid="ENT">
               <name>Organization Summary Remittance</name>
               <usage>R</usage>
-              <pos>010</pos>
+              <pos>0100</pos>
               <max_use>1</max_use>
               <syntax>P020304</syntax>
               <syntax>P050607</syntax>
@@ -1660,12 +1660,12 @@
               <loop xid="2200A">
                 <name>Organization Summary Remittance Level Adjustment For Previous Payment</name>
                 <usage>S</usage>
-                <pos>080</pos>
+                <pos>0800</pos>
                 <repeat>&gt;1</repeat>
                 <segment xid="ADX">
                   <name>Organization Summary Remittance Level Adjustment For Previous Payment</name>
                   <usage>R</usage>
-                  <pos>210</pos>
+                  <pos>2100</pos>
                   <max_use>1</max_use>
                   <syntax>P0304</syntax>
                   <element xid="ADX01">
@@ -1712,12 +1712,12 @@
             <loop xid="2300A">
               <name>Organization Summary Remittance Detail</name>
               <usage>R</usage>
-              <pos>150</pos>
+              <pos>1500</pos>
               <repeat>&gt;1</repeat>
               <segment xid="RMR">
                 <name>Organization Summary Remittance Detail</name>
                 <usage>R</usage>
-                <pos>150</pos>
+                <pos>1500</pos>
                 <max_use>1</max_use>
                 <syntax>P0102</syntax>
                 <syntax>P0708</syntax>
@@ -1786,7 +1786,7 @@
           <segment xid="REF">
             <name>Reference Information</name>
             <usage>S</usage>
-            <pos>170</pos>
+            <pos>1700</pos>
             <max_use>&gt;1</max_use>
             <syntax>R0203</syntax>
             <element xid="REF01">
@@ -1829,7 +1829,7 @@
           <segment xid="DTM">
             <name>Organizational Coverage Period</name>
             <usage>S</usage>
-            <pos>180</pos>
+            <pos>1800</pos>
             <max_use>1</max_use>
             <syntax>R020305</syntax>
             <syntax>C0403</syntax>
@@ -1882,12 +1882,12 @@
               <loop xid="2310A">
                 <name>Summary Line Item</name>
                 <usage>S</usage>
-                <pos>190</pos>
+                <pos>1900</pos>
                 <repeat>1</repeat>
                 <segment xid="IT1">
                   <name>Summary Line Item</name>
                   <usage>R</usage>
-                  <pos>190</pos>
+                  <pos>1900</pos>
                   <max_use>1</max_use>
                   <syntax>P020304</syntax>
                   <syntax>P0607</syntax>
@@ -2055,12 +2055,12 @@
                 <loop xid="2312A">
                   <name>SAC - Service, Promotion, Allowance or Charge Information</name>
                   <usage>S</usage>
-                  <pos>202</pos>
+                  <pos>2020</pos>
                   <repeat>4</repeat>
                   <segment xid="SAC">
                     <name>Service, Promotion, Allowance or Charge Information</name>
                     <usage>R</usage>
-                    <pos>202</pos>
+                    <pos>2020</pos>
                     <max_use>1</max_use>
                     <element xid="SAC01">
                       <data_ele>248</data_ele>
@@ -2104,12 +2104,12 @@
                 <loop xid="2315A">
                   <name>Member Count</name>
                   <usage>S</usage>
-                  <pos>204</pos>
+                  <pos>2040</pos>
                   <repeat>3</repeat>
                   <segment xid="SLN">
                     <name>Member Count</name>
                     <usage>R</usage>
-                    <pos>204</pos>
+                    <pos>2040</pos>
                     <max_use>1</max_use>
                     <syntax>P0405</syntax>
                     <element xid="SLN01">
@@ -2387,12 +2387,12 @@
               <loop xid="2320A">
                 <name>Organization Summary Remittance Level Adjustment</name>
                 <usage>S</usage>
-                <pos>210</pos>
+                <pos>2100</pos>
                 <repeat>&gt;1</repeat>
                 <segment xid="ADX">
                   <name>Organization Summary Remittance Level Adjustment</name>
                   <usage>R</usage>
-                  <pos>210</pos>
+                  <pos>2100</pos>
                   <max_use>1</max_use>
                   <syntax>P0304</syntax>
                   <element xid="ADX01">
@@ -2441,12 +2441,12 @@
           <loop xid="2000B">
             <name>Individual Remittance</name>
             <usage>S</usage>
-            <pos>160</pos>
+            <pos>1600</pos>
             <repeat>&gt;1</repeat>
             <segment xid="ENT">
               <name>Individual Remittance</name>
               <usage>R</usage>
-              <pos>010</pos>
+              <pos>0100</pos>
               <max_use>1</max_use>
               <syntax>P020304</syntax>
               <element xid="ENT01">
@@ -2516,12 +2516,12 @@
             <loop xid="2100B">
               <name>Individual Name</name>
               <usage>S</usage>
-              <pos>020</pos>
+              <pos>0200</pos>
               <repeat>&gt;1</repeat>
               <segment xid="NM1">
                 <name>Individual Name</name>
                 <usage>R</usage>
-                <pos>020</pos>
+                <pos>0200</pos>
                 <max_use>1</max_use>
                 <syntax>P0809</syntax>
                 <element xid="NM101">
@@ -2611,12 +2611,12 @@
               <loop xid="2200B">
                 <name>Individual Premium Adjustment For Previous Payment</name>
                 <usage>S</usage>
-                <pos>080</pos>
+                <pos>0800</pos>
                 <repeat>&gt;1</repeat>
                 <segment xid="ADX">
                   <name>Individual Premium Adjustment For Previous Payment</name>
                   <usage>R</usage>
-                  <pos>210</pos>
+                  <pos>2100</pos>
                   <max_use>1</max_use>
                   <syntax>P0304</syntax>
                   <element xid="ADX01">
@@ -2662,12 +2662,12 @@
             <loop xid="2300B">
               <name>Individual Premium Remittance Detail</name>
               <usage>S</usage>
-              <pos>150</pos>
+              <pos>1500</pos>
               <repeat>&gt;1</repeat>
               <segment xid="RMR">
                 <name>Individual Premium Remittance Detail</name>
                 <usage>R</usage>
-                <pos>150</pos>
+                <pos>1500</pos>
                 <max_use>1</max_use>
                 <syntax>P0102</syntax>
                 <element xid="RMR01">
@@ -2734,7 +2734,7 @@
           <segment xid="REF">
             <name>Reference Information</name>
             <usage>S</usage>
-            <pos>170</pos>
+            <pos>1700</pos>
             <max_use>&gt;1</max_use>
             <syntax>R0203</syntax>
             <element xid="REF01">
@@ -2776,7 +2776,7 @@
               <segment xid="DTM">
                 <name>Individual Coverage Period</name>
                 <usage>S</usage>
-                <pos>180</pos>
+                <pos>1800</pos>
                 <max_use>1</max_use>
                 <syntax>R020305</syntax>
                 <syntax>C0403</syntax>
@@ -2829,12 +2829,12 @@
               <loop xid="2320B">
                 <name>Individual Premium Adjustment</name>
                 <usage>S</usage>
-                <pos>210</pos>
+                <pos>2100</pos>
                 <repeat>&gt;1</repeat>
                 <segment xid="ADX">
                   <name>Individual Premium Adjustment</name>
                   <usage>R</usage>
-                  <pos>210</pos>
+                  <pos>2100</pos>
                   <max_use>1</max_use>
                   <syntax>P0304</syntax>
                   <element xid="ADX01">
@@ -2885,14 +2885,14 @@
         <loop xid="FOOTER" type="wrapper">
           <name>Table 3 - Footer</name>
           <usage>N</usage>
-          <pos>030</pos>
+          <pos>0300</pos>
           <repeat>1</repeat>
         </loop>
 <!--End of FOOTER loop-->
         <segment xid="SE">
           <name>820 Trailer</name>
           <usage>R</usage>
-          <pos>050</pos>
+          <pos>0500</pos>
           <max_use>1</max_use>
           <element xid="SE01">
             <data_ele>96</data_ele>
@@ -2913,7 +2913,7 @@
       <segment xid="GE">
         <name>Functional Group Trailer</name>
         <usage>R</usage>
-        <pos>030</pos>
+        <pos>0300</pos>
         <max_use>1</max_use>
         <element xid="GE01">
           <data_ele>97</data_ele>
@@ -2934,7 +2934,7 @@
     <segment xid="TA1">
       <name>Interchange Acknowledgement</name>
       <usage>S</usage>
-      <pos>020</pos>
+      <pos>0200</pos>
       <max_use>1</max_use>
       <element xid="TA101">
         <data_ele>I12</data_ele>
@@ -3010,7 +3010,7 @@
     <segment xid="IEA">
       <name>Interchange Control Trailer</name>
       <usage>R</usage>
-      <pos>030</pos>
+      <pos>0300</pos>
       <max_use>1</max_use>
       <element xid="IEA01">
         <data_ele>I16</data_ele>

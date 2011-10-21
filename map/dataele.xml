@@ -170,6 +170,7 @@
   <data_ele ele_num="166" data_type="AN" min_len="1" max_len="55" name="Address Information"/>
   <data_ele ele_num="1685" data_type="ID" min_len="1" max_len="2" name="Tax Treatment Code"/>
   <data_ele ele_num="1687" data_type="R" min_len="1" max_len="15" name="Earnings Rate of Pay"/>
+  <data_ele ele_num="1701" data_type="ID" min_len="1" max_len="1" name="Eligibility Reason Code"/>
   <data_ele ele_num="1705" data_type="AN" min_len="1" max_len="35" name="Implementation Convention Reference"/>
   <data_ele ele_num="1715" data_type="ID" min_len="1" max_len="3" name="Country Subdivision Code"/>
   <data_ele ele_num="183" data_type="R" min_len="1" max_len="8" name="Volume"/>

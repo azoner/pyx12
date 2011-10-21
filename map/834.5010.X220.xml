@@ -17,12 +17,12 @@
   <loop xid="ISA_LOOP" type="explicit">
     <name>Interchange Control Header</name>
     <usage>R</usage>
-    <pos>001</pos>
+    <pos>0010</pos>
     <repeat>&gt;1</repeat>
     <segment xid="ISA">
       <name>Interchange Control Header</name>
       <usage>R</usage>
-      <pos>010</pos>
+      <pos>0100</pos>
       <max_use>1</max_use>
       <element xid="ISA01">
         <data_ele>I01</data_ele>
@@ -170,12 +170,12 @@
     <loop xid="GS_LOOP" type="explicit">
       <name>Functional Group Header</name>
       <usage>R</usage>
-      <pos>020</pos>
+      <pos>0200</pos>
       <repeat>&gt;1</repeat>
       <segment xid="GS">
         <name>Functional Group Header</name>
         <usage>R</usage>
-        <pos>010</pos>
+        <pos>0100</pos>
         <max_use>1</max_use>
         <element xid="GS01">
           <data_ele>479</data_ele>
@@ -243,12 +243,12 @@
       <loop xid="ST_LOOP" type="explicit">
         <name>Transaction Set Header</name>
         <usage>R</usage>
-        <pos>020</pos>
+        <pos>0200</pos>
         <repeat>&gt;1</repeat>
         <segment xid="ST">
           <name>Transaction Set Header</name>
           <usage>R</usage>
-          <pos>005</pos>
+          <pos>0050</pos>
           <max_use>1</max_use>
           <element xid="ST01">
             <data_ele>143</data_ele>
@@ -276,12 +276,12 @@
         <loop xid="HEADER" type="wrapper">
           <name>Table 1 - Header</name>
           <usage>R</usage>
-          <pos>010</pos>
+          <pos>0100</pos>
           <repeat>1</repeat>
           <segment xid="BGN">
             <name>Beginning Segment</name>
             <usage>R</usage>
-            <pos>020</pos>
+            <pos>0200</pos>
             <max_use>1</max_use>
             <syntax>C0504</syntax>
             <element xid="BGN01">
@@ -392,6 +392,7 @@
               <valid_codes>
                 <code>2</code>
                 <code>4</code>
+                <code>RX</code>
               </valid_codes>
             </element>
             <element xid="BGN09">
@@ -405,7 +406,7 @@
           <segment xid="REF">
             <name>Transaction Set Policy Number</name>
             <usage>S</usage>
-            <pos>030</pos>
+            <pos>0300</pos>
             <max_use>1</max_use>
             <syntax>R0203</syntax>
             <element xid="REF01">
@@ -440,7 +441,7 @@
           <segment xid="DTP">
             <name>File Effective Date</name>
             <usage>S</usage>
-            <pos>040</pos>
+            <pos>0400</pos>
             <max_use>&gt;1</max_use>
             <element xid="DTP01">
               <data_ele>374</data_ele>
@@ -449,6 +450,8 @@
               <seq>01</seq>
               <valid_codes>
                 <code>007</code>
+                <code>090</code>
+                <code>091</code>
                 <code>303</code>
                 <code>382</code>
                 <code>388</code>
@@ -474,7 +477,7 @@
           <segment xid="QTY">
             <name>Transaction Set Control Totals</name>
             <usage>S</usage>
-            <pos>060</pos>
+            <pos>0600</pos>
             <max_use>3</max_use>
             <syntax>R0204</syntax>
             <syntax>E0204</syntax>
@@ -512,12 +515,12 @@
           <loop xid="1000A">
             <name>Sponsor Name</name>
             <usage>R</usage>
-            <pos>070</pos>
+            <pos>0700</pos>
             <repeat>1</repeat>
             <segment xid="N1">
               <name>Sponsor Name</name>
               <usage>R</usage>
-              <pos>070</pos>
+              <pos>0700</pos>
               <max_use>1</max_use>
               <syntax>R0203</syntax>
               <syntax>P0304</syntax>
@@ -542,8 +545,9 @@
                 <usage>R</usage>
                 <seq>03</seq>
                 <valid_codes>
+                  <code>24</code>
+                  <code>94</code>
                   <code>FI</code>
-                  <code>ZZ</code>
                 </valid_codes>
               </element>
               <element xid="N104">
@@ -571,12 +575,12 @@
           <loop xid="1000B">
             <name>Payer</name>
             <usage>R</usage>
-            <pos>070</pos>
+            <pos>0700</pos>
             <repeat>1</repeat>
             <segment xid="N1">
               <name>Payer</name>
               <usage>R</usage>
-              <pos>070</pos>
+              <pos>0700</pos>
               <max_use>1</max_use>
               <syntax>R0203</syntax>
               <syntax>P0304</syntax>
@@ -601,6 +605,7 @@
                 <usage>R</usage>
                 <seq>03</seq>
                 <valid_codes>
+                  <code>94</code>
                   <code>FI</code>
                   <code>XV</code>
                 </valid_codes>
@@ -630,12 +635,12 @@
           <loop xid="1000C">
             <name>TPA/Broker Name</name>
             <usage>S</usage>
-            <pos>070</pos>
+            <pos>0700</pos>
             <repeat>2</repeat>
             <segment xid="N1">
               <name>TPA/Broker Name</name>
               <usage>R</usage>
-              <pos>070</pos>
+              <pos>0700</pos>
               <max_use>1</max_use>
               <syntax>R0203</syntax>
               <syntax>P0304</syntax>
@@ -689,12 +694,12 @@
             <loop xid="1100C">
               <name>TPA/Broker Account Information</name>
               <usage>S</usage>
-              <pos>120</pos>
+              <pos>1200</pos>
               <repeat>1</repeat>
               <segment xid="ACT">
                 <name>TPA/Broker Account Information</name>
                 <usage>R</usage>
-                <pos>120</pos>
+                <pos>1200</pos>
                 <max_use>1</max_use>
                 <syntax>P0304</syntax>
                 <syntax>C0506</syntax>
@@ -764,17 +769,17 @@
         <loop xid="DETAIL" type="wrapper">
           <name>Table 2 - Detail</name>
           <usage>S</usage>
-          <pos>020</pos>
+          <pos>0200</pos>
           <repeat>&gt;1</repeat>
           <loop xid="2000">
             <name>Member Level Detail</name>
             <usage>R</usage>
-            <pos>010</pos>
+            <pos>0100</pos>
             <repeat>&gt;1</repeat>
             <segment xid="INS">
               <name>Member Level Detail</name>
               <usage>R</usage>
-              <pos>010</pos>
+              <pos>0100</pos>
               <max_use>1</max_use>
               <syntax>P1112</syntax>
               <element xid="INS01">
@@ -807,6 +812,7 @@
                   <code>13</code>
                   <code>14</code>
                   <code>15</code>
+                  <code>16</code>
                   <code>17</code>
                   <code>18</code>
                   <code>19</code>
@@ -815,12 +821,13 @@
                   <code>25</code>
                   <code>26</code>
                   <code>31</code>
-                  <code>32</code>
-                  <code>33</code>
                   <code>38</code>
-                  <code>48</code>
                   <code>49</code>
                   <code>53</code>
+                  <code>60</code>
+                  <code>D2</code>
+                  <code>G8</code>
+                  <code>G9</code>
                 </valid_codes>
               </element>
               <element xid="INS03">
@@ -875,7 +882,19 @@
                   <code>40</code>
                   <code>41</code>
                   <code>43</code>
+                  <code>59</code>
+                  <code>AA</code>
+                  <code>AB</code>
+                  <code>AC</code>
+                  <code>AD</code>
+                  <code>AE</code>
+                  <code>AF</code>
+                  <code>AG</code>
+                  <code>AH</code>
                   <code>AI</code>
+                  <code>AJ</code>
+                  <code>AL</code>
+                  <code>EC</code>
                   <code>XN</code>
                   <code>XT</code>
                 </valid_codes>
@@ -892,19 +911,36 @@
                   <code>T</code>
                 </valid_codes>
               </element>
-              <element xid="INS06">
-                <data_ele>1218</data_ele>
-                <name>Medicare Plan Code</name>
+              <composite>
+                <data_ele>C052</data_ele>
+                <name>Medicare Status Code</name>
                 <usage>S</usage>
                 <seq>06</seq>
-                <valid_codes>
-                  <code>A</code>
-                  <code>B</code>
-                  <code>C</code>
-                  <code>D</code>
-                  <code>E</code>
-                </valid_codes>
-              </element>
+                <element xid="INS06-01">
+                  <data_ele>1218</data_ele>
+                  <name>Medicare Plan Code</name>
+                  <usage>R</usage>
+                  <seq>01</seq>
+                  <valid_codes>
+                    <code>A</code>
+                    <code>B</code>
+                    <code>C</code>
+                    <code>D</code>
+                    <code>E</code>
+                  </valid_codes>
+                </element>
+                <element xid="INS06-02">
+                  <data_ele>1701</data_ele>
+                  <name>Eligibility Reason Code</name>
+                  <usage>S</usage>
+                  <seq>02</seq>
+                  <valid_codes>
+                    <code>0</code>
+                    <code>1</code>
+                    <code>2</code>
+                  </valid_codes>
+                </element>
+              </composite>
               <element xid="INS07">
                 <data_ele>1219</data_ele>
                 <name>Consolidated Omnibus Budget Reconciliation Act (COBRA) Qualifying Event Code</name>
@@ -919,6 +955,9 @@
                   <code>6</code>
                   <code>7</code>
                   <code>8</code>
+                  <code>9</code>
+                  <code>10</code>
+                  <code>ZZ</code>
                 </valid_codes>
               </element>
               <element xid="INS08">
@@ -927,6 +966,7 @@
                 <usage>S</usage>
                 <seq>08</seq>
                 <valid_codes>
+                  <code>AC</code>
                   <code>AO</code>
                   <code>AU</code>
                   <code>FT</code>
@@ -975,8 +1015,12 @@
               <element xid="INS13">
                 <data_ele>1165</data_ele>
                 <name>Confidentiality Code</name>
-                <usage>N</usage>
+                <usage>S</usage>
                 <seq>13</seq>
+                <valid_codes>
+                  <code>R</code>
+                  <code>U</code>
+                </valid_codes>
               </element>
               <element xid="INS14">
                 <data_ele>19</data_ele>
@@ -1007,7 +1051,7 @@
             <segment xid="REF">
               <name>Subscriber Identifier</name>
               <usage>R</usage>
-              <pos>020</pos>
+              <pos>0200</pos>
               <max_use>1</max_use>
               <syntax>R0203</syntax>
               <element xid="REF01">
@@ -1042,7 +1086,7 @@
             <segment xid="REF">
               <name>Member Policy Number</name>
               <usage>S</usage>
-              <pos>020</pos>
+              <pos>0200</pos>
               <max_use>1</max_use>
               <syntax>R0203</syntax>
               <element xid="REF01">
@@ -1077,7 +1121,7 @@
             <segment xid="REF">
               <name>Member Supplemental Identifier</name>
               <usage>S</usage>
-              <pos>020</pos>
+              <pos>0200</pos>
               <max_use>13</max_use>
               <syntax>R0203</syntax>
               <element xid="REF01">
@@ -1124,7 +1168,7 @@
             <segment xid="DTP">
               <name>Member Level Dates</name>
               <usage>S</usage>
-              <pos>025</pos>
+              <pos>0250</pos>
               <max_use>24</max_use>
               <element xid="DTP01">
                 <data_ele>374</data_ele>
@@ -1132,6 +1176,7 @@
                 <usage>R</usage>
                 <seq>01</seq>
                 <valid_codes>
+                  <code>050</code>
                   <code>286</code>
                   <code>296</code>
                   <code>297</code>
@@ -1149,6 +1194,8 @@
                   <code>356</code>
                   <code>357</code>
                   <code>383</code>
+                  <code>385</code>
+                  <code>386</code>
                   <code>393</code>
                   <code>394</code>
                   <code>473</code>
@@ -1175,12 +1222,12 @@
             <loop xid="2100A">
               <name>Member Name</name>
               <usage>R</usage>
-              <pos>030</pos>
+              <pos>0300</pos>
               <repeat>1</repeat>
               <segment xid="NM1">
                 <name>Member Name</name>
                 <usage>R</usage>
-                <pos>030</pos>
+                <pos>0300</pos>
                 <max_use>1</max_use>
                 <syntax>P0809</syntax>
                 <syntax>C1110</syntax>
@@ -1212,7 +1259,7 @@
                 <element xid="NM104">
                   <data_ele>1036</data_ele>
                   <name>Subscriber First Name</name>
-                  <usage>R</usage>
+                  <usage>S</usage>
                   <seq>04</seq>
                 </element>
                 <element xid="NM105">
@@ -1266,7 +1313,7 @@
               <segment xid="PER">
                 <name>Member Communications Numbers</name>
                 <usage>S</usage>
-                <pos>040</pos>
+                <pos>0400</pos>
                 <max_use>1</max_use>
                 <syntax>P0304</syntax>
                 <syntax>P0506</syntax>
@@ -1292,6 +1339,9 @@
                   <usage>R</usage>
                   <seq>03</seq>
                   <valid_codes>
+                    <code>AP</code>
+                    <code>BN</code>
+                    <code>CP</code>
                     <code>EM</code>
                     <code>EX</code>
                     <code>FX</code>
@@ -1312,6 +1362,9 @@
                   <usage>S</usage>
                   <seq>05</seq>
                   <valid_codes>
+                    <code>AP</code>
+                    <code>BN</code>
+                    <code>CP</code>
                     <code>EM</code>
                     <code>EX</code>
                     <code>FX</code>
@@ -1332,6 +1385,9 @@
                   <usage>S</usage>
                   <seq>07</seq>
                   <valid_codes>
+                    <code>AP</code>
+                    <code>BN</code>
+                    <code>CP</code>
                     <code>EM</code>
                     <code>EX</code>
                     <code>FX</code>
@@ -1357,7 +1413,7 @@
               <segment xid="N3">
                 <name>Member Residence Street Address</name>
                 <usage>S</usage>
-                <pos>050</pos>
+                <pos>0500</pos>
                 <max_use>1</max_use>
                 <element xid="N301">
                   <data_ele>166</data_ele>
@@ -1376,9 +1432,11 @@
               <segment xid="N4">
                 <name>Member Residence City, State, Zip Code</name>
                 <usage>S</usage>
-                <pos>060</pos>
+                <pos>0600</pos>
                 <max_use>1</max_use>
+                <syntax>E0207</syntax>
                 <syntax>C0605</syntax>
+                <syntax>C0704</syntax>
                 <element xid="N401">
                   <data_ele>19</data_ele>
                   <name>Subscriber City Name</name>
@@ -1388,14 +1446,14 @@
                 <element xid="N402">
                   <data_ele>156</data_ele>
                   <name>Subscriber State Code</name>
-                  <usage>R</usage>
+                  <usage>S</usage>
                   <seq>02</seq>
                   <valid_codes external="states"/>
                 </element>
                 <element xid="N403">
                   <data_ele>116</data_ele>
                   <name>Subscriber Postal Zone or ZIP Code</name>
-                  <usage>R</usage>
+                  <usage>S</usage>
                   <seq>03</seq>
                 </element>
                 <element xid="N404">
@@ -1431,9 +1489,11 @@
               <segment xid="DMG">
                 <name>Member Demographics</name>
                 <usage>S</usage>
-                <pos>080</pos>
+                <pos>0800</pos>
                 <max_use>1</max_use>
                 <syntax>P0102</syntax>
+                <syntax>P1011</syntax>
+                <syntax>C1105</syntax>
                 <element xid="DMG01">
                   <data_ele>1250</data_ele>
                   <name>Date Time Period Format Qualifier</name>
@@ -1477,30 +1537,52 @@
                     <code>X</code>
                   </valid_codes>
                 </element>
-                <element xid="DMG05">
-                  <data_ele>1109</data_ele>
-                  <name>Race or Ethnicity Code</name>
+                <composite>
+                  <data_ele>C056</data_ele>
+                  <name>Composite Race or Ethnicity Information</name>
                   <usage>S</usage>
                   <seq>05</seq>
-                  <valid_codes>
-                    <code>7</code>
-                    <code>8</code>
-                    <code>A</code>
-                    <code>B</code>
-                    <code>C</code>
-                    <code>D</code>
-                    <code>E</code>
-                    <code>F</code>
-                    <code>G</code>
-                    <code>H</code>
-                    <code>I</code>
-                    <code>J</code>
-                    <code>N</code>
-                    <code>O</code>
-                    <code>P</code>
-                    <code>Z</code>
-                  </valid_codes>
-                </element>
+                  <syntax>P0203</syntax>
+                  <element xid="DMG05-01">
+                    <data_ele>1109</data_ele>
+                    <name>Race or Ethnicity Code</name>
+                    <usage>S</usage>
+                    <seq>01</seq>
+                    <valid_codes>
+                      <code>7</code>
+                      <code>8</code>
+                      <code>A</code>
+                      <code>B</code>
+                      <code>C</code>
+                      <code>D</code>
+                      <code>E</code>
+                      <code>F</code>
+                      <code>G</code>
+                      <code>H</code>
+                      <code>I</code>
+                      <code>J</code>
+                      <code>N</code>
+                      <code>O</code>
+                      <code>P</code>
+                      <code>Z</code>
+                    </valid_codes>
+                  </element>
+                  <element xid="DMG05-02">
+                    <data_ele>1270</data_ele>
+                    <name>Code List Qualifier Code</name>
+                    <usage>S</usage>
+                    <seq>02</seq>
+                    <valid_codes>
+                      <code>RET</code>
+                    </valid_codes>
+                  </element>
+                  <element xid="DMG05-03">
+                    <data_ele>1271</data_ele>
+                    <name>Industry Code</name>
+                    <usage>S</usage>
+                    <seq>03</seq>
+                  </element>
+                </composite>
                 <element xid="DMG06">
                   <data_ele>1066</data_ele>
                   <name>Citizenship Status Code</name>
@@ -1534,12 +1616,27 @@
                   <usage>N</usage>
                   <seq>09</seq>
                 </element>
+                <element xid="DMG10">
+                  <data_ele>1270</data_ele>
+                  <name>Code List Qualifier Code</name>
+                  <usage>S</usage>
+                  <seq>10</seq>
+                  <valid_codes>
+                    <code>REC</code>
+                  </valid_codes>
+                </element>
+                <element xid="DMG11">
+                  <data_ele>1271</data_ele>
+                  <name>Industry Code</name>
+                  <usage>S</usage>
+                  <seq>11</seq>
+                </element>
               </segment>
               <!--End of DMG segment-->
               <segment xid="EC">
                 <name>Employment Class</name>
                 <usage>S</usage>
-                <pos>100</pos>
+                <pos>1000</pos>
                 <max_use>&gt;1</max_use>
                 <element xid="EC01">
                   <data_ele>1176</data_ele>
@@ -1564,7 +1661,7 @@
               <segment xid="ICM">
                 <name>Member Income</name>
                 <usage>S</usage>
-                <pos>110</pos>
+                <pos>1100</pos>
                 <max_use>1</max_use>
                 <element xid="ICM01">
                   <data_ele>594</data_ele>
@@ -1623,7 +1720,7 @@
               <segment xid="AMT">
                 <name>Member Policy Amounts</name>
                 <usage>S</usage>
-                <pos>120</pos>
+                <pos>1200</pos>
                 <max_use>7</max_use>
                 <element xid="AMT01">
                   <data_ele>522</data_ele>
@@ -1634,7 +1731,10 @@
                     <code>B9</code>
                     <code>C1</code>
                     <code>D2</code>
+                    <code>EBA</code>
+                    <code>FK</code>
                     <code>P3</code>
+                    <code>R</code>
                   </valid_codes>
                 </element>
                 <element xid="AMT02">
@@ -1654,12 +1754,12 @@
               <segment xid="HLH">
                 <name>Member Health Information</name>
                 <usage>S</usage>
-                <pos>130</pos>
+                <pos>1300</pos>
                 <max_use>1</max_use>
                 <element xid="HLH01">
                   <data_ele>1212</data_ele>
                   <name>Health Related Code</name>
-                  <usage>S</usage>
+                  <usage>R</usage>
                   <seq>01</seq>
                   <valid_codes>
                     <code>N</code>
@@ -1710,7 +1810,7 @@
               <segment xid="LUI">
                 <name>Member Language</name>
                 <usage>S</usage>
-                <pos>150</pos>
+                <pos>1500</pos>
                 <max_use>&gt;1</max_use>
                 <syntax>P0102</syntax>
                 <syntax>L040203</syntax>
@@ -1743,6 +1843,7 @@
                   <seq>04</seq>
                   <valid_codes>
                     <code>5</code>
+                    <code>6</code>
                     <code>7</code>
                     <code>8</code>
                   </valid_codes>
@@ -1760,12 +1861,12 @@
             <loop xid="2100B">
               <name>Incorrect Member Name</name>
               <usage>S</usage>
-              <pos>030</pos>
+              <pos>0300</pos>
               <repeat>1</repeat>
               <segment xid="NM1">
                 <name>Incorrect Member Name</name>
                 <usage>R</usage>
-                <pos>030</pos>
+                <pos>0300</pos>
                 <max_use>1</max_use>
                 <syntax>P0809</syntax>
                 <syntax>C1110</syntax>
@@ -1796,7 +1897,7 @@
                 <element xid="NM104">
                   <data_ele>1036</data_ele>
                   <name>Prior Incorrect Insured First Name</name>
-                  <usage>R</usage>
+                  <usage>S</usage>
                   <seq>04</seq>
                 </element>
                 <element xid="NM105">
@@ -1850,13 +1951,15 @@
               <segment xid="DMG">
                 <name>Incorrect Member Demographics</name>
                 <usage>S</usage>
-                <pos>080</pos>
+                <pos>0800</pos>
                 <max_use>1</max_use>
                 <syntax>P0102</syntax>
+                <syntax>P1011</syntax>
+                <syntax>C1105</syntax>
                 <element xid="DMG01">
                   <data_ele>1250</data_ele>
                   <name>Date Time Period Format Qualifier</name>
-                  <usage>R</usage>
+                  <usage>S</usage>
                   <seq>01</seq>
                   <valid_codes>
                     <code>D8</code>
@@ -1865,13 +1968,13 @@
                 <element xid="DMG02">
                   <data_ele>1251</data_ele>
                   <name>Prior Incorrect Insured Birth Date</name>
-                  <usage>R</usage>
+                  <usage>S</usage>
                   <seq>02</seq>
                 </element>
                 <element xid="DMG03">
                   <data_ele>1068</data_ele>
                   <name>Prior Incorrect Insured Gender Code</name>
-                  <usage>R</usage>
+                  <usage>S</usage>
                   <seq>03</seq>
                   <valid_codes>
                     <code>F</code>
@@ -1882,19 +1985,60 @@
                 <element xid="DMG04">
                   <data_ele>1067</data_ele>
                   <name>Marital Status Code</name>
-                  <usage>N</usage>
+                  <usage>S</usage>
                   <seq>04</seq>
                 </element>
-                <element xid="DMG05">
-                  <data_ele>1109</data_ele>
-                  <name>Race or Ethnicity Code</name>
-                  <usage>N</usage>
+                <composite>
+                  <data_ele>C056</data_ele>
+                  <name>Composite Race or Ethnicity Information</name>
+                  <usage>S</usage>
                   <seq>05</seq>
-                </element>
+                  <syntax>P0203</syntax>
+                  <repeat>10</repeat>
+                  <element xid="DMG05-01">
+                    <data_ele>1109</data_ele>
+                    <name>Race or Ethnicity Code</name>
+                    <usage>S</usage>
+                    <seq>01</seq>
+                    <valid_codes>
+                      <code>7</code>
+                      <code>8</code>
+                      <code>A</code>
+                      <code>B</code>
+                      <code>C</code>
+                      <code>D</code>
+                      <code>E</code>
+                      <code>F</code>
+                      <code>G</code>
+                      <code>H</code>
+                      <code>I</code>
+                      <code>J</code>
+                      <code>N</code>
+                      <code>O</code>
+                      <code>P</code>
+                      <code>Z</code>
+                    </valid_codes>
+                  </element>
+                  <element xid="DMG05-02">
+                    <data_ele>1270</data_ele>
+                    <name>Code List Qualifier Code</name>
+                    <usage>S</usage>
+                    <seq>02</seq>
+                    <valid_codes>
+                      <code>RET</code>
+                    </valid_codes>
+                  </element>
+                  <element xid="DMG05-03">
+                    <data_ele>1271</data_ele>
+                    <name>Industry Code</name>
+                    <usage>S</usage>
+                    <seq>03</seq>
+                  </element>
+                </composite>
                 <element xid="DMG06">
                   <data_ele>1066</data_ele>
                   <name>Citizenship Status Code</name>
-                  <usage>N</usage>
+                  <usage>S</usage>
                   <seq>06</seq>
                 </element>
                 <element xid="DMG07">
@@ -1915,6 +2059,18 @@
                   <usage>N</usage>
                   <seq>09</seq>
                 </element>
+                <element xid="DMG10">
+                  <data_ele>1270</data_ele>
+                  <name>Code List Qualifier Code</name>
+                  <usage>S</usage>
+                  <seq>10</seq>
+                </element>
+                <element xid="DMG11">
+                  <data_ele>1271</data_ele>
+                  <name>Industry Code</name>
+                  <usage>S</usage>
+                  <seq>11</seq>
+                </element>
               </segment>
               <!--End of DMG segment-->
             </loop>
@@ -1922,12 +2078,12 @@
             <loop xid="2100C">
               <name>Member Mailing Address</name>
               <usage>S</usage>
-              <pos>030</pos>
+              <pos>0300</pos>
               <repeat>1</repeat>
               <segment xid="NM1">
                 <name>Member Mailing Address</name>
                 <usage>R</usage>
-                <pos>030</pos>
+                <pos>0300</pos>
                 <max_use>1</max_use>
                 <syntax>P0809</syntax>
                 <syntax>C1110</syntax>
@@ -2008,7 +2164,7 @@
               <segment xid="N3">
                 <name>Member Mail Street Address</name>
                 <usage>R</usage>
-                <pos>050</pos>
+                <pos>0500</pos>
                 <max_use>1</max_use>
                 <element xid="N301">
                   <data_ele>166</data_ele>
@@ -2027,9 +2183,11 @@
               <segment xid="N4">
                 <name>Member Mail City, State, Zip</name>
                 <usage>R</usage>
-                <pos>060</pos>
+                <pos>0600</pos>
                 <max_use>1</max_use>
+                <syntax>E0207</syntax>
                 <syntax>C0605</syntax>
+                <syntax>C0704</syntax>
                 <element xid="N401">
                   <data_ele>19</data_ele>
                   <name>Subscriber City Name</name>
@@ -2039,14 +2197,14 @@
                 <element xid="N402">
                   <data_ele>156</data_ele>
                   <name>Subscriber State Code</name>
-                  <usage>R</usage>
+                  <usage>S</usage>
                   <seq>02</seq>
                   <valid_codes external="states"/>
                 </element>
                 <element xid="N403">
                   <data_ele>116</data_ele>
                   <name>Subscriber Postal Zone or ZIP Code</name>
-                  <usage>R</usage>
+                  <usage>S</usage>
                   <seq>03</seq>
                 </element>
                 <element xid="N404">
@@ -2081,12 +2239,12 @@
             <loop xid="2100D">
               <name>Member Employer</name>
               <usage>S</usage>
-              <pos>030</pos>
+              <pos>0300</pos>
               <repeat>3</repeat>
               <segment xid="NM1">
                 <name>Member Employer</name>
                 <usage>R</usage>
-                <pos>030</pos>
+                <pos>0300</pos>
                 <max_use>1</max_use>
                 <syntax>P0809</syntax>
                 <syntax>C1110</syntax>
@@ -2096,7 +2254,7 @@
                   <usage>R</usage>
                   <seq>01</seq>
                   <valid_codes>
-                    <code>ES</code>
+                    <code>36</code>
                   </valid_codes>
                 </element>
                 <element xid="NM102">
@@ -2130,7 +2288,7 @@
                 <element xid="NM106">
                   <data_ele>1038</data_ele>
                   <name>Name Prefix</name>
-                  <usage>N</usage>
+                  <usage>S</usage>
                   <seq>06</seq>
                 </element>
                 <element xid="NM107">
@@ -2145,7 +2303,8 @@
                   <usage>S</usage>
                   <seq>08</seq>
                   <valid_codes>
-                    <code>ZZ</code>
+                    <code>24</code>
+                    <code>34</code>
                   </valid_codes>
                 </element>
                 <element xid="NM109">
@@ -2171,7 +2330,7 @@
               <segment xid="PER">
                 <name>Member Employer Communications Numbers</name>
                 <usage>S</usage>
-                <pos>040</pos>
+                <pos>0400</pos>
                 <max_use>1</max_use>
                 <syntax>P0304</syntax>
                 <syntax>P0506</syntax>
@@ -2188,7 +2347,7 @@
                 <element xid="PER02">
                   <data_ele>93</data_ele>
                   <name>Name</name>
-                  <usage>N</usage>
+                  <usage>S</usage>
                   <seq>02</seq>
                 </element>
                 <element xid="PER03">
@@ -2197,6 +2356,9 @@
                   <usage>R</usage>
                   <seq>03</seq>
                   <valid_codes>
+                    <code>AP</code>
+                    <code>BN</code>
+                    <code>CP</code>
                     <code>EM</code>
                     <code>EX</code>
                     <code>FX</code>
@@ -2215,6 +2377,9 @@
                   <usage>S</usage>
                   <seq>05</seq>
                   <valid_codes>
+                    <code>AP</code>
+                    <code>BN</code>
+                    <code>CP</code>
                     <code>EM</code>
                     <code>EX</code>
                     <code>FX</code>
@@ -2233,6 +2398,9 @@
                   <usage>S</usage>
                   <seq>07</seq>
                   <valid_codes>
+                    <code>AP</code>
+                    <code>BN</code>
+                    <code>CP</code>
                     <code>EM</code>
                     <code>EX</code>
                     <code>FX</code>
@@ -2256,7 +2424,7 @@
               <segment xid="N3">
                 <name>Member Employer Street Address</name>
                 <usage>S</usage>
-                <pos>050</pos>
+                <pos>0500</pos>
                 <max_use>1</max_use>
                 <element xid="N301">
                   <data_ele>166</data_ele>
@@ -2275,9 +2443,11 @@
               <segment xid="N4">
                 <name>Member Employer City, State, Zip</name>
                 <usage>R</usage>
-                <pos>060</pos>
+                <pos>0600</pos>
                 <max_use>1</max_use>
+                <syntax>E0207</syntax>
                 <syntax>C0605</syntax>
+                <syntax>C0704</syntax>
                 <element xid="N401">
                   <data_ele>19</data_ele>
                   <name>Insured Employer City Name</name>
@@ -2287,14 +2457,14 @@
                 <element xid="N402">
                   <data_ele>156</data_ele>
                   <name>Insured Employer State Code</name>
-                  <usage>R</usage>
+                  <usage>S</usage>
                   <seq>02</seq>
                   <valid_codes external="states"/>
                 </element>
                 <element xid="N403">
                   <data_ele>116</data_ele>
                   <name>Insured Employer Postal Zone or ZIP Code</name>
-                  <usage>R</usage>
+                  <usage>S</usage>
                   <seq>03</seq>
                 </element>
                 <element xid="N404">
@@ -2329,12 +2499,12 @@
             <loop xid="2100E">
               <name>Member School</name>
               <usage>S</usage>
-              <pos>030</pos>
+              <pos>0300</pos>
               <repeat>3</repeat>
               <segment xid="NM1">
                 <name>Member School</name>
                 <usage>R</usage>
-                <pos>030</pos>
+                <pos>0300</pos>
                 <max_use>1</max_use>
                 <syntax>P0809</syntax>
                 <syntax>C1110</syntax>
@@ -2415,7 +2585,7 @@
               <segment xid="PER">
                 <name>Member School Communications Numbers</name>
                 <usage>S</usage>
-                <pos>040</pos>
+                <pos>0400</pos>
                 <max_use>1</max_use>
                 <syntax>P0304</syntax>
                 <syntax>P0506</syntax>
@@ -2500,7 +2670,7 @@
               <segment xid="N3">
                 <name>Member School Street Address</name>
                 <usage>S</usage>
-                <pos>050</pos>
+                <pos>0500</pos>
                 <max_use>1</max_use>
                 <element xid="N301">
                   <data_ele>166</data_ele>
@@ -2519,9 +2689,11 @@
               <segment xid="N4">
                 <name>Member School City, State, Zip</name>
                 <usage>R</usage>
-                <pos>060</pos>
+                <pos>0600</pos>
                 <max_use>1</max_use>
+                <syntax>E0207</syntax>
                 <syntax>C0605</syntax>
+                <syntax>C0704</syntax>
                 <element xid="N401">
                   <data_ele>19</data_ele>
                   <name>School City Name</name>
@@ -2531,14 +2703,14 @@
                 <element xid="N402">
                   <data_ele>156</data_ele>
                   <name>School State Code</name>
-                  <usage>R</usage>
+                  <usage>S</usage>
                   <seq>02</seq>
                   <valid_codes external="states"/>
                 </element>
                 <element xid="N403">
                   <data_ele>116</data_ele>
                   <name>School Postal Zone or ZIP Code</name>
-                  <usage>R</usage>
+                  <usage>S</usage>
                   <seq>03</seq>
                 </element>
                 <element xid="N404">
@@ -2573,12 +2745,12 @@
             <loop xid="2100F">
               <name>Custodial Parent</name>
               <usage>S</usage>
-              <pos>030</pos>
+              <pos>0300</pos>
               <repeat>1</repeat>
               <segment xid="NM1">
                 <name>Custodial Parent</name>
                 <usage>R</usage>
-                <pos>030</pos>
+                <pos>0300</pos>
                 <max_use>1</max_use>
                 <syntax>P0809</syntax>
                 <syntax>C1110</syntax>
@@ -2663,7 +2835,7 @@
               <segment xid="PER">
                 <name>Custodial Parent Communications Numbers</name>
                 <usage>S</usage>
-                <pos>040</pos>
+                <pos>0400</pos>
                 <max_use>1</max_use>
                 <syntax>P0304</syntax>
                 <syntax>P0506</syntax>
@@ -2689,6 +2861,9 @@
                   <usage>R</usage>
                   <seq>03</seq>
                   <valid_codes>
+                    <code>AP</code>
+                    <code>BN</code>
+                    <code>CP</code>
                     <code>EM</code>
                     <code>EX</code>
                     <code>FX</code>
@@ -2709,6 +2884,9 @@
                   <usage>S</usage>
                   <seq>05</seq>
                   <valid_codes>
+                    <code>AP</code>
+                    <code>BN</code>
+                    <code>CP</code>
                     <code>EM</code>
                     <code>EX</code>
                     <code>FX</code>
@@ -2729,6 +2907,9 @@
                   <usage>S</usage>
                   <seq>07</seq>
                   <valid_codes>
+                    <code>AP</code>
+                    <code>BN</code>
+                    <code>CP</code>
                     <code>EM</code>
                     <code>EX</code>
                     <code>HP</code>
@@ -2753,7 +2934,7 @@
               <segment xid="N3">
                 <name>Custodial Parent Street Address</name>
                 <usage>S</usage>
-                <pos>050</pos>
+                <pos>0500</pos>
                 <max_use>1</max_use>
                 <element xid="N301">
                   <data_ele>166</data_ele>
@@ -2772,9 +2953,11 @@
               <segment xid="N4">
                 <name>Custodial Parent City, State, Zip</name>
                 <usage>R</usage>
-                <pos>060</pos>
+                <pos>0600</pos>
                 <max_use>1</max_use>
+                <syntax>E0207</syntax>
                 <syntax>C0605</syntax>
+                <syntax>C0704</syntax>
                 <element xid="N401">
                   <data_ele>19</data_ele>
                   <name>Custodial Parent City Name</name>
@@ -2784,14 +2967,14 @@
                 <element xid="N402">
                   <data_ele>156</data_ele>
                   <name>Custodial Parent State Code</name>
-                  <usage>R</usage>
+                  <usage>S</usage>
                   <seq>02</seq>
                   <valid_codes external="states"/>
                 </element>
                 <element xid="N403">
                   <data_ele>116</data_ele>
                   <name>Custodial Parent Postal Zone or ZIP Code</name>
-                  <usage>R</usage>
+                  <usage>S</usage>
                   <seq>03</seq>
                 </element>
                 <element xid="N404">
@@ -2826,12 +3009,12 @@
             <loop xid="2100G">
               <name>Responsible Person</name>
               <usage>S</usage>
-              <pos>030</pos>
+              <pos>0300</pos>
               <repeat>13</repeat>
               <segment xid="NM1">
                 <name>Responsible Person</name>
                 <usage>R</usage>
-                <pos>030</pos>
+                <pos>0300</pos>
                 <max_use>1</max_use>
                 <syntax>P0809</syntax>
                 <syntax>C1110</syntax>
@@ -2841,12 +3024,19 @@
                   <usage>R</usage>
                   <seq>01</seq>
                   <valid_codes>
+                    <code>6Y</code>
+                    <code>9K</code>
                     <code>E1</code>
                     <code>EI</code>
                     <code>EXS</code>
+                    <code>GB</code>
                     <code>GD</code>
                     <code>J6</code>
+                    <code>LR</code>
                     <code>QD</code>
+                    <code>S1</code>
+                    <code>TZ</code>
+                    <code>X4</code>
                   </valid_codes>
                 </element>
                 <element xid="NM102">
@@ -2867,7 +3057,7 @@
                 <element xid="NM104">
                   <data_ele>1036</data_ele>
                   <name>Responsible Party First Name</name>
-                  <usage>R</usage>
+                  <usage>S</usage>
                   <seq>04</seq>
                 </element>
                 <element xid="NM105">
@@ -2921,7 +3111,7 @@
               <segment xid="PER">
                 <name>Responsible Person Communications Numbers</name>
                 <usage>S</usage>
-                <pos>040</pos>
+                <pos>0400</pos>
                 <max_use>1</max_use>
                 <syntax>P0304</syntax>
                 <syntax>P0506</syntax>
@@ -2947,6 +3137,9 @@
                   <usage>R</usage>
                   <seq>03</seq>
                   <valid_codes>
+                    <code>AP</code>
+                    <code>BN</code>
+                    <code>CP</code>
                     <code>EM</code>
                     <code>EX</code>
                     <code>FX</code>
@@ -2967,6 +3160,9 @@
                   <usage>S</usage>
                   <seq>05</seq>
                   <valid_codes>
+                    <code>AP</code>
+                    <code>BN</code>
+                    <code>CP</code>
                     <code>EM</code>
                     <code>EX</code>
                     <code>FX</code>
@@ -2987,6 +3183,9 @@
                   <usage>S</usage>
                   <seq>07</seq>
                   <valid_codes>
+                    <code>AP</code>
+                    <code>BN</code>
+                    <code>CP</code>
                     <code>EM</code>
                     <code>EX</code>
                     <code>FX</code>
@@ -3012,7 +3211,7 @@
               <segment xid="N3">
                 <name>Responsible Person Street Address</name>
                 <usage>S</usage>
-                <pos>050</pos>
+                <pos>0500</pos>
                 <max_use>1</max_use>
                 <element xid="N301">
                   <data_ele>166</data_ele>
@@ -3031,9 +3230,11 @@
               <segment xid="N4">
                 <name>Responsible Person City, State, Zip</name>
                 <usage>S</usage>
-                <pos>060</pos>
+                <pos>0600</pos>
                 <max_use>1</max_use>
+                <syntax>E0207</syntax>
                 <syntax>C0605</syntax>
+                <syntax>C0704</syntax>
                 <element xid="N401">
                   <data_ele>19</data_ele>
                   <name>Responsible Party City Name</name>
@@ -3043,14 +3244,14 @@
                 <element xid="N402">
                   <data_ele>156</data_ele>
                   <name>Responsible Party State Code</name>
-                  <usage>R</usage>
+                  <usage>S</usage>
                   <seq>02</seq>
                   <valid_codes external="states"/>
                 </element>
                 <element xid="N403">
                   <data_ele>116</data_ele>
                   <name>Responsible Party Postal Zone or ZIP Code</name>
-                  <usage>R</usage>
+                  <usage>S</usage>
                   <seq>03</seq>
                 </element>
                 <element xid="N404">
@@ -3085,12 +3286,12 @@
             <loop xid="2100H">
               <name>Drop Off Location</name>
               <usage>S</usage>
-              <pos>030</pos>
+              <pos>0300</pos>
               <repeat>1</repeat>
               <segment xid="NM1">
                 <name>Drop Off Location</name>
                 <usage>R</usage>
-                <pos>030</pos>
+                <pos>0300</pos>
                 <max_use>1</max_use>
                 <syntax>P0809</syntax>
                 <syntax>C1110</syntax>
@@ -3171,7 +3372,7 @@
               <segment xid="N3">
                 <name>Drop Off Street Address</name>
                 <usage>S</usage>
-                <pos>050</pos>
+                <pos>0500</pos>
                 <max_use>1</max_use>
                 <element xid="N301">
                   <data_ele>166</data_ele>
@@ -3190,7 +3391,7 @@
               <segment xid="N4">
                 <name>Drop Off City, State, Zip</name>
                 <usage>S</usage>
-                <pos>060</pos>
+                <pos>0600</pos>
                 <max_use>1</max_use>
                 <syntax>E0207</syntax>
                 <syntax>C0605</syntax>
@@ -3246,12 +3447,12 @@
             <loop xid="2200">
               <name>Disability Information</name>
               <usage>S</usage>
-              <pos>200</pos>
+              <pos>2000</pos>
               <repeat>1</repeat>
               <segment xid="DSB">
                 <name>Disability Information</name>
                 <usage>R</usage>
-                <pos>200</pos>
+                <pos>2000</pos>
                 <max_use>1</max_use>
                 <syntax>P0708</syntax>
                 <element xid="DSB01">
@@ -3303,6 +3504,7 @@
                   <seq>07</seq>
                   <valid_codes>
                     <code>DX</code>
+                    <code>ZZ</code>
                   </valid_codes>
                 </element>
                 <element xid="DSB08">
@@ -3316,7 +3518,7 @@
               <segment xid="DTP">
                 <name>Disability Eligibility Dates</name>
                 <usage>S</usage>
-                <pos>210</pos>
+                <pos>2100</pos>
                 <max_use>2</max_use>
                 <element xid="DTP01">
                   <data_ele>374</data_ele>
@@ -3350,12 +3552,12 @@
             <loop xid="2300">
               <name>Health Coverage</name>
               <usage>S</usage>
-              <pos>260</pos>
+              <pos>2600</pos>
               <repeat>99</repeat>
               <segment xid="HD">
                 <name>Health Coverage</name>
                 <usage>R</usage>
-                <pos>260</pos>
+                <pos>2600</pos>
                 <max_use>1</max_use>
                 <element xid="HD01">
                   <data_ele>875</data_ele>
@@ -3464,8 +3666,8 @@
                 </element>
                 <element xid="HD09">
                   <data_ele>1073</data_ele>
-                  <name>Yes/No Condition or Response Code</name>
-                  <usage>N</usage>
+                  <name>Late Enrollment</name>
+                  <usage>S</usage>
                   <seq>09</seq>
                 </element>
                 <element xid="HD10">
@@ -3485,7 +3687,7 @@
               <segment xid="DTP">
                 <name>Health Coverage Dates</name>
                 <usage>R</usage>
-                <pos>270</pos>
+                <pos>2700</pos>
                 <max_use>6</max_use>
                 <element xid="DTP01">
                   <data_ele>374</data_ele>
@@ -3493,10 +3695,13 @@
                   <usage>R</usage>
                   <seq>01</seq>
                   <valid_codes>
+                    <code>300</code>
                     <code>303</code>
+                    <code>343</code>
                     <code>348</code>
                     <code>349</code>
                     <code>543</code>
+                    <code>695</code>
                   </valid_codes>
                 </element>
                 <element xid="DTP02">
@@ -3506,6 +3711,7 @@
                   <seq>02</seq>
                   <valid_codes>
                     <code>D8</code>
+                    <code>RD8</code>
                   </valid_codes>
                 </element>
                 <element xid="DTP03">
@@ -3519,7 +3725,7 @@
               <segment xid="AMT">
                 <name>Health Coverage Policy</name>
                 <usage>S</usage>
-                <pos>280</pos>
+                <pos>2800</pos>
                 <max_use>9</max_use>
                 <element xid="AMT01">
                   <data_ele>522</data_ele>
@@ -3530,7 +3736,10 @@
                     <code>B9</code>
                     <code>C1</code>
                     <code>D2</code>
+                    <code>EBA</code>
+                    <code>FK</code>
                     <code>P3</code>
+                    <code>R</code>
                   </valid_codes>
                 </element>
                 <element xid="AMT02">
@@ -3550,7 +3759,7 @@
               <segment xid="REF">
                 <name>Health Coverage Policy Number</name>
                 <usage>S</usage>
-                <pos>290</pos>
+                <pos>2900</pos>
                 <max_use>14</max_use>
                 <syntax>R0203</syntax>
                 <element xid="REF01">
@@ -3561,6 +3770,17 @@
                   <valid_codes>
                     <code>17</code>
                     <code>1L</code>
+                    <code>9V</code>
+                    <code>CE</code>
+                    <code>E8</code>
+                    <code>M7</code>
+                    <code>PID</code>
+                    <code>RB</code>
+                    <code>X9</code>
+                    <code>XM</code>
+                    <code>XX1</code>
+                    <code>XX2</code>
+                    <code>ZX</code>
                     <code>ZZ</code>
                   </valid_codes>
                 </element>
@@ -3587,7 +3807,7 @@
               <segment xid="REF">
                 <name>Prior Coverage Months</name>
                 <usage>S</usage>
-                <pos>029</pos>
+                <pos>0290</pos>
                 <max_use>1</max_use>
                 <syntax>R0203</syntax>
                 <element xid="REF01">
@@ -3622,7 +3842,7 @@
               <segment xid="IDC">
                 <name>Identification Card</name>
                 <usage>S</usage>
-                <pos>300</pos>
+                <pos>3000</pos>
                 <max_use>3</max_use>
                 <element xid="IDC01">
                   <data_ele>1204</data_ele>
@@ -3663,12 +3883,12 @@
               <loop xid="2310">
                 <name>Provider Information</name>
                 <usage>S</usage>
-                <pos>310</pos>
+                <pos>3100</pos>
                 <repeat>30</repeat>
                 <segment xid="LX">
                   <name>Provider Information</name>
                   <usage>R</usage>
-                  <pos>310</pos>
+                  <pos>3100</pos>
                   <max_use>1</max_use>
                   <element xid="LX01">
                     <data_ele>554</data_ele>
@@ -3681,7 +3901,7 @@
                 <segment xid="NM1">
                   <name>Provider Name</name>
                   <usage>R</usage>
-                  <pos>320</pos>
+                  <pos>3200</pos>
                   <max_use>1</max_use>
                   <syntax>P0809</syntax>
                   <syntax>C1110</syntax>
@@ -3691,7 +3911,10 @@
                     <usage>R</usage>
                     <seq>01</seq>
                     <valid_codes>
+                      <code>1X</code>
                       <code>3D</code>
+                      <code>80</code>
+                      <code>FA</code>
                       <code>OD</code>
                       <code>P3</code>
                       <code>QA</code>
@@ -3779,7 +4002,7 @@
                 <segment xid="N3">
                   <name>Provider Address</name>
                   <usage>S</usage>
-                  <pos>350</pos>
+                  <pos>3500</pos>
                   <max_use>2</max_use>
                   <element xid="N301">
                     <data_ele>166</data_ele>
@@ -3798,9 +4021,11 @@
                 <segment xid="N4">
                   <name>Provider City, State, Zip Code</name>
                   <usage>R</usage>
-                  <pos>360</pos>
+                  <pos>3600</pos>
                   <max_use>1</max_use>
+                  <syntax>E0207</syntax>
                   <syntax>C0605</syntax>
+                  <syntax>C0704</syntax>
                   <element xid="N401">
                     <data_ele>19</data_ele>
                     <name>Member City Name</name>
@@ -3810,14 +4035,14 @@
                   <element xid="N402">
                     <data_ele>156</data_ele>
                     <name>Member State Code</name>
-                    <usage>R</usage>
+                    <usage>S</usage>
                     <seq>02</seq>
                     <valid_codes external="states"/>
                   </element>
                   <element xid="N403">
                     <data_ele>116</data_ele>
                     <name>Member Postal Zone or Zip Code</name>
-                    <usage>R</usage>
+                    <usage>S</usage>
                     <seq>03</seq>
                   </element>
                   <element xid="N404">
@@ -3830,7 +4055,7 @@
                   <element xid="N405">
                     <data_ele>309</data_ele>
                     <name>Location Qualifier</name>
-                    <usage>S</usage>
+                    <usage>N</usage>
                     <seq>05</seq>
                     <valid_codes>
                       <code>60</code>
@@ -3841,7 +4066,7 @@
                   <element xid="N406">
                     <data_ele>310</data_ele>
                     <name>Location Identification Code</name>
-                    <usage>S</usage>
+                    <usage>N</usage>
                     <seq>06</seq>
                   </element>
                   <element xid="N407">
@@ -3855,7 +4080,7 @@
                 <segment xid="PER">
                   <name>Provider Communications Numbers</name>
                   <usage>S</usage>
-                  <pos>370</pos>
+                  <pos>3700</pos>
                   <max_use>2</max_use>
                   <syntax>P0304</syntax>
                   <syntax>P0506</syntax>
@@ -3881,6 +4106,7 @@
                     <usage>R</usage>
                     <seq>03</seq>
                     <valid_codes>
+                      <code>CP</code>
                       <code>EM</code>
                       <code>EX</code>
                       <code>FX</code>
@@ -3901,6 +4127,9 @@
                     <usage>S</usage>
                     <seq>05</seq>
                     <valid_codes>
+                      <code>AP</code>
+                      <code>BN</code>
+                      <code>CP</code>
                       <code>EM</code>
                       <code>EX</code>
                       <code>FX</code>
@@ -3921,6 +4150,9 @@
                     <usage>S</usage>
                     <seq>07</seq>
                     <valid_codes>
+                      <code>AP</code>
+                      <code>BN</code>
+                      <code>CP</code>
                       <code>EM</code>
                       <code>EX</code>
                       <code>FX</code>
@@ -3944,9 +4176,9 @@
                 </segment>
                 <!--End of PER segment-->
                 <segment xid="PLA">
-                  <name>PCP Change Reason</name>
+                  <name>PCP - Provider Change Reason</name>
                   <usage>S</usage>
-                  <pos>395</pos>
+                  <pos>3950</pos>
                   <max_use>1</max_use>
                   <element xid="PLA01">
                     <data_ele>306</data_ele>
@@ -4008,12 +4240,12 @@
               <loop xid="2320">
                 <name>Coordination of Benefits</name>
                 <usage>S</usage>
-                <pos>400</pos>
+                <pos>4000</pos>
                 <repeat>5</repeat>
                 <segment xid="COB">
                   <name>Coordination of Benefits</name>
                   <usage>R</usage>
-                  <pos>400</pos>
+                  <pos>4000</pos>
                   <max_use>1</max_use>
                   <element xid="COB01">
                     <data_ele>1138</data_ele>
@@ -4044,12 +4276,32 @@
                       <code>6</code>
                     </valid_codes>
                   </element>
+                  <element xid="COB04">
+                    <data_ele>1365</data_ele>
+                    <name>Service Type Code</name>
+                    <usage>S</usage>
+                    <seq>04</seq>
+                    <repeat>9</repeat>
+                    <valid_codes>
+                      <code>1</code>
+                      <code>35</code>
+                      <code>48</code>
+                      <code>50</code>
+                      <code>54</code>
+                      <code>89</code>
+                      <code>90</code>
+                      <code>A4</code>
+                      <code>AG</code>
+                      <code>AL</code>
+                      <code>BB</code>
+                    </valid_codes>
+                  </element>
                 </segment>
                 <!--End of COB segment-->
                 <segment xid="REF">
                   <name>Additional Coordination of Benefits Identifiers</name>
                   <usage>S</usage>
-                  <pos>405</pos>
+                  <pos>4050</pos>
                   <max_use>4</max_use>
                   <syntax>R0203</syntax>
                   <element xid="REF01">
@@ -4060,7 +4312,6 @@
                     <valid_codes>
                       <code>60</code>
                       <code>6P</code>
-                      <code>A6</code>
                       <code>SY</code>
                       <code>ZZ</code>
                     </valid_codes>
@@ -4088,7 +4339,7 @@
                 <segment xid="DTP">
                   <name>Coordination of Benefits Eligibility Dates</name>
                   <usage>S</usage>
-                  <pos>450</pos>
+                  <pos>4500</pos>
                   <max_use>2</max_use>
                   <element xid="DTP01">
                     <data_ele>374</data_ele>
@@ -4120,12 +4371,12 @@
                 <loop xid="2330">
                   <name>Coordination of Benefits Related Entity</name>
                   <usage>S</usage>
-                  <pos>041</pos>
+                  <pos>0410</pos>
                   <repeat>3</repeat>
                   <segment xid="NM1">
                     <name>Coordination of Benefits Related Entity</name>
                     <usage>R</usage>
-                    <pos>410</pos>
+                    <pos>4100</pos>
                     <max_use>1</max_use>
                     <syntax>P0809</syntax>
                     <syntax>C1110</syntax>
@@ -4213,7 +4464,7 @@
                   <segment xid="N3">
                     <name>Coordination of Benefits Related Entity Street Address</name>
                     <usage>S</usage>
-                    <pos>430</pos>
+                    <pos>4300</pos>
                     <max_use>1</max_use>
                     <element xid="N301">
                       <data_ele>166</data_ele>
@@ -4232,7 +4483,7 @@
                   <segment xid="N4">
                     <name>Coordination of Benefits Related Entity City, State, Zip</name>
                     <usage>R</usage>
-                    <pos>440</pos>
+                    <pos>4400</pos>
                     <max_use>1</max_use>
                     <syntax>E0207</syntax>
                     <syntax>C0605</syntax>
@@ -4286,7 +4537,7 @@
                   <segment xid="PER">
                     <name>Coordination of Benefits Related Entity Communications Numbers</name>
                     <usage>S</usage>
-                    <pos>450</pos>
+                    <pos>4500</pos>
                     <max_use>1</max_use>
                     <syntax>P0304</syntax>
                     <syntax>P0506</syntax>
@@ -4529,14 +4780,14 @@
         <loop xid="FOOTER" type="wrapper">
           <name>Table 3 - Footer</name>
           <usage>N</usage>
-          <pos>030</pos>
+          <pos>0300</pos>
           <repeat>1</repeat>
         </loop>
         <!--End of FOOTER loop-->
         <segment xid="SE">
           <name>Transaction Set Trailer</name>
           <usage>R</usage>
-          <pos>690</pos>
+          <pos>6900</pos>
           <max_use>1</max_use>
           <element xid="SE01">
             <data_ele>96</data_ele>
@@ -4557,7 +4808,7 @@
       <segment xid="GE">
         <name>Functional Group Trailer</name>
         <usage>R</usage>
-        <pos>030</pos>
+        <pos>0300</pos>
         <max_use>1</max_use>
         <element xid="GE01">
           <data_ele>97</data_ele>
@@ -4578,7 +4829,7 @@
     <segment xid="TA1">
       <name>Interchange Acknowledgement</name>
       <usage>S</usage>
-      <pos>020</pos>
+      <pos>0200</pos>
       <max_use>1</max_use>
       <element xid="TA101">
         <data_ele>I12</data_ele>
@@ -4654,7 +4905,7 @@
     <segment xid="IEA">
       <name>Interchange Control Trailer</name>
       <usage>R</usage>
-      <pos>030</pos>
+      <pos>0300</pos>
       <max_use>1</max_use>
       <element xid="IEA01">
         <data_ele>I16</data_ele>
