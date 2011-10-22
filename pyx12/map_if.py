@@ -532,10 +532,6 @@ class loop_if(x12_node):
 
         index = 0
         self.base_level = reader.Depth()
-#        if parent == None:
-#            self.path = id
-#        else:
-#            self.path = path + '/' + id
 
         self.cur_level = reader.Depth()
 
@@ -632,6 +628,12 @@ class loop_if(x12_node):
                 raise XML_Reader_Error, 'Read Error'
             elif ret == 0:
                 raise XML_Reader_Error, 'End of Map File'
+
+        # For the segments with duplicate ordinals, adjust the path to be unique
+        for ord1 in sorted(self.pos_map):
+            if len(self.pos_map[ord1]) > 1:
+                for node in self.pos_map[ord1]:
+                    pass # xxx
         
     def debug_print(self):
         sys.stdout.write(self.__repr__())
@@ -720,30 +722,35 @@ class loop_if(x12_node):
                         seg_id = pathl[0][0:pathl[0].find('[')]
                         id_val = pathl[0][pathl[0].find('[')+1:pathl[0].find(']')]
                         if seg_id == child.id:
-                            if child.children[0].is_element() \
-                                and child.children[0].get_data_type() == 'ID' \
-                                and len(child.children[0].valid_codes) > 0 \
-                                and id_val in child.children[0].valid_codes:
+                            possible = child.get_unique_key_id_element(id_val)
+                            if possible is not None:
                                 return child
-                            # Special Case for 820
-                            elif seg_id == 'ENT' and child.children[1].is_element() \
-                                and child.children[1].get_data_type() == 'ID' \
-                                and len(child.children[1].valid_codes) > 0 \
-                                and id_val in child.children[1].valid_codes:
-                                return child
-                            elif child.children[0].is_composite() \
-                                and child.children[0].children[0].get_data_type() == 'ID' \
-                                and len(child.children[0].children[0].valid_codes) > 0 \
-                                and id_val in child.children[0].children[0].valid_codes:
-                                return child
-                            elif seg_id == 'HL' and child.children[2].is_element() \
-                                and len(child.children[2].valid_codes) > 0 \
-                                and id_val in child.children[2].valid_codes:
-                                return child
+                            #if child.children[0].is_element() \
+                            #    and child.children[0].get_data_type() == 'ID' \
+                            #    and len(child.children[0].valid_codes) > 0 \
+                            #    and id_val in child.children[0].valid_codes:
+                            #    return child
+                            ## Special Case for 820
+                            #elif seg_id == 'ENT' and child.children[1].is_element() \
+                            #    and child.children[1].get_data_type() == 'ID' \
+                            #    and len(child.children[1].valid_codes) > 0 \
+                            #    and id_val in child.children[1].valid_codes:
+                            #    return child
+                            #elif child.children[0].is_composite() \
+                            #    and child.children[0].children[0].get_data_type() == 'ID' \
+                            #    and len(child.children[0].children[0].valid_codes) > 0 \
+                            #    and id_val in child.children[0].children[0].valid_codes:
+                            #    return child
+                            #elif seg_id == 'HL' and child.children[2].is_element() \
+                            #    and len(child.children[2].valid_codes) > 0 \
+                            #    and id_val in child.children[2].valid_codes:
+                            #    return child
         raise EngineError, 'getnodebypath failed. Path "%s" not found' % path
 
     def getnodebypath2(self, path_str):
         """
+        Try x12 path
+
         @param path_str: remaining path to match
         @type path_str: string
         @return: matching node, or None is no match
@@ -767,26 +774,29 @@ class loop_if(x12_node):
                         seg_id = x12path.seg_id
                         id_val = x12path.id_val
                         if seg_id == child.id:
-                            if child.children[0].is_element() \
-                                and child.children[0].get_data_type() == 'ID' \
-                                and len(child.children[0].valid_codes) > 0 \
-                                and id_val in child.children[0].valid_codes:
+                            possible = child.get_unique_key_id_element(id_val)
+                            if possible is not None:
                                 return child
+                            #if child.children[0].is_element() \
+                            #    and child.children[0].get_data_type() == 'ID' \
+                            #    and len(child.children[0].valid_codes) > 0 \
+                            #    and id_val in child.children[0].valid_codes:
+                            #    return child
                             # Special Case for 820
-                            elif seg_id == 'ENT' and child.children[1].is_element() \
-                                and child.children[1].get_data_type() == 'ID' \
-                                and len(child.children[1].valid_codes) > 0 \
-                                and id_val in child.children[1].valid_codes:
-                                return child
-                            elif child.children[0].is_composite() \
-                                and child.children[0].children[0].get_data_type() == 'ID' \
-                                and len(child.children[0].children[0].valid_codes) > 0 \
-                                and id_val in child.children[0].children[0].valid_codes:
-                                return child
-                            elif seg_id == 'HL' and child.children[2].is_element() \
-                                and len(child.children[2].valid_codes) > 0 \
-                                and id_val in child.children[2].valid_codes:
-                                return child
+                            #elif seg_id == 'ENT' and child.children[1].is_element() \
+                            #    and child.children[1].get_data_type() == 'ID' \
+                            #    and len(child.children[1].valid_codes) > 0 \
+                            #    and id_val in child.children[1].valid_codes:
+                            #    return child
+                            #elif child.children[0].is_composite() \
+                            #    and child.children[0].children[0].get_data_type() == 'ID' \
+                            #    and len(child.children[0].children[0].valid_codes) > 0 \
+                            #    and id_val in child.children[0].children[0].valid_codes:
+                            #    return child
+                            #elif seg_id == 'HL' and child.children[2].is_element() \
+                            #    and len(child.children[2].valid_codes) > 0 \
+                            #    and id_val in child.children[2].valid_codes:
+                            #    return child
         raise EngineError, 'getnodebypath failed. Path "%s" not found' % path_str
 
     def get_child_count(self):
@@ -935,11 +945,6 @@ class segment_if(x12_node):
         self.max_use = None
         self.syntax = []
  
-#        if parent == None:
-#            self.path = id
-#        else:
-#            self.path = path + '/' + id
-
         self.cur_level = reader.Depth()
         
         while reader.MoveToNextAttribute():
@@ -1158,6 +1163,42 @@ class segment_if(x12_node):
                 return True
         else:
             return False
+
+    def guess_unique_key_id_element(self):
+        """
+        Some segments, like REF, DTP, and DTP are duplicated.  They are matched using the value of an ID element.
+        Which element to use varies.  This function tries to find a good candidate.
+        """
+        if self.children[0].is_element() and self.children[0].get_data_type() == 'ID' and len(self.children[0].valid_codes) > 0:
+            return self.children[0]
+        # Special Case for 820
+        elif self.id == 'ENT' and self.children[1].is_element() and self.children[1].get_data_type() == 'ID' and len(self.children[1].valid_codes) > 0:
+            return self.children[1]
+        elif self.children[0].is_composite() and self.children[0].children[0].get_data_type() == 'ID' and len(self.children[0].children[0].valid_codes) > 0:
+            return self.children[0].children[0]
+        elif self.id == 'HL' and self.children[2].is_element() and len(self.children[2].valid_codes) > 0:
+            return self.children[2]
+        return None
+
+    def get_unique_key_id_element(self, id_val):
+        """
+        Some segments, like REF, DTP, and DTP are duplicated.  They are matched using the value of an ID element.
+        Which element to use varies.  This function tries to find a good candidate, using a key value
+        """
+
+        if self.children[0].is_element() and self.children[0].get_data_type() == 'ID' \
+                and len(self.children[0].valid_codes) > 0 and id_val in self.children[0].valid_codes:
+            return self.children[0]
+        # Special Case for 820
+        elif self.id == 'ENT' and self.children[1].is_element() and self.children[1].get_data_type() == 'ID' \
+                and len(self.children[1].valid_codes) > 0 and id_val in self.children[1].valid_codes:
+            return self.children[1]
+        elif self.children[0].is_composite() and self.children[0].children[0].get_data_type() == 'ID' \
+                and len(self.children[0].children[0].valid_codes) > 0 and id_val in self.children[0].children[0].valid_codes:
+            return self.children[0].children[0]
+        elif self.id == 'HL' and self.children[2].is_element() and len(self.children[2].valid_codes) > 0 and id_val in self.children[2].valid_codes:
+            return self.children[2]
+        return None
 
     def is_segment(self):
         """
