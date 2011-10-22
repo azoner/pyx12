@@ -909,7 +909,6 @@ class segment_if(x12_node):
         self.path = ''
         self.base_name = 'segment'
         self.base_level = reader.Depth()
-        self.check_dte = '20030930'
         self.cur_count = 0
         #self.logger = logging.getLogger('pyx12')
 
@@ -1187,7 +1186,7 @@ class segment_if(x12_node):
                         (subele_node.name, subele_node.refdes)
                     err_value = seg_data.get_value(ref_des)
                     errh.ele_error('3', err_str, err_value, ref_des)
-                valid &= child_node.is_valid(comp_data, errh, self.check_dte)
+                valid &= child_node.is_valid(comp_data, errh)
             elif child_node.is_element():
                 # Validate Element
                 if i == 1 and seg_data.get_seg_id() == 'DTP' \
@@ -1197,11 +1196,11 @@ class segment_if(x12_node):
                     type_list.extend(child_node.valid_codes)
                 ele_data = seg_data.get('%02i' % (i+1))
                 if i == 2 and seg_data.get_seg_id() == 'DTP':
-                    valid &= child_node.is_valid(ele_data, errh, self.check_dte, dtype)
+                    valid &= child_node.is_valid(ele_data, errh, dtype)
                 elif child_node.data_ele == '1251' and len(type_list) > 0:
-                    valid &= child_node.is_valid(ele_data, errh, self.check_dte, type_list)
+                    valid &= child_node.is_valid(ele_data, errh, type_list)
                 else:
-                    valid &= child_node.is_valid(ele_data, errh, self.check_dte)
+                    valid &= child_node.is_valid(ele_data, errh)
 
         for i in range(min(len(seg_data), child_count), child_count):
             #missing required elements?
@@ -1416,7 +1415,7 @@ class element_if(x12_node):
         raise NotImplementedError, 'Override in sub-class'
         #return False
 
-    def is_valid(self, elem, errh, check_dte=None, type_list=[]):
+    def is_valid(self, elem, errh, type_list=[]):
         """
         Is this a valid element?
 
@@ -1488,7 +1487,7 @@ class element_if(x12_node):
                 self._error(errh, err_str, '6', elem_val)
                 valid = False
             
-        if not self._is_valid_code(elem_val, errh, check_dte):
+        if not self._is_valid_code(elem_val, errh):
             valid = False
         if not validation.IsValidDataType(elem_val, data_type, self.root.param.get('charset'), self.root.icvn):
             if data_type in ('RD8', 'DT', 'D8', 'D6'):
@@ -1530,7 +1529,7 @@ class element_if(x12_node):
                 valid = False
         return valid
 
-    def _is_valid_code(self, elem_val, errh, check_dte=None):
+    def _is_valid_code(self, elem_val, errh):
         """
         @rtype: boolean
         """
@@ -1540,7 +1539,7 @@ class element_if(x12_node):
         if elem_val in self.valid_codes:
             bValidCode = True
         if self.external_codes is not None and \
-            self.root.ext_codes.isValid(self.external_codes, elem_val, check_dte):
+            self.root.ext_codes.isValid(self.external_codes, elem_val):
             bValidCode = True
         if not bValidCode:
             err_str = '(%s) is not a valid code for %s (%s)' % (elem_val, self.name, self.refdes)
@@ -1589,7 +1588,7 @@ class composite_if(x12_node):
         self.path = ''
         self.base_name = 'composite'
         self.base_level = reader.Depth()
-        self.check_dte = '20030930'
+        #self.check_dte = '20030930'
 
         #self.id = None
         self.name = None
@@ -1693,7 +1692,7 @@ class composite_if(x12_node):
             sub_elem.xml()
         sys.stdout.write('</composite>\n')
 
-    def is_valid(self, comp_data, errh, check_dte=None):
+    def is_valid(self, comp_data, errh):
         """
         Validates the composite
         @param comp_data: data composite instance, has multiple values
@@ -1729,7 +1728,7 @@ class composite_if(x12_node):
             errh.ele_error('3', err_str, None, self.refdes)
             valid = False
         for i in range(min(len(comp_data), self.get_child_count())):
-            valid &= self.get_child_node_by_idx(i).is_valid(comp_data[i], errh, check_dte)
+            valid &= self.get_child_node_by_idx(i).is_valid(comp_data[i], errh)
         for i in range(min(len(comp_data), self.get_child_count()), \
                 self.get_child_count()): 
             if i < self.get_child_count():
