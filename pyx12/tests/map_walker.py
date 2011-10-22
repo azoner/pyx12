@@ -177,6 +177,7 @@ class Implicit_Loops(unittest.TestCase):
         #errh = pyx12.error_handler.errh_null()
         map = pyx12.map_if.load_map_file('270.4010.X092.A1.xml', self.param)
         node = map.getnodebypath('/ISA_LOOP/GS_LOOP/ST_LOOP/DETAIL/2000A/2000B/2000C/2100C/2110C/EQ')
+        start_node = node
         self.assertNotEqual(node, None, 'Node not found')
         node.cur_count = 1
         seg_data = pyx12.segment.Segment('EQ*30**CHD', '~', '*', ':')
