@@ -1,5 +1,5 @@
 ######################################################################
-# Copyright (c) 2001-2008 Kalamazoo Community Mental Health Services,
+# Copyright (c) 2001-2011 Kalamazoo Community Mental Health Services,
 #   John Holland <jholland@kazoocmh.org> <john@zoner.org>
 # All rights reserved.
 #
@@ -18,7 +18,7 @@ If seg indicates a segment has been entered, returns the segment node.
 """
 
 import logging
-import pdb
+#import pdb
 
 # Intrapackage imports
 from errors import *
@@ -171,19 +171,14 @@ class walk_tree(object):
                             return (node_seg, pop_node_list, push_node_list) # segment node
             # End for ord1 in pos_keys
             if node.is_map_root(): # If at root and we haven't found the segment yet.
-                self._seg_not_found_error(orig_node, seg_data, errh, seg_count, cur_line, ls_id)
+                walk_tree._seg_not_found_error(orig_node, seg_data, errh, seg_count, cur_line, ls_id)
                 return (None, [], [])
             node_pos = node.pos # Get position ordinal of current node in tree
             pop_node_list.append(node)
             node = pop_to_parent_loop(node) # Get enclosing parent loop
 
-        self._seg_not_found_error(orig_node, seg_data, errh, seg_count, cur_line, ls_id)
+        walk_tree._seg_not_found_error(orig_node, seg_data, errh, seg_count, cur_line, ls_id)
         return (None, [], [])
-
-#    def _is_loop_repeat(self, node, seg_data):
-#        if not (node.is_loop() or node.is_map_root()): 
-#            node = pop_to_parent_loop(node) # Get enclosing loop
-#        return self._is_first_seg_match(node, seg_data):
 
     def _check_seg_usage(self, seg_node, seg_data, seg_count, cur_line, ls_id, errh):
         """
@@ -214,7 +209,8 @@ class walk_tree(object):
                 errh.add_seg(seg_node, seg_data, seg_count, cur_line, ls_id)
                 errh.seg_error('5', err_str, None)
 
-    def _seg_not_found_error(self, orig_node, seg_data, errh, seg_count, cur_line, ls_id):
+    @staticmethod
+    def _seg_not_found_error(orig_node, seg_data, errh, seg_count, cur_line, ls_id):
         """
         Create error for not found segments
 
@@ -232,23 +228,7 @@ class walk_tree(object):
         err_str = 'Segment %s not found.  Started at %s' % (seg_str, orig_node.get_path()) 
         errh.add_seg(orig_node, seg_data, seg_count, cur_line, ls_id)
         errh.seg_error('1', err_str, None)
-        #raise EngineError, "Could not find segment %s*%s.  Started at %s" % \
-        #    (seg.get_seg_id(), seg[1], orig_node.get_path())
 
-#    def _is_first_seg_match(self, node, seg_data):
-#        """
-#        Find the first segment in loop, verify it matches segment
-#        @rtype: boolean
-#        """
-#        if not node.is_loop(): raise EngineError, \
-#            "Call to first_seg_match failed, node is not a loop"
-#        child = node.get_child_node_by_idx(0)
-#        if child.is_segment():
-#            if child.is_match(seg_data):
-#                return True
-#            else:
-#                return False # seg does not match the first segment in loop, so not valid
-#        return False
 
     def _flush_mandatory_segs(self, errh, cur_pos = None):
         """
@@ -257,19 +237,12 @@ class walk_tree(object):
         @param errh: Error handler
         @type errh: L{error_handler.err_handler}
         """
-        #if self.mandatory_segs_missing: pdb.set_trace()
         for (seg_node, seg_data, err_cde, err_str, seg_count, cur_line, ls_id) in self.mandatory_segs_missing:
             # Create errors if not also at current position
             if seg_node.pos != cur_pos:
                 errh.add_seg(seg_node, seg_data, seg_count, cur_line, ls_id)
                 errh.seg_error(err_cde, err_str, None)
         self.mandatory_segs_missing = [x for x in self.mandatory_segs_missing if x[0].pos==cur_pos]
-        #self.mandatory_segs_missing = []
-
-    #def _is_loop_match(self, loop_node, seg_data, errh, seg_count, cur_line, ls_id):
-    #    if not loop_node.is_loop(): raise EngineError, \
-    #        "Call to first_seg_match failed, node %s is not a loop. seg %s" \
-    #        % (loop_node.id, seg_data.get_seg_id())
 
     def _is_loop_match(self, loop_node, seg_data, errh, seg_count, cur_line, ls_id):
         """
@@ -295,7 +268,7 @@ class walk_tree(object):
         assert first_child_node is not None, 'get_first_node failed from loop %s' % (loop_node.id)
         if first_child_node.is_loop():
             #If any loop node matches
-            for child_node in loop_node.ChildIterator():
+            for child_node in loop_node.childIterator():
                 if child_node.is_loop() and self._is_loop_match(child_node, \
                         seg_data, errh, seg_count, cur_line, ls_id):
                     return True
@@ -335,12 +308,12 @@ class walk_tree(object):
         first_child_node = loop_node.get_first_seg()
         #pdb.set_trace()
         if first_child_node is not None and is_first_seg_match2(first_child_node, seg_data): 
-            self._check_loop_usage(loop_node, seg_data, seg_count, cur_line, ls_id, errh)
+            walk_tree._check_loop_usage(loop_node, seg_data, seg_count, cur_line, ls_id, errh)
             first_child_node.incr_cur_count()
             self._flush_mandatory_segs(errh)
             return (first_child_node, [loop_node])
         else:
-            for child in loop_node.ChildIterator():
+            for child in loop_node.childIterator():
                 if child.is_loop():
                     (node1, push1) = self._goto_seg_match(child, seg_data, errh, \
                         seg_count, cur_line, ls_id)
@@ -350,7 +323,8 @@ class walk_tree(object):
                         return (node1, push_node_list)
         return (None, [])
 
-    def _check_loop_usage(self, loop_node, seg_data, seg_count, cur_line, ls_id, errh):
+    @staticmethod
+    def _check_loop_usage(loop_node, seg_data, seg_count, cur_line, ls_id, errh):
         """
         Check loop usage requirement and count
 

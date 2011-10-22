@@ -467,6 +467,14 @@ class map_if(x12_node):
     def __iter__(self):
         return self
 
+    def loop_segment_iterator(self):
+        yield self
+        for ord1 in sorted(self.pos_map):
+            for child in self.pos_map[ord1]:
+                if child.is_loop() or child.is_segment():
+                    for c in child.loop_segment_iterator():
+                        yield c
+
 #    def next(self):
 #        #if self.cur_iter_node.id == 'GS06':
 #        if self.cur_iter_node.id == 'IEA':
@@ -682,7 +690,7 @@ class loop_if(x12_node):
         else:
             return None
 
-    def ChildIterator(self):
+    def childIterator(self):
         for ord1 in sorted(self.pos_map):
             for child in self.pos_map[ord1]:
                 yield child
@@ -830,7 +838,7 @@ class loop_if(x12_node):
         """
         Return the child segment matching the segment data
         """
-        for child in self.ChildIterator():
+        for child in self.childIterator():
             if child.is_segment() and child.is_match(seg_data):
                 return child
         return None
@@ -839,7 +847,7 @@ class loop_if(x12_node):
         """
         Return the child segment matching the segment data
         """
-        for child in self.ChildIterator():
+        for child in self.childIterator():
             if child.is_loop() and child.is_match(seg_data):
                 return child
         return None
@@ -885,6 +893,13 @@ class loop_if(x12_node):
             self.parent.get_counts_list(ct_list)
         return True
 
+    def loop_segment_iterator(self):
+        yield self
+        for ord1 in sorted(self.pos_map):
+            for child in self.pos_map[ord1]:
+                if child.is_loop() or child.is_segment():
+                    for c in child.loop_segment_iterator():
+                        yield c
 
 ############################################################
 # Segment Interface
@@ -1262,6 +1277,9 @@ class segment_if(x12_node):
         if not self.parent.is_map_root():
             self.parent.get_counts_list(ct_list)
         return True
+
+    def loop_segment_iterator(self):
+        yield self
 
 
 ############################################################

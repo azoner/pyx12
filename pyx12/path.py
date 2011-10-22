@@ -1,5 +1,5 @@
 ######################################################################
-# Copyright (c) 2005-2009 Kalamazoo Community Mental Health Services,
+# Copyright (c) 2005-2011 Kalamazoo Community Mental Health Services,
 #   John Holland <jholland@kazoocmh.org> <john@zoner.org>
 # All rights reserved.
 #
@@ -165,7 +165,6 @@ class X12Path(object):
     __le__ = __lt__
     __gt__ = __lt__
     __ge__ = __lt__
-    __hash__ = None
         
 #    def __len__(self):
 #        """
@@ -186,6 +185,8 @@ class X12Path(object):
             ret += '/'
         ret += self.format_refdes()
         return ret
+
+    __hash__ = __repr__.__hash__()
 
     def format(self):
         """
