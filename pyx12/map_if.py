@@ -18,7 +18,7 @@ import libxml2
 import libxslt
 import logging
 import os.path
-#import pdb
+import pdb
 import string
 import sys
 import re
@@ -632,8 +632,12 @@ class loop_if(x12_node):
         # For the segments with duplicate ordinals, adjust the path to be unique
         for ord1 in sorted(self.pos_map):
             if len(self.pos_map[ord1]) > 1:
-                for node in self.pos_map[ord1]:
-                    pass # xxx
+                for seg_node in [n for n in self.pos_map[ord1] if n.is_segment()]:
+                    #pdb.set_trace()
+                    id_elem = seg_node.guess_unique_key_id_element()
+                    if id_elem is not None:
+                        #print id_elem
+                        seg_node.path = seg_node.path + '[' + id_elem.valid_codes[0] + ']'
         
     def debug_print(self):
         sys.stdout.write(self.__repr__())
@@ -935,7 +939,6 @@ class segment_if(x12_node):
         self.base_name = 'segment'
         self.base_level = reader.Depth()
         self.cur_count = 0
-        #self.logger = logging.getLogger('pyx12')
 
         self.id = None
         self.end_tag = None
