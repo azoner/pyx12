@@ -797,7 +797,7 @@ class X12Path(unittest.TestCase):
     def test_837_paths(self):
         paths = [
             '/ISA_LOOP/GS_LOOP/ST_LOOP/DETAIL/2000A/2000B/2300/CLM',
-            '/ISA_LOOP/GS_LOOP/ST_LOOP/DETAIL/2000A/2000B/2300/REF',
+            '/ISA_LOOP/GS_LOOP/ST_LOOP/DETAIL/2000A/2000B/2300/REF[4N]',
             '/ISA_LOOP/GS_LOOP/ST_LOOP/DETAIL/2000A',
             '/ISA_LOOP/GS_LOOP/ST_LOOP/DETAIL/2000A/2000B/2300/2400/SV1'
         ]
