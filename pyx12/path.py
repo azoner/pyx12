@@ -186,7 +186,8 @@ class X12Path(object):
         ret += self.format_refdes()
         return ret
 
-    __hash__ = __repr__.__hash__()
+    def __hash__(self):
+        return self.__repr__().__hash__()
 
     def format(self):
         """

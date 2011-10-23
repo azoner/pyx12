@@ -171,6 +171,7 @@ class Equality(unittest.TestCase):
         p2 = pyx12.path.X12Path('/ISA_LOOP/GS_LOOP/ST_LOOP/DETAIL/2000A')
         self.assertEqual(p1, p2)
         self.assertEqual(p1.format(), p2.format())        
+        self.assertEqual(p1.__hash__(), p2.__hash__())        
     
     def test_equal2(self):
         p1 = pyx12.path.X12Path('/ISA_LOOP/GS_LOOP/ST_LOOP/DETAIL/2000A')
@@ -178,6 +179,7 @@ class Equality(unittest.TestCase):
         p2.loop_list.append('2000A')
         self.assertEqual(p1, p2)
         self.assertEqual(p1.format(), p2.format())
+        self.assertEqual(p1.__hash__(), p2.__hash__())        
         
     def test_equal3(self):
         p1 = pyx12.path.X12Path('/AA/BB/CC/TST[1B5]03-1')
@@ -185,6 +187,7 @@ class Equality(unittest.TestCase):
         p2.seg_id = 'TST'
         self.assertEqual(p1, p2)
         self.assertEqual(p1.format(), p2.format())
+        self.assertEqual(p1.__hash__(), p2.__hash__())        
 
     def test_equal4(self):
         p1 = pyx12.path.X12Path('1000B/TST03-2')
@@ -192,6 +195,7 @@ class Equality(unittest.TestCase):
         p2.ele_idx = 3
         self.assertEqual(p1, p2)
         self.assertEqual(p1.format(), p2.format())
+        self.assertEqual(p1.__hash__(), p2.__hash__())        
 
 
 class NonEquality(unittest.TestCase):
@@ -200,24 +204,28 @@ class NonEquality(unittest.TestCase):
         p2 = pyx12.path.X12Path('ISA_LOOP/GS_LOOP/ST_LOOP/DETAIL/2000A')
         self.assertNotEqual(p1, p2)
         self.assertNotEqual(p1.format(), p2.format())        
+        self.assertNotEqual(p1.__hash__(), p2.__hash__())        
     
     def test_nequal2(self):
         p1 = pyx12.path.X12Path('/ISA_LOOP/GS_LOOP/ST_LOOP/DETAIL/2000A')
         p2 = pyx12.path.X12Path('/ISA_LOOP/GS_LOOP/ST_LOOP/DETAIL/')
         self.assertNotEqual(p1, p2)
         self.assertNotEqual(p1.format(), p2.format())
+        self.assertNotEqual(p1.__hash__(), p2.__hash__())        
         
     def test_nequal3(self):
         p1 = pyx12.path.X12Path('/AA/BB/CC/TST[1B5]03-1')
         p2 = pyx12.path.X12Path('/AA/BB/CC/AAA[1B5]03-1')
         self.assertNotEqual(p1, p2)
         self.assertNotEqual(p1.format(), p2.format())
+        self.assertNotEqual(p1.__hash__(), p2.__hash__())        
 
     def test_nequal4(self):
         p1 = pyx12.path.X12Path('1000B/TST03-2')
         p2 = pyx12.path.X12Path('1000B/TST04-2')
         self.assertNotEqual(p1, p2)
         self.assertNotEqual(p1.format(), p2.format())
+        self.assertNotEqual(p1.__hash__(), p2.__hash__())        
         
 
 class Empty(unittest.TestCase):
