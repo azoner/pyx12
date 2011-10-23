@@ -90,10 +90,10 @@ class walk_tree(object):
     """
     Walks a map_if tree.  Tracks loop/segment counting, missing loop/segment.
     """
-    def __init__(self):
+    def __init__(self, initialCounts={}):
         # Store errors until we know we have an error
         self.mandatory_segs_missing = []  
-        self.counter = NodeCounter()
+        self.counter = NodeCounter(initialCounts)
 
     def walk(self, node, seg_data, errh, seg_count, cur_line, ls_id):
         """
@@ -181,6 +181,9 @@ class walk_tree(object):
         walk_tree._seg_not_found_error(orig_node, seg_data, errh, seg_count, cur_line, ls_id)
         return (None, [], [])
 
+    def setCountState(self, initialCounts={}):
+        self.counter = NodeCounter(initialCounts)
+
     def _check_seg_usage(self, seg_node, seg_data, seg_count, cur_line, ls_id, errh):
         """
         Check segment usage requirement and count
@@ -264,7 +267,9 @@ class walk_tree(object):
         """
         assert loop_node.is_loop(), "Call to first_seg_match failed, node %s is not a loop. seg %s" \
                 % (loop_node.id, seg_data.get_seg_id())
-        assert loop_node.get_cur_count()==self.counter.get_count(loop_node.x12path), 'loop_node counts not equal'
+        assert loop_node.get_cur_count()==self.counter.get_count(loop_node.x12path), \
+            'loop_node counts not equal: %s=%i / %s=%i' % (loop_node.get_path(), loop_node.get_cur_count(),
+                    loop_node.x12path.format(), self.counter.get_count(loop_node.x12path) )
         if len(loop_node) <= 0: # Has no children
             return False
         first_child_node = loop_node.get_first_node()

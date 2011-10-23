@@ -11,6 +11,7 @@ from pyx12.errors import *
 from pyx12.map_walker import walk_tree, get_id_list, traverse_path, pop_to_parent_loop
 import pyx12.map_if
 import pyx12.params 
+import pyx12.path
 import pyx12.segment
 from pyx12.tests.support import getMapPath
 
@@ -449,14 +450,20 @@ class Counting(unittest.TestCase):
         #self.node = self.map.getnodebypath('/ISA_LOOP/GS_LOOP/ST_LOOP/DETAIL/2000A/2000B/2100B/N4')
         self.node = self.map.getnodebypath('/ISA_LOOP/GS_LOOP/ST_LOOP/DETAIL/2000A/2000B/2100B/NM1')
         self.node.parent.cur_count = 1 # Loop 2100B
+        self.countState = {
+            self.node.parent.x12path: 1, 
+            self.node.x12path: 1, 
+        }
         self.node.cur_count = 1
         self.node = self.map.getnodebypath('/ISA_LOOP/GS_LOOP/ST_LOOP/DETAIL/2000A/2000B/2100B/PER')
         self.assertNotEqual(self.node, None)
+        self.countState[self.node.x12path] = 1
 
     def test_count_ok1(self):
         self.errh.reset()
         node = self.node
         node.cur_count = 1
+        self.walker.setCountState(self.countState)
         seg_data = pyx12.segment.Segment('PER*IC*Name1*EM*dev@null.com~', '~', '*', ':')
         (node, pop, push) = self.walker.walk(node, seg_data, self.errh, 5, 4, None)
         self.assertNotEqual(node, None)
@@ -466,6 +473,8 @@ class Counting(unittest.TestCase):
         self.errh.reset()
         node = self.node
         node.cur_count = 2 
+        self.walker.setCountState(self.countState)
+        self.walker.counter.increment(node.x12path)
         seg_data = pyx12.segment.Segment('PER*IC*Name1*EM*dev@null.com~', '~', '*', ':')
         (node, pop, push) = self.walker.walk(node, seg_data, self.errh, 5, 4, None)
         self.assertNotEqual(node, None)
@@ -475,6 +484,10 @@ class Counting(unittest.TestCase):
         self.errh.reset()
         node = self.node
         node.cur_count = 3 
+        self.walker.setCountState(self.countState)
+        #self.walker.counter.increment(node.x12path)
+        #self.walker.counter.increment(node.x12path)
+        self.walker.counter.setCount(node.x12path, 3)
         seg_data = pyx12.segment.Segment('PER*IC*Name1*EM*dev@null.com~', '~', '*', ':')
         self.assertNotEqual(node, None, 'Node not found')
         (node, pop, push) = self.walker.walk(node, seg_data, self.errh, 5, 4, None)

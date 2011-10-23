@@ -14,15 +14,20 @@
 Loop and segment counter
 """
 #import collections
+import pyx12.path
 
 class NodeCounter(object):
     """
     X12 Loop and Segment Node Counter
     """
-    def __init__(self, counts={}):
-# can default initial count state
+    def __init__(self, initialCounts={}):
+        self._dict = {}
 # copy constructor
-        self.stack = counts
+        for k, v in initialCounts.iteritems():
+            if isinstance(k, pyx12.path.X12Path):
+                self._dict[k] = v
+            else:
+                self._dict[pyx12.path.X12Path(k)] = v
 # deque, Counter, OrderedDict
         #self.nodes = OrderedDict()
 
@@ -30,17 +35,20 @@ class NodeCounter(object):
         """
         Pop to node, deleting all child counts
         """
-        if xpath in self.stack:
-            del self.stack[xpath]
+        if xpath in self._dict:
+            del self._dict[xpath]
 
     def increment(self, xpath):
-        if xpath in self.stack:
-            self.stack[xpath] += 1
+        if xpath in self._dict:
+            self._dict[xpath] += 1
         else:
-            self.stack[xpath] = 1
+            self._dict[xpath] = 1
+
+    def setCount(self, xpath, ct):
+        self._dict[xpath] = ct
     
     def get_count(self, xpath):
-        if xpath not in self.stack:
+        if xpath not in self._dict:
             return 0
             #raise Exception, 'Unknown xpath in counter: %s' % (xpath)
-        return self.stack[xpath]
+        return self._dict[xpath]
