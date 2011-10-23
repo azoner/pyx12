@@ -23,6 +23,7 @@ import logging
 # Intrapackage imports
 from errors import *
 import pyx12.segment
+from nodeCounter import NodeCounter
 
 logger = logging.getLogger('pyx12.walk_tree')
 #logger.setLevel(logging.DEBUG)
@@ -90,11 +91,9 @@ class walk_tree(object):
     Walks a map_if tree.  Tracks loop/segment counting, missing loop/segment.
     """
     def __init__(self):
-#        end_tag_stack = []
-        #self.cur_seg_count = 0
         # Store errors until we know we have an error
         self.mandatory_segs_missing = []  
-        pass
+        self.counter = NodeCounter()
 
     def walk(self, node, seg_data, errh, seg_count, cur_line, ls_id):
         """
@@ -152,6 +151,8 @@ class walk_tree(object):
                                     push_node_list = [node]
                                 return (node1, pop_node_list, push_node_list) # segment node
                             child.incr_cur_count()
+                            self.counter.increment(child.x12path)
+                            assert child.get_cur_count()==self.counter.get_count(child.x12path), 'Child counts not equal'
                             self._check_seg_usage(child, seg_data, seg_count, cur_line, ls_id, errh)
                             # Remove any previously missing errors for this segment
                             self.mandatory_segs_missing = [x for x in self.mandatory_segs_missing if x[0]!=child]
@@ -203,6 +204,7 @@ class walk_tree(object):
             err_str = "Segment %s found but marked as not used" % (seg_node.id)
             errh.seg_error('2', err_str, None)
         elif seg_node.usage == 'R' or seg_node.usage == 'S':
+            assert seg_node.get_cur_count()==self.counter.get_count(seg_node.x12path), 'seg_node counts not equal'
             if seg_node.get_cur_count() > seg_node.get_max_repeat():  # handle seg repeat count
                 err_str = "Segment %s exceeded max count.  Found %i, should have %i" \
                     % (seg_data.get_seg_id(), seg_node.get_cur_count(), seg_node.get_max_repeat())
@@ -262,6 +264,7 @@ class walk_tree(object):
         """
         assert loop_node.is_loop(), "Call to first_seg_match failed, node %s is not a loop. seg %s" \
                 % (loop_node.id, seg_data.get_seg_id())
+        assert loop_node.get_cur_count()==self.counter.get_count(loop_node.x12path), 'loop_node counts not equal'
         if len(loop_node) <= 0: # Has no children
             return False
         first_child_node = loop_node.get_first_node()
@@ -308,8 +311,10 @@ class walk_tree(object):
         first_child_node = loop_node.get_first_seg()
         #pdb.set_trace()
         if first_child_node is not None and is_first_seg_match2(first_child_node, seg_data): 
-            walk_tree._check_loop_usage(loop_node, seg_data, seg_count, cur_line, ls_id, errh)
+            self._check_loop_usage(loop_node, seg_data, seg_count, cur_line, ls_id, errh)
             first_child_node.incr_cur_count()
+            self.counter.increment(first_child_node.x12path)
+            assert first_child_node.get_cur_count()==self.counter.get_count(first_child_node.x12path), 'first_child_node counts not equal'
             self._flush_mandatory_segs(errh)
             return (first_child_node, [loop_node])
         else:
@@ -323,8 +328,7 @@ class walk_tree(object):
                         return (node1, push_node_list)
         return (None, [])
 
-    @staticmethod
-    def _check_loop_usage(loop_node, seg_data, seg_count, cur_line, ls_id, errh):
+    def _check_loop_usage(self, loop_node, seg_data, seg_count, cur_line, ls_id, errh):
         """
         Check loop usage requirement and count
 
@@ -349,7 +353,10 @@ class walk_tree(object):
             errh.seg_error('2', err_str, None)
         elif loop_node.usage in ('R', 'S'):
             loop_node.reset_child_count()
+            self.counter.reset_to_node(loop_node.x12path)
             loop_node.incr_cur_count()
+            self.counter.increment(loop_node.x12path)
+            assert loop_node.get_cur_count()==self.counter.get_count(loop_node.x12path), 'loop_node counts not equal'
             #logger.debug('incr loop_node %s %i' % (loop_node.id, loop_node.cur_count))
             #logger.debug('incr first_child_node %s %i' % (first_child_node.id, first_child_node.cur_count))
             if loop_node.get_cur_count() > loop_node.get_max_repeat():
