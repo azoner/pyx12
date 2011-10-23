@@ -41,5 +41,6 @@ class NodeCounter(object):
     
     def get_count(self, xpath):
         if xpath not in self.stack:
-            raise Exception, 'Unknown xpath in counter: %s' % (xpath)
+            return 0
+            #raise Exception, 'Unknown xpath in counter: %s' % (xpath)
         return self.stack[xpath]

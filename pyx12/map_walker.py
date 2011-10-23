@@ -356,7 +356,9 @@ class walk_tree(object):
             self.counter.reset_to_node(loop_node.x12path)
             loop_node.incr_cur_count()
             self.counter.increment(loop_node.x12path)
-            assert loop_node.get_cur_count()==self.counter.get_count(loop_node.x12path), 'loop_node counts not equal'
+            assert loop_node.get_cur_count()==self.counter.get_count(loop_node.x12path), \
+                'loop_node counts not equal: %s=%i / %s=%i' % (loop_node.get_path(), loop_node.get_cur_count(),
+                        loop_node.x12path.format(), self.counter.get_count(loop_node.x12path) )
             #logger.debug('incr loop_node %s %i' % (loop_node.id, loop_node.cur_count))
             #logger.debug('incr first_child_node %s %i' % (first_child_node.id, first_child_node.cur_count))
             if loop_node.get_cur_count() > loop_node.get_max_repeat():
