@@ -100,7 +100,7 @@
   <data_ele ele_num="1318" data_type="ID" min_len="1" max_len="1" name="Approval Code"/>
   <data_ele ele_num="1319" data_type="ID" min_len="1" max_len="2" name="Basis of Cost Determination Code"/>
   <data_ele ele_num="1320" data_type="ID" min_len="1" max_len="1" name="Basis of Days Supply Determination Code"/>
-  <data_ele ele_num="1321" data_type="ID" min_len="2" max_len="2" name="Condition Indicator"/>
+  <data_ele ele_num="1321" data_type="ID" min_len="2" max_len="3" name="Condition Indicator"/>
   <data_ele ele_num="1322" data_type="ID" min_len="1" max_len="1" name="Certification Type Code"/>
   <data_ele ele_num="1325" data_type="ID" min_len="1" max_len="1" name="Claim Frequency Type Code"/>
   <data_ele ele_num="1327" data_type="ID" min_len="1" max_len="1" name="Copay Status Code"/>
@@ -209,7 +209,7 @@
   <data_ele ele_num="355" data_type="ID" min_len="2" max_len="2" name="Unit or Basis for Measurement Code"/>
   <data_ele ele_num="358" data_type="R" min_len="1" max_len="10" name="Quantity Invoiced"/>
   <data_ele ele_num="363" data_type="ID" min_len="3" max_len="3" name="Note Reference Code"/>
-  <data_ele ele_num="364" data_type="AN" min_len="1" max_len="80" name="Communication Number"/>
+  <data_ele ele_num="364" data_type="AN" min_len="1" max_len="256" name="Communication Number"/>
   <data_ele ele_num="365" data_type="ID" min_len="2" max_len="2" name="Communication Number Qualifier"/>
   <data_ele ele_num="366" data_type="ID" min_len="2" max_len="2" name="Contact Function Code"/>
   <data_ele ele_num="373" data_type="DT" min_len="8" max_len="8" name="Date"/>
