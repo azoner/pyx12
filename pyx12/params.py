@@ -20,14 +20,10 @@ Order of precedence:
 """
 from os.path import dirname, abspath, join, isdir, isfile, expanduser
 import sys
-import libxml2
+import xml.etree.ElementTree
 import logging
 
 from pyx12.errors import EngineError
-
-NodeType = {'element_start': 1, 'element_end': 15, 'attrib': 2, 'text': 3,
-    'CData': 4, 'entity_ref': 5, 'entity_decl':6, 'pi': 7, 'comment': 8,
-    'doc': 9, 'dtd': 10, 'doc_frag': 11, 'notation': 12}
 
 class ParamsBase(object):
     """
@@ -92,30 +88,16 @@ class ParamsBase(object):
         @return: None
         """
         if not isfile(filename):
+            self.logger.debug('Configuration file "%s" does not exist' % filename)
             raise EngineError, 'Configuration file "%s" does not exist' % (filename)
         try:
-            reader = libxml2.newTextReaderFilename(filename)
-            ret = reader.Read()
-            while ret == 1:
-                tmpNodeType = reader.NodeType()
-                if tmpNodeType == NodeType['element_start']:
-                    cur_name = reader.Name()
-                    if cur_name == 'param':
-                        option = None
-                        value = None
-                        valtype = None
-                        while reader.MoveToNextAttribute():
-                            if reader.Name() == 'name':
-                                option = reader.Value()
-                elif tmpNodeType == NodeType['element_end']:
-                    if option is not None:
-                        self._set_option(option, value, valtype)
-                elif tmpNodeType == NodeType['text']:
-                    if cur_name == 'value':
-                        value = reader.Value()
-                    elif cur_name == 'type':
-                        valtype = reader.Value()
-                ret = reader.Read()
+            self.logger.debug('parsing config file %s' % (filename))
+            t = xml.etree.ElementTree.parse(filename)
+            for c in t.iter('param'):
+                option = c.get('name')
+                value = c.findtext('value')
+                valtype = c.findtext('type')
+                self._set_option(option, value, valtype)
         except:
             self.logger.error('Read of configuration file "%s" failed' % \
                 (filename))
@@ -131,6 +113,8 @@ class ParamsBase(object):
         @param valtype: Parameter type
         @type valtype: string
         """
+        if option is None or option == '':
+            return
         if value == '':
             value = None
         if valtype == 'boolean':
@@ -167,6 +151,8 @@ class ParamsUnix(ParamsBase):
         if config_file:
             self.logger.debug('Read param file: %s' % (filename))
             self._read_config_file(config_file)
+        else:
+            self.logger.debug('No config file passed to the constructor')
 
 class ParamsWindows(ParamsBase):
     """

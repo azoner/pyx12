@@ -49,10 +49,8 @@ class SetParamOverride(unittest.TestCase):
 
 class ReadConfigFile(unittest.TestCase):
     def setUp(self):
-        test_path = os.path.dirname(sys.argv[0])
-        #test_path = pyx12.tests.__path__[0]
-        self.param = pyx12.params.params(os.path.join(test_path,
-            'pyx12test.conf.xml'))
+        test_path = os.path.abspath(os.path.dirname(sys.argv[0]))
+        self.param = pyx12.params.params(os.path.join(test_path, 'pyx12test.conf.xml'))
 
     def test_changed(self):
         self.assertEqual(self.param.get('map_path'), '/opt1/local/share/pyx12/map')
