@@ -1,5 +1,5 @@
 ######################################################################
-# Copyright (c) 2001-2008 Kalamazoo Community Mental Health Services,
+# Copyright (c) 2001-2011 Kalamazoo Community Mental Health Services,
 #   John Holland <jholland@kazoocmh.org> <john@zoner.org>
 # All rights reserved.
 #
@@ -18,10 +18,8 @@ Locate the correct xml map file given:
     - Transaction Set Purpose Code (BHT02) (For 278 only)
 """
 
-import libxml2
+import xml.etree.ElementTree
 import errors
-
-NodeType = {'element_start': 1, 'element_end': 15, 'attrib': 2, 'text': 3, 'CData': 4, 'entity_ref': 5, 'entity_decl':6, 'pi': 7, 'comment': 8, 'doc': 9, 'dtd': 10, 'doc_frag': 11, 'notation': 12}
 
 class map_index(object):
     """
@@ -33,46 +31,13 @@ class map_index(object):
         @type map_index_file: string
         """
         self.maps = []
-        tspc = None
-        abbr = None
-        try:
-            reader = libxml2.newTextReaderFilename(map_index_file)
-        except:
-            raise errors.EngineError, 'Map file not found: %s' % (map_index_file)
-                    
-        while reader.Read():
-            #processNode(reader)
-            if reader.NodeType() == NodeType['element_start'] and reader.Name() == 'version':
-                while reader.MoveToNextAttribute():
-                    if reader.Name() == 'icvn':
-                        icvn = reader.Value()
 
-            if reader.NodeType() == NodeType['element_end'] and reader.Name() == 'version':
-                icvn = None
-
-            if reader.NodeType() == NodeType['element_start'] and reader.Name() == 'map':
-                file_name = ''
-                while reader.MoveToNextAttribute():
-                    if reader.Name() == 'vriic':
-                        vriic = reader.Value()
-                    elif reader.Name() == 'fic':
-                        fic = reader.Value()
-                    elif reader.Name() == 'tspc':
-                        tspc = reader.Value()
-                    elif reader.Name() == 'abbr':
-                        abbr = reader.Value()
-
-            if reader.NodeType() == NodeType['element_end'] and reader.Name() == 'map':
-                self.maps.append((icvn, vriic, fic, tspc, file_name, abbr))
-                vriic = None
-                fic = None
-                tspc = None
-                abbr = None
-                file_name = None
-
-            if reader.NodeType() == NodeType['text']:
-                file_name = reader.Value()
-
+        t = xml.etree.ElementTree.parse(map_index_file)
+        for v in t.iter('version'):
+            icvn = v.get('icvn')
+            for m in v.iterfind('map'):
+                self.maps.append((
+                self.add_map(icvn, m.get('vriic'), m.get('fic'), m.get('tspc'), m.text, m.get('abbr'))
     
     def add_map(self, icvn, vriic, fic, tspc, map_file, abbr):
         self.maps.append((icvn, vriic, fic, tspc, map_file, abbr))
