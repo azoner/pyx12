@@ -36,11 +36,10 @@ class map_index(object):
         for v in t.iter('version'):
             icvn = v.get('icvn')
             for m in v.iterfind('map'):
-                self.maps.append((
                 self.add_map(icvn, m.get('vriic'), m.get('fic'), m.get('tspc'), m.text, m.get('abbr'))
     
     def add_map(self, icvn, vriic, fic, tspc, map_file, abbr):
-        self.maps.append((icvn, vriic, fic, tspc, map_file, abbr))
+        self.maps.append({'icvn':icvn, 'vriic':vriic, 'fic':fic, 'tspc':tspc, 'map_file':map_file, 'abbr':abbr})
     
     def get_filename(self, icvn, vriic, fic, tspc=None):
         """
@@ -49,9 +48,9 @@ class map_index(object):
         @rtype: string
         """
         for a in self.maps:
-            if a[0] == icvn and a[1] == vriic and a[2] == fic \
-                    and (tspc is None or a[3] == tspc):
-                return a[4]
+            if a['icvn'] == icvn and a['vriic'] == vriic and a['fic'] == fic \
+                    and (tspc is None or a['tspc'] == tspc):
+                return a['map_file']
         return None
 
     def get_abbr(self, icvn, vriic, fic, tspc=None):
@@ -61,12 +60,12 @@ class map_index(object):
         @rtype: string
         """
         for a in self.maps:
-            if a[0] == icvn and a[1] == vriic and a[2] == fic \
-                    and (tspc is None or a[3] == tspc):
-                return a[5]
+            if a['icvn'] == icvn and a['vriic'] == vriic and a['fic'] == fic \
+                    and (tspc is None or a['tspc'] == tspc):
+                return a['abbr']
         return None
 
     def print_all(self):
         for a in self.maps:
-            print(a[0], a[1], a[2], a[3], a[4], a[5])
+            print a
 
