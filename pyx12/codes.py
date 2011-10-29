@@ -25,10 +25,6 @@ from pyx12.errors import EngineError, XML_Reader_Error
 class CodesError(Exception):
     """Class for code modules errors."""
 
-NodeType = {'element_start': 1, 'element_end': 15, 'attrib': 2, 'text': 3, \
-    'CData': 4, 'entity_ref': 5, 'entity_decl':6, 'pi': 7, 'comment': 8, \
-    'doc': 9, 'dtd': 10, 'doc_frag': 11, 'notation': 12}
-
 
 class ExternalCodes(object):
     """
@@ -86,7 +82,7 @@ class ExternalCodes(object):
         else:
             if key in self.exclude_list:
                 return True
-            if key in self.codes:
+            if key not in self.codes:
                 raise EngineError, 'External Code "%s" is not defined' % (key)
             if code in self.codes[key]['codes']:
                 return True

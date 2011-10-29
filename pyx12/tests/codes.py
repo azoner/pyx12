@@ -11,6 +11,7 @@ from pyx12.tests.support import getMapPath
 
 class TestExternal(unittest.TestCase):
     """
+    Load Codes interface
     """
     def setUp(self):
         map_path = getMapPath()
