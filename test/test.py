@@ -9,6 +9,8 @@ def suite():
         'test_dataele', 
         'test_map_if', 
         'test_map_index', 
+        'test_map_path', 
+        'test_map_unique', 
         'test_map_walker', 
         'test_params',
         'test_path', 
