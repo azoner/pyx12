@@ -18,15 +18,12 @@ import os, os.path
 from xml.etree.ElementTree import ElementTree
 
 # Intrapackage imports
-from pyx12.errors import EngineError, XML_Reader_Error
+from pyx12.errors import EngineError
 
 class DataElementsError(Exception):
     """Class for data elements module errors."""
 
-NodeType = {'element_start': 1, 'element_end': 15, 'attrib': 2, 'text': 3, \
-    'CData': 4, 'entity_ref': 5, 'entity_decl':6, 'pi': 7, 'comment': 8, \
-    'doc': 9, 'dtd': 10, 'doc_frag': 11, 'notation': 12}
-
+    
 class DataElements(object):
     """
     Interface to normalized Data Elements
@@ -52,7 +49,7 @@ class DataElements(object):
             min_len = int(e.get('min_len'))
             max_len = int(e.get('max_len'))
             name = e.get('name')
-            self.dataele[ele_num] = (data_type, min_len, max_len, name)
+            self.dataele[ele_num] = {'data_type':data_type, 'min_len':min_len, 'max_len':max_len, 'name':name}
 
     def get_by_elem_num(self, ele_num):
         """
@@ -67,7 +64,8 @@ class DataElements(object):
         if not self.dataele.has_key(ele_num):
             raise EngineError, 'Data Element "%s" is not defined' \
                 % (ele_num)
-        return self.dataele[ele_num]
+        e = self.dataele[ele_num]
+        return (e['data_type'], e['min_len'], e['max_len'])
 
     def __repr__(self):
         for ele_num in self.dataele.keys():
