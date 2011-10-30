@@ -222,6 +222,7 @@ class map_if(x12_node):
             icvn = node.valid_codes[0]
             return icvn
         except:
+            raise
             return None
 
     def debug_print(self):
@@ -387,16 +388,16 @@ class loop_if(x12_node):
 
         for e in elem.findall('loop'):
             loop_node = loop_if(self.root, self, e)
-            if self.pos_map:
-                assert loop_node.pos >= max(self.pos_map.keys()), 'Bad ordinal %s' % (loop_node)
+            #if self.pos_map:
+            #    assert loop_node.pos >= max(self.pos_map.keys()), 'Bad ordinal %s' % (loop_node)
             try:
                 self.pos_map[loop_node.pos].append(loop_node)
             except KeyError:
                 self.pos_map[loop_node.pos] = [loop_node]
         for e in elem.findall('segment'):
             seg_node = segment_if(self.root, self, e)
-            if self.pos_map:
-                assert seg_node.pos >= max(self.pos_map.keys()), 'Bad ordinal %s' % (seg_node)
+            #if self.pos_map:
+            #    assert seg_node.pos >= max(self.pos_map.keys()), 'Bad ordinal %s' % (seg_node)
             try:
                 self.pos_map[seg_node.pos].append(seg_node)
             except KeyError:
@@ -752,6 +753,19 @@ class segment_if(x12_node):
         out += '\n'
         return out
 
+    def get_child_node_by_idx(self, idx):
+        """
+        @param idx: zero based
+        """
+        if idx >= len(self.children):
+            return None
+        else:
+            m = [c for c in self.children if c.seq==idx+1]
+            if len(m) == 1:
+                return m[0]
+            else:
+                raise EngineError, 'idx %i not found in %s' % (idx, self.id)
+            
     def get_max_repeat(self):
         if self.max_use is None or self.max_use == '>1':
             return MAXINT
@@ -1078,8 +1092,8 @@ class element_if(x12_node):
         
         v = elem.find('valid_codes')
         if v:
-            self.external_codes = elem.get('external')
-            for c in elem.findall('code'):
+            self.external_codes = v.get('external')
+            for c in v.findall('code'):
                 self.valid_codes.append(c.text)
 
     def debug_print(self):
@@ -1436,5 +1450,6 @@ def load_map_file(map_file, param, xslt_files = []):
         logger.error('Load of map file failed: %s' % (map_full))
         raise
     except:
+        raise
         raise EngineError, 'Load of map file failed: %s' % (map_full)
     return imap
