@@ -23,22 +23,22 @@ class TestExternal(unittest.TestCase):
             self.param.get('exclude_external_codes'))
 
     def test_valid_state1(self):
-        self.failUnless(self.ext_codes.isValid('states', 'MI', '20031001'))
+        self.assertTrue(self.ext_codes.isValid('states', 'MI', '20031001'))
 
     def test_valid_state2(self):
-        self.failUnless(self.ext_codes.isValid('states', 'NV'))
+        self.assertTrue(self.ext_codes.isValid('states', 'NV'))
 
     def test_invalid_state1(self):
-        self.failIf(self.ext_codes.isValid('states', 'AN', '20031001'))
+        self.assertFalse(self.ext_codes.isValid('states', 'AN', '20031001'))
 
     def test_exclude_state_code(self):
         self.param.set('exclude_external_codes', 'states')
         ext_codes = pyx12.codes.ExternalCodes(self.map_path, \
             self.param.get('exclude_external_codes'))
-        self.failUnless(ext_codes.isValid('states', 'ZZ'))
+        self.assertTrue(ext_codes.isValid('states', 'ZZ'))
 
     def test_noexclude_state_code(self):
         ext_codes = pyx12.codes.ExternalCodes(self.map_path, \
             self.param.get('exclude_external_codes'))
-        self.failIf(ext_codes.isValid('states', 'ZZ'))
+        self.assertFalse(ext_codes.isValid('states', 'ZZ'))
 

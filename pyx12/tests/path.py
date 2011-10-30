@@ -95,7 +95,7 @@ class RelativePath(unittest.TestCase):
             'BB/CC/03-2'
         ]
         for spath in bad_paths:
-            self.failUnlessRaises(pyx12.errors.X12PathError, pyx12.path.X12Path, spath)
+            self.assertTrueRaises(pyx12.errors.X12PathError, pyx12.path.X12Path, spath)
 
     def test_plain_loops(self):
         paths = [
@@ -145,7 +145,7 @@ class AbsolutePath(unittest.TestCase):
             '/BB/CC/03-2'
         ]
         for spath in bad_paths:
-            self.failUnlessRaises(pyx12.errors.X12PathError, pyx12.path.X12Path, spath)
+            self.assertTrueRaises(pyx12.errors.X12PathError, pyx12.path.X12Path, spath)
 
     def test_plain_loops(self):
         paths = [

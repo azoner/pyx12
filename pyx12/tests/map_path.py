@@ -16,4 +16,4 @@ class MapPath(unittest.TestCase):
         param.set('map_path', map_path)
         self.assertEqual(param.get('map_path'), map_path)
         file837 = join(map_path, '837.4010.X098.A1.xml')
-        self.failUnless(isfile(file837))
+        self.assertTrue(isfile(file837))

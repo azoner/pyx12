@@ -229,7 +229,7 @@ class TreeSelectFromSegment(unittest.TestCase):
         src = pyx12.x12context.X12ContextReader(param, errh, fd, xslt_files = [])
         for datatree in src.iter_segments('ST_LOOP'):
             if datatree.id == 'GS':
-                #self.failIfRaises(AttributeError, datatree.select, 'DETAIL/2000/2100')
+                #self.assertFalseRaises(AttributeError, datatree.select, 'DETAIL/2000/2100')
                 for claim in datatree.select('DETAIL/2000/2100'):
                     pass
 
@@ -258,7 +258,7 @@ class TreeAddSegment(unittest.TestCase):
 
     def test_add_new_not_exists(self):
         seg_data = pyx12.segment.Segment('ZZZ*00~', '~', '*', ':')
-        self.failUnlessRaises(pyx12.errors.X12PathError, self.loop2300.add_segment, seg_data)
+        self.assertTrueRaises(pyx12.errors.X12PathError, self.loop2300.add_segment, seg_data)
 
 
 class TreeAddSegmentString(unittest.TestCase):
@@ -282,7 +282,7 @@ class TreeAddSegmentString(unittest.TestCase):
         self.assertNotEqual(new_node, None)
 
     def test_add_new_not_exists(self):
-        self.failUnlessRaises(pyx12.errors.X12PathError, self.loop2300.add_segment, 'ZZZ*00~')
+        self.assertTrueRaises(pyx12.errors.X12PathError, self.loop2300.add_segment, 'ZZZ*00~')
 
 
 class SegmentExists(unittest.TestCase):
@@ -298,23 +298,23 @@ class SegmentExists(unittest.TestCase):
                 break
 
     def test_qual_segment(self):
-        self.failUnless(self.loop2300.exists('2310B'))
-        self.failUnless(self.loop2300.exists('2310B/NM1[82]'))
+        self.assertTrue(self.loop2300.exists('2310B'))
+        self.assertTrue(self.loop2300.exists('2310B/NM1[82]'))
         for loop2310b in self.loop2300.select('2310B'):
-            self.failUnless(loop2310b.exists('NM1'))
-            self.failUnless(loop2310b.exists('NM1[82]'))
+            self.assertTrue(loop2310b.exists('NM1'))
+            self.assertTrue(loop2310b.exists('NM1[82]'))
 
     def test_qual_segment_sub_loop(self):
-        self.failUnless(self.loop2300.exists('2400/2430'))
-        self.failUnless(self.loop2300.exists('2400/2430/DTP[573]'))
-        self.failIf(self.loop2300.exists('2400/2430/DTP[111]'))
-        self.failUnless(self.loop2300.exists('2400/2430/DTP[573]03'))
+        self.assertTrue(self.loop2300.exists('2400/2430'))
+        self.assertTrue(self.loop2300.exists('2400/2430/DTP[573]'))
+        self.assertFalse(self.loop2300.exists('2400/2430/DTP[111]'))
+        self.assertTrue(self.loop2300.exists('2400/2430/DTP[573]03'))
 
     def test_qual_segment_select_sub_loop(self):
         loop2430 = self.loop2300.first('2400/2430')
-        self.failUnless(loop2430.exists('DTP'))
-        self.failUnless(loop2430.exists('DTP[573]'))
-        self.failUnless(loop2430.exists('DTP[573]03'))
+        self.assertTrue(loop2430.exists('DTP'))
+        self.assertTrue(loop2430.exists('DTP[573]'))
+        self.assertTrue(loop2430.exists('DTP[573]03'))
 
     def test_qual_834_dtp(self):
         fd = open('files/834_lui_id.txt')
@@ -325,8 +325,8 @@ class SegmentExists(unittest.TestCase):
             if datatree.id == '2300':
                 loop2300 = datatree
                 break
-        self.failUnless(loop2300.exists('DTP[348]'))
-        self.failIf(loop2300.exists('DTP[349]'))
+        self.assertTrue(loop2300.exists('DTP[348]'))
+        self.assertFalse(loop2300.exists('DTP[349]'))
 
 class TreeAddLoop(X12fileTestCase):
 
@@ -344,19 +344,19 @@ class TreeAddLoop(X12fileTestCase):
         seg_data = pyx12.segment.Segment('NM1*82*2*Provider 1*****ZZ*9898798~', '~', '*', ':')
         new_node = self.loop2300.add_loop(seg_data)
         self.assertNotEqual(new_node, None)
-        self.failUnless(self.loop2300.exists('2310B'))
+        self.assertTrue(self.loop2300.exists('2310B'))
         for loop2310b in self.loop2300.select('2310B'):
-            self.failUnless(loop2310b.exists('NM1'))
-            self.failUnless(loop2310b.exists('NM1[82]'))
+            self.assertTrue(loop2310b.exists('NM1'))
+            self.assertTrue(loop2310b.exists('NM1[82]'))
 
     def test_add_new_string_seg(self):
         old_ct = self.loop2300.count('2400')
         new_node = self.loop2300.add_loop('LX*5~')
         self.assertNotEqual(new_node, None)
-        self.failUnless(self.loop2300.exists('2400'))
+        self.assertTrue(self.loop2300.exists('2400'))
         self.assertEqual(old_ct + 1, self.loop2300.count('2400'))
         for loop2400 in self.loop2300.select('2400'):
-            self.failUnless(loop2400.exists('LX'))
+            self.assertTrue(loop2400.exists('LX'))
 
 
 class TreeAddLoopDetail(X12fileTestCase):
@@ -377,11 +377,11 @@ class TreeAddLoopDetail(X12fileTestCase):
         for st_loop in src.iter_segments('ST_LOOP'):
             if st_loop.id == 'ST_LOOP' and st_loop.exists('DETAIL'):
                 detail = st_loop.first('DETAIL')
-                self.failUnless(detail.exists('2000'))
+                self.assertTrue(detail.exists('2000'))
                 detail.first('2000').delete()
-                self.failIf(detail.exists('2000'))
+                self.assertFalse(detail.exists('2000'))
                 detail.add_loop('INS&Y&18&30&XN&AE&RT+')
-                self.failUnless(detail.exists('2000'))
+                self.assertTrue(detail.exists('2000'))
 
 
 class TreeAddNode(unittest.TestCase):
@@ -431,7 +431,7 @@ class TreeAddNode(unittest.TestCase):
             n2400 = node
             break
         assert n2400 is not None, 'Loop 2400 was not matched'
-        self.failUnlessRaises(pyx12.errors.X12PathError, n2400.add_node, cn1)
+        self.assertTrueRaises(pyx12.errors.X12PathError, n2400.add_node, cn1)
 
     def _get_count(self, node, loop_id):
         ct = 0
@@ -500,12 +500,12 @@ class TreeDeleteSegment(unittest.TestCase):
     def test_delete(self):
         assert self.loop2300.get_value('CN101') == '05'
         seg_data = pyx12.segment.Segment('CN1*05~', '~', '*', ':')
-        self.failUnless(self.loop2300.delete_segment(seg_data))
+        self.assertTrue(self.loop2300.delete_segment(seg_data))
         self.assertEqual(self.loop2300.get_value('CN101'), None)
 
     def test_delete_fail(self):
         seg_data = pyx12.segment.Segment('HCP*00*7.11~', '~', '*', ':')
-        self.failIf(self.loop2300.delete_segment(seg_data))
+        self.assertFalse(self.loop2300.delete_segment(seg_data))
 
 
 class TreeDeleteLoop(unittest.TestCase):
@@ -522,11 +522,11 @@ class TreeDeleteLoop(unittest.TestCase):
 
     def test_delete(self):
         self.assertEqual(self.loop2300.get_value('2400/LX01'), '1')
-        self.failUnless(self.loop2300.delete_node('2400'))
+        self.assertTrue(self.loop2300.delete_node('2400'))
         self.assertEqual(self.loop2300.get_value('2400/LX01'), '2')
 
     def test_delete_fail(self):
-        self.failIf(self.loop2300.delete_node('2500'))
+        self.assertFalse(self.loop2300.delete_node('2500'))
 
 
 class NodeDeleteSelf(unittest.TestCase):

@@ -64,4 +64,4 @@ class ReadConfigFile(unittest.TestCase):
         self.assertEqual(self.param.get('skip_html'), False)
 
     def test_invalid_file(self):
-        self.failUnlessRaises(pyx12.errors.EngineError, pyx12.params.params, 'nonexistant_file.xml')
+        self.assertTrueRaises(pyx12.errors.EngineError, pyx12.params.params, 'nonexistant_file.xml')
