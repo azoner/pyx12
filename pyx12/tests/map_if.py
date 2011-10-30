@@ -238,8 +238,7 @@ class ElementIsValid(unittest.TestCase):
         self.assertEqual(node.id, 'CLM05-01')
         self.assertEqual(node.base_name, 'element')
         elem = pyx12.segment.Element('02')
-        result = node.is_valid(elem, self.errh)
-        self.assertFalse(result)
+        self.assertFalse(node.is_valid(elem, self.errh))
         self.assertEqual(self.errh.err_cde, '7')
 
     def test_valid_codes_bad_spaces(self):
@@ -264,7 +263,7 @@ class ElementIsValid(unittest.TestCase):
         self.assertEqual(node.id, 'CLM11-04')
         self.assertEqual(node.base_name, 'element')
         elem = pyx12.segment.Element('MI')
-        self.assertTrue(node.is_valid(elem, self.errh), 'Error Code: '%(self.errh.err_cde))
+        self.assertTrue(node.is_valid(elem, self.errh), 'Error Code: %s'%(self.errh.err_cde))
         self.assertEqual(self.errh.err_cde, None)
         
     def test_external_codes_bad1(self):
@@ -275,8 +274,7 @@ class ElementIsValid(unittest.TestCase):
         self.assertEqual(node.id, 'CLM11-04')
         self.assertEqual(node.base_name, 'element')
         elem = pyx12.segment.Element('NA')
-        result = node.is_valid(elem, self.errh)
-        self.assertFalse(result)
+        self.assertFalse(node.is_valid(elem, self.errh))
         self.assertEqual(self.errh.err_cde, '7')
 
     def test_bad_passed_comp_to_ele_node(self):
@@ -677,7 +675,7 @@ class NodeEquality(unittest.TestCase):
         self.assertNotEqual(node1, None)
         node2 = self.map.getnodebypath('/ISA_LOOP/GS_LOOP/ST_LOOP/DETAIL/2000A/2000B/2300/2400')
         self.assertNotEqual(node2, None)
-        self.assertFalse(node1 == node2)
+        sel.assertFalse(node1 == node2)
 
 
 class LoopIsMatch(unittest.TestCase):
