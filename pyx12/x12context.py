@@ -167,12 +167,16 @@ class X12DataNode(object):
     def _get_insert_idx(self, x12_node):
         """
         Find the index of self.children before which the x12_node belongs
+        Nodes will be inserted after the last node with matching ordinals
         """
         self._cleanup()
         map_idx = x12_node.pos
+        idx = None
         for i in range(len(self.children)):
-            if self.children[i].x12_map_node.pos > map_idx:
-                return i
+            if self.children[i].x12_map_node.pos <= map_idx:
+                idx = i
+        if idx is not None:
+            return idx
         return len(self.children)
 
     def _get_first_matching_segment(self, x12_path_str):
