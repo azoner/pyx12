@@ -675,7 +675,7 @@ class NodeEquality(unittest.TestCase):
         self.assertNotEqual(node1, None)
         node2 = self.map.getnodebypath('/ISA_LOOP/GS_LOOP/ST_LOOP/DETAIL/2000A/2000B/2300/2400')
         self.assertNotEqual(node2, None)
-        sel.assertFalse(node1 == node2)
+        self.assertFalse(node1 == node2)
 
 
 class LoopIsMatch(unittest.TestCase):
