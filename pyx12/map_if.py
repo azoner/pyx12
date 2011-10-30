@@ -565,7 +565,7 @@ class loop_if(x12_node):
         """
         @param idx: zero based
         """
-        raise EngineError, 'loop_if.get_child_node_by_idx is not a valid call'
+        raise EngineError, 'loop_if.get_child_node_by_idx is not a valid call for a loop_if'
             
     def get_seg_count(self):
         """
@@ -743,6 +743,14 @@ class segment_if(x12_node):
                 return m[0]
             else:
                 raise EngineError, 'idx %i not found in %s' % (idx, self.id)
+            
+    def get_child_node_by_ordinal(self, ord):
+        """
+        Get a child element or oomposite by the X12 ordinal
+        @param ord: one based element/composite index.  Corresponds to the map <seq> element
+        @type ord: int
+        """
+        return self.get_child_node_by_idx(ord-1)
             
     def get_max_repeat(self):
         if self.max_use is None or self.max_use == '>1':
