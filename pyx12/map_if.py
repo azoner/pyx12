@@ -1053,9 +1053,10 @@ class element_if(x12_node):
 
         self.res = elem.findtext('regex')
         try:
-            self.rec = re.compile(self.res, re.S)
+            if self.res is not None and self.res != '':
+                self.rec = re.compile(self.res, re.S)
         except:
-            logger.error('Element regex "%s" failed to compile' % (self.res))
+            raise EngineError, 'Element regex "%s" failed to compile' % (self.res)
         
         v = elem.find('valid_codes')
         if v:
