@@ -15,7 +15,7 @@ Interface to normalized Data Elements
 """
 
 import os, os.path
-from xml.etree.ElementTree import ElementTree
+import xml.etree.cElementTree as et
 
 # Intrapackage imports
 from pyx12.errors import EngineError
@@ -41,8 +41,7 @@ class DataElements(object):
         
         self.dataele = {} 
         code_file = os.path.join(base_path, 'dataele.xml')
-        tree = ElementTree()
-        t = tree.parse(code_file)
+        t = et.parse(code_file)
         for e in t.iter('data_ele'):
             ele_num = e.get('ele_num')
             data_type = e.get('data_type')

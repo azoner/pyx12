@@ -16,7 +16,7 @@ External Codes interface
 
 import os, os.path
 #import sys
-import xml.etree.ElementTree
+import xml.etree.cElementTree as et
 import datetime 
 
 # Intrapackage imports
@@ -53,7 +53,7 @@ class ExternalCodes(object):
         else:
             self.exclude_list = exclude.split(',')
 
-        t = xml.etree.ElementTree.parse(code_file)
+        t = et.parse(code_file)
         for c in t.iter('codeset'):
             codeset_id = c.findtext('id')
             name = c.findtext('name')

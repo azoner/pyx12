@@ -18,7 +18,7 @@ Locate the correct xml map file given:
     - Transaction Set Purpose Code (BHT02) (For 278 only)
 """
 
-import xml.etree.ElementTree
+import xml.etree.cElementTree as et
 import errors
 
 class map_index(object):
@@ -32,7 +32,7 @@ class map_index(object):
         """
         self.maps = []
 
-        t = xml.etree.ElementTree.parse(map_index_file)
+        t = et.parse(map_index_file)
         for v in t.iter('version'):
             icvn = v.get('icvn')
             for m in v.iterfind('map'):

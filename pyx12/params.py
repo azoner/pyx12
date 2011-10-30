@@ -20,7 +20,7 @@ Order of precedence:
 """
 from os.path import dirname, abspath, join, isdir, isfile, expanduser
 import sys
-import xml.etree.ElementTree
+import xml.etree.cElementTree as et
 import logging
 
 from pyx12.errors import EngineError
@@ -92,7 +92,7 @@ class ParamsBase(object):
             raise EngineError, 'Configuration file "%s" does not exist' % (filename)
         try:
             self.logger.debug('parsing config file %s' % (filename))
-            t = xml.etree.ElementTree.parse(filename)
+            t = et.parse(filename)
             for c in t.iter('param'):
                 option = c.get('name')
                 value = c.findtext('value')
