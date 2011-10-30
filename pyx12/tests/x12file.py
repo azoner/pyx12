@@ -95,12 +95,12 @@ class ISA_header(X12fileTestCase):
     def test_starts_with_ISA(self):
         str1 = ' ISA~'
         fd = self._makeFd(str1)
-        self.assertTrueRaises(pyx12.errors.X12Error, pyx12.x12file.X12Reader, fd)
+        self.assertRaises(pyx12.errors.X12Error, pyx12.x12file.X12Reader, fd)
 
     def test_at_least_ISA_len(self):
         str1 = 'ISA~'
         fd = self._makeFd(str1)
-        self.assertTrueRaises(pyx12.errors.X12Error, pyx12.x12file.X12Reader, fd)
+        self.assertRaises(pyx12.errors.X12Error, pyx12.x12file.X12Reader, fd)
 
     def test_repeat_ISA_loops(self):
         str1 = 'ISA*00*          *00*          *ZZ*ZZ000          *ZZ*ZZ001          *030828*1128*U*00401*000010121*0*T*:~\n'

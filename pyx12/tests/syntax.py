@@ -14,7 +14,7 @@ class IsValidSyntax(unittest.TestCase):
         seg = pyx12.segment.Segment('*'.join(seg1), '~', '*', ':')
         syntax = ['R', 3]
         (result, err_str) = pyx12.map_if.is_syntax_valid(seg, syntax)
-        #self.assertTrueRaises(EngineError, map_if.is_syntax_valid, seg, syntax)
+        #self.assertRaises(EngineError, map_if.is_syntax_valid, seg, syntax)
         self.assertFalse(result, err_str)
 
 

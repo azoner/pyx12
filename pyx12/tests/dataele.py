@@ -16,12 +16,12 @@ class BadDataElem(unittest.TestCase):
         self.de = pyx12.dataele.DataElements(map_path)
 
     def testNone(self):
-        self.assertTrueRaises(EngineError, self.de.get_by_elem_num, None)
+        self.assertRaises(EngineError, self.de.get_by_elem_num, None)
 
     def testInvalid(self):
-        self.assertTrueRaises(EngineError, self.de.get_by_elem_num, '28902')
-        self.assertTrueRaises(EngineError, self.de.get_by_elem_num, '0')
-        self.assertTrueRaises(EngineError, self.de.get_by_elem_num, '99991')
+        self.assertRaises(EngineError, self.de.get_by_elem_num, '28902')
+        self.assertRaises(EngineError, self.de.get_by_elem_num, '0')
+        self.assertRaises(EngineError, self.de.get_by_elem_num, '99991')
 
 class LookupDataElem(unittest.TestCase):
 

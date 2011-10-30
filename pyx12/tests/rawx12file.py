@@ -123,18 +123,18 @@ class X12InterchangeControlVersion(X12fileTestCase):
 
     def test_unknown(self):
         fd = self._makeFd('ISA&00&          &00&          &ZZ&ZZ000          &ZZ&ZZ001          &030828&1128&^&00101&000010121&0&T&!+\n')
-        self.assertTrueRaises(pyx12.errors.X12Error, pyx12.rawx12file.RawX12File, fd)
+        self.assertRaises(pyx12.errors.X12Error, pyx12.rawx12file.RawX12File, fd)
 
 
 class RawISA_header(X12fileTestCase):
 
     def test_starts_with_ISA(self):
         fd = self._makeFd(' ISA~')
-        self.assertTrueRaises(pyx12.errors.X12Error, pyx12.rawx12file.RawX12File, fd)
+        self.assertRaises(pyx12.errors.X12Error, pyx12.rawx12file.RawX12File, fd)
 
     def test_at_least_ISA_len(self):
         fd = self._makeFd('ISA~')
-        self.assertTrueRaises(pyx12.errors.X12Error, pyx12.rawx12file.RawX12File, fd)
+        self.assertRaises(pyx12.errors.X12Error, pyx12.rawx12file.RawX12File, fd)
 
 
 #class Formatting(unittest.TestCase):

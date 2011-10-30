@@ -258,7 +258,7 @@ class TreeAddSegment(unittest.TestCase):
 
     def test_add_new_not_exists(self):
         seg_data = pyx12.segment.Segment('ZZZ*00~', '~', '*', ':')
-        self.assertTrueRaises(pyx12.errors.X12PathError, self.loop2300.add_segment, seg_data)
+        self.assertRaises(pyx12.errors.X12PathError, self.loop2300.add_segment, seg_data)
 
 
 class TreeAddSegmentString(unittest.TestCase):
@@ -282,7 +282,7 @@ class TreeAddSegmentString(unittest.TestCase):
         self.assertNotEqual(new_node, None)
 
     def test_add_new_not_exists(self):
-        self.assertTrueRaises(pyx12.errors.X12PathError, self.loop2300.add_segment, 'ZZZ*00~')
+        self.assertRaises(pyx12.errors.X12PathError, self.loop2300.add_segment, 'ZZZ*00~')
 
 
 class SegmentExists(unittest.TestCase):
@@ -431,7 +431,7 @@ class TreeAddNode(unittest.TestCase):
             n2400 = node
             break
         assert n2400 is not None, 'Loop 2400 was not matched'
-        self.assertTrueRaises(pyx12.errors.X12PathError, n2400.add_node, cn1)
+        self.assertRaises(pyx12.errors.X12PathError, n2400.add_node, cn1)
 
     def _get_count(self, node, loop_id):
         ct = 0

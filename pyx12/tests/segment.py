@@ -120,7 +120,7 @@ class Composite(unittest.TestCase):
         self.assertEqual(self.seg.get_value('TST01-1'), 'AA')
         self.assertEqual(self.seg.get_value('TST01-3'), 'Y')
         self.assertEqual(self.seg.get_value('TST01-4'), None)
-        #self.assertTrueRaises(IndexError, lambda x: self.seg.get('TST01-%i' % (x)), 4)
+        #self.assertRaises(IndexError, lambda x: self.seg.get('TST01-%i' % (x)), 4)
 
 
 class Simple(unittest.TestCase):
@@ -142,7 +142,7 @@ class Simple(unittest.TestCase):
         self.assertEqual(self.seg.get_value('TST03'), 'Y')
         self.assertEqual(self.seg.get_value('TST05'), 'ZZ')
         self.assertEqual(self.seg.get_value('TST06'), None)
-        #self.assertTrueRaises(IndexError, lambda x: self.seg[0][x].get_value(), 1)
+        #self.assertRaises(IndexError, lambda x: self.seg[0][x].get_value(), 1)
 
     def test_simple_spaces(self):
         seg_str = 'TST*AA*          *BB~'
@@ -180,7 +180,7 @@ class RefDes(unittest.TestCase):
         self.assertEqual(self.seg.get_value('01'), 'AA')
 
     def test_fail_seg_id(self):
-        self.assertTrueRaises(EngineError, self.seg.get_value, 'XXX01')
+        self.assertRaises(EngineError, self.seg.get_value, 'XXX01')
 
     def test_simple2(self):
         self.assertEqual(self.seg.get_value('TST02'), '1')
