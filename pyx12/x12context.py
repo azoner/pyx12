@@ -176,7 +176,7 @@ class X12DataNode(object):
             if self.children[i].x12_map_node.pos <= map_idx:
                 idx = i
         if idx is not None:
-            return idx
+            return idx+1
         return len(self.children)
 
     def _get_first_matching_segment(self, x12_path_str):
