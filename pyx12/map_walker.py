@@ -131,8 +131,6 @@ class walk_tree(object):
         while True:
             # Iterate through nodes with position >= current position
             for ord1 in [a for a in sorted(node.pos_map) if a>=node_pos]:
-                #logger.debug('id=%s child.index=%i node_pos=%i' % \
-                #    (child.id, child.index, node_pos))
                 for child in node.pos_map[ord1]:
                     if child.is_segment():
                         #logger.debug('id=%s cur_count=%i max_repeat=%i' % (child.id, child.cur_count, child.get_max_repeat()))
