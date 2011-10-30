@@ -13,32 +13,20 @@
 """
 Interface to a X12N IG Map
 """
-import cPickle
-import libxml2
-import libxslt
 import logging
 import os.path
-import pdb
 import string
 import sys
 import re
-from types import *
-from stat import ST_MTIME
-from stat import ST_SIZE
+import xml.etree.cElementTree
 
 # Intrapackage imports
-from errors import IsValidError, XML_Reader_Error, EngineError
+from errors import IsValidError, EngineError
 import codes
 import dataele
 import path
-#import segment
 import validation
 from syntax import is_syntax_valid
-
-#Global Variables
-NodeType = {'element_start': 1, 'element_end': 15, 'attrib': 2, 'text': 3, 
-    'CData': 4, 'entity_ref': 5, 'entity_decl':6, 'pi': 7, 'comment': 8, 
-    'doc': 9, 'dtd': 10, 'doc_frag': 11, 'notation': 12}
 
 MAXINT = 2147483647
 
@@ -53,13 +41,8 @@ class x12_node(object):
         self.id = None
         self.name = None
         self.parent = None
-#        self.prev_node = None
-#        self.next_node = None
         self.children = []
         self.path = ''
-
-#    def __del__(self):
-#        pass
 
     def __eq__(self, other):
         if isinstance(other, x12_node):
@@ -141,19 +124,6 @@ class x12_node(object):
 
     x12path = property(_get_x12_path, None, None)
 
-#    def walk_tree(self, seg):
-#        pass
-        # handle loop events, pop, push
-        # only concerned with loop and segment nodes
-
-        # repeat of seg
-        # next seg in loop
-        # repeat of loop
-        # child loop
-        # sibling loop
-        # parent loop
-        # - first id element ==
-
     def is_first_seg_in_loop(self):
         """
         @rtype: boolean
@@ -191,13 +161,6 @@ class x12_node(object):
         return False
 
 
-#    def debug_print(self):
-#       sys.stdout.write('%s%s %s %s %s\n' % (str(' '*self.base_level), \
-#           self.base_name, self.base_level, self.id, self.name))
-#       for node in self.children:
-#           node.debug_print()
-
-
 ############################################################
 # Map file interface
 ############################################################
@@ -205,9 +168,9 @@ class map_if(x12_node):
     """
     Map file interface
     """
-    def __init__(self, reader, param):
+    def __init__(self, eroot, param):
         """
-        @param reader: libxml2 TextReader
+        @param eroot: ElementTree root
         @param param: map of parameters
         """
         #codes = codes.ExternalCodes()
@@ -215,118 +178,37 @@ class map_if(x12_node):
         x12_node.__init__(self)
         self.children = None
         self.pos_map = {}
-        index = 0
         cur_name = ''
         self.cur_path = '/transaction'
         self.path = '/'
-        self.cur_level = -1 
-        self.base_level = 0
         self.base_name = ''
-        self.index = 0
-        self.src_version = '$Revision$'
-
         self.id = None
         self.name = None
 
         self.cur_iter_node = self
 
-        self.reader = reader
         self.param = param
         #global codes
         self.ext_codes = codes.ExternalCodes(param.get('map_path'), \
             param.get('exclude_external_codes'))
         self.data_elements = dataele.DataElements(param.get('map_path'))
-        #try:
-        #    map_path = param.get('map_path')
-        #    self.reader = libxml2.newTextReaderFilename(os.path.join(map_path, \
-        #        map_file))
-        #except:
-        #    raise GSError, 'Map file not found: %s' % (map_file)
-        try:    
-            ret = self.reader.Read()
-            if ret == -1:
-                raise XML_Reader_Error, 'Read Error'
-            elif ret == 0:
-                raise XML_Reader_Error, 'End of Map File'
-            while ret == 1:
-                #print 'map_if', self.reader.NodeType(), self.reader.Depth(), self.reader.Name()
-                tmpNodeType = self.reader.NodeType()
-                if tmpNodeType == NodeType['element_start']:
-                #       if self.reader.Name() in ('map', 'transaction', 'loop', 'segment', 'element'):
-                #    print 't'*self.reader.Depth(), self.reader.Depth(), \
-                #       self.base_level, self.reader.NodeType(), self.reader.Name()
-                #sys.stdout.write('%s%i %s %s %s\n') % ('\t'*self.reader.Depth(), \
-                #    self.reader.Depth(),  self.base_level, self.reader.Name())
-                    cur_name = self.reader.Name()
-                    if cur_name == 'transaction':
-                        self.base_level = self.reader.Depth()
-                        self.base_name = 'transaction'
-                        while reader.MoveToNextAttribute():
-                            if reader.Name() == 'xid':
-                                self.id = reader.Value()
-                    elif cur_name == 'segment':
-                        seg_node = segment_if(self, self, index)
-                        try:
-                            self.pos_map[seg_node.pos].append(seg_node)
-                        except KeyError:
-                            self.pos_map[seg_node.pos] = [seg_node]
-                        #self.children.append(segment_if(self, self, index))
-                        #if len(self.children) > 1:
-                        #    self.children[-1].prev_node = self.children[-2]
-                        #    self.children[-2].next_node = self.children[-1]
-                        index += 1
-                    elif cur_name == 'loop':
-                        loop_node = loop_if(self, self, index)
-                        try:
-                            self.pos_map[loop_node.pos].append(loop_node)
-                        except KeyError:
-                            self.pos_map[loop_node.pos] = [loop_node]
-                        #self.children.append(loop_if(self, self, index))
-                        #if len(self.children) > 1:
-                        #    self.children[-1].prev_node = self.children[-2]
-                        #    self.children[-2].next_node = self.children[-1]
-                        index += 1
-                    
-                    #if self.cur_level < self.reader.Depth():
-                        #    self.cur_path = os.path.join(self.cur_path, cur_name)
-                    #elif self.cur_level > self.reader.Depth():
-                    #    self.cur_path = os.path.dirname(self.cur_path)
-                    self.cur_level = self.reader.Depth()
-                elif tmpNodeType == NodeType['element_end']:
-                    #print '--', self.reader.Name(), self.base_level, \
-                    #   self.self.reader.Depth(), self.reader.Depth() <= self.base_level 
-                    #print self.reader.Depth(),  self.base_level, self.reader.NodeType(), self.reader.Name()
-                    if self.reader.Depth() <= self.base_level:
-                        ret = self.reader.Read()
-                        if ret == -1:
-                            raise XML_Reader_Error, 'Read Error'
-                        elif ret == 0:
-                            raise XML_Reader_Error, 'End of Map File'
-                        break 
-                    #if cur_name == 'transaction':
-                    #    pass
-                    cur_name = ''
-                
-                elif tmpNodeType == NodeType['text'] and self.base_level + 2 == self.reader.Depth():
-                    #print cur_name, self.reader.Value()
-                    #if cur_name == 'id' and self.base_name == 'transaction':
-                    #    self.id = self.reader.Value()
-                    if cur_name == 'name' and self.base_name == 'transaction':
-                        self.name = self.reader.Value()
 
-                ret = self.reader.Read()
-                if ret == -1:
-                    raise XML_Reader_Error, 'Read Error'
-                elif ret == 0:
-                    raise XML_Reader_Error, 'End of Map File'
-        except XML_Reader_Error:
-            pass
-
-        del self.reader
+        self.id = eroot.get('xid')
+        self.name = eroot.findtext('name')
+        self.base_name = 'transaction'
+        for e in eroot.findall('loop'):
+            loop_node = loop_if(self, self, e)
+            try:
+                self.pos_map[loop_node.pos].append(loop_node)
+            except KeyError:
+                self.pos_map[loop_node.pos] = [loop_node]
+        for e in eroot.findall('segment'):
+            seg_node = segment_if(self, self, e)
+            try:
+                self.pos_map[seg_node.pos].append(seg_node)
+            except KeyError:
+                self.pos_map[seg_node.pos] = [seg_node]
         self.icvn = self._get_icvn()
-
-    #def __del__(self):
-    #    print 'Map root de-cronstructor'
                 
     def _get_icvn(self):
         """
@@ -337,9 +219,6 @@ class map_if(x12_node):
         path = '/ISA_LOOP/ISA'
         try:
             node = self.getnodebypath(path).children[11]
-            #print node
-            #print node.valid_codes
-            #if node is None:
             icvn = node.valid_codes[0]
             return icvn
         except:
@@ -384,11 +263,6 @@ class map_if(x12_node):
         """
         @rtype: string
         """
-        #out = '%s%s %s %s %s\n' % (str(' '*self.base_level), \
-        #   self.base_name, self.base_level, self.id, self.name)
-        #out = '%s%s' % (str(' '*self.base_level), self.base_name)
-        #out += '%sid %s\n' % (str(' '*(self.base_level+1)), self.id)
-        #out += '%sname %s\n' % (str(' '*(self.base_level+1)), self.name)
         return '%s\n' % (self.id)
 
     def _path_parent(self):
@@ -475,29 +349,6 @@ class map_if(x12_node):
                     for c in child.loop_segment_iterator():
                         yield c
 
-#    def next(self):
-#        #if self.cur_iter_node.id == 'GS06':
-#        if self.cur_iter_node.id == 'IEA':
-#            raise StopIteration
-#        #first, get first child
-#        if self.cur_iter_node.get_child_count() > 0:
-#            self.cur_iter_node = self.cur_iter_node.children[0]
-#            return self.cur_iter_node
-#        # Get original index of starting node
-#        #node_idx = self.cur_iter_node.index 
-#        cur_node = self.cur_iter_node
-#        #node = self._pop_to_parent(cur_node) 
-#        while 1:
-#            #second, get next sibling
-#            if cur_node is None:
-#                raise StopIteration
-#            if cur_node.next_node != None:
-#                self.cur_iter_node = cur_node.next_node
-#                return self.cur_iter_node
-#            #last, get siblings of parent
-#            cur_node = cur_node.parent
-#        return None
-
 
 ############################################################
 # Loop Interface
@@ -506,15 +357,12 @@ class loop_if(x12_node):
     """
     Loop Interface
     """
-    def __init__(self, root, parent, my_index): 
+    def __init__(self, root, parent, elem): 
         """
-        @requires: Must be entered with a libxml2 loop node current
         """
         x12_node.__init__(self)
         self.root = root
         self.parent = parent
-        self.index = my_index
-        #self.children = None
         self.pos_map = {}
         self.path = ''
         self.base_name = 'loop'
@@ -528,115 +376,38 @@ class loop_if(x12_node):
         self.pos = None
         self.repeat = None
         
-        reader = self.root.reader
+        self.id = elem.get('xid')
+        self.path = self.id
+        self.type = elem.get('type')
 
-        index = 0
-        self.base_level = reader.Depth()
+        self.name = elem.findtext('name')
+        self.usage= elem.findtext('usage')
+        self.pos = int(elem.findtext('pos'))
+        self.repeat = elem.findtext('repeat')
 
-        self.cur_level = reader.Depth()
-
-        while reader.MoveToNextAttribute():
-            if reader.Name() == 'xid':
-                self.id = reader.Value()
-                self.path = self.id
-            elif reader.Name() == 'type':
-                self.type = reader.Value()
-        
-        ret = 1 
-        while ret == 1:
-            #print '--- loop while'
-            #print reader.NodeType(), reader.Name()
-            #print 'loop', reader.NodeType(), reader.Depth(), reader.Name()
-            #processNode(reader)
-            tmpNodeType = reader.NodeType()
-            if tmpNodeType == NodeType['element_start']:
-                #if reader.Name() in ('map', 'transaction', 'loop', \
-                #   'segment', 'element'):
-                #    print 'l'*reader.Depth(), reader.Depth(),  \
-                #       self.base_level, reader.NodeType(), reader.Name()
-                cur_name = reader.Name()
-                if cur_name == 'loop' and self.base_level < reader.Depth():
-                    loop_node = loop_if(self.root, self, index)
-                    if self.pos_map:
-                        assert loop_node.pos >= max(self.pos_map.keys()), 'Bad ordinal %s' % (loop_node)
-                    try:
-                        self.pos_map[loop_node.pos].append(loop_node)
-                    except KeyError:
-                        self.pos_map[loop_node.pos] = [loop_node]
-                    #self.children.append(loop_if(self.root, self, index))
-                    #if len(self.children) > 1:
-                    #    self.children[-1].prev_node = self.children[-2]
-                    #    self.children[-2].next_node = self.children[-1]
-                    index += 1
-                elif cur_name == 'segment':
-                    seg_node = segment_if(self.root, self, index)
-                    if self.pos_map:
-                        assert seg_node.pos >= max(self.pos_map.keys()), 'Bad ordinal %s' % (seg_node)
-                    try:
-                        self.pos_map[seg_node.pos].append(seg_node)
-                    except KeyError:
-                        self.pos_map[seg_node.pos] = [seg_node]
-                    #self.children.append(segment_if(self.root, self, index))
-                    #if len(self.children) > 1:
-                    #    self.children[-1].prev_node = self.children[-2]
-                    #    self.children[-2].next_node = self.children[-1]
-                    index += 1
-                elif cur_name == 'element':
-                    raise EngineError, 'This should not happen'
-                    #self.children.append(element_if(self.root, self))
-                    #if len(self.children) > 1:
-                    #    self.children[-1].prev_node = self.children[-2]
-                    #    self.children[-2].next_node = self.children[-1]
-                    
-                #if self.cur_level < reader.Depth():
-                #    self.cur_path = os.path.join(self.cur_path, cur_name)
-                #elif self.cur_level > reader.Depth():
-                #    self.cur_path = os.path.dirname(self.cur_path)
-                self.cur_level = reader.Depth()
-            elif tmpNodeType == NodeType['element_end']:
-                #print '--', reader.Name(), self.base_level, reader.Depth(), reader.Depth() <= self.base_level 
-                if reader.Depth() <= self.base_level:
-                    ret = reader.Read()
-                    if ret == -1:
-                        raise XML_Reader_Error, 'Read Error'
-                    elif ret == 0:
-                        raise XML_Reader_Error, 'End of Map File'
-                    break
-                #if reader.Name() == 'transaction':
-                #    return
-                #    pass
-                cur_name = ''
-                
-            elif tmpNodeType == NodeType['text'] and self.base_level + 2 == \
-                    reader.Depth():
-                #print cur_name, reader.Value()
-                #if cur_name == 'id' and self.base_name == 'loop':
-                #    self.id = reader.Value()
-                #    self.path = self.id
-                if cur_name == 'name' and self.base_name == 'loop':
-                    self.name = reader.Value()
-                elif cur_name == 'usage' and self.base_name == 'loop':
-                    self.usage = reader.Value()
-                elif cur_name == 'pos' and self.base_name == 'loop':
-                    self.pos = int(reader.Value())
-                    #self.seq = self.pos  # XXX
-                elif cur_name == 'repeat' and self.base_name == 'loop':
-                    self.repeat = reader.Value()
-
-            ret = reader.Read()
-            if ret == -1:
-                raise XML_Reader_Error, 'Read Error'
-            elif ret == 0:
-                raise XML_Reader_Error, 'End of Map File'
+        for e in elem.findall('loop'):
+            loop_node = loop_if(self.root, self, e)
+            if self.pos_map:
+                assert loop_node.pos >= max(self.pos_map.keys()), 'Bad ordinal %s' % (loop_node)
+            try:
+                self.pos_map[loop_node.pos].append(loop_node)
+            except KeyError:
+                self.pos_map[loop_node.pos] = [loop_node]
+        for e in elem.findall('segment'):
+            seg_node = segment_if(self.root, self, e)
+            if self.pos_map:
+                assert seg_node.pos >= max(self.pos_map.keys()), 'Bad ordinal %s' % (seg_node)
+            try:
+                self.pos_map[seg_node.pos].append(seg_node)
+            except KeyError:
+                self.pos_map[seg_node.pos] = [seg_node]
 
         # For the segments with duplicate ordinals, adjust the path to be unique
         for ord1 in sorted(self.pos_map):
             if len(self.pos_map[ord1]) > 1:
                 for seg_node in [n for n in self.pos_map[ord1] if n.is_segment()]:
-                    #pdb.set_trace()
                     id_elem = seg_node.guess_unique_key_id_element()
                     if id_elem is not None:
-                        #print id_elem
                         seg_node.path = seg_node.path + '[' + id_elem.valid_codes[0] + ']'
         
     def debug_print(self):
@@ -655,12 +426,9 @@ class loop_if(x12_node):
         """
         @rtype: string
         """
-        #out = '%s%s %s %s %s\n' % (str(' '*self.base_level), self.base_name, \
-        #    self.id, self.name, self.base_level)
         out = ''
         if self.id: 
-            out += '%sLOOP %s' % (str(' '*(self.base_level+1)), self.id)
-            #out += '%sid: %s  ' % (str(' '*(self.base_level+1)), self.id)
+            out += 'LOOP %s' % (self.id)
         if self.name: 
             out += '  "%s"' % (self.name)
         if self.usage: 
@@ -922,22 +690,17 @@ class segment_if(x12_node):
     """
     Segment Interface
     """
-    def __init__(self, root, parent, my_index):
+    def __init__(self, root, parent, elem):
         """
-        @requires: Must be entered with a libxml2 segment node current
         @param parent: parent node 
         """
 
-        #global reader
-        reader = root.reader
         x12_node.__init__(self)
         self.root = root
         self.parent = parent
-        self.index = my_index
         self.children = []
         self.path = ''
         self.base_name = 'segment'
-        self.base_level = reader.Depth()
         self.cur_count = 0
 
         self.id = None
@@ -948,80 +711,27 @@ class segment_if(x12_node):
         self.max_use = None
         self.syntax = []
  
-        self.cur_level = reader.Depth()
+
+        self.id = elem.get('xid')
+        self.path = self.id
+        self.type = elem.get('type')
+
+        self.name = elem.findtext('name')
+        self.end_tag = elem.findtext('end_tag')
+        self.usage = elem.findtext('usage')
+        self.pos = int(elem.findtext('pos'))
+        self.max_use = elem.findtext('max_use')
         
-        while reader.MoveToNextAttribute():
-            if reader.Name() == 'xid':
-                self.id = reader.Value()
-                self.path = self.id
+        for s in elem.findall('syntax'):
+            syn_list = self._split_syntax(s.text)
+            if syn_list is not None:
+                self.syntax.append(syn_list)
+        
+        for e in elem.findall('element'):
+            self.children.append(element_if(self.root, self, e))
 
-        ret = 1 
-        while ret == 1:
-            #print '--- segment while'
-            #print 'seg', reader.NodeType(), reader.Depth(), reader.Name()
-            tmpNodeType = reader.NodeType()
-            if tmpNodeType == NodeType['element_start']:
-                #if reader.Name() in ('map', 'transaction', 'loop', 'segment', 'element'):
-                #    print 's'*reader.Depth(), reader.Depth(),  self.base_level, reader.NodeType(), reader.Name()
-                cur_name = reader.Name()
-                if cur_name == 'segment':
-                    self.base_level = reader.Depth()
-                    self.base_name = 'segment'
-                elif cur_name == 'element':
-                    self.children.append(element_if(self.root, self))
-                    #if len(self.children) > 1:
-                    #    self.children[-1].prev_node = self.children[-2]
-                    #    self.children[-2].next_node = self.children[-1]
-                elif cur_name == 'composite':
-                    self.children.append(composite_if(self.root, self))
-                    #if len(self.children) > 1:
-                    #    self.children[-1].prev_node = self.children[-2]
-                    #    self.children[-2].next_node = self.children[-1]
-                    
-                #if self.cur_level < reader.Depth():
-                #    self.cur_path = os.path.join(self.cur_path, cur_name)
-                #elif self.cur_level > reader.Depth():
-                #    self.cur_path = os.path.dirname(self.cur_path)
-                self.cur_level = reader.Depth()
-            elif tmpNodeType == NodeType['element_end']:
-                #print '--', reader.Name(), self.base_level, reader.Depth(), reader.Depth() <= self.base_level 
-                if reader.Depth() <= self.base_level:
-                    ret = reader.Read()
-                    if ret == -1:
-                        raise XML_Reader_Error, 'Read Error'
-                    elif ret == 0:
-                        raise XML_Reader_Error, 'End of Map File'
-                    break 
-                #if reader.Name() == 'transaction':
-                #    return
-                #    pass
-                cur_name = ''
-                
-            elif tmpNodeType == NodeType['text'] and self.base_level + 2 == reader.Depth():
-                #print cur_name, reader.Value()
-                #if cur_name == 'id' and self.base_name == 'segment':
-                #    self.id = reader.Value()
-                #    self.path = self.id
-                if cur_name == 'end_tag' and self.base_name == 'segment':
-                    self.end_tag = reader.Value()
-                elif cur_name == 'name' and self.base_name == 'segment':
-                    self.name = reader.Value()
-                elif cur_name == 'usage' and self.base_name == 'segment':
-                    self.usage = reader.Value()
-                elif cur_name == 'pos' and self.base_name == 'segment':
-                    self.pos = int(reader.Value())
-                elif cur_name == 'max_use' and self.base_name == 'segment':
-                    self.max_use = reader.Value()
-                elif cur_name == 'syntax' and self.base_name == 'segment':
-                    syn_list = self._split_syntax(reader.Value())
-                    if syn_list is not None:
-                        self.syntax.append(syn_list)
-
-            ret = reader.Read()
-            if ret == -1:
-                raise XML_Reader_Error, 'Read Error'
-            elif ret == 0:
-                raise XML_Reader_Error, 'End of Map File'
+        for e in elem.findall('composite'):
+            self.children.append(composite_if(self.root, self, e))
         
     def debug_print(self):
         sys.stdout.write(self.__repr__())
@@ -1032,14 +742,7 @@ class segment_if(x12_node):
         """
         @rtype: string
         """
-        t1 = str(' '*self.base_level)
-        #t2 = str(' '*(self.base_level+1))
-        #self.base_name
-        out = '%s%s "%s"' % (t1, self.id, self.name)
-        #if self.id: 
-        #    out += '%sid %s\n' % (t2, self.id)
-        #if self.name: 
-        #    out += '%sname %s\n' % (t2, self.name)
+        out = '%s "%s"' % (self.id, self.name)
         if self.usage: 
             out += '  usage: %s' % (self.usage)
         if self.pos: 
@@ -1333,22 +1036,17 @@ class element_if(x12_node):
     """
     Element Interface
     """
-    #data_elements = dataele.DataElements(map_path)
 
-    def __init__(self, root, parent):
+    def __init__(self, root, parent, elem):
         """
-        @requires: Must be entered with a libxml2 element node current
         @param parent: parent node 
         """
-
-        reader = root.reader
         x12_node.__init__(self)
         self.children = []
         self.root = root
         self.parent = parent
         self.path = ''
         self.base_name = 'element'
-        self.base_level = reader.Depth()
 
         self.id = None
         self.name = None
@@ -1362,62 +1060,28 @@ class element_if(x12_node):
         self.res = None
         self.rec = None
 
-        self.cur_level = reader.Depth()
-        
-        while reader.MoveToNextAttribute():
-            if reader.Name() == 'xid':
-                self.id = reader.Value()
-                self.refdes = self.id
+        self.id = elem.get('xid')
+        self.refdes= self.id
 
-        ret = 1 
-        while ret == 1:
-            tmpNodeType = reader.NodeType()
-            if tmpNodeType == NodeType['element_start']:
-                cur_name = reader.Name()
-                if cur_name == 'element':
-                    self.base_level = reader.Depth()
-                    self.base_name = 'element'
-                elif cur_name == 'valid_codes':
-                    while reader.MoveToNextAttribute():
-                        if reader.Name() == 'external':
-                            self.external_codes = reader.Value()
-                self.cur_level = reader.Depth()
-            elif tmpNodeType == NodeType['element_end']:
-                if reader.Depth() <= self.base_level:
-                    ret = reader.Read()
-                    if ret == -1:
-                        raise XML_Reader_Error, 'Read Error'
-                    elif ret == 0:
-                        raise XML_Reader_Error, 'End of Map File'
-                    break 
-                cur_name = ''
-                
-            elif tmpNodeType == NodeType['text'] and self.base_level + 2 <= reader.Depth():
-                if cur_name == 'name':
-                    self.name = reader.Value()
-                elif cur_name == 'data_ele':
-                    self.data_ele= reader.Value()
-                elif cur_name == 'usage':
-                    self.usage = reader.Value()
-                elif cur_name == 'seq':
-                    self.seq = int(reader.Value())
-                    self.path = reader.Value()
-                elif cur_name == 'regex':
-                    self.res = reader.Value()
-                    try:
-                        self.rec = re.compile(self.res, re.S)
-                    except:
-                        pass
-                        #logger.error('Element regex "%s" failed to compile' % (reader.Value()))
-                elif cur_name == 'code':
-                    self.valid_codes.append(reader.Value())
+        self.name = elem.findtext('name')
+        self.data_ele = elem.findtext('data_ele')
+        self.usage = elem.findtext('usage')
+        self.seq = int(elem.findtext('seq'))
+        self.path = elem.findtext('seq')
 
-            ret = reader.Read()
-            if ret == -1:
-                raise XML_Reader_Error, 'Read Error'
-            elif ret == 0:
-                raise XML_Reader_Error, 'End of Map File'
+        self.res = elem.findtext('regex')
+        try:
+            self.rec = re.compile(self.res, re.S)
+        except:
+            pass
+            #logger.error('Element regex "%s" failed to compile' % (self.res))
         
+        v = elem.find('valid_codes')
+        if v:
+            self.external_codes = elem.get('external')
+            for c in elem.findall('code'):
+                self.valid_codes.append(c.text)
+
     def debug_print(self):
         sys.stdout.write(self.__repr__())
         for node in self.children:
@@ -1428,8 +1092,7 @@ class element_if(x12_node):
         @rtype: string
         """
         data_ele = self.root.data_elements.get_by_elem_num(self.data_ele)
-# {'data_type':data_type, 'min_len':min_len, 'max_len':max_len, 'name':name}
-        out = '%s%s "%s"' % (str(' '*self.base_level), self.refdes, self.name)
+        out = '%s "%s"' % (self.refdes, self.name)
         if self.data_ele: 
             out += '  data_ele: %s' % (self.data_ele)
         if self.usage: 
@@ -1638,14 +1301,11 @@ class composite_if(x12_node):
     """
     Composite Node Interface
     """
-    def __init__(self, root, parent):
+    def __init__(self, root, parent, elem):
         """
         Get the values for this composite
         @param parent: parent node 
         """
-
-        #global reader
-        reader = root.reader
         x12_node.__init__(self)
 
         self.children = []
@@ -1653,75 +1313,22 @@ class composite_if(x12_node):
         self.parent = parent
         self.path = ''
         self.base_name = 'composite'
-        self.base_level = reader.Depth()
-        #self.check_dte = '20030930'
-
-        #self.id = None
         self.name = None
         self.data_ele = None
         self.usage = None
         self.seq = None
         self.refdes = None
 
-        self.cur_level = reader.Depth()
-        #self.logger = logging.getLogger('pyx12')
-        
-        ret = 1 
-        while ret == 1:
-            #print '--- segment while'
-            #print 'seg', reader.NodeType(), reader.Depth(), reader.Name()
-            tmpNodeType = reader.NodeType()
-            if tmpNodeType == NodeType['element_start']:
-                #if reader.Name() in ('map', 'transaction', 'loop', 'segment', 'element'):
-                #    print 's'*reader.Depth(), reader.Depth(),  self.base_level, reader.NodeType(), reader.Name()
-                cur_name = reader.Name()
-                if cur_name == 'composite':
-                    self.base_level = reader.Depth()
-                    self.base_name = 'composite'
-                elif cur_name == 'element':
-                    self.children.append(element_if(self.root, self))
-                    #if len(self.children) > 1:
-                    #    self.children[-1].prev_node = self.children[-2]
-                    #    self.children[-2].next_node = self.children[-1]
-                    
-                #if self.cur_level < reader.Depth():
-                #    self.cur_path = os.path.join(self.cur_path, cur_name)
-                #elif self.cur_level > reader.Depth():
-                #    self.cur_path = os.path.dirname(self.cur_path)
-                self.cur_level = reader.Depth()
-            elif tmpNodeType == NodeType['element_end']:
-                #print '--', reader.Name(), self.base_level, reader.Depth(), reader.Depth() <= self.base_level 
-                if reader.Depth() <= self.base_level:
-                    ret = reader.Read()
-                    if ret == -1:
-                        raise XML_Reader_Error, 'Read Error'
-                    elif ret == 0:
-                        raise XML_Reader_Error, 'End of Map File'
-                    break 
-                #if reader.Name() == 'transaction':
-                #    return
-                #    pass
-                cur_name = ''
-                
-            elif tmpNodeType == NodeType['text'] and self.base_level + 2 == reader.Depth():
-                #print cur_name, reader.Value()
-                if cur_name == 'name':
-                    self.name = reader.Value()
-                elif cur_name == 'data_ele':
-                    self.data_ele = reader.Value()
-                elif cur_name == 'usage':
-                    self.usage = reader.Value()
-                elif cur_name == 'seq':
-                    self.seq = int(reader.Value())
-                elif cur_name == 'refdes':
-                    self.refdes = reader.Value()
 
-            ret = reader.Read()
-            if ret == -1:
-                raise XML_Reader_Error, 'Read Error'
-            elif ret == 0:
-                raise XML_Reader_Error, 'End of Map File'
-                
+        self.name = elem.findtext('name')
+        self.data_ele = elem.findtext('data_ele')
+        self.usage = elem.findtext('usage')
+        self.seq = int(elem.findtext('seq'))
+        self.refdes = elem.findtext('refdes')
+        
+        for e in elem.findall('element'):
+            self.children.append(element_if(self.root, self, e))
+
     def _error(self, errh, err_str, err_cde, elem_val):
         """
         Forward the error to an error_handler
@@ -1738,8 +1345,7 @@ class composite_if(x12_node):
         """
         @rtype: string
         """
-        out = '%s%s "%s"' % (str(' '*self.base_level), \
-            self.id, self.name)
+        out = '%s "%s"' % (self.id, self.name)
         if self.usage: 
             out += '  usage %s' % (self.usage)
         if self.seq: 
@@ -1809,97 +1415,26 @@ class composite_if(x12_node):
         return True
 
 
-class Pickle_Errors(Exception):
-    """Class for map pickling errors."""
-
-class Create_Map_Errors(Exception):
-    """Class for map creation errors."""
-
-def apply_xslt_to_map_win():
-    #from os import environ
-    import win32com.client
-    xsluri = 'xsl/plainpage.xsl'
-    xmluri = 'website.xml'
-
-    xsl = win32com.client.Dispatch("Msxml2.FreeThreadedDOMDocument.4.0")
-    xml = win32com.client.Dispatch("Msxml2.DOMDocument.4.0")
-    xsl.load(xsluri)
-    xml.load(xmluri)
-
-    xslt = win32com.client.Dispatch("Msxml2.XSLTemplate.4.0")
-    xslt.stylesheet = xsl
-    proc = xslt.createProcessor()
-    proc.input = xml
-
-    #params = {"url":environ['QUERY_STRING'].split("=")[1]}
-    #for i, v in enumerate(environ['QUERY_STRING'].split("/")[1:]):
-    #    params["selected_section%s" % (i + 1)] = "/" + v
-
-    #for param, value in params.items():
-    #        proc.addParameter(param, value)
-    proc.transform()
-    return proc.output
-
-def cb(ctx, str):
-    sys.stdout.write('%s%s' % (ctx, str))
-
 def load_map_file(map_file, param, xslt_files = []):
     """
-    If any XSL transforms are given, apply them and create map_if
-    from transformed map.
-    Else, load the map by pickle if available
+    Create the map object from a file
     @param map_file: absolute path for file
     @type map_file: string
-    @param xslt_files: list of absolute paths of xsl files
+    @param xslt_files: deprecated: list of absolute paths of xsl files
     @type xslt_files: list[string]
     @rtype: pyx12.map_if
     """
-    logger = logging.getLogger('pyx12.pickler')
+    logger = logging.getLogger('pyx12')
     map_path = param.get('map_path')
     map_full = os.path.join(map_path, map_file)
-    schema_file = os.path.join(map_path, 'map.xsd')
     imap = None
-    if xslt_files:
-        try:
-            doc = libxml2.parseFile(map_full)
-            for xslt_file in xslt_files:
-                logger.debug('Apply transform to map %s' % (xslt_file))
-                styledoc = libxml2.parseFile(xslt_file)
-                style = libxslt.parseStylesheetDoc(styledoc)
-                doc = style.applyStylesheet(doc, None)
-                style.freeStylesheet()
-            xsdp = libxml2.schemaNewParserCtxt(schema_file)
-            xsds = xsdp.schemaParse()
-            ctx = xsds.schemaNewValidCtxt()
-            libxml2.registerErrorHandler(cb, ctx)
-            if doc.schemaValidateDoc(ctx) != 0:
-                raise Create_Map_Errors, 'Transformed map does not validate agains the schema %s' % (schema_file)
-            reader = doc.readerWalker()
-            imap = map_if(reader, param)
-            doc.freeDoc()
-        except:
-            raise Create_Map_Errors, 'Error creating map: %s' % (map_file)
-    else:
-        pickle_path = param.get('pickle_path')
-        pickle_file = '%s.%s' % (os.path.splitext(os.path.join(pickle_path, \
-            map_file))[0], 'pkl')
-        try:
-            if os.stat(map_full)[ST_MTIME] < os.stat(pickle_file)[ST_MTIME]:
-                imap = cPickle.load(open(pickle_file, 'b'))
-                if imap.cur_path != '/transaction' or len(imap.children) == 0 \
-                    or imap.src_version != '$Revision$':
-                    raise Pickle_Errors, "reload map"
-                logger.debug('Map %s loaded from pickle %s' % (map_full, pickle_file))
-            else:
-                raise Pickle_Errors, "reload map"
-        except:
-            try:
-                logger.debug('Create map from %s' % (map_full))
-                reader = libxml2.newTextReaderFilename(map_full)
-                imap = map_if(reader, param)
-            except AssertionError:
-                logger.error('Load of map file failed: %s' % (map_full))
-                raise
-            except:
-                raise EngineError, 'Load of map file failed: %s' % (map_full)
+    try:
+        logger.debug('Create map from %s' % (map_full))
+        etree = xml.etree.cElementTree.parse(map_full)
+        imap = map_if(etree.getroot(), param)
+    except AssertionError:
+        logger.error('Load of map file failed: %s' % (map_full))
+        raise
+    except:
+        raise EngineError, 'Load of map file failed: %s' % (map_full)
     return imap
