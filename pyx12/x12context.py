@@ -169,9 +169,9 @@ class X12DataNode(object):
         Find the index of self.children before which the x12_node belongs
         """
         self._cleanup()
-        map_idx = x12_node.index
+        map_idx = x12_node.pos
         for i in range(len(self.children)):
-            if self.children[i].x12_map_node.index > map_idx:
+            if self.children[i].x12_map_node.pos > map_idx:
                 return i
         return len(self.children)
 
@@ -363,16 +363,6 @@ class X12LoopDataNode(X12DataNode):
             raise errors.X12PathError, 'The segment %s is not a member of loop %s' % \
                 (seg_data.__repr__(), self.id)
         new_data_node = X12SegmentDataNode(x12_seg_node, seg_data, self)
-        #idx = x12_seg_node.index
-        # Iterate over data nodes
-        #self._cleanup()
-        #child_idx = len(self.children)
-        #for i in range(len(self.children)):
-        #    if self.children[i].x12_map_node.index > idx:
-        #        child_idx = i
-        #        break
-        #self.children.insert(self._get_insert_idx(x12_seg_node), new_data_node)
-        #assert(child_idx==self._get_insert_idx(x12_seg_node))
         child_idx = self._get_insert_idx(x12_seg_node)
         self.children.insert(child_idx, new_data_node)
         return new_data_node
