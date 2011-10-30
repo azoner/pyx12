@@ -1427,7 +1427,8 @@ class element_if(x12_node):
         """
         @rtype: string
         """
-        (data_type, min_len, max_len) = self.root.data_elements.get_by_elem_num(self.data_ele)
+        data_ele = self.root.data_elements.get_by_elem_num(self.data_ele)
+# {'data_type':data_type, 'min_len':min_len, 'max_len':max_len, 'name':name}
         out = '%s%s "%s"' % (str(' '*self.base_level), self.refdes, self.name)
         if self.data_ele: 
             out += '  data_ele: %s' % (self.data_ele)
@@ -1435,7 +1436,7 @@ class element_if(x12_node):
             out += '  usage: %s' % (self.usage)
         if self.seq: 
             out += '  seq: %i' % (self.seq)
-        out += '  %s(%i, %i)' % (data_type, min_len, max_len)
+        out += '  %s(%i, %i)' % (data_ele['data_type'], data_ele['min_len'], data_ele['max_len'])
         if self.external_codes: 
             out += '   external codes: %s' % (self.external_codes)
         out += '\n'
@@ -1514,7 +1515,10 @@ class element_if(x12_node):
             return False
 
         elem_val = elem.get_value()
-        (data_type, min_len, max_len) = self.root.data_elements.get_by_elem_num(self.data_ele)
+        data_ele = self.root.data_elements.get_by_elem_num(self.data_ele)
+        data_type = data_ele['data_type']
+        min_len = data_ele['min_len']
+        max_len = data_ele['max_len']
         valid = True
 # Validate based on data_elem_num
 # Then, validate on more specific criteria
@@ -1612,8 +1616,8 @@ class element_if(x12_node):
     def get_data_type(self):
         """
         """
-        (data_type, min_len, max_len) = self.root.data_elements.get_by_elem_num(self.data_ele)
-        return data_type
+        data_ele = self.root.data_elements.get_by_elem_num(self.data_ele)
+        return data_ele['data_type']
 
     def get_seg_count(self):
         """

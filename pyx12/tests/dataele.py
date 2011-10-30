@@ -33,16 +33,17 @@ class LookupDataElem(unittest.TestCase):
         self.de = pyx12.dataele.DataElements(map_path)
     
     def testOK_AN(self):
-        self.assertEqual(self.de.get_by_elem_num('1204')[:3], ('AN', 1, 50))
+        self.assertEqual(self.de.get_by_elem_num('1204'), {'max_len': 50, 'name': 'Plan Coverage Description', 'data_type': 'AN', 'min_len': 1})
 
     def testOK_ID(self):
-        self.assertEqual(self.de.get_by_elem_num('116')[:3], ('ID', 3, 15))
+        self.assertEqual(self.de.get_by_elem_num('116'), {'max_len': 15, 'name': 'Postal Code', 'data_type': 'ID', 'min_len': 3})
 
     def testOK_N(self):
-        self.assertEqual(self.de.get_by_elem_num('554')[:3], ('N0', 1, 6))
+        self.assertEqual(self.de.get_by_elem_num('554'), {'max_len': 6, 'name': 'Assigned Number', 'data_type': 'N0', 'min_len': 1})
 
     def testOK_DT(self):
-        self.assertEqual(self.de.get_by_elem_num('373')[:3], ('DT', 8, 8))
+        self.assertEqual(self.de.get_by_elem_num('373'), 
+                {'max_len': 8, 'name': 'Date', 'data_type': 'DT', 'min_len': 8})
 
     def testOK_TM(self):
-        self.assertEqual(self.de.get_by_elem_num('337')[:3], ('TM', 4, 8))
+        self.assertEqual(self.de.get_by_elem_num('337'), {'max_len': 8, 'name': 'Time', 'data_type': 'TM', 'min_len': 4})

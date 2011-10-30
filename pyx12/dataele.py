@@ -1,5 +1,5 @@
 ######################################################################
-# Copyright (c) 2001-2007 Kalamazoo Community Mental Health Services,
+# Copyright (c) 2001-2011 Kalamazoo Community Mental Health Services,
 #   John Holland <jholland@kazoocmh.org> <john@zoner.org>
 # All rights reserved.
 #
@@ -36,7 +36,7 @@ class DataElements(object):
         @type base_path: string
 
         @note: self.dataele - map to the data element
-        {ele_num: (data_type, min_len, max_len, name)}
+        {ele_num: {data_type, min_len, max_len, name}}
         """
         
         self.dataele = {} 
@@ -56,16 +56,14 @@ class DataElements(object):
         Get the element characteristics for the indexed element code
         @param ele_num: the data element code
         @type ele_num: string
-        @return: (data_type, min_len, max_len)
-        @rtype: (string, int, int)
+        @return: {data_type, min_len, max_len, name}
+        @rtype: dict
         """
         if not ele_num:
             raise EngineError, 'Bad data element %s' % (ele_num)
         if not self.dataele.has_key(ele_num):
-            raise EngineError, 'Data Element "%s" is not defined' \
-                % (ele_num)
-        e = self.dataele[ele_num]
-        return (e['data_type'], e['min_len'], e['max_len'])
+            raise EngineError, 'Data Element "%s" is not defined' % (ele_num)
+        return self.dataele[ele_num]
 
     def __repr__(self):
         for ele_num in self.dataele.keys():
