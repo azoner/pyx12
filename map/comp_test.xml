@@ -9,7 +9,7 @@
       <data_ele>C111</data_ele>
       <name>Place of Service Code</name>
       <usage>S</usage>
-      <seq>05</seq>
+      <seq>01</seq>
       <element>
         <name>Facility Type Code</name>
         <data_ele>98</data_ele>
