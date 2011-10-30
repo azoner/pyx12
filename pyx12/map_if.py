@@ -18,7 +18,7 @@ import os.path
 import string
 import sys
 import re
-import xml.etree.cElementTree
+import xml.etree.cElementTree as et
 
 # Intrapackage imports
 from errors import IsValidError, EngineError
@@ -178,15 +178,9 @@ class map_if(x12_node):
         x12_node.__init__(self)
         self.children = None
         self.pos_map = {}
-        cur_name = ''
         self.cur_path = '/transaction'
         self.path = '/'
-        self.base_name = ''
-        self.id = None
-        self.name = None
-
-        self.cur_iter_node = self
-
+        #self.cur_iter_node = self
         self.param = param
         #global codes
         self.ext_codes = codes.ExternalCodes(param.get('map_path'), \
@@ -369,13 +363,6 @@ class loop_if(x12_node):
         self.base_name = 'loop'
         self.type = 'implicit'
         self.cur_count = 0
-        
-        self.id = None
-        self.name = None
-        self.usage = None
-        #self.seq = None
-        self.pos = None
-        self.repeat = None
         
         self.id = elem.get('xid')
         self.path = self.id
@@ -703,15 +690,7 @@ class segment_if(x12_node):
         self.path = ''
         self.base_name = 'segment'
         self.cur_count = 0
-
-        self.id = None
-        self.end_tag = None
-        self.name = None
-        self.usage = None
-        self.pos = None
-        self.max_use = None
         self.syntax = []
- 
 
         self.id = elem.get('xid')
         self.path = self.id
@@ -1059,24 +1038,13 @@ class element_if(x12_node):
         self.children = []
         self.root = root
         self.parent = parent
-        self.path = ''
         self.base_name = 'element'
-
-        self.id = None
-        self.name = None
-        self.usage = None
-        self.data_ele = None
-        self.seq = None
-        self.refdes = None
-
         self.valid_codes = []
         self.external_codes = None
-        self.res = None
         self.rec = None
 
         self.id = elem.get('xid')
         self.refdes= self.id
-
         self.name = elem.findtext('name')
         self.data_ele = elem.findtext('data_ele')
         self.usage = elem.findtext('usage')
@@ -1087,8 +1055,7 @@ class element_if(x12_node):
         try:
             self.rec = re.compile(self.res, re.S)
         except:
-            pass
-            #logger.error('Element regex "%s" failed to compile' % (self.res))
+            logger.error('Element regex "%s" failed to compile' % (self.res))
         
         v = elem.find('valid_codes')
         if v:
@@ -1327,12 +1294,6 @@ class composite_if(x12_node):
         self.parent = parent
         self.path = ''
         self.base_name = 'composite'
-        self.name = None
-        self.data_ele = None
-        self.usage = None
-        self.seq = None
-        self.refdes = None
-
 
         self.name = elem.findtext('name')
         self.data_ele = elem.findtext('data_ele')
@@ -1444,7 +1405,7 @@ def load_map_file(map_file, param, xslt_files = []):
     imap = None
     try:
         logger.debug('Create map from %s' % (map_full))
-        etree = xml.etree.cElementTree.parse(map_full)
+        etree = et.parse(map_full)
         imap = map_if(etree.getroot(), param)
     except AssertionError:
         logger.error('Load of map file failed: %s' % (map_full))
