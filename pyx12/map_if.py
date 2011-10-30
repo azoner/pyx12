@@ -216,7 +216,6 @@ class map_if(x12_node):
             icvn = node.valid_codes[0]
             return icvn
         except:
-            raise
             return None
 
     def debug_print(self):
