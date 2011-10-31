@@ -354,14 +354,8 @@ class Segment(object):
             err_str = 'Invalid Reference Designator: %s, seg_id: %s' \
                 % (ref_des, self.seg_id)
             raise EngineError, err_str
-        if xp.ele_idx is not None:
-            ele_idx = xp.ele_idx - 1
-        else:
-            ele_idx = None
-        if xp.subele_idx is not None:
-            comp_idx = xp.subele_idx - 1
-        else:
-            comp_idx = None
+        ele_idx = xp.ele_idx - 1 if xp.ele_idx is not None else None
+        comp_idx = xp.subele_idx - 1 if xp.subele_idx is not None else None
         return (ele_idx, comp_idx)
 
     # def _parse_refdes(self, ref_des):

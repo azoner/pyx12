@@ -33,7 +33,7 @@ def main():
                     sys.stdout.write('\n')
                 else:
                     state = ''
-        except:
+        except Exception:
             sys.stderr.write('File %s failed.' % (src_file))
             raise
 

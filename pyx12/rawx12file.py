@@ -51,10 +51,7 @@ class RawX12File(object):
         self.seg_term = line[-1]
         self.ele_term = line[3]
         self.subele_term = line[-2]
-        if self.icvn == '00501':
-            self.repetition_term = line[82]
-        else:
-            self.repetition_term = None
+        self.repetition_term = line[82] if self.icvn == '00501' else None
         self.buffer = line
         self.buffer += self.fd.read(DEFAULT_BUFSIZE)
         
@@ -75,7 +72,7 @@ class RawX12File(object):
                 line = line.replace('\n','').replace('\r','')
                 if line != '':
                     break
-        except:
+        except Exception:
             raise StopIteration
 
         return line

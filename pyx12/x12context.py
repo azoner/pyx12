@@ -752,10 +752,7 @@ class X12ContextReader(object):
         self.src = x12file.X12Reader(src_file_obj) 
 
         #Get Map of Control Segments
-        if self.src.icvn == '00501':
-            self.map_file = 'x12.control.00501.xml'
-        else:
-            self.map_file = 'x12.control.00401.xml'
+        self.map_file = 'x12.control.00501.xml' if self.src.icvn == '00501' else 'x12.control.00401.xml'
         self.control_map = map_if.load_map_file(os.path.join(map_path, self.map_file), param)
         self.map_index_if = map_index.map_index(os.path.join(map_path, 'maps.xml'))
         self.x12_map_node = self.control_map.getnodebypath('/ISA_LOOP/ISA')
@@ -956,13 +953,13 @@ class X12ContextReader(object):
                 cur_loop_node = cur_loop_node.parent._add_loop_node(segment_x12_node.parent)
         try:
             new_node = X12SegmentDataNode(self.x12_map_node, seg_data)
-        except:
+        except Exception:
             raise errors.EngineError, 'X12SegmentDataNode failed: x12_path=%s, seg_date=%s ' % \
                 (self.x12_map_node.get_path(), seg_data)
         try:
             new_node.parent = cur_loop_node
             cur_loop_node.children.append(new_node)
-        except:
+        except Exception:
             err_str = 'X12SegmentDataNode child append failed:'
             err_str += ' seg_x12_path=%s' % (segment_x12_node.get_path())
             err_str += ', orig_datanode=%s' % (orig_data_node.cur_path)

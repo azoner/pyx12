@@ -215,7 +215,7 @@ class map_if(x12_node):
             node = self.getnodebypath(path).children[11]
             icvn = node.valid_codes[0]
             return icvn
-        except:
+        except Exception:
             return None
 
     def debug_print(self):
@@ -771,10 +771,9 @@ class segment_if(x12_node):
         """
         parent_path = self.parent.get_path()
         if parent_path == '/':
-            ret = '/' + self.path
+            return '/' + self.path
         else:
-            ret = parent_path + '/' + self.path
-        return ret
+            return parent_path + '/' + self.path
 
     def is_first_seg_in_loop(self):
         """
@@ -1062,7 +1061,7 @@ class element_if(x12_node):
         try:
             if self.res is not None and self.res != '':
                 self.rec = re.compile(self.res, re.S)
-        except:
+        except Exception:
             raise EngineError, 'Element regex "%s" failed to compile' % (self.res)
         
         v = elem.find('valid_codes')
@@ -1375,9 +1374,6 @@ class composite_if(x12_node):
             errh.ele_error('5', err_str, None, self.refdes)
             return False
 
-        #try:
-        #    a = len(comp_data)
-        #except:
         if len(comp_data) > self.get_child_count():
             err_str = 'Too many sub-elements in composite "%s" (%s)' % (self.name, self.refdes)
             errh.ele_error('3', err_str, None, self.refdes)
@@ -1418,7 +1414,7 @@ def load_map_file(map_file, param, xslt_files = []):
     except AssertionError:
         logger.error('Load of map file failed: %s' % (map_full))
         raise
-    except:
+    except Exception:
         raise
         raise EngineError, 'Load of map file failed: %s' % (map_full)
     return imap

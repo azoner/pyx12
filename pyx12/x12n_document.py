@@ -90,10 +90,7 @@ def x12n_document(param, src_file, fd_997, fd_html,
         return False
 
     #Get Map of Control Segments
-    if src.icvn == '00501':
-        map_file = 'x12.control.00501.xml'
-    else:
-        map_file = 'x12.control.00401.xml'
+    map_file = 'x12.control.00501.xml' if src.icvn == '00501' else 'x12.control.00401.xml'
     logger.debug('X12 control file: %s' % (map_file))
     control_map = map_if.load_map_file(os.path.join(map_path, map_file), param)
     map_index_if = map_index.map_index(os.path.join(map_path, 'maps.xml'))
@@ -191,10 +188,7 @@ def x12n_document(param, src_file, fd_997, fd_html,
                             raise pyx12.errors.EngineError, "Map not found.  icvn=%s, fic=%s, vriic=%s, tspc=%s" % \
                                 (icvn, fic, vriic, tspc)
                         cur_map = map_if.load_map_file(map_file, param, xslt_files)
-                        if cur_map.id == '837':
-                            src.check_837_lx = True
-                        else:
-                            src.check_837_lx = False
+                        src.check_837_lx = True if cur_map.id == '837' else False
                         logger.debug('Map file: %s' % (map_file))
                         apply_loop_count(node, cur_map)
                         node = cur_map.getnodebypath('/ISA_LOOP/GS_LOOP/ST_LOOP/HEADER/BHT')
@@ -270,6 +264,6 @@ def x12n_document(param, src_file, fd_997, fd_html,
             return False
         else:
             return True
-    except:
+    except Exception:
         print(errh)
         return False

@@ -98,7 +98,7 @@ class ParamsBase(object):
                 value = c.findtext('value')
                 valtype = c.findtext('type')
                 self._set_option(option, value, valtype)
-        except:
+        except Exception:
             self.logger.error('Read of configuration file "%s" failed' % \
                 (filename))
             raise
@@ -128,7 +128,7 @@ class ParamsBase(object):
                     self.params[option] = value
                     #self.logger.debug('Params: option "%s": "%s"' % \
                     #    (option, self.params[option]))
-            except:
+            except Exception:
                 self.params[option] = value
                 #self.logger.debug('Params: option "%s": "%s"' % \
                 #   (option, self.params[option]))

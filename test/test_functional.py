@@ -127,9 +127,7 @@ def test_997(src_filename, param):
         sys.stderr.write('Error: Could not open files (%s)\n' % (src_filename))
         return False
         #sys.exit(2)
-    except KeyboardInterrupt:
-        print "\n[interrupt]"
-    except:
+    except Exception:
         #logger.info('Base xml not found: %s' % (os.path.basename(base_xml)))
         return False
     return True
@@ -245,12 +243,11 @@ def main():
                     test_997(src_filename, param)
                     if sys.platform != 'win32':
                         test_xml(src_filename, param)
-                except KeyboardInterrupt:
-                    print "\n[interrupt]"
+                except Exception:
+                    raise
                 except IOError:
                     sys.stderr.write('Unknown Error: Could not test file (%s)\n' % (name))
                     continue
-
     return True
 
 if __name__ == '__main__':

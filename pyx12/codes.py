@@ -48,10 +48,7 @@ class ExternalCodes(object):
         codeset_id = None
         base_name = None
         
-        if exclude is None:
-            self.exclude_list = []
-        else:
-            self.exclude_list = exclude.split(',')
+        self.exclude_list = exclude.split(',') if exclude is not None else []
 
         t = et.parse(code_file)
         for c in t.iter('codeset'):

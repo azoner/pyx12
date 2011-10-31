@@ -144,10 +144,7 @@ def is_valid_date(data_type, val):
         if len(val) in (6, 8, 12): # valid lengths for date
             try:
                 if 6 == len(val):  # if 2 digit year, add CC
-                    if val[0:2] < 50:
-                        val = '20' + val
-                    else:
-                        val = '19' + val
+                    val = '20' + val if val[0:2] < 50 else '19' + val
                 year = int(val[0:4])  # get year
                 month = int(val[4:6])  
                 day = int(val[6:8])  

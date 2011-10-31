@@ -340,7 +340,7 @@ class X12Reader(X12Base):
         try:
             if self.need_to_close:
                 self.fd_in.close()
-        except:
+        except Exception:
             pass
 
     def _parse_segment(self, seg_data):
@@ -416,7 +416,7 @@ class X12Reader(X12Base):
                     self.subele_term)
                 self._parse_segment(seg_data)
                 return seg_data
-        except:
+        except Exception:
             raise StopIteration
 
     def get_errors(self):
