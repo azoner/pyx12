@@ -1066,7 +1066,7 @@ class element_if(x12_node):
             raise EngineError, 'Element regex "%s" failed to compile' % (self.res)
         
         v = elem.find('valid_codes')
-        if v:
+        if v is not None:
             self.external_codes = v.get('external')
             for c in v.findall('code'):
                 self.valid_codes.append(c.text)
