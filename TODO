@@ -1,3 +1,9 @@
+5010
+Repeating elements, composites
+Syntax on composites
+TA3
+999
+
 Python 3
     Overriding __eq__ blocks inheritance of __hash__
     raise Exception*(*args)
@@ -12,17 +18,11 @@ Context
     handle error returns - throw events?
     node.select('//path'): get all matching sub-loops
 
-Apply transforms to x12 control also
-
-Data Element XSLT ??
-
 x12file:
     check invalid seg term (004)
     check invalid ele term (026)
 
 XML schema for idtag and idtagqual forms
-
-Add tests for x12 > xml > x12 for all xml mappings
 
 xmlx12.py - handle idtag and idtagqual types
 
@@ -40,4 +40,3 @@ Error Handling
 Unit Testing
     x12file - HL counting?
     HL reset bug
-    http://xmlunit.sourceforge.net/
