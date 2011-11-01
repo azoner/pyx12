@@ -98,6 +98,7 @@
   <codeset>
     <id>country</id>
     <name>Country Codes</name>
+    <source>ISO 3166-1 alpha-2</source>
     <data_ele>26</data_ele>
     <version>
       <id>20000101</id>

@@ -25,9 +25,10 @@
 
   <xsd:complexType name="CodeSetType">
     <xsd:sequence>
-      <xsd:element name="id" type="xsd:token"/>
-      <xsd:element name="name" type="xsd:token"/>
-      <xsd:element name="data_ele" type="xsd:token" minOccurs="0"/>
+      <xsd:element name="id" type="xsd:token" maxOccurs="1" />
+      <xsd:element name="name" type="xsd:token" maxOccurs="1" />
+      <xsd:element name="source" type="xsd:token" minOccurs="0" maxOccurs="1" />
+      <xsd:element name="data_ele" type="xsd:token" minOccurs="0" maxOccurs="1" />
       <xsd:element name="version" type="VersionType" maxOccurs="unbounded"/>
     </xsd:sequence>
   </xsd:complexType>
