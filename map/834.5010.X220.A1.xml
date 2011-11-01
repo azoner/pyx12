@@ -2625,7 +2625,7 @@
                 <element xid="PER02">
                   <data_ele>93</data_ele>
                   <name>Name</name>
-                  <usage>N</usage>
+                  <usage>S</usage>
                   <seq>02</seq>
                 </element>
                 <element xid="PER03">
@@ -3471,7 +3471,7 @@
               <name>Disability Information</name>
               <usage>S</usage>
               <pos>2000</pos>
-              <repeat>1</repeat>
+              <repeat>&gt;1</repeat>
               <segment xid="DSB">
                 <name>Disability Information</name>
                 <usage>R</usage>
@@ -4133,6 +4133,8 @@
                     <usage>R</usage>
                     <seq>03</seq>
                     <valid_codes>
+                      <code>AP</code>
+                      <code>BN</code>
                       <code>CP</code>
                       <code>EM</code>
                       <code>EX</code>
