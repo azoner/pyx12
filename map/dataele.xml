@@ -172,6 +172,7 @@
   <data_ele ele_num="1596" data_type="ID" min_len="2" max_len="2" name="Military Service Rank Code"/>
   <data_ele ele_num="166" data_type="AN" min_len="1" max_len="55" name="Address Information"/>
   <data_ele ele_num="1685" data_type="ID" min_len="1" max_len="2" name="Tax Treatment Code"/>
+  <data_ele ele_num="1686" data_type="N0" min_len="1" max_len="4" name="Repeating Data Element Position"/>
   <data_ele ele_num="1687" data_type="R" min_len="1" max_len="15" name="Earnings Rate of Pay"/>
   <data_ele ele_num="1701" data_type="ID" min_len="1" max_len="1" name="Eligibility Reason Code"/>
   <data_ele ele_num="1705" data_type="AN" min_len="1" max_len="35" name="Implementation Convention Reference"/>
@@ -250,6 +251,9 @@
   <data_ele ele_num="610" data_type="N2" min_len="1" max_len="15" name="Amount"/>
   <data_ele ele_num="615" data_type="ID" min_len="1" max_len="2" name="Time Period Qualifier"/>
   <data_ele ele_num="616" data_type="N0" min_len="1" max_len="3" name="Number of Periods"/>
+  <data_ele ele_num="618" data_type="ID" min_len="1" max_len="3" name="Implementation Transaction Set Syntax Error Code"/>
+  <data_ele ele_num="620" data_type="ID" min_len="1" max_len="3" name="Implementation Segment Syntax Error Code"/>
+  <data_ele ele_num="621" data_type="ID" min_len="1" max_len="3" name="Implementation Segment Syntax Error Code"/>
   <data_ele ele_num="623" data_type="ID" min_len="2" max_len="2" name="Time Code"/>
   <data_ele ele_num="628" data_type="AN" min_len="1" max_len="12" name="Hierarchical ID Number"/>
   <data_ele ele_num="639" data_type="ID" min_len="2" max_len="2" name="Basis of Unit Price Code"/>
@@ -325,6 +329,8 @@
   <data_ele ele_num="96" data_type="N0" min_len="1" max_len="10" name="Number of Included Segments"/>
   <data_ele ele_num="97" data_type="N0" min_len="1" max_len="6" name="97"/>
   <data_ele ele_num="98" data_type="ID" min_len="2" max_len="3" name="Entity Identifier Code"/>
+  <data_ele ele_num="9998" data_type="AN" min_len="1" max_len="35" name="Context Reference"/>
+  <data_ele ele_num="9999" data_type="AN" min_len="1" max_len="35" name="Context Name"/>
   <data_ele ele_num="I01" data_type="ID" min_len="2" max_len="2" name="I01"/>
   <data_ele ele_num="I02" data_type="AN" min_len="10" max_len="10" name="I02"/>
   <data_ele ele_num="I03" data_type="ID" min_len="2" max_len="2" name="I03"/>
