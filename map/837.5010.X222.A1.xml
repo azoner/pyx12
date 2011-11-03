@@ -234,7 +234,7 @@
           <usage>R</usage>
           <seq>08</seq>
           <valid_codes>
-            <code>005010X222</code>
+            <code>005010X222A1</code>
           </valid_codes>
         </element>
       </segment>
@@ -684,7 +684,7 @@
                 <usage>R</usage>
                 <seq>02</seq>
                 <valid_codes>
-                  <code>ZZ</code>
+                  <code>PXC</code>
                 </valid_codes>
               </element>
               <element xid="PRV03">
@@ -2446,7 +2446,7 @@
                     <element xid="CLM05-02">
                       <data_ele>1332</data_ele>
                       <name>Facility Code Qualifier</name>
-                      <usage>N</usage>
+                      <usage>R</usage>
                       <seq>02</seq>
                     </element>
                     <element xid="CLM05-03">
@@ -6018,11 +6018,7 @@
                       <usage>S</usage>
                       <seq>04</seq>
                       <valid_codes>
-                        <code>B</code>
-                        <code>C</code>
-                        <code>M</code>
                         <code>P</code>
-                        <code>S</code>
                       </valid_codes>
                     </element>
                     <element xid="OI05">
@@ -16853,11 +16849,7 @@
                         <usage>S</usage>
                         <seq>04</seq>
                         <valid_codes>
-                          <code>B</code>
-                          <code>C</code>
-                          <code>M</code>
                           <code>P</code>
-                          <code>S</code>
                         </valid_codes>
                       </element>
                       <element xid="OI05">
