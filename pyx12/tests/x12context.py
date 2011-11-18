@@ -13,8 +13,16 @@ import pyx12.error_handler
 from pyx12.errors import *
 import pyx12.x12context
 import pyx12.params
+from pyx12.tests.support import getMapPath
 
 class X12fileTestCase(unittest.TestCase):
+    def setUp(self):
+        map_path = getMapPath()
+        self.param = pyx12.params.params('pyx12.conf.xml')
+        if map_path:
+            self.param.set('map_path', map_path)
+            self.param.set('pickle_path', map_path)
+
     def _makeFd(self, x12str=None):
         try:
             if x12str:
@@ -41,9 +49,8 @@ class Delimiters(X12fileTestCase):
         str1 += 'GE&1&17+\n'
         str1 += 'IEA&1&000010121+\n'
         fd = self._makeFd(str1)
-        param = pyx12.params.params('pyx12.conf.xml')
         errh = pyx12.error_handler.errh_null()
-        src = pyx12.x12context.X12ContextReader(param, errh, fd, xslt_files = [])
+        src = pyx12.x12context.X12ContextReader(self.param, errh, fd, xslt_files = [])
         for datatree in src.iter_segments():
             pass
         self.assertEqual(src.subele_term, '!')
@@ -63,9 +70,8 @@ class Delimiters(X12fileTestCase):
         str1 = str1.replace('!', chr(0x1E))
         fd = self._makeFd(str1)
         errors = []
-        param = pyx12.params.params('pyx12.conf.xml')
         errh = pyx12.error_handler.errh_null()
-        src = pyx12.x12context.X12ContextReader(param, errh, fd, xslt_files = [])
+        src = pyx12.x12context.X12ContextReader(self.param, errh, fd, xslt_files = [])
         for datatree in src.iter_segments():
             pass
         self.assertEqual(src.subele_term, chr(0x1E))
@@ -76,8 +82,12 @@ class Delimiters(X12fileTestCase):
 class TreeGetValue(unittest.TestCase):
 
     def setUp(self):
+        map_path = getMapPath()
         fd = open('files/simple_837p.txt')
         param = pyx12.params.params('pyx12.conf.xml')
+        if map_path:
+            param.set('map_path', map_path)
+            param.set('pickle_path', map_path)
         errh = pyx12.error_handler.errh_null()
         self.src = pyx12.x12context.X12ContextReader(param, errh, fd, xslt_files = [])
         for datatree in self.src.iter_segments('2300'):
@@ -128,8 +138,12 @@ class TreeGetValue(unittest.TestCase):
 class TreeSetValue(unittest.TestCase):
 
     def setUp(self):
+        map_path = getMapPath()
         fd = open('files/simple_837p.txt')
         param = pyx12.params.params('pyx12.conf.xml')
+        if map_path:
+            param.set('map_path', map_path)
+            param.set('pickle_path', map_path)
         errh = pyx12.error_handler.errh_null()
         self.src = pyx12.x12context.X12ContextReader(param, errh, fd, xslt_files = [])
         for datatree in self.src.iter_segments('2300'):
@@ -150,10 +164,14 @@ class TreeSetValue(unittest.TestCase):
 class TreeSelect(unittest.TestCase):
 
     def setUp(self):
+        map_path = getMapPath()
         fd = open('files/simple_837p.txt')
-        param = pyx12.params.params('pyx12.conf.xml')
+        self.param = pyx12.params.params('pyx12.conf.xml')
+        if map_path:
+            self.param.set('map_path', map_path)
+            self.param.set('pickle_path', map_path)
         errh = pyx12.error_handler.errh_null()
-        src = pyx12.x12context.X12ContextReader(param, errh, fd, xslt_files = [])
+        src = pyx12.x12context.X12ContextReader(self.param, errh, fd, xslt_files = [])
         for datatree in src.iter_segments('2300'):
             if datatree.id == '2300':
                 self.loop2300 = datatree
@@ -195,9 +213,8 @@ class TreeSelect(unittest.TestCase):
 
     def test_select_from_st(self):
         fd = open('files/835_simple.txt')
-        param = pyx12.params.params('pyx12.conf.xml')
         errh = pyx12.error_handler.errh_null()
-        src = pyx12.x12context.X12ContextReader(param, errh, fd, xslt_files = [])
+        src = pyx12.x12context.X12ContextReader(self.param, errh, fd, xslt_files = [])
         ct = 0
         for datatree in src.iter_segments('ST_LOOP'):
             if datatree.id == 'ST_LOOP':
@@ -208,9 +225,8 @@ class TreeSelect(unittest.TestCase):
 
     def test_select_from_gs(self):
         fd = open('files/simple_837i.txt')
-        param = pyx12.params.params('pyx12.conf.xml')
         errh = pyx12.error_handler.errh_null()
-        src = pyx12.x12context.X12ContextReader(param, errh, fd, xslt_files = [])
+        src = pyx12.x12context.X12ContextReader(self.param, errh, fd, xslt_files = [])
         ct = 0
         for datatree in src.iter_segments('GS_LOOP'):
             if datatree.id == 'GS_LOOP':
@@ -223,8 +239,12 @@ class TreeSelect(unittest.TestCase):
 class TreeSelectFromSegment(unittest.TestCase):
 
     def test_select_from_seg_fail(self):
+        map_path = getMapPath()
         fd = open('files/835_simple.txt')
         param = pyx12.params.params('pyx12.conf.xml')
+        if map_path:
+            param.set('map_path', map_path)
+            param.set('pickle_path', map_path)
         errh = pyx12.error_handler.errh_null()
         src = pyx12.x12context.X12ContextReader(param, errh, fd, xslt_files = [])
         for datatree in src.iter_segments('ST_LOOP'):
@@ -237,8 +257,12 @@ class TreeSelectFromSegment(unittest.TestCase):
 class TreeAddSegment(unittest.TestCase):
 
     def setUp(self):
+        map_path = getMapPath()
         fd = open('files/simple_837p.txt')
         param = pyx12.params.params('pyx12.conf.xml')
+        if map_path:
+            param.set('map_path', map_path)
+            param.set('pickle_path', map_path)
         errh = pyx12.error_handler.errh_null()
         self.src = pyx12.x12context.X12ContextReader(param, errh, fd, xslt_files = [])
         for datatree in self.src.iter_segments('2300'):
@@ -264,8 +288,12 @@ class TreeAddSegment(unittest.TestCase):
 class TreeAddSegmentString(unittest.TestCase):
 
     def setUp(self):
+        map_path = getMapPath()
         fd = open('files/simple_837p.txt')
         param = pyx12.params.params('pyx12.conf.xml')
+        if map_path:
+            param.set('map_path', map_path)
+            param.set('pickle_path', map_path)
         errh = pyx12.error_handler.errh_null()
         self.src = pyx12.x12context.X12ContextReader(param, errh, fd, xslt_files = [])
         for datatree in self.src.iter_segments('2300'):
@@ -288,10 +316,14 @@ class TreeAddSegmentString(unittest.TestCase):
 class SegmentExists(unittest.TestCase):
 
     def setUp(self):
+        map_path = getMapPath()
         fd = open('files/simple_837p.txt')
-        param = pyx12.params.params('pyx12.conf.xml')
+        self.param = pyx12.params.params('pyx12.conf.xml')
+        if map_path:
+            self.param.set('map_path', map_path)
+            self.param.set('pickle_path', map_path)
         errh = pyx12.error_handler.errh_null()
-        self.src = pyx12.x12context.X12ContextReader(param, errh, fd, xslt_files = [])
+        self.src = pyx12.x12context.X12ContextReader(self.param, errh, fd, xslt_files = [])
         for datatree in self.src.iter_segments('2300'):
             if datatree.id == '2300':
                 self.loop2300 = datatree
@@ -318,9 +350,8 @@ class SegmentExists(unittest.TestCase):
 
     def test_qual_834_dtp(self):
         fd = open('files/834_lui_id.txt')
-        param = pyx12.params.params('pyx12.conf.xml')
         errh = pyx12.error_handler.errh_null()
-        src = pyx12.x12context.X12ContextReader(param, errh, fd, xslt_files = [])
+        src = pyx12.x12context.X12ContextReader(self.param, errh, fd, xslt_files = [])
         for datatree in src.iter_segments('2300'):
             if datatree.id == '2300':
                 loop2300 = datatree
@@ -331,8 +362,12 @@ class SegmentExists(unittest.TestCase):
 class TreeAddLoop(X12fileTestCase):
 
     def setUp(self):
+        map_path = getMapPath()
         fd = open('files/simple_837p.txt')
         param = pyx12.params.params('pyx12.conf.xml')
+        if map_path:
+            param.set('map_path', map_path)
+            param.set('pickle_path', map_path)
         errh = pyx12.error_handler.errh_null()
         self.src = pyx12.x12context.X12ContextReader(param, errh, fd, xslt_files = [])
         for datatree in self.src.iter_segments('2300'):
@@ -372,6 +407,10 @@ class TreeAddLoopDetail(X12fileTestCase):
         fd = self._makeFd(str1)
         errors = []
         param = pyx12.params.params('pyx12.conf.xml')
+        map_path = getMapPath()
+        if map_path:
+            param.set('map_path', map_path)
+            param.set('pickle_path', map_path)
         errh = pyx12.error_handler.errh_null()
         src = pyx12.x12context.X12ContextReader(param, errh, fd, xslt_files = [])
         for st_loop in src.iter_segments('ST_LOOP'):
@@ -385,12 +424,18 @@ class TreeAddLoopDetail(X12fileTestCase):
 
 
 class TreeAddNode(unittest.TestCase):
+    def setUp(self):
+        self.param = pyx12.params.params('pyx12.conf.xml')
+        map_path = getMapPath()
+        if map_path:
+            self.param.set('map_path', map_path)
+            self.param.set('pickle_path', map_path)
 
     def test_add_loop(self):
         fd = open('files/simple_837p.txt')
-        param = pyx12.params.params('pyx12.conf.xml')
+        map_path = getMapPath()
         errh = pyx12.error_handler.errh_null()
-        self.src = pyx12.x12context.X12ContextReader(param, errh, fd, xslt_files = [])
+        self.src = pyx12.x12context.X12ContextReader(self.param, errh, fd, xslt_files = [])
         for datatree in self.src.iter_segments('2300'):
             if datatree.id == '2300':
                 loop2300 = datatree
@@ -402,9 +447,8 @@ class TreeAddNode(unittest.TestCase):
 
     def test_add_segment(self):
         fd = open('files/simple_837p.txt')
-        param = pyx12.params.params('pyx12.conf.xml')
         errh = pyx12.error_handler.errh_null()
-        self.src = pyx12.x12context.X12ContextReader(param, errh, fd, xslt_files = [])
+        self.src = pyx12.x12context.X12ContextReader(self.param, errh, fd, xslt_files = [])
         for datatree in self.src.iter_segments('2300'):
             if datatree.id == '2300':
                 loop2300 = datatree
@@ -416,9 +460,8 @@ class TreeAddNode(unittest.TestCase):
 
     def test_fail(self):
         fd = open('files/simple_837p.txt')
-        param = pyx12.params.params('pyx12.conf.xml')
         errh = pyx12.error_handler.errh_null()
-        self.src = pyx12.x12context.X12ContextReader(param, errh, fd, xslt_files = [])
+        self.src = pyx12.x12context.X12ContextReader(self.param, errh, fd, xslt_files = [])
         for datatree in self.src.iter_segments('2300'):
             if datatree.id == '2300':
                 loop2300 = datatree
@@ -445,6 +488,10 @@ class CountRepeatingLoop(unittest.TestCase):
     def setUp(self):
         fd = open('files/simple_837p.txt')
         param = pyx12.params.params('pyx12.conf.xml')
+        map_path = getMapPath()
+        if map_path:
+            param.set('map_path', map_path)
+            param.set('pickle_path', map_path)
         errh = pyx12.error_handler.errh_null()
         self.src = pyx12.x12context.X12ContextReader(param, errh, fd, xslt_files = [])
         for datatree in self.src.iter_segments('2300'):
@@ -470,6 +517,10 @@ class IterateTree(unittest.TestCase):
     def setUp(self):
         fd = open('files/simple_837p.txt')
         param = pyx12.params.params('pyx12.conf.xml')
+        map_path = getMapPath()
+        if map_path:
+            param.set('map_path', map_path)
+            param.set('pickle_path', map_path)
         errh = pyx12.error_handler.errh_null()
         self.src = pyx12.x12context.X12ContextReader(param, errh, fd, xslt_files = [])
 
@@ -488,8 +539,12 @@ class IterateTree(unittest.TestCase):
 class TreeDeleteSegment(unittest.TestCase):
 
     def setUp(self):
+        map_path = getMapPath()
         fd = open('files/simple_837p.txt')
         param = pyx12.params.params('pyx12.conf.xml')
+        if map_path:
+            param.set('map_path', map_path)
+            param.set('pickle_path', map_path)
         errh = pyx12.error_handler.errh_null()
         self.src = pyx12.x12context.X12ContextReader(param, errh, fd, xslt_files = [])
         for datatree in self.src.iter_segments('2300'):
@@ -511,8 +566,12 @@ class TreeDeleteSegment(unittest.TestCase):
 class TreeDeleteLoop(unittest.TestCase):
 
     def setUp(self):
+        map_path = getMapPath()
         fd = open('files/simple_837p.txt')
         param = pyx12.params.params('pyx12.conf.xml')
+        if map_path:
+            param.set('map_path', map_path)
+            param.set('pickle_path', map_path)
         errh = pyx12.error_handler.errh_null()
         self.src = pyx12.x12context.X12ContextReader(param, errh, fd, xslt_files = [])
         for datatree in self.src.iter_segments('2300'):
@@ -532,8 +591,12 @@ class TreeDeleteLoop(unittest.TestCase):
 class NodeDeleteSelf(unittest.TestCase):
 
     def setUp(self):
+        map_path = getMapPath()
         fd = open('files/simple_837p.txt')
         param = pyx12.params.params('pyx12.conf.xml')
+        if map_path:
+            param.set('map_path', map_path)
+            param.set('pickle_path', map_path)
         errh = pyx12.error_handler.errh_null()
         self.src = pyx12.x12context.X12ContextReader(param, errh, fd, xslt_files = [])
         for datatree in self.src.iter_segments('2300'):
@@ -555,12 +618,17 @@ class NodeDeleteSelf(unittest.TestCase):
 
 
 class TreeCopy(unittest.TestCase):
+    def setUp(self):
+        map_path = getMapPath()
+        self.param = pyx12.params.params('pyx12.conf.xml')
+        if map_path:
+            self.param.set('map_path', map_path)
+            self.param.set('pickle_path', map_path)
 
     def test_add_node(self):
         fd = open('files/835_simple.txt')
-        param = pyx12.params.params('pyx12.conf.xml')
         errh = pyx12.error_handler.errh_null()
-        src = pyx12.x12context.X12ContextReader(param, errh, fd, xslt_files = [])
+        src = pyx12.x12context.X12ContextReader(self.param, errh, fd, xslt_files = [])
         for datatree in src.iter_segments('2100'):
             if datatree.id == '2100':
                 for svc in datatree.select('2110'):
@@ -574,9 +642,8 @@ class TreeCopy(unittest.TestCase):
 
     def test_copy_seg(self):
         fd = open('files/835_simple.txt')
-        param = pyx12.params.params('pyx12.conf.xml')
         errh = pyx12.error_handler.errh_null()
-        src = pyx12.x12context.X12ContextReader(param, errh, fd, xslt_files = [])
+        src = pyx12.x12context.X12ContextReader(self.param, errh, fd, xslt_files = [])
         for datatree in src.iter_segments('2100'):
             if datatree.id == '2100':
                 for svc in datatree.select('2110'):

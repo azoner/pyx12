@@ -12,7 +12,7 @@ import pyx12.path
 import pyx12.segment
 from pyx12.tests.support import getMapPath
 
-def getMapPath():
+def getMapPathX():
     """
     First, try relative path
     Them look in standard installation location
