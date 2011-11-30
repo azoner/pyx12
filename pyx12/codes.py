@@ -14,13 +14,10 @@
 External Codes interface
 """
 
-import os, os.path
-#import sys
 import xml.etree.cElementTree as et
-import datetime 
 
 # Intrapackage imports
-from pyx12.errors import EngineError, XML_Reader_Error
+from pyx12.errors import EngineError
 
 class CodesError(Exception):
     """Class for code modules errors."""
@@ -46,7 +43,7 @@ class ExternalCodes(object):
         self.codes = {} 
         code_file = base_path + '/codes.xml'
         codeset_id = None
-        base_name = None
+        #base_name = None
         
         self.exclude_list = exclude.split(',') if exclude is not None else []
 
