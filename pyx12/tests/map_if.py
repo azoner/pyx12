@@ -818,3 +818,23 @@ class X12Version(unittest.TestCase):
     def test_5010(self):
         map = pyx12.map_if.load_map_file('834.5010.X220.A1.xml', self.param)
         self.assertEqual(map.icvn, '00501')
+
+
+class SegmentChildrenOrdinal(unittest.TestCase):
+    def setUp(self):
+        map_path = getMapPath()
+        param = pyx12.params.params('pyx12.conf.xml')
+        if map_path:
+            param.set('map_path', map_path)
+            param.set('pickle_path', map_path)
+        self.map = pyx12.map_if.load_map_file('999.5010.xml', param)
+        mypath = '/ISA_LOOP/GS_LOOP/ST_LOOP/HEADER/2000/2100/CTX'
+        self.node = self.map.getnodebypath(mypath)
+        self.errh = pyx12.error_handler.errh_null()
+
+    def test_check_ord_ok(self):
+        self.errh.err_cde = None
+        i = 1
+        for c in self.node.children:
+            self.assertEqual(i, c.seq)
+            i += 1

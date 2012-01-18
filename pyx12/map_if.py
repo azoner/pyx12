@@ -1,6 +1,5 @@
 ######################################################################
 # Copyright (c) 2001-2009 Kalamazoo Community Mental Health Services,
-#   John Holland <jholland@kazoocmh.org> <john@zoner.org>
 # All rights reserved.
 #
 # This software is licensed as described in the file LICENSE.txt, which
@@ -706,11 +705,20 @@ class segment_if(x12_node):
             if syn_list is not None:
                 self.syntax.append(syn_list)
         
+        children_map = {}
         for e in elem.findall('element'):
+            seq = int(e.findtext('seq'))
+            children_map[seq] = e
             self.children.append(element_if(self.root, self, e))
 
         for e in elem.findall('composite'):
+            seq = int(e.findtext('seq'))
+            children_map[seq] = e
             self.children.append(composite_if(self.root, self, e))
+
+        #for (k,v) in children_map:
+        #    if v.
+        #    self.children.append(composite_if(self.root, self, e))
         
     def debug_print(self):
         sys.stdout.write(self.__repr__())
@@ -746,7 +754,7 @@ class segment_if(x12_node):
             
     def get_child_node_by_ordinal(self, ord):
         """
-        Get a child element or oomposite by the X12 ordinal
+        Get a child element or composite by the X12 ordinal
         @param ord: one based element/composite index.  Corresponds to the map <seq> element
         @type ord: int
         """
