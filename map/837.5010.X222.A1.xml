@@ -6227,7 +6227,7 @@
                     <!--End of N3 segment-->
                     <segment xid="N4">
                       <name>Other Subscriber City/State/ZIP Code</name>
-                      <usage>R</usage>
+                      <usage>S</usage>
                       <pos>3400</pos>
                       <max_use>1</max_use>
                       <syntax>C0605</syntax>
@@ -6432,7 +6432,7 @@
                     <!--End of N3 segment-->
                     <segment xid="N4">
                       <name>Other Payer City/State/ZIP Code</name>
-                      <usage>R</usage>
+                      <usage>S</usage>
                       <pos>3400</pos>
                       <max_use>1</max_use>
                       <syntax>C0605</syntax>
