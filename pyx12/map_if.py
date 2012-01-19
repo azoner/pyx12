@@ -1,5 +1,5 @@
 ######################################################################
-# Copyright (c) 2001-2009 Kalamazoo Community Mental Health Services,
+# Copyright (c) Kalamazoo Community Mental Health Services,
 # All rights reserved.
 #
 # This software is licensed as described in the file LICENSE.txt, which
@@ -709,16 +709,18 @@ class segment_if(x12_node):
         for e in elem.findall('element'):
             seq = int(e.findtext('seq'))
             children_map[seq] = e
-            self.children.append(element_if(self.root, self, e))
+            #self.children.append(element_if(self.root, self, e))
 
         for e in elem.findall('composite'):
             seq = int(e.findtext('seq'))
             children_map[seq] = e
-            self.children.append(composite_if(self.root, self, e))
+            #self.children.append(composite_if(self.root, self, e))
 
-        #for (k,v) in children_map:
-        #    if v.
-        #    self.children.append(composite_if(self.root, self, e))
+        for seq in sorted(children_map.keys()):
+            if children_map[seq].tag == 'element':
+                self.children.append(element_if(self.root, self, children_map[seq]))
+            elif children_map[seq].tag == 'composite':
+                self.children.append(composite_if(self.root, self, children_map[seq]))
         
     def debug_print(self):
         sys.stdout.write(self.__repr__())
