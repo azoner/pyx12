@@ -483,26 +483,6 @@ class loop_if(x12_node):
                             possible = child.get_unique_key_id_element(id_val)
                             if possible is not None:
                                 return child
-                            #if child.children[0].is_element() \
-                            #    and child.children[0].get_data_type() == 'ID' \
-                            #    and len(child.children[0].valid_codes) > 0 \
-                            #    and id_val in child.children[0].valid_codes:
-                            #    return child
-                            ## Special Case for 820
-                            #elif seg_id == 'ENT' and child.children[1].is_element() \
-                            #    and child.children[1].get_data_type() == 'ID' \
-                            #    and len(child.children[1].valid_codes) > 0 \
-                            #    and id_val in child.children[1].valid_codes:
-                            #    return child
-                            #elif child.children[0].is_composite() \
-                            #    and child.children[0].children[0].get_data_type() == 'ID' \
-                            #    and len(child.children[0].children[0].valid_codes) > 0 \
-                            #    and id_val in child.children[0].children[0].valid_codes:
-                            #    return child
-                            #elif seg_id == 'HL' and child.children[2].is_element() \
-                            #    and len(child.children[2].valid_codes) > 0 \
-                            #    and id_val in child.children[2].valid_codes:
-                            #    return child
         raise EngineError, 'getnodebypath failed. Path "%s" not found' % path
 
     def getnodebypath2(self, path_str):
@@ -535,26 +515,6 @@ class loop_if(x12_node):
                             possible = child.get_unique_key_id_element(id_val)
                             if possible is not None:
                                 return child
-                            #if child.children[0].is_element() \
-                            #    and child.children[0].get_data_type() == 'ID' \
-                            #    and len(child.children[0].valid_codes) > 0 \
-                            #    and id_val in child.children[0].valid_codes:
-                            #    return child
-                            # Special Case for 820
-                            #elif seg_id == 'ENT' and child.children[1].is_element() \
-                            #    and child.children[1].get_data_type() == 'ID' \
-                            #    and len(child.children[1].valid_codes) > 0 \
-                            #    and id_val in child.children[1].valid_codes:
-                            #    return child
-                            #elif child.children[0].is_composite() \
-                            #    and child.children[0].children[0].get_data_type() == 'ID' \
-                            #    and len(child.children[0].children[0].valid_codes) > 0 \
-                            #    and id_val in child.children[0].children[0].valid_codes:
-                            #    return child
-                            #elif seg_id == 'HL' and child.children[2].is_element() \
-                            #    and len(child.children[2].valid_codes) > 0 \
-                            #    and id_val in child.children[2].valid_codes:
-                            #    return child
         raise EngineError, 'getnodebypath failed. Path "%s" not found' % path_str
 
     def get_child_count(self):
@@ -816,6 +776,14 @@ class segment_if(x12_node):
                 and len(self.children[1].valid_codes) > 0 \
                 and seg.get_value('02') not in self.children[1].valid_codes:
                 #logger.debug('is_match: %s %s' % (seg.get_seg_id(), seg[1]), self.children[0].valid_codes)
+                return False
+            # Special Case for 999 CTX
+            # IG defines the dataelement 2100/CT01-1 as an AN, but acts like an ID
+            elif seg.get_seg_id() == 'CTX' \
+                and self.children[0].is_composite() \
+                and self.children[0].children[0].get_data_type() == 'AN' \
+                and len(self.children[0].children[0].valid_codes) > 0 \
+                and seg.get_value('01-1') not in self.children[0].children[0].valid_codes:
                 return False
             elif self.children[0].is_composite() \
                 and self.children[0].children[0].get_data_type() == 'ID' \

@@ -130,6 +130,7 @@ class walk_tree(object):
             #node_list.append(node)
         while True:
             # Iterate through nodes with position >= current position
+            #import ipdb; ipdb.set_trace()
             for ord1 in [a for a in sorted(node.pos_map) if a>=node_pos]:
                 for child in node.pos_map[ord1]:
                     if child.is_segment():

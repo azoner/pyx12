@@ -307,6 +307,7 @@ class Implicit_Loops(unittest.TestCase):
         self.assertEqual(get_id_list(push), ['2420A'])
 
     def test_999_2110_IK4(self):
+        #self.assertNotEqual('A', 'B')
         map_path = getMapPath()
         walker = walk_tree()
         param = pyx12.params.params('pyx12.conf.xml')
@@ -319,7 +320,9 @@ class Implicit_Loops(unittest.TestCase):
         node = cmap.getnodebypath(path)
         self.assertNotEqual(node, None)
         self.assertEqual(node.base_name, 'segment')
+        node.cur_count = 1
         seg_data = pyx12.segment.Segment('IK4*3*116*7*88888-8888~', '~', '*', ':')
+        errh.reset()
         (node, pop, push) = walker.walk(node, seg_data, errh, seg_count=8, cur_line=7, ls_id=None)
         self.assertNotEqual(node, None, 'walker failed to find %s' % (seg_data))
         self.assertEqual(seg_data.get_seg_id(), node.id)
