@@ -245,7 +245,7 @@ class Segment(object):
     # Attributes:
     
     # Operations
-    def __init__(self, seg_str, seg_term, ele_term, subele_term):
+    def __init__(self, seg_str, seg_term, ele_term, subele_term, repetition_term='^'):
         """
         """
         self.seg_term = seg_term
@@ -254,6 +254,7 @@ class Segment(object):
         self.ele_term_orig = ele_term
         self.subele_term = subele_term
         self.subele_term_orig = subele_term
+        self.repetition_term = repetition_term
         self.seg_id = None
         if seg_str and seg_str[-1] == seg_term:
             elems = seg_str[:-1].split(self.ele_term)
