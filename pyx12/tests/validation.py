@@ -1,7 +1,3 @@
-#! /usr/bin/env /usr/local/bin/python
-
-#import test_support
-#from test_support import TestFailed, have_unicode
 import unittest
 import sys
 

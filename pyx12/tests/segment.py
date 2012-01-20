@@ -1,5 +1,3 @@
-#! /usr/bin/env /usr/local/bin/python
-
 import unittest
 
 import pyx12.segment

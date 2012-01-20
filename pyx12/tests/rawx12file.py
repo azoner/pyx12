@@ -1,5 +1,3 @@
-#! /usr/bin/env /usr/local/bin/python
-
 import unittest
 try:
     from StringIO import StringIO

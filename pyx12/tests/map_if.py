@@ -1,5 +1,3 @@
-#! /usr/bin/env /usr/local/bin/python
-
 import os, sys
 from os.path import dirname, abspath, join, isdir, isfile
 import unittest

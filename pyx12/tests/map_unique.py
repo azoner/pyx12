@@ -1,5 +1,3 @@
-#! /usr/bin/env /usr/local/bin/python
-
 #    $Id: map_walker.py 1484 2011-10-22 02:06:12Z johnholland $
 
 import sys
@@ -33,6 +31,3 @@ class UniqueNodePath(unittest.TestCase):
             p = x.get_path()
             self.assertTrue(p not in paths, 'Duplicate path %s' % (p))
             paths.add(p)
-
-        #self.assertNotEqual(node, None, 'walker failed')
-        #self.assertEqual(seg_data.get_seg_id(), node.id)

@@ -1,5 +1,3 @@
-#! /usr/bin/env /usr/local/bin/python
-
 import os, os.path
 import unittest
 

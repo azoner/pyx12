@@ -1,7 +1,4 @@
-#! /usr/bin/env /usr/local/bin/python
-
 import unittest
-#import sys
 import tempfile
 try:
     from StringIO import StringIO
@@ -9,7 +6,6 @@ except:
     from io import StringIO
 
 import pyx12.error_handler
-#from error_handler import ErrorErrhNull
 from pyx12.errors import *
 import pyx12.x12context
 import pyx12.params

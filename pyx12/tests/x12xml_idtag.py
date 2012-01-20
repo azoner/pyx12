@@ -1,5 +1,3 @@
-#! /usr/bin/env /usr/local/bin/python
-
 import unittest
 import sys
 try:
@@ -13,7 +11,6 @@ import pyx12.x12xml_idtag
 import pyx12.map_if
 import pyx12.params
 import pyx12.segment
-#from pyx12.errors import *
 from pyx12.tests.support import getMapPath
 
 class ConvertToXML(unittest.TestCase):
