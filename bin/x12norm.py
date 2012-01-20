@@ -50,13 +50,6 @@ def main():
         if o == '-f': fix = True
         if o == '-o': file_out = a
 
-    if not debug:
-        try:
-            import psyco
-            psyco.full()
-        except ImportError:
-            pass
-
     for file_in in args:
         if not os.path.isfile(file_in):
             sys.stderr.write('File %s was not found' % (file_in))

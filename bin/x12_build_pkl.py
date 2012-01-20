@@ -68,11 +68,5 @@ def main():
     return True
 
 if __name__ == '__main__':
-    try:
-        import psyco
-        psyco.full()
-    except ImportError:
-        pass
-
     sys.exit(not main())
 

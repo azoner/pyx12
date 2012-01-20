@@ -1,7 +1,7 @@
 #! /usr/bin/env python
 
 ######################################################################
-# Copyright (c) 2001-2008 Kalamazoo Community Mental Health Services,
+# Copyright (c) Kalamazoo Community Mental Health Services,
 #   John Holland <jholland@kazoocmh.org> <john@zoner.org>
 # All rights reserved.
 #
@@ -107,10 +107,4 @@ def main():
 
 #profile.run('x12n_document(src_filename)', 'pyx12.prof')
 if __name__ == '__main__':
-    try:
-        import psyco
-        psyco.full()
-    except ImportError:
-        pass
-
     sys.exit(not main())

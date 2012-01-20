@@ -133,13 +133,6 @@ def main():
                 logger.error('Could not open log file: %s' % (a))
                 return False
 
-    if not debug:
-        try:
-            import psyco
-            psyco.full()
-        except ImportError:
-            pass
-
     if len(args) > 0:
         src_filename = args[0]
         logger.debug('src=%s    xml=%s' % (src_filename, target_xml))

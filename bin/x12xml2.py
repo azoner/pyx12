@@ -1,7 +1,7 @@
 #! /usr/bin/env python
 
 ######################################################################
-# Copyright (c) 2001-2008 Kalamazoo Community Mental Health Services,
+# Copyright (c) Kalamazoo Community Mental Health Services,
 #   John Holland <jholland@kazoocmh.org> <john@zoner.org>
 # All rights reserved.
 #
@@ -127,13 +127,6 @@ def main():
             except IOError:
                 logger.error('Could not open log file: %s' % (a))
                 return False
-
-    if not debug:
-        try:
-            import psyco
-            psyco.full()
-        except ImportError:
-            pass
 
     if len(args) > 0:
         src_filename = args[0]

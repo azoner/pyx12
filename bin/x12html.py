@@ -114,13 +114,6 @@ def main():
             except IOError:
                 logger.error('Could not open log file: %s' % (a))
 
-    if not debug:
-        try:
-            import psyco
-            psyco.full()
-        except ImportError:
-            pass
-
     for src_filename in args:
         try:
             #fd_src = open(src_filename, 'U')
