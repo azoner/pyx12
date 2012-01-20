@@ -1,7 +1,7 @@
-#! /usr/bin/env /usr/local/bin/python
+#! /usr/bin/env python
 #
 ######################################################################
-# Copyright (c) 2001-2005 Kalamazoo Community Mental Health Services,
+# Copyright (c) Kalamazoo Community Mental Health Services,
 #   John Holland <jholland@kazoocmh.org> <john@zoner.org>
 # All rights reserved.
 #
@@ -215,13 +215,6 @@ def main():
 
     profile = False
     debug = False
-
-    if not debug:
-        try:
-            import psyco
-            psyco.full()
-        except ImportError:
-            pass
 
     dir1 = os.path.abspath('./files')
     if len(sys.argv) > 1:

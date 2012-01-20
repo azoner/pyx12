@@ -1,5 +1,4 @@
-#! /usr/bin/env /usr/local/bin/python
-
+#! /usr/bin/env python
 
 import unittest
 

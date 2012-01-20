@@ -1,4 +1,4 @@
-#! /usr/bin/env /usr/local/bin/python
+#! /usr/bin/env python
 
 #import test_support
 #from test_support import TestFailed, have_unicode
@@ -29,9 +29,4 @@ def suite():
 
 #if __name__ == "__main__":
 #    unittest.main()
-try:
-    import psyco
-    psyco.full()
-except ImportError:
-    pass
 unittest.TextTestRunner(verbosity=2).run(suite())
