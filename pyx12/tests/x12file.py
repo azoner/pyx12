@@ -1,7 +1,4 @@
-#! /usr/bin/env /usr/local/bin/python
-
 import unittest
-#import sys
 import tempfile
 try:
     from StringIO import StringIO
@@ -9,7 +6,6 @@ except:
     from io import StringIO
 
 import pyx12.error_handler
-#from error_handler import ErrorErrhNull
 from pyx12.errors import *
 import pyx12.x12file
 
@@ -433,6 +429,43 @@ class X12WriterTest(X12fileTestCase):
         fd_out.seek(0)
         newval = fd_out.read()
         self.assertEqual(output, newval)
+
+    def test_identity_5010(self):
+        segs = [
+            'ISA*00*          *00*          *ZZ*ZZ000          *ZZ*ZZ001          *030828*1128*^*00501*000010121*0*T*:',
+            'GS*HC*ZZ000*ZZ001*20030828*1128*17*X*005010X999',
+            'ST*837*11280001',
+            'HL*1**20*1',
+            'HL*2*1*22*1',
+            'AAA*2:A*1:Y:Y*22*1',
+            'SE*5*11280001',
+            'GE*1*17',
+            'IEA*1*000010121'
+        ]
+        fd_out = self._makeFd()
+        wr = pyx12.x12file.X12Writer(fd_out, '~', '*', ':', '\n')
+        output = ''
+        for seg_str in segs:
+            seg_data = pyx12.segment.Segment(seg_str, '~', '*', ':')
+            wr.Write(seg_data)
+            output += seg_str + '~\n'
+        fd_out.seek(0)
+        newval = fd_out.read()
+        self.assertMultiLineEqual(output, newval)
+
+    def test_change_delimiters_in_isa_segment(self):
+        segs = [
+            'ISA*00*          *00*          *ZZ*ZZ000          *ZZ*ZZ001          *030828*1128*^*00501*000010121*0*T*:',
+        ]
+        fd_out = self._makeFd()
+        wr = pyx12.x12file.X12Writer(fd_out, '~', '*', '\\', '\n')
+        expected = 'ISA*00*          *00*          *ZZ*ZZ000          *ZZ*ZZ001          *030828*1128*^*00501*000010121*0*T*\\~\n'
+        for seg_str in segs:
+            seg_data = pyx12.segment.Segment(seg_str, '~', '*', '\\', '^')
+            wr.Write(seg_data)
+        fd_out.seek(0)
+        newval = fd_out.read()
+        self.assertMultiLineEqual(expected, newval)
 
     def test_fix_se(self):
         segs = [
