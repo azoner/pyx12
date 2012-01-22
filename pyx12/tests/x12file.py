@@ -329,7 +329,7 @@ class Formatting(X12fileTestCase):
         str_out = ''
         for seg in src:
             str_out += seg.format() + '\n'
-        self.assertEqual(str1, str_out)
+        self.assertMultiLineEqual(str1, str_out)
 
     def test_strip_eol(self):
         str1 = 'ISA*00*          *00*          *ZZ*ZZ000          *ZZ*ZZ001          *030828*1128*U*00401*000010121*0*T*:~\n'
@@ -340,7 +340,7 @@ class Formatting(X12fileTestCase):
         for seg in src:
             str_out += seg.format()
         str1 = str1.replace('\n', '')
-        self.assertEqual(str1, str_out)
+        self.assertMultiLineEqual(str1, str_out)
  
 
 class Segment_ID_Checks(X12fileTestCase):
@@ -428,7 +428,7 @@ class X12WriterTest(X12fileTestCase):
             output += seg_str + '~\n'
         fd_out.seek(0)
         newval = fd_out.read()
-        self.assertEqual(output, newval)
+        self.assertMultiLineEqual(output, newval)
 
     def test_identity_5010(self):
         segs = [
@@ -458,7 +458,7 @@ class X12WriterTest(X12fileTestCase):
             'ISA*00*          *00*          *ZZ*ZZ000          *ZZ*ZZ001          *030828*1128*^*00501*000010121*0*T*:',
         ]
         fd_out = self._makeFd()
-        wr = pyx12.x12file.X12Writer(fd_out, '~', '*', '\\', '\n')
+        wr = pyx12.x12file.X12Writer(fd_out, seg_term='~', ele_term='*', subele_term='\\', eol='\n', repetition_term='^')
         expected = 'ISA*00*          *00*          *ZZ*ZZ000          *ZZ*ZZ001          *030828*1128*^*00501*000010121*0*T*\\~\n'
         for seg_str in segs:
             seg_data = pyx12.segment.Segment(seg_str, '~', '*', '\\', '^')
@@ -492,7 +492,7 @@ class X12WriterTest(X12fileTestCase):
             output += seg_str + '~\n'
         fd_out.seek(0)
         newval = fd_out.read()
-        self.assertEqual(output, newval)
+        self.assertMultiLineEqual(output, newval)
 
     def test_missing(self):
         segs = [
@@ -520,7 +520,7 @@ class X12WriterTest(X12fileTestCase):
         wr.Close()
         fd_out.seek(0)
         newval = fd_out.read()
-        self.assertEqual(output, newval)
+        self.assertMultiLineEqual(output, newval)
 
 
 class LX_Checks(X12fileTestCase):

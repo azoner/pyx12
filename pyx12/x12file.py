@@ -29,9 +29,6 @@ import pyx12.errors
 import pyx12.segment
 from pyx12.rawx12file import RawX12File
 
-DEFAULT_BUFSIZE = 8*1024
-ISA_LEN = 106
-
 logger = logging.getLogger('pyx12.x12file')
 
 class X12Base(object):
@@ -510,6 +507,9 @@ class X12Writer(X12Base):
             # Write our own LX counter
             seg_data.set('01', '%i' % (self.lx_count) )
             self._write_segment(seg_data)
+        elif seg_id == 'ISA':
+            # Replace terminators
+            self._write_isa_segment(seg_data)
         else:
             self._write_segment(seg_data)
 
@@ -575,6 +575,23 @@ class X12Writer(X12Base):
         @param seg_data: segment to write
         @type seg_data: L{segment<segment.Segment>}
         """
+        out = seg_data.format(self.seg_term, self.ele_term, self.subele_term)+self.eol
+        self.fd_out.write(out.decode('ascii'))
+
+    def _write_isa_segment(self, seg_data):
+        """
+        Write the ISA segment, using the current delimiters and end of line
+
+        ISA*03*SENDER    *01*          *ZZ*SENDER         *ZZ*RECEIVER       *040608*1333*U*00401*000000288*0*P*:~
+        ISA*03*SENDER    *01*          *ZZ*SENDER         *ZZ*RECEIVER       *040611*1333*^*00501*000000125*0*P*\~
+
+        @param seg_data: ISA segment to write
+        @type seg_data: L{segment<segment.Segment>}
+        """
+        icvn = seg_data.get_value('ISA12')
+        if icvn == '00501':
+            seg_data.set('ISA11', self.repetition_term)
+        seg_data.set('ISA16', self.subele_term)
         out = seg_data.format(self.seg_term, self.ele_term, self.subele_term)+self.eol
         self.fd_out.write(out.decode('ascii'))
 

@@ -304,17 +304,6 @@ class Segment(object):
         """
         return self.format(self.seg_term, self.ele_term, self.subele_term)
     
-#    def __getitem__(self, idx):
-#        """
-#        returns element instance
-#        """
-#        return self.elements[idx]
-
-#    def __setitem__(self, idx, val):
-#        """
-#        """
-#        self.elements[idx] = Composite(val, self.subele_term)
-
     def append(self, val):
         """
         Append a composite to the segment
@@ -359,43 +348,6 @@ class Segment(object):
         comp_idx = xp.subele_idx - 1 if xp.subele_idx is not None else None
         return (ele_idx, comp_idx)
 
-    # def _parse_refdes(self, ref_des):
-        # """
-        # Format of ref_des:
-            # - a simple element: TST02
-            # - a composite: TST03 where TST03 is a composite
-            # - a sub-element: TST03-2
-            # - or any of the above with the segment ID omitted (02, 03, 03-1)
-
-        # @param ref_des: X12 Reference Designator
-        # @type ref_des: string
-        # @rtype: tuple(ele_idx, subele_idx)
-        # @raise EngineError: If the given ref_des does not match the segment ID
-            # or if the indexes are not valid integers
-        # """
-        # if ref_des is None or ref_des == '':
-            # raise EngineError, 'Blank Reference Designator'
-        # if ref_des[0].isalpha():
-            # if ref_des[:len(self.seg_id)] != self.seg_id:
-                # err_str = 'Invalid Reference Designator: %s, seg_id: %s' \
-                    # % (ref_des, self.seg_id)
-                # raise EngineError, err_str
-            # rest = ref_des[len(self.seg_id):]
-        # else:
-            # rest = ref_des
-        # dash = rest.find('-')
-        # try:
-            # if dash == -1:
-                # ele_idx = int(rest) - 1
-                # comp_idx = None
-            # else:
-                # ele_idx = int(rest[:dash]) - 1
-                # comp_idx = int(rest[dash+1:]) - 1
-        # except ValueError:
-            # raise EngineError, 'Invalid Reference Designator indexes: %s' \
-                # % (ref_des)
-        # return (ele_idx, comp_idx)
-
     def get(self, ref_des):
         """
         @param ref_des: X12 Reference Designator
@@ -431,7 +383,6 @@ class Segment(object):
         @attention: Deprecated - use get_value
         """
         raise DeprecationWarning, 'User Segment.get_value'
-        #return self.get(ref_des).format()
         
     def set(self, ref_des, val):
         """
@@ -445,11 +396,18 @@ class Segment(object):
         """
         (ele_idx, comp_idx) = self._parse_refdes(ref_des)
         while len(self.elements) <= ele_idx:
+            # insert blank values before our value if needed
             self.elements.append(Composite('', self.subele_term))
+        if self.seg_id == 'ISA' and ele_idx == 15:
+            #Special handling for ISA segment
+            #guarantee subele_term will not be matched
+            self.elements[ele_idx] = Composite(val, self.ele_term)
+            return
         if comp_idx is None:
             self.elements[ele_idx] = Composite(val, self.subele_term)
         else:
             while len(self.elements[ele_idx]) <= comp_idx:
+                # insert blank values before our value if needed
                 self.elements[ele_idx].elements.append(Element(''))
             self.elements[ele_idx][comp_idx] = Element(val)
 
@@ -500,9 +458,6 @@ class Segment(object):
         """
         self.subele_term = subele_term
 
-#    def set_eol(self, eol):
-#        self.eol = eol
-
     def format(self, seg_term=None, ele_term=None, subele_term=None):
         """
         @rtype: string
@@ -527,7 +482,6 @@ class Segment(object):
                 break
         for ele in self.elements[:i+1]:
             str_elems.append(ele.format(subele_term))
-        #str_elems
         return '%s%s%s%s' % (self.seg_id, ele_term, \
             ele_term.join(str_elems), \
             seg_term)

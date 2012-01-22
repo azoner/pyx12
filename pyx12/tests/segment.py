@@ -332,3 +332,24 @@ class Copy(unittest.TestCase):
         self.assertFalse(seg1 is seg2)
         self.assertEqual(seg1, seg2)
 
+
+class IsaTerminators(unittest.TestCase):
+
+    def test_no_change_4010(self):
+        initial = 'ISA*03*SENDER    *01*          *ZZ*SENDER         *ZZ*RECEIVER       *040608*1333*U*00401*000000288*0*P*:~'
+        result =  initial
+        seg_isa = pyx12.segment.Segment(initial, '~', '*', ':')
+        self.assertMultiLineEqual(seg_isa.format(seg_term='~', ele_term='*', subele_term=':'), result)
+
+    def test_no_change_5010(self):
+        initial = 'ISA*03*SENDER    *01*          *ZZ*SENDER         *ZZ*RECEIVER       *040611*1333*^*00501*000000125*0*P*\~'
+        result =  initial
+        seg_isa = pyx12.segment.Segment(initial, '~', '*', ':')
+        self.assertMultiLineEqual(seg_isa.format(seg_term='~', ele_term='*', subele_term=':'), result)
+
+    def test_subele(self):
+        initial = 'ISA*03*SENDER    *01*          *ZZ*SENDER         *ZZ*RECEIVER       *040611*1333*^*00501*000000125*0*P*:~'
+        result =  'ISA*03*SENDER    *01*          *ZZ*SENDER         *ZZ*RECEIVER       *040611*1333*^*00501*000000125*0*P*\~'
+        seg_isa = pyx12.segment.Segment(initial, '~', '*', ':')
+        seg_isa.set('ISA16', '\\')
+        self.assertMultiLineEqual(seg_isa.format(subele_term='\\'), result)
