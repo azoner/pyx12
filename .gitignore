@@ -1,6 +1,8 @@
 MANIFEST
-dist
-build
+dist/
+build/
 .project
 pkg-plist
 .pypirc
+*.pyo
+*.pyc
