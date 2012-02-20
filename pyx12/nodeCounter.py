@@ -1,5 +1,5 @@
 ######################################################################
-# Copyright (c) 2011-2012 Kalamazoo Community Mental Health Services,
+# Copyright Kalamazoo Community Mental Health Services,
 #   John Holland <jholland@kazoocmh.org> <john@zoner.org>
 # All rights reserved.
 #
@@ -23,7 +23,7 @@ class NodeCounter(object):
     def __init__(self, initialCounts={}):
         self._dict = {}
 # copy constructor
-        for k, v in initialCounts.iteritems():
+        for k, v in initialCounts.items():
             if isinstance(k, pyx12.path.X12Path):
                 self._dict[k] = v
             else:
@@ -39,15 +39,24 @@ class NodeCounter(object):
             del self._dict[xpath]
 
     def increment(self, xpath):
+        """
+        Increment path count
+        """
         if xpath in self._dict:
             self._dict[xpath] += 1
         else:
             self._dict[xpath] = 1
 
     def setCount(self, xpath, ct):
+        """
+        Set path count
+        """
         self._dict[xpath] = ct
     
     def get_count(self, xpath):
+        """
+        Get path count
+        """
         if xpath not in self._dict:
             return 0
             #raise Exception, 'Unknown xpath in counter: %s' % (xpath)

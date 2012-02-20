@@ -85,8 +85,7 @@ class X12Base(object):
         seg_id = seg_data.get_seg_id()
         if seg_id == 'ISA': 
             if len(seg_data) != 16:
-                raise pyx12.errors.X12Error, \
-                    'The ISA segment must have 16 elements (%s)' % (seg_data)
+                raise pyx12.errors.X12Error('The ISA segment must have 16 elements (%s)' % (seg_data))
             interchange_control_number = seg_data.get_value('ISA13')
             if interchange_control_number in self.isa_ids:
                 err_str = 'ISA Interchange Control Number '
@@ -396,7 +395,7 @@ class X12Reader(X12Base):
     def __iter__(self):
         return self
 
-    def next(self):
+    def __next__(self):
         """
         Iterate over input segments
         """
@@ -404,7 +403,7 @@ class X12Reader(X12Base):
         try:
             while True:
                 # We have not yet incremented cur_line
-                line = self.raw.next()
+                line = next(self.raw)
                 if line[-1] == self.ele_term:
                     err_str = 'Segment contains trailing element terminators'
                     self._seg_error('SEG1', err_str, None, 
@@ -421,7 +420,7 @@ class X12Reader(X12Base):
         Get Errors
         DEPRECATED
         """
-        raise pyx12.errors.EngineError, 'X12file.get_errors is no longer used'
+        raise pyx12.errors.EngineError('X12file.get_errors is no longer used')
         
     def cleanup(self):
         """

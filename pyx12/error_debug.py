@@ -1,5 +1,5 @@
 ######################################################################
-# Copyright (c) 2001-2005 Kalamazoo Community Mental Health Services,
+# Copyright (c) Kalamazoo Community Mental Health Services,
 #   John Holland <jholland@kazoocmh.org> <john@zoner.org>
 # All rights reserved.
 #
@@ -8,17 +8,12 @@
 #
 ######################################################################
 
-#    $Id$
-
 """
 Generates error debug output
 Visitor - Visits an error_handler composite
 """
 
-#from types import *
-
 # Intrapackage imports
-from errors import *
 from error_visitor import error_visitor
 
 class error_debug_visitor(error_visitor):
@@ -59,7 +54,7 @@ class error_debug_visitor(error_visitor):
             self.fd.write('  %s %s\n' % err)
         for ele in err_isa.elements:
             self.fd.write('  %s %s\n' % (ele.id, ele.name))
-            print(ele.parent)
+            print((ele.parent))
             for err in ele.errors:
                 self.fd.write('    ERR %s %s (%s)\n' % err)
 

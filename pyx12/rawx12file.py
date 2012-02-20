@@ -40,14 +40,14 @@ class RawX12File(object):
         line = self.fd.read(ISA_LEN)
         if line[:3] != 'ISA': 
             err_str = "First line does not begin with 'ISA': %s" % line[:3]
-            raise pyx12.errors.X12Error, err_str
+            raise pyx12.errors.X12Error(err_str)
         if len(line) != ISA_LEN:
             err_str = 'ISA line is only %i characters' % len(line)
-            raise pyx12.errors.X12Error, err_str
+            raise pyx12.errors.X12Error(err_str)
         self.icvn = line[84:89]
         if self.icvn not in ('00401', '00501'):
             err_str = 'ISA Interchange Control Version Number is unknown: %s' % (self.icvn)
-            raise pyx12.errors.X12Error, err_str
+            raise pyx12.errors.X12Error(err_str)
         self.seg_term = line[-1]
         self.ele_term = line[3]
         self.subele_term = line[-2]
@@ -58,7 +58,7 @@ class RawX12File(object):
     def __iter__(self):
         return self
 
-    def next(self):
+    def __next__(self):
         """
         Iterate over input lines
         """

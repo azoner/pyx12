@@ -1,5 +1,5 @@
 ######################################################################
-# Copyright (c) 2001-2005 Kalamazoo Community Mental Health Services,
+# Copyright Kalamazoo Community Mental Health Services,
 #   John Holland <jholland@kazoocmh.org> <john@zoner.org>
 # All rights reserved.
 #
@@ -8,28 +8,22 @@
 #
 ######################################################################
 
-#    $Id$
-
 """
 Generates a 997 Response
 Visitor - Visits an error_handler composite
 """
 
-#import os
-#import sys
-from types import *
+#from types import *
 import time
 import logging
-#import pdb
 
 # Intrapackage imports
-from errors import *
+from errors import EngineError
 import error_visitor
 import pyx12.segment
 
 logger = logging.getLogger('pyx12.error_997')
 logger.setLevel(logging.DEBUG)
-#logger.setLevel(logging.ERROR)
 
 class error_997_visitor(error_visitor.error_visitor):
     """
@@ -52,7 +46,13 @@ class error_997_visitor(error_visitor.error_visitor):
         #self.eol = term[3]
         self.eol = '\n'
         self.seg_count = 0
+        self.isa_control_num = None
+        self.isa_seg = None
+        self.gs_loop_count = 0
+        self.gs_id = None
+        self.gs_seg = None
         self.st_control_num = 0
+        self.st_loop_count = 0
 
     def visit_root_pre(self, errh):
         """
@@ -305,14 +305,14 @@ class error_997_visitor(error_visitor.error_visitor):
         @type err_st: L{error_handler.err_st}
         """
         if err_st.ack_code is None:
-            raise EngineError, 'err_st.ack_cde variable not set'
+            raise EngineError('err_st.ack_cde variable not set')
 #        self.ack_code = None # AK501
         seg_data = pyx12.segment.Segment('AK5', '~', '*', ':')
 #        self.err_cde = [] # AK502-6
         #seg.append(err_st.ack_code)
         seg_data.append(err_st.ack_code)
         err_codes = self.__get_st_errors(err_st)
-        for i in range(min(len(err_codes),5)):
+        for i in range(min(len(err_codes), 5)):
             seg_data.append(err_codes[i])
             #seg.append(err_codes[i])
         self._write(seg_data)
@@ -337,7 +337,7 @@ class error_997_visitor(error_visitor.error_visitor):
         if 'SEG1' in errors:
             if '8' not in errors:
                 errors.append('8')
-            errors = filter(lambda x: x!='SEG1', errors)
+            errors = [x for x in errors if x != 'SEG1']
         for err_cde in list(set(errors)):
             if err_cde in valid_AK3_codes: # unique codes
                 seg_data = pyx12.segment.Segment(seg_str, '~', '*', ':')

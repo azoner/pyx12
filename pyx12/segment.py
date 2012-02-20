@@ -1,5 +1,5 @@
 ######################################################################
-# Copyright (c) 2001-2005 Kalamazoo Community Mental Health Services,
+# Copyright Kalamazoo Community Mental Health Services,
 #   John Holland <jholland@kazoocmh.org> <john@zoner.org>
 # All rights reserved.
 #
@@ -7,8 +7,6 @@
 # you should have received as part of this distribution.
 #
 ######################################################################
-
-#    $Id$
 
 """
 Implements an interface to a x12 segment.
@@ -19,8 +17,6 @@ treated as a composite element with one sub-element.
 
 All indexing is zero based.
 """
-
-#import string
 
 import path
 from pyx12.errors import EngineError
@@ -191,8 +187,7 @@ class Composite(object):
         for i in range(len(self.elements)-1, -1, -1):
             if not self.elements[i].is_empty():
                 break
-        return '%s' % (subele_term.join(map(Element.__repr__, \
-            self.elements[:i+1])))
+        return '%s' % (subele_term.join(map(Element.__repr__, self.elements[:i+1])))
             
     def get_value(self):
         """
@@ -201,7 +196,7 @@ class Composite(object):
         if len(self.elements) == 1:
             return self.elements[0].get_value()
         else:
-            raise IndexError, 'value of composite is undefined'
+            raise IndexError('value of composite is undefined')
 
     def set_subele_term(self, subele_term):
         """
@@ -343,7 +338,7 @@ class Segment(object):
         if xp.seg_id is not None and xp.seg_id != self.seg_id:
             err_str = 'Invalid Reference Designator: %s, seg_id: %s' \
                 % (ref_des, self.seg_id)
-            raise EngineError, err_str
+            raise EngineError(err_str)
         ele_idx = xp.ele_idx - 1 if xp.ele_idx is not None else None
         comp_idx = xp.subele_idx - 1 if xp.subele_idx is not None else None
         return (ele_idx, comp_idx)
@@ -382,7 +377,7 @@ class Segment(object):
         @type ref_des: string
         @attention: Deprecated - use get_value
         """
-        raise DeprecationWarning, 'User Segment.get_value'
+        raise DeprecationWarning('User Segment.get_value')
         
     def set(self, ref_des, val):
         """
@@ -470,11 +465,11 @@ class Segment(object):
         if subele_term is None: 
             subele_term = self.subele_term
         if seg_term is None: 
-            raise EngineError, 'seg_term is None'
+            raise EngineError('seg_term is None')
         if ele_term is None: 
-            raise EngineError, 'ele_term is None'
+            raise EngineError('ele_term is None')
         if subele_term is None: 
-            raise EngineError, 'subele_term is None'
+            raise EngineError('subele_term is None')
         str_elems = []
         i = 0
         for i in range(len(self.elements)-1, -1, -1):

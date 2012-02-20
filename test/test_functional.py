@@ -18,7 +18,7 @@ Compare the 997 output against existing output
 """
 
 import os, os.path
-import sys, string
+import string
 import logging
 from types import *
 #import pdb
@@ -26,6 +26,7 @@ import tempfile
 #import difflib
 import subprocess
 import StringIO
+import sys; sys.path.insert(0, '..')
 
 # Intrapackage imports
 import pyx12

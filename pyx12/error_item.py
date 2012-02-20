@@ -1,5 +1,5 @@
 ######################################################################
-# Copyright (c) 2001-2005 Kalamazoo Community Mental Health Services,
+# Copyright Kalamazoo Community Mental Health Services,
 #   John Holland <jholland@kazoocmh.org> <john@zoner.org>
 # All rights reserved.
 #
@@ -8,12 +8,10 @@
 #
 ######################################################################
 
-#    $Id$
-
 """
 """
 
-import errors
+from errors import EngineError
 
 isa_errors = ('000' ,'001' ,'002' ,'003' ,'004' ,'005' ,'006' ,'007' ,'008' ,
     '009' ,'010' ,'011' ,'012' ,'013' ,'014' ,'015' ,'016' ,
@@ -49,8 +47,8 @@ class ISAError(ErrorItem):
     def __init__(self, err_cde, err_str):
         ErrorItem.__init__(self, 'isa', err_cde, err_str)
         if self.err_cde not in isa_errors:
-            raise errors.EngineError, 'Invalid ISA level error code "%s"' % \
-                (self.err_cde) 
+            raise EngineError('Invalid ISA level error code "%s"' % \
+                (self.err_cde)) 
 
 
 class SegError(ErrorItem):
@@ -58,8 +56,8 @@ class SegError(ErrorItem):
         ErrorItem.__init__(self, 'seg', err_cde, err_str)
         self.err_val = err_val
         if self.err_cde not in seg_errors:
-            raise errors.EngineError, 'Invalid segment level error code "%s"' % \
-                (self.err_cde) 
+            raise EngineError('Invalid segment level error code "%s"' % \
+                (self.err_cde)) 
 
     def getErrVal(self):
         return self.err_val
@@ -73,8 +71,8 @@ class EleError(ErrorItem):
         self.ele_idx = ele_idx
         self.subele_idx = subele_idx
         if self.err_cde not in ele_errors:
-            raise errors.EngineError, 'Invalid element level error code "%s"' % \
-                (self.err_cde) 
+            raise EngineError('Invalid element level error code "%s"' % \
+                (self.err_cde)) 
 
     def getErrVal(self):
         return self.err_val

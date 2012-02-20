@@ -1,5 +1,5 @@
 #####################################################################
-# Copyright (c) 2001-2005 Kalamazoo Community Mental Health Services,
+# Copyright Kalamazoo Community Mental Health Services,
 #   John Holland <jholland@kazoocmh.org> <john@zoner.org>
 # All rights reserved.
 #
@@ -8,18 +8,13 @@
 #
 ######################################################################
 
-#
-#    $Id$
-
 """
 Parse a ANSI X12N data file.  Validate against a map and codeset values.
 Create XML, HTML, and 997 documents based on the data file.
 """
 
 import os, os.path
-#import sys
 import logging
-#from types import *
 
 # Intrapackage imports
 import pyx12
@@ -27,13 +22,11 @@ import error_handler
 import error_997
 import error_debug
 import error_html
-#import errh_xml
 import errors
 import map_index
 import map_if
 import x12file
 from map_walker import walk_tree
-#from params import params
 
 def apply_loop_count(orig_node, new_map):
     """
@@ -161,8 +154,8 @@ def x12n_document(param, src_file, fd_997, fd_html,
                 if map_file != map_file_new:
                     map_file = map_file_new
                     if map_file is None:
-                        raise pyx12.errors.EngineError, "Map not found.  icvn=%s, fic=%s, vriic=%s" % \
-                            (icvn, fic, vriic)
+                        raise pyx12.errors.EngineError("Map not found.  icvn=%s, fic=%s, vriic=%s" % \
+                            (icvn, fic, vriic))
                     cur_map = map_if.load_map_file(map_file, param, xslt_files)
                     if cur_map.id == '837':
                         src.check_837_lx = True
@@ -185,8 +178,8 @@ def x12n_document(param, src_file, fd_997, fd_html,
                     if map_file != map_file_new:
                         map_file = map_file_new
                         if map_file is None:
-                            raise pyx12.errors.EngineError, "Map not found.  icvn=%s, fic=%s, vriic=%s, tspc=%s" % \
-                                (icvn, fic, vriic, tspc)
+                            raise pyx12.errors.EngineError("Map not found.  icvn=%s, fic=%s, vriic=%s, tspc=%s" % \
+                                (icvn, fic, vriic, tspc))
                         cur_map = map_if.load_map_file(map_file, param, xslt_files)
                         src.check_837_lx = True if cur_map.id == '837' else False
                         logger.debug('Map file: %s' % (map_file))

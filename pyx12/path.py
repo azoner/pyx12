@@ -82,9 +82,9 @@ class X12Path(object):
                     self.subele_idx = int(m.group('subele_idx'))
                 del self.loop_list[-1]
                 if self.seg_id is None and self.id_val is not None:
-                    raise X12PathError, 'Path "%s" is invalid. Must specify a segment identifier with a qualifier' % (path_str)
+                    raise X12PathError('Path "%s" is invalid. Must specify a segment identifier with a qualifier' % (path_str))
                 if self.seg_id is None and (self.ele_idx is not None or self.subele_idx is not None) and len(self.loop_list) > 0:
-                    raise X12PathError, 'Path "%s" is invalid. Must specify a segment identifier' % (path_str)
+                    raise X12PathError('Path "%s" is invalid. Must specify a segment identifier' % (path_str))
         
     def is_match(self, path_str):
         pass

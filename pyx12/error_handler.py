@@ -1,5 +1,5 @@
 ######################################################################
-# Copyright (c) 2001-2005 Kalamazoo Community Mental Health Services,
+# Copyright Kalamazoo Community Mental Health Services,
 #   John Holland <jholland@kazoocmh.org> <john@zoner.org>
 # All rights reserved.
 #
@@ -8,20 +8,14 @@
 #
 ######################################################################
 
-#    $Id$
-
 """
 Interface to X12 Errors
 """
 
 import logging
-from types import *
 
 # Intrapackage imports
-from errors import *
-
-#class error_node:
-#    def __init__(self)
+from errors import EngineError, IterOutOfBounds, IterDone
 
 logger = logging.getLogger('pyx12.error_handler')
 
@@ -44,7 +38,7 @@ class err_iter(object):
     def first(self):
         self.cur_node = self.errh
     
-    def next(self):
+    def __next__(self):
         #If at previosly visited branch, do not do children
         if self.cur_node in self.visit_stack:
             node = None
@@ -76,7 +70,7 @@ class err_iter(object):
         start_line = self.cur_node.get_cur_line()
         orig_node = self.cur_node
         if self.done:
-            raise EngineError, 'Iterator was completed'
+            raise EngineError('Iterator was completed')
         try:
             self.cur_node = self.cur_node.get_first_child()
         except IterOutOfBounds:
@@ -389,7 +383,7 @@ class err_handler(object):
         return None
         #raise IterDone
 
-    def next(self):
+    def __next__(self):
         """
         Return the next error node
         """
@@ -574,9 +568,9 @@ class err_isa(err_node):
         """
         """
         if seg_id == 'ISA':
-            return filter(lambda err: 'ISA' in err[0], self.errors)
+            return [err for err in self.errors if 'ISA' in err[0]]
         elif seg_id == 'IEA':
-            return filter(lambda err: 'IEA' in err[0], self.errors)
+            return [err for err in self.errors if 'IEA' in err[0]]
         else:
             return []
         #err_list = []
@@ -585,13 +579,13 @@ class err_isa(err_node):
         #        err_list.append(err)
         #return err_list
     
-    def next(self):
+    def __next__(self):
         """
         Return the next error node
         """
         for child in self.children:
             yield child
-        self.parent.next()
+        next(self.parent)
             
     def __repr__(self):
         return '%i: %s' % (self.get_cur_line(), self.id)
@@ -710,9 +704,9 @@ class err_gs(err_node):
         """
         """
         if seg_id == 'GS':
-            return filter(lambda err: err[0] in ('6'), self.errors)
+            return [err for err in self.errors if err[0] in ('6')]
         elif seg_id == 'GE':
-            return filter(lambda err: err[0] not in ('6'), self.errors)
+            return [err for err in self.errors if err[0] not in ('6')]
         else:
             return []
    
@@ -725,13 +719,13 @@ class err_gs(err_node):
         else:
             return False
 
-    def next(self):
+    def __next__(self):
         """
         Return the next error node
         """
         for child in self.children:
             yield child
-        self.parent.next()
+        next(self.parent)
             
     def __repr__(self):
         return '%i: %s' % (self.get_cur_line(), self.id)
@@ -822,9 +816,9 @@ class err_st(err_node):
         """
         """
         if seg_id == 'ST':
-            return filter(lambda err: err[0] in ('1', '6', '7', '23'), self.errors)
+            return [err for err in self.errors if err[0] in ('1', '6', '7', '23')]
         elif seg_id == 'SE':
-            return filter(lambda err: err[0] not in ('1', '6', '7', '23'), self.errors)
+            return [err for err in self.errors if err[0] not in ('1', '6', '7', '23')]
         else:
             return []
    
@@ -854,7 +848,7 @@ class err_st(err_node):
         else:
             return False
 
-    def next(self):
+    def __next__(self):
         """
         Return the next error node
         """
@@ -893,7 +887,7 @@ class err_seg(err_node):
         
         self.id = 'SEG'
         
-        self.elements= []
+        self.elements = []
         self.errors = []
 
     def accept(self, visitor):
@@ -932,7 +926,7 @@ class err_seg(err_node):
                 ct += 1
         return ct
 
-    def next(self):
+    def __next__(self):
         """
         Desc:       Return the next error node
         """

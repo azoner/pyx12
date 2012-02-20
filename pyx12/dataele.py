@@ -41,13 +41,12 @@ class DataElements(object):
         
         self.dataele = {} 
         code_file = os.path.join(base_path, 'dataele.xml')
-        t = et.parse(code_file)
-        for e in t.iter('data_ele'):
-            ele_num = e.get('ele_num')
-            data_type = e.get('data_type')
-            min_len = int(e.get('min_len'))
-            max_len = int(e.get('max_len'))
-            name = e.get('name')
+        for eElem in et.parse(code_file).iter('data_ele'):
+            ele_num = eElem.get('ele_num')
+            data_type = eElem.get('data_type')
+            min_len = int(eElem.get('min_len'))
+            max_len = int(eElem.get('max_len'))
+            name = eElem.get('name')
             self.dataele[ele_num] = {'data_type':data_type, 'min_len':min_len, 'max_len':max_len, 'name':name}
 
     def get_by_elem_num(self, ele_num):
@@ -59,14 +58,17 @@ class DataElements(object):
         @rtype: dict
         """
         if not ele_num:
-            raise EngineError, 'Bad data element %s' % (ele_num)
-        if not self.dataele.has_key(ele_num):
-            raise EngineError, 'Data Element "%s" is not defined' % (ele_num)
+            raise EngineError('Bad data element %s' % (ele_num))
+        if ele_num not in self.dataele:
+            raise EngineError('Data Element "%s" is not defined' % (ele_num))
         return self.dataele[ele_num]
 
     def __repr__(self):
-        for ele_num in self.dataele.keys():
-            print(self.dataele[ele_num])
+        for ele_num in list(self.dataele.keys()):
+            print((self.dataele[ele_num]))
 
     def debug_print(self):
+        """
+        Debug print data elements
+        """
         self.__repr__()

@@ -1,5 +1,5 @@
 ######################################################################
-# Copyright (c) 2001-2008 Kalamazoo Community Mental Health Services,
+# Copyright Kalamazoo Community Mental Health Services,
 #   John Holland <jholland@kazoocmh.org> <john@zoner.org>
 # All rights reserved.
 #
@@ -7,8 +7,6 @@
 # you should have received as part of this distribution.
 #
 ######################################################################
-
-#    $Id$
 
 """
 Create a XML rendering of the X12 document
@@ -29,7 +27,7 @@ logger = logging.getLogger('pyx12.x12xml.idtagqual')
 
 class x12xml_idtagqual(x12xml):
     def __init__(self, fd, dtd_urn=None):
-        x12xml.__init__(self, fd, u"x12idtagqual", dtd_urn)
+        x12xml.__init__(self, fd, "x12idtagqual", dtd_urn)
         self.last_path = []
 
     def __del__(self):
@@ -46,7 +44,7 @@ class x12xml_idtagqual(x12xml):
         @type seg_data: L{segment<segment.Segment>}
         """
         if not seg_node.is_segment():
-            raise EngineError, 'Node must be a segment'
+            raise EngineError('Node must be a segment')
         parent = pop_to_parent_loop(seg_node) # Get enclosing loop
         # check path for new loops to be added
         cur_path = self._path_list(parent.get_path())
@@ -86,7 +84,7 @@ class x12xml_idtagqual(x12xml):
                     (xname, attrib) = self._get_ele_info(child_node.id)
                     self.writer.elem(xname, seg_data.get_value('%02i' % (i+1)), attrib)
             else:
-                raise EngineError, 'Node must be a either an element or a composite'
+                raise EngineError('Node must be a either an element or a composite')
         self.writer.pop() #end segment
         self.last_path = cur_path
         

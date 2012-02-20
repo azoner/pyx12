@@ -1,5 +1,5 @@
 ######################################################################
-# Copyright (c) 2001-2009 Kalamazoo Community Mental Health Services,
+# Copyright Kalamazoo Community Mental Health Services,
 #   John Holland <jholland@kazoocmh.org> <john@zoner.org>
 # All rights reserved.
 #
@@ -7,8 +7,6 @@
 # you should have received as part of this distribution.
 #
 ######################################################################
-
-#    $Id$
 
 """
 Create an XML rendering of the X12 document
@@ -26,9 +24,10 @@ class x12xml(object):
         self.writer = XMLWriter(fd)
         if dtd_urn:
             self.writer.doctype(
-                type, u"-//J Holland//DTD XML X12 Document Conversion1.0//EN//XML",
-                u"%s" % (dtd_urn))
+                type, "-//J Holland//DTD XML X12 Document Conversion1.0//EN//XML",
+                "%s" % (dtd_urn))
         self.writer.push(type)
+        self.last_path = None
 
     def __del__(self):
         pass
@@ -43,7 +42,7 @@ class x12xml(object):
         @type seg_data: L{segment<segment.Segment>}
         """
         if not seg_node.is_segment():
-            raise EngineError, 'Node must be a segment'
+            raise EngineError('Node must be a segment')
         parent = pop_to_parent_loop(seg_node) # Get enclosing loop
         # check path for new loops to be added
         cur_path = self._path_list(parent.get_path())
@@ -83,7 +82,7 @@ class x12xml(object):
                     (xname, attrib) = self._get_ele_info(child_node.id)
                     self.writer.elem(xname, seg_data.get_value('%02i' % (i+1)), attrib)
             else:
-                raise EngineError, 'Node must be a either an element or a composite'
+                raise EngineError('Node must be a either an element or a composite')
         self.writer.pop() #end segment
         self.last_path = cur_path
 
@@ -126,7 +125,7 @@ class x12xml(object):
                     (xname, attrib) = self._get_ele_info(child_node.id)
                     self.writer.elem(xname, seg_data.get_value('%02i' % (i+1)), attrib)
             else:
-                raise EngineError, 'Node must be a either an element or a composite'
+                raise EngineError('Node must be a either an element or a composite')
         self.writer.pop() #end segment
 
     def _path_list(self, path_str):

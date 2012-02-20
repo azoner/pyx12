@@ -1,5 +1,5 @@
 ######################################################################
-# Copyright (c) 2001-2005 Kalamazoo Community Mental Health Services,
+# Copyright Kalamazoo Community Mental Health Services,
 #   John Holland <jholland@kazoocmh.org> <john@zoner.org>
 # All rights reserved.
 #
@@ -8,21 +8,15 @@
 #
 ######################################################################
 
-#    $Id$
-
 """
 Generates HTML error output
 """
 
-import string
-from types import *
 import time
 import logging
-#import pdb
+from types import ListType
 
 # Intrapackage imports
-from errors import *
-#from utils import seg_str, escape_html_chars
 
 logger = logging.getLogger('pyx12.error_html')
 logger.setLevel(logging.DEBUG)
@@ -121,13 +115,13 @@ class error_html(object):
                 for j in range(1, seg_data.ele_len('%02i' % (i))+1):
                     ref_des = '%02i-%i' % (i, j)
                     ele_str = escape_html_chars(seg_data.get_value(ref_des))
-                    if i in ele_pos_map.keys() and ele_pos_map[i] == j:
+                    if i in list(ele_pos_map.keys()) and ele_pos_map[i] == j:
                         ele_str = self._wrap_ele_error(ele_str)
                     t_seg[-1].append(ele_str)
             else:
                 ref_des = '%02i' % (i)
                 ele_str = escape_html_chars(seg_data.get_value(ref_des))
-                if i in ele_pos_map.keys():
+                if i in list(ele_pos_map.keys()):
                     ele_str = self._wrap_ele_error(ele_str)
                 t_seg.append(ele_str)
                 
@@ -195,10 +189,10 @@ def seg_str(seg, seg_term, ele_term, subele_term, eol=''):
     tmp = []
     for a in seg:
         if type(a) is ListType:
-            tmp.append(string.join(a, subele_term))
+            tmp.append(subele_term.join(a))
         else:
             tmp.append(a)
-    return '%s%s%s' % (string.join(tmp, ele_term), seg_term, eol)
+    return '%s%s%s' % (ele_term.join(tmp), seg_term, eol)
 
 def escape_html_chars(str_val):
     """

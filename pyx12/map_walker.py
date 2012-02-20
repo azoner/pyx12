@@ -21,7 +21,7 @@ import logging
 #import pdb
 
 # Intrapackage imports
-from errors import *
+from errors import EngineError
 import pyx12.segment
 from nodeCounter import NodeCounter
 
@@ -40,11 +40,11 @@ def pop_to_parent_loop(node):
         return node
     map_node = node.parent
     if map_node is None:
-        raise EngineError, "Node is None: %s" % (node.name)
+        raise EngineError("Node is None: %s" % (node.name))
     while not (map_node.is_loop() or map_node.is_map_root()): 
         map_node = map_node.parent
     if not (map_node.is_loop() or map_node.is_map_root()):
-        raise EngineError, "Called pop_to_parent_loop, can't find parent loop"
+        raise EngineError("Called pop_to_parent_loop, can't find parent loop")
     return map_node
 
 def is_first_seg_match2(child, seg_data):
@@ -78,7 +78,7 @@ def traverse_path(start_node, pop_loops, push_loops):
     Debug function - From the start path, pop up then push down to get a path string
     """
     start_path = pop_to_parent_loop(start_node).get_path()
-    p1= [p for p in start_path.split('/') if p != '']
+    p1 = [p for p in start_path.split('/') if p != '']
     for loop_id in get_id_list(pop_loops):
         assert loop_id == p1[-1], 'Path %s does not contain %s' % (start_path, loop_id)
         p1 = p1[:-1]
@@ -154,14 +154,13 @@ class walk_tree(object):
                             #assert child.get_cur_count()==self.counter.get_count(child.x12path), 'Child counts not equal'
                             self._check_seg_usage(child, seg_data, seg_count, cur_line, ls_id, errh)
                             # Remove any previously missing errors for this segment
-                            self.mandatory_segs_missing = [x for x in self.mandatory_segs_missing if x[0]!=child]
+                            self.mandatory_segs_missing = [x for x in self.mandatory_segs_missing if x[0] != child]
                             self._flush_mandatory_segs(errh, child.pos)
                             return (child, pop_node_list, push_node_list) # segment node
                         elif child.usage == 'R' and child.get_cur_count() < 1:
                             fake_seg = pyx12.segment.Segment('%s'% (child.id), '~', '*', ':')
                             err_str = 'Mandatory segment "%s" (%s) missing' % (child.name, child.id)
-                            self.mandatory_segs_missing.append((child, fake_seg,'3', err_str, seg_count, cur_line, \
-                                ls_id))
+                            self.mandatory_segs_missing.append((child, fake_seg, '3', err_str, seg_count, cur_line, ls_id))
                         #else:
                             #logger.debug('Segment %s is not a match for (%s*%s)' % \
                             #   (child.id, seg_data.get_seg_id(), seg_data[0].get_value()))
@@ -246,7 +245,7 @@ class walk_tree(object):
             if seg_node.pos != cur_pos:
                 errh.add_seg(seg_node, seg_data, seg_count, cur_line, ls_id)
                 errh.seg_error(err_cde, err_str, None)
-        self.mandatory_segs_missing = [x for x in self.mandatory_segs_missing if x[0].pos==cur_pos]
+        self.mandatory_segs_missing = [x for x in self.mandatory_segs_missing if x[0].pos == cur_pos]
 
     def _is_loop_match(self, loop_node, seg_data, errh, seg_count, cur_line, ls_id):
         """

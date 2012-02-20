@@ -3,7 +3,7 @@
 #import test_support
 #from test_support import TestFailed, have_unicode
 import unittest
-import sys
+import sys; sys.path.insert(0, '..')
 
 from pyx12.validation import IsValidDataType
 from pyx12.errors import *

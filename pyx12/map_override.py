@@ -1,5 +1,5 @@
 ######################################################################
-# Copyright (c) 2001-2005 Kalamazoo Community Mental Health Services,
+# Copyright Kalamazoo Community Mental Health Services,
 #   John Holland <jholland@kazoocmh.org> <john@zoner.org>
 # All rights reserved.
 #
@@ -8,16 +8,12 @@
 #
 ######################################################################
 
-#    $Id$
-
 """
 Apply local overrides to the current map.
 Overrides defined in a xml document. 
 
 NOT IMPLEMENTED
 """
-
-import errors
 
 class map_override(object):
     """

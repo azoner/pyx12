@@ -15,14 +15,14 @@ Capture X12 Errors
 """
 
 import logging
-from types import *
+#from types import *
 #import pdb
 import tempfile
 #import lxml
 import os
 
 # Intrapackage imports
-from errors import *
+from errors import EngineError
 from xmlwriter import XMLWriter
 
 #class error_node:
@@ -58,12 +58,12 @@ class err_handler(object):
         self.cur_line = None
         self.errors = []
         if not fd:
-            raise EngineError, 'Could not open temp error xml file'
+            raise EngineError('Could not open temp error xml file')
         self.writer = XMLWriter(fd)
         #self.writer.doctype(
         #    u"x12simple", u"-//J Holland//DTD XML X12 Document Conversion1.0//EN//XML",
         #    u"%s" % (dtd_urn))
-        self.writer.push(u"x12err")
+        self.writer.push("x12err")
 
     def __del__(self):
         while len(self.writer) > 0:
@@ -100,14 +100,14 @@ class err_handler(object):
 
         """
         if len(self.errors) > 0:
-            self.writer.push(u"seg", attrs={u'line': '%i'%(cur_line)})
+            self.writer.push("seg", attrs={'line': '%i'%(cur_line)})
             for (err_type, err_cde, err_str, err_val, src_line) in self.errors:
-                self.writer.push(u"err", attrs={u"code": err_cde})
+                self.writer.push("err", attrs={"code": err_cde})
                 #self.writer.elem(u"type", err_type)
                 #self.writer.elem(u"code", err_cde)
-                self.writer.elem(u"desc", err_str)
+                self.writer.elem("desc", err_str)
                 if err_val:
-                    self.writer.elem(u"errval", err_val)
+                    self.writer.elem("errval", err_val)
                 #self.writer.push(u"seg", {u'line': '%i'%(cur_line)})
                         #self.writer.elem(u'ele', seg_data.get_value('%02i' % (i+1)), 
                         #    attrs={u'id': child_node.id})
@@ -266,7 +266,7 @@ class errh_list(object):
         """
         pass
         
-    def find_node(self, type):
+    def find_node(self, atype):
         """
         Find the last node of a type
         """

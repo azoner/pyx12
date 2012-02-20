@@ -1,5 +1,5 @@
 ######################################################################
-# Copyright (c) 2001-2011 Kalamazoo Community Mental Health Services,
+# Copyright Kalamazoo Community Mental Health Services,
 #   John Holland <jholland@kazoocmh.org> <john@zoner.org>
 # All rights reserved.
 #
@@ -47,13 +47,12 @@ class ExternalCodes(object):
         
         self.exclude_list = exclude.split(',') if exclude is not None else []
 
-        t = et.parse(code_file)
-        for c in t.iter('codeset'):
-            codeset_id = c.findtext('id')
-            name = c.findtext('name')
-            data_ele = c.findtext('data_ele')
+        for cElem in et.parse(code_file).iter('codeset'):
+            codeset_id = cElem.findtext('id')
+            name = cElem.findtext('name')
+            data_ele = cElem.findtext('data_ele')
             codes = []
-            for code in c.iterfind('version/code'):
+            for code in cElem.iterfind('version/code'):
                 codes.append(code.text)
             self.codes[codeset_id] = {'name':name, 'dataele': data_ele, 'codes': codes}
 
@@ -71,18 +70,21 @@ class ExternalCodes(object):
         """
         #if not given a key, do not flag an error
         if not key:
-            raise EngineError, 'bad key %s' % (key)
+            raise EngineError('bad key %s' % (key))
         #check the code against the list indexed by key
         else:
             if key in self.exclude_list:
                 return True
             if key not in self.codes:
-                raise EngineError, 'External Code "%s" is not defined' % (key)
+                raise EngineError('External Code "%s" is not defined' % (key))
             if code in self.codes[key]['codes']:
                 return True
         return False
 
     def debug_print(self):
-        for key in self.codes.keys():
-            print(self.codes[key][:10])
+        """
+        Debug print first 10 codes
+        """
+        for key in list(self.codes.keys()):
+            print((self.codes[key][:10]))
 

@@ -1,5 +1,5 @@
 ######################################################################
-# Copyright (c) 2011 Kalamazoo Community Mental Health Services,
+# Copyright Kalamazoo Community Mental Health Services,
 #   John Holland <jholland@kazoocmh.org> <john@zoner.org>
 # All rights reserved.
 #
@@ -7,8 +7,6 @@
 # you should have received as part of this distribution.
 #
 ######################################################################
-
-#    $Id: map_if.py 1437 2009-03-13 18:38:50Z johnholland $
 
 """
 X12 data element validation
@@ -60,7 +58,7 @@ def IsValidDataType(str_val, data_type, charset = 'B', icvn='00401'):
         elif data_type == 'B':
             pass
         else:
-            raise IsValidError, 'Unknown data type %s' % data_type
+            raise IsValidError('Unknown data type %s' % data_type)
     except IsValidError:
         return False
     return True
@@ -87,7 +85,7 @@ def match_re(short_data_type, val):
     elif short_data_type == 'R':
         rec = rec_R
     else:
-        raise EngineError, 'Unknown data type %s' % (short_data_type)
+        raise EngineError('Unknown data type %s' % (short_data_type))
     m = rec.search(val)
     if not m:
         return False
@@ -119,7 +117,7 @@ def not_match_re(short_data_type, val, charset = 'B', icvn='00401'):
     elif short_data_type == 'TM':
         rec = rec_TM
     else:
-        raise EngineError, 'Unknown data type %s' % (short_data_type)
+        raise EngineError('Unknown data type %s' % (short_data_type))
     m = rec.search(val)
     if m and m.group(0):
         return True # Invalid char matched
@@ -161,7 +159,7 @@ def is_valid_date(data_type, val):
                     if day < 1 or day > 30:
                         raise IsValidError
                 else: # else 28 day
-                    if not year%4 and not (not year%100 and year%400):
+                    if not year % 4 and not (not year % 100 and year % 400):
                     #if not (year % 4) and ((year % 100) or (not (year % 400)) ):  # leap year
                         if day < 1 or day > 29:
                             raise IsValidError

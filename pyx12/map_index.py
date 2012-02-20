@@ -1,5 +1,5 @@
 ######################################################################
-# Copyright (c) 2001-2011 Kalamazoo Community Mental Health Services,
+# Copyright Kalamazoo Community Mental Health Services,
 #   John Holland <jholland@kazoocmh.org> <john@zoner.org>
 # All rights reserved.
 #
@@ -7,8 +7,6 @@
 # you should have received as part of this distribution.
 #
 ######################################################################
-
-#    $Id$
 
 """
 Locate the correct xml map file given:
@@ -19,7 +17,6 @@ Locate the correct xml map file given:
 """
 
 import xml.etree.cElementTree as et
-import errors
 
 class map_index(object):
     """
@@ -67,5 +64,5 @@ class map_index(object):
 
     def print_all(self):
         for a in self.maps:
-            print a
+            print(a)
 

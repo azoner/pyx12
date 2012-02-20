@@ -89,7 +89,7 @@ class x12_node(object):
                         return child.getnodebypath(string.join(pathl[1:],'/'))
                     else:
                         break
-        raise EngineError, 'getnodebypath failed. Path "%s" not found' % path
+        raise EngineError('getnodebypath failed. Path "%s" not found' % path)
  
     def get_child_count(self):
         return len(self.children)
@@ -274,7 +274,7 @@ class map_if(x12_node):
         """
         @param idx: zero based
         """
-        raise EngineError, 'map_if.get_child_node_by_idx is not a valid call'
+        raise EngineError('map_if.get_child_node_by_idx is not a valid call')
             
     def getnodebypath(self, path):
         """
@@ -291,7 +291,7 @@ class map_if(x12_node):
                         return child
                     else:
                         return child.getnodebypath(string.join(pathl[1:],'/'))
-        raise EngineError, 'getnodebypath failed. Path "%s" not found' % path
+        raise EngineError('getnodebypath failed. Path "%s" not found' % path)
             
     def getnodebypath2(self, path_str):
         """
@@ -309,7 +309,7 @@ class map_if(x12_node):
                     else:
                         del x12path.loop_list[0]
                         return child.getnodebypath(x12path.format())
-        raise EngineError, 'getnodebypath failed. Path "%s" not found' % path_str
+        raise EngineError('getnodebypath failed. Path "%s" not found' % path_str)
             
     def is_map_root(self):
         """
@@ -367,7 +367,7 @@ class loop_if(x12_node):
         self.type = elem.get('type')
 
         self.name = elem.findtext('name')
-        self.usage= elem.findtext('usage')
+        self.usage = elem.findtext('usage')
         self.pos = int(elem.findtext('pos'))
         self.repeat = elem.findtext('repeat')
 
@@ -483,7 +483,7 @@ class loop_if(x12_node):
                             possible = child.get_unique_key_id_element(id_val)
                             if possible is not None:
                                 return child
-        raise EngineError, 'getnodebypath failed. Path "%s" not found' % path
+        raise EngineError('getnodebypath failed. Path "%s" not found' % path)
 
     def getnodebypath2(self, path_str):
         """
@@ -515,7 +515,7 @@ class loop_if(x12_node):
                             possible = child.get_unique_key_id_element(id_val)
                             if possible is not None:
                                 return child
-        raise EngineError, 'getnodebypath failed. Path "%s" not found' % path_str
+        raise EngineError('getnodebypath failed. Path "%s" not found' % path_str)
 
     def get_child_count(self):
         return self.__len__()
@@ -524,7 +524,7 @@ class loop_if(x12_node):
         """
         @param idx: zero based
         """
-        raise EngineError, 'loop_if.get_child_node_by_idx is not a valid call for a loop_if'
+        raise EngineError('loop_if.get_child_node_by_idx is not a valid call for a loop_if')
             
     def get_seg_count(self):
         """
@@ -708,11 +708,11 @@ class segment_if(x12_node):
         if idx >= len(self.children):
             return None
         else:
-            m = [c for c in self.children if c.seq==idx+1]
+            m = [c for c in self.children if c.seq == idx+1]
             if len(m) == 1:
                 return m[0]
             else:
-                raise EngineError, 'idx %i not found in %s' % (idx, self.id)
+                raise EngineError('idx %i not found in %s' % (idx, self.id))
             
     def get_child_node_by_ordinal(self, ord):
         """
@@ -1028,7 +1028,7 @@ class element_if(x12_node):
         self.rec = None
 
         self.id = elem.get('xid')
-        self.refdes= self.id
+        self.refdes = self.id
         self.name = elem.findtext('name')
         self.data_ele = elem.findtext('data_ele')
         self.usage = elem.findtext('usage')
@@ -1040,7 +1040,7 @@ class element_if(x12_node):
             if self.res is not None and self.res != '':
                 self.rec = re.compile(self.res, re.S)
         except Exception:
-            raise EngineError, 'Element regex "%s" failed to compile' % (self.res)
+            raise EngineError('Element regex "%s" failed to compile' % (self.res))
         
         v = elem.find('valid_codes')
         if v is not None:
@@ -1104,7 +1104,7 @@ class element_if(x12_node):
         @rtype: boolean
         """
         # match also by ID
-        raise NotImplementedError, 'Override in sub-class'
+        raise NotImplementedError('Override in sub-class')
         #return False
 
     def is_valid(self, elem, errh, type_list=[]):
@@ -1394,5 +1394,5 @@ def load_map_file(map_file, param, xslt_files = []):
         raise
     except Exception:
         raise
-        raise EngineError, 'Load of map file failed: %s' % (map_full)
+        raise EngineError('Load of map file failed: %s' % (map_full))
     return imap

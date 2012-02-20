@@ -60,7 +60,7 @@ class ParamsBase(object):
         @param option: Option name
         @type option: string
         """
-        if option in self.params.keys():
+        if option in list(self.params.keys()):
             return self.params[option]
         else:
             return None
@@ -89,7 +89,7 @@ class ParamsBase(object):
         """
         if not isfile(filename):
             self.logger.debug('Configuration file "%s" does not exist' % filename)
-            raise EngineError, 'Configuration file "%s" does not exist' % (filename)
+            raise EngineError('Configuration file "%s" does not exist' % (filename))
         try:
             self.logger.debug('parsing config file %s' % (filename))
             t = et.parse(filename)
