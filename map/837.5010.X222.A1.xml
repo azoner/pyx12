@@ -1740,22 +1740,22 @@
                   <usage>S</usage>
                   <seq>09</seq>
                   <valid_codes>
-                    <code>09</code>
-                    <code>10</code>
                     <code>11</code>
                     <code>12</code>
                     <code>13</code>
                     <code>14</code>
                     <code>15</code>
                     <code>16</code>
+                    <code>17</code>
                     <code>AM</code>
                     <code>BL</code>
                     <code>CH</code>
                     <code>CI</code>
                     <code>DS</code>
+                    <code>FI</code>
                     <code>HM</code>
-                    <code>LI</code>
                     <code>LM</code>
+                    <code>MA</code>
                     <code>MB</code>
                     <code>MC</code>
                     <code>OF</code>
