@@ -1,5 +1,5 @@
 ######################################################################
-# Copyright (c) 2001-2011 Kalamazoo Community Mental Health Services,
+# Copyright Kalamazoo Community Mental Health Services,
 #   John Holland <jholland@kazoocmh.org> <john@zoner.org>
 # All rights reserved.
 #
@@ -7,8 +7,6 @@
 # you should have received as part of this distribution.  
 #
 ######################################################################
-
-#    $Id$
 
 """
 Interface to an X12 data stream.
@@ -393,27 +391,19 @@ class X12Reader(X12Base):
             del self.loops[-1]
 
     def __iter__(self):
-        return self
-
-    def __next__(self):
         """
         Iterate over input segments
         """
         self.err_list = []
-        try:
-            while True:
-                # We have not yet incremented cur_line
-                line = next(self.raw)
-                if line[-1] == self.ele_term:
-                    err_str = 'Segment contains trailing element terminators'
-                    self._seg_error('SEG1', err_str, None, 
-                        src_line=self.cur_line+1)
-                seg_data = pyx12.segment.Segment(line, self.seg_term, self.ele_term, \
-                    self.subele_term)
-                self._parse_segment(seg_data)
-                return seg_data
-        except Exception:
-            raise StopIteration
+        for line in self.raw:
+            # We have not yet incremented cur_line
+            if line[-1] == self.ele_term:
+                err_str = 'Segment contains trailing element terminators'
+                self._seg_error('SEG1', err_str, None, src_line=self.cur_line+1)
+            seg_data = pyx12.segment.Segment(line, self.seg_term, self.ele_term, self.subele_term)
+            self._parse_segment(seg_data)
+            yield(seg_data)
+        #yield(None)
 
     def get_errors(self):
         """

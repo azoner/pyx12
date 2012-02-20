@@ -56,26 +56,22 @@ class RawX12File(object):
         self.buffer += self.fd.read(DEFAULT_BUFSIZE)
         
     def __iter__(self):
-        return self
-
-    def __next__(self):
         """
         Iterate over input lines
         """
-        try:
-            while True:
-                if self.buffer.find(self.seg_term) == -1: 
-                    # Need more data
-                    self.buffer += self.fd.read(DEFAULT_BUFSIZE)
-                # Get first segment in buffer
-                (line, self.buffer) = self.buffer.split(self.seg_term, 1) 
-                line = line.replace('\n','').replace('\r','')
-                if line != '':
-                    break
-        except Exception:
-            raise StopIteration
-
-        return line
+        while True:
+            if self.buffer.find(self.seg_term) == -1: 
+                # Need more data
+                self.buffer += self.fd.read(DEFAULT_BUFSIZE)
+            if self.buffer.find(self.seg_term) == -1: 
+                # Still have no segment terminator
+                break
+            # Get first segment in buffer
+            (line, self.buffer) = self.buffer.split(self.seg_term, 1) 
+            line = line.replace('\n','').replace('\r','')
+            if line == '':
+                break
+            yield(line)
 
     def get_term(self):
         """

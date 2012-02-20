@@ -37,13 +37,15 @@ class RawDelimiters(X12fileTestCase):
         str1 += 'IEA&1&000010121+\n'
         fd = self._makeFd(str1)
         src = pyx12.rawx12file.RawX12File(fd)
+        ct = 0
         for seg in src:
-            pass
+            ct += 1 
         (seg_term, ele_term, subele_term, eol, repetition_term) = src.get_term()
         self.assertEqual(subele_term, '!')
         self.assertEqual(ele_term, '&')
         self.assertEqual(seg_term, '+')
         self.assertEqual(repetition_term, None)
+        self.assertEqual(ct, 7)
 
     def test_binary_delimiters(self):
         str1 = 'ISA&00&          &00&          &ZZ&ZZ000          &ZZ&ZZ001          &030828&1128&U&00401&000010121&0&T&!+\n'
@@ -58,13 +60,15 @@ class RawDelimiters(X12fileTestCase):
         str1 = str1.replace('!', chr(0x1E))
         fd = self._makeFd(str1)
         src = pyx12.rawx12file.RawX12File(fd)
+        ct = 0
         for seg in src:
-            pass
+            ct += 1 
         (seg_term, ele_term, subele_term, eol, repetition_term) = src.get_term()
         self.assertEqual(subele_term, chr(0x1E))
         self.assertEqual(ele_term, chr(0x1C))
         self.assertEqual(seg_term, chr(0x1D))
         self.assertEqual(repetition_term, None)
+        self.assertEqual(ct, 7)
 
     def test_arbitrary_delimiters_5010(self):
         str1 = 'ISA&00&          &00&          &ZZ&ZZ000          &ZZ&ZZ001          &030828&1128&^&00501&000010121&0&T&!+\n'
@@ -76,13 +80,15 @@ class RawDelimiters(X12fileTestCase):
         str1 += 'IEA&1&000010121+\n'
         fd = self._makeFd(str1)
         src = pyx12.rawx12file.RawX12File(fd)
+        ct = 0
         for seg in src:
-            pass
+            ct += 1 
         (seg_term, ele_term, subele_term, eol, repetition_term) = src.get_term()
         self.assertEqual(subele_term, '!')
         self.assertEqual(ele_term, '&')
         self.assertEqual(seg_term, '+')
         self.assertEqual(repetition_term, '^')
+        self.assertEqual(ct, 7)
 
     def test_binary_delimiters_5010(self):
         str1 = 'ISA&00&          &00&          &ZZ&ZZ000          &ZZ&ZZ001          &030828&1128&^&00501&000010121&0&T&!+\n'
@@ -98,13 +104,15 @@ class RawDelimiters(X12fileTestCase):
         str1 = str1.replace('^', chr(0x1F))
         fd = self._makeFd(str1)
         src = pyx12.rawx12file.RawX12File(fd)
+        ct = 0
         for seg in src:
-            pass
+            ct += 1 
         (seg_term, ele_term, subele_term, eol, repetition_term) = src.get_term()
         self.assertEqual(subele_term, chr(0x1E))
         self.assertEqual(ele_term, chr(0x1C))
         self.assertEqual(seg_term, chr(0x1D))
         self.assertEqual(repetition_term, chr(0x1F))
+        self.assertEqual(ct, 7)
 
 
 class X12InterchangeControlVersion(X12fileTestCase):
