@@ -15,7 +15,7 @@ Create an XML rendering of the X12 document
 import os.path
 
 # Intrapackage imports
-from errors import *
+from errors import EngineError
 from xmlwriter import XMLWriter
 from map_walker import pop_to_parent_loop
 
