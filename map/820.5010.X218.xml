@@ -1605,6 +1605,10 @@
                 <seq>02</seq>
                 <valid_codes>
                   <code>2L</code>
+                  <code>AG</code>
+                  <code>NH</code>
+                  <code>RGA</code>
+                  <code>UN</code>
                 </valid_codes>
               </element>
               <element xid="ENT03">
