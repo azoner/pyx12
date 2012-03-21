@@ -1,5 +1,5 @@
 ######################################################################
-# Copyright (c) 2001-2011 Kalamazoo Community Mental Health Services,
+# Copyright (c) Kalamazoo Community Mental Health Services,
 #   John Holland <jholland@kazoocmh.org> <john@zoner.org>
 # All rights reserved.
 #
@@ -8,14 +8,12 @@
 #
 ######################################################################
 
-#    $Id$
-
 """
 Validate and transform HIPAA X12 documents
 """
 
 __author__  = "John Holland <jholland@kazoocmh.org> <john@zoner.org>"
 __status__  = "production"
-__version__ = "2.0.0"
+__version__ = "2.0.a1"
 __date__    = "2012-01-04"
 __revision__ = ""

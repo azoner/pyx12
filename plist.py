@@ -31,7 +31,7 @@ def main():
     [(fd_out.write(share+x+'\n')) for x in filter(lambda x: x[:4] == 'test' and ext(x) in ('.py', '.xml'), manifest)]
     [(fd_out.write(share+x+'\n')) for x in filter(lambda x: x[:10] == 'test/files' 
         and ext(x) in ('.txt', '.base', '.simple', '.idtag', '.idtagqual', '.xsl'), manifest)]
-    for x in ('CHANGELOG.txt', 'INSTALL.txt', 'LICENSE.txt', 'README.txt'):
+    for x in ('CHANGELOG.txt', 'INSTALL.txt', 'LICENSE.txt', 'README.md'):
         fd_out.write(doc+x+'\n')
     maps = filter(lambda x: x[:3] == 'map' and ext(x) == '.xml', manifest)
     [(fd_out.write(share+x+'\n')) for x in maps]

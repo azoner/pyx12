@@ -118,7 +118,7 @@ def main():
                 hdlr.setFormatter(formatter)
                 logger.addHandler(hdlr) 
             except IOError:
-                logger.error('Could not open log file: %s' % (val))
+                logger.exception('Could not open log file: %s' % (val))
 
     for src_filename in args:
         try:
@@ -163,7 +163,7 @@ def main():
             if fd_html:
                 fd_html.close()
         except IOError:
-            logger.error('Could not open files')
+            logger.exception('Could not open files')
             usage()
             return False
         except KeyboardInterrupt:

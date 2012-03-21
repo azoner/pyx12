@@ -7,8 +7,6 @@ from os.path import join, splitext
 import sys
 
 import pyx12
-import pyx12.map_if
-import pyx12.params
 
 map_dir = 'share/pyx12/map'
 MAP_FILES = ['map/%s' % (file1) for file1 in 
@@ -38,7 +36,6 @@ TEST_DATA = ['test/files/%s' % (file1) for file1 in
 kw = {  
     'name': "pyx12",
     'version': pyx12.__version__,
-    'description': pyx12.__doc__,
     'long_description': pyx12.__doc__,
     'license': 'BSD',
     'description': "An X12 validator and converter",
