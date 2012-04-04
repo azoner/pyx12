@@ -6,3 +6,4 @@ pkg-plist
 .pypirc
 *.pyo
 *.pyc
+*.egg-info/
