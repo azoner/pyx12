@@ -18,7 +18,6 @@ If seg indicates a segment has been entered, returns the segment node.
 """
 
 import logging
-#import pdb
 
 # Intrapackage imports
 from errors import EngineError
@@ -130,7 +129,6 @@ class walk_tree(object):
             #node_list.append(node)
         while True:
             # Iterate through nodes with position >= current position
-            #import ipdb; ipdb.set_trace()
             for ord1 in [a for a in sorted(node.pos_map) if a>=node_pos]:
                 for child in node.pos_map[ord1]:
                     if child.is_segment():
@@ -312,7 +310,6 @@ class walk_tree(object):
         assert loop_node.is_loop(), "_goto_seg_match failed, node %s is not a loop. seg %s" \
             % (loop_node.id, seg_data.get_seg_id())
         first_child_node = loop_node.get_first_seg()
-        #pdb.set_trace()
         if first_child_node is not None and is_first_seg_match2(first_child_node, seg_data): 
             self._check_loop_usage(loop_node, seg_data, seg_count, cur_line, ls_id, errh)
             first_child_node.incr_cur_count()
