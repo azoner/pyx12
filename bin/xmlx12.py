@@ -10,8 +10,6 @@
 #
 ######################################################################
 
-#    $Id$
-
 """
 Create an X12 document from a XML data file
 """
@@ -22,6 +20,9 @@ import logging
 import codecs
 
 # Intrapackage imports
+libpath = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
+if os.path.isdir(libpath):
+    sys.path.insert(0, libpath)
 import pyx12.segment
 import pyx12.xmlx12_simple
 

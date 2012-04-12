@@ -1,4 +1,9 @@
 #! /usr/bin/env python
+import sys, os, os.path
+
+libpath = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
+if os.path.isdir(libpath):
+    sys.path.insert(0, libpath)
 
 import pyx12.x12file
 import pyx12.error_handler

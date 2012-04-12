@@ -24,6 +24,9 @@ import logging
 from types import *
 
 # Intrapackage imports
+libpath = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
+if os.path.isdir(libpath):
+    sys.path.insert(0, libpath)
 #import pyx12.x12xml_simple
 #import pyx12.x12xml_idtag
 import pyx12

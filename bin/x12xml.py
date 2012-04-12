@@ -10,8 +10,6 @@
 #
 ######################################################################
 
-#    $Id$
-
 """
 Parse a ANSI X12N data file.
 Validate against a map and codeset values.
@@ -21,16 +19,12 @@ Create a XML document based on the data file.
 import os, os.path
 import sys
 import logging
-#import string
 from types import *
-#import StringIO
-#import tempfile
-#import pdb
-#import profile
 
 # Intrapackage imports
-#import pyx12.x12xml_simple
-#import pyx12.x12xml_idtag
+libpath = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
+if os.path.isdir(libpath):
+    sys.path.insert(0, libpath)
 import pyx12
 import pyx12.x12n_document
 import pyx12.params

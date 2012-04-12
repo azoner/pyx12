@@ -1,13 +1,17 @@
 #! /usr/bin/env python
 
-import pyx12
-import pyx12.x12file
-#import pyx12.error_handler
 import sys
 import getopt
 import os.path
 import codecs
 import tempfile
+
+# Intrapackage imports
+libpath = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
+if os.path.isdir(libpath):
+    sys.path.insert(0, libpath)
+import pyx12
+import pyx12.x12file
 
 """
 Format a X12 document.  If the option -e is used, it adds newlines.
