@@ -117,8 +117,6 @@ def x12n_document(param, src_file, fd_997, fd_html,
     #basedir = os.path.dirname(src_file)
     #erx = errh_xml.err_handler(basedir=basedir)
 
-    #import pdb
-    #pdb.set_trace()
     valid = True
     for seg in src:
         #find node
