@@ -448,7 +448,7 @@
               <element xid="PER02">
                 <data_ele>93</data_ele>
                 <name>Submitter Contact Name</name>
-                <usage>R</usage>
+                <usage>S</usage>
                 <seq>02</seq>
               </element>
               <element xid="PER03">
