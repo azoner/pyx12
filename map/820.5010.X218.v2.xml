@@ -1,0 +1,1029 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<!--
+######################################################################
+# Copyright (c) 2011-2012 Kalamazoo Community Mental Health Services,
+#   John Holland <jholland@kazoocmh.org> <john@zoner.org>
+# All rights reserved.
+#
+# This software is licensed as described in the file LICENSE.txt, which
+# you should have received as part of this distribution.
+#
+######################################################################
+-->
+<transaction xid="820A1" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="map.v2.xsd">
+  <name>HIPAA Payment Order/Remittance Advice 005010X218 820A1</name>
+  <loop xid="ST_LOOP" pos="0200" usage="R" repeat="&gt;1" type="explicit" name="Transaction Set Header">
+    <segment xid="ST" usage="R" pos="0100" max_use="1" name="820 Header">
+      <element xid="ST01" data_ele="143" usage="R" seq="01" name="Transaction Set Identifier Code">
+        <valid_codes>
+          <code>820</code>
+        </valid_codes>
+      </element>
+      <element xid="ST02" data_ele="329" usage="R" seq="02" name="Transaction Set Control Number" />
+      <element xid="ST03" data_ele="1705" usage="R" seq="03" name="Implementation Convention Reference">
+        <valid_codes>
+          <code>005010X218</code>
+        </valid_codes>
+      </element>
+    </segment>
+    <!--End of segment ST-->
+    <loop xid="HEADER" pos="0110" usage="R" repeat="1" type="wrapper" name="Header">
+      <segment xid="BPR" usage="R" pos="0200" max_use="1" name="Financial Information">
+        <syntax>P0607</syntax>
+        <syntax>C0809</syntax>
+        <syntax>P1213</syntax>
+        <syntax>C1415</syntax>
+        <syntax>P1819</syntax>
+        <syntax>C2021</syntax>
+        <element xid="BPR01" data_ele="305" usage="R" seq="01" name="Transaction Handling Code">
+          <valid_codes>
+            <code>C</code>
+            <code>D</code>
+            <code>I</code>
+            <code>P</code>
+            <code>U</code>
+            <code>X</code>
+          </valid_codes>
+        </element>
+        <element xid="BPR02" data_ele="782" usage="R" seq="02" name="Total Premium Payment Amount" />
+        <element xid="BPR03" data_ele="478" usage="R" seq="03" name="Credit or Debit Flag Code">
+          <valid_codes>
+            <code>C</code>
+          </valid_codes>
+        </element>
+        <element xid="BPR04" data_ele="591" usage="R" seq="04" name="Payment Method Code">
+          <valid_codes>
+            <code>ACH</code>
+            <code>BOP</code>
+            <code>CHK</code>
+            <code>FWT</code>
+            <code>NON</code>
+            <code>SWT</code>
+          </valid_codes>
+        </element>
+        <element xid="BPR05" data_ele="812" usage="S" seq="05" name="Payment Format Code">
+          <valid_codes>
+            <code>CCP</code>
+            <code>CTX</code>
+          </valid_codes>
+        </element>
+        <element xid="BPR06" data_ele="506" usage="S" seq="06" name="Depository Financial Institution (DFI) Identification Number Qualifier">
+          <valid_codes>
+            <code>01</code>
+            <code>02</code>
+            <code>04</code>
+          </valid_codes>
+        </element>
+        <element xid="BPR07" data_ele="507" usage="S" seq="07" name="Originating Depository Financial Institution (DFI) Identifier" />
+        <element xid="BPR08" data_ele="569" usage="S" seq="08" name="Account Number Qualifier">
+          <valid_codes>
+            <code>ALC</code>
+            <code>DA</code>
+          </valid_codes>
+        </element>
+        <element xid="BPR09" data_ele="508" usage="S" seq="09" name="Sender Bank Account Number" />
+        <element xid="BPR10" data_ele="509" usage="R" seq="10" name="Payer Identifier" />
+        <element xid="BPR11" data_ele="510" usage="S" seq="11" name="Originating Company Supplemental Code" />
+        <element xid="BPR12" data_ele="506" usage="S" seq="12" name="Depository Financial Institution (DFI) Identification Number Qualifier">
+          <valid_codes>
+            <code>01</code>
+            <code>02</code>
+            <code>04</code>
+          </valid_codes>
+        </element>
+        <element xid="BPR13" data_ele="507" usage="S" seq="13" name="Receiving Depository Financial Institution (DFI) Identifier" />
+        <element xid="BPR14" data_ele="569" usage="S" seq="14" name="Account Number Qualifier">
+          <valid_codes>
+            <code>DA</code>
+            <code>SG</code>
+          </valid_codes>
+        </element>
+        <element xid="BPR15" data_ele="508" usage="S" seq="15" name="Receiver Bank Account Number" />
+        <element xid="BPR16" data_ele="373" usage="R" seq="16" name="Check Issue or EFT Effective Date" />
+        <element xid="BPR17" data_ele="1048" usage="N" seq="17" name="Business Function Code" />
+        <element xid="BPR18" data_ele="506" usage="N" seq="18" name="(DFI) ID Number Qualifier" />
+        <element xid="BPR19" data_ele="507" usage="N" seq="19" name="(DFI) Identification Number" />
+        <element xid="BPR20" data_ele="569" usage="N" seq="20" name="Account Number Qualifier" />
+        <element xid="BPR21" data_ele="508" usage="N" seq="21" name="Account Number" />
+      </segment>
+      <!--End of segment BPR-->
+      <segment xid="TRN" usage="R" pos="0350" max_use="1" name="Reassociation Trace Number">
+        <element xid="TRN01" data_ele="481" usage="R" seq="01" name="Trace Type Code">
+          <valid_codes>
+            <code>1</code>
+            <code>3</code>
+          </valid_codes>
+        </element>
+        <element xid="TRN02" data_ele="127" usage="R" seq="02" name="Check or EFT Trace Number" />
+        <element xid="TRN03" data_ele="509" usage="S" seq="03" name="Originating Company Identifier" />
+        <element xid="TRN04" data_ele="127" usage="S" seq="04" name="Originating Company Supplemental Code" />
+      </segment>
+      <!--End of segment TRN-->
+      <segment xid="CUR" usage="S" pos="0400" max_use="1" name="Foreign Currency Information">
+        <syntax>C0807</syntax>
+        <syntax>C0907</syntax>
+        <syntax>L101112</syntax>
+        <syntax>C1110</syntax>
+        <syntax>C1210</syntax>
+        <syntax>L131415</syntax>
+        <syntax>C1413</syntax>
+        <syntax>C1513</syntax>
+        <syntax>L161718</syntax>
+        <syntax>C1716</syntax>
+        <syntax>C1816</syntax>
+        <syntax>L192021</syntax>
+        <syntax>C2019</syntax>
+        <syntax>C2119</syntax>
+        <element xid="CUR01" data_ele="98" usage="R" seq="01" name="Entity Identifier Code">
+          <valid_codes>
+            <code>2B</code>
+            <code>PR</code>
+          </valid_codes>
+        </element>
+        <element xid="CUR02" data_ele="100" usage="R" seq="02" name="Currency Code">
+          <valid_codes external="currency" />
+        </element>
+        <element xid="CUR03" data_ele="280" usage="N" seq="03" name="Exchange Rate" />
+        <element xid="CUR04" data_ele="98" usage="N" seq="04" name="Entity Identifier Code" />
+        <element xid="CUR05" data_ele="100" usage="N" seq="05" name="Currency Code" />
+        <element xid="CUR06" data_ele="669" usage="N" seq="06" name="Currency Market/Exchange Code" />
+        <element xid="CUR07" data_ele="374" usage="N" seq="07" name="Date/Time Qualifier" />
+        <element xid="CUR08" data_ele="373" usage="N" seq="08" name="Date" />
+        <element xid="CUR09" data_ele="337" usage="N" seq="09" name="Time" />
+        <element xid="CUR10" data_ele="374" usage="N" seq="10" name="Date/Time Qualifier" />
+        <element xid="CUR11" data_ele="373" usage="N" seq="11" name="Date" />
+        <element xid="CUR12" data_ele="337" usage="N" seq="12" name="Time" />
+        <element xid="CUR13" data_ele="374" usage="N" seq="13" name="Date/Time Qualifier" />
+        <element xid="CUR14" data_ele="373" usage="N" seq="14" name="Date" />
+        <element xid="CUR15" data_ele="337" usage="N" seq="15" name="Time" />
+        <element xid="CUR16" data_ele="374" usage="N" seq="16" name="Date/Time Qualifier" />
+        <element xid="CUR17" data_ele="373" usage="N" seq="17" name="Date" />
+        <element xid="CUR18" data_ele="337" usage="N" seq="18" name="Time" />
+        <element xid="CUR19" data_ele="374" usage="N" seq="19" name="Date/Time Qualifier" />
+        <element xid="CUR20" data_ele="373" usage="N" seq="20" name="Date" />
+        <element xid="CUR21" data_ele="337" usage="N" seq="21" name="Time" />
+      </segment>
+      <!--End of segment CUR-->
+      <segment xid="REF" usage="S" pos="0500" max_use="&gt;1" name="Premium Receivers Identification Key">
+        <syntax>R0203</syntax>
+        <element xid="REF01" data_ele="128" usage="R" seq="01" name="Reference Identification Qualifier">
+          <valid_codes>
+            <code>14</code>
+            <code>17</code>
+            <code>18</code>
+            <code>2F</code>
+            <code>38</code>
+            <code>72</code>
+            <code>LB</code>
+          </valid_codes>
+        </element>
+        <element xid="REF02" data_ele="127" usage="R" seq="02" name="Premium Receiver Reference Identifier" />
+        <element xid="REF03" data_ele="352" usage="N" seq="03" name="Description" />
+        <composite xid="REF04" data_ele="C040" usage="N" seq="04" name="Reference Identifier" />
+      </segment>
+      <!--End of segment REF-->
+      <segment xid="DTM" usage="S" pos="0600" max_use="1" name="Process Date">
+        <syntax>R020305</syntax>
+        <syntax>C0403</syntax>
+        <syntax>P0506</syntax>
+        <element xid="DTM01" data_ele="374" usage="R" seq="01" name="Date Time Qualifier">
+          <valid_codes>
+            <code>009</code>
+          </valid_codes>
+        </element>
+        <element xid="DTM02" data_ele="373" usage="R" seq="02" name="Payer Process Date" />
+        <element xid="DTM03" data_ele="337" usage="N" seq="03" name="Time" />
+        <element xid="DTM04" data_ele="623" usage="N" seq="04" name="Time Code" />
+        <element xid="DTM05" data_ele="1250" usage="N" seq="05" name="Date Time Period Format Qualifier" />
+        <element xid="DTM06" data_ele="1251" usage="N" seq="06" name="Date Time Period" />
+      </segment>
+      <!--End of segment DTM-->
+      <segment xid="DTM" usage="S" pos="0600" max_use="1" name="Delivery Date">
+        <syntax>R020305</syntax>
+        <syntax>C0403</syntax>
+        <syntax>P0506</syntax>
+        <element xid="DTM01" data_ele="374" usage="R" seq="01" name="Date Time Qualifier">
+          <valid_codes>
+            <code>035</code>
+          </valid_codes>
+        </element>
+        <element xid="DTM02" data_ele="373" usage="R" seq="02" name="Premium Delivery Date" />
+        <element xid="DTM03" data_ele="337" usage="N" seq="03" name="Time" />
+        <element xid="DTM04" data_ele="623" usage="N" seq="04" name="Time Code" />
+        <element xid="DTM05" data_ele="1250" usage="N" seq="05" name="Date Time Period Format Qualifier" />
+        <element xid="DTM06" data_ele="1251" usage="N" seq="06" name="Date Time Period" />
+      </segment>
+      <!--End of segment DTM-->
+      <segment xid="DTM" usage="S" pos="0600" max_use="1" name="Coverage Period">
+        <syntax>R020305</syntax>
+        <syntax>C0403</syntax>
+        <syntax>P0506</syntax>
+        <element xid="DTM01" data_ele="374" usage="R" seq="01" name="Date Time Qualifier">
+          <valid_codes>
+            <code>582</code>
+          </valid_codes>
+        </element>
+        <element xid="DTM02" data_ele="373" usage="N" seq="02" name="Date" />
+        <element xid="DTM03" data_ele="337" usage="N" seq="03" name="Time" />
+        <element xid="DTM04" data_ele="623" usage="N" seq="04" name="Time Code" />
+        <element xid="DTM05" data_ele="1250" usage="R" seq="05" name="Date Time Period Format Qualifier">
+          <valid_codes>
+            <code>RD8</code>
+          </valid_codes>
+        </element>
+        <element xid="DTM06" data_ele="1251" usage="R" seq="06" name="Coverage Period" />
+      </segment>
+      <!--End of segment DTM-->
+      <segment xid="DTM" usage="S" pos="0600" max_use="1" name="Creation Date">
+        <syntax>R020305</syntax>
+        <syntax>C0403</syntax>
+        <syntax>P0506</syntax>
+        <element xid="DTM01" data_ele="374" usage="R" seq="01" name="Date Time Qualifier">
+          <valid_codes>
+            <code>097</code>
+          </valid_codes>
+        </element>
+        <element xid="DTM02" data_ele="373" usage="R" seq="02" name="Date" />
+        <element xid="DTM03" data_ele="337" usage="N" seq="03" name="Time" />
+        <element xid="DTM04" data_ele="623" usage="N" seq="04" name="Time Code" />
+        <element xid="DTM05" data_ele="1250" usage="N" seq="05" name="Date Time Period Format Qualifier" />
+        <element xid="DTM06" data_ele="1251" usage="N" seq="06" name="Date Time Period" />
+      </segment>
+      <!--End of segment DTM-->
+      <loop xid="1000A" pos="0700" usage="R" repeat="1" name="Premium Receiver's Name">
+        <segment xid="N1" usage="R" pos="0700" max_use="1" name="Premium Receiver's Name">
+          <syntax>R0203</syntax>
+          <syntax>P0304</syntax>
+          <element xid="N101" data_ele="98" usage="R" seq="01" name="Entity Identifier Code">
+            <valid_codes>
+              <code>PE</code>
+            </valid_codes>
+          </element>
+          <element xid="N102" data_ele="93" usage="S" seq="02" name="Premium Receiver's Last or Organization Name" />
+          <element xid="N103" data_ele="66" usage="S" seq="03" name="Identification Code Qualifier">
+            <valid_codes>
+              <code>1</code>
+              <code>9</code>
+              <code>EQ</code>
+              <code>FI</code>
+              <code>XV</code>
+            </valid_codes>
+          </element>
+          <element xid="N104" data_ele="67" usage="S" seq="04" name="Premium Receiver's Identification Code" />
+          <element xid="N105" data_ele="706" usage="N" seq="05" name="Entity Relationship Code" />
+          <element xid="N106" data_ele="98" usage="N" seq="06" name="Entity Identifier Code" />
+        </segment>
+        <!--End of segment N1-->
+        <segment xid="N2" usage="S" pos="0800" max_use="1" name="Premium Receiver Additional Name">
+          <element xid="N201" data_ele="93" usage="R" seq="01" name="Premium Receiver's Additional Name" />
+          <element xid="N202" data_ele="93" usage="N" seq="02" name="Name" />
+        </segment>
+        <!--End of segment N2-->
+        <segment xid="N3" usage="S" pos="0900" max_use="1" name="Premium Receiver's Address">
+          <element xid="N301" data_ele="166" usage="R" seq="01" name="Premium Receiver's Address Line" />
+          <element xid="N302" data_ele="166" usage="S" seq="02" name="Premium Receiver's Address Line" />
+        </segment>
+        <!--End of segment N3-->
+        <segment xid="N4" usage="S" pos="1000" max_use="1" name="Premium Receiver's City, State, and ZIP Code">
+          <syntax>E0207</syntax>
+          <syntax>C0605</syntax>
+          <syntax>C0704</syntax>
+          <element xid="N401" data_ele="19" usage="R" seq="01" name="Premium Receiver's City Name" />
+          <element xid="N402" data_ele="156" usage="S" seq="02" name="Premium Receiver's State Code">
+            <valid_codes external="states" />
+          </element>
+          <element xid="N403" data_ele="116" usage="S" seq="03" name="Premium Receiver's Postal Zone or Zip Code" />
+          <element xid="N404" data_ele="26" usage="S" seq="04" name="Country Code">
+            <valid_codes external="country" />
+          </element>
+          <element xid="N405" data_ele="309" usage="N" seq="05" name="Location Qualifier" />
+          <element xid="N406" data_ele="310" usage="N" seq="06" name="Location Identifier" />
+          <element xid="N407" data_ele="1715" usage="S" seq="07" name="Country Subdivision Code" />
+        </segment>
+        <!--End of segment N4-->
+        <segment xid="RDM" usage="S" pos="1300" max_use="1" name="Premium Receiver's Remittance Delivery Method">
+          <element xid="RDM01" data_ele="756" usage="R" seq="01" name="Remittance Delivery Method Code">
+            <valid_codes>
+              <code>BM</code>
+              <code>EM</code>
+              <code>FT</code>
+              <code>FX</code>
+              <code>IA</code>
+              <code>OL</code>
+            </valid_codes>
+          </element>
+          <element xid="RDM02" data_ele="93" usage="S" seq="02" name="Premium Receiver's Last or Organization Name" />
+          <element xid="RDM03" data_ele="364" usage="S" seq="03" name="Premium Receiver's Communication Number" />
+          <composite xid="RDM04" data_ele="C040" usage="N" seq="04" name="Reference Identifier" />
+          <composite xid="RDM05" data_ele="C040" usage="N" seq="05" name="Reference Identifier" />
+        </segment>
+        <!--End of segment RDM-->
+      </loop>
+      <!--End of 1000A loop-->
+      <loop xid="1000B" pos="1500" usage="R" repeat="1" name="Premium Payer's Name">
+        <segment xid="N1" usage="R" pos="0700" max_use="1" name="Premium Payer's Name">
+          <syntax>R0203</syntax>
+          <syntax>P0304</syntax>
+          <element xid="N101" data_ele="98" usage="R" seq="01" name="Entity Identifier Code">
+            <valid_codes>
+              <code>PR</code>
+            </valid_codes>
+          </element>
+          <element xid="N102" data_ele="93" usage="S" seq="02" name="Premium Payer Name" />
+          <element xid="N103" data_ele="66" usage="S" seq="03" name="Identification Code Qualifier">
+            <valid_codes>
+              <code>1</code>
+              <code>24</code>
+              <code>75</code>
+              <code>9</code>
+              <code>EQ</code>
+              <code>FI</code>
+              <code>PI</code>
+            </valid_codes>
+          </element>
+          <element xid="N104" data_ele="67" usage="S" seq="04" name="Premium Payer Identifier" />
+          <element xid="N105" data_ele="706" usage="N" seq="05" name="Entity Relationship Code" />
+          <element xid="N106" data_ele="98" usage="N" seq="06" name="Entity Identifier Code" />
+        </segment>
+        <!--End of segment N1-->
+        <segment xid="N2" usage="S" pos="0800" max_use="1" name="Premium Payer Additional Name">
+          <element xid="N201" data_ele="93" usage="R" seq="01" name="Premium Payer Additional Name" />
+          <element xid="N202" data_ele="93" usage="N" seq="02" name="Name" />
+        </segment>
+        <!--End of segment N2-->
+        <segment xid="N3" usage="S" pos="0900" max_use="1" name="Premium Payer's Address">
+          <element xid="N301" data_ele="166" usage="R" seq="01" name="Premium Payer Address Line" />
+          <element xid="N302" data_ele="166" usage="S" seq="02" name="Premium Payer Address Line" />
+        </segment>
+        <!--End of segment N3-->
+        <segment xid="N4" usage="S" pos="1000" max_use="1" name="Premium Payer's City, State, ZIP Code">
+          <syntax>E0207</syntax>
+          <syntax>C0605</syntax>
+          <syntax>C0704</syntax>
+          <element xid="N401" data_ele="19" usage="R" seq="01" name="Premium Payer City Name" />
+          <element xid="N402" data_ele="156" usage="S" seq="02" name="Premium Payer State Code">
+            <valid_codes external="states" />
+          </element>
+          <element xid="N403" data_ele="116" usage="S" seq="03" name="Premium Payer Postal Zone or ZIP Code" />
+          <element xid="N404" data_ele="26" usage="S" seq="04" name="Country Code">
+            <valid_codes external="country" />
+          </element>
+          <element xid="N405" data_ele="309" usage="N" seq="05" name="Location Qualifier" />
+          <element xid="N406" data_ele="310" usage="N" seq="06" name="Location Identifier" />
+          <element xid="N407" data_ele="1715" usage="S" seq="07" name="Country Subdivision Code" />
+        </segment>
+        <!--End of segment N4-->
+        <segment xid="PER" usage="S" pos="1200" max_use="&gt;1" name="Premium Payer's Administrative Contact">
+          <syntax>P0304</syntax>
+          <syntax>P0506</syntax>
+          <syntax>P0708</syntax>
+          <element xid="PER01" data_ele="366" usage="R" seq="01" name="Contact Function Code">
+            <valid_codes>
+              <code>IC</code>
+            </valid_codes>
+          </element>
+          <element xid="PER02" data_ele="93" usage="R" seq="02" name="Premium Payer Contact Name" />
+          <element xid="PER03" data_ele="365" usage="R" seq="03" name="Communication Number Qualifier">
+            <valid_codes>
+              <code>EM</code>
+              <code>FX</code>
+              <code>TE</code>
+            </valid_codes>
+          </element>
+          <element xid="PER04" data_ele="364" usage="R" seq="04" name="Communication Number" />
+          <element xid="PER05" data_ele="365" usage="S" seq="05" name="Communication Number Qualifier">
+            <valid_codes>
+              <code>EM</code>
+              <code>EX</code>
+              <code>FX</code>
+              <code>TE</code>
+            </valid_codes>
+          </element>
+          <element xid="PER06" data_ele="364" usage="S" seq="06" name="Communication Number" />
+          <element xid="PER07" data_ele="365" usage="S" seq="07" name="Communication Number Qualifier">
+            <valid_codes>
+              <code>EM</code>
+              <code>EX</code>
+              <code>FX</code>
+              <code>TE</code>
+            </valid_codes>
+          </element>
+          <element xid="PER08" data_ele="364" usage="S" seq="08" name="Communication Number" />
+          <element xid="PER09" data_ele="443" usage="N" seq="09" name="Contact Inquiry Reference" />
+        </segment>
+        <!--End of segment PER-->
+      </loop>
+      <!--End of 1000B loop-->
+      <loop xid="1000C" pos="2300" usage="S" repeat="14" name="Intermediary Bank Information">
+        <segment xid="N1" usage="R" pos="0700" max_use="1" name="Intermediary Bank Information">
+          <syntax>R0203</syntax>
+          <syntax>P0304</syntax>
+          <element xid="N101" data_ele="98" usage="R" seq="01" name="Entity Identifier Code">
+            <valid_codes>
+              <code>04</code>
+              <code>0B</code>
+              <code>8W</code>
+              <code>AK</code>
+              <code>BE</code>
+              <code>BK</code>
+              <code>C1</code>
+              <code>C2</code>
+              <code>IAT</code>
+              <code>MJ</code>
+              <code>RB</code>
+              <code>Z6</code>
+              <code>ZB</code>
+              <code>ZL</code>
+            </valid_codes>
+          </element>
+          <element xid="N102" data_ele="93" usage="S" seq="02" name="Intermediary Bank Name" />
+          <element xid="N103" data_ele="66" usage="S" seq="03" name="Identification Code Qualifier">
+            <valid_codes>
+              <code>31</code>
+              <code>57</code>
+              <code>94</code>
+              <code>A3</code>
+              <code>A4</code>
+              <code>A6</code>
+              <code>CF</code>
+              <code>G</code>
+              <code>PA</code>
+            </valid_codes>
+          </element>
+          <element xid="N104" data_ele="67" usage="S" seq="04" name="Intermediary Bank Identifier" />
+          <element xid="N105" data_ele="706" usage="N" seq="05" name="Entity Relationship Code" />
+          <element xid="N106" data_ele="98" usage="N" seq="06" name="Entity Identifier Code" />
+        </segment>
+        <!--End of segment N1-->
+        <segment xid="N2" usage="S" pos="0800" max_use="1" name="Intermediary Bank Additional Name">
+          <element xid="N201" data_ele="93" usage="R" seq="01" name="Intermediary Bank Additional Name" />
+          <element xid="N202" data_ele="93" usage="N" seq="02" name="Name" />
+        </segment>
+        <!--End of segment N2-->
+        <segment xid="N3" usage="S" pos="0900" max_use="1" name="Intermediary Bank's Address">
+          <element xid="N301" data_ele="166" usage="R" seq="01" name="Intermediary Bank Address Line" />
+          <element xid="N302" data_ele="166" usage="S" seq="02" name="Intermediary Bank Address Line" />
+        </segment>
+        <!--End of segment N3-->
+        <segment xid="N4" usage="S" pos="1000" max_use="1" name="Intermediary Bank's City, State, ZIP Code">
+          <syntax>E0207</syntax>
+          <syntax>C0605</syntax>
+          <syntax>C0704</syntax>
+          <element xid="N401" data_ele="19" usage="R" seq="01" name="Intermediary Bank City Name" />
+          <element xid="N402" data_ele="156" usage="S" seq="02" name="Intermediary Bank State Code">
+            <valid_codes external="states" />
+          </element>
+          <element xid="N403" data_ele="116" usage="S" seq="03" name="Intermediary Bank Postal Zone or ZIP Code" />
+          <element xid="N404" data_ele="26" usage="S" seq="04" name="Country Code">
+            <valid_codes external="country" />
+          </element>
+          <element xid="N405" data_ele="309" usage="N" seq="05" name="Location Qualifier" />
+          <element xid="N406" data_ele="310" usage="N" seq="06" name="Location Identifier" />
+          <element xid="N407" data_ele="1715" usage="S" seq="07" name="Country Subdivision Code" />
+        </segment>
+        <!--End of segment N4-->
+        <segment xid="PER" usage="S" pos="1200" max_use="&gt;1" name="Intermediary Bank's Administrative Contact">
+          <syntax>P0304</syntax>
+          <syntax>P0506</syntax>
+          <syntax>P0708</syntax>
+          <element xid="PER01" data_ele="366" usage="R" seq="01" name="Contact Function Code">
+            <valid_codes>
+              <code>IC</code>
+            </valid_codes>
+          </element>
+          <element xid="PER02" data_ele="93" usage="R" seq="02" name="Intermediary Bank Contact Name" />
+          <element xid="PER03" data_ele="365" usage="R" seq="03" name="Communication Number Qualifier">
+            <valid_codes>
+              <code>EM</code>
+              <code>FX</code>
+              <code>TE</code>
+            </valid_codes>
+          </element>
+          <element xid="PER04" data_ele="364" usage="R" seq="04" name="Communication Number" />
+          <element xid="PER05" data_ele="365" usage="S" seq="05" name="Communication Number Qualifier">
+            <valid_codes>
+              <code>EM</code>
+              <code>EX</code>
+              <code>FX</code>
+              <code>TE</code>
+            </valid_codes>
+          </element>
+          <element xid="PER06" data_ele="364" usage="S" seq="06" name="Communication Number" />
+          <element xid="PER07" data_ele="365" usage="S" seq="07" name="Communication Number Qualifier">
+            <valid_codes>
+              <code>EM</code>
+              <code>EX</code>
+              <code>FX</code>
+              <code>TE</code>
+            </valid_codes>
+          </element>
+          <element xid="PER08" data_ele="364" usage="S" seq="08" name="Communication Number" />
+          <element xid="PER09" data_ele="443" usage="N" seq="09" name="Contact Inquiry Reference" />
+        </segment>
+        <!--End of segment PER-->
+      </loop>
+      <!--End of 1000C loop-->
+    </loop>
+    <!--End of Header loop-->
+    <loop xid="TABLE2AREA2" pos="0120" usage="S" repeat="&gt;1" type="wrapper" name="Table2 - Area2">
+      <loop xid="2000A" pos="0100" usage="S" repeat="1" name="Organization Summary Remittance">
+        <segment xid="ENT" usage="R" pos="0100" max_use="1" name="Organization Summary Remittance">
+          <syntax>P020304</syntax>
+          <syntax>P050607</syntax>
+          <syntax>P0809</syntax>
+          <element xid="ENT01" data_ele="554" usage="R" seq="01" name="Assigned Number" />
+          <element xid="ENT02" data_ele="98" usage="R" seq="02" name="Entity Identifier Code">
+            <valid_codes>
+              <code>2L</code>
+              <code>AG</code>
+              <code>NH</code>
+              <code>RGA</code>
+              <code>UN</code>
+            </valid_codes>
+          </element>
+          <element xid="ENT03" data_ele="66" usage="R" seq="03" name="Identification Code Qualifier">
+            <valid_codes>
+              <code>1</code>
+              <code>24</code>
+              <code>9</code>
+              <code>FI</code>
+            </valid_codes>
+          </element>
+          <element xid="ENT04" data_ele="67" usage="R" seq="04" name="Organization Identification Code" />
+          <element xid="ENT05" data_ele="98" usage="N" seq="05" name="Entity Identifier Code" />
+          <element xid="ENT06" data_ele="66" usage="N" seq="06" name="Identification Code Qualifier" />
+          <element xid="ENT07" data_ele="67" usage="N" seq="07" name="Identification Code" />
+          <element xid="ENT08" data_ele="128" usage="N" seq="08" name="Reference Identification Qualifier" />
+          <element xid="ENT09" data_ele="127" usage="N" seq="09" name="Reference Identification" />
+        </segment>
+        <!--End of segment ENT-->
+        <loop xid="2200A" pos="0800" usage="S" repeat="&gt;1" name="Organization Summary Remittance Level Adjustment for Previous Payment">
+          <segment xid="ADX" usage="R" pos="0800" max_use="1" name="Organization Summary Remittance Level Adjustment for Previous Payment">
+            <syntax>P0304</syntax>
+            <element xid="ADX01" data_ele="782" usage="R" seq="01" name="Premium Payment Adjustment Amount" />
+            <element xid="ADX02" data_ele="426" usage="R" seq="02" name="Premium Payment Adjustment Reason">
+              <valid_codes>
+                <code>52</code>
+                <code>53</code>
+                <code>80</code>
+                <code>81</code>
+                <code>86</code>
+                <code>BJ</code>
+                <code>H1</code>
+                <code>H6</code>
+                <code>RU</code>
+                <code>WO</code>
+                <code>WW</code>
+              </valid_codes>
+            </element>
+            <element xid="ADX03" data_ele="128" usage="N" seq="03" name="Reference Identification Qualifier" />
+            <element xid="ADX04" data_ele="127" usage="N" seq="04" name="Reference Identification" />
+          </segment>
+          <!--End of segment ADX-->
+        </loop>
+        <!--End of 2200A loop-->
+        <loop xid="2300A" pos="1500" usage="R" repeat="&gt;1" name="Organization Summary Remittance Detail">
+          <segment xid="RMR" usage="R" pos="1500" max_use="1" name="Organization Summary Remittance Detail">
+            <syntax>P0102</syntax>
+            <syntax>P0708</syntax>
+            <element xid="RMR01" data_ele="128" usage="R" seq="01" name="Reference Identification Qualifier">
+              <valid_codes>
+                <code>11</code>
+                <code>1L</code>
+                <code>CT</code>
+                <code>IK</code>
+              </valid_codes>
+            </element>
+            <element xid="RMR02" data_ele="127" usage="R" seq="02" name="Contract, Invoice, Account, Group, or Policy Number" />
+            <element xid="RMR03" data_ele="482" usage="S" seq="03" name="Payment Action Code">
+              <valid_codes>
+                <code>PA</code>
+                <code>PI</code>
+                <code>PO</code>
+                <code>PP</code>
+              </valid_codes>
+            </element>
+            <element xid="RMR04" data_ele="782" usage="R" seq="04" name="Detail Premium Payment Amount" />
+            <element xid="RMR05" data_ele="782" usage="S" seq="05" name="Billed Premium Amount" />
+            <element xid="RMR06" data_ele="782" usage="N" seq="06" name="Monetary Amount" />
+            <element xid="RMR07" data_ele="426" usage="N" seq="07" name="Adjustment Reason Code" />
+            <element xid="RMR08" data_ele="782" usage="N" seq="08" name="Monetary Amount" />
+          </segment>
+          <!--End of segment RMR-->
+          <segment xid="REF" usage="S" pos="1700" max_use="&gt;1" name="Reference Information">
+            <syntax>R0203</syntax>
+            <element xid="REF01" data_ele="128" usage="R" seq="01" name="Organizational Reference Identification Qualifier">
+              <valid_codes>
+                <code>14</code>
+                <code>17</code>
+                <code>18</code>
+                <code>2F</code>
+                <code>38</code>
+                <code>E9</code>
+                <code>LB</code>
+                <code>LU</code>
+                <code>ZZ</code>
+              </valid_codes>
+            </element>
+            <element xid="REF02" data_ele="127" usage="R" seq="02" name="Organizational Reference Identifier" />
+            <element xid="REF03" data_ele="352" usage="N" seq="03" name="Description" />
+            <composite xid="REF04" data_ele="C040" usage="N" seq="04" name="Reference Identifier" />
+          </segment>
+          <!--End of segment REF-->
+          <segment xid="DTM" usage="S" pos="1800" max_use="1" name="Organizational Coverage Period">
+            <syntax>R020305</syntax>
+            <syntax>C0403</syntax>
+            <syntax>P0506</syntax>
+            <element xid="DTM01" data_ele="374" usage="R" seq="01" name="Date Time Qualifier">
+              <valid_codes>
+                <code>582</code>
+                <code>AAG</code>
+              </valid_codes>
+            </element>
+            <element xid="DTM02" data_ele="373" usage="S" seq="02" name="Date" />
+            <element xid="DTM03" data_ele="337" usage="N" seq="03" name="Time" />
+            <element xid="DTM04" data_ele="623" usage="N" seq="04" name="Time Code" />
+            <element xid="DTM05" data_ele="1250" usage="S" seq="05" name="Date Time Period Format Qualifier">
+              <valid_codes>
+                <code>RD8</code>
+              </valid_codes>
+            </element>
+            <element xid="DTM06" data_ele="1251" usage="S" seq="06" name="Coverage Period" />
+          </segment>
+          <!--End of segment DTM-->
+          <loop xid="2310A" pos="1900" usage="S" repeat="1" name="Summary Line Item">
+            <segment xid="IT1" usage="R" pos="1900" max_use="1" name="Summary Line Item">
+              <syntax>P020304</syntax>
+              <syntax>P0607</syntax>
+              <syntax>P0809</syntax>
+              <syntax>P1011</syntax>
+              <syntax>P1213</syntax>
+              <syntax>P1415</syntax>
+              <syntax>P1617</syntax>
+              <syntax>P1819</syntax>
+              <syntax>P2021</syntax>
+              <syntax>P2223</syntax>
+              <syntax>P2425</syntax>
+              <element xid="IT101" data_ele="350" usage="R" seq="01" name="Line Item Control Number" />
+              <element xid="IT102" data_ele="358" usage="N" seq="02" name="Quantity Invoiced" />
+              <element xid="IT103" data_ele="355" usage="N" seq="03" name="Unit or Basis for Measurement Code" />
+              <element xid="IT104" data_ele="212" usage="N" seq="04" name="Unit Price" />
+              <element xid="IT105" data_ele="639" usage="N" seq="05" name="Basis of Unit Price Code" />
+              <element xid="IT106" data_ele="235" usage="N" seq="06" name="Product/Service ID Qualifier" />
+              <element xid="IT107" data_ele="234" usage="N" seq="07" name="Product/Service ID" />
+              <element xid="IT108" data_ele="235" usage="N" seq="08" name="Product/Service ID Qualifier" />
+              <element xid="IT109" data_ele="234" usage="N" seq="09" name="Product/Service ID" />
+              <element xid="IT110" data_ele="235" usage="N" seq="10" name="Product/Service ID Qualifier" />
+              <element xid="IT111" data_ele="234" usage="N" seq="11" name="Product/Service ID" />
+              <element xid="IT112" data_ele="235" usage="N" seq="12" name="Product/Service ID Qualifier" />
+              <element xid="IT113" data_ele="234" usage="N" seq="13" name="Product/Service ID" />
+              <element xid="IT114" data_ele="235" usage="N" seq="14" name="Product/Service ID Qualifier" />
+              <element xid="IT115" data_ele="234" usage="N" seq="15" name="Product/Service ID" />
+              <element xid="IT116" data_ele="235" usage="N" seq="16" name="Product/Service ID Qualifier" />
+              <element xid="IT117" data_ele="234" usage="N" seq="17" name="Product/Service ID" />
+              <element xid="IT118" data_ele="235" usage="N" seq="18" name="Product/Service ID Qualifier" />
+              <element xid="IT119" data_ele="234" usage="N" seq="19" name="Product/Service ID" />
+              <element xid="IT120" data_ele="235" usage="N" seq="20" name="Product/Service ID Qualifier" />
+              <element xid="IT121" data_ele="234" usage="N" seq="21" name="Product/Service ID" />
+              <element xid="IT122" data_ele="235" usage="N" seq="22" name="Product/Service ID Qualifier" />
+              <element xid="IT123" data_ele="234" usage="N" seq="23" name="Product/Service ID" />
+              <element xid="IT124" data_ele="235" usage="N" seq="24" name="Product/Service ID Qualifier" />
+              <element xid="IT125" data_ele="234" usage="N" seq="25" name="Product/Service ID" />
+            </segment>
+            <!--End of segment IT1-->
+            <loop xid="2312A" pos="2020" usage="S" repeat="4" name="Service, Promotion, Allowance, or Charge Information">
+              <segment xid="SAC" usage="R" pos="2020" max_use="1" name="Service, Promotion, Allowance, or Charge Information">
+                <syntax>R0203</syntax>
+                <syntax>P0304</syntax>
+                <syntax>P0607</syntax>
+                <syntax>P0910</syntax>
+                <syntax>C1110</syntax>
+                <syntax>C1413</syntax>
+                <syntax>C1615</syntax>
+                <element xid="SAC01" data_ele="248" usage="R" seq="01" name="Allowance or Charge Indicator">
+                  <valid_codes>
+                    <code>C</code>
+                  </valid_codes>
+                </element>
+                <element xid="SAC02" data_ele="1300" usage="R" seq="02" name="Service, Promotion, Allowance, or Charge Code">
+                  <valid_codes>
+                    <code>A172</code>
+                    <code>B680</code>
+                    <code>D940</code>
+                    <code>G740</code>
+                  </valid_codes>
+                </element>
+                <element xid="SAC03" data_ele="559" usage="N" seq="03" name="Agency Qualifier Code" />
+                <element xid="SAC04" data_ele="1301" usage="N" seq="04" name="Agency Service, Promotion, Allowance, or Charge Code" />
+                <element xid="SAC05" data_ele="610" usage="R" seq="05" name="Amount" />
+                <element xid="SAC06" data_ele="378" usage="N" seq="06" name="Allowance/Charge Percent Qualifier" />
+                <element xid="SAC07" data_ele="332" usage="N" seq="07" name="Percent, Decimal Format" />
+                <element xid="SAC08" data_ele="118" usage="N" seq="08" name="Rate" />
+                <element xid="SAC09" data_ele="355" usage="N" seq="09" name="Unit or Basis for Measurement Code" />
+                <element xid="SAC10" data_ele="380" usage="N" seq="10" name="Quantity" />
+                <element xid="SAC11" data_ele="380" usage="N" seq="11" name="Quantity" />
+                <element xid="SAC12" data_ele="331" usage="N" seq="12" name="Allowance or Charge Method of Handling Code" />
+                <element xid="SAC13" data_ele="127" usage="N" seq="13" name="Reference Identification" />
+                <element xid="SAC14" data_ele="770" usage="N" seq="14" name="Option Number" />
+                <element xid="SAC15" data_ele="352" usage="N" seq="15" name="Description" />
+                <element xid="SAC16" data_ele="819" usage="N" seq="16" name="Language Code" />
+              </segment>
+              <!--End of segment SAC-->
+            </loop>
+            <!--End of 2312A loop-->
+            <loop xid="2315A" pos="2040" usage="S" repeat="3" name="Member Count">
+              <segment xid="SLN" usage="R" pos="2040" max_use="1" name="Member Count">
+                <syntax>P0405</syntax>
+                <syntax>C0706</syntax>
+                <syntax>C0806</syntax>
+                <syntax>P0910</syntax>
+                <syntax>P1112</syntax>
+                <syntax>P1314</syntax>
+                <syntax>P1516</syntax>
+                <syntax>P1718</syntax>
+                <syntax>P1920</syntax>
+                <syntax>P2122</syntax>
+                <syntax>P2324</syntax>
+                <syntax>P2526</syntax>
+                <syntax>P2728</syntax>
+                <element xid="SLN01" data_ele="350" usage="R" seq="01" name="Line Item Control Number" />
+                <element xid="SLN02" data_ele="350" usage="N" seq="02" name="Assigned Identification" />
+                <element xid="SLN03" data_ele="662" usage="R" seq="03" name="Information Only Indicator">
+                  <valid_codes>
+                    <code>O</code>
+                  </valid_codes>
+                </element>
+                <element xid="SLN04" data_ele="380" usage="R" seq="04" name="Head Count" />
+                <composite xid="SLN05" data_ele="C001" usage="R" seq="05" name="Composite Unit of Measure">
+                  <element xid="SLN05-01" data_ele="355" usage="R" seq="01" name="Unit or Basis for Measurement Code">
+                    <valid_codes>
+                      <code>10</code>
+                      <code>IE</code>
+                      <code>PR</code>
+                    </valid_codes>
+                  </element>
+                  <element xid="SLN05-02" data_ele="1018" usage="N" seq="02" name="Exponent" />
+                  <element xid="SLN05-03" data_ele="649" usage="N" seq="03" name="Multiplier" />
+                  <element xid="SLN05-04" data_ele="355" usage="N" seq="04" name="Unit or Basis for Measurement Code" />
+                  <element xid="SLN05-05" data_ele="1018" usage="N" seq="05" name="Exponent" />
+                  <element xid="SLN05-06" data_ele="649" usage="N" seq="06" name="Multiplier" />
+                  <element xid="SLN05-07" data_ele="355" usage="N" seq="07" name="Unit or Basis for Measurement Code" />
+                  <element xid="SLN05-08" data_ele="1018" usage="N" seq="08" name="Exponent" />
+                  <element xid="SLN05-09" data_ele="649" usage="N" seq="09" name="Multiplier" />
+                  <element xid="SLN05-10" data_ele="355" usage="N" seq="10" name="Unit or Basis for Measurement Code" />
+                  <element xid="SLN05-11" data_ele="1018" usage="N" seq="11" name="Exponent" />
+                  <element xid="SLN05-12" data_ele="649" usage="N" seq="12" name="Multiplier" />
+                  <element xid="SLN05-13" data_ele="355" usage="N" seq="13" name="Unit or Basis for Measurement Code" />
+                  <element xid="SLN05-14" data_ele="1018" usage="N" seq="14" name="Exponent" />
+                  <element xid="SLN05-15" data_ele="649" usage="N" seq="15" name="Multiplier" />
+                </composite>
+                <element xid="SLN06" data_ele="212" usage="N" seq="06" name="Unit Price" />
+                <element xid="SLN07" data_ele="639" usage="N" seq="07" name="Basis of Unit Price Code" />
+                <element xid="SLN08" data_ele="662" usage="N" seq="08" name="Relationship Code" />
+                <element xid="SLN09" data_ele="235" usage="N" seq="09" name="Product/Service ID Qualifier" />
+                <element xid="SLN10" data_ele="234" usage="N" seq="10" name="Product/Service ID" />
+                <element xid="SLN11" data_ele="235" usage="N" seq="11" name="Product/Service ID Qualifier" />
+                <element xid="SLN12" data_ele="234" usage="N" seq="12" name="Product/Service ID" />
+                <element xid="SLN13" data_ele="235" usage="N" seq="13" name="Product/Service ID Qualifier" />
+                <element xid="SLN14" data_ele="234" usage="N" seq="14" name="Product/Service ID" />
+                <element xid="SLN15" data_ele="235" usage="N" seq="15" name="Product/Service ID Qualifier" />
+                <element xid="SLN16" data_ele="234" usage="N" seq="16" name="Product/Service ID" />
+                <element xid="SLN17" data_ele="235" usage="N" seq="17" name="Product/Service ID Qualifier" />
+                <element xid="SLN18" data_ele="234" usage="N" seq="18" name="Product/Service ID" />
+                <element xid="SLN19" data_ele="235" usage="N" seq="19" name="Product/Service ID Qualifier" />
+                <element xid="SLN20" data_ele="234" usage="N" seq="20" name="Product/Service ID" />
+                <element xid="SLN21" data_ele="235" usage="N" seq="21" name="Product/Service ID Qualifier" />
+                <element xid="SLN22" data_ele="234" usage="N" seq="22" name="Product/Service ID" />
+                <element xid="SLN23" data_ele="235" usage="N" seq="23" name="Product/Service ID Qualifier" />
+                <element xid="SLN24" data_ele="234" usage="N" seq="24" name="Product/Service ID" />
+                <element xid="SLN25" data_ele="235" usage="N" seq="25" name="Product/Service ID Qualifier" />
+                <element xid="SLN26" data_ele="234" usage="N" seq="26" name="Product/Service ID" />
+                <element xid="SLN27" data_ele="235" usage="N" seq="27" name="Product/Service ID Qualifier" />
+                <element xid="SLN28" data_ele="234" usage="N" seq="28" name="Product/Service ID" />
+              </segment>
+              <!--End of segment SLN-->
+            </loop>
+            <!--End of 2315A loop-->
+          </loop>
+          <!--End of 2310A loop-->
+          <loop xid="2320A" pos="2100" usage="S" repeat="&gt;1" name="Organization Summary Remittance Level Adjustment for Current Payment">
+            <segment xid="ADX" usage="R" pos="2100" max_use="1" name="Organization Summary Remittance Level Adjustment for Current Payment">
+              <syntax>P0304</syntax>
+              <element xid="ADX01" data_ele="782" usage="R" seq="01" name="Adjustment Amount" />
+              <element xid="ADX02" data_ele="426" usage="R" seq="02" name="Adjustment Reason Code">
+                <valid_codes>
+                  <code>20</code>
+                  <code>52</code>
+                  <code>53</code>
+                  <code>AA</code>
+                  <code>AX</code>
+                  <code>H1</code>
+                  <code>H6</code>
+                  <code>IA</code>
+                  <code>J3</code>
+                </valid_codes>
+              </element>
+              <element xid="ADX03" data_ele="128" usage="N" seq="03" name="Reference Identification Qualifier" />
+              <element xid="ADX04" data_ele="127" usage="N" seq="04" name="Reference Identification" />
+            </segment>
+            <!--End of segment ADX-->
+          </loop>
+          <!--End of 2320A loop-->
+        </loop>
+        <!--End of 2300A loop-->
+      </loop>
+      <!--End of 2000A loop-->
+    </loop>
+    <!--End of Table2 - Area2 loop-->
+    <loop xid="TABLE2AREA3" pos="0130" usage="S" repeat="&gt;1" type="wrapper" name="Table2 - Area3">
+      <loop xid="2000B" pos="0100" usage="S" repeat="&gt;1" name="Individual Remittance">
+        <segment xid="ENT" usage="R" pos="0100" max_use="1" name="Individual Remittance">
+          <syntax>P020304</syntax>
+          <syntax>P050607</syntax>
+          <syntax>P0809</syntax>
+          <element xid="ENT01" data_ele="554" usage="R" seq="01" name="Assigned Number" />
+          <element xid="ENT02" data_ele="98" usage="R" seq="02" name="Entity Identifier Code">
+            <valid_codes>
+              <code>2J</code>
+            </valid_codes>
+          </element>
+          <element xid="ENT03" data_ele="66" usage="R" seq="03" name="Identification Code Qualifier">
+            <valid_codes>
+              <code>34</code>
+              <code>EI</code>
+              <code>II</code>
+            </valid_codes>
+          </element>
+          <element xid="ENT04" data_ele="67" usage="R" seq="04" name="Receiver's Individual Identifier" />
+          <element xid="ENT05" data_ele="98" usage="N" seq="05" name="Entity Identifier Code" />
+          <element xid="ENT06" data_ele="66" usage="N" seq="06" name="Identification Code Qualifier" />
+          <element xid="ENT07" data_ele="67" usage="N" seq="07" name="Identification Code" />
+          <element xid="ENT08" data_ele="128" usage="N" seq="08" name="Reference Identification Qualifier" />
+          <element xid="ENT09" data_ele="127" usage="N" seq="09" name="Reference Identification" />
+        </segment>
+        <!--End of segment ENT-->
+        <loop xid="2100B" pos="0200" usage="S" repeat="&gt;1" name="Individual Name">
+          <segment xid="NM1" usage="R" pos="0200" max_use="1" name="Individual Name">
+            <syntax>P0809</syntax>
+            <syntax>C1110</syntax>
+            <syntax>C1203</syntax>
+            <element xid="NM101" data_ele="98" usage="R" seq="01" name="Entity Identifier Code">
+              <valid_codes>
+                <code>DO</code>
+                <code>EY</code>
+                <code>IL</code>
+                <code>QE</code>
+              </valid_codes>
+            </element>
+            <element xid="NM102" data_ele="1065" usage="R" seq="02" name="Entity Type Qualifier">
+              <valid_codes>
+                <code>1</code>
+              </valid_codes>
+            </element>
+            <element xid="NM103" data_ele="1035" usage="S" seq="03" name="Individual Last Name" />
+            <element xid="NM104" data_ele="1036" usage="S" seq="04" name="Individual First Name" />
+            <element xid="NM105" data_ele="1037" usage="S" seq="05" name="Individual Middle Name" />
+            <element xid="NM106" data_ele="1038" usage="S" seq="06" name="Individual Name Prefix" />
+            <element xid="NM107" data_ele="1039" usage="S" seq="07" name="Individual Name Suffix" />
+            <element xid="NM108" data_ele="66" usage="S" seq="08" name="Identification Code Qualifier">
+              <valid_codes>
+                <code>34</code>
+                <code>EI</code>
+                <code>N</code>
+              </valid_codes>
+            </element>
+            <element xid="NM109" data_ele="67" usage="S" seq="09" name="Individual Identifier" />
+            <element xid="NM110" data_ele="706" usage="N" seq="10" name="Entity Relationship Code" />
+            <element xid="NM111" data_ele="98" usage="N" seq="11" name="Entity Identifier Code" />
+            <element xid="NM112" data_ele="1035" usage="N" seq="12" name="Name Last or Organization Name" />
+          </segment>
+          <!--End of segment NM1-->
+        </loop>
+        <!--End of 2100B loop-->
+        <loop xid="2200B" pos="0800" usage="S" repeat="&gt;1" name="Individual Premium Adjustment for Previous Payment">
+          <segment xid="ADX" usage="R" pos="0800" max_use="1" name="Individual Premium Adjustment for Previous Payment">
+            <syntax>P0304</syntax>
+            <element xid="ADX01" data_ele="782" usage="R" seq="01" name="Premium Payment Adjustment Amount" />
+            <element xid="ADX02" data_ele="426" usage="R" seq="02" name="Premium Payment Adjustment Reason">
+              <valid_codes>
+                <code>52</code>
+                <code>53</code>
+                <code>80</code>
+                <code>81</code>
+                <code>86</code>
+                <code>BJ</code>
+                <code>H1</code>
+                <code>H6</code>
+                <code>RU</code>
+                <code>WO</code>
+              </valid_codes>
+            </element>
+            <element xid="ADX03" data_ele="128" usage="N" seq="03" name="Reference Identification Qualifier" />
+            <element xid="ADX04" data_ele="127" usage="N" seq="04" name="Reference Identification" />
+          </segment>
+          <!--End of segment ADX-->
+        </loop>
+        <!--End of 2200B loop-->
+        <loop xid="2300B" pos="1500" usage="R" repeat="&gt;1" name="Individual Premium Remittance Detail">
+          <segment xid="RMR" usage="R" pos="1500" max_use="1" name="Individual Premium Remittance Detail">
+            <syntax>P0102</syntax>
+            <syntax>P0708</syntax>
+            <element xid="RMR01" data_ele="128" usage="R" seq="01" name="Reference Identification Qualifier">
+              <valid_codes>
+                <code>11</code>
+                <code>9J</code>
+                <code>AZ</code>
+                <code>B7</code>
+                <code>CT</code>
+                <code>ID</code>
+                <code>IG</code>
+                <code>IK</code>
+                <code>KW</code>
+              </valid_codes>
+            </element>
+            <element xid="RMR02" data_ele="127" usage="R" seq="02" name="Insurance Remittance Reference Number" />
+            <element xid="RMR03" data_ele="482" usage="N" seq="03" name="Payment Action Code" />
+            <element xid="RMR04" data_ele="782" usage="R" seq="04" name="Detail Premium Payment Amount" />
+            <element xid="RMR05" data_ele="782" usage="S" seq="05" name="Billed Premium Amount" />
+            <element xid="RMR06" data_ele="782" usage="N" seq="06" name="Monetary Amount" />
+            <element xid="RMR07" data_ele="426" usage="N" seq="07" name="Adjustment Reason Code" />
+            <element xid="RMR08" data_ele="782" usage="N" seq="08" name="Monetary Amount" />
+          </segment>
+          <!--End of segment RMR-->
+          <segment xid="REF" usage="S" pos="1700" max_use="&gt;1" name="Reference Information">
+            <syntax>R0203</syntax>
+            <element xid="REF01" data_ele="128" usage="R" seq="01" name="Organizational Reference Identification Qualifier">
+              <valid_codes>
+                <code>14</code>
+                <code>18</code>
+                <code>2F</code>
+                <code>38</code>
+                <code>E9</code>
+                <code>LU</code>
+                <code>ZZ</code>
+              </valid_codes>
+            </element>
+            <element xid="REF02" data_ele="127" usage="R" seq="02" name="Organizational Reference Identifier" />
+            <element xid="REF03" data_ele="352" usage="N" seq="03" name="Description" />
+            <composite xid="REF04" data_ele="C040" usage="N" seq="04" name="Reference Identifier" />
+          </segment>
+          <!--End of segment REF-->
+          <segment xid="DTM" usage="S" pos="1800" max_use="1" name="Individual Coverage Period">
+            <syntax>R020305</syntax>
+            <syntax>C0403</syntax>
+            <syntax>P0506</syntax>
+            <element xid="DTM01" data_ele="374" usage="R" seq="01" name="Date Time Qualifier">
+              <valid_codes>
+                <code>582</code>
+                <code>AAG</code>
+              </valid_codes>
+            </element>
+            <element xid="DTM02" data_ele="373" usage="S" seq="02" name="Date" />
+            <element xid="DTM03" data_ele="337" usage="N" seq="03" name="Time" />
+            <element xid="DTM04" data_ele="623" usage="N" seq="04" name="Time Code" />
+            <element xid="DTM05" data_ele="1250" usage="S" seq="05" name="Date Time Period Format Qualifier">
+              <valid_codes>
+                <code>RD8</code>
+              </valid_codes>
+            </element>
+            <element xid="DTM06" data_ele="1251" usage="S" seq="06" name="Coverage Period" />
+          </segment>
+          <!--End of segment DTM-->
+          <loop xid="2320B" pos="2100" usage="S" repeat="&gt;1" name="Individual Premium Adjustment for Current Payment">
+            <segment xid="ADX" usage="R" pos="2100" max_use="1" name="Individual Premium Adjustment for Current Payment">
+              <syntax>P0304</syntax>
+              <element xid="ADX01" data_ele="782" usage="R" seq="01" name="Adjustment Amount" />
+              <element xid="ADX02" data_ele="426" usage="R" seq="02" name="Adjustment Reason Code">
+                <valid_codes>
+                  <code>20</code>
+                  <code>52</code>
+                  <code>53</code>
+                  <code>AA</code>
+                  <code>AX</code>
+                  <code>H1</code>
+                  <code>H6</code>
+                  <code>IA</code>
+                  <code>J3</code>
+                </valid_codes>
+              </element>
+              <element xid="ADX03" data_ele="128" usage="N" seq="03" name="Reference Identification Qualifier" />
+              <element xid="ADX04" data_ele="127" usage="N" seq="04" name="Reference Identification" />
+            </segment>
+            <!--End of segment ADX-->
+          </loop>
+          <!--End of 2320B loop-->
+        </loop>
+        <!--End of 2300B loop-->
+      </loop>
+      <!--End of 2000B loop-->
+    </loop>
+    <!--End of Table2 - Area3 loop-->
+    <loop xid="FOOTER" pos="0140" usage="N" repeat="1" type="wrapper" name="Footer" />
+    <!--End of Footer loop-->
+    <segment xid="SE" usage="R" pos="0500" max_use="1" name="Transaction Set Trailer">
+      <element xid="SE01" data_ele="96" usage="R" seq="01" name="Transaction Segment Count" />
+      <element xid="SE02" data_ele="329" usage="R" seq="02" name="Transaction Set Control Number" />
+    </segment>
+    <!--End of segment SE-->
+  </loop>
+</transaction>
