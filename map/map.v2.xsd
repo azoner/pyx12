@@ -42,7 +42,7 @@
     <xsd:attribute name="usage" type="usageType" use="required" />
     <xsd:attribute name="repeat" type="xsd:token" use="required" />
     <xsd:attribute name="type" type="xsd:NMTOKEN" />
-    <xsd:attribute name="name" type="xsd:token" />
+    <xsd:attribute name="name" type="xsd:token" use="required" />
   </xsd:complexType>
   
   <xsd:group id="LoopChildGroupType" name="LoopChildGroupType">
