@@ -20,7 +20,11 @@
         </valid_codes>
       </element>
       <element xid="ST02" data_ele="329" usage="R" seq="02" name="Transaction Set Control Number" />
-      <element xid="ST03" data_ele="1705" usage="R" seq="03" name="Implementation Convention Reference" />
+      <element xid="ST03" data_ele="1705" usage="R" seq="03" name="Implementation Convention Reference" >
+        <valid_codes>
+          <code>005010X220A1</code>
+        </valid_codes>
+      </element>
     </segment>
     <!--End of segment ST-->
     <loop xid="HEADER" pos="0110" usage="R" repeat="1" type="wrapper" name="Header">

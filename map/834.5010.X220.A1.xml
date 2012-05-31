@@ -229,7 +229,7 @@
           <usage>R</usage>
           <seq>08</seq>
           <valid_codes>
-            <code>005010X218</code>
+            <code>005010X220A1</code>
           </valid_codes>
         </element>
       </segment>
@@ -264,6 +264,9 @@
             <name>Implementation Convention Reference</name>
             <usage>R</usage>
             <seq>03</seq>
+            <valid_codes>
+              <code>005010X220A1</code>
+            </valid_codes>
           </element>
         </segment>
         <loop xid="HEADER" type="wrapper">
