@@ -7,8 +7,6 @@
 #
 ######################################################################
 
-#    $Id$
-
 """
 Interface to a X12N IG Map
 """
@@ -20,7 +18,7 @@ import re
 import xml.etree.cElementTree as et
 
 # Intrapackage imports
-from errors import IsValidError, EngineError
+from errors import EngineError
 import codes
 import dataele
 import path
@@ -187,7 +185,8 @@ class map_if(x12_node):
         self.data_elements = dataele.DataElements(param.get('map_path'))
 
         self.id = eroot.get('xid')
-        self.name = eroot.findtext('name')
+
+        self.name = eroot.get('name') if eroot.get('name') else eroot.findtext('name')
         self.base_name = 'transaction'
         for e in eroot.findall('loop'):
             loop_node = loop_if(self, self, e)
@@ -209,9 +208,9 @@ class map_if(x12_node):
         Map must have a first ISA segment
         ISA12
         """
-        path = '/ISA_LOOP/ISA'
+        ipath = '/ISA_LOOP/ISA'
         try:
-            node = self.getnodebypath(path).children[11]
+            node = self.getnodebypath(ipath).children[11]
             icvn = node.valid_codes[0]
             return icvn
         except Exception:
@@ -276,12 +275,12 @@ class map_if(x12_node):
         """
         raise EngineError('map_if.get_child_node_by_idx is not a valid call')
             
-    def getnodebypath(self, path):
+    def getnodebypath(self, spath):
         """
-        @param path: Path string; /1000/2000/2000A/NM102-3
-        @type path: string
+        @param spath: Path string; /1000/2000/2000A/NM102-3
+        @type spath: string
         """
-        pathl = path.split('/')[1:]
+        pathl = spath.split('/')[1:]
         if len(pathl) == 0: return None
         #logger.debug('%s %s %s' % (self.base_name, self.id, pathl[1]))
         for ord1 in sorted(self.pos_map):
@@ -291,7 +290,7 @@ class map_if(x12_node):
                         return child
                     else:
                         return child.getnodebypath(string.join(pathl[1:],'/'))
-        raise EngineError('getnodebypath failed. Path "%s" not found' % path)
+        raise EngineError('getnodebypath failed. Path "%s" not found' % spath)
             
     def getnodebypath2(self, path_str):
         """
@@ -357,19 +356,19 @@ class loop_if(x12_node):
         self.root = root
         self.parent = parent
         self.pos_map = {}
-        self.path = ''
+        #self.path = ''
         self.base_name = 'loop'
-        self.type = 'implicit'
+        #self.type = 'implicit'
         self.cur_count = 0
         
         self.id = elem.get('xid')
         self.path = self.id
         self.type = elem.get('type')
 
-        self.name = elem.findtext('name')
-        self.usage = elem.findtext('usage')
-        self.pos = int(elem.findtext('pos'))
-        self.repeat = elem.findtext('repeat')
+        self.name = elem.get('name') if elem.get('name') else elem.findtext('name')
+        self.usage = elem.get('usage') if elem.get('usage') else elem.findtext('usage')
+        self.pos = int(elem.get('pos')) if elem.get('pos') else int(elem.findtext('pos'))
+        self.repeat = elem.get('repeat') if elem.get('repeat') else elem.findtext('repeat')
 
         for e in elem.findall('loop'):
             loop_node = loop_if(self.root, self, e)
@@ -455,13 +454,13 @@ class loop_if(x12_node):
             for child in self.pos_map[ord1]:
                 yield child
 
-    def getnodebypath(self, path):
+    def getnodebypath(self, spath):
         """
-        @param path: remaining path to match
-        @type path: string
+        @param spath: remaining path to match
+        @type spath: string
         @return: matching node, or None is no match
         """
-        pathl = path.split('/')
+        pathl = spath.split('/')
         if len(pathl) == 0: 
             return None
         for ord1 in sorted(self.pos_map):
@@ -483,7 +482,7 @@ class loop_if(x12_node):
                             possible = child.get_unique_key_id_element(id_val)
                             if possible is not None:
                                 return child
-        raise EngineError('getnodebypath failed. Path "%s" not found' % path)
+        raise EngineError('getnodebypath failed. Path "%s" not found' % spath)
 
     def getnodebypath2(self, path_str):
         """
@@ -645,7 +644,7 @@ class segment_if(x12_node):
         self.root = root
         self.parent = parent
         self.children = []
-        self.path = ''
+        #self.path = ''
         self.base_name = 'segment'
         self.cur_count = 0
         self.syntax = []
@@ -654,11 +653,13 @@ class segment_if(x12_node):
         self.path = self.id
         self.type = elem.get('type')
 
-        self.name = elem.findtext('name')
-        self.end_tag = elem.findtext('end_tag')
-        self.usage = elem.findtext('usage')
-        self.pos = int(elem.findtext('pos'))
-        self.max_use = elem.findtext('max_use')
+        self.name = elem.get('name') if elem.get('name') else elem.findtext('name')
+        self.usage = elem.get('usage') if elem.get('usage') else elem.findtext('usage')
+        self.pos = int(elem.get('pos')) if elem.get('pos') else int(elem.findtext('pos'))
+        self.max_use = elem.get('max_use') if elem.get('max_use') else elem.findtext('max_use')
+        self.repeat = elem.get('repeat') if elem.get('repeat') else elem.findtext('repeat')
+
+        self.end_tag = elem.get('end_tag') if elem.get('end_tag') else elem.findtext('end_tag')
         
         for s in elem.findall('syntax'):
             syn_list = self._split_syntax(s.text)
@@ -667,12 +668,12 @@ class segment_if(x12_node):
         
         children_map = {}
         for e in elem.findall('element'):
-            seq = int(e.findtext('seq'))
+            seq = int(e.get('seq')) if e.get('seq') else int(e.findtext('seq'))
             children_map[seq] = e
             #self.children.append(element_if(self.root, self, e))
 
         for e in elem.findall('composite'):
-            seq = int(e.findtext('seq'))
+            seq = int(e.get('seq')) if e.get('seq') else int(e.findtext('seq'))
             children_map[seq] = e
             #self.children.append(composite_if(self.root, self, e))
 
@@ -1029,12 +1030,12 @@ class element_if(x12_node):
 
         self.id = elem.get('xid')
         self.refdes = self.id
-        self.name = elem.findtext('name')
-        self.data_ele = elem.findtext('data_ele')
-        self.usage = elem.findtext('usage')
-        self.seq = int(elem.findtext('seq'))
-        self.path = elem.findtext('seq')
-
+        self.data_ele = elem.get('data_ele') if elem.get('data_ele') else elem.findtext('data_ele')
+        self.usage = elem.get('usage') if elem.get('usage') else elem.findtext('usage')
+        self.name = elem.get('name') if elem.get('name') else elem.findtext('name')
+        self.seq = int(elem.get('seq')) if elem.get('seq') else int(elem.findtext('seq'))
+        self.path = elem.get('seq') if elem.get('seq') else elem.findtext('seq')
+        self.max_use = elem.get('max_use') if elem.get('max_use') else elem.findtext('max_use')
         self.res = elem.findtext('regex')
         try:
             if self.res is not None and self.res != '':
@@ -1280,11 +1281,13 @@ class composite_if(x12_node):
         self.path = ''
         self.base_name = 'composite'
 
-        self.name = elem.findtext('name')
-        self.data_ele = elem.findtext('data_ele')
-        self.usage = elem.findtext('usage')
-        self.seq = int(elem.findtext('seq'))
-        self.refdes = elem.findtext('refdes')
+        self.id = elem.get('xid')
+        self.refdes = elem.findtext('refdes') if elem.findtext('refdes') else self.id
+        self.data_ele = elem.get('data_ele') if elem.get('data_ele') else elem.findtext('data_ele')
+        self.usage = elem.get('usage') if elem.get('usage') else elem.findtext('usage')
+        self.seq = int(elem.get('seq')) if elem.get('seq') else int(elem.findtext('seq'))
+        self.repeat = int(elem.get('repeat')) if elem.get('repeat') else int(elem.findtext('repeat')) if elem.findtext('repeat') else 1
+        self.name = elem.get('name') if elem.get('name') else elem.findtext('name')
         
         for e in elem.findall('element'):
             self.children.append(element_if(self.root, self, e))
@@ -1372,7 +1375,7 @@ class composite_if(x12_node):
         return True
 
 
-def load_map_file(map_file, param, xslt_files = []):
+def load_map_file(map_file, param, xslt_files = None):
     """
     Create the map object from a file
     @param map_file: absolute path for file
@@ -1385,6 +1388,8 @@ def load_map_file(map_file, param, xslt_files = []):
     map_path = param.get('map_path')
     map_full = os.path.join(map_path, map_file)
     imap = None
+    if xslt_files is None:
+        xslt_files = []
     try:
         logger.debug('Create map from %s' % (map_full))
         etree = et.parse(map_full)
