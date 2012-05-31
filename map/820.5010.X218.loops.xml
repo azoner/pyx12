@@ -1,0 +1,84 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<transaction xid="820A1">
+  <name>HIPAA Payment Order/Remittance Advice 005010X218 820A1</name>
+  <loop xid="ST_LOOP" pos="0200" usage="R" repeat="&gt;1" type="explicit">
+    <name>Transaction Set Header</name>
+    <loop xid="HEADER" pos="0110" usage="R" repeat="1" type="wrapper">
+      <segment xid="BPR" usage="R" pos="0200" max_use="1" name="Financial Information" />
+      <segment xid="TRN" usage="R" pos="0350" max_use="1" name="Reassociation Trace Number" />
+      <segment xid="CUR" usage="S" pos="0400" max_use="1" name="Foreign Currency Information" />
+      <segment xid="REF" usage="S" pos="0500" max_use="&gt;1" name="Premium Receivers Identification Key" />
+      <segment xid="DTM" usage="S" pos="0600" max_use="1" name="Process Date" />
+      <segment xid="DTM" usage="S" pos="0600" max_use="1" name="Delivery Date" />
+      <segment xid="DTM" usage="S" pos="0600" max_use="1" name="Coverage Period" />
+      <segment xid="DTM" usage="S" pos="0600" max_use="1" name="Creation Date" />
+      <loop xid="1000A" pos="0700" usage="R" repeat="1">
+        <segment xid="N1" usage="R" pos="0700" max_use="1" name="Premium Receiver's Name" />
+        <segment xid="N2" usage="S" pos="0800" max_use="1" name="Premium Receiver Additional Name" />
+        <segment xid="N3" usage="S" pos="0900" max_use="1" name="Premium Receiver's Address" />
+        <segment xid="N4" usage="S" pos="1000" max_use="1" name="Premium Receiver's City, State, and ZIP Code" />
+        <segment xid="RDM" usage="S" pos="1300" max_use="1" name="Premium Receiver's Remittance Delivery Method" />
+      </loop>
+      <loop xid="1000B" pos="1500" usage="R" repeat="1">
+        <segment xid="N1" usage="R" pos="0700" max_use="1" name="Premium Payer's Name" />
+        <segment xid="N2" usage="S" pos="0800" max_use="1" name="Premium Payer Additional Name" />
+        <segment xid="N3" usage="S" pos="0900" max_use="1" name="Premium Payer's Address" />
+        <segment xid="N4" usage="S" pos="1000" max_use="1" name="Premium Payer's City, State, ZIP Code" />
+        <segment xid="PER" usage="S" pos="1200" max_use="&gt;1" name="Premium Payer's Administrative Contact" />
+      </loop>
+      <loop xid="1000C" pos="2300" usage="S" repeat="14">
+        <segment xid="N1" usage="R" pos="0700" max_use="1" name="Intermediary Bank Information" />
+        <segment xid="N2" usage="S" pos="0800" max_use="1" name="Intermediary Bank Additional Name" />
+        <segment xid="N3" usage="S" pos="0900" max_use="1" name="Intermediary Bank's Address" />
+        <segment xid="N4" usage="S" pos="1000" max_use="1" name="Intermediary Bank's City, State, ZIP Code" />
+        <segment xid="PER" usage="S" pos="1200" max_use="&gt;1" name="Intermediary Bank's Administrative Contact" />
+      </loop>
+    </loop>
+    <loop xid="TABLE2AREA2" pos="0120" usage="S" repeat="&gt;1" type="wrapper">
+      <loop xid="2000A" pos="0100" usage="S" repeat="1">
+        <segment xid="ENT" usage="R" pos="0100" max_use="1" name="Organization Summary Remittance" />
+        <loop xid="2200A" pos="0800" usage="S" repeat="&gt;1">
+          <segment xid="ADX" usage="R" pos="0800" max_use="1" name="Organization Summary Remittance Level Adjustment for Previous Payment" />
+        </loop>
+        <loop xid="2300A" pos="1500" usage="R" repeat="&gt;1">
+          <segment xid="RMR" usage="R" pos="1500" max_use="1" name="Organization Summary Remittance Detail" />
+          <segment xid="REF" usage="S" pos="1700" max_use="&gt;1" name="Reference Information" />
+          <segment xid="DTM" usage="S" pos="1800" max_use="1" name="Organizational Coverage Period" />
+          <loop xid="2310A" pos="1900" usage="S" repeat="1">
+            <segment xid="IT1" usage="R" pos="1900" max_use="1" name="Summary Line Item" />
+            <loop xid="2312A" pos="2020" usage="S" repeat="4">
+              <segment xid="SAC" usage="R" pos="2020" max_use="1" name="Service, Promotion, Allowance, or Charge Information" />
+            </loop>
+            <loop xid="2315A" pos="2040" usage="S" repeat="3">
+              <segment xid="SLN" usage="R" pos="2040" max_use="1" name="Member Count" />
+            </loop>
+          </loop>
+          <loop xid="2320A" pos="2100" usage="S" repeat="&gt;1">
+            <segment xid="ADX" usage="R" pos="2100" max_use="1" name="Organization Summary Remittance Level Adjustment for Current Payment" />
+          </loop>
+        </loop>
+      </loop>
+    </loop>
+    <loop xid="TABLE2AREA3" pos="0130" usage="S" repeat="&gt;1" type="wrapper">
+      <loop xid="2000B" pos="0100" usage="S" repeat="&gt;1">
+        <segment xid="ENT" usage="R" pos="0100" max_use="1" name="Individual Remittance" />
+        <loop xid="2100B" pos="0200" usage="S" repeat="&gt;1">
+          <segment xid="NM1" usage="R" pos="0200" max_use="1" name="Individual Name" />
+        </loop>
+        <loop xid="2200B" pos="0800" usage="S" repeat="&gt;1">
+          <segment xid="ADX" usage="R" pos="0800" max_use="1" name="Individual Premium Adjustment for Previous Payment" />
+        </loop>
+        <loop xid="2300B" pos="1500" usage="R" repeat="&gt;1">
+          <segment xid="RMR" usage="R" pos="1500" max_use="1" name="Individual Premium Remittance Detail" />
+          <segment xid="REF" usage="S" pos="1700" max_use="&gt;1" name="Reference Information" />
+          <segment xid="DTM" usage="S" pos="1800" max_use="1" name="Individual Coverage Period" />
+          <loop xid="2320B" pos="2100" usage="S" repeat="&gt;1">
+            <segment xid="ADX" usage="R" pos="2100" max_use="1" name="Individual Premium Adjustment for Current Payment" />
+          </loop>
+        </loop>
+      </loop>
+    </loop>
+    <loop xid="FOOTER" pos="0140" usage="N" repeat="1" type="wrapper" />
+    <segment xid="SE" />
+  </loop>
+</transaction>
