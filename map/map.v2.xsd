@@ -1,0 +1,138 @@
+<?xml version="1.0"?>
+<!-- 
+######################################################################
+# Copyright (c) 2012 Kalamazoo Community Mental Health Services,
+#   John Holland <jholland@kazoocmh.org> <john@zoner.org>
+# All rights reserved.
+#
+# This software is licensed as described in the file LICENSE.txt, which
+# you should have received as part of this distribution.
+#
+######################################################################
+
+#    $Id$
+-->
+
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+
+  <xsd:annotation>
+    <xsd:documentation xml:lang="en">
+    XML Schema for pyx12 data validation maps
+    Copyright 2001-2012 Kalamazoo Community Mental Health Services. All rights reserved.
+    </xsd:documentation>
+  </xsd:annotation>
+
+  <xsd:element name="transaction" type="transactionType"/>
+
+  <xsd:complexType name="transactionType">
+    <xsd:sequence>
+      <xsd:element name="name" type="xsd:token"/>
+      <xsd:element name="loop" type="LoopType" />
+    </xsd:sequence>
+    <xsd:attribute name="xid" type="xsd:NMTOKEN" use="required" />
+  </xsd:complexType>
+
+  <!-- A loop can contain multiple segments and multiple child loops -->
+  <xsd:complexType name="LoopType">
+    <xsd:sequence>
+      <xsd:group ref="LoopChildGroupType" minOccurs="0" maxOccurs="unbounded"/>
+    </xsd:sequence>
+    <xsd:attribute name="xid" type="xsd:NMTOKEN" use="required" />
+    <xsd:attribute name="pos" type="xsd:nonNegativeInteger" use="required" />
+    <xsd:attribute name="usage" type="usageType" use="required" />
+    <xsd:attribute name="repeat" type="xsd:token" use="required" />
+    <xsd:attribute name="type" type="xsd:NMTOKEN" />
+    <xsd:attribute name="name" type="xsd:token" />
+  </xsd:complexType>
+  
+  <xsd:group id="LoopChildGroupType" name="LoopChildGroupType">
+    <xsd:choice>
+      <xsd:element name="segment" type="SegmentType"/>
+      <xsd:element name="loop" type="LoopType"/>
+    </xsd:choice>
+  </xsd:group>
+
+  <!-- Segments can contain both simple elements and composite elements -->
+  <xsd:group id="SegmentChildGroupType" name="SegmentChildGroupType">
+    <xsd:choice>
+      <xsd:element name="element" type="ElementType"/>
+      <xsd:element name="composite" type="CompositeType"/>
+    </xsd:choice>
+  </xsd:group>
+
+  <xsd:complexType name="SegmentType">
+    <xsd:sequence>
+      <xsd:element name="syntax" type="syntaxType" minOccurs="0" maxOccurs="unbounded"/>
+      <xsd:group ref="SegmentChildGroupType" minOccurs="0" maxOccurs="unbounded"/>
+    </xsd:sequence>
+    <xsd:attribute name="xid" type="xsd:NMTOKEN" use="required" />
+    <xsd:attribute name="usage" type="usageType" use="required" />
+    <xsd:attribute name="pos" type="xsd:nonNegativeInteger" use="required" />
+    <xsd:attribute name="max_use" type="xsd:token" use="required" />
+    <xsd:attribute name="end_tag" type="xsd:token" />
+    <xsd:attribute name="name" type="xsd:token" use="required" />
+  </xsd:complexType>
+
+  <xsd:complexType name="CompositeType">
+    <xsd:sequence>
+      <xsd:element name="syntax" type="syntaxType" minOccurs="0" maxOccurs="unbounded"/>
+      <xsd:element name="element" type="ElementType" minOccurs="0" maxOccurs="unbounded"/>
+    </xsd:sequence>
+    <xsd:attribute name="xid" type="xsd:NMTOKEN" use="required" />
+    <xsd:attribute name="data_ele" type="xsd:token" use="required" />
+    <xsd:attribute name="usage" type="usageType" use="required" />
+    <xsd:attribute name="seq" type="xsd:nonNegativeInteger" use="required" />
+    <xsd:attribute name="repeat" type="xsd:nonNegativeInteger" />
+    <xsd:attribute name="name" type="xsd:token" use="required" />
+  </xsd:complexType>
+
+  <xsd:complexType name="ElementType">
+    <xsd:sequence>
+      <xsd:element name="valid_codes" minOccurs="0">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element name="code" type="xsd:token" minOccurs="0" maxOccurs="unbounded"/>
+          </xsd:sequence>
+          <xsd:attribute name="external" type="xsd:NMTOKEN"/>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="regex" type="xsd:token" minOccurs="0"/>
+    </xsd:sequence>
+    <xsd:attribute name="xid" type="xsd:NMTOKEN" use="required" />
+    <xsd:attribute name="data_ele" type="xsd:token" use="required" />
+    <xsd:attribute name="usage" type="usageType"  use="required" /> <!-- IG usage, -->
+    <xsd:attribute name="seq" type="xsd:nonNegativeInteger" use="required" />
+    <xsd:attribute name="repeat" type="xsd:nonNegativeInteger" />
+    <xsd:attribute name="name" type="xsd:token" use="required" />
+  </xsd:complexType>
+  
+  <xsd:simpleType name="formatType">
+    <xsd:restriction base="xsd:token">
+      <xsd:enumeration value="D8"/> <!-- Date CCYYMMDD -->
+      <xsd:enumeration value="D6"/> <!-- Date YYMMDD -->
+      <xsd:enumeration value="RD8"/> <!-- Date Range CCYYMMDD-CCYYMMDD -->
+      <xsd:enumeration value="TM"/> <!-- Time HHMM -->
+    </xsd:restriction>
+  </xsd:simpleType>
+  
+  <xsd:simpleType name="usageType">
+    <xsd:restriction base="xsd:token">
+      <xsd:enumeration value="R"/> <!-- Required -->
+      <xsd:enumeration value="S"/> <!-- Situational -->
+      <xsd:enumeration value="N"/> <!-- Not Used -->
+    </xsd:restriction>
+  </xsd:simpleType>
+  
+  <xsd:simpleType name="syntaxType">
+    <xsd:restriction base="xsd:token">
+      <xsd:pattern value='(E|L|P|C|R)([0-9]{2}){2,20}'/>
+      <!-- Syntax Codes:
+        P - Paired or Multiple - If any element specified is present, all must be present 
+        R - Required - At least one must be present
+        E - Exclusion - Not more than one specified element may be present
+        C - Conditional - If first is present, all others must be present
+        L - List - If first is present, at least one other must be present
+      -->
+    </xsd:restriction>
+  </xsd:simpleType>
+</xsd:schema>

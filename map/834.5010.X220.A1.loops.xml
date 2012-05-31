@@ -1,0 +1,128 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<transaction xid="834A1">
+  <name>HIPAA Benefit Enrollment and Maintenance 005010X220A1 834A1</name>
+  <loop xid="ST_LOOP" pos="0200" usage="R" repeat="&gt;1" type="explicit">
+    <name>Transaction Set Header</name>
+    <loop xid="HEADER" pos="0110" usage="R" repeat="1" type="wrapper">
+      <segment xid="BGN" usage="R" pos="0200" max_use="1" name="Beginning Segment" />
+      <segment xid="REF" usage="S" pos="0300" max_use="1" name="Transaction Set Policy Number" />
+      <segment xid="DTP" usage="S" pos="0400" max_use="&gt;1" name="File Effective Date" />
+      <segment xid="QTY" usage="S" pos="0600" max_use="3" name="Transaction Set Control Totals" />
+      <loop xid="1000A" pos="0700" usage="R" repeat="1">
+        <segment xid="N1" usage="R" pos="0700" max_use="1" name="Sponsor Name" />
+      </loop>
+      <loop xid="1000B" pos="1900" usage="R" repeat="1">
+        <segment xid="N1" usage="R" pos="0700" max_use="1" name="Payer" />
+      </loop>
+      <loop xid="1000C" pos="3100" usage="R" repeat="2">
+        <segment xid="N1" usage="R" pos="0700" max_use="1" name="TPA/Broker Name" />
+        <loop xid="1100C" pos="3600" usage="R" repeat="1">
+          <segment xid="ACT" usage="R" pos="1200" max_use="1" name="TPA/Broker Account Information" />
+        </loop>
+      </loop>
+    </loop>
+    <loop xid="TABLE2AREA2" pos="0120" usage="R" repeat="&gt;1" type="wrapper">
+      <loop xid="2000" pos="0100" usage="R" repeat="&gt;1">
+        <segment xid="INS" usage="R" pos="0100" max_use="1" name="Member Level Detail" />
+        <segment xid="REF" usage="R" pos="0200" max_use="1" name="Subscriber Identifier" />
+        <segment xid="REF" usage="S" pos="0200" max_use="1" name="Member Policy Number" />
+        <segment xid="REF" usage="S" pos="0200" max_use="13" name="Member Supplemental Identifier" />
+        <segment xid="DTP" usage="S" pos="0250" max_use="24" name="Member Level Dates" />
+        <loop xid="2100A" pos="0300" usage="R" repeat="1">
+          <segment xid="NM1" usage="R" pos="0300" max_use="1" name="Member Name" />
+          <segment xid="PER" usage="S" pos="0400" max_use="1" name="Member Communications Numbers" />
+          <segment xid="N3" usage="S" pos="0500" max_use="1" name="Member Residence Street Address" />
+          <segment xid="N4" usage="S" pos="0600" max_use="1" name="Member City, State, ZIP Code" />
+          <segment xid="DMG" usage="S" pos="0800" max_use="1" name="Member Demographics" />
+          <segment xid="EC" usage="S" pos="1000" max_use="&gt;1" name="Employment Class" />
+          <segment xid="ICM" usage="S" pos="1100" max_use="1" name="Member Income" />
+          <segment xid="AMT" usage="S" pos="1200" max_use="7" name="Member Policy Amounts" />
+          <segment xid="HLH" usage="S" pos="1300" max_use="1" name="Member Health Information" />
+          <segment xid="LUI" usage="S" pos="1500" max_use="&gt;1" name="Member Language" />
+        </loop>
+        <loop xid="2100B" pos="0300" usage="R" repeat="1">
+          <segment xid="NM1" usage="R" pos="0300" max_use="1" name="Incorrect Member Name" />
+          <segment xid="DMG" usage="S" pos="0800" max_use="1" name="Incorrect Member Demographics" />
+        </loop>
+        <loop xid="2100C" pos="0300" usage="R" repeat="1">
+          <segment xid="NM1" usage="R" pos="0300" max_use="1" name="Member Mailing Address" />
+          <segment xid="N3" usage="R" pos="0500" max_use="1" name="Member Mail Street Address" />
+          <segment xid="N4" usage="R" pos="0600" max_use="1" name="Member Mail City, State, ZIP Code" />
+        </loop>
+        <loop xid="2100D" pos="0300" usage="R" repeat="3">
+          <segment xid="NM1" usage="R" pos="0300" max_use="1" name="Member Employer" />
+          <segment xid="PER" usage="S" pos="0400" max_use="1" name="Member Employer Communications Numbers" />
+          <segment xid="N3" usage="S" pos="0500" max_use="1" name="Member Employer Street Address" />
+          <segment xid="N4" usage="S" pos="0600" max_use="1" name="Member Employer City, State, ZIP Code" />
+        </loop>
+        <loop xid="2100E" pos="0300" usage="R" repeat="3">
+          <segment xid="NM1" usage="R" pos="0300" max_use="1" name="Member School" />
+          <segment xid="PER" usage="S" pos="0400" max_use="1" name="Member School Commmunications Numbers" />
+          <segment xid="N3" usage="S" pos="0500" max_use="1" name="Member School Street Address" />
+          <segment xid="N4" usage="S" pos="0600" max_use="1" name="Member School City, State, ZIP Code" />
+        </loop>
+        <loop xid="2100F" pos="0300" usage="R" repeat="1">
+          <segment xid="NM1" usage="R" pos="0300" max_use="1" name="Custodial Parent" />
+          <segment xid="PER" usage="S" pos="0400" max_use="1" name="Custodial Parent Communications Numbers" />
+          <segment xid="N3" usage="S" pos="0500" max_use="1" name="Custodial Parent Street Address" />
+          <segment xid="N4" usage="S" pos="0600" max_use="1" name="Custodial Parent City, State, ZIP Code" />
+        </loop>
+        <loop xid="2100G" pos="0300" usage="R" repeat="13">
+          <segment xid="NM1" usage="R" pos="0300" max_use="1" name="Responsible Person" />
+          <segment xid="PER" usage="S" pos="0400" max_use="1" name="Responsible Person Communications Numbers" />
+          <segment xid="N3" usage="S" pos="0500" max_use="1" name="Responsible Person Street Address" />
+          <segment xid="N4" usage="S" pos="0600" max_use="1" name="Responsible Person City, State, ZIP Code" />
+        </loop>
+        <loop xid="2100H" pos="0700" usage="R" repeat="1">
+          <segment xid="NM1" usage="R" pos="0300" max_use="1" name="Drop Off Location" />
+          <segment xid="N3" usage="S" pos="0500" max_use="1" name="Drop Off Location Street Address" />
+          <segment xid="N4" usage="S" pos="0600" max_use="1" name="Drop Off Location City, State, ZIP Code" />
+        </loop>
+        <loop xid="2200" pos="2000" usage="R" repeat="&gt;1">
+          <segment xid="DSB" usage="R" pos="2000" max_use="1" name="Disability Information" />
+          <segment xid="DTP" usage="S" pos="2100" max_use="2" name="Disability Eligibility Dates" />
+        </loop>
+        <loop xid="2300" pos="2600" usage="R" repeat="99">
+          <segment xid="HD" usage="R" pos="2600" max_use="1" name="Health Coverage" />
+          <segment xid="DTP" usage="R" pos="2700" max_use="6" name="Health Coverage Dates" />
+          <segment xid="AMT" usage="S" pos="2800" max_use="9" name="Health Coverage Policy" />
+          <segment xid="REF" usage="S" pos="2900" max_use="14" name="Health Coverage Policy Number" />
+          <segment xid="REF" usage="S" pos="2900" max_use="1" name="Prior Coverage Months" />
+          <segment xid="IDC" usage="S" pos="3000" max_use="3" name="Identification Card" />
+          <loop xid="2310" pos="3100" usage="R" repeat="30">
+            <segment xid="LX" usage="R" pos="3100" max_use="1" name="Provider Information" />
+            <segment xid="NM1" usage="R" pos="3200" max_use="1" name="Provider Name" />
+            <segment xid="N3" usage="S" pos="3500" max_use="2" name="Provider Address" />
+            <segment xid="N4" usage="S" pos="3600" max_use="1" name="Provider City, State, ZIP Code" />
+            <segment xid="PER" usage="S" pos="3700" max_use="2" name="Provider Communications Numbers" />
+            <segment xid="PLA" usage="S" pos="3950" max_use="1" name="Provider Change Reason" />
+          </loop>
+          <loop xid="2320" pos="4000" usage="R" repeat="5">
+            <segment xid="COB" usage="R" pos="4000" max_use="1" name="Coordination of Benefits" />
+            <segment xid="REF" usage="S" pos="4050" max_use="4" name="Additional Coordination of Benefits Identifiers" />
+            <segment xid="DTP" usage="S" pos="4070" max_use="2" name="Coordination of Benefits Eligibility Dates" />
+            <loop xid="2330" pos="4510" usage="R" repeat="3">
+              <segment xid="NM1" usage="R" pos="4100" max_use="1" name="Coordination of Benefits Related Entity" />
+              <segment xid="N3" usage="S" pos="4300" max_use="1" name="Coordination of Benefits Related Entity Address" />
+              <segment xid="N4" usage="S" pos="4400" max_use="1" name="Coordination of Benefits Other Insurance Company City, State, ZIP Code" />
+              <segment xid="PER" usage="S" pos="4500" max_use="1" name="Administrative Communications Contact" />
+            </loop>
+          </loop>
+        </loop>
+        <loop xid="2700" pos="6800" usage="R" repeat="&gt;1">
+          <segment xid="LS" usage="R" pos="6880" max_use="1" name="Additional Reporting Categories" />
+          <loop xid="2710" pos="6801" usage="R" repeat="&gt;1">
+            <segment xid="LX" usage="R" pos="6881" max_use="1" name="Member Reporting Categories" />
+            <loop xid="2750" pos="6802" usage="R" repeat="1">
+              <segment xid="N1" usage="R" pos="6882" max_use="1" name="Reporting Category" />
+              <segment xid="REF" usage="S" pos="6883" max_use="1" name="Reporting Category Reference" />
+              <segment xid="DTP" usage="S" pos="6884" max_use="1" name="Reporting Category Date" />
+            </loop>
+            <segment xid="LE" usage="S" pos="6885" max_use="1" name="Additional Reporting Categories Loop Termination" />
+          </loop>
+        </loop>
+      </loop>
+    </loop>
+    <segment xid="SE" />
+  </loop>
+</transaction>
