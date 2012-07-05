@@ -4,7 +4,7 @@
 # All rights reserved.
 #
 # This software is licensed as described in the file LICENSE.txt, which
-# you should have received as part of this distribution.  
+# you should have received as part of this distribution.
 #
 ######################################################################
 
@@ -28,6 +28,7 @@ import pyx12.segment
 from pyx12.rawx12file import RawX12File
 
 logger = logging.getLogger('pyx12.x12file')
+
 
 class X12Base(object):
     """
@@ -63,7 +64,7 @@ class X12Base(object):
         Complete any outstanding tasks
         """
         pass
-       
+
     def _parse_segment(self, seg_data):
         """
         Catch segment issues common to both readers and writers
@@ -73,15 +74,15 @@ class X12Base(object):
         """
         if seg_data.is_empty():
             err_str = 'Segment "%s" is empty' % (seg_data)
-            self._seg_error('8', err_str, None, 
-                src_line=self.cur_line+1)
+            self._seg_error('8', err_str, None,
+                src_line=self.cur_line + 1)
         if not seg_data.is_seg_id_valid():
             err_str = 'Segment identifier "%s" is invalid' % (
                 seg_data.get_seg_id())
-            self._seg_error('1', err_str, None, 
-                src_line=self.cur_line+1)
+            self._seg_error('1', err_str, None,
+                src_line=self.cur_line + 1)
         seg_id = seg_data.get_seg_id()
-        if seg_id == 'ISA': 
+        if seg_id == 'ISA':
             if len(seg_data) != 16:
                 raise pyx12.errors.X12Error('The ISA segment must have 16 elements (%s)' % (seg_data))
             interchange_control_number = seg_data.get_value('ISA13')
@@ -95,7 +96,7 @@ class X12Base(object):
             self.gs_count = 0
             self.gs_ids = []
             self.isa_usage = seg_data.get_value('ISA15')
-        elif seg_id == 'GS': 
+        elif seg_id == 'GS':
             group_control_number = seg_data.get_value('GS06')
             if group_control_number in self.gs_ids:
                 err_str = 'GS Interchange Control Number '
@@ -107,7 +108,7 @@ class X12Base(object):
             self.loops.append(('GS', group_control_number))
             self.st_count = 0
             self.st_ids = []
-        elif seg_id == 'ST': 
+        elif seg_id == 'ST':
             self.hl_stack = []
             self.hl_count = 0
             transaction_control_number = seg_data.get_value('ST02')
@@ -119,15 +120,15 @@ class X12Base(object):
             self.st_count += 1
             self.st_ids.append(transaction_control_number)
             self.loops.append(('ST', transaction_control_number))
-            self.seg_count = 1 
+            self.seg_count = 1
             self.hl_count = 0
-        #elif seg_id == 'LS': 
+        #elif seg_id == 'LS':
         #    self.seg_count += 1
         #    self.loops.append(('LS', seg_data.get_value('LS06')))
-        #elif seg_id == 'LE': 
+        #elif seg_id == 'LE':
         #    self.seg_count += 1
         #    del self.loops[-1]
-        elif seg_id == 'HL': 
+        elif seg_id == 'HL':
             self.hl_count += 1
             hl_count = seg_data.get_value('HL01')
             if self.hl_count != self._int(hl_count):
@@ -208,7 +209,7 @@ class X12Base(object):
         @type err_str: string
         """
         self.err_list.append(('seg', err_cde, err_str, err_value, src_line))
-        
+
     def _int(self, str_val):
         """
         Converts a string to an integer
@@ -221,52 +222,52 @@ class X12Base(object):
         except ValueError:
             return None
         return None
-        
-    def get_isa_id(self): 
+
+    def get_isa_id(self):
         """
         Get the current ISA identifier
 
         @rtype: string
         """
         for loop in self.loops:
-            if loop[0] == 'ISA': 
+            if loop[0] == 'ISA':
                 return loop[1]
         return None
 
-    def get_gs_id(self): 
+    def get_gs_id(self):
         """
         Get the current GS identifier
 
         @rtype: string
         """
         for loop in self.loops:
-            if loop[0] == 'GS': 
+            if loop[0] == 'GS':
                 return loop[1]
         return None
 
-    def get_st_id(self): 
+    def get_st_id(self):
         """
         Get the current ST identifier
 
         @rtype: string
         """
         for loop in self.loops:
-            if loop[0] == 'ST': 
+            if loop[0] == 'ST':
                 return loop[1]
         return None
 
-    def get_ls_id(self): 
+    def get_ls_id(self):
         """
         Get the current LS identifier
 
         @rtype: string
         """
         for loop in self.loops:
-            if loop[0] == 'LS': 
+            if loop[0] == 'LS':
                 return loop[1]
         return None
 
-    def get_seg_count(self): 
+    def get_seg_count(self):
         """
         Get the current segment count
 
@@ -303,7 +304,7 @@ class X12Reader(X12Base):
         """
         Initialize the file X12 file reader
 
-        @param src_file_obj: absolute path of source file or an open, 
+        @param src_file_obj: absolute path of source file or an open,
             readable file object
         @type src_file_obj: string or open file object
         """
@@ -329,7 +330,7 @@ class X12Reader(X12Base):
         self.subele_term = subele_term
         self.repetition_term = repetition_term
         self.icvn = self.raw.icvn
-       
+
     def __del__(self):
         try:
             if self.need_to_close:
@@ -346,7 +347,7 @@ class X12Reader(X12Base):
         """
         X12Base._parse_segment(self, seg_data)
         seg_id = seg_data.get_seg_id()
-        if seg_id == 'IEA': 
+        if seg_id == 'IEA':
             if self.loops[-1][0] != 'ISA':
                 # Unterminated GS loop
                 err_str = 'Unterminated Loop %s' % (self.loops[-1][0])
@@ -361,7 +362,7 @@ class X12Reader(X12Base):
                     (seg_data.get_value('IEA02'))
                 self._isa_error('021', err_str)
             del self.loops[-1]
-        elif seg_id == 'GE': 
+        elif seg_id == 'GE':
             if self.loops[-1][0] != 'GS':
                 err_str = 'Unterminated segment %s' % (self.loops[-1][1])
                 self._gs_error('3', err_str)
@@ -376,7 +377,7 @@ class X12Reader(X12Base):
                     seg_data.get_value('GE02'), self.st_count)
                 self._gs_error('5', err_str)
             del self.loops[-1]
-        elif seg_id == 'SE': 
+        elif seg_id == 'SE':
             se_trn_control_num = seg_data.get_value('SE02')
             if self.loops[-1][0] != 'ST' or \
                     self.loops[-1][1] != se_trn_control_num:
@@ -399,7 +400,7 @@ class X12Reader(X12Base):
             # We have not yet incremented cur_line
             if line[-1] == self.ele_term:
                 err_str = 'Segment contains trailing element terminators'
-                self._seg_error('SEG1', err_str, None, src_line=self.cur_line+1)
+                self._seg_error('SEG1', err_str, None, src_line=self.cur_line + 1)
             seg_data = pyx12.segment.Segment(line, self.seg_term, self.ele_term, self.subele_term)
             self._parse_segment(seg_data)
             yield(seg_data)
@@ -411,13 +412,13 @@ class X12Reader(X12Base):
         DEPRECATED
         """
         raise pyx12.errors.EngineError('X12file.get_errors is no longer used')
-        
+
     def cleanup(self):
         """
         At EOF, check for missing loop trailers
         """
         if self.loops:
-            for (seg, id1) in self.loops: 
+            for (seg, id1) in self.loops:
                 if seg == 'ST':
                     err_str = 'Mandatory segment "Transaction Set Trailer" '
                     err_str += '(SE=%s) missing' % (id1)
@@ -433,9 +434,10 @@ class X12Reader(X12Base):
                 #elif self.loops[-1][0] == 'LS':
                 #    err_str = 'LS id=%s was not closed with a LE' % \
                 #    (id1, self.loops[-1][1])
-        
+
 # Backward compatible name
 X12file = X12Reader
+
 
 class X12Writer(X12Base):
     """
@@ -446,7 +448,7 @@ class X12Writer(X12Base):
         """
         Initialize the file X12 file writer
 
-        @param src_file_obj: absolute path of source file or an open, 
+        @param src_file_obj: absolute path of source file or an open,
             readable file object
         @type src_file_obj: string or open file object
         """
@@ -494,7 +496,7 @@ class X12Writer(X12Base):
             self._popToLoop('ST')
         elif self.check_837_lx and seg_id == 'LX':
             # Write our own LX counter
-            seg_data.set('01', '%i' % (self.lx_count) )
+            seg_data.set('01', '%i' % (self.lx_count))
             self._write_segment(seg_data)
         elif seg_id == 'ISA':
             # Replace terminators
@@ -553,7 +555,7 @@ class X12Writer(X12Base):
         @param id: ST loop ID
         @type id: string
         """
-        seg_temp = self._get_trailer_segment('SE', self.seg_count+1, id)
+        seg_temp = self._get_trailer_segment('SE', self.seg_count + 1, id)
         self._write_segment(seg_temp)
         self.seg_count = 0
 
@@ -564,7 +566,7 @@ class X12Writer(X12Base):
         @param seg_data: segment to write
         @type seg_data: L{segment<segment.Segment>}
         """
-        out = seg_data.format(self.seg_term, self.ele_term, self.subele_term)+self.eol
+        out = seg_data.format(self.seg_term, self.ele_term, self.subele_term) + self.eol
         self.fd_out.write(out.decode('ascii'))
 
     def _write_isa_segment(self, seg_data):
@@ -581,7 +583,7 @@ class X12Writer(X12Base):
         if icvn == '00501':
             seg_data.set('ISA11', self.repetition_term)
         seg_data.set('ISA16', self.subele_term)
-        out = seg_data.format(self.seg_term, self.ele_term, self.subele_term)+self.eol
+        out = seg_data.format(self.seg_term, self.ele_term, self.subele_term) + self.eol
         self.fd_out.write(out.decode('ascii'))
 
     def _get_trailer_segment(self, seg_id, count, id):
