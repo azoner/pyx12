@@ -7,3 +7,4 @@ pkg-plist
 *.pyo
 *.pyc
 *.egg-info/
+.ropeproject/
