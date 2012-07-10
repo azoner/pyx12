@@ -1,0 +1,52 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<transaction xid="837Q3">
+  <name>HIPAA Health Care Claim - Institutional 005010X223A2 837Q3</name>
+  <loop xid="ST_LOOP" pos="0200" usage="R" repeat="&gt;1" type="explicit" name="Transaction Set Header">
+    <loop xid="HEADER" usage="R" pos="0110" repeat="1" type="wrapper" name="Header">
+      <loop xid="1000A" usage="R" pos="0200" repeat="1" name="Submitter Name" />
+      <loop xid="1000B" usage="R" pos="0500" repeat="1" name="Receiver Name" />
+    </loop>
+    <loop xid="TABLE2AREA2" usage="R" pos="0120" repeat="&gt;1" type="wrapper" name="Table 2 - Detail">
+      <loop xid="2000A" usage="R" pos="0010" repeat="&gt;1" name="Billing Provider Hierarchical Level">
+        <loop xid="2010AA" usage="R" pos="0150" repeat="1" name="Billing Provider Name" />
+        <loop xid="2010AB" usage="S" pos="0150" repeat="1" name="Pay-to Address Name" />
+        <loop xid="2010AC" usage="S" pos="0500" repeat="1" name="Pay-To Plan Name" />
+        <loop xid="2000B" usage="R" pos="0700" repeat="&gt;1" name="Subscriber Hierarchical Level">
+          <loop xid="2010BA" usage="R" pos="0150" repeat="1" name="Subscriber Name" />
+          <loop xid="2010BB" usage="R" pos="0150" repeat="1" name="Payer Name" />
+          <loop xid="2000C" usage="S" pos="0200" repeat="&gt;1" name="Patient Hierarchical Level">
+            <loop xid="2010CA" usage="R" pos="0150" repeat="1" name="Patient Name" />
+            <loop xid="2300" usage="R" pos="1300" repeat="100" name="Claim Information">
+              <loop xid="2310A" usage="S" pos="2500" repeat="1" name="Attending Provider Name" />
+              <loop xid="2310B" usage="S" pos="2500" repeat="1" name="Operating Physician Name" />
+              <loop xid="2310C" usage="S" pos="2500" repeat="1" name="Other Operating Physician Name" />
+              <loop xid="2310D" usage="S" pos="2500" repeat="1" name="Rendering Provider Name" />
+              <loop xid="2310E" usage="S" pos="2500" repeat="1" name="Service Facility Location Name" />
+              <loop xid="2310F" usage="S" pos="2800" repeat="1" name="Referring Provider Name" />
+              <loop xid="2320" usage="S" pos="2900" repeat="10" name="Other Subscriber Information">
+                <loop xid="2330A" usage="R" pos="3250" repeat="1" name="Other Subscriber Name" />
+                <loop xid="2330B" usage="R" pos="3250" repeat="1" name="Other Payer Name" />
+                <loop xid="2330C" usage="S" pos="3250" repeat="1" name="Other Payer Attending Provider" />
+                <loop xid="2330D" usage="S" pos="3600" repeat="1" name="Other Payer Operating Physician" />
+                <loop xid="2330E" usage="S" pos="3700" repeat="1" name="Other Payer Other Operating Physician" />
+                <loop xid="2330F" usage="S" pos="3900" repeat="1" name="Other Payer Service Facility Location" />
+                <loop xid="2330G" usage="S" pos="4000" repeat="1" name="Other Payer Rendering Provider Name" />
+                <loop xid="2330H" usage="S" pos="5000" repeat="1" name="Other Payer Referring Provider" />
+                <loop xid="2330I" usage="S" pos="6000" repeat="1" name="Other Payer Billing Provider" />
+              </loop>
+              <loop xid="2400" usage="R" pos="3650" repeat="999" name="Service Line Number">
+                <loop xid="2410" usage="S" pos="4940" repeat="1" name="Drug Identification" />
+                <loop xid="2420A" usage="S" pos="5000" repeat="1" name="Operating Physician Name" />
+                <loop xid="2420B" usage="S" pos="5000" repeat="1" name="Other Operating Physician Name" />
+                <loop xid="2420C" usage="S" pos="5000" repeat="1" name="Rendering Provider Name" />
+                <loop xid="2420D" usage="S" pos="5300" repeat="1" name="Referring Provider Name" />
+                <loop xid="2430" usage="S" pos="5400" repeat="15" name="Line Adjudication Information" />
+              </loop>
+            </loop>
+          </loop>
+        </loop>
+      </loop>
+    </loop>
+    <segment xid="SE" />
+  </loop>
+</transaction>
