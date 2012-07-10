@@ -12,7 +12,7 @@ map_dir = 'share/pyx12/map'
 MAP_FILES = ['map/%s' % (file1) for file1 in 
     filter(lambda x: splitext(x)[1] == '.xml', os.listdir('map'))]
 mkpath('build/bin')
-SCRIPTS = ('x12_build_pkl.py', 'x12html.py', 'x12info.py', 'x12valid.py', 
+SCRIPTS = ('x12html.py', 'x12info.py', 'x12valid.py',
     'x12norm.py', 'x12sql.py', 'x12xml.py', 'xmlx12.py')
 if sys.platform == 'win32':
     for filename in SCRIPTS:

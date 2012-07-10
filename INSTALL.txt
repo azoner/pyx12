@@ -7,11 +7,6 @@ To install:
 
     python setup.py install
 
-Optionally, you may pickle the maps.  This gives a substantial decrease in
-startup time.  After installation:
-
-    x12_build_pkl <path to map files>
-
 
 WINDOWS:
 
