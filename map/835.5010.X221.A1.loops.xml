@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<transaction xid="835">
+  <name>HIPAA Health Care Claim Payment/Advice X091-835</name>
+  <loop xid="ISA_LOOP" type="explicit" usage="R" pos="001" repeat="&gt;1" name="Interchange Control Header">
+    <loop xid="GS_LOOP" type="explicit" usage="R" pos="020" repeat="&gt;1" name="Functional Group Header">
+      <loop xid="ST_LOOP" type="explicit" usage="R" pos="020" repeat="&gt;1" name="Transaction Set Header">
+        <loop xid="HEADER" type="wrapper" usage="R" pos="015" repeat="1" name="Table 1 - Header">
+          <loop xid="1000A" usage="R" pos="080" repeat="1" name="Payer Identification"/>
+          <loop xid="1000B" usage="R" pos="080" repeat="1" name="Payee Identification"/>
+        </loop>
+        <loop xid="DETAIL" type="wrapper" usage="S" pos="020" repeat="&gt;1" name="Table 2 - Detail">
+          <loop xid="2000" usage="S" pos="003" repeat="&gt;1" name="Header Number">
+            <loop xid="2100" usage="R" pos="010" repeat="&gt;1" name="Claim Payment Information">
+              <loop xid="2110" usage="S" pos="070" repeat="999" name="Service Payment Information"/>
+            </loop>
+          </loop>
+        </loop>
+        <loop xid="FOOTER" type="wrapper" usage="S" pos="030" repeat="&gt;1" name="Table 3 - Footer"/>
+      </loop>
+    </loop>
+  </loop>
+</transaction>
