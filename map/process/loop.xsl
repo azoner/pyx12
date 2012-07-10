@@ -41,7 +41,24 @@
   <xsl:template match="loop/repeat"/>
   <xsl:template match="loop/name"/>
  
-  <xsl:template match="segment" />
+  <xsl:template match="segment">
+    <xsl:copy>
+      <xsl:attribute name="xid"><xsl:value-of select="@xid"/></xsl:attribute>
+      <xsl:attribute name="pos"><xsl:value-of select="child::pos"/></xsl:attribute>
+      <xsl:attribute name="usage"><xsl:value-of select="child::usage"/></xsl:attribute>
+      <xsl:attribute name="max_use"><xsl:value-of select="child::max_use"/></xsl:attribute>
+      <xsl:attribute name="name"><xsl:value-of select="child::name"/></xsl:attribute>
+      <xsl:apply-templates/>
+    </xsl:copy>
+  </xsl:template>
+
+  <xsl:template match="segment/id"/>
+  <xsl:template match="segment/pos"/>
+  <xsl:template match="segment/usage"/>
+  <xsl:template match="segment/max_use"/>
+  <xsl:template match="segment/name"/>
+
   <xsl:template match="element" />
+  <xsl:template match="composite" />
   <xsl:template match="comment()" />
 </xsl:stylesheet>

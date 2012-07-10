@@ -2,21 +2,75 @@
 <transaction xid="835">
   <name>HIPAA Health Care Claim Payment/Advice X091-835</name>
   <loop xid="ISA_LOOP" type="explicit" usage="R" pos="001" repeat="&gt;1" name="Interchange Control Header">
+    <segment xid="ISA" pos="010" usage="R" max_use="1" name="Interchange Control Header"/>
     <loop xid="GS_LOOP" type="explicit" usage="R" pos="020" repeat="&gt;1" name="Functional Group Header">
+      <segment xid="GS" pos="010" usage="R" max_use="1" name="Functional Group Header"/>
       <loop xid="ST_LOOP" type="explicit" usage="R" pos="020" repeat="&gt;1" name="Transaction Set Header">
+        <segment xid="ST" pos="010" usage="R" max_use="1" name="Transaction Set Header"/>
         <loop xid="HEADER" type="wrapper" usage="R" pos="015" repeat="1" name="Table 1 - Header">
-          <loop xid="1000A" usage="R" pos="080" repeat="1" name="Payer Identification"/>
-          <loop xid="1000B" usage="R" pos="080" repeat="1" name="Payee Identification"/>
+          <segment xid="BPR" pos="020" usage="R" max_use="1" name="Financial Information"/>
+          <segment xid="TRN" pos="040" usage="R" max_use="1" name="Reassociation Trace Number"/>
+          <segment xid="CUR" pos="050" usage="S" max_use="1" name="Foreign Currency Information"/>
+          <segment xid="REF" pos="060" usage="S" max_use="1" name="Receiver Identification"/>
+          <segment xid="REF" pos="060" usage="S" max_use="1" name="Version Identification"/>
+          <segment xid="DTM" pos="070" usage="S" max_use="1" name="Production Date"/>
+          <loop xid="1000A" usage="R" pos="080" repeat="1" name="Payer Identification">
+            <segment xid="N1" pos="080" usage="R" max_use="1" name="Payer Identification"/>
+            <segment xid="N3" pos="100" usage="R" max_use="1" name="Payer Address"/>
+            <segment xid="N4" pos="110" usage="R" max_use="1" name="Payer City, State, ZIP Code"/>
+            <segment xid="REF" pos="120" usage="S" max_use="4" name="Additional Payer Identification"/>
+            <segment xid="PER" pos="130" usage="S" max_use="1" name="Payer Contact Information"/>
+          </loop>
+          <loop xid="1000B" usage="R" pos="080" repeat="1" name="Payee Identification">
+            <segment xid="N1" pos="080" usage="R" max_use="1" name="Payee Identification"/>
+            <segment xid="N3" pos="100" usage="S" max_use="1" name="Payee Address"/>
+            <segment xid="N4" pos="110" usage="S" max_use="1" name="Payee City, State, ZIP Code"/>
+            <segment xid="REF" pos="120" usage="S" max_use="&gt;1" name="Payee Additional Identification"/>
+          </loop>
         </loop>
         <loop xid="DETAIL" type="wrapper" usage="S" pos="020" repeat="&gt;1" name="Table 2 - Detail">
           <loop xid="2000" usage="S" pos="003" repeat="&gt;1" name="Header Number">
+            <segment xid="LX" pos="003" usage="R" max_use="1" name="Header Number"/>
+            <segment xid="TS3" pos="005" usage="S" max_use="1" name="Provider Summary Information"/>
+            <segment xid="TS2" pos="007" usage="S" max_use="1" name="Provider Supplemental Summary Information"/>
             <loop xid="2100" usage="R" pos="010" repeat="&gt;1" name="Claim Payment Information">
-              <loop xid="2110" usage="S" pos="070" repeat="999" name="Service Payment Information"/>
+              <segment xid="CLP" pos="010" usage="R" max_use="1" name="Claim Payment Information"/>
+              <segment xid="CAS" pos="020" usage="S" max_use="99" name="Claim Adjustment"/>
+              <segment xid="NM1" pos="030" usage="R" max_use="1" name="Patient Name"/>
+              <segment xid="NM1" pos="030" usage="S" max_use="1" name="Insured Name"/>
+              <segment xid="NM1" pos="030" usage="S" max_use="1" name="Corrected Patient/Insured Name"/>
+              <segment xid="NM1" pos="030" usage="S" max_use="1" name="Service Provider Name"/>
+              <segment xid="NM1" pos="030" usage="S" max_use="1" name="Crossover Carrier Name"/>
+              <segment xid="NM1" pos="030" usage="S" max_use="2" name="Corrected Priority Payer Name"/>
+              <segment xid="MIA" pos="033" usage="S" max_use="1" name="Inpatient Adjudication Information"/>
+              <segment xid="MOA" pos="035" usage="S" max_use="1" name="Outpatient Adjudication Information"/>
+              <segment xid="REF" pos="040" usage="S" max_use="5" name="Other Claim Related Identification"/>
+              <segment xid="REF" pos="040" usage="S" max_use="10" name="Rendering Provider Identification"/>
+              <segment xid="DTM" pos="050" usage="S" max_use="4" name="Claim Date"/>
+              <segment xid="PER" pos="060" usage="S" max_use="3" name="Claim Contact Information"/>
+              <segment xid="AMT" pos="062" usage="S" max_use="14" name="Claim Supplemental Information"/>
+              <segment xid="QTY" pos="064" usage="S" max_use="15" name="Claim Supplemental Information Quantity"/>
+              <loop xid="2110" usage="S" pos="070" repeat="999" name="Service Payment Information">
+                <segment xid="SVC" pos="070" usage="R" max_use="1" name="Service Payment Information"/>
+                <segment xid="DTM" pos="080" usage="S" max_use="3" name="Service Date"/>
+                <segment xid="CAS" pos="090" usage="S" max_use="99" name="Service Adjustment"/>
+                <segment xid="REF" pos="100" usage="S" max_use="7" name="Service Identification"/>
+                <segment xid="REF" pos="100" usage="S" max_use="10" name="Rendering Provider Information"/>
+                <segment xid="AMT" pos="110" usage="S" max_use="12" name="Service Supplemental Amount"/>
+                <segment xid="QTY" pos="120" usage="S" max_use="6" name="Service Supplemental Quantity"/>
+                <segment xid="LQ" pos="130" usage="S" max_use="99" name="Health Care Remark Codes"/>
+              </loop>
             </loop>
           </loop>
         </loop>
-        <loop xid="FOOTER" type="wrapper" usage="S" pos="030" repeat="&gt;1" name="Table 3 - Footer"/>
+        <loop xid="FOOTER" type="wrapper" usage="S" pos="030" repeat="&gt;1" name="Table 3 - Footer">
+          <segment xid="PLB" pos="010" usage="S" max_use="&gt;1" name="Provider Adjustment"/>
+        </loop>
+        <segment xid="SE" pos="050" usage="R" max_use="1" name="Transaction Set Trailer"/>
       </loop>
+      <segment xid="GE" pos="030" usage="R" max_use="1" name="Functional Group Trailer"/>
     </loop>
+    <segment xid="TA1" pos="020" usage="S" max_use="1" name="Interchange Acknowledgement"/>
+    <segment xid="IEA" pos="030" usage="R" max_use="1" name="Interchange Control Trailer"/>
   </loop>
 </transaction>
