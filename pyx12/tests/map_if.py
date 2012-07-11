@@ -5,7 +5,7 @@ import unittest
 import pyx12.error_handler
 from pyx12.errors import *
 import pyx12.map_if
-import pyx12.params 
+import pyx12.params
 import pyx12.path
 import pyx12.segment
 from pyx12.tests.support import getMapPath
@@ -40,7 +40,7 @@ class ElementIsValidDate(unittest.TestCase):
     def test_date_bad1(self):
         self.errh.err_cde = None
         seg_data = pyx12.segment.Segment('DTP*434*D8*20041340~', '~', '*', ':')
-        #node = self.node.get_child_node_by_idx(2) 
+        #node = self.node.get_child_node_by_idx(2)
         node = self.node.getnodebypath('DTP[434]')
         result = node.is_valid(seg_data, self.errh)
         self.assertFalse(result)
@@ -49,7 +49,7 @@ class ElementIsValidDate(unittest.TestCase):
     def test_date_ok1(self):
         self.errh.err_cde = None
         seg_data = pyx12.segment.Segment('DTP*434*D8*20040110~', '~', '*', ':')
-        #node = self.node.get_child_node_by_idx(2) 
+        #node = self.node.get_child_node_by_idx(2)
         node = self.node.getnodebypath('DTP[434]')
         result = node.is_valid(seg_data, self.errh)
         self.assertTrue(result, '%s should be valid' % (seg_data.format()))
@@ -58,7 +58,7 @@ class ElementIsValidDate(unittest.TestCase):
     def test_time_bad1(self):
         self.errh.err_cde = None
         seg_data = pyx12.segment.Segment('DTP*096*TM*2577~', '~', '*', ':')
-        #node = self.node.get_child_node_by_idx(1) 
+        #node = self.node.get_child_node_by_idx(1)
         node = self.node.getnodebypath('DTP[096]')
         result = node.is_valid(seg_data, self.errh)
         self.assertFalse(result)
@@ -67,7 +67,7 @@ class ElementIsValidDate(unittest.TestCase):
     def test_time_ok1(self):
         self.errh.err_cde = None
         seg_data = pyx12.segment.Segment('DTP*096*TM*1215~', '~', '*', ':')
-        #node = self.node.get_child_node_by_idx(1) 
+        #node = self.node.get_child_node_by_idx(1)
         node = self.node.getnodebypath('DTP[096]')
         result = node.is_valid(seg_data, self.errh)
         self.assertTrue(result)
@@ -125,7 +125,7 @@ class SegmentIsValid(unittest.TestCase):
     def test_segment_length(self):
         self.errh.err_cde = None
         seg_data = pyx12.segment.Segment('DTP*434*D8*20040101*R~', '~', '*', ':')
-        #node = self.node.get_child_node_by_idx(2) 
+        #node = self.node.get_child_node_by_idx(2)
         node = self.node.getnodebypath('DTP[434]')
         result = node.is_valid(seg_data, self.errh)
         self.assertFalse(result)
@@ -203,7 +203,7 @@ class ElementIsValid(unittest.TestCase):
         result = node.is_valid(elem, self.errh)
         self.assertFalse(result)
         self.assertEqual(self.errh.err_cde, '6')
-        
+
     #def test_bad_char_DT(self):
     #    node = self.map.getnodebypath('/ISA_LOOP/GS_LOOP/ST_LOOP/2000A/2000B/2300/DTP')
     #    node = self.node.get_child_node_by_idx(2)
@@ -227,7 +227,7 @@ class ElementIsValid(unittest.TestCase):
         result = node.is_valid(elem, self.errh)
         self.assertTrue(result)
         self.assertEqual(self.errh.err_cde, None)
-        
+
     def test_valid_codes_bad1(self):
         self.errh.err_cde = None
         node = self.node.get_child_node_by_idx(4) #CLM05
@@ -263,7 +263,7 @@ class ElementIsValid(unittest.TestCase):
         elem = pyx12.segment.Element('MI')
         self.assertTrue(node.is_valid(elem, self.errh), 'Error Code: %s'%(self.errh.err_cde))
         self.assertEqual(self.errh.err_cde, None)
-        
+
     def test_external_codes_bad1(self):
         self.errh.err_cde = None
         node = self.node.get_child_node_by_idx(10) #CLM11
@@ -295,7 +295,7 @@ class ElementIsValid(unittest.TestCase):
         result = node.is_valid(None, self.errh)
         self.assertTrue(result)
         self.assertEqual(self.errh.err_cde, None)
-        
+
     def test_blank_N(self):
         self.errh.err_cde = None
         node = self.node.get_child_node_by_idx(2)
@@ -306,7 +306,7 @@ class ElementIsValid(unittest.TestCase):
         result = node.is_valid(elem, self.errh)
         self.assertTrue(result)
         self.assertEqual(self.errh.err_cde, None)
-        
+
     def test_null_S(self):
         self.errh.err_cde = None
         node = self.node.get_child_node_by_idx(9)
@@ -316,7 +316,7 @@ class ElementIsValid(unittest.TestCase):
         result = node.is_valid(None, self.errh)
         self.assertTrue(result)
         self.assertEqual(self.errh.err_cde, None)
-        
+
     def test_blank_S(self):
         self.errh.err_cde = None
         node = self.node.get_child_node_by_idx(9)
@@ -327,7 +327,7 @@ class ElementIsValid(unittest.TestCase):
         result = node.is_valid(elem, self.errh)
         self.assertTrue(result)
         self.assertEqual(self.errh.err_cde, None)
-         
+
     def test_null_R(self):
         self.errh.err_cde = None
         node = self.node.get_child_node_by_idx(0)
@@ -337,7 +337,7 @@ class ElementIsValid(unittest.TestCase):
         result = node.is_valid(None, self.errh)
         self.assertFalse(result)
         self.assertEqual(self.errh.err_cde, '1')
-        
+
     def test_blank_R(self):
         self.errh.err_cde = None
         node = self.node.get_child_node_by_idx(0)
@@ -348,7 +348,7 @@ class ElementIsValid(unittest.TestCase):
         result = node.is_valid(elem, self.errh)
         self.assertFalse(result)
         self.assertEqual(self.errh.err_cde, '1')
-        
+
 
 class GetNodeByPath(unittest.TestCase):
     def setUp(self):
@@ -429,7 +429,7 @@ class GetNodeByPath(unittest.TestCase):
 
     def tearDown(self):
         del self.map
-        
+
 
 class CompositeRequirement(unittest.TestCase):
     def setUp(self):
