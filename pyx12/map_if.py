@@ -38,6 +38,8 @@ class x12_node(object):
         self.parent = None
         self.children = []
         self.path = ''
+        self._x12path = None
+        self._fullpath = None
 
     def __eq__(self, other):
         if isinstance(other, x12_node):
@@ -104,18 +106,26 @@ class x12_node(object):
         @return: path - XPath style
         @rtype: string
         """
+        if self._fullpath:
+            return self._fullpath
         parent_path = self.parent.get_path()
         if parent_path == '/':
-            return '/' + self.path
+            self._fullpath = '/' + self.path
+            return self._fullpath
         else:
-            return parent_path + '/' + self.path
+            self._fullpath = parent_path + '/' + self.path
+            return self._fullpath
 
     def _get_x12_path(self):
         """
         @return: X12 node path
         @rtype: L{path<path.X12Path>}
         """
-        return path.X12Path(self.get_path())
+        if self._x12path:
+            return self._x12path
+        p = path.X12Path(self.get_path())
+        self._x12path = p
+        return p
 
     x12path = property(_get_x12_path, None, None)
 
@@ -732,17 +742,6 @@ class segment_if(x12_node):
         """
         return self.parent
 
-    def get_path(self):
-        """
-        @return: path - XPath style
-        @rtype: string
-        """
-        parent_path = self.parent.get_path()
-        if parent_path == '/':
-            return '/' + self.path
-        else:
-            return parent_path + '/' + self.path
-
     def is_first_seg_in_loop(self):
         """
         @rtype: boolean
@@ -964,8 +963,8 @@ class segment_if(x12_node):
             #self.logger.error('Syntax %s is not valid' % (syntax))
             return None
         syn = [syntax[0]]
-        for i in range(len(syntax[1:])/2):
-            syn.append(int(syntax[i*2+1:i*2+3]))
+        for i in range(len(syntax[1:]) / 2):
+            syn.append(int(syntax[i * 2 + 1:i * 2 + 3]))
         return syn
 
     def get_cur_count(self):
@@ -1076,7 +1075,7 @@ class element_if(x12_node):
         """
         Forward the error to an error_handler
         """
-        errh.ele_error(err_cde, err_str, elem_val, self.refdes) #, pos=self.seq, data_ele=self.data_ele)
+        errh.ele_error(err_cde, err_str, elem_val, self.refdes)  # pos=self.seq, data_ele=self.data_ele)
 
     def _valid_code(self, code):
         """
@@ -1372,7 +1371,7 @@ class composite_if(x12_node):
         return True
 
 
-def load_map_file(map_file, param, xslt_files = None):
+def load_map_file(map_file, param, xslt_files=None):
     """
     Create the map object from a file
     @param map_file: absolute path for file
