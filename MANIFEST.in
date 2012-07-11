@@ -1,5 +1,5 @@
 include *.txt
 recursive-include bin *.py *.sample *.rng *.1 *.5
-recursive-include map *.xml *.xsd *.xsl README *.dtd *.rng
+recursive-include map *.xml *.xsd *.xsl README* *.dtd *.rng
 recursive-include test test*.py *.xml
 recursive-include test/files *.txt *.997.base *.idtag *.idtagqual *.simple *.xsl
