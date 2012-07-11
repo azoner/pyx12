@@ -15,10 +15,10 @@ Parse a ANSI X12N data file.
 Validate against a map and codeset values.
 """
 
-import os, os.path
+import os
+import os.path
 import sys
 import logging
-#from types import *
 import tempfile
 import codecs
 
@@ -30,41 +30,36 @@ import pyx12
 import pyx12.x12n_document
 import pyx12.params
 
-__author__  = pyx12.__author__
-__status__  = pyx12.__status__
+__author__ = pyx12.__author__
+__status__ = pyx12.__status__
 __version__ = pyx12.__version__
-__date__    = pyx12.__date__
+__date__ = pyx12.__date__
 
-def usage():
-    pgm_nme = os.path.basename(sys.argv[0])
-    sys.stderr.write('%s %s (%s)\n' % (pgm_nme, __version__, __date__))
-    sys.stderr.write('usage: %s [options] source_files\n' % (pgm_nme))
-    sys.stderr.write('\noptions:\n')
-    sys.stderr.write('  -c <file>  XML configuration file\n')
-    sys.stderr.write('  -d         Debug Mode.  Implies verbose output\n')
-    sys.stderr.write('  -f         Force map load.  Do not use the map pickle file\n')
-    sys.stderr.write('  -H         Create HTML output file\n')
-    sys.stderr.write('  -l <file>  Output log\n')
-    sys.stderr.write('  -m <path>  Path to map files\n')
-    #sys.stderr.write('  -o <file>  Override file\n')
-    sys.stderr.write('  -p <path>  Path to to pickle files\n')
-    sys.stderr.write('  -P         Profile script\n')
-    sys.stderr.write('  -q         Quiet output\n')
-    sys.stderr.write('  -s <b|e>   Specify X12 character set: b=basic, e=extended\n')
-    sys.stderr.write('  -t <file>  XSL Transform, applied to the map.  May be used multiple times.\n')
-    sys.stderr.write('  -v         Verbose output\n')
-    sys.stderr.write('  -x <tag>   Exclude external code\n')
-    
+
 def main():
     """
     Set up environment for processing
     """
-    import getopt
-    try:
-        opts, args = getopt.getopt(sys.argv[1:], 'c:dfl:m:p:qs:t:vx:HP')
-    except getopt.error, msg:
-        usage()
-        return False
+    import argparse
+    parser = argparse.ArgumentParser(description='X12 Validation')
+    parser.add_argument('--config-file', '-c', action='store', dest="configfile", default=None)
+    parser.add_argument('--log-file', '-l', action='store', dest="logfile", default=None)
+    parser.add_argument('--map-path', '-m', action='store', dest="map_path", default=None)
+    parser.add_argument('--verbose', '-v', action='count')
+    parser.add_argument('--debug', '-d', action='store_true')
+    parser.add_argument('--quiet', '-q', action='store_true')
+    parser.add_argument('--html', '-H', action='store_true')
+    parser.add_argument('--exclude-external-codes', '-x', action='append', dest="exclude_external",
+        default=[], help='External Code Names to ignore')
+    parser.add_argument('--charset', '-s', choices=('b', 'e'), help='Specify X12 character set: b=basic, e=extended')
+    #parser.add_argument('--background', '-b', action='store_true')
+    #parser.add_argument('--test', '-t', action='store_true')
+    parser.add_argument('--profile', action='store_true',
+            help='Profile the code with plop')
+    parser.add_argument('--version', action='version', version='{prog} {version}'.format(prog=parser.prog, version=__version__))
+    parser.add_argument('input_files', nargs='*')
+    args = parser.parse_args()
+
     logger = logging.getLogger('pyx12')
     formatter = logging.Formatter('%(asctime)s %(levelname)s %(message)s')
 
@@ -73,55 +68,30 @@ def main():
     logger.addHandler(stdout_hdlr)
     logger.setLevel(logging.INFO)
 
-    #fd_src = None
+    param = pyx12.params.params(args.configfile)
+    if args.debug:
+        logger.setLevel(logging.DEBUG)
+        param.set('debug', True)
+    if args.verbose > 0:
+        logger.setLevel(logging.DEBUG)
+    if args.quiet:
+        logger.setLevel(logging.ERROR)
     fd_997 = None
     fd_html = None
-
-    flag_html = False
     flag_997 = True
-    profile = False
-    debug = False
-    configfile = None
-    xslt_files = []
-    for opt, val in opts:
-        if opt == '-c':
-            configfile = val
-    param = pyx12.params.params(configfile)
+    param.set('exclude_external_codes', ','.join(args.exclude_external))
+    if args.map_path:
+        param.set('map_path', args.map_path)
 
-    for xslt_file in param.get('xslt_files'):
-        if os.path.isfile(xslt_file):
-            xslt_files.append(xslt_file)
-        else:
-            logger.debug("XSL Transform '%s' not found" % (xslt_file))
+    if args.logfile:
+        try:
+            hdlr = logging.FileHandler(args.logfile)
+            hdlr.setFormatter(formatter)
+            logger.addHandler(hdlr)
+        except IOError:
+            logger.exception('Could not open log file: %s' % (args.logfile))
 
-    for opt, val in opts:
-        if opt == '-v': logger.setLevel(logging.DEBUG)
-        if opt == '-q': logger.setLevel(logging.ERROR)
-        if opt == '-d': 
-            param.set('debug', True)
-            debug = True
-            logger.setLevel(logging.DEBUG)
-        if opt == '-x': param.set('exclude_external_codes', val)
-        if opt == '-f': param.set('force_map_load', True)
-        if opt == '-m': param.set('map_path', val)
-        if opt == '-p': param.set('pickle_path', val)
-        if opt == '-P': profile = True
-        if opt == '-s': param.set('charset', val)
-        if opt == '-t': 
-            if os.path.isfile(val):
-                xslt_files.append(val)
-            else:
-                logger.debug("XSL Transform '%s' not found" % (val))
-        if opt == '-H': flag_html = True
-        if opt == '-l':
-            try:
-                hdlr = logging.FileHandler(val)
-                hdlr.setFormatter(formatter)
-                logger.addHandler(hdlr) 
-            except IOError:
-                logger.exception('Could not open log file: %s' % (val))
-
-    for src_filename in args:
+    for src_filename in args.input_files:
         try:
             if not os.path.isfile(src_filename):
                 logger.error('Could not open file "%s"' % (src_filename))
@@ -132,27 +102,38 @@ def main():
                     target_997 = os.path.splitext(src_filename)[0] + '.997'
                 else:
                     target_997 = src_filename + '.997'
-                #fd_997 = open(target_997, 'w')
-                #(fd_997, temp_997) = tempfile.mkstemp(text=True)
                 fd_997 = tempfile.TemporaryFile()
-                #O_EXCL
-            if flag_html:
+            if args.html:
                 if os.path.splitext(src_filename)[1] == '.txt':
                     target_html = os.path.splitext(src_filename)[0] + '.html'
                 else:
                     target_html = src_filename + '.html'
                 fd_html = open(target_html, 'w')
 
-            if profile:
-                import profile
-                prof_str = 'pyx12.x12n_document.x12n_document(param, src_filename, ' \
-                        + 'fd_997, fd_html, None, xslt_files)'
-                print prof_str
-                print param
-                profile.run(prof_str, 'pyx12.prof')
+            if args.profile:
+                from plop.collector import Collector
+                p = Collector()
+                p.start()
+                if pyx12.x12n_document.x12n_document(param=param, src_file=src_filename,
+                        fd_997=fd_997, fd_html=fd_html, fd_xmldoc=None):
+                    sys.stderr.write('%s: OK\n' % (src_filename))
+                else:
+                    sys.stderr.write('%s: Failure\n' % (src_filename))
+                #import profile
+                #prof_str = 'pyx12.x12n_document.x12n_document(param, src_filename, ' \
+                #        + 'fd_997, fd_html, None, xslt_files)'
+                #print prof_str
+                #print param
+                #profile.run(prof_str, 'pyx12.prof')
+                p.stop()
+                try:
+                    with open(os.path.join(os.path.expanduser('~/.plop.profiles'), 'profile.out'), 'w') as fd:
+                        fd.write(repr(dict(p.stack_counts)))
+                except Exception as e:
+                    logger.exception('Failed to write profile data')
             else:
-                if pyx12.x12n_document.x12n_document(param=param, src_file=src_filename, 
-                        fd_997=fd_997, fd_html=fd_html, fd_xmldoc=None, xslt_files=xslt_files):
+                if pyx12.x12n_document.x12n_document(param=param, src_file=src_filename,
+                        fd_997=fd_997, fd_html=fd_html, fd_xmldoc=None):
                     sys.stderr.write('%s: OK\n' % (src_filename))
                 else:
                     sys.stderr.write('%s: Failure\n' % (src_filename))
@@ -165,7 +146,6 @@ def main():
                 fd_html.close()
         except IOError:
             logger.exception('Could not open files')
-            usage()
             return False
         except KeyboardInterrupt:
             print "\n[interrupt]"
@@ -178,4 +158,3 @@ if __name__ == '__main__':
     #    profile.run('pyx12.x12n_document(src_filename)', 'pyx12.prof')
     #else:
     sys.exit(not main())
-
