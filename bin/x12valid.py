@@ -127,10 +127,14 @@ def main():
                 #profile.run(prof_str, 'pyx12.prof')
                 p.stop()
                 try:
-                    with open(os.path.join(os.path.expanduser('~/.plop.profiles'), 'profile.out'), 'w') as fd:
-                        fd.write(repr(dict(p.stack_counts)))
-                except Exception as e:
+                    pfile = os.path.splitext(os.path.basename(src_filename))[0] + '.plop.out'
+                    pfull = os.path.join(os.path.expanduser('~/.plop.profiles'), pfile)
+                    print pfull
+                    with open(pfull, 'w') as fdp:
+                        fdp.write(repr(dict(p.stack_counts)))
+                except Exception:
                     logger.exception('Failed to write profile data')
+                    sys.stderr.write('%s: bad profile save\n' % (src_filename))
             else:
                 if pyx12.x12n_document.x12n_document(param=param, src_file=src_filename,
                         fd_997=fd_997, fd_html=fd_html, fd_xmldoc=None):
