@@ -1,5 +1,5 @@
 ######################################################################
-# Copyright (c) 2005-2011 Kalamazoo Community Mental Health Services,
+# Copyright (c) Kalamazoo Community Mental Health Services,
 #   John Holland <jholland@kazoocmh.org> <john@zoner.org>
 # All rights reserved.
 #
@@ -7,8 +7,6 @@
 # you should have received as part of this distribution.
 #
 ######################################################################
-
-#    $Id$
 
 """
 Parses an x12 path
@@ -30,20 +28,28 @@ SEG[434]02-1
 
 import re
 
-from pyx12.errors import *
+from pyx12.errors import X12PathError
+
 
 class X12Path(object):
     """
     Interface to an x12 path
     """
 
+    re_seg_id = '(?P<seg_id>[A-Z][A-Z0-9]{1,2})?'
+    re_id_val = '(\[(?P<id_val>[A-Z0-9]+)\])?'
+    re_ele_idx = '(?P<ele_idx>[0-9]{2})?'
+    re_subele_idx = '(-(?P<subele_idx>[0-9]+))?'
+    re_str = '^%s%s%s%s$' % (re_seg_id, re_id_val, re_ele_idx, re_subele_idx)
+    rec_path = re.compile(re_str, re.S)
+
     def __init__(self, path_str):
         """
-        @param path_str: 
+        @param path_str:
         @type path_str: string
-        
+
         """
-        #self.loop_list = 
+        #self.loop_list =
         self.seg_id = None
         self.id_val = None
         self.ele_idx = None
@@ -67,12 +73,7 @@ class X12Path(object):
             return
         if len(self.loop_list) > 0:
             seg_str = self.loop_list[-1]
-            re_seg_id = '(?P<seg_id>[A-Z][A-Z0-9]{1,2})?'
-            re_id_val = '(\[(?P<id_val>[A-Z0-9]+)\])?'
-            re_ele_idx = '(?P<ele_idx>[0-9]{2})?'
-            re_subele_idx = '(-(?P<subele_idx>[0-9]+))?'
-            re_str = '^%s%s%s%s$' % (re_seg_id, re_id_val, re_ele_idx, re_subele_idx)
-            m = re.compile(re_str, re.S).search(seg_str)
+            m = X12Path.rec_path.search(seg_str)
             if m is not None:
                 self.seg_id = m.group('seg_id')
                 self.id_val = m.group('id_val')
@@ -85,7 +86,7 @@ class X12Path(object):
                     raise X12PathError('Path "%s" is invalid. Must specify a segment identifier with a qualifier' % (path_str))
                 if self.seg_id is None and (self.ele_idx is not None or self.subele_idx is not None) and len(self.loop_list) > 0:
                     raise X12PathError('Path "%s" is invalid. Must specify a segment identifier' % (path_str))
-        
+
     def is_match(self, path_str):
         pass
 
@@ -114,37 +115,6 @@ class X12Path(object):
                 return False
         return True
 
-    # def __parse_ele_path(self, ele_str):
-        # """
-        # @param ele_str: An element path in the form '03' or '03-5'
-        # @type ele_str: string
-        # """
-        # #m = re.compile("^-?[0-9]*(\.[0-9]+)?", re.S).search(str_val)
-        # re_str = '^(?P<seg_id>[A-Z][A-Z0-9]{1,2})(?P<ele_idx>[0-9]{2})?(-(?P<subele_idx>[0-9]+))?$'
-        # m = re.compile(re_str, re.S).search(ele_str)
-        # if not m:
-            # raise IsValidError # nothing matched
-        # #if m.group(0) != ele_str:  # matched substring != original, bad
-
-        # if ele_str.find('-') != -1:
-            # ele_idx = ele_str[:ele_str.find('-')]
-            # subele_idx = ele_str[ele_str.find('-')+1:]
-        # else:
-            # ele_idx = ele_str
-            # subele_idx = None
-        # try:
-            # a = int(ele_idx)
-        # except:
-            # raise EngineError, 'Invalid element path: %s' % (ele_str)
-        # try:
-            # if subele_idx is not None:
-                # a = int(subele_idx)
-        # except:
-            # raise EngineError, 'Invalid element path: %s' % (ele_str)
-        # if len(ele_idx) != 2:
-            # raise EngineError, 'Invalid element path: %s' % (ele_str)
-        # return (ele_idx, subele_idx)
-
     def __eq__(self, other):
         if isinstance(other, X12Path):
             return self.loop_list == other.loop_list and self.seg_id == other.seg_id \
@@ -165,7 +135,7 @@ class X12Path(object):
     __le__ = __lt__
     __gt__ = __lt__
     __ge__ = __lt__
-        
+
 #    def __len__(self):
 #        """
 #        @rtype: int
@@ -178,7 +148,7 @@ class X12Path(object):
         @rtype: string
         """
         ret = ''
-        if not self.relative: 
+        if not self.relative:
             ret += '/'
         ret += '/'.join(self.loop_list)
         if self.seg_id and ret != '':
