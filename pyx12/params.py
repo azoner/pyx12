@@ -25,6 +25,7 @@ import logging
 
 from pyx12.errors import EngineError
 
+
 class ParamsBase(object):
     """
     Base class for parameters
@@ -53,7 +54,7 @@ class ParamsBase(object):
         self.params['xmlout'] = 'simple'
         #self.params['xmlout'] = 'idtag'
         self.params['xslt_files'] = []
-        
+
     def get(self, option):
         """
         Get the value of the parameter specified by option
@@ -135,7 +136,7 @@ class ParamsBase(object):
         #self.logger.debug('Params: option "%s": "%s"' % \
         #    (option, self.params[option]))
 
-    
+
 class ParamsUnix(ParamsBase):
     """
     Read options from XML configuration files
@@ -153,6 +154,7 @@ class ParamsUnix(ParamsBase):
             self._read_config_file(config_file)
         else:
             self.logger.debug('No config file passed to the constructor')
+
 
 class ParamsWindows(ParamsBase):
     """
