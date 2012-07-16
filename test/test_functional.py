@@ -17,10 +17,11 @@ Test the files in ./files
 Compare the 997 output against existing output
 """
 
-import os, os.path
+import os
+import os.path
 import string
 import logging
-from types import *
+#from types import *
 #import pdb
 import tempfile
 #import difflib
@@ -32,20 +33,23 @@ import sys; sys.path.insert(0, '..')
 import pyx12
 import pyx12.x12n_document
 import pyx12.params
-import pyx12.xmlx12_simple
+#import pyx12.xmlx12_simple
 import pyx12.x12file
 
 logger = None
 
+
 class TesterError(Exception):
     """Base class for tester engine errors."""
+
 
 def skip_headers(line1):
     if line1[:3] == 'ISA' or line1[:2] == 'GS':
         return True
     else:
         return False
-   
+
+
 def diff(file1, file2):
     diff_prg = "/usr/bin/diff"
     diff_args = (diff_prg, '-uBb', file1, file2)
@@ -54,6 +58,7 @@ def diff(file1, file2):
     if stderr:
         print stderr
     return stout
+
 
 def isX12Diff(fd1, fd2):
     """
@@ -81,7 +86,8 @@ def isX12Diff(fd1, fd2):
         if done1 and done2:
             return False
     return False
-    
+
+
 def get997BaseFilename(src_filename):
     if os.path.splitext(src_filename)[1] == '.997':
         filename = src_filename + '.997.base'
@@ -107,8 +113,9 @@ def test_997(src_filename, param):
     try:
         base_997 = get997BaseFilename(src_filename)
         fd_997 = StringIO.StringIO()
+        fd_html = StringIO.StringIO()
         xslt_files = getXSLTFilenames(src_filename)
-        pyx12.x12n_document.x12n_document(param, src_filename, fd_997, None, None, xslt_files)
+        pyx12.x12n_document.x12n_document(param, src_filename, fd_997, fd_html, None, xslt_files)
         fd_997.seek(0)
 
         fd_base = open(base_997, 'r')
@@ -171,7 +178,8 @@ def test_xml(src_filename, param, xmlout='simple'):
             if xmlout in ('simple'):
                 fd_xml.seek(0)
                 fd_x12 = tempfile.NamedTemporaryFile()
-                res = pyx12.xmlx12_simple.convert(fd_xml.name, fd_x12)
+                #res = pyx12.xmlx12_simple.convert(fd_xml.name, fd_x12)
+                res = False
                 fd_xml.seek(0)
                 fd_x12.seek(0)
                 diff_txt = diff(src_filename, fd_x12.name)
@@ -235,8 +243,8 @@ def main():
             if tail == '.txt':
                 try:
                     test_997(src_filename, param)
-                    if sys.platform != 'win32':
-                        test_xml(src_filename, param)
+                    #if sys.platform != 'win32':
+                    #    test_xml(src_filename, param)
                 except Exception:
                     raise
                 except IOError:

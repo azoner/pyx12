@@ -13,20 +13,22 @@ Parse a ANSI X12N data file.  Validate against a map and codeset values.
 Create XML, HTML, and 997 documents based on the data file.
 """
 
-import os, os.path
+import os
+import os.path
 import logging
 
 # Intrapackage imports
 import pyx12
 import error_handler
 import error_997
-import error_debug
+#import error_debug
 import error_html
 import errors
 import map_index
 import map_if
 import x12file
 from map_walker import walk_tree
+
 
 def apply_loop_count(orig_node, new_map):
     """
@@ -42,18 +44,21 @@ def apply_loop_count(orig_node, new_map):
         except errors.EngineError:
             logger.error('getnodebypath failed:  path "%s" not found' % path)
 
+
 def reset_isa_counts(cur_map):
     cur_map.getnodebypath('/ISA_LOOP').set_cur_count(1)
     cur_map.getnodebypath('/ISA_LOOP/ISA').set_cur_count(1)
+
 
 def reset_gs_counts(cur_map):
     cur_map.getnodebypath('/ISA_LOOP/GS_LOOP').reset_cur_count()
     cur_map.getnodebypath('/ISA_LOOP/GS_LOOP').set_cur_count(1)
     cur_map.getnodebypath('/ISA_LOOP/GS_LOOP/GS').set_cur_count(1)
 
-def x12n_document(param, src_file, fd_997, fd_html, 
+
+def x12n_document(param, src_file, fd_997, fd_html,
         fd_xmldoc=None,
-        xslt_files = []):
+        xslt_files=[]):
     """
     Primary X12 validation function
     @param param: pyx12.param instance
@@ -74,10 +79,10 @@ def x12n_document(param, src_file, fd_997, fd_html,
     #errh = errh_xml.errh_list()
     #errh.register()
     #param.set('checkdate', None)
-    
+
     # Get X12 DATA file
     try:
-        src = x12file.X12Reader(src_file) 
+        src = x12file.X12Reader(src_file)
     except pyx12.errors.X12Error:
         logger.error('"%s" does not look like an X12 data file' % (src_file))
         return False
@@ -100,18 +105,18 @@ def x12n_document(param, src_file, fd_997, fd_html,
         logger.debug('xmlout: %s' % (param.get('xmlout')))
         if param.get('xmlout') == 'simple':
             import x12xml_simple
-            xmldoc = x12xml_simple.x12xml_simple(fd_xmldoc, 
+            xmldoc = x12xml_simple.x12xml_simple(fd_xmldoc,
                 param.get('simple_dtd'))
         elif param.get('xmlout') == 'idtag':
             import x12xml_idtag
-            xmldoc = x12xml_idtag.x12xml_idtag(fd_xmldoc, 
+            xmldoc = x12xml_idtag.x12xml_idtag(fd_xmldoc,
                 param.get('idtag_dtd'))
         elif param.get('xmlout') == 'idtagqual':
             import x12xml_idtagqual
-            xmldoc = x12xml_idtagqual.x12xml_idtagqual(fd_xmldoc, 
+            xmldoc = x12xml_idtagqual.x12xml_idtagqual(fd_xmldoc,
                 param.get('idtagqual_dtd'))
         else:
-            xmldoc = x12xml_simple.x12xml_simple(fd_xmldoc, 
+            xmldoc = x12xml_simple.x12xml_simple(fd_xmldoc,
                 param.get('simple_dtd'))
 
     #basedir = os.path.dirname(src_file)
@@ -121,7 +126,7 @@ def x12n_document(param, src_file, fd_997, fd_html,
     for seg in src:
         #find node
         orig_node = node
-        
+
         if seg.get_seg_id() == 'ISA':
             node = control_map.getnodebypath('/ISA_LOOP/ISA')
         elif seg.get_seg_id() == 'GS':
@@ -225,11 +230,11 @@ def x12n_document(param, src_file, fd_997, fd_html,
         #erx.Write(src.cur_line)
 
     #erx.handleErrors(src.pop_errors())
-    src.cleanup() #Catch any skipped loop trailers
+    src.cleanup()  # Catch any skipped loop trailers
     errh.handle_errors(src.pop_errors())
     #erx.handleErrors(src.pop_errors())
     #erx.handleErrors(errh.get_errors())
-    
+
     if fd_html:
         html.footer()
         del html
@@ -241,7 +246,7 @@ def x12n_document(param, src_file, fd_997, fd_html,
     #errh.accept(visit_debug)
 
     #If this transaction is not a 997, generate one.
-    if not (vriic=='004010' and fic=='FA'):
+    if not (vriic == '004010' and fic == 'FA'):
         if fd_997:
             visit_997 = error_997.error_997_visitor(fd_997, src.get_term())
             errh.accept(visit_997)
