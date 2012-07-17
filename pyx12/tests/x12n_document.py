@@ -171,7 +171,6 @@ GE*1*17~
 TA1*000010121*030828*1128*R*023~
 IEA*1*412111902~
 """
-
         source = """ISA*00*          *00*          *ZZ*ZZ000          *ZZ*ZZ001          *030828*1128*U*00401*000010121*1*T*:~
 GS*HC*ZZ000*ZZ001*20030828*1128*17*X*004010X098A1~
 ST*837*11280001~"""
@@ -507,8 +506,8 @@ GE*1*1~
 IEA*1*000484889~"""
         self._test_997(source, res997)
 
-        def test_bad_2010AA_bug(self):
-            res997 = """ISA*00*          *00*          *ZZ*RECEIVER       *ZZ*SENDER         *040701*1620*U*00401*407011620*0*P*:~
+    def test_bad_2010AA_bug(self):
+        res997 = """ISA*00*          *00*          *ZZ*RECEIVER       *ZZ*SENDER         *040701*1620*U*00401*407011620*0*P*:~
 GS*FA*RECEIVER*SENDER*20040701*162046*56*X*004010~
 ST*997*0001~
 AK1*HC*56~
@@ -549,8 +548,8 @@ GE*1*56~
 IEA*1*000000288~"""
         self._test_997(source, res997)
 
-        def test_elements(self):
-            res997 = """ISA*00*          *00*          *ZZ*RECEIVER       *ZZ*SENDER         *070320*0942*U*00401*703200942*0*P*:~
+    def test_elements(self):
+        res997 = """ISA*00*          *00*          *ZZ*RECEIVER       *ZZ*SENDER         *070320*0942*U*00401*703200942*0*P*:~
 GS*FA*RECEIVER*SENDER*20070320*094249*56*X*004010~
 ST*997*0001~
 AK1*HC*56~
@@ -609,8 +608,8 @@ GE*1*56~
 IEA*1*000000288~"""
         self._test_997(source, res997)
 
-        def test_bad_header_looping(self):
-            res997 = """ISA*00*          *00*          *ZZ*00AA           *ZZ*D00000         *070405*0014*U*00401*704050014*0*P*:~
+    def test_bad_header_looping(self):
+        res997 = """ISA*00*          *00*          *ZZ*00AA           *ZZ*D00000         *070405*0014*U*00401*704050014*0*P*:~
 GS*FA*00GR*D00111*20070405*001406*383880001*X*004010~
 ST*997*0001~
 AK1*HP*383880001~
@@ -704,8 +703,8 @@ GE*1*383880001~
 IEA*1*000238388~"""
         self._test_997(source, res997)
 
-        def test_blank1(self):
-            res997 = """ISA*00*          *00*          *ZZ*0000BBB        *ZZ*00000AAA       *050721*1643*U*00401*507211643*0*P*:~
+    def test_blank1(self):
+        res997 = """ISA*00*          *00*          *ZZ*0000BBB        *ZZ*00000AAA       *050721*1643*U*00401*507211643*0*P*:~
 GS*FA*0BBB*0AAA*20050721*164347*1*X*004010~
 ST*997*0001~
 AK1*HC*1~
@@ -790,8 +789,8 @@ GE*1*1~
 IEA*1*000484889~"""
         self._test_997(source, res997)
 
-        def test_ele(self):
-            res997 = """ISA*00*          *00*          *ZZ*0000BBB        *ZZ*00000AAA       *041214*1129*U*00401*412141129*1*P*:~
+    def test_ele(self):
+        res997 = """ISA*00*          *00*          *ZZ*0000BBB        *ZZ*00000AAA       *041214*1129*U*00401*412141129*1*P*:~
 GS*FA*0BBB*0AAA*20041214*112925*1*X*004010~
 ST*997*0001~
 AK1*HC*1~
@@ -871,8 +870,8 @@ GE*1*1~
 IEA*1*000484889~"""
         self._test_997(source, res997)
 
-        def test_fail_no_IEA(self):
-            res997 = """ISA*00*          *00*          *ZZ*ZZ001          *ZZ*ZZ000          *040701*1621*U*00401*407011621*0*T*:~
+    def test_fail_no_IEA(self):
+        res997 = """ISA*00*          *00*          *ZZ*ZZ001          *ZZ*ZZ000          *040701*1621*U*00401*407011621*0*T*:~
 GS*FA*ZZ001*ZZ000*20040701*162104*17*X*004010~
 ST*997*0001~
 AK1*HC*17~
@@ -892,8 +891,8 @@ SE*0*11280001~
 GE*1*17~"""
         self._test_997(source, res997)
 
-        def test_loop_counting(self):
-            res997 = """ISA*00*          *00*          *ZZ*BBBBBBBBB      *ZZ*AAAAAAAA       *041210*0057*U*00401*412100057*1*P*:~
+    def test_loop_counting(self):
+        res997 = """ISA*00*          *00*          *ZZ*BBBBBBBBB      *ZZ*AAAAAAAA       *041210*0057*U*00401*412100057*1*P*:~
 GS*FA*BBBBBBBBB*AAAA*20041210*005722*1167*X*004010~
 ST*997*0001~
 AK1*HC*1167~
@@ -1327,8 +1326,8 @@ GE*1*1167~
 IEA*1*000001168~"""
         self._test_997(source, res997)
 
-        def test_loop_counting2(self):
-            res997 = """ISA*00*          *00*          *ZZ*BBBBBBBBB      *ZZ*AAAAAAAA       *070426*1251*U*00401*704261251*1*P*:~
+    def xtest_loop_counting2(self):
+        res997 = """ISA*00*          *00*          *ZZ*BBBBBBBBB      *ZZ*AAAAAAAA       *070426*1251*U*00401*704261251*1*P*:~
 GS*FA*BBBBBBBBB*AAAA*20070426*125101*1167*X*004010~
 ST*997*0001~
 AK1*HC*1167~
@@ -1758,8 +1757,8 @@ GE*1*1167~
 IEA*1*000001168~"""
         self._test_997(source, res997)
 
-        def test_multiple_trn(self):
-            res997 = """ISA*00*          *00*          *ZZ*ZZ001          *ZZ*ZZ000          *050807*0207*U*00401*508070207*0*T*:~
+    def test_multiple_trn(self):
+        res997 = """ISA*00*          *00*          *ZZ*ZZ001          *ZZ*ZZ000          *050807*0207*U*00401*508070207*0*T*:~
 GS*FA*00GR*D00111*20050807*020749*383880001*X*004010~
 ST*997*0001~
 AK1*HI*17~
@@ -1817,8 +1816,8 @@ GE*1*383880001~
 IEA*3*000010121~"""
         self._test_997(source, res997)
 
-        def test_ordinal(self):
-            res997 = """ISA*00*          *00*          *ZZ*0000BBB        *ZZ*00000AAA       *040809*1625*U*00401*408091625*0*P*:~
+    def test_ordinal(self):
+        res997 = """ISA*00*          *00*          *ZZ*0000BBB        *ZZ*00000AAA       *040809*1625*U*00401*408091625*0*P*:~
 GS*FA*0BBB*0AAA*20040809*162519*1*X*004010~
 ST*997*0001~
 AK1*HC*1~
@@ -1897,8 +1896,8 @@ GE*1*1~
 IEA*1*000484889~"""
         self._test_997(source, res997)
 
-        def test_per_segment_repeat(self):
-            res997 = """ISA*00*          *00*          *ZZ*RECEIVER       *ZZ*SENDER         *041210*0107*U*00401*412100107*0*P*:~
+    def test_per_segment_repeat(self):
+        res997 = """ISA*00*          *00*          *ZZ*RECEIVER       *ZZ*SENDER         *041210*0107*U*00401*412100107*0*P*:~
 GS*FA*RECEIVER*SENDER*20041210*010712*56*X*004010~
 ST*997*0001~
 AK1*HC*56~
@@ -1945,8 +1944,8 @@ GE*1*56~
 IEA*1*000000288~"""
         self._test_997(source, res997)
 
-        def test_repeat_init_segment(self):
-            res997 = """ISA*00*          *00*          *ZZ*111111960      *ZZ*111111536      *070829*1105*U*00401*708291105*0*T*:~
+    def test_repeat_init_segment(self):
+        res997 = """ISA*00*          *00*          *ZZ*111111960      *ZZ*111111536      *070829*1105*U*00401*708291105*0*T*:~
 GS*FA*111111960*111111536*20070829*110552*1*X*004010~
 ST*997*0001~
 AK1*HS*1~
@@ -1977,8 +1976,8 @@ GE*1*1~
 IEA*1*000168037~"""
         self._test_997(source, res997)
 
-        def test_simple1(self):
-            res997 = """ISA*00*          *00*          *ZZ*ZZ001          *ZZ*ZZ000          *040701*1611*U*00401*407011611*0*T*:~
+    def test_simple1(self):
+        res997 = """ISA*00*          *00*          *ZZ*ZZ001          *ZZ*ZZ000          *040701*1611*U*00401*407011611*0*T*:~
 GS*FA*ZZ001*ZZ000*20040701*161145*17*X*004010~
 ST*997*0001~
 AK1*HC*17~
@@ -1998,8 +1997,8 @@ GE*1*17~
 IEA*1*000010121~"""
         self._test_997(source, res997)
 
-        def test_simple_837p(self):
-            res997 = """ISA*00*          *00*          *ZZ*BBBBBBBBB      *ZZ*AAAAAAAA       *081117*1543*U*00401*811171543*1*P*:~
+    def test_simple_837p(self):
+        res997 = """ISA*00*          *00*          *ZZ*BBBBBBBBB      *ZZ*AAAAAAAA       *081117*1543*U*00401*811171543*1*P*:~
 GS*FA*BBBBBBBBB*AAAA*20081117*154310*1167*X*004010~
 ST*997*0001~
 AK1*HC*1167~
