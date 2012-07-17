@@ -400,11 +400,13 @@ class FileString(X12fileTestCase):
         for seg in src:
             errors.extend(src.pop_errors())
         err_cde = None
-        if len(errors) > 0: err_cde = errors[0][1]
+        if len(errors) > 0:
+            err_cde = errors[0][1]
         self.assertEqual(err_cde, None)
         self.assertEqual(src.subele_term, '!')
         self.assertEqual(src.ele_term, '&')
         self.assertEqual(src.seg_term, '+')
+
 
 class X12WriterTest(X12fileTestCase):
 
@@ -603,4 +605,3 @@ class InterchangeVersion(X12fileTestCase):
         if len(errors) > 0:
             err_cde = errors[0][1]
         self.assertEqual(err_cde, None)
-
