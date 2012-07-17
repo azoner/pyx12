@@ -37,26 +37,9 @@ class X12DocumentTestCase(unittest.TestCase):
         """
         src1 = pyx12.x12file.X12Reader(fd1)
         src2 = pyx12.x12file.X12Reader(fd2)
-        done1 = False
-        done2 = False
-        while True:
-            try:
-                seg1 = src1.next()
-            except StopIteration:
-                done1 = True
-            try:
-                seg2 = src2.next()
-            except StopIteration:
-                done2 = True
-            #id1 = seg1.get_seg_id()
-            #id2 = seg2.get_seg_id()
-            if seg1.format() != seg2.format() \
-                    and (seg1.get_seg_id() not in ('ISA', 'GS', 'ST', 'SE', 'GE', 'IEA') \
-                    or seg2.get_seg_id() not in ('ISA', 'GS', 'ST', 'SE', 'GE', 'IEA')):
-                return True
-            if done1 and done2:
-                return False
-        return False
+        segs1 = [x.format() for x in src1 if x.get_seg_id() not in ('ISA', 'GS', 'ST', 'SE', 'GE', 'IEA')]
+        segs2 = [x.format() for x in src2 if x.get_seg_id() not in ('ISA', 'GS', 'ST', 'SE', 'GE', 'IEA')]
+        self.assertListEqual(segs1, segs2)
 
     def _test_997(self, source, res_997):
         fd_source = self._makeFd(source)
@@ -75,8 +58,7 @@ class X12DocumentTestCase(unittest.TestCase):
         #print fd_source.read()
         pyx12.x12n_document.x12n_document(self.param, fd_source, fd_997, fd_html, None)
         fd_997.seek(0)
-        res = self._isX12Diff(fd_997_base, fd_997)
-        self.assertFalse(res)
+        self._isX12Diff(fd_997_base, fd_997)
 
 
 class Test834(X12DocumentTestCase):
