@@ -58,6 +58,26 @@ class X12DocumentTestCase(unittest.TestCase):
                 return False
         return False
 
+    def _test_997(self, source, res_997):
+        fd_source = self._makeFd(source)
+        fd_997_base = self._makeFd(res_997)
+        fd_997 = StringIO()
+        fd_html = StringIO()
+        #import logging
+        #logger = logging.getLogger('pyx12')
+        #logger.setLevel(logging.DEBUG)
+        #formatter = logging.Formatter('%(asctime)s %(levelname)s %(message)s')
+        #hdlr = logging.StreamHandler()
+        #hdlr.setFormatter(formatter)
+        #logger.addHandler(hdlr)
+
+        fd_source.seek(0)
+        #print fd_source.read()
+        pyx12.x12n_document.x12n_document(self.param, fd_source, fd_997, fd_html, None)
+        fd_997.seek(0)
+        res = self._isX12Diff(fd_997_base, fd_997)
+        self.assertFalse(res)
+
 
 class Test834(X12DocumentTestCase):
 
@@ -98,21 +118,4 @@ SE*6*0001~
 GE*1*13360001~
 IEA*1*703201721~
 """
-        fd_source = self._makeFd(source)
-        fd_997_base = self._makeFd(res_997)
-        fd_997 = StringIO()
-        fd_html = StringIO()
-        import logging
-        logger = logging.getLogger('pyx12')
-        logger.setLevel(logging.DEBUG)
-        formatter = logging.Formatter('%(asctime)s %(levelname)s %(message)s')
-        hdlr = logging.StreamHandler()
-        hdlr.setFormatter(formatter)
-        logger.addHandler(hdlr)
-
-        fd_source.seek(0)
-        #print fd_source.read()
-        pyx12.x12n_document.x12n_document(self.param, fd_source, fd_997, fd_html, None)
-        fd_997.seek(0)
-        res = self._isX12Diff(fd_997_base, fd_997)
-        self.assertFalse(res)
+        self._test_997(source, res_997)
