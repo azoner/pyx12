@@ -13,3 +13,4 @@
 from pyx12.tests import map_if, params, syntax, x12xml_idtag
 from pyx12.tests import codes, segment, validation, path, x12file
 from pyx12.tests import map_walker, map_index, map_unique
+from pyx12.tests import x12n_document

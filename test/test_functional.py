@@ -136,7 +136,7 @@ def test_997(src_filename, param):
         return False
         #sys.exit(2)
     except Exception:
-        #logger.info('Base xml not found: %s' % (os.path.basename(base_xml)))
+        logger.exception('997 test failed for "%s"' %(src_filename))
         return False
     return True
 

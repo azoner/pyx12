@@ -1,13 +1,13 @@
 import unittest
-import tempfile
 try:
     from StringIO import StringIO
 except:
     from io import StringIO
 
 import pyx12.error_handler
-from pyx12.errors import *
+#from pyx12.errors import *
 import pyx12.x12file
+
 
 class X12fileTestCase(unittest.TestCase):
 
@@ -29,7 +29,7 @@ class X12fileTestCase(unittest.TestCase):
             err_cde = errors[0][1]
             err_str = errors[0][2]
         return (err_cde, err_str)
-    
+
     def _makeFd(self, x12str=None):
         try:
             if x12str:
@@ -43,7 +43,6 @@ class X12fileTestCase(unittest.TestCase):
                 fd = StringIO(encoding='ascii')
         fd.seek(0)
         return fd
-
 
     def test_binary_delimiters(self):
         str1 = 'ISA&00&          &00&          &ZZ&ZZ000          &ZZ&ZZ001          &030828&1128&^&00501&000010121&0&T&!+\n'
@@ -63,7 +62,8 @@ class X12fileTestCase(unittest.TestCase):
         for seg in src:
             errors.extend(src.pop_errors())
         err_cde = None
-        if len(errors) > 0: err_cde = errors[0][1]
+        if len(errors) > 0:
+            err_cde = errors[0][1]
         self.assertEqual(err_cde, None)
         self.assertEqual(src.subele_term, chr(0x1E))
         self.assertEqual(src.ele_term, chr(0x1C))
@@ -85,7 +85,7 @@ class X12fileTestCase(unittest.TestCase):
                     err_str = errors[0][2]
         self.assertEqual(err_cde, 'SEG1', err_str)
 
-                    
+
 class ISA_header(X12fileTestCase):
 
     def test_starts_with_ISA(self):
@@ -99,20 +99,22 @@ class ISA_header(X12fileTestCase):
         self.assertRaises(pyx12.errors.X12Error, pyx12.x12file.X12Reader, fd)
 
     def test_repeat_ISA_loops(self):
-        str1 = 'ISA*00*          *00*          *ZZ*ZZ000          *ZZ*ZZ001          *030828*1128*U*00401*000010121*0*T*:~\n'
-        str1 += 'IEA*0*000010121~\n'
-        str1 += 'ISA*00*          *00*          *ZZ*ZZ000          *ZZ*ZZ001          *030828*1128*U*00401*000010122*0*T*:~\n'
-        str1 += 'IEA*0*000010122~\n'
-        (err_cde, err_str) = self._get_first_error(str1)        
+        str1 = """ISA*00*          *00*          *ZZ*ZZ000          *ZZ*ZZ001          *030828*1128*U*00401*000010121*0*T*:~
+IEA*0*000010121~
+ISA*00*          *00*          *ZZ*ZZ000          *ZZ*ZZ001          *030828*1128*U*00401*000010122*0*T*:~
+IEA*0*000010122~
+"""
+        (err_cde, err_str) = self._get_first_error(str1)
         self.assertEqual(err_cde, None, err_str)
 
     def test_Unique_Interchange_ID(self):
         seg = None
-        str1 = 'ISA*00*          *00*          *ZZ*ZZ000          *ZZ*ZZ001          *030828*1128*U*00401*000010121*0*T*:~\n'
-        str1 += 'IEA*0*000010121~\n'
-        str1 += 'ISA*00*          *00*          *ZZ*ZZ000          *ZZ*ZZ001          *030828*1128*U*00401*000010121*0*T*:~\n'
-        str1 += 'IEA*0*000010121~\n'
-        (err_cde, err_str) = self._get_first_error(str1)        
+        str1 = """ISA*00*          *00*          *ZZ*ZZ000          *ZZ*ZZ001          *030828*1128*U*00401*000010121*0*T*:~
+IEA*0*000010121~
+ISA*00*          *00*          *ZZ*ZZ000          *ZZ*ZZ001          *030828*1128*U*00401*000010121*0*T*:~
+IEA*0*000010121~
+"""
+        (err_cde, err_str) = self._get_first_error(str1)
         self.assertEqual(err_cde, '025', err_str)
 
 
@@ -124,7 +126,7 @@ class IEA_Checks(X12fileTestCase):
         str1 += 'GS*HC*ZZ000*ZZ001*20030828*1128*17*X*004010X098~\n'
         str1 += 'GE*0*17~\n'
         str1 += 'IEA*1*000010555~\n'
-        (err_cde, err_str) = self._get_first_error(str1)        
+        (err_cde, err_str) = self._get_first_error(str1)
         self.assertEqual(err_cde, '001', err_str)
 
     def test_IEA_count(self):
@@ -133,7 +135,7 @@ class IEA_Checks(X12fileTestCase):
         str1 += 'GS*HC*ZZ000*ZZ001*20030828*1128*17*X*004010X098~\n'
         str1 += 'GE*0*17~\n'
         str1 += 'IEA*2*000010121~\n'
-        (err_cde, err_str) = self._get_first_error(str1)        
+        (err_cde, err_str) = self._get_first_error(str1)
         self.assertEqual(err_cde, '021', err_str)
 
     def test_missing_IEA(self):
@@ -141,7 +143,7 @@ class IEA_Checks(X12fileTestCase):
         str1 = 'ISA*00*          *00*          *ZZ*ZZ000          *ZZ*ZZ001          *030828*1128*U*00401*000010121*0*T*:~\n'
         str1 += 'GS*HC*ZZ000*ZZ001*20030828*1128*17*X*004010X098~\n'
         str1 += 'GE*0*17~\n'
-        (err_cde, err_str) = self._get_first_error(str1)        
+        (err_cde, err_str) = self._get_first_error(str1)
         self.assertEqual(err_cde, '023', err_str)
 
 
@@ -153,7 +155,7 @@ class GE_Checks(X12fileTestCase):
         str1 += 'GS*HC*ZZ000*ZZ001*20030828*1128*17*X*004010X098~\n'
         str1 += 'GE*0*555~\n'
         str1 += 'IEA*1*000010121~\n'
-        (err_cde, err_str) = self._get_first_error(str1)        
+        (err_cde, err_str) = self._get_first_error(str1)
         self.assertEqual(err_cde, '4', err_str)
 
     def test_GE_count(self):
@@ -161,7 +163,7 @@ class GE_Checks(X12fileTestCase):
         str1 += 'GS*HC*ZZ000*ZZ001*20030828*1128*17*X*004010X098~\n'
         str1 += 'GE*999*17~\n'
         str1 += 'IEA*1*000010121~\n'
-        (err_cde, err_str) = self._get_first_error(str1)        
+        (err_cde, err_str) = self._get_first_error(str1)
         self.assertEqual(err_cde, '5', err_str)
 
     def test_Unique_Functional_Group_ID(self):
@@ -171,7 +173,7 @@ class GE_Checks(X12fileTestCase):
         str1 += 'GS*HC*ZZ000*ZZ001*20030828*1128*17*X*004010X098~\n'
         str1 += 'GE*0*17~\n'
         str1 += 'IEA*2*000010121~\n'
-        (err_cde, err_str) = self._get_first_error(str1)        
+        (err_cde, err_str) = self._get_first_error(str1)
         self.assertEqual(err_cde, '6', err_str)
 
     def test_missing_GE(self):
@@ -179,7 +181,7 @@ class GE_Checks(X12fileTestCase):
         str1 = 'ISA*00*          *00*          *ZZ*ZZ000          *ZZ*ZZ001          *030828*1128*U*00401*000010121*0*T*:~\n'
         str1 += 'GS*HC*ZZ000*ZZ001*20030828*1128*17*X*004010X098~\n'
         str1 += 'IEA*1*000010121~\n'
-        (err_cde, err_str) = self._get_first_error(str1)        
+        (err_cde, err_str) = self._get_first_error(str1)
         self.assertEqual(err_cde, '024', err_str)
 
 
@@ -193,7 +195,7 @@ class SE_Checks(X12fileTestCase):
         str1 += 'SE*2*11280999~\n'
         str1 += 'GE*1*17~\n'
         str1 += 'IEA*1*000010121~\n'
-        (err_cde, err_str) = self._get_first_error(str1)        
+        (err_cde, err_str) = self._get_first_error(str1)
         self.assertEqual(err_cde, '3', err_str)
 
     def test_SE_count(self):
@@ -204,7 +206,7 @@ class SE_Checks(X12fileTestCase):
         str1 += 'SE*0*11280001~\n'
         str1 += 'GE*1*17~\n'
         str1 += 'IEA*1*000010121~\n'
-        (err_cde, err_str) = self._get_first_error(str1)        
+        (err_cde, err_str) = self._get_first_error(str1)
         self.assertEqual(err_cde, '4', err_str)
 
     def test_Unique_Transaction_Set_ID(self):
@@ -217,7 +219,7 @@ class SE_Checks(X12fileTestCase):
         str1 += 'SE*2*11280001~\n'
         str1 += 'GE*2*17~\n'
         str1 += 'IEA*1*000010121~\n'
-        (err_cde, err_str) = self._get_first_error(str1)        
+        (err_cde, err_str) = self._get_first_error(str1)
         self.assertEqual(err_cde, '23', err_str)
 
     def test_missing_SE(self):
@@ -227,7 +229,7 @@ class SE_Checks(X12fileTestCase):
         str1 += 'ST*837*11280001~\n'
         str1 += 'GE*1*17~\n'
         str1 += 'IEA*1*000010121~\n'
-        (err_cde, err_str) = self._get_first_error(str1)        
+        (err_cde, err_str) = self._get_first_error(str1)
         self.assertEqual(err_cde, '3', err_str)
 
 
@@ -247,7 +249,7 @@ class HL_Checks(X12fileTestCase):
         str1 += 'SE*6*11280001~\n'
         str1 += 'GE*1*17~\n'
         str1 += 'IEA*1*000010121~\n'
-        (err_cde, err_str) = self._get_first_error(str1)        
+        (err_cde, err_str) = self._get_first_error(str1)
         self.assertEqual(err_cde, None, err_str)
 
     def test_HL_increment_bad(self):
@@ -262,7 +264,7 @@ class HL_Checks(X12fileTestCase):
         str1 += 'SE*6*11280001~\n'
         str1 += 'GE*1*17~\n'
         str1 += 'IEA*1*000010121~\n'
-        (err_cde, err_str) = self._get_first_error(str1)        
+        (err_cde, err_str) = self._get_first_error(str1)
         self.assertEqual(err_cde, 'HL1', err_str)
 
     def test_HL_parent_good(self):
@@ -277,7 +279,7 @@ class HL_Checks(X12fileTestCase):
         str1 += 'SE*6*11280001~\n'
         str1 += 'GE*1*17~\n'
         str1 += 'IEA*1*000010121~\n'
-        (err_cde, err_str) = self._get_first_error(str1)        
+        (err_cde, err_str) = self._get_first_error(str1)
         self.assertEqual(err_cde, None, err_str)
 
     def test_HL_parent_bad_invalid(self):
@@ -292,7 +294,7 @@ class HL_Checks(X12fileTestCase):
         str1 += 'SE*6*11280001~\n'
         str1 += 'GE*1*17~\n'
         str1 += 'IEA*1*000010121~\n'
-        (err_cde, err_str) = self._get_first_error(str1)        
+        (err_cde, err_str) = self._get_first_error(str1)
         self.assertEqual(err_cde, 'HL2', err_str)
 
     def xtest_HL_parent_bad_blank(self):
@@ -307,7 +309,7 @@ class HL_Checks(X12fileTestCase):
         str1 += 'SE*6*11280001~\n'
         str1 += 'GE*1*17~\n'
         str1 += 'IEA*1*000010121~\n'
-        (err_cde, err_str) = self._get_first_error(str1)        
+        (err_cde, err_str) = self._get_first_error(str1)
         self.assertEqual(err_cde, 'HL2', err_str)
 
 
@@ -341,14 +343,14 @@ class Formatting(X12fileTestCase):
             str_out += seg.format()
         str1 = str1.replace('\n', '')
         self.assertMultiLineEqual(str1, str_out)
- 
+
 
 class Segment_ID_Checks(X12fileTestCase):
 
     def test_segment_id_short(self):
         str1 = 'ISA*00*          *00*          *ZZ*ZZ000          *ZZ*ZZ001          *030828*1128*U*00401*000010121*0*T*:~\n'
         str1 += 'Z*0019~\n'
-        (err_cde, err_str) = self._get_first_error(str1)        
+        (err_cde, err_str) = self._get_first_error(str1)
         self.assertEqual(err_cde, '1', err_str)
 
     def test_segment_last_space(self):
@@ -365,20 +367,20 @@ class Segment_ID_Checks(X12fileTestCase):
     def test_segment_id_long(self):
         str1 = 'ISA*00*          *00*          *ZZ*ZZ000          *ZZ*ZZ001          *030828*1128*U*00401*000010121*0*T*:~\n'
         str1 += 'ZZZZ*0019~\n'
-        (err_cde, err_str) = self._get_first_error(str1)        
+        (err_cde, err_str) = self._get_first_error(str1)
         self.assertEqual(err_cde, '1', err_str)
 
     def test_segment_id_empty(self):
         str1 = 'ISA*00*          *00*          *ZZ*ZZ000          *ZZ*ZZ001          *030828*1128*U*00401*000010121*0*T*:~\n'
         str1 += '*1~\n'
-        (err_cde, err_str) = self._get_first_error(str1)        
+        (err_cde, err_str) = self._get_first_error(str1)
         self.assertEqual(err_cde, '1', err_str)
-        
+
     def test_segment_empty(self):
         errh = pyx12.error_handler.errh_null()
         str1 = 'ISA*00*          *00*          *ZZ*ZZ000          *ZZ*ZZ001          *030828*1128*U*00401*000010121*0*T*:~\n'
         str1 += 'TST~\n'
-        (err_cde, err_str) = self._get_first_error(str1)        
+        (err_cde, err_str) = self._get_first_error(str1)
         self.assertEqual(err_cde, '8', err_str)
 
 
@@ -579,7 +581,7 @@ class InterchangeVersion(X12fileTestCase):
         for seg in src:
             errors.extend(src.pop_errors())
         err_cde = None
-        if len(errors) > 0: 
+        if len(errors) > 0:
             err_cde = errors[0][1]
         self.assertEqual(err_cde, None)
 
@@ -598,7 +600,7 @@ class InterchangeVersion(X12fileTestCase):
         for seg in src:
             errors.extend(src.pop_errors())
         err_cde = None
-        if len(errors) > 0: 
+        if len(errors) > 0:
             err_cde = errors[0][1]
         self.assertEqual(err_cde, None)
 
