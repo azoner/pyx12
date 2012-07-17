@@ -39,6 +39,9 @@ class err_iter(object):
     def first(self):
         self.cur_node = self.errh
 
+    def next(self):
+        self.__next__()
+
     def __next__(self):
         #If at previosly visited branch, do not do children
         if self.cur_node in self.visit_stack:
