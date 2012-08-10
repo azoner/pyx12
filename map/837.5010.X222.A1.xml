@@ -5681,25 +5681,8 @@
                     <element xid="SBR05">
                       <data_ele>1336</data_ele>
                       <name>Insurance Type Code</name>
-                      <usage>S</usage>
+                      <usage>N</usage>
                       <seq>05</seq>
-                      <valid_codes>
-                        <code>AP</code>
-                        <code>C1</code>
-                        <code>CP</code>
-                        <code>GP</code>
-                        <code>HM</code>
-                        <code>IP</code>
-                        <code>LD</code>
-                        <code>LT</code>
-                        <code>MB</code>
-                        <code>MC</code>
-                        <code>MI</code>
-                        <code>MP</code>
-                        <code>OT</code>
-                        <code>PP</code>
-                        <code>SP</code>
-                      </valid_codes>
                     </element>
                     <element xid="SBR06">
                       <data_ele>1143</data_ele>
@@ -16246,25 +16229,8 @@
                       <element xid="SBR05">
                         <data_ele>1336</data_ele>
                         <name>Insurance Type Code</name>
-                        <usage>R</usage>
+                        <usage>N</usage>
                         <seq>05</seq>
-                        <valid_codes>
-                          <code>AP</code>
-                          <code>C1</code>
-                          <code>CP</code>
-                          <code>GP</code>
-                          <code>HM</code>
-                          <code>IP</code>
-                          <code>LD</code>
-                          <code>LT</code>
-                          <code>MB</code>
-                          <code>MC</code>
-                          <code>MI</code>
-                          <code>MP</code>
-                          <code>OT</code>
-                          <code>PP</code>
-                          <code>SP</code>
-                        </valid_codes>
                       </element>
                       <element xid="SBR06">
                         <data_ele>1143</data_ele>
