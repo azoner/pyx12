@@ -1,8 +1,7 @@
 import unittest
-import sys
 
 from pyx12.validation import IsValidDataType
-from pyx12.errors import *
+
 
 class BasicNumeric(unittest.TestCase):
     def testValid(self):
@@ -24,7 +23,7 @@ class BasicReal(unittest.TestCase):
         self.assertTrue(IsValidDataType('-331232', 'R', 'B'))
         self.assertTrue(IsValidDataType('1.325', 'R', 'B'))
         self.assertTrue(IsValidDataType('.024', 'R', 'B'))
-        
+
     def testInvalid(self):
         self.assertFalse(IsValidDataType('+331232', 'R', 'B'))
         self.assertFalse(IsValidDataType('123,456,789.123', 'R', 'B'))
@@ -37,17 +36,18 @@ class BasicIdentifier(unittest.TestCase):
     def testValid(self):
         self.assertTrue(IsValidDataType('10&3', 'ID', 'B'))
         self.assertTrue(IsValidDataType('  XYZ', 'ID', 'B'))
-        
+
     def testInvalid(self):
         self.assertFalse(IsValidDataType('abc', 'ID', 'B'))
         self.assertFalse(IsValidDataType('abc   ', 'ID', 'B'))
+
 
 class BasicString(unittest.TestCase):
     def testValid(self):
         self.assertTrue(IsValidDataType('LKJS', 'AN', 'B'))
         self.assertTrue(IsValidDataType('THIS IS A TEST ()', 'AN', 'B'))
         self.assertTrue(IsValidDataType(r"""BASIC ABCDEFIGHIJKLMNOPQRSTUVWXYZ 0123456789!"&'()+,-./;:?=""", 'AN', 'B'))
-        
+
     def testInvalid(self):
         self.assertFalse(IsValidDataType('abd1P', 'AN', 'B'))
         self.assertFalse(IsValidDataType(r'extended abcdefghijklmnopqrstuvwxyz%~@[]_{}\|<>#$', 'AN', 'B'))
@@ -69,7 +69,7 @@ class BasicDate(unittest.TestCase):
         self.assertTrue(IsValidDataType('200402020400', 'DT', 'B'))
         self.assertTrue(IsValidDataType('20040430', 'DT', 'B'))
         self.assertTrue(IsValidDataType('20040401-20040430', 'RD8', 'B'))
-        
+
     def testInvalidLeapDate(self):
         self.assertFalse(IsValidDataType('990229', 'DT', 'B'))
         self.assertFalse(IsValidDataType('20030229', 'DT', 'B'))
@@ -135,7 +135,7 @@ class ExtendedReal(unittest.TestCase):
         self.assertTrue(IsValidDataType('-331232', 'R', 'E'))
         self.assertTrue(IsValidDataType('1.325', 'R', 'E'))
         self.assertTrue(IsValidDataType('.024', 'R', 'E'))
-        
+
     def testInvalid(self):
         self.assertFalse(IsValidDataType('a.603', 'R', 'E'))
         self.assertFalse(IsValidDataType('0.0b', 'R', 'E'))
@@ -161,7 +161,7 @@ class ExtendedString(unittest.TestCase):
         self.assertTrue(IsValidDataType('extended abcdefghijklmnopqrstuvwxyz%~@[]_{}\|<>#$', 'AN', 'E'))
         self.assertTrue(IsValidDataType("""Both ABCDEFIGHIJKLMNOPQRSTUVWXYZ 0123456789!"&'()+,-./;:?= abcdefghijklmnopqrstuvwxyz%~@[]_{}\|<>#$""", 'AN', 'E'))
         self.assertTrue(IsValidDataType('wharf', 'AN', 'E'))
-        
+
     def testInvalid(self):
         self.assertFalse(IsValidDataType('bad ^`', 'AN', 'E'))
 
@@ -184,7 +184,7 @@ class ExtendedDate(unittest.TestCase):
         self.assertTrue(IsValidDataType('020414', 'D6', 'E'))
         self.assertTrue(IsValidDataType('960229', 'D6', 'E'))
         self.assertTrue(IsValidDataType('20040401-20040430', 'RD8', 'E'))
-        
+
     def testInvalid(self):
         self.assertFalse(IsValidDataType('990229', 'DT', 'E'))
         self.assertFalse(IsValidDataType('030732', 'DT', 'E'))
@@ -248,7 +248,6 @@ class Extended5010String(unittest.TestCase):
         self.assertTrue(IsValidDataType("""Both ABCDEFIGHIJKLMNOPQRSTUVWXYZ 0123456789!"&'()+,-./;:?= abcdefghijklmnopqrstuvwxyz%~@[]_{}\|<>#$""", 'AN', 'E', '00501'))
         self.assertTrue(IsValidDataType('wharf', 'AN', 'E', '00501'))
         self.assertTrue(IsValidDataType('_good ^`', 'AN', 'E', '00501'))
-        
-    def testInvalid(self):
-        self.assertFalse(IsValidDataType('%s'%(chr(0x1D)), 'AN', 'E', '00501'))
 
+    def testInvalid(self):
+        self.assertFalse(IsValidDataType('%s' % (chr(0x1D)), 'AN', 'E', '00501'))
