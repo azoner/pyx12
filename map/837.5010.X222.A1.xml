@@ -5681,8 +5681,19 @@
                     <element xid="SBR05">
                       <data_ele>1336</data_ele>
                       <name>Insurance Type Code</name>
-                      <usage>N</usage>
+                      <usage>S</usage>
                       <seq>05</seq>
+                      <valid_codes>
+                        <code>12</code>
+                        <code>13</code>
+                        <code>14</code>
+                        <code>15</code>
+                        <code>16</code>
+                        <code>41</code>
+                        <code>42</code>
+                        <code>43</code>
+                        <code>47</code>
+                      </valid_codes>
                     </element>
                     <element xid="SBR06">
                       <data_ele>1143</data_ele>
@@ -16229,8 +16240,19 @@
                       <element xid="SBR05">
                         <data_ele>1336</data_ele>
                         <name>Insurance Type Code</name>
-                        <usage>N</usage>
+                        <usage>R</usage>
                         <seq>05</seq>
+                        <valid_codes>
+                        <code>12</code>
+                        <code>13</code>
+                        <code>14</code>
+                        <code>15</code>
+                        <code>16</code>
+                        <code>41</code>
+                        <code>42</code>
+                        <code>43</code>
+                        <code>47</code>
+                        </valid_codes>
                       </element>
                       <element xid="SBR06">
                         <data_ele>1143</data_ele>
