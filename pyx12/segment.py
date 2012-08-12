@@ -18,7 +18,7 @@ treated as a composite element with one sub-element.
 All indexing is zero based.
 """
 
-import path
+import pyx12.path
 from pyx12.errors import EngineError
 
 class Element(object):
@@ -187,7 +187,8 @@ class Composite(object):
         for i in range(len(self.elements)-1, -1, -1):
             if not self.elements[i].is_empty():
                 break
-        return '%s' % (subele_term.join(map(Element.__repr__, self.elements[:i+1])))
+        return subele_term.join([Element.__repr__(x) for x in self.elements[:i+1]])
+        #return '%s' % (subele_term.join(map(Element.__repr__, self.elements[:i+1])))
             
     def get_value(self):
         """
@@ -334,7 +335,7 @@ class Segment(object):
         @raise EngineError: If the given ref_des does not match the segment ID
             or if the indexes are not valid integers
         """
-        xp = path.X12Path(ref_des)
+        xp = pyx12.path.X12Path(ref_des)
         if xp.seg_id is not None and xp.seg_id != self.seg_id:
             err_str = 'Invalid Reference Designator: %s, seg_id: %s' \
                 % (ref_des, self.seg_id)
