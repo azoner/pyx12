@@ -32,7 +32,7 @@ class Element(object):
         @type ele_str: string
         
         """
-        self.value = ele_str
+        self.value = ele_str if ele_str is not None else ''
         
     def __eq__(self, other):
         if isinstance(other, Element):
@@ -83,7 +83,7 @@ class Element(object):
         @param elem_str: Element string value
         @type elem_str: string
         """
-        self.value = elem_str
+        self.value = elem_str if ele_str is not None else ''
 
     def is_composite(self):
         """
@@ -101,7 +101,7 @@ class Element(object):
         """
         @rtype: boolean
         """
-        if self.value and self.value != '':
+        if self.value is not None and self.value != '':
             return False
         else:
             return True
@@ -188,7 +188,6 @@ class Composite(object):
             if not self.elements[i].is_empty():
                 break
         return subele_term.join([Element.__repr__(x) for x in self.elements[:i+1]])
-        #return '%s' % (subele_term.join(map(Element.__repr__, self.elements[:i+1])))
             
     def get_value(self):
         """
