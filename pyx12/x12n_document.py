@@ -102,22 +102,8 @@ def x12n_document(param, src_file, fd_997, fd_html,
         html.header()
         err_iter = error_handler.err_iter(errh)
     if fd_xmldoc:
-        logger.debug('xmlout: %s' % (param.get('xmlout')))
-        if param.get('xmlout') == 'simple':
-            import x12xml_simple
-            xmldoc = x12xml_simple.x12xml_simple(fd_xmldoc,
-                param.get('simple_dtd'))
-        elif param.get('xmlout') == 'idtag':
-            import x12xml_idtag
-            xmldoc = x12xml_idtag.x12xml_idtag(fd_xmldoc,
-                param.get('idtag_dtd'))
-        elif param.get('xmlout') == 'idtagqual':
-            import x12xml_idtagqual
-            xmldoc = x12xml_idtagqual.x12xml_idtagqual(fd_xmldoc,
-                param.get('idtagqual_dtd'))
-        else:
-            xmldoc = x12xml_simple.x12xml_simple(fd_xmldoc,
-                param.get('simple_dtd'))
+        import x12xml_simple
+        xmldoc = x12xml_simple.x12xml_simple(fd_xmldoc, param.get('simple_dtd'))
 
     #basedir = os.path.dirname(src_file)
     #erx = errh_xml.err_handler(basedir=basedir)

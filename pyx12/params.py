@@ -49,10 +49,7 @@ class ParamsBase(object):
         self.params['skip_html'] = False
         self.params['skip_997'] = False
         self.params['simple_dtd'] = ''
-        self.params['idtag_dtd'] = ''
-        self.params['idtagqual_dtd'] = ''
         self.params['xmlout'] = 'simple'
-        #self.params['xmlout'] = 'idtag'
         self.params['xslt_files'] = []
 
     def get(self, option):

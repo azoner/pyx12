@@ -21,8 +21,9 @@ def suite():
         'test_x12context',
         'test_x12file',
         'test_x12n_document',
-        'test_x12xml_idtag',
-        'test_xmlwriter'
+        'test_xmlwriter',
+        'test_x12n_document.py',
+        'test_xmlx12_simple.py',
     )
     alltests = unittest.TestSuite()
     for module in map(__import__, modules_to_test):

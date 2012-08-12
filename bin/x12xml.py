@@ -52,7 +52,7 @@ def usage():
     sys.stderr.write('  -t <file>  XSL Transform, applied to the map.  May be used multiple times.\n')
     sys.stderr.write('  -v         Verbose output\n')
     sys.stderr.write('  -x <tag>   Exclude external code\n')
-    sys.stderr.write('  -X <simple|idtag|idtagqual>   XML output format\n')
+    sys.stderr.write('  -X <simple>   XML output format\n')
 
 def main():
     """Script main program."""
@@ -102,7 +102,7 @@ def main():
         if o == '-q': logger.setLevel(logging.ERROR)
         if o == '-x': param.set('exclude_external_codes', a)
         if o == '-X': 
-            if a not in ('simple','idtag', 'idtagqual'):
+            if a not in ('simple'):
                 logger.error('Unknown parameter for -X')
                 usage()
                 return False
