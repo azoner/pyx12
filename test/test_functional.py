@@ -242,9 +242,7 @@ def main():
             head, tail = name[:-4], name[-4:]
             if tail == '.txt':
                 try:
-                    test_997(src_filename, param)
-                    #if sys.platform != 'win32':
-                    #    test_xml(src_filename, param)
+                    test_xml(src_filename, param)
                 except Exception:
                     raise
                 except IOError:
