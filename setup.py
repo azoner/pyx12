@@ -28,9 +28,6 @@ test_dir = 'share/pyx12/test'
 TEST_FILES = ['test/%s' % (file1) for file1 in
     filter(lambda x: splitext(x)[1] in ('.py', '.xml'),
     os.listdir('test'))]
-TEST_DATA = ['test/files/%s' % (file1) for file1 in
-    filter(lambda x: splitext(x)[1] in ('.txt'),
-    os.listdir('test/files'))]
 
 kw = {
     'name': "pyx12",
@@ -53,8 +50,7 @@ kw = {
             'map/x12simple.dtd', 'map/dataele.xml', 'map/dataele.xsd']),
         ('share/doc/pyx12', ['README.md', 'LICENSE.txt',
             'CHANGELOG.txt', 'INSTALL.txt']),
-        (test_dir, TEST_FILES),
-        (test_dir + '/files', TEST_DATA)
+        (test_dir, TEST_FILES)
     ],
       #package_dir = {'': ''},
 }
