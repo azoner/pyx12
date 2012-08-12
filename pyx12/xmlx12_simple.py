@@ -50,5 +50,6 @@ def get_segment(cSegment):
         elif node.tag == 'comp':
             for subele in node.findall('subele'):
                 subele_id = subele.get('id')
-                seg_data.set(subele_id, subele.text)
+                if subele.text is not None and subele.text != '':
+                    seg_data.set(subele_id, subele.text)
     return seg_data
