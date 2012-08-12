@@ -29,21 +29,26 @@ def convert(filename, fd_out):
     """
     logger = logging.getLogger('pyx12')
     wr = pyx12.x12file.X12Writer(fd_out, '~', '*', ':', '\n', '^')
-    try:
-        for cSeg in et.parse(filename).iterfind('seg'):
-            seg_id = cSeg.get('id')
-            #seg_id = cSeg.findtext('data_ele')
-            seg_data = pyx12.segment.Segment(seg_id, '~', '*', ':')
-            for ele in cSeg.findall('ele'):
-                ele_id = ele.get('id')
-                if ele.text.strip() != '':
-                    seg_data.set(ele_id, ele.text.strip())
-                for subele in ele.findall('subele'):
-                    subele_id = subele.get('id')
-                    seg_data.set(subele_id, subele.text.strip())
-            wr.Write(seg_data) 
-    except:
-        logger.error('Read of file "%s" failed' % (filename))
-        raise
-        #return False
+    doc = et.parse(filename)
+    for node in doc.iter():
+        if node.tag == 'seg':
+            wr.Write(get_segment(node)) 
     return True
+
+def get_segment(cSegment):
+    """
+    Build an X12 segment from a XML node
+    """
+    seg_id = cSegment.get('id')
+    #seg_id = cSeg.findtext('data_ele')
+    seg_data = pyx12.segment.Segment(seg_id, '~', '*', ':')
+    for node in cSegment.iter():
+        if node.tag == 'ele':
+            ele_id = node.get('id')
+            if node.text != '':
+                seg_data.set(ele_id, node.text)
+        elif node.tag == 'comp':
+            for subele in node.findall('subele'):
+                subele_id = subele.get('id')
+                seg_data.set(subele_id, subele.text)
+    return seg_data

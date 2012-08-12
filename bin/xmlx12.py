@@ -96,11 +96,12 @@ def main():
         fd_x12 = sys.stdout
 
     try:
-        result = pyx12.xmlx12_simple.convert(src_filename, fd_x12)
-        fd_x12.close()
-        if not result:
-            logger.error('File %s had errors.' % (src_filename))
-            return False
+        with open(src_filename) as fd_source:
+            result = pyx12.xmlx12_simple.convert(fd_source, fd_x12)
+            #fd_x12.close()
+            if not result:
+                logger.error('File %s had errors.' % (src_filename))
+                return False
     except KeyboardInterrupt:
         print "\n[interrupt]"
         

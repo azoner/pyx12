@@ -46,7 +46,7 @@ class RawX12File(object):
             raise pyx12.errors.X12Error(err_str)
         self.icvn = line[84:89]
         if self.icvn not in ('00401', '00501'):
-            err_str = 'ISA Interchange Control Version Number is unknown: %s' % (self.icvn)
+            err_str = 'ISA Interchange Control Version Number is unknown: %s for %s' % (self.icvn, line)
             raise pyx12.errors.X12Error(err_str)
         self.seg_term = line[-1]
         self.ele_term = line[3]
