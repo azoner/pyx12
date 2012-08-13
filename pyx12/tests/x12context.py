@@ -222,7 +222,7 @@ class TreeSelect(X12fileTestCase):
         self.assertEqual(ct, 3, 'Found %i 2100 loops.  Should have %i' % (ct, 3))
 
     def test_select_from_gs(self):
-        fd = open('files/simple_837i.txt')
+        fd = self._makeFd(datafiles['simple_837i']['source'])
         errh = pyx12.error_handler.errh_null()
         src = pyx12.x12context.X12ContextReader(self.param, errh, fd,)
         ct = 0
