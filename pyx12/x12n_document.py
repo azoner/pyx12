@@ -10,7 +10,7 @@
 
 """
 Parse a ANSI X12N data file.  Validate against a map and codeset values.
-Create XML, HTML, and 997 documents based on the data file.
+Create XML, HTML, and 997/999 documents based on the data file.
 """
 
 import os
@@ -64,7 +64,7 @@ def x12n_document(param, src_file, fd_997, fd_html,
     @param param: pyx12.param instance
     @param src_file: Source document
     @type src_file: string
-    @param fd_997: 997 output document
+    @param fd_997: 997/999 output document
     @type fd_997: file descriptor
     @param fd_html: HTML output document
     @type fd_html: file descriptor
