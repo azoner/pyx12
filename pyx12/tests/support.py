@@ -2,7 +2,8 @@
 
 import sys
 from os.path import dirname, abspath, join, isdir, isfile
-import pyx12.params 
+import pyx12.params
+
 
 def getMapPath():
     """

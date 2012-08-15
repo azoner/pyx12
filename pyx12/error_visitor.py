@@ -14,6 +14,7 @@
 Visitor - Visits an error_handler composite
 """
 
+
 class error_visitor(object):
     """
     """
@@ -76,4 +77,3 @@ class error_visitor(object):
         Params:     err_ele - error_ele instance
         """
         pass
-

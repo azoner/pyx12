@@ -19,6 +19,7 @@ import xml.etree.cElementTree as et
 # Intrapackage imports
 from pyx12.errors import EngineError
 
+
 class CodesError(Exception):
     """Class for code modules errors."""
 
@@ -36,15 +37,15 @@ class ExternalCodes(object):
         @param exclude: comma separated string of external codes to ignore
         @type exclude: string
 
-        @note: self.codes - map of a tuple of two dates and a list of codes 
+        @note: self.codes - map of a tuple of two dates and a list of codes
         {codeset_id: (eff_dte, exp_dte, [code_values])}
         """
-        
-        self.codes = {} 
+
+        self.codes = {}
         code_file = base_path + '/codes.xml'
         codeset_id = None
         #base_name = None
-        
+
         self.exclude_list = exclude.split(',') if exclude is not None else []
 
         for cElem in et.parse(code_file).iter('codeset'):
@@ -54,7 +55,8 @@ class ExternalCodes(object):
             codes = []
             for code in cElem.iterfind('version/code'):
                 codes.append(code.text)
-            self.codes[codeset_id] = {'name':name, 'dataele': data_ele, 'codes': codes}
+            self.codes[codeset_id] = {'name': name, 'dataele':
+                                      data_ele, 'codes': codes}
 
     def isValid(self, key, code, check_dte=None):
         """
@@ -87,4 +89,3 @@ class ExternalCodes(object):
         """
         for key in list(self.codes.keys()):
             print((self.codes[key][:10]))
-

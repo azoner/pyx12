@@ -242,7 +242,8 @@ class Extended5010String(unittest.TestCase):
     def testValid(self):
         self.assertTrue(IsValidDataType('LKJS\\', 'AN', 'E', '00501'))
         self.assertTrue(IsValidDataType('abd1P', 'AN', 'E', '00501'))
-        self.assertTrue(IsValidDataType('THIS IS A TEST ()', 'AN', 'E', '00501'))
+        self.assertTrue(
+            IsValidDataType('THIS IS A TEST ()', 'AN', 'E', '00501'))
         self.assertTrue(IsValidDataType("""BASIC ABCDEFIGHIJKLMNOPQRSTUVWXYZ 0123456789!"&'()+,-./;:?=""", 'AN', 'E', '00501'))
         self.assertTrue(IsValidDataType('extended abcdefghijklmnopqrstuvwxyz%~@[]_{}\|<>#$', 'AN', 'E', '00501'))
         self.assertTrue(IsValidDataType("""Both ABCDEFIGHIJKLMNOPQRSTUVWXYZ 0123456789!"&'()+,-./;:?= abcdefghijklmnopqrstuvwxyz%~@[]_{}\|<>#$""", 'AN', 'E', '00501'))
@@ -250,4 +251,5 @@ class Extended5010String(unittest.TestCase):
         self.assertTrue(IsValidDataType('_good ^`', 'AN', 'E', '00501'))
 
     def testInvalid(self):
-        self.assertFalse(IsValidDataType('%s' % (chr(0x1D)), 'AN', 'E', '00501'))
+        self.assertFalse(
+            IsValidDataType('%s' % (chr(0x1D)), 'AN', 'E', '00501'))

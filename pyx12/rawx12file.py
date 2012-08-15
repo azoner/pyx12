@@ -4,7 +4,7 @@
 # All rights reserved.
 #
 # This software is licensed as described in the file LICENSE.txt, which
-# you should have received as part of this distribution.  
+# you should have received as part of this distribution.
 #
 ######################################################################
 
@@ -20,8 +20,9 @@ Used by X12Reader.
 import pyx12.errors
 import pyx12.segment
 
-DEFAULT_BUFSIZE = 8*1024
+DEFAULT_BUFSIZE = 8 * 1024
 ISA_LEN = 106
+
 
 class RawX12File(object):
     """
@@ -38,7 +39,7 @@ class RawX12File(object):
         self.fd = fin
         self.buffer = None
         line = self.fd.read(ISA_LEN)
-        if line[:3] != 'ISA': 
+        if line[:3] != 'ISA':
             err_str = "First line does not begin with 'ISA': %s" % line[:3]
             raise pyx12.errors.X12Error(err_str)
         if len(line) != ISA_LEN:
@@ -54,21 +55,21 @@ class RawX12File(object):
         self.repetition_term = line[82] if self.icvn == '00501' else None
         self.buffer = line
         self.buffer += self.fd.read(DEFAULT_BUFSIZE)
-        
+
     def __iter__(self):
         """
         Iterate over input lines
         """
         while True:
-            if self.buffer.find(self.seg_term) == -1: 
+            if self.buffer.find(self.seg_term) == -1:
                 # Need more data
                 self.buffer += self.fd.read(DEFAULT_BUFSIZE)
-            if self.buffer.find(self.seg_term) == -1: 
+            if self.buffer.find(self.seg_term) == -1:
                 # Still have no segment terminator
                 break
             # Get first segment in buffer
-            (line, self.buffer) = self.buffer.split(self.seg_term, 1) 
-            line = line.replace('\n','').replace('\r','')
+            (line, self.buffer) = self.buffer.split(self.seg_term, 1)
+            line = line.replace('\n', '').replace('\r', '')
             if line == '':
                 break
             yield(line)
@@ -80,4 +81,3 @@ class RawX12File(object):
         @rtype: tuple(string, string, string, string)
         """
         return (self.seg_term, self.ele_term, self.subele_term, '\n', self.repetition_term)
-

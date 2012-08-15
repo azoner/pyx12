@@ -8,6 +8,7 @@ import pyx12.error_handler
 from pyx12.errors import *
 import pyx12.rawx12file
 
+
 class X12fileTestCase(unittest.TestCase):
 
     def _makeFd(self, x12str=None):
@@ -39,8 +40,9 @@ class RawDelimiters(X12fileTestCase):
         src = pyx12.rawx12file.RawX12File(fd)
         ct = 0
         for seg in src:
-            ct += 1 
-        (seg_term, ele_term, subele_term, eol, repetition_term) = src.get_term()
+            ct += 1
+        (seg_term, ele_term, subele_term, eol,
+            repetition_term) = src.get_term()
         self.assertEqual(subele_term, '!')
         self.assertEqual(ele_term, '&')
         self.assertEqual(seg_term, '+')
@@ -62,8 +64,9 @@ class RawDelimiters(X12fileTestCase):
         src = pyx12.rawx12file.RawX12File(fd)
         ct = 0
         for seg in src:
-            ct += 1 
-        (seg_term, ele_term, subele_term, eol, repetition_term) = src.get_term()
+            ct += 1
+        (seg_term, ele_term, subele_term, eol,
+            repetition_term) = src.get_term()
         self.assertEqual(subele_term, chr(0x1E))
         self.assertEqual(ele_term, chr(0x1C))
         self.assertEqual(seg_term, chr(0x1D))
@@ -82,8 +85,9 @@ class RawDelimiters(X12fileTestCase):
         src = pyx12.rawx12file.RawX12File(fd)
         ct = 0
         for seg in src:
-            ct += 1 
-        (seg_term, ele_term, subele_term, eol, repetition_term) = src.get_term()
+            ct += 1
+        (seg_term, ele_term, subele_term, eol,
+            repetition_term) = src.get_term()
         self.assertEqual(subele_term, '!')
         self.assertEqual(ele_term, '&')
         self.assertEqual(seg_term, '+')
@@ -106,8 +110,9 @@ class RawDelimiters(X12fileTestCase):
         src = pyx12.rawx12file.RawX12File(fd)
         ct = 0
         for seg in src:
-            ct += 1 
-        (seg_term, ele_term, subele_term, eol, repetition_term) = src.get_term()
+            ct += 1
+        (seg_term, ele_term, subele_term, eol,
+            repetition_term) = src.get_term()
         self.assertEqual(subele_term, chr(0x1E))
         self.assertEqual(ele_term, chr(0x1C))
         self.assertEqual(seg_term, chr(0x1D))
@@ -129,18 +134,21 @@ class X12InterchangeControlVersion(X12fileTestCase):
 
     def test_unknown(self):
         fd = self._makeFd('ISA&00&          &00&          &ZZ&ZZ000          &ZZ&ZZ001          &030828&1128&^&00101&000010121&0&T&!+\n')
-        self.assertRaises(pyx12.errors.X12Error, pyx12.rawx12file.RawX12File, fd)
+        self.assertRaises(
+            pyx12.errors.X12Error, pyx12.rawx12file.RawX12File, fd)
 
 
 class RawISA_header(X12fileTestCase):
 
     def test_starts_with_ISA(self):
         fd = self._makeFd(' ISA~')
-        self.assertRaises(pyx12.errors.X12Error, pyx12.rawx12file.RawX12File, fd)
+        self.assertRaises(
+            pyx12.errors.X12Error, pyx12.rawx12file.RawX12File, fd)
 
     def test_at_least_ISA_len(self):
         fd = self._makeFd('ISA~')
-        self.assertRaises(pyx12.errors.X12Error, pyx12.rawx12file.RawX12File, fd)
+        self.assertRaises(
+            pyx12.errors.X12Error, pyx12.rawx12file.RawX12File, fd)
 
 
 #class Formatting(unittest.TestCase):

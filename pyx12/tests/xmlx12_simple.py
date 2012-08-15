@@ -49,8 +49,10 @@ class XmlTransformTestCase(unittest.TestCase):
         """
         src1 = pyx12.x12file.X12Reader(fd1)
         src2 = pyx12.x12file.X12Reader(fd2)
-        segs1 = [x.format() for x in src1 if x.get_seg_id() not in ('ISA', 'GS', 'ST', 'SE', 'GE', 'IEA')]
-        segs2 = [x.format() for x in src2 if x.get_seg_id() not in ('ISA', 'GS', 'ST', 'SE', 'GE', 'IEA')]
+        segs1 = [x.format() for x in src1 if x.get_seg_id(
+        ) not in ('ISA', 'GS', 'ST', 'SE', 'GE', 'IEA')]
+        segs2 = [x.format() for x in src2 if x.get_seg_id(
+        ) not in ('ISA', 'GS', 'ST', 'SE', 'GE', 'IEA')]
         self.assertListEqual(segs1, segs2)
 
     def _test_x12xml_simple(self, datakey):
@@ -61,7 +63,8 @@ class XmlTransformTestCase(unittest.TestCase):
         fd_xml = tempfile.TemporaryFile()
         fd_result = StringIO()
         self.param.set('xmlout', 'simple')
-        result = pyx12.x12n_document.x12n_document(param=self.param, src_file=fd_source, \
+        result = pyx12.x12n_document.x12n_document(
+            param=self.param, src_file=fd_source,
             fd_997=None, fd_html=None, fd_xmldoc=fd_xml, xslt_files=None)
 
         self.assertTrue(result)

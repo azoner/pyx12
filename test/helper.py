@@ -1,6 +1,7 @@
 import unittest
 import pdb
 
+
 def get_testcases(ns):
     ret = []
     ns_dict = ns.__dict__
@@ -13,9 +14,11 @@ def get_testcases(ns):
     ret.sort()
     return ret
 
+
 def print_testcases(ns):
     for t in get_testcases(ns):
         print t
+
 
 def get_suite(ns, args):
     if args:

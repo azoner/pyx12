@@ -86,8 +86,10 @@ class ParamsBase(object):
         @return: None
         """
         if not isfile(filename):
-            self.logger.debug('Configuration file "%s" does not exist' % filename)
-            raise EngineError('Configuration file "%s" does not exist' % (filename))
+            self.logger.debug('Configuration file "%s" does not exist' %
+                              filename)
+            raise EngineError('Configuration file "%s" does not exist' %
+                              (filename))
         try:
             self.logger.debug('parsing config file %s' % (filename))
             t = et.parse(filename)
@@ -97,8 +99,8 @@ class ParamsBase(object):
                 valtype = c.findtext('type')
                 self._set_option(option, value, valtype)
         except Exception:
-            self.logger.error('Read of configuration file "%s" failed' % \
-                (filename))
+            self.logger.error('Read of configuration file "%s" failed' %
+                              (filename))
             raise
 
     def _set_option(self, option, value, valtype):
@@ -140,8 +142,8 @@ class ParamsUnix(ParamsBase):
     """
     def __init__(self, config_file=None):
         ParamsBase.__init__(self)
-        config_files = [join(sys.prefix, 'etc/pyx12.conf.xml'), \
-            expanduser('~/.pyx12.conf.xml')]
+        config_files = [join(sys.prefix, 'etc/pyx12.conf.xml'),
+                        expanduser('~/.pyx12.conf.xml')]
         for filename in config_files:
             if isfile(filename):
                 self.logger.debug('Read param file: %s' % (filename))

@@ -10,10 +10,11 @@
 
 """
 Apply local overrides to the current map.
-Overrides defined in a xml document. 
+Overrides defined in a xml document.
 
 NOT IMPLEMENTED
 """
+
 
 class map_override(object):
     """
@@ -30,4 +31,3 @@ class map_override(object):
 
     def _reset_list(self, map_root, path, variable, value):
         pass
-

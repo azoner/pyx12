@@ -16,7 +16,8 @@ Validate against a map and codeset values.
 Create a XML document based on the data file.
 """
 
-import os, os.path
+import os
+import os.path
 import sys
 import logging
 from types import *
@@ -30,10 +31,11 @@ import pyx12.x12n_document
 import pyx12.params
 
 #Global Variables
-__author__  = pyx12.__author__
-__status__  = pyx12.__status__
+__author__ = pyx12.__author__
+__status__ = pyx12.__status__
 __version__ = pyx12.__version__
-__date__    = pyx12.__date__
+__date__ = pyx12.__date__
+
 
 def usage():
     pgm_nme = os.path.basename(sys.argv[0])
@@ -42,17 +44,20 @@ def usage():
     sys.stderr.write('\noptions:\n')
     sys.stderr.write('  -c <file>  XML configuration file\n')
     sys.stderr.write('  -d         Debug mode\n')
-    sys.stderr.write('  -f         Force map load.  Do not use the map pickle file\n')
+    sys.stderr.write(
+        '  -f         Force map load.  Do not use the map pickle file\n')
     sys.stderr.write('  -l <file>  Output log\n')
     sys.stderr.write('  -m <path>  Path to map files\n')
     sys.stderr.write('  -o <file>  Output file\n')
     sys.stderr.write('  -p <path>  Path to to pickle files\n')
     sys.stderr.write('  -q         Quiet output\n')
-    sys.stderr.write('  -s <b|e>   Specify X12 character set: b=basic, e=extended\n')
+    sys.stderr.write(
+        '  -s <b|e>   Specify X12 character set: b=basic, e=extended\n')
     sys.stderr.write('  -t <file>  XSL Transform, applied to the map.  May be used multiple times.\n')
     sys.stderr.write('  -v         Verbose output\n')
     sys.stderr.write('  -x <tag>   Exclude external code\n')
     sys.stderr.write('  -X <simple>   XML output format\n')
+
 
 def main():
     """Script main program."""
@@ -64,11 +69,12 @@ def main():
         raise
         return False
     logger = logging.getLogger('pyx12')
-    formatter = logging.Formatter('%(asctime)s %(levelname)s %(module)s %(lineno)d %(message)s')
+    formatter = logging.Formatter(
+        '%(asctime)s %(levelname)s %(module)s %(lineno)d %(message)s')
     #try:
     #    hdlr = logging.FileHandler('./run.log')
     #    hdlr.setFormatter(formatter)
-    #    logger.addHandler(hdlr) 
+    #    logger.addHandler(hdlr)
     #except:
     #    pass
     stderr_hdlr = logging.StreamHandler()
@@ -98,21 +104,29 @@ def main():
         if o == '-d':
             logger.setLevel(logging.DEBUG)
             debug = True
-        if o == '-v': logger.setLevel(logging.DEBUG)
-        if o == '-q': logger.setLevel(logging.ERROR)
-        if o == '-x': param.set('exclude_external_codes', a)
-        if o == '-X': 
+        if o == '-v':
+            logger.setLevel(logging.DEBUG)
+        if o == '-q':
+            logger.setLevel(logging.ERROR)
+        if o == '-x':
+            param.set('exclude_external_codes', a)
+        if o == '-X':
             if a not in ('simple'):
                 logger.error('Unknown parameter for -X')
                 usage()
                 return False
             else:
                 param.set('xmlout', a)
-        if o == '-f': param.set('force_map_load', True)
-        if o == '-m': param.set('map_path', a)
-        if o == '-o': target_xml = a
-        if o == '-p': param.set('pickle_path', a)
-        if o == '-s': param.set('charset', a)
+        if o == '-f':
+            param.set('force_map_load', True)
+        if o == '-m':
+            param.set('map_path', a)
+        if o == '-o':
+            target_xml = a
+        if o == '-p':
+            param.set('pickle_path', a)
+        if o == '-s':
+            param.set('charset', a)
         if o == '-t':
             if os.path.isfile(a):
                 xslt_files.append(a)
@@ -143,7 +157,8 @@ def main():
         fd_xml = sys.stdout
 
     try:
-        result = pyx12.x12n_document.x12n_document(param=param, src_file=src_filename,
+        result = pyx12.x12n_document.x12n_document(
+            param=param, src_file=src_filename,
             fd_997=None, fd_html=None, fd_xmldoc=fd_xml, xslt_files=xslt_files)
         fd_xml.close()
         if not result:
@@ -153,7 +168,7 @@ def main():
             return False
     except KeyboardInterrupt:
         print "\n[interrupt]"
-        
+
     return True
 
 #profile.run('x12n_document(src_filename)', 'pyx12.prof')

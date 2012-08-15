@@ -219,7 +219,8 @@ class TreeSelect(X12fileTestCase):
                 for claim in datatree.select('DETAIL/2000/2100'):
                     self.assertEqual(claim.id, '2100')
                     ct += 1
-        self.assertEqual(ct, 3, 'Found %i 2100 loops.  Should have %i' % (ct, 3))
+        self.assertEqual(
+            ct, 3, 'Found %i 2100 loops.  Should have %i' % (ct, 3))
 
     def test_select_from_gs(self):
         fd = self._makeFd(datafiles['simple_837i']['source'])
@@ -231,7 +232,8 @@ class TreeSelect(X12fileTestCase):
                 for sub in datatree.select('ST_LOOP/DETAIL/2000A/2000B/2300/2400'):
                     self.assertEqual(sub.id, '2400')
                     ct += 1
-        self.assertEqual(ct, 6, 'Found %i 2400 loops.  Should have %i' % (ct, 6))
+        self.assertEqual(
+            ct, 6, 'Found %i 2400 loops.  Should have %i' % (ct, 6))
 
 
 class TreeSelectFromSegment(X12fileTestCase):
@@ -280,7 +282,8 @@ class TreeAddSegment(X12fileTestCase):
 
     def test_add_new_not_exists(self):
         seg_data = pyx12.segment.Segment('ZZZ*00~', '~', '*', ':')
-        self.assertRaises(pyx12.errors.X12PathError, self.loop2300.add_segment, seg_data)
+        self.assertRaises(pyx12.errors.X12PathError,
+                          self.loop2300.add_segment, seg_data)
 
 
 class TreeAddSegmentString(X12fileTestCase):
@@ -308,7 +311,8 @@ class TreeAddSegmentString(X12fileTestCase):
         self.assertNotEqual(new_node, None)
 
     def test_add_new_not_exists(self):
-        self.assertRaises(pyx12.errors.X12PathError, self.loop2300.add_segment, 'ZZZ*00~')
+        self.assertRaises(pyx12.errors.X12PathError,
+                          self.loop2300.add_segment, 'ZZZ*00~')
 
 
 class SegmentExists(X12fileTestCase):
@@ -375,7 +379,8 @@ class TreeAddLoop(X12fileTestCase):
                 break
 
     def test_add_new_plain(self):
-        seg_data = pyx12.segment.Segment('NM1*82*2*Provider 1*****ZZ*9898798~', '~', '*', ':')
+        seg_data = pyx12.segment.Segment(
+            'NM1*82*2*Provider 1*****ZZ*9898798~', '~', '*', ':')
         new_node = self.loop2300.add_loop(seg_data)
         self.assertNotEqual(new_node, None)
         self.assertTrue(self.loop2300.exists('2310B'))
@@ -502,13 +507,15 @@ class CountRepeatingLoop(X12fileTestCase):
         ct = 0
         for loop_2400 in self.loop2300.select('2400'):
             ct += 1
-        self.assertEqual(ct, 3, 'Found %i 2400 loops.  Should have %i' % (ct, 3))
+        self.assertEqual(
+            ct, 3, 'Found %i 2400 loops.  Should have %i' % (ct, 3))
 
     def test_repeat_2430(self):
         ct = 0
         for loop_2430 in self.loop2300.select('2400/2430'):
             ct += 1
-        self.assertEqual(ct, 0, 'Found %i 2430 loops.  Should have %i' % (ct, 0))
+        self.assertEqual(
+            ct, 0, 'Found %i 2430 loops.  Should have %i' % (ct, 0))
 
 
 class IterateTree(X12fileTestCase):
@@ -531,7 +538,8 @@ class IterateTree(X12fileTestCase):
                 ct_2000a += 1
             else:
                 ct_other += 1
-        self.assertEqual(ct_2000a, 1, 'Found %i 2000A loops.  Should have %i' % (ct_2000a, 1))
+        self.assertEqual(ct_2000a, 1,
+                         'Found %i 2000A loops.  Should have %i' % (ct_2000a, 1))
         self.assertEqual(ct_other, 11, 'Found %i external segments.  Should have %i' % (ct_other, 11))
 
 
@@ -648,8 +656,10 @@ class TreeCopy(X12fileTestCase):
                 for svc in datatree.select('2110'):
                     new_svc = svc.copy()
                     self.assertFalse(svc is new_svc)
-                    self.assertEqual(svc.get_value('SVC01'), new_svc.get_value('SVC01'))
+                    self.assertEqual(svc.get_value('SVC01'),
+                                     new_svc.get_value('SVC01'))
                     new_svc.set_value('SVC01', 'XX:AAAAA')
                     self.assertFalse(svc is new_svc)
-                    self.assertNotEqual(svc.get_value('SVC01'), new_svc.get_value('SVC01'))
+                    self.assertNotEqual(svc.get_value('SVC01'),
+                                        new_svc.get_value('SVC01'))
                     break

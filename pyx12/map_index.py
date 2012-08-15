@@ -18,6 +18,7 @@ Locate the correct xml map file given:
 
 import xml.etree.cElementTree as et
 
+
 class map_index(object):
     """
     Interface to the maps.xml file
@@ -33,14 +34,16 @@ class map_index(object):
         for v in t.iter('version'):
             icvn = v.get('icvn')
             for m in v.iterfind('map'):
-                self.add_map(icvn, m.get('vriic'), m.get('fic'), m.get('tspc'), m.text, m.get('abbr'))
-    
+                self.add_map(icvn, m.get('vriic'), m.get('fic'),
+                             m.get('tspc'), m.text, m.get('abbr'))
+
     def add_map(self, icvn, vriic, fic, tspc, map_file, abbr):
-        self.maps.append({'icvn':icvn, 'vriic':vriic, 'fic':fic, 'tspc':tspc, 'map_file':map_file, 'abbr':abbr})
-    
+        self.maps.append({'icvn': icvn, 'vriic': vriic, 'fic': fic,
+                          'tspc': tspc, 'map_file': map_file, 'abbr': abbr})
+
     def get_filename(self, icvn, vriic, fic, tspc=None):
         """
-        Get the map filename associated with the given icvn, vriic, fic, 
+        Get the map filename associated with the given icvn, vriic, fic,
         and tspc values
         @rtype: string
         """
@@ -52,7 +55,7 @@ class map_index(object):
 
     def get_abbr(self, icvn, vriic, fic, tspc=None):
         """
-        Get the informal abbreviation associated with the given icvn, vriic, 
+        Get the informal abbreviation associated with the given icvn, vriic,
         fic, and tspc values
         @rtype: string
         """
@@ -65,4 +68,3 @@ class map_index(object):
     def print_all(self):
         for a in self.maps:
             print(a)
-

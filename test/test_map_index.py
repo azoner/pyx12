@@ -1,6 +1,7 @@
 #! /usr/bin/env python
 
-import sys; sys.path.insert(0, '..')
+import sys
+sys.path.insert(0, '..')
 import unittest
 
 from pyx12.tests.map_index import *

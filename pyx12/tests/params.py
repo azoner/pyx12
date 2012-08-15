@@ -1,8 +1,10 @@
 import unittest
-import sys, os.path 
+import sys
+import os.path
 
 import pyx12.params
 from pyx12.errors import *
+
 
 class Default(unittest.TestCase):
     def setUp(self):
@@ -42,17 +44,21 @@ class SetParamOverride(unittest.TestCase):
 
     def test_valid2(self):
         self.param.set('exclude_external_codes', 'states,diagnosis')
-        self.assertEqual(self.param.get('exclude_external_codes'), 'states,diagnosis')
+        self.assertEqual(self.param.get(
+            'exclude_external_codes'), 'states,diagnosis')
 
 
 class ReadConfigFile(unittest.TestCase):
     def setUp(self):
         test_path = os.path.abspath(os.path.dirname(sys.argv[0]))
-        self.param = pyx12.params.params(os.path.join(test_path, 'pyx12test.conf.xml'))
+        self.param = pyx12.params.params(
+            os.path.join(test_path, 'pyx12test.conf.xml'))
 
     def test_changed(self):
-        self.assertEqual(self.param.get('map_path'), '/opt1/local/share/pyx12/map')
-        self.assertEqual(self.param.get('exclude_external_codes'), 'taxonomy,states')
+        self.assertEqual(
+            self.param.get('map_path'), '/opt1/local/share/pyx12/map')
+        self.assertEqual(self.param.get(
+            'exclude_external_codes'), 'taxonomy,states')
         self.assertEqual(self.param.get('ignore_syntax'), True)
         self.assertEqual(self.param.get('charset'), 'B')
 
@@ -62,4 +68,5 @@ class ReadConfigFile(unittest.TestCase):
         self.assertEqual(self.param.get('skip_html'), False)
 
     def test_invalid_file(self):
-        self.assertRaises(pyx12.errors.EngineError, pyx12.params.params, 'nonexistant_file.xml')
+        self.assertRaises(pyx12.errors.EngineError,
+                          pyx12.params.params, 'nonexistant_file.xml')

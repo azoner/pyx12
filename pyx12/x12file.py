@@ -75,12 +75,12 @@ class X12Base(object):
         if seg_data.is_empty():
             err_str = 'Segment "%s" is empty' % (seg_data)
             self._seg_error('8', err_str, None,
-                src_line=self.cur_line + 1)
+                            src_line=self.cur_line + 1)
         if not seg_data.is_seg_id_valid():
             err_str = 'Segment identifier "%s" is invalid' % (
                 seg_data.get_seg_id())
             self._seg_error('1', err_str, None,
-                src_line=self.cur_line + 1)
+                            src_line=self.cur_line + 1)
         seg_id = seg_data.get_seg_id()
         if seg_id == 'ISA':
             if len(seg_data) != 16:
@@ -324,7 +324,8 @@ class X12Reader(X12Base):
             self.raw = RawX12File(self.fd_in)
         except pyx12.errors.X12Error:
             raise
-        (seg_term, ele_term, subele_term, eol, repetition_term) = self.raw.get_term()
+        (seg_term, ele_term, subele_term, eol,
+            repetition_term) = self.raw.get_term()
         self.seg_term = seg_term
         self.ele_term = ele_term
         self.subele_term = subele_term
@@ -373,8 +374,8 @@ class X12Reader(X12Base):
                 self._gs_error('4', err_str)
             if self._int(seg_data.get_value('GE01')) != self.st_count:
                 err_str = 'GE count of %s for GE02=%s is wrong. I count %i'\
-                    % (seg_data.get_value('GE01'), \
-                    seg_data.get_value('GE02'), self.st_count)
+                    % (seg_data.get_value('GE01'),
+                       seg_data.get_value('GE02'), self.st_count)
                 self._gs_error('5', err_str)
             del self.loops[-1]
         elif seg_id == 'SE':
@@ -386,7 +387,7 @@ class X12Reader(X12Base):
                 self._st_error('3', err_str)
             if self._int(seg_data.get_value('SE01')) != self.seg_count + 1:
                 err_str = 'SE count of %s for SE02=%s is wrong. I count %i'\
-                    % (seg_data.get_value('SE01'), \
+                    % (seg_data.get_value('SE01'),
                         se_trn_control_num, self.seg_count + 1)
                 self._st_error('4', err_str)
             del self.loops[-1]
@@ -400,8 +401,10 @@ class X12Reader(X12Base):
             # We have not yet incremented cur_line
             if line[-1] == self.ele_term:
                 err_str = 'Segment contains trailing element terminators'
-                self._seg_error('SEG1', err_str, None, src_line=self.cur_line + 1)
-            seg_data = pyx12.segment.Segment(line, self.seg_term, self.ele_term, self.subele_term)
+                self._seg_error('SEG1', err_str, None,
+                                src_line=self.cur_line + 1)
+            seg_data = pyx12.segment.Segment(line,
+                                             self.seg_term, self.ele_term, self.subele_term)
             self._parse_segment(seg_data)
             yield(seg_data)
         #yield(None)
@@ -461,7 +464,8 @@ class X12Writer(X12Base):
             if src_file_obj == '-':
                 self.fd_out = sys.stdout
             else:
-                self.fd_out = codecs.open(src_file_obj, mode='w', encoding='ascii')
+                self.fd_out = codecs.open(
+                    src_file_obj, mode='w', encoding='ascii')
         #assert self.fd_out.encoding in ('ascii', 'US-ASCII'), 'Outfile file must have ASCII encoding, is %s' % (self.fd_out.encoding)
         X12Base.__init__(self)
         self.seg_term = seg_term
@@ -566,7 +570,8 @@ class X12Writer(X12Base):
         @param seg_data: segment to write
         @type seg_data: L{segment<segment.Segment>}
         """
-        out = seg_data.format(self.seg_term, self.ele_term, self.subele_term) + self.eol
+        out = seg_data.format(
+            self.seg_term, self.ele_term, self.subele_term) + self.eol
         self.fd_out.write(out.decode('ascii'))
 
     def _write_isa_segment(self, seg_data):
@@ -583,7 +588,8 @@ class X12Writer(X12Base):
         if icvn == '00501':
             seg_data.set('ISA11', self.repetition_term)
         seg_data.set('ISA16', self.subele_term)
-        out = seg_data.format(self.seg_term, self.ele_term, self.subele_term) + self.eol
+        out = seg_data.format(
+            self.seg_term, self.ele_term, self.subele_term) + self.eol
         self.fd_out.write(out.decode('ascii'))
 
     def _get_trailer_segment(self, seg_id, count, id):
@@ -599,5 +605,5 @@ class X12Writer(X12Base):
         """
         ele_term = self.ele_term
         seg_str = '%s%s%i%s%s' % (seg_id, ele_term, count, ele_term, id)
-        return pyx12.segment.Segment(seg_str, self.seg_term, self.ele_term, \
-            self.subele_term)
+        return pyx12.segment.Segment(seg_str, self.seg_term, self.ele_term,
+                                     self.subele_term)

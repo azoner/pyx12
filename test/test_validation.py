@@ -3,11 +3,13 @@
 #import test_support
 #from test_support import TestFailed, have_unicode
 import unittest
-import sys; sys.path.insert(0, '..')
+import sys
+sys.path.insert(0, '..')
 
 from pyx12.validation import IsValidDataType
 from pyx12.errors import *
 from pyx12.tests.validation import *
+
 
 def suite():
     suite = unittest.TestSuite()

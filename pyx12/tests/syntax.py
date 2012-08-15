@@ -1,9 +1,11 @@
-import os, os.path
+import os
+import os.path
 import unittest
 
 import pyx12.syntax
 import pyx12.segment
 from pyx12.errors import *
+
 
 class IsValidSyntax(unittest.TestCase):
 
@@ -28,7 +30,7 @@ class IsValidSyntaxP(unittest.TestCase):
         #pdb.set_trace()
         (result, err_str) = pyx12.map_if.is_syntax_valid(seg, syntax)
         self.assertTrue(result, err_str)
-        
+
     def test_P_bad1(self):
         seg1 = ['NM1', '41', '1', 'Smith', 'Sam', '', '', '', '', 'AAAA']
         seg = pyx12.segment.Segment('*'.join(seg1), '~', '*', ':')
@@ -76,14 +78,14 @@ class IsValidSyntaxR(unittest.TestCase):
         syntax = ['R', 2, 3]
         (result, err_str) = pyx12.map_if.is_syntax_valid(seg, syntax)
         self.assertTrue(result, err_str)
-        
+
     def test_R_ok3(self):
         seg1 = ['REF', '1A', 'AAA']
         seg = pyx12.segment.Segment('*'.join(seg1), '~', '*', ':')
         syntax = ['R', 2, 3]
         (result, err_str) = pyx12.map_if.is_syntax_valid(seg, syntax)
         self.assertTrue(result, err_str)
-        
+
     def test_R_fail1(self):
         #pdb.set_trace()
         seg1 = ['REF', '1A']
@@ -132,7 +134,7 @@ class IsValidSyntaxC(unittest.TestCase):
         syntax = ['C', 8, 9]
         (result, err_str) = pyx12.map_if.is_syntax_valid(seg, syntax)
         self.assertTrue(result, err_str)
-        
+
     def test_C_fail1(self):
         seg1 = ['NM1', '41', '1', 'Smith', 'Sam', '', '', '', '46', '']
         seg = pyx12.segment.Segment('*'.join(seg1), '~', '*', ':')
@@ -180,12 +182,13 @@ class IsValidSyntaxL(unittest.TestCase):
     If the first is present, then at least one of others is required
     """
     def test_L_ok(self):
-        seg1 = ['NM1', '41', '1', 'Smith', 'Sam', '', '', '', '46', 'AAAA', 'ZZZZ']
+        seg1 = ['NM1', '41', '1', 'Smith', 'Sam', '', '', '', '46',
+                'AAAA', 'ZZZZ']
         seg = pyx12.segment.Segment('*'.join(seg1), '~', '*', ':')
         syntax = ['L', 8, 9, 10]
         (result, err_str) = pyx12.map_if.is_syntax_valid(seg, syntax)
         self.assertTrue(result, err_str)
-        
+
     def test_L_ok1(self):
         seg1 = ['NM1', '41', '1', 'Smith', 'Sam', '', '', '', '', 'AAAA', '']
         seg = pyx12.segment.Segment('*'.join(seg1), '~', '*', ':')
@@ -215,7 +218,8 @@ class IsValidSyntaxL(unittest.TestCase):
         self.assertFalse(result, err_str)
 
     def test_L_missing_element_ok(self):
-        seg = pyx12.segment.Segment('CAS*PR*42*75.00**1*25.00**2*75.00~', '~', '*', ':')
+        seg = pyx12.segment.Segment(
+            'CAS*PR*42*75.00**1*25.00**2*75.00~', '~', '*', ':')
         syntax = ['L', 8, 9, 10]
         (result, err_str) = pyx12.map_if.is_syntax_valid(seg, syntax)
         self.assertTrue(result, err_str)
@@ -240,12 +244,13 @@ class IsValidSyntaxE(unittest.TestCase):
     Not more than one of the elements may be present
     """
     def test_E_fail1(self):
-        seg1 = ['NM1', '41', '1', 'Smith', 'Sam', '', '', '', '46', 'AAAA', 'ZZZZ']
+        seg1 = ['NM1', '41', '1', 'Smith', 'Sam', '', '', '', '46',
+                'AAAA', 'ZZZZ']
         seg = pyx12.segment.Segment('*'.join(seg1), '~', '*', ':')
         syntax = ['E', 8, 9, 10]
         (result, err_str) = pyx12.map_if.is_syntax_valid(seg, syntax)
         self.assertFalse(result, err_str)
-        
+
     def test_E_ok1(self):
         seg1 = ['NM1', '41', '1', 'Smith', 'Sam', '', '', '', '', 'AAAA', '']
         seg = pyx12.segment.Segment('*'.join(seg1), '~', '*', ':')

@@ -55,8 +55,8 @@ class error_html(object):
         self.fd.write('  -->\n</style>\n')
         self.fd.write('  <link rel="stylesheet" href="errors.css" type="text/css" />\n')
         self.fd.write('</head>\n<body>\n')
-        self.fd.write('<h1>X12N Error Analysis</h1>\n<h3>Analysis Date: %s</h3><p>\n' % \
-            (time.strftime('%m/%d/%Y %H:%M:%S')))
+        self.fd.write('<h1>X12N Error Analysis</h1>\n<h3>Analysis Date: %s</h3><p>\n' %
+                      (time.strftime('%m/%d/%Y %H:%M:%S')))
         self.fd.write('<div class="segs" style="">\n')
 
     def footer(self):
@@ -64,20 +64,20 @@ class error_html(object):
         if not err_st.is_closed():
             for (err_cde, err_str) in err_st.errors:
                 if err_cde == '2':
-                    self.fd.write('<span class="error">&nbsp;%s (Segment Error Code: %s)</span><br />\n' % \
-                        (err_str, err_cde))
+                    self.fd.write('<span class="error">&nbsp;%s (Segment Error Code: %s)</span><br />\n' %
+                                  (err_str, err_cde))
         err_gs = self.errh.cur_gs_node
         if not err_gs.is_closed():
             for (err_cde, err_str) in err_gs.errors:
                 if err_cde == '3':
-                    self.fd.write('<span class="error">&nbsp;%s (Segment Error Code: %s)</span><br />\n' % \
-                        (err_str, err_cde))
+                    self.fd.write('<span class="error">&nbsp;%s (Segment Error Code: %s)</span><br />\n' %
+                                  (err_str, err_cde))
         err_isa = self.errh.cur_isa_node
         if not err_isa.is_closed():
             for (err_cde, err_str) in err_isa.errors:
                 if err_cde == '023':
-                    self.fd.write('<span class="error">&nbsp;%s (Segment Error Code: %s)</span><br />\n' % \
-                        (err_str, err_cde))
+                    self.fd.write('<span class="error">&nbsp;%s (Segment Error Code: %s)</span><br />\n' %
+                                  (err_str, err_cde))
         self.fd.write('</div>\n')
         self.fd.write('<p>\n<a href="http://sourceforge.net/projects/pyx12/">pyx12 Validator</a>\n</p>\n')
         self.fd.write('</body>\n</html>\n')
@@ -90,7 +90,8 @@ class error_html(object):
     def gen_info(self, info_str):
         """
         """
-        self.fd.write('<span class="info">&nbsp;&nbsp;%s</span><br />\n' % (info_str))
+        self.fd.write('<span class="info">&nbsp;&nbsp;%s</span><br />\n' %
+                      (info_str))
 
     def gen_seg(self, seg_data, src, err_node_list):
         """
@@ -132,34 +133,35 @@ class error_html(object):
                 err_cde = err_tuple[0]
                 err_str = err_tuple[1]
                 if err_cde == '3':
-                    self.fd.write('<span class="error">&nbsp;%s (Segment Error Code: %s)</span><br />\n' % \
-                        (err_str, err_cde))
+                    self.fd.write('<span class="error">&nbsp;%s (Segment Error Code: %s)</span><br />\n' %
+                                  (err_str, err_cde))
         if self.loop_info:
             self.gen_info(self.loop_info)
         self.loop_info = None
-        self.fd.write('<span class="seg">%i:&nbsp;%s</span><br />\n' % \
-            (cur_line, self._seg_str(seg_data.get_seg_id(), t_seg)))
+        self.fd.write('<span class="seg">%i:&nbsp;%s</span><br />\n' %
+                      (cur_line, self._seg_str(seg_data.get_seg_id(), t_seg)))
         for err_node in err_node_list:
             for err_tuple in err_node.get_error_list(seg_data.get_seg_id(), False):
             #for err_tuple in err_node.errors:
                 err_cde = err_tuple[0]
                 err_str = err_tuple[1]
                 if err_cde != '3':
-                    self.fd.write('<span class="error">&nbsp;%s (Segment Error Code: %s)</span><br />\n' % \
-                        (err_str, err_cde))
+                    self.fd.write('<span class="error">&nbsp;%s (Segment Error Code: %s)</span><br />\n' %
+                                  (err_str, err_cde))
             for ele in err_node.elements:
                 for (err_cde, err_str, err_val) in ele.get_error_list(seg_data.get_seg_id(), False):
                 #for (err_cde, err_str, err_val) in ele.errors:
                     if not (seg_data.get_seg_id() == 'GE' and 'GS' in err_str):  # Ugly hack
-                        self.fd.write('<span class="error">&nbsp;%s (Element Error Code: %s)</span><br />\n' % \
-                            (err_str, err_cde))
+                        self.fd.write('<span class="error">&nbsp;%s (Element Error Code: %s)</span><br />\n' %
+                                      (err_str, err_cde))
 
     def _seg_str(self, seg_id, ele_list):
         """
         @param ele_list: list of formatted elements
         @rtype: string
         """
-        return seg_id + self.ele_term + seg_str(ele_list, self.seg_term, self.ele_term, \
+        return seg_id + self.ele_term + seg_str(
+            ele_list, self.seg_term, self.ele_term,
             self.subele_term, self.eol)
 
     def _wrap_ele_error(self, str1):

@@ -462,7 +462,8 @@ class X12WriterTest(X12fileTestCase):
             'ISA*00*          *00*          *ZZ*ZZ000          *ZZ*ZZ001          *030828*1128*^*00501*000010121*0*T*:',
         ]
         fd_out = self._makeFd()
-        wr = pyx12.x12file.X12Writer(fd_out, seg_term='~', ele_term='*', subele_term='\\', eol='\n', repetition_term='^')
+        wr = pyx12.x12file.X12Writer(fd_out, seg_term='~', ele_term='*',
+                                     subele_term='\\', eol='\n', repetition_term='^')
         expected = 'ISA*00*          *00*          *ZZ*ZZ000          *ZZ*ZZ001          *030828*1128*^*00501*000010121*0*T*\\~\n'
         for seg_str in segs:
             seg_data = pyx12.segment.Segment(seg_str, '~', '*', '\\', '^')
