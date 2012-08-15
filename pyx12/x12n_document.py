@@ -18,7 +18,6 @@ import os.path
 import logging
 
 # Intrapackage imports
-#import pyx12
 import pyx12.error_handler
 import pyx12.error_997
 import pyx12.error_999
@@ -29,6 +28,7 @@ import pyx12.map_index
 import pyx12.map_if
 import pyx12.x12file
 from pyx12.map_walker import walk_tree
+import pyx12.x12xml_simple
 
 
 def apply_loop_count(orig_node, new_map):
@@ -103,7 +103,6 @@ def x12n_document(param, src_file, fd_997, fd_html,
         html.header()
         err_iter = pyx12.error_handler.err_iter(errh)
     if fd_xmldoc:
-        import pyx12.x12xml_simple
         xmldoc = pyx12.x12xml_simple.x12xml_simple(
             fd_xmldoc, param.get('simple_dtd'))
 
