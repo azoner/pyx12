@@ -65,9 +65,7 @@ class error_997_visitor(error_visitor.error_visitor):
         #ISA*00*          *00*          *ZZ*ENCOUNTER      *ZZ*00GR           *030425*1501*U*00401*000065350*0*T*:~
         self.isa_control_num = ('%s%s' % (time.strftime('%y%m%d'),
                                           time.strftime('%H%M')))[1:]
-
-        #logger.info('\n'+seg.format())
-        #pdb.set_trace()
+        icvn = seg.get_value('ISA12')
         isa_seg = pyx12.segment.Segment('ISA*00*          *00*          ',
                                         self.seg_term, self.ele_term, self.subele_term)
         isa_seg.append(seg.get_value('ISA07'))
@@ -77,7 +75,7 @@ class error_997_visitor(error_visitor.error_visitor):
         isa_seg.append(time.strftime('%y%m%d'))  # Date
         isa_seg.append(time.strftime('%H%M'))  # Time
         isa_seg.append(seg.get_value('ISA11'))
-        isa_seg.append(seg.get_value('ISA12'))
+        isa_seg.append(icvn)
         isa_seg.append(self.isa_control_num)  # ISA Interchange Control Number
         isa_seg.append(seg.get_value('ISA14'))
         isa_seg.append(seg.get_value('ISA15'))
@@ -96,7 +94,7 @@ class error_997_visitor(error_visitor.error_visitor):
         gs_seg.append(time.strftime('%H%M%S'))
         gs_seg.append(seg.get_value('GS06'))
         gs_seg.append(seg.get_value('GS07'))
-        gs_seg.append('004010')
+        gs_seg.append(icvn)
         self._write(gs_seg)
         self.gs_seg = gs_seg
         self.gs_id = seg.get_value('GS06')
