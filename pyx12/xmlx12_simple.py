@@ -19,6 +19,7 @@ import logging
 import pyx12.segment
 import pyx12.x12file
 
+
 def convert(filename, fd_out):
     """
     Convert a XML file in simple X12 form to an X12 file
@@ -32,8 +33,9 @@ def convert(filename, fd_out):
     doc = et.parse(filename)
     for node in doc.iter():
         if node.tag == 'seg':
-            wr.Write(get_segment(node)) 
+            wr.Write(get_segment(node))
     return True
+
 
 def get_segment(cSegment):
     """
