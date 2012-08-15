@@ -102,10 +102,6 @@ def main():
                 continue
             #fd_src = open(src_filename, 'U')
             if flag_997:
-                if os.path.splitext(src_filename)[1] == '.txt':
-                    target_997 = os.path.splitext(src_filename)[0] + '.997'
-                else:
-                    target_997 = src_filename + '.997'
                 fd_997 = tempfile.TemporaryFile()
             if args.html:
                 if os.path.splitext(src_filename)[1] == '.txt':
@@ -149,9 +145,14 @@ def main():
                     sys.stderr.write('%s: OK\n' % (src_filename))
                 else:
                     sys.stderr.write('%s: Failure\n' % (src_filename))
-            fd_997.seek(0)
-            codecs.open(target_997, mode='w',
-                        encoding='ascii').write(fd_997.read())
+            if flag_997 and fd_997.tell() != 0:
+                fd_997.seek(0)
+                if os.path.splitext(src_filename)[1] == '.txt':
+                    target_997 = os.path.splitext(src_filename)[0] + '.997'
+                else:
+                    target_997 = src_filename + '.997'
+                codecs.open(target_997, mode='w',
+                            encoding='ascii').write(fd_997.read())
 
             if fd_997:
                 fd_997.close()
