@@ -31,7 +31,7 @@ class error_999_visitor(pyx12.error_visitor.error_visitor):
     """
     Visit an error_handler composite.  Generate a 999.
     """
-    def __init__(self, fd, term=('~', '*', '~', '\n', '^')):
+    def __init__(self, fd, term=('~', '*', ':', '\n', '^')):
         """
         @param fd: target file
         @type fd: file descriptor
@@ -39,7 +39,7 @@ class error_999_visitor(pyx12.error_visitor.error_visitor):
         @type term: tuple(string, string, string, string)
         """
         self.fd = fd
-        self.wr = pyx12.x12file.X12Writer(fd, '~', '*', '~', '\n', '^')
+        self.wr = pyx12.x12file.X12Writer(fd, '~', '*', ':', '\n', '^')
         self.seg_term = '~'
         self.ele_term = '*'
         self.subele_term = ':'
@@ -89,8 +89,8 @@ class error_999_visitor(pyx12.error_visitor.error_visitor):
         gs_seg.set('03', seg.get_value('GS02').rstrip())
         gs_seg.set('04', time.strftime('%Y%m%d'))
         gs_seg.set('05', time.strftime('%H%M%S'))
-        gs_seg.set('06', seg.get_value('GS06'))
-        gs_seg.set('07', self.gs_control_num)
+        gs_seg.set('06', self.gs_control_num)
+        gs_seg.set('07', seg.get_value('GS07'))
         gs_seg.set('08', self.vriic)
         self.wr.Write(gs_seg)
 

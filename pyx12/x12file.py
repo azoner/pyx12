@@ -468,6 +468,7 @@ class X12Writer(X12Base):
                     src_file_obj, mode='w', encoding='ascii')
         #assert self.fd_out.encoding in ('ascii', 'US-ASCII'), 'Outfile file must have ASCII encoding, is %s' % (self.fd_out.encoding)
         X12Base.__init__(self)
+        #terms = set([seg_term, ele_term, subele_term, repetition_term])
         self.seg_term = seg_term
         self.ele_term = ele_term
         self.subele_term = subele_term

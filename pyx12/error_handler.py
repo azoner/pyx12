@@ -595,6 +595,7 @@ class err_gs(err_node):
         self.cur_line_ge = None
         self.gs_control_num = src.get_gs_id()
         self.fic = self.seg_data.get_value('GS01')
+        self.vriic = self.seg_data.get_value('GS08')
         self.id = 'GS'
 
         self.st_loops = []
@@ -739,6 +740,7 @@ class err_st(err_node):
         self.cur_line_st = src.get_cur_line()
         self.cur_line_se = None
         self.trn_set_id = seg_data.get_value('ST01')
+        self.vriic = seg_data.get_value('ST03')
         self.id = 'ST'
 
         self.ack_code = 'R'
@@ -948,6 +950,7 @@ class err_ele(err_node):
         else:
             self.ele_pos = map_node.seq
             self.subele_pos = None
+        self.repeat_pos = None
 
         #self.bad_val = bad_val
         self.id = 'ELE'
