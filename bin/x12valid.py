@@ -42,20 +42,24 @@ def main():
     """
     import argparse
     parser = argparse.ArgumentParser(description='X12 Validation')
-    parser.add_argument('--config-file', '-c', action='store', dest="configfile", default=None)
-    parser.add_argument('--log-file', '-l', action='store', dest="logfile", default=None)
-    parser.add_argument('--map-path', '-m', action='store', dest="map_path", default=None)
+    parser.add_argument('--config-file', '-c', action='store',
+                        dest="configfile", default=None)
+    parser.add_argument(
+        '--log-file', '-l', action='store', dest="logfile", default=None)
+    parser.add_argument(
+        '--map-path', '-m', action='store', dest="map_path", default=None)
     parser.add_argument('--verbose', '-v', action='count')
     parser.add_argument('--debug', '-d', action='store_true')
     parser.add_argument('--quiet', '-q', action='store_true')
     parser.add_argument('--html', '-H', action='store_true')
     parser.add_argument('--exclude-external-codes', '-x', action='append', dest="exclude_external",
-        default=[], help='External Code Names to ignore')
-    parser.add_argument('--charset', '-s', choices=('b', 'e'), help='Specify X12 character set: b=basic, e=extended')
+                        default=[], help='External Code Names to ignore')
+    parser.add_argument('--charset', '-s', choices=(
+        'b', 'e'), help='Specify X12 character set: b=basic, e=extended')
     #parser.add_argument('--background', '-b', action='store_true')
     #parser.add_argument('--test', '-t', action='store_true')
     parser.add_argument('--profile', action='store_true',
-            help='Profile the code with plop')
+                        help='Profile the code with plop')
     parser.add_argument('--version', action='version', version='{prog} {version}'.format(prog=parser.prog, version=__version__))
     parser.add_argument('input_files', nargs='*')
     args = parser.parse_args()
@@ -114,7 +118,8 @@ def main():
                 from plop.collector import Collector
                 p = Collector()
                 p.start()
-                if pyx12.x12n_document.x12n_document(param=param, src_file=src_filename,
+                if pyx12.x12n_document.x12n_document(
+                    param=param, src_file=src_filename,
                         fd_997=fd_997, fd_html=fd_html, fd_xmldoc=None):
                     sys.stderr.write('%s: OK\n' % (src_filename))
                 else:
@@ -127,8 +132,10 @@ def main():
                 #profile.run(prof_str, 'pyx12.prof')
                 p.stop()
                 try:
-                    pfile = os.path.splitext(os.path.basename(src_filename))[0] + '.plop.out'
-                    pfull = os.path.join(os.path.expanduser('~/.plop.profiles'), pfile)
+                    pfile = os.path.splitext(os.path.basename(
+                        src_filename))[0] + '.plop.out'
+                    pfull = os.path.join(os.path.expanduser(
+                        '~/.plop.profiles'), pfile)
                     print pfull
                     with open(pfull, 'w') as fdp:
                         fdp.write(repr(dict(p.stack_counts)))
@@ -136,13 +143,15 @@ def main():
                     logger.exception('Failed to write profile data')
                     sys.stderr.write('%s: bad profile save\n' % (src_filename))
             else:
-                if pyx12.x12n_document.x12n_document(param=param, src_file=src_filename,
+                if pyx12.x12n_document.x12n_document(
+                    param=param, src_file=src_filename,
                         fd_997=fd_997, fd_html=fd_html, fd_xmldoc=None):
                     sys.stderr.write('%s: OK\n' % (src_filename))
                 else:
                     sys.stderr.write('%s: Failure\n' % (src_filename))
             fd_997.seek(0)
-            codecs.open(target_997, mode='w', encoding='ascii').write(fd_997.read())
+            codecs.open(target_997, mode='w',
+                        encoding='ascii').write(fd_997.read())
 
             if fd_997:
                 fd_997.close()

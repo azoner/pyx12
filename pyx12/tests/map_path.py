@@ -4,8 +4,9 @@ import sys
 from os.path import dirname, abspath, join, isdir, isfile
 import unittest
 
-import pyx12.params 
+import pyx12.params
 from pyx12.tests.support import getMapPath
+
 
 class MapPath(unittest.TestCase):
 

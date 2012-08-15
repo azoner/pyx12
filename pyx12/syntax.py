@@ -14,6 +14,7 @@
 X12 syntax validation functions
 """
 
+
 def is_syntax_valid(seg_data, syn):
     """
     Verifies the segment against the syntax
@@ -72,19 +73,20 @@ def is_syntax_valid(seg_data, syn):
             for s in syn_idx[1:]:
                 if len(seg_data) >= s and seg_data.get_value('%02i' % (s)) != '':
                     count += 1
-            if count != len(syn_idx)-1:
+            if count != len(syn_idx) - 1:
                 if len(syn_idx[1:]) > 1: verb = 'are'
-                else: verb = 'is'
+                else:
+                    verb = 'is'
                 err_str = 'Syntax Error (%s): If %s%02i is present, then %s %s required'\
-                    % (syntax_str(syn), seg_data.get_seg_id(), syn_idx[0], \
-                    syntax_ele_id_str(seg_data.get_seg_id(), syn_idx[1:]), verb)
+                    % (syntax_str(syn), seg_data.get_seg_id(), syn_idx[0],
+                       syntax_ele_id_str(seg_data.get_seg_id(), syn_idx[1:]), verb)
                 return (False, err_str)
             else:
                 return (True, None)
         else:
             return (True, None)
     elif syn_code == 'L':
-        if len(seg_data) > syn_idx[0]-1 and seg_data.get_value('%02i' % (syn_idx[0])) != '':
+        if len(seg_data) > syn_idx[0] - 1 and seg_data.get_value('%02i' % (syn_idx[0])) != '':
             count = 0
             for s in syn_idx[1:]:
                 if len(seg_data) >= s and seg_data.get_value('%02i' % (s)) != '':
@@ -92,7 +94,8 @@ def is_syntax_valid(seg_data, syn):
             if count == 0:
                 err_str = 'Syntax Error (%s): If %s%02i is present, then at least one of '\
                     % (syntax_str(syn), seg_data.get_seg_id(), syn_idx[0])
-                err_str += syntax_ele_id_str(seg_data.get_seg_id(), syn_idx[1:])
+                err_str += syntax_ele_id_str(
+                    seg_data.get_seg_id(), syn_idx[1:])
                 err_str += ' is required'
                 return (False, err_str)
             else:
@@ -101,7 +104,8 @@ def is_syntax_valid(seg_data, syn):
             return (True, None)
     #raise EngineError
     return (False, 'Syntax Type %s Not Found' % (syntax_str(syn)))
-        
+
+
 def syntax_str(syntax):
     """
     @rtype: string
@@ -111,16 +115,16 @@ def syntax_str(syntax):
         output += '%02i' % (i)
     return output
 
+
 def syntax_ele_id_str(seg_id, ele_pos_list):
     """
     @rtype: string
     """
     output = ''
     output += '%s%02i' % (seg_id, ele_pos_list[0])
-    for i in range(len(ele_pos_list)-1):
-        if i == len(ele_pos_list)-2:    
-            output += ' or %s%02i' % (seg_id, ele_pos_list[i+1])
+    for i in range(len(ele_pos_list) - 1):
+        if i == len(ele_pos_list) - 2:
+            output += ' or %s%02i' % (seg_id, ele_pos_list[i + 1])
         else:
-            output += ', %s%02i' % (seg_id, ele_pos_list[i+1])
+            output += ', %s%02i' % (seg_id, ele_pos_list[i + 1])
     return output
-        

@@ -38,8 +38,10 @@ class X12DocumentTestCase(unittest.TestCase):
         """
         src1 = pyx12.x12file.X12Reader(fd1)
         src2 = pyx12.x12file.X12Reader(fd2)
-        segs1 = [x.format() for x in src1 if x.get_seg_id() not in ('ISA', 'GS', 'ST', 'SE', 'GE', 'IEA')]
-        segs2 = [x.format() for x in src2 if x.get_seg_id() not in ('ISA', 'GS', 'ST', 'SE', 'GE', 'IEA')]
+        segs1 = [x.format() for x in src1 if x.get_seg_id(
+        ) not in ('ISA', 'GS', 'ST', 'SE', 'GE', 'IEA')]
+        segs2 = [x.format() for x in src2 if x.get_seg_id(
+        ) not in ('ISA', 'GS', 'ST', 'SE', 'GE', 'IEA')]
         self.assertListEqual(segs1, segs2)
 
     def _test_997(self, datakey):
@@ -59,7 +61,8 @@ class X12DocumentTestCase(unittest.TestCase):
         #hdlr = logging.StreamHandler()
         #hdlr.setFormatter(formatter)
         logger.addHandler(hdlr)
-        pyx12.x12n_document.x12n_document(self.param, fd_source, fd_997, fd_html, None)
+        pyx12.x12n_document.x12n_document(
+            self.param, fd_source, fd_997, fd_html, None)
         fd_997.seek(0)
         self._isX12Diff(fd_997_base, fd_997)
 

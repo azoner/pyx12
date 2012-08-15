@@ -178,7 +178,8 @@ class err_handler(object):
         @type ls_id: string
         """
         parent = self.cur_st_node
-        self.cur_seg_node = err_seg(parent, map_node, seg_data, seg_count, cur_line, ls_id)
+        self.cur_seg_node = err_seg(
+            parent, map_node, seg_data, seg_count, cur_line, ls_id)
         self.seg_node_added = False
         #logger.debug('add_seg: %s' % map_node.name)
         #if len(parent.children) > 0:
@@ -287,7 +288,8 @@ class err_handler(object):
         @type err_str: string
         """
         self._add_cur_ele()
-        self.cur_ele_node.add_error(err_cde, err_str, bad_value)  # , pos, data_ele)
+        self.cur_ele_node.add_error(
+            err_cde, err_str, bad_value)  # , pos, data_ele)
         sout = ''
         sout += 'Line:%i ' % (self.cur_seg_node.get_cur_line())
         sout += 'ELE:%s - %s' % (err_cde, err_str)
@@ -322,7 +324,8 @@ class err_handler(object):
         Find the last node of a type
         """
         new_node = self.cur_node
-        node_order = {'ROOT': 1, 'ISA': 2, 'GS': 3, 'ST': 4, 'SEG': 5, 'ELE': 6}
+        node_order = {'ROOT': 1, 'ISA': 2, 'GS': 3, 'ST': 4, 'SEG':
+                      5, 'ELE': 6}
         while node_order[type] > new_node[new_node.get_id()]:
             new_node = new_node.get_parent()
         #walk error tree to find place to append

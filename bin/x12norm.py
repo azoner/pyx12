@@ -19,10 +19,11 @@ If no source file is given, read from stdin.
 If no ouput filename is given with -o,  write to stdout.
 """
 
-__author__  = pyx12.__author__
-__status__  = pyx12.__status__
+__author__ = pyx12.__author__
+__status__ = pyx12.__status__
 __version__ = pyx12.__version__
-__date__    = pyx12.__date__
+__date__ = pyx12.__date__
+
 
 def usage():
     pgm_nme = os.path.basename(sys.argv[0])
@@ -34,6 +35,7 @@ def usage():
     sys.stdout.write('  -e         Add eol to each segment line\n')
     sys.stdout.write('  -f         Fix.  Try to fix counting errors\n')
     sys.stdout.write('  -o file    Output file.\n')
+
 
 def main():
     try:
@@ -49,10 +51,14 @@ def main():
         if o == '-h':
             usage()
             return True
-        if o == '-d': debug = True
-        if o == '-e': eol = '\n'
-        if o == '-f': fix = True
-        if o == '-o': file_out = a
+        if o == '-d':
+            debug = True
+        if o == '-e':
+            eol = '\n'
+        if o == '-f':
+            fix = True
+        if o == '-o':
+            file_out = a
 
     for file_in in args:
         if not os.path.isfile(file_in):
@@ -72,7 +78,7 @@ def main():
                 elif seg_data.get_seg_id() == 'GE' and '5' in err_codes:
                     seg_data.set('GE01', '%i' % (src.st_count))
                 elif seg_data.get_seg_id() == 'SE' and '4' in err_codes:
-                    seg_data.set('SE01', '%i' % (src.seg_count+1))
+                    seg_data.set('SE01', '%i' % (src.seg_count + 1))
                 elif seg_data.get_seg_id() == 'HL' and 'HL1' in err_codes:
                     seg_data.set('HL01', '%i' % (src.hl_count))
             fd_out.write(seg_data.format() + eol)

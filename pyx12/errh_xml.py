@@ -32,6 +32,7 @@ logger = logging.getLogger('pyx12.errh_xml')
 #logger.setLevel(logging.DEBUG)
 #logger.setLevel(logging.ERROR)
 
+
 class err_handler(object):
     """
     The interface to the error handling structures.
@@ -52,7 +53,8 @@ class err_handler(object):
                 #self.filename = fd.name
             except:
                 #self.filename = '997.tmp.xml'
-                (fdesc, self.filename) = tempfile.mkstemp(suffix='.xml', prefix='pyx12_', dir=basedir)
+                (fdesc, self.filename) = tempfile.mkstemp(suffix='.xml',
+                                                          prefix='pyx12_', dir=basedir)
                 fd = os.fdopen(fdesc, 'w+b')
                 #fd = file(os.path.join(basedir, self.filename), 'w')
         self.cur_line = None
@@ -76,7 +78,7 @@ class err_handler(object):
         """
         @param err_list: list of errors to apply
         """
-        self.errors.extend(err_list) 
+        self.errors.extend(err_list)
         #for (err_type, err_cde, err_str, err_val, src_line) in err_list:
         #    if err_type == 'isa':
         #        self.isa_error(err_cde, err_str)
@@ -100,7 +102,7 @@ class err_handler(object):
 
         """
         if len(self.errors) > 0:
-            self.writer.push("seg", attrs={'line': '%i'%(cur_line)})
+            self.writer.push("seg", attrs={'line': '%i' % (cur_line)})
             for (err_type, err_cde, err_str, err_val, src_line) in self.errors:
                 self.writer.push("err", attrs={"code": err_cde})
                 #self.writer.elem(u"type", err_type)
@@ -109,14 +111,16 @@ class err_handler(object):
                 if err_val:
                     self.writer.elem("errval", err_val)
                 #self.writer.push(u"seg", {u'line': '%i'%(cur_line)})
-                        #self.writer.elem(u'ele', seg_data.get_value('%02i' % (i+1)), 
+                        #self.writer.elem(u'ele', seg_data.get_value('%02i' % (i+1)),
                         #    attrs={u'id': child_node.id})
-                self.writer.pop() #end err
-            self.writer.pop() #end segment
+                self.writer.pop()  # end err
+            self.writer.pop()  # end segment
             self.errors = []
+
 
 class ErrorErrhNull(Exception):
     """Class for errh_null errors."""
+
 
 class errh_list(object):
     """
@@ -133,7 +137,7 @@ class errh_list(object):
 
     def get_errors(self):
         return self.errors
-    
+
     def reset(self):
         self.errors = []
 
@@ -161,27 +165,27 @@ class errh_list(object):
         """
         #raise ErrorErrhNull, 'add_isa loop'
         pass
-        
+
     def add_gs_loop(self, seg, src):
         """
         """
         pass
-        
+
     def add_st_loop(self, seg, src):
         """
         """
         pass
-        
+
     def add_seg(self, map_node, seg, seg_count, cur_line, ls_id):
         """
         """
         pass
-        
+
     def add_ele(self, map_node):
         """
         """
         pass
-   
+
     def isa_error(self, err_cde, err_str):
         """
         @param err_cde: ISA level error code
@@ -207,7 +211,7 @@ class errh_list(object):
         sout += 'Line:%i ' % (self.cur_line)
         sout += 'GS:%s - %s' % (err_cde, err_str)
         logger.error(sout)
-        
+
     def st_error(self, err_cde, err_str):
         """
         @param err_cde: Segment level error code
@@ -220,7 +224,7 @@ class errh_list(object):
         sout += 'Line:%i ' % (self.cur_line)
         sout += 'ST:%s - %s' % (err_cde, err_str)
         logger.error(sout)
-        
+
     def seg_error(self, err_cde, err_str, err_value=None, src_line=None):
         """
         @param err_cde: Segment level error code
@@ -235,7 +239,7 @@ class errh_list(object):
         if err_value:
             sout += ' (%s)' % err_value
         logger.error(sout)
-        
+
     def ele_error(self, err_cde, err_str, bad_value):
         """
         @param err_cde: Element level error code
@@ -255,17 +259,17 @@ class errh_list(object):
         """
         """
         pass
-        
+
     def close_gs_loop(self, node, seg, src):
         """
         """
         pass
-        
+
     def close_st_loop(self, node, seg, src):
         """
         """
         pass
-        
+
     def find_node(self, atype):
         """
         Find the last node of a type
@@ -282,7 +286,7 @@ class errh_list(object):
 #            return self.children[0]
 #        else:
 #            return None
-         
+
     def get_next_sibling(self):
         """
         """

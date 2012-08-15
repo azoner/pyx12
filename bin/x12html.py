@@ -17,7 +17,8 @@ Create a html document based on the data file
 Write to the standard output stream
 """
 
-import os, os.path
+import os
+import os.path
 import sys
 import logging
 from types import *
@@ -30,10 +31,11 @@ import pyx12
 import pyx12.x12n_document
 import pyx12.params
 
-__author__  = pyx12.__author__
-__status__  = pyx12.__status__
+__author__ = pyx12.__author__
+__status__ = pyx12.__status__
 __version__ = pyx12.__version__
-__date__    = pyx12.__date__
+__date__ = pyx12.__date__
+
 
 def usage():
     pgm_nme = os.path.basename(sys.argv[0])
@@ -42,17 +44,20 @@ def usage():
     sys.stdout.write('\noptions:\n')
     sys.stdout.write('  -c <file>  XML configuration file\n')
     sys.stdout.write('  -d         Debug Mode.  Implies verbose output\n')
-    sys.stdout.write('  -f         Force map load.  Do not use the map pickle file\n')
+    sys.stdout.write(
+        '  -f         Force map load.  Do not use the map pickle file\n')
     sys.stdout.write('  -l <file>  Output log\n')
     sys.stdout.write('  -m <path>  Path to map files\n')
     sys.stdout.write('  -p <path>  Path to to pickle files\n')
     sys.stdout.write('  -P         Profile script\n')
     sys.stdout.write('  -q         Quiet output\n')
-    sys.stdout.write('  -s <b|e>   Specify X12 character set: b=basic, e=extended\n')
+    sys.stdout.write(
+        '  -s <b|e>   Specify X12 character set: b=basic, e=extended\n')
     sys.stderr.write('  -t <file>  XSL Transform, applied to the map.  May be used multiple times.\n')
     sys.stdout.write('  -v         Verbose output\n')
     sys.stdout.write('  -x <tag>   Exclude external code\n')
-    
+
+
 def main():
     """
     Set up environment for processing
@@ -90,18 +95,26 @@ def main():
             logger.debug("XSL Transform '%s' not found" % (xslt_file))
 
     for o, a in opts:
-        if o == '-v': logger.setLevel(logging.DEBUG)
-        if o == '-q': logger.setLevel(logging.ERROR)
-        if o == '-d': 
+        if o == '-v':
+            logger.setLevel(logging.DEBUG)
+        if o == '-q':
+            logger.setLevel(logging.ERROR)
+        if o == '-d':
             param.set('debug', True)
             debug = True
             logger.setLevel(logging.DEBUG)
-        if o == '-x': param.set('exclude_external_codes', a)
-        if o == '-f': param.set('force_map_load', True)
-        if o == '-m': param.set('map_path', a)
-        if o == '-p': param.set('pickle_path', a)
-        if o == '-P': profile = True
-        if o == '-s': param.set('charset', a)
+        if o == '-x':
+            param.set('exclude_external_codes', a)
+        if o == '-f':
+            param.set('force_map_load', True)
+        if o == '-m':
+            param.set('map_path', a)
+        if o == '-p':
+            param.set('pickle_path', a)
+        if o == '-P':
+            profile = True
+        if o == '-s':
+            param.set('charset', a)
         if o == '-t':
             if os.path.isfile(a):
                 xslt_files.append(a)
@@ -111,7 +124,7 @@ def main():
             try:
                 hdlr = logging.FileHandler(a)
                 hdlr.setFormatter(formatter)
-                logger.addHandler(hdlr) 
+                logger.addHandler(hdlr)
             except IOError:
                 logger.error('Could not open log file: %s' % (a))
 
@@ -121,10 +134,11 @@ def main():
             fd_html = sys.stdout
             if profile:
                 import profile
-                profile.run('pyx12.x12n_document.x12n_document(param, src_filename, None, fd_html, None, xslt_files)', 
-                    'pyx12.prof')
+                profile.run('pyx12.x12n_document.x12n_document(param, src_filename, None, fd_html, None, xslt_files)',
+                            'pyx12.prof')
             else:
-                pyx12.x12n_document.x12n_document(param=param, src_file=src_filename,
+                pyx12.x12n_document.x12n_document(
+                    param=param, src_file=src_filename,
                     fd_997=None, fd_html=fd_html, fd_xmldoc=None, xslt_files=xslt_files)
 
         except IOError:
@@ -138,4 +152,3 @@ def main():
 
 if __name__ == '__main__':
     sys.exit(not main())
-

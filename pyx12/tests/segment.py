@@ -3,6 +3,7 @@ import unittest
 import pyx12.segment
 from pyx12.errors import *
 
+
 class ArbitraryDelimiters(unittest.TestCase):
 
     def setUp(self):
@@ -10,7 +11,7 @@ class ArbitraryDelimiters(unittest.TestCase):
         self.seg = pyx12.segment.Segment(self.seg_str, '+', '&', '!')
 
     def test_identity(self):
-        self.assertEqual(self.seg_str+'+', self.seg.__repr__())
+        self.assertEqual(self.seg_str + '+', self.seg.__repr__())
 
     def test_get_seg_id(self):
         self.assertEqual(self.seg.get_seg_id(), 'TST')
@@ -20,10 +21,10 @@ class ArbitraryDelimiters(unittest.TestCase):
 
     def test_getitem3(self):
         self.assertEqual(self.seg.get_value('TST03'), 'ZZ')
-                    
+
     def test_getitem1(self):
         self.assertEqual(self.seg.get_value('TST01'), 'AA!1!1')
-                    
+
     def test_other_terms(self):
         self.assertEqual(self.seg.format('~', '*', ':'), 'TST*AA:1:1*BB:5*ZZ~')
 
@@ -36,13 +37,13 @@ class Identity(unittest.TestCase):
     def test_identity1(self):
         seg_str = 'TST*AA:1:1*BB:5*ZZ'
         seg = pyx12.segment.Segment(seg_str, '~', '*', ':')
-        self.assertEqual(seg.__repr__(), seg_str+'~')
+        self.assertEqual(seg.__repr__(), seg_str + '~')
 
     def test_identity2(self):
         seg_str = 'ISA*00*          *00*          *ZZ*ZZ000          *'
         seg_str += 'ZZ*ZZ001          *030828*1128*U*00401*000010121*0*T*:\n'
         seg = pyx12.segment.Segment(seg_str, '~', '*', ':')
-        self.assertEqual(seg.__repr__(), seg_str+'~')
+        self.assertEqual(seg.__repr__(), seg_str + '~')
 
     def test_identity3(self):
         seg_str = 'TST*AA:1:1*BB:5*ZZ~'
@@ -110,7 +111,7 @@ class Composite(unittest.TestCase):
     def test_composite_is_a(self):
         self.assertTrue(self.seg.is_composite('TST01'))
         self.assertFalse(self.seg.is_element('TST01'))
-        
+
     def test_composite_len(self):
         self.assertEqual(len(self.seg.get('01')), 3)
 
@@ -130,7 +131,7 @@ class Simple(unittest.TestCase):
     def test_simple_is_a(self):
         self.assertTrue(self.seg.is_element('TST01'))
         self.assertFalse(self.seg.is_composite('TST01'))
-        
+
     def test_simple_len(self):
         self.assertEqual(len(self.seg.get('01')), 1)
 
@@ -156,15 +157,22 @@ class GetValue(unittest.TestCase):
         self.seg = pyx12.segment.Segment(seg_str, '~', '*', ':')
 
     def getElementValueOK(self):
-        self.assertEqual(self.seg.get_value('TST01'), self.seg.get('TST01').format())
-        self.assertEqual(self.seg.get_value('TST04'), self.seg.get('TST04').format())
-        self.assertEqual(self.seg.get_value('TST03'), self.seg.get('TST03').format())
-        self.assertEqual(self.seg.get_value('TST05'), self.seg.get('TST05').format())
-        self.assertEqual(self.seg.get_value('TST06'), self.seg.get('TST06').format())
-        
+        self.assertEqual(self.seg.get_value(
+            'TST01'), self.seg.get('TST01').format())
+        self.assertEqual(self.seg.get_value(
+            'TST04'), self.seg.get('TST04').format())
+        self.assertEqual(self.seg.get_value(
+            'TST03'), self.seg.get('TST03').format())
+        self.assertEqual(self.seg.get_value(
+            'TST05'), self.seg.get('TST05').format())
+        self.assertEqual(self.seg.get_value(
+            'TST06'), self.seg.get('TST06').format())
+
     def getCompositeValueOK(self):
-        self.assertEqual(self.seg.get_value('TST04-1'), self.seg.get('TST04-1').format())
-        self.assertEqual(self.seg.get_value('TST04-2'), self.seg.get('TST04-2').format())
+        self.assertEqual(self.seg.get_value(
+            'TST04-1'), self.seg.get('TST04-1').format())
+        self.assertEqual(self.seg.get_value(
+            'TST04-2'), self.seg.get('TST04-2').format())
 
 
 class RefDes(unittest.TestCase):
@@ -263,7 +271,7 @@ class Indexing(unittest.TestCase):
 
     def test_index_composite_2(self):
         self.assertEqual(self.seg.get_value('TST04-2'), '5')
-                    
+
 
 class IsValidSegID(unittest.TestCase):
 
@@ -337,19 +345,21 @@ class IsaTerminators(unittest.TestCase):
 
     def test_no_change_4010(self):
         initial = 'ISA*03*SENDER    *01*          *ZZ*SENDER         *ZZ*RECEIVER       *040608*1333*U*00401*000000288*0*P*:~'
-        result =  initial
+        result = initial
         seg_isa = pyx12.segment.Segment(initial, '~', '*', ':')
-        self.assertMultiLineEqual(seg_isa.format(seg_term='~', ele_term='*', subele_term=':'), result)
+        self.assertMultiLineEqual(seg_isa.format(
+            seg_term='~', ele_term='*', subele_term=':'), result)
 
     def test_no_change_5010(self):
         initial = 'ISA*03*SENDER    *01*          *ZZ*SENDER         *ZZ*RECEIVER       *040611*1333*^*00501*000000125*0*P*\~'
-        result =  initial
+        result = initial
         seg_isa = pyx12.segment.Segment(initial, '~', '*', ':')
-        self.assertMultiLineEqual(seg_isa.format(seg_term='~', ele_term='*', subele_term=':'), result)
+        self.assertMultiLineEqual(seg_isa.format(
+            seg_term='~', ele_term='*', subele_term=':'), result)
 
     def test_subele(self):
         initial = 'ISA*03*SENDER    *01*          *ZZ*SENDER         *ZZ*RECEIVER       *040611*1333*^*00501*000000125*0*P*:~'
-        result =  'ISA*03*SENDER    *01*          *ZZ*SENDER         *ZZ*RECEIVER       *040611*1333*^*00501*000000125*0*P*\~'
+        result = 'ISA*03*SENDER    *01*          *ZZ*SENDER         *ZZ*RECEIVER       *040611*1333*^*00501*000000125*0*P*\~'
         seg_isa = pyx12.segment.Segment(initial, '~', '*', ':')
         seg_isa.set('ISA16', '\\')
         self.assertMultiLineEqual(seg_isa.format(subele_term='\\'), result)

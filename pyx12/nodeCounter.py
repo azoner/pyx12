@@ -16,6 +16,7 @@ Loop and segment counter
 #import collections
 import pyx12.path
 
+
 class NodeCounter(object):
     """
     X12 Loop and Segment Node Counter
@@ -52,7 +53,7 @@ class NodeCounter(object):
         Set path count
         """
         self._dict[xpath] = ct
-    
+
     def get_count(self, xpath):
         """
         Get path count

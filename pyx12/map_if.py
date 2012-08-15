@@ -188,13 +188,14 @@ class map_if(x12_node):
         #self.cur_iter_node = self
         self.param = param
         #global codes
-        self.ext_codes = codes.ExternalCodes(param.get('map_path'), \
-            param.get('exclude_external_codes'))
+        self.ext_codes = codes.ExternalCodes(param.get('map_path'),
+                                             param.get('exclude_external_codes'))
         self.data_elements = dataele.DataElements(param.get('map_path'))
 
         self.id = eroot.get('xid')
 
-        self.name = eroot.get('name') if eroot.get('name') else eroot.findtext('name')
+        self.name = eroot.get(
+            'name') if eroot.get('name') else eroot.findtext('name')
         self.base_name = 'transaction'
         for e in eroot.findall('loop'):
             loop_node = loop_if(self, self, e)
@@ -317,7 +318,8 @@ class map_if(x12_node):
                     else:
                         del x12path.loop_list[0]
                         return child.getnodebypath(x12path.format())
-        raise EngineError('getnodebypath failed. Path "%s" not found' % path_str)
+        raise EngineError(
+            'getnodebypath failed. Path "%s" not found' % path_str)
 
     def is_map_root(self):
         """
@@ -374,10 +376,14 @@ class loop_if(x12_node):
         self.path = self.id
         self.type = elem.get('type')
 
-        self.name = elem.get('name') if elem.get('name') else elem.findtext('name')
-        self.usage = elem.get('usage') if elem.get('usage') else elem.findtext('usage')
-        self.pos = int(elem.get('pos')) if elem.get('pos') else int(elem.findtext('pos'))
-        self.repeat = elem.get('repeat') if elem.get('repeat') else elem.findtext('repeat')
+        self.name = elem.get(
+            'name') if elem.get('name') else elem.findtext('name')
+        self.usage = elem.get(
+            'usage') if elem.get('usage') else elem.findtext('usage')
+        self.pos = int(elem.get(
+            'pos')) if elem.get('pos') else int(elem.findtext('pos'))
+        self.repeat = elem.get('repeat') if elem.get(
+            'repeat') else elem.findtext('repeat')
 
         for e in elem.findall('loop'):
             loop_node = loop_if(self.root, self, e)
@@ -486,7 +492,8 @@ class loop_if(x12_node):
                             return child
                     else:
                         seg_id = pathl[0][0:pathl[0].find('[')]
-                        id_val = pathl[0][pathl[0].find('[') + 1:pathl[0].find(']')]
+                        id_val = pathl[0][pathl[0].find('[')
+                                          + 1:pathl[0].find(']')]
                         if seg_id == child.id:
                             possible = child.get_unique_key_id_element(id_val)
                             if possible is not None:
@@ -523,7 +530,8 @@ class loop_if(x12_node):
                             possible = child.get_unique_key_id_element(id_val)
                             if possible is not None:
                                 return child
-        raise EngineError('getnodebypath failed. Path "%s" not found' % path_str)
+        raise EngineError(
+            'getnodebypath failed. Path "%s" not found' % path_str)
 
     def get_child_count(self):
         return self.__len__()
@@ -660,13 +668,19 @@ class segment_if(x12_node):
         self.path = self.id
         self.type = elem.get('type')
 
-        self.name = elem.get('name') if elem.get('name') else elem.findtext('name')
-        self.usage = elem.get('usage') if elem.get('usage') else elem.findtext('usage')
-        self.pos = int(elem.get('pos')) if elem.get('pos') else int(elem.findtext('pos'))
-        self.max_use = elem.get('max_use') if elem.get('max_use') else elem.findtext('max_use')
-        self.repeat = elem.get('repeat') if elem.get('repeat') else elem.findtext('repeat')
+        self.name = elem.get(
+            'name') if elem.get('name') else elem.findtext('name')
+        self.usage = elem.get(
+            'usage') if elem.get('usage') else elem.findtext('usage')
+        self.pos = int(elem.get(
+            'pos')) if elem.get('pos') else int(elem.findtext('pos'))
+        self.max_use = elem.get('max_use') if elem.get(
+            'max_use') else elem.findtext('max_use')
+        self.repeat = elem.get('repeat') if elem.get(
+            'repeat') else elem.findtext('repeat')
 
-        self.end_tag = elem.get('end_tag') if elem.get('end_tag') else elem.findtext('end_tag')
+        self.end_tag = elem.get('end_tag') if elem.get(
+            'end_tag') else elem.findtext('end_tag')
 
         for s in elem.findall('syntax'):
             syn_list = self._split_syntax(s.text)
@@ -686,9 +700,11 @@ class segment_if(x12_node):
 
         for seq in sorted(children_map.keys()):
             if children_map[seq].tag == 'element':
-                self.children.append(element_if(self.root, self, children_map[seq]))
+                self.children.append(element_if(
+                    self.root, self, children_map[seq]))
             elif children_map[seq].tag == 'composite':
-                self.children.append(composite_if(self.root, self, children_map[seq]))
+                self.children.append(composite_if(
+                    self.root, self, children_map[seq]))
 
     def debug_print(self):
         sys.stdout.write(self.__repr__())
@@ -917,7 +933,8 @@ class segment_if(x12_node):
                 comp_data = seg_data.get(ref_des)
                 subele_count = child_node.get_child_count()
                 if seg_data.ele_len(ref_des) > subele_count and child_node.usage != 'N':
-                    subele_node = child_node.get_child_node_by_idx(subele_count + 1)
+                    subele_node = child_node.get_child_node_by_idx(
+                        subele_count + 1)
                     err_str = 'Too many sub-elements in composite "%s" (%s)' % \
                         (subele_node.name, subele_node.refdes)
                     err_value = seg_data.get_value(ref_des)
@@ -1026,18 +1043,25 @@ class element_if(x12_node):
 
         self.id = elem.get('xid')
         self.refdes = self.id
-        self.data_ele = elem.get('data_ele') if elem.get('data_ele') else elem.findtext('data_ele')
-        self.usage = elem.get('usage') if elem.get('usage') else elem.findtext('usage')
-        self.name = elem.get('name') if elem.get('name') else elem.findtext('name')
-        self.seq = int(elem.get('seq')) if elem.get('seq') else int(elem.findtext('seq'))
-        self.path = elem.get('seq') if elem.get('seq') else elem.findtext('seq')
-        self.max_use = elem.get('max_use') if elem.get('max_use') else elem.findtext('max_use')
+        self.data_ele = elem.get('data_ele') if elem.get(
+            'data_ele') else elem.findtext('data_ele')
+        self.usage = elem.get(
+            'usage') if elem.get('usage') else elem.findtext('usage')
+        self.name = elem.get(
+            'name') if elem.get('name') else elem.findtext('name')
+        self.seq = int(elem.get(
+            'seq')) if elem.get('seq') else int(elem.findtext('seq'))
+        self.path = elem.get(
+            'seq') if elem.get('seq') else elem.findtext('seq')
+        self.max_use = elem.get('max_use') if elem.get(
+            'max_use') else elem.findtext('max_use')
         self.res = elem.findtext('regex')
         try:
             if self.res is not None and self.res != '':
                 self.rec = re.compile(self.res, re.S)
         except Exception:
-            raise EngineError('Element regex "%s" failed to compile' % (self.res))
+            raise EngineError('Element regex "%s" failed to compile' %
+                (self.res))
 
         v = elem.find('valid_codes')
         if v is not None:
@@ -1062,7 +1086,8 @@ class element_if(x12_node):
             out += '  usage: %s' % (self.usage)
         if self.seq:
             out += '  seq: %i' % (self.seq)
-        out += '  %s(%i, %i)' % (data_ele['data_type'], data_ele['min_len'], data_ele['max_len'])
+        out += '  %s(%i, %i)' % (data_ele['data_type'], data_ele[
+            'min_len'], data_ele['max_len'])
         if self.external_codes:
             out += '   external codes: %s' % (self.external_codes)
         out += '\n'
@@ -1075,7 +1100,8 @@ class element_if(x12_node):
         """
         Forward the error to an error_handler
         """
-        errh.ele_error(err_cde, err_str, elem_val, self.refdes)  # pos=self.seq, data_ele=self.data_ele)
+        errh.ele_error(err_cde, err_str, elem_val, self.refdes)
+            # pos=self.seq, data_ele=self.data_ele)
 
     def _valid_code(self, code):
         """
@@ -1130,13 +1156,15 @@ class element_if(x12_node):
                 return True
             elif self.usage == 'R':
                 if self.seq != 1 or not self.parent.is_composite() or self.parent.usage == 'R':
-                    err_str = 'Mandatory data element "%s" (%s) is missing' % (self.name, self.refdes)
+                    err_str = 'Mandatory data element "%s" (%s) is missing' % (
+                        self.name, self.refdes)
                     self._error(errh, err_str, '1', None)
                     return False
                 else:
                     return True
         if self.usage == 'N' and elem.get_value() != '':
-            err_str = 'Data element "%s" (%s) is marked as Not Used' % (self.name, self.refdes)
+            err_str = 'Data element "%s" (%s) is marked as Not Used' % (
+                self.name, self.refdes)
             self._error(errh, err_str, '10', None)
             return False
 
@@ -1149,7 +1177,8 @@ class element_if(x12_node):
 # Validate based on data_elem_num
 # Then, validate on more specific criteria
         if (not data_type is None) and (data_type == 'R' or data_type[0] == 'N'):
-            elem_strip = string.replace(string.replace(elem_val, '-', ''), '.', '')
+            elem_strip = string.replace(
+                string.replace(elem_val, '-', ''), '.', '')
             if len(elem_strip) < min_len:
                 err_str = 'Data element "%s" (%s) is too short: "%s" should be at least %i characters' % \
                     (self.name, self.refdes, elem_val, min_len)
@@ -1200,7 +1229,8 @@ class element_if(x12_node):
         if len(type_list) > 0:
             valid_type = False
             for dtype in type_list:
-                valid_type |= validation.IsValidDataType(elem_val, dtype, self.root.param.get('charset'))
+                valid_type |= validation.IsValidDataType(elem_val,
+                    dtype, self.root.param.get('charset'))
             if not valid_type:
                 if 'TM' in type_list:
                     err_str = 'Data element "%s" (%s) contains an invalid time (%s)' % \
@@ -1216,7 +1246,8 @@ class element_if(x12_node):
             if not m:
                 err_str = 'Data element "%s" with a value of (%s)' % \
                     (self.name, elem_val)
-                err_str += ' failed to match the regular expression "%s"' % (self.res)
+                err_str += ' failed to match the regular expression "%s"' % (
+                    self.res)
                 self._error(errh, err_str, '7', elem_val)
                 valid = False
         return valid
@@ -1234,7 +1265,8 @@ class element_if(x12_node):
             self.root.ext_codes.isValid(self.external_codes, elem_val):
             bValidCode = True
         if not bValidCode:
-            err_str = '(%s) is not a valid code for %s (%s)' % (elem_val, self.name, self.refdes)
+            err_str = '(%s) is not a valid code for %s (%s)' % (
+                elem_val, self.name, self.refdes)
             self._error(errh, err_str, '7', elem_val)
             return False
         return True
@@ -1278,12 +1310,18 @@ class composite_if(x12_node):
         self.base_name = 'composite'
 
         self.id = elem.get('xid')
-        self.refdes = elem.findtext('refdes') if elem.findtext('refdes') else self.id
-        self.data_ele = elem.get('data_ele') if elem.get('data_ele') else elem.findtext('data_ele')
-        self.usage = elem.get('usage') if elem.get('usage') else elem.findtext('usage')
-        self.seq = int(elem.get('seq')) if elem.get('seq') else int(elem.findtext('seq'))
-        self.repeat = int(elem.get('repeat')) if elem.get('repeat') else int(elem.findtext('repeat')) if elem.findtext('repeat') else 1
-        self.name = elem.get('name') if elem.get('name') else elem.findtext('name')
+        self.refdes = elem.findtext(
+            'refdes') if elem.findtext('refdes') else self.id
+        self.data_ele = elem.get('data_ele') if elem.get(
+            'data_ele') else elem.findtext('data_ele')
+        self.usage = elem.get(
+            'usage') if elem.get('usage') else elem.findtext('usage')
+        self.seq = int(elem.get(
+            'seq')) if elem.get('seq') else int(elem.findtext('seq'))
+        self.repeat = int(elem.get('repeat')) if elem.get('repeat') else int(
+            elem.findtext('repeat')) if elem.findtext('repeat') else 1
+        self.name = elem.get(
+            'name') if elem.get('name') else elem.findtext('name')
 
         for e in elem.findall('element'):
             self.children.append(element_if(self.root, self, e))
@@ -1347,17 +1385,19 @@ class composite_if(x12_node):
                 return False
 
         if self.usage == 'N' and not comp_data.is_empty():
-            err_str = 'Composite "%s" (%s) is marked as Not Used' % (self.name, self.refdes)
+            err_str = 'Composite "%s" (%s) is marked as Not Used' % (
+                self.name, self.refdes)
             errh.ele_error('5', err_str, None, self.refdes)
             return False
 
         if len(comp_data) > self.get_child_count():
-            err_str = 'Too many sub-elements in composite "%s" (%s)' % (self.name, self.refdes)
+            err_str = 'Too many sub-elements in composite "%s" (%s)' % (
+                self.name, self.refdes)
             errh.ele_error('3', err_str, None, self.refdes)
             valid = False
         for i in range(min(len(comp_data), self.get_child_count())):
             valid &= self.get_child_node_by_idx(i).is_valid(comp_data[i], errh)
-        for i in range(min(len(comp_data), self.get_child_count()), \
+        for i in range(min(len(comp_data), self.get_child_count()),
                 self.get_child_count()):
             if i < self.get_child_count():
                 #Check missing required elements

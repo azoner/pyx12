@@ -111,7 +111,7 @@ class error_999_visitor(pyx12.error_visitor.error_visitor):
             7:'007', 8:'008', 9:'014', 10:'015', 11:'016', 12:'017', 13:'018',
             14:'019', 15:'020', 16:'027'
         }
-        iea_ele_err_map = {1:'021', 2:'018' }
+        iea_ele_err_map = { 1:'021', 2:'018' }
         err_codes = [err[0] for err in err_isa.errors]
         for elem in err_isa.elements:
             for (err_cde, err_str, bad_value) in elem.errors:
@@ -191,8 +191,8 @@ class error_999_visitor(pyx12.error_visitor.error_visitor):
         """
         Build list of GS level errors
         """
-        gs_ele_err_map = {6:'6', 8:'2' }
-        ge_ele_err_map = {2:'6' }
+        gs_ele_err_map = { 6:'6', 8:'2' }
+        ge_ele_err_map = { 2:'6' }
         err_codes = [err[0] for err in err_gs.errors]
         for elem in err_gs.elements:
             for (err_cde, err_str, bad_value) in elem.errors:
@@ -311,7 +311,7 @@ class error_999_visitor(pyx12.error_visitor.error_visitor):
                 errors.append('8')
             errors = [x for x in errors if x != 'SEG1']
         for err_cde in list(set(errors)):
-            if err_cde in valid_IK3_codes:  # unique codes
+            if err_cde in valid_IK3_codes: # unique codes
                 seg_data = pyx12.segment.Segment(seg_str, '~', '*', ':')
                 seg_data.set('IK304', err_cde)
                 self.wr.Write(seg_data)

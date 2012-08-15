@@ -14,16 +14,18 @@
 Interface to normalized Data Elements
 """
 
-import os, os.path
+import os
+import os.path
 import xml.etree.cElementTree as et
 
 # Intrapackage imports
 from pyx12.errors import EngineError
 
+
 class DataElementsError(Exception):
     """Class for data elements module errors."""
 
-    
+
 class DataElements(object):
     """
     Interface to normalized Data Elements
@@ -38,8 +40,8 @@ class DataElements(object):
         @note: self.dataele - map to the data element
         {ele_num: {data_type, min_len, max_len, name}}
         """
-        
-        self.dataele = {} 
+
+        self.dataele = {}
         code_file = os.path.join(base_path, 'dataele.xml')
         for eElem in et.parse(code_file).iter('data_ele'):
             ele_num = eElem.get('ele_num')
@@ -47,7 +49,8 @@ class DataElements(object):
             min_len = int(eElem.get('min_len'))
             max_len = int(eElem.get('max_len'))
             name = eElem.get('name')
-            self.dataele[ele_num] = {'data_type':data_type, 'min_len':min_len, 'max_len':max_len, 'name':name}
+            self.dataele[ele_num] = {'data_type': data_type, 'min_len':
+                                     min_len, 'max_len': max_len, 'name': name}
 
     def get_by_elem_num(self, ele_num):
         """

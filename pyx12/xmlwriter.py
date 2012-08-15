@@ -9,6 +9,7 @@
 import sys
 #import codecs
 
+
 class XMLWriter(object):
     """
     Doctest:
@@ -68,14 +69,14 @@ class XMLWriter(object):
         """
         Create a document type declaration (no internal subset)
         """
-        if pubid == None:
+        if pubid is None:
             self._write(
                 "<!DOCTYPE %s SYSTEM '%s'>\n" % (root, sysid))
         else:
             self._write(
-                "<!DOCTYPE %s PUBLIC '%s' '%s'>\n" \
+                "<!DOCTYPE %s PUBLIC '%s' '%s'>\n"
                 % (root, pubid, sysid))
-        
+
     def push(self, elem, attrs={}):
         """
         Create an element which will have child elements
@@ -102,11 +103,11 @@ class XMLWriter(object):
         Create an empty element
         """
         self._indent()
-        self._write("<"+elem)
+        self._write("<" + elem)
         for a in list(attrs.items()):
             self._write(" %s='%s'" % a)
         self.out.write("/>\n")
-        
+
     def pop(self):
         """
         Close an element started with the push() method
@@ -119,10 +120,10 @@ class XMLWriter(object):
 
     def __len__(self):
         return len(self.stack)
-    
+
     def _indent(self):
         self._write(self.indent * (len(self.stack) * 2))
-    
+
     def _escape_cont(self, text):
         if text is None:
             return None

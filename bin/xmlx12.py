@@ -14,7 +14,8 @@
 Create an X12 document from a XML data file
 """
 
-import os, os.path
+import os
+import os.path
 import sys
 import logging
 import codecs
@@ -27,14 +28,15 @@ import pyx12.segment
 import pyx12.xmlx12_simple
 
 #Global Variables
-__author__  = pyx12.__author__
-__status__  = pyx12.__status__
+__author__ = pyx12.__author__
+__status__ = pyx12.__status__
 __version__ = pyx12.__version__
-__date__    = pyx12.__date__
+__date__ = pyx12.__date__
 
 NodeType = {'element_start': 1, 'element_end': 15, 'attrib': 2, 'text': 3,
-    'CData': 4, 'entity_ref': 5, 'entity_decl':6, 'pi': 7, 'comment': 8,
-    'doc': 9, 'dtd': 10, 'doc_frag': 11, 'notation': 12, 'CData2': 14}
+            'CData': 4, 'entity_ref': 5, 'entity_decl': 6, 'pi': 7, 'comment': 8,
+            'doc': 9, 'dtd': 10, 'doc_frag': 11, 'notation': 12, 'CData2': 14}
+
 
 def usage():
     pgm_nme = os.path.basename(sys.argv[0])
@@ -45,6 +47,7 @@ def usage():
     sys.stdout.write('  -o <file>  Output file\n')
     sys.stdout.write('  -q         Quiet output\n')
     sys.stdout.write('  -v         Verbose output\n')
+
 
 def main():
     """Script main program."""
@@ -58,10 +61,11 @@ def main():
     logger = logging.getLogger('pyx12')
     #hdlr = logging.FileHandler('./run.log')
     stderr_hdlr = logging.StreamHandler()
-    formatter = logging.Formatter('%(asctime)s %(levelname)s %(module)s %(lineno)d %(message)s')
+    formatter = logging.Formatter(
+        '%(asctime)s %(levelname)s %(module)s %(lineno)d %(message)s')
     #hdlr.setFormatter(formatter)
     stderr_hdlr.setFormatter(formatter)
-    #logger.addHandler(hdlr) 
+    #logger.addHandler(hdlr)
     logger.addHandler(stderr_hdlr)
     logger.setLevel(logging.INFO)
     target_x12 = None
@@ -69,9 +73,12 @@ def main():
         if o == '-h':
             usage()
             return True
-        if o == '-v': logger.setLevel(logging.DEBUG)
-        if o == '-q': logger.setLevel(logging.ERROR)
-        if o == '-o': target_x12 = a
+        if o == '-v':
+            logger.setLevel(logging.DEBUG)
+        if o == '-q':
+            logger.setLevel(logging.ERROR)
+        if o == '-o':
+            target_x12 = a
         if o == '-l':
             try:
                 hdlr = logging.FileHandler(a)
@@ -104,7 +111,7 @@ def main():
                 return False
     except KeyboardInterrupt:
         print "\n[interrupt]"
-        
+
     return True
 
 #profile.run('x12n_document(src_filename)', 'pyx12.prof')

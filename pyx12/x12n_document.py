@@ -57,8 +57,8 @@ def reset_gs_counts(cur_map):
 
 
 def x12n_document(param, src_file, fd_997, fd_html,
-        fd_xmldoc=None,
-        xslt_files=[]):
+                  fd_xmldoc=None,
+                  xslt_files=[]):
     """
     Primary X12 validation function
     @param param: pyx12.param instance
@@ -103,7 +103,8 @@ def x12n_document(param, src_file, fd_997, fd_html,
         err_iter = error_handler.err_iter(errh)
     if fd_xmldoc:
         import x12xml_simple
-        xmldoc = x12xml_simple.x12xml_simple(fd_xmldoc, param.get('simple_dtd'))
+        xmldoc = x12xml_simple.x12xml_simple(
+            fd_xmldoc, param.get('simple_dtd'))
 
     #basedir = os.path.dirname(src_file)
     #erx = errh_xml.err_handler(basedir=basedir)
@@ -119,8 +120,8 @@ def x12n_document(param, src_file, fd_997, fd_html,
             node = control_map.getnodebypath('/ISA_LOOP/GS_LOOP/GS')
         else:
             try:
-                (node, pop_loops, push_loops) = walker.walk(node, seg, errh, \
-                    src.get_seg_count(), src.get_cur_line(), src.get_ls_id())
+                (node, pop_loops, push_loops) = walker.walk(node, seg, errh,
+                                                            src.get_seg_count(), src.get_cur_line(), src.get_ls_id())
             except errors.EngineError:
                 logger.error('Source file line %i' % (src.get_cur_line()))
                 raise
@@ -143,8 +144,8 @@ def x12n_document(param, src_file, fd_997, fd_html,
                 if map_file != map_file_new:
                     map_file = map_file_new
                     if map_file is None:
-                        raise pyx12.errors.EngineError("Map not found.  icvn=%s, fic=%s, vriic=%s" % \
-                            (icvn, fic, vriic))
+                        raise pyx12.errors.EngineError("Map not found.  icvn=%s, fic=%s, vriic=%s" %
+                                                       (icvn, fic, vriic))
                     cur_map = map_if.load_map_file(map_file, param, xslt_files)
                     if cur_map.id == '837':
                         src.check_837_lx = True
@@ -160,22 +161,24 @@ def x12n_document(param, src_file, fd_997, fd_html,
             elif seg.get_seg_id() == 'BHT':
                 if vriic in ('004010X094', '004010X094A1'):
                     tspc = seg.get_value('BHT02')
-                    logger.debug('icvn=%s, fic=%s, vriic=%s, tspc=%s' % \
-                        (icvn, fic, vriic, tspc))
-                    map_file_new = map_index_if.get_filename(icvn, vriic, fic, tspc)
+                    logger.debug('icvn=%s, fic=%s, vriic=%s, tspc=%s' %
+                                 (icvn, fic, vriic, tspc))
+                    map_file_new = map_index_if.get_filename(
+                        icvn, vriic, fic, tspc)
                     logger.debug('New map file: %s' % (map_file_new))
                     if map_file != map_file_new:
                         map_file = map_file_new
                         if map_file is None:
-                            raise pyx12.errors.EngineError("Map not found.  icvn=%s, fic=%s, vriic=%s, tspc=%s" % \
-                                (icvn, fic, vriic, tspc))
-                        cur_map = map_if.load_map_file(map_file, param, xslt_files)
+                            raise pyx12.errors.EngineError("Map not found.  icvn=%s, fic=%s, vriic=%s, tspc=%s" %
+                                                           (icvn, fic, vriic, tspc))
+                        cur_map = map_if.load_map_file(map_file,
+                                                       param, xslt_files)
                         src.check_837_lx = True if cur_map.id == '837' else False
                         logger.debug('Map file: %s' % (map_file))
                         apply_loop_count(node, cur_map)
                         node = cur_map.getnodebypath('/ISA_LOOP/GS_LOOP/ST_LOOP/HEADER/BHT')
-                errh.add_seg(node, seg, src.get_seg_count(), \
-                    src.get_cur_line(), src.get_ls_id())
+                errh.add_seg(node, seg, src.get_seg_count(),
+                             src.get_cur_line(), src.get_ls_id())
                 errh.handle_errors(src.pop_errors())
             elif seg.get_seg_id() == 'GE':
                 errh.handle_errors(src.pop_errors())
@@ -187,8 +190,8 @@ def x12n_document(param, src_file, fd_997, fd_html,
                 errh.handle_errors(src.pop_errors())
                 errh.close_st_loop(node, seg, src)
             else:
-                errh.add_seg(node, seg, src.get_seg_count(), \
-                    src.get_cur_line(), src.get_ls_id())
+                errh.add_seg(node, seg, src.get_seg_count(),
+                             src.get_cur_line(), src.get_ls_id())
                 errh.handle_errors(src.pop_errors())
 
             #errh.set_cur_line(src.get_cur_line())

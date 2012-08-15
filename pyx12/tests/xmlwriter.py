@@ -1,4 +1,6 @@
-import os.path, sys, os
+import os.path
+import sys
+import os
 import unittest
 try:
     from io import StringIO
@@ -8,6 +10,7 @@ except:
 import tempfile
 
 from pyx12.xmlwriter import XMLWriter
+
 
 class TestWriter(unittest.TestCase):
     """

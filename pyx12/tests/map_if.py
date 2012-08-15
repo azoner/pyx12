@@ -34,8 +34,10 @@ class ElementIsValidDate(unittest.TestCase):
         if map_path:
             param.set('map_path', map_path)
             param.set('pickle_path', map_path)
-        self.map = pyx12.map_if.load_map_file('837Q3.I.5010.X223.A1.xml', param)
-        self.node = self.map.getnodebypath('/ISA_LOOP/GS_LOOP/ST_LOOP/DETAIL/2000A/2000B/2300')
+        self.map = pyx12.map_if.load_map_file(
+            '837Q3.I.5010.X223.A1.xml', param)
+        self.node = self.map.getnodebypath(
+            '/ISA_LOOP/GS_LOOP/ST_LOOP/DETAIL/2000A/2000B/2300')
         # 1 096 TM, 2 434 RD8 & D8
         self.errh = pyx12.error_handler.errh_null()
 
@@ -78,7 +80,8 @@ class ElementIsValidDate(unittest.TestCase):
     def test_date_1251_ok1(self):
         self.errh.err_cde = None
         seg_data = pyx12.segment.Segment('DMG*D8*20040110*M~', '~', '*', ':')
-        node = self.map.getnodebypath('/ISA_LOOP/GS_LOOP/ST_LOOP/DETAIL/2000A/2000B/2010BA/DMG')
+        node = self.map.getnodebypath(
+            '/ISA_LOOP/GS_LOOP/ST_LOOP/DETAIL/2000A/2000B/2010BA/DMG')
         self.assertNotEqual(node, None)
         self.assertTrue(node.is_match_qual(seg_data, 'DMG', None))
         result = node.is_valid(seg_data, self.errh)
@@ -88,7 +91,8 @@ class ElementIsValidDate(unittest.TestCase):
     def test_date_1251_bad1(self):
         self.errh.err_cde = None
         seg_data = pyx12.segment.Segment('DMG*D8*20042110*M~', '~', '*', ':')
-        node = self.map.getnodebypath('/ISA_LOOP/GS_LOOP/ST_LOOP/DETAIL/2000A/2000B/2010BA/DMG')
+        node = self.map.getnodebypath(
+            '/ISA_LOOP/GS_LOOP/ST_LOOP/DETAIL/2000A/2000B/2010BA/DMG')
         self.assertNotEqual(node, None)
         result = node.is_valid(seg_data, self.errh)
         self.assertFalse(result)
@@ -96,8 +100,10 @@ class ElementIsValidDate(unittest.TestCase):
 
     def test_date_1251_bad2(self):
         self.errh.err_cde = None
-        seg_data = pyx12.segment.Segment('DMG*D8*20040109-20040110*M~', '~', '*', ':')
-        node = self.map.getnodebypath('/ISA_LOOP/GS_LOOP/ST_LOOP/DETAIL/2000A/2000B/2010BA/DMG')
+        seg_data = pyx12.segment.Segment(
+            'DMG*D8*20040109-20040110*M~', '~', '*', ':')
+        node = self.map.getnodebypath(
+            '/ISA_LOOP/GS_LOOP/ST_LOOP/DETAIL/2000A/2000B/2010BA/DMG')
         self.assertNotEqual(node, None)
         result = node.is_valid(seg_data, self.errh)
         self.assertFalse(result)
@@ -105,7 +111,8 @@ class ElementIsValidDate(unittest.TestCase):
 
     def test_date_1251_ok2(self):
         self.errh.err_cde = None
-        seg_data = pyx12.segment.Segment('DTP*434*RD8*20110101-20110220~', '~', '*', ':')
+        seg_data = pyx12.segment.Segment(
+            'DTP*434*RD8*20110101-20110220~', '~', '*', ':')
         node = self.map.getnodebypath('/ISA_LOOP/GS_LOOP/ST_LOOP/DETAIL/2000A/2000B/2300/DTP[434]')
         self.assertNotEqual(node, None)
         result = node.is_valid(seg_data, self.errh)
@@ -120,13 +127,16 @@ class SegmentIsValid(unittest.TestCase):
         if map_path:
             param.set('map_path', map_path)
             param.set('pickle_path', map_path)
-        self.map = pyx12.map_if.load_map_file('837Q3.I.5010.X223.A1.xml', param)
-        self.node = self.map.getnodebypath('/ISA_LOOP/GS_LOOP/ST_LOOP/DETAIL/2000A/2000B/2300')
+        self.map = pyx12.map_if.load_map_file(
+            '837Q3.I.5010.X223.A1.xml', param)
+        self.node = self.map.getnodebypath(
+            '/ISA_LOOP/GS_LOOP/ST_LOOP/DETAIL/2000A/2000B/2300')
         self.errh = pyx12.error_handler.errh_null()
 
     def test_segment_length(self):
         self.errh.err_cde = None
-        seg_data = pyx12.segment.Segment('DTP*435*D8*20040101*R~', '~', '*', ':')
+        seg_data = pyx12.segment.Segment(
+            'DTP*435*D8*20040101*R~', '~', '*', ':')
         #node = self.node.get_child_node_by_idx(2)
         node = self.node.getnodebypath('DTP[435]')
         result = node.is_valid(seg_data, self.errh)
@@ -142,7 +152,8 @@ class ElementIsValid(unittest.TestCase):
             param.set('map_path', map_path)
             param.set('pickle_path', map_path)
         self.map = pyx12.map_if.load_map_file('837.4010.X098.A1.xml', param)
-        self.node = self.map.getnodebypath('/ISA_LOOP/GS_LOOP/ST_LOOP/DETAIL/2000A/2000B/2300/CLM')
+        self.node = self.map.getnodebypath(
+            '/ISA_LOOP/GS_LOOP/ST_LOOP/DETAIL/2000A/2000B/2300/CLM')
         self.errh = pyx12.error_handler.errh_null()
 
     def test_len_ID(self):
@@ -263,7 +274,8 @@ class ElementIsValid(unittest.TestCase):
         self.assertEqual(node.id, 'CLM11-04')
         self.assertEqual(node.base_name, 'element')
         elem = pyx12.segment.Element('MI')
-        self.assertTrue(node.is_valid(elem, self.errh), 'Error Code: %s' % (self.errh.err_cde))
+        self.assertTrue(node.is_valid(
+            elem, self.errh), 'Error Code: %s' % (self.errh.err_cde))
         self.assertEqual(self.errh.err_cde, None)
 
     def test_external_codes_bad1(self):
@@ -359,7 +371,8 @@ class GetNodeByPath(unittest.TestCase):
         if map_path:
             self.param.set('map_path', map_path)
             self.param.set('pickle_path', map_path)
-        self.map = pyx12.map_if.load_map_file('837.4010.X098.A1.xml', self.param)
+        self.map = pyx12.map_if.load_map_file(
+            '837.4010.X098.A1.xml', self.param)
 
     def test_get_ISA(self):
         path = '/ISA_LOOP/ISA'
@@ -440,12 +453,14 @@ class CompositeRequirement(unittest.TestCase):
         if map_path:
             self.param.set('map_path', map_path)
             self.param.set('pickle_path', map_path)
-        self.map = pyx12.map_if.load_map_file('837.4010.X098.A1.xml', self.param)
+        self.map = pyx12.map_if.load_map_file(
+            '837.4010.X098.A1.xml', self.param)
         self.errh = pyx12.error_handler.errh_null()
 
     def test_comp_required_ok1(self):
         self.errh.err_cde = None
-        node = self.map.getnodebypath('/ISA_LOOP/GS_LOOP/ST_LOOP/DETAIL/2000A/2000B/2300/CLM')
+        node = self.map.getnodebypath(
+            '/ISA_LOOP/GS_LOOP/ST_LOOP/DETAIL/2000A/2000B/2300/CLM')
         node = node.get_child_node_by_idx(4)
         self.assertNotEqual(node, None)
         #self.assertEqual(node.id, 'CLM05', node.id)
@@ -470,7 +485,8 @@ class CompositeRequirement(unittest.TestCase):
 
     def test_comp_S_sub_R_ok3(self):
         self.errh.err_cde = None
-        map = pyx12.map_if.load_map_file('837Q3.I.5010.X223.A1.xml', self.param)
+        map = pyx12.map_if.load_map_file(
+            '837Q3.I.5010.X223.A1.xml', self.param)
         node = map.getnodebypath('/ISA_LOOP/GS_LOOP/ST_LOOP/DETAIL/2000A/2000B/2300/2400/SV2')
         node = node.get_child_node_by_idx(1)  # SV202
         self.assertNotEqual(node, None)
@@ -483,7 +499,8 @@ class CompositeRequirement(unittest.TestCase):
 
     def test_comp_required_fail1(self):
         self.errh.err_cde = None
-        node = self.map.getnodebypath('/ISA_LOOP/GS_LOOP/ST_LOOP/DETAIL/2000A/2000B/2300/CLM')
+        node = self.map.getnodebypath(
+            '/ISA_LOOP/GS_LOOP/ST_LOOP/DETAIL/2000A/2000B/2300/CLM')
         node = node.get_child_node_by_idx(4)
         self.assertNotEqual(node, None)
         self.assertEqual(node.base_name, 'composite')
@@ -497,9 +514,11 @@ class CompositeRequirement(unittest.TestCase):
         node = self.map.getnodebypath('/ISA_LOOP/GS_LOOP/ST_LOOP/HEADER/REF')
         self.assertNotEqual(node, None)
         self.assertEqual(node.id, 'REF')
-        self.assertEqual(node.get_path(), '/ISA_LOOP/GS_LOOP/ST_LOOP/HEADER/REF')
+        self.assertEqual(
+            node.get_path(), '/ISA_LOOP/GS_LOOP/ST_LOOP/HEADER/REF')
         self.assertEqual(node.base_name, 'segment')
-        seg_data = pyx12.segment.Segment('REF*87*004010X098A1**:1~', '~', '*', ':')
+        seg_data = pyx12.segment.Segment(
+            'REF*87*004010X098A1**:1~', '~', '*', ':')
         result = node.is_valid(seg_data, self.errh)
         self.assertFalse(result)
         self.assertEqual(self.errh.err_cde, '5')
@@ -529,7 +548,8 @@ class TrailingSpaces(unittest.TestCase):
 
     def test_no_trailing_AN_ok(self):
         self.errh.err_cde = None
-        node = self.map.getnodebypath('/ISA_LOOP/GS_LOOP/ST_LOOP/DETAIL/2000A/2000B/2300/CLM')
+        node = self.map.getnodebypath(
+            '/ISA_LOOP/GS_LOOP/ST_LOOP/DETAIL/2000A/2000B/2300/CLM')
         node = node.get_child_node_by_idx(0)
         self.assertNotEqual(node, None)
         self.assertEqual(node.id, 'CLM01')
@@ -541,7 +561,8 @@ class TrailingSpaces(unittest.TestCase):
 
     def test_trailing_AN_bad(self):
         self.errh.err_cde = None
-        node = self.map.getnodebypath('/ISA_LOOP/GS_LOOP/ST_LOOP/DETAIL/2000A/2000B/2300/CLM')
+        node = self.map.getnodebypath(
+            '/ISA_LOOP/GS_LOOP/ST_LOOP/DETAIL/2000A/2000B/2300/CLM')
         node = node.get_child_node_by_idx(0)
         self.assertNotEqual(node, None)
         self.assertEqual(node.id, 'CLM01')
@@ -567,16 +588,19 @@ class ElementRequirement(unittest.TestCase):
         node = self.map.getnodebypath('/ISA_LOOP/GS_LOOP/ST_LOOP/HEADER/REF')
         self.assertNotEqual(node, None)
         self.assertEqual(node.id, 'REF')
-        self.assertEqual(node.get_path(), '/ISA_LOOP/GS_LOOP/ST_LOOP/HEADER/REF')
+        self.assertEqual(
+            node.get_path(), '/ISA_LOOP/GS_LOOP/ST_LOOP/HEADER/REF')
         self.assertEqual(node.base_name, 'segment')
-        seg_data = pyx12.segment.Segment('REF*87*004010X098A1*Description*~', '~', '*', ':')
+        seg_data = pyx12.segment.Segment(
+            'REF*87*004010X098A1*Description*~', '~', '*', ':')
         result = node.is_valid(seg_data, self.errh)
         self.assertFalse(result)
         self.assertEqual(self.errh.err_cde, '10')
 
     def test_ele_required_ok1(self):
         self.errh.err_cde = None
-        node = self.map.getnodebypath('/ISA_LOOP/GS_LOOP/ST_LOOP/DETAIL/2000A/2000B/2300/CLM')
+        node = self.map.getnodebypath(
+            '/ISA_LOOP/GS_LOOP/ST_LOOP/DETAIL/2000A/2000B/2300/CLM')
         node = node.get_child_node_by_idx(1)
         self.assertNotEqual(node, None)
         #self.assertEqual(node.id, 'CLM05', node.id)
@@ -599,7 +623,8 @@ class MapTransform(unittest.TestCase):
             param.set('pickle_path', map_path)
         testfiledir = abspath('./files')
         xslt_files = [join(testfiledir, '835_test.xsl')]
-        self.map = pyx12.map_if.load_map_file('835.4010.X091.A1.xml', param, xslt_files)
+        self.map = pyx12.map_if.load_map_file(
+            '835.4010.X091.A1.xml', param, xslt_files)
         self.errh = pyx12.error_handler.errh_null()
 
     def ztest_alter_usage(self):
@@ -607,7 +632,8 @@ class MapTransform(unittest.TestCase):
         node = self.map.getnodebypath('/ISA_LOOP/GS_LOOP/ST_LOOP/HEADER/1000B')
         self.assertNotEqual(node, None)
         self.assertEqual(node.id, '1000B')
-        self.assertEqual(node.get_path(), '/ISA_LOOP/GS_LOOP/ST_LOOP/HEADER/1000B')
+        self.assertEqual(
+            node.get_path(), '/ISA_LOOP/GS_LOOP/ST_LOOP/HEADER/1000B')
         self.assertEqual(node.base_name, 'loop')
         self.assertEqual(node.usage, 'S')
 
@@ -663,17 +689,21 @@ class NodeEquality(unittest.TestCase):
 
     def test_eq_1(self):
         self.errh.err_cde = None
-        node1 = self.map.getnodebypath('/ISA_LOOP/GS_LOOP/ST_LOOP/DETAIL/2000A/2000B/2300')
+        node1 = self.map.getnodebypath(
+            '/ISA_LOOP/GS_LOOP/ST_LOOP/DETAIL/2000A/2000B/2300')
         self.assertNotEqual(node1, None)
-        node2 = self.map.getnodebypath('/ISA_LOOP/GS_LOOP/ST_LOOP/DETAIL/2000A/2000B/2300')
+        node2 = self.map.getnodebypath(
+            '/ISA_LOOP/GS_LOOP/ST_LOOP/DETAIL/2000A/2000B/2300')
         self.assertNotEqual(node2, None)
         self.assertTrue(node1 == node2)
 
     def test_neq_1(self):
         self.errh.err_cde = None
-        node1 = self.map.getnodebypath('/ISA_LOOP/GS_LOOP/ST_LOOP/DETAIL/2000A/2000B/2300')
+        node1 = self.map.getnodebypath(
+            '/ISA_LOOP/GS_LOOP/ST_LOOP/DETAIL/2000A/2000B/2300')
         self.assertNotEqual(node1, None)
-        node2 = self.map.getnodebypath('/ISA_LOOP/GS_LOOP/ST_LOOP/DETAIL/2000A/2000B/2300/2400')
+        node2 = self.map.getnodebypath(
+            '/ISA_LOOP/GS_LOOP/ST_LOOP/DETAIL/2000A/2000B/2300/2400')
         self.assertNotEqual(node2, None)
         self.assertFalse(node1 == node2)
 
@@ -685,8 +715,10 @@ class LoopIsMatch(unittest.TestCase):
         if map_path:
             param.set('map_path', map_path)
             param.set('pickle_path', map_path)
-        self.map = pyx12.map_if.load_map_file('837Q3.I.5010.X223.A1.xml', param)
-        self.node = self.map.getnodebypath('/ISA_LOOP/GS_LOOP/ST_LOOP/DETAIL/2000A/2000B/2300')
+        self.map = pyx12.map_if.load_map_file(
+            '837Q3.I.5010.X223.A1.xml', param)
+        self.node = self.map.getnodebypath(
+            '/ISA_LOOP/GS_LOOP/ST_LOOP/DETAIL/2000A/2000B/2300')
         self.errh = pyx12.error_handler.errh_null()
 
     def test_match_self(self):
@@ -724,7 +756,8 @@ class GetNodeBySegment(unittest.TestCase):
         node = self.map.getnodebypath('/ISA_LOOP/GS_LOOP/ST_LOOP/DETAIL/2000')
         self.assertNotEqual(node, None)
         self.assertEqual(node.id, '2000')
-        seg_data = pyx12.segment.Segment('NM1*IL*1*User*Test****ZZ*XX1234', '~', '*', ':')
+        seg_data = pyx12.segment.Segment(
+            'NM1*IL*1*User*Test****ZZ*XX1234', '~', '*', ':')
         loop_node = node.get_child_loop_node(seg_data)
         self.assertNotEqual(loop_node, None)
         self.assertEqual(loop_node.id, '2100A')
@@ -755,8 +788,10 @@ class MatchSegmentQual(unittest.TestCase):
         if map_path:
             param.set('map_path', map_path)
             param.set('pickle_path', map_path)
-        self.map = pyx12.map_if.load_map_file('837Q3.I.5010.X223.A1.xml', param)
-        self.node = self.map.getnodebypath('/ISA_LOOP/GS_LOOP/ST_LOOP/DETAIL/2000A/2000B/2300')
+        self.map = pyx12.map_if.load_map_file(
+            '837Q3.I.5010.X223.A1.xml', param)
+        self.node = self.map.getnodebypath(
+            '/ISA_LOOP/GS_LOOP/ST_LOOP/DETAIL/2000A/2000B/2300')
         self.errh = pyx12.error_handler.errh_null()
 
     def test_match_plain_ok1(self):
@@ -773,10 +808,12 @@ class MatchSegmentQual(unittest.TestCase):
 
     def test_match_qual_ok2(self):
         self.errh.err_cde = None
-        node = self.map.getnodebypath('/ISA_LOOP/GS_LOOP/ST_LOOP/DETAIL/2000A/2010AA/REF')
+        node = self.map.getnodebypath(
+            '/ISA_LOOP/GS_LOOP/ST_LOOP/DETAIL/2000A/2010AA/REF')
         self.assertNotEqual(node, None)
         self.assertEqual(node.id, 'REF')
-        self.assertEqual(node.get_path(), '/ISA_LOOP/GS_LOOP/ST_LOOP/DETAIL/2000A/2010AA/REF')
+        self.assertEqual(node.get_path(
+        ), '/ISA_LOOP/GS_LOOP/ST_LOOP/DETAIL/2000A/2010AA/REF')
         self.assertEqual(node.base_name, 'segment')
         seg_data = pyx12.segment.Segment('REF*EI*5555~', '~', '*', ':')
         self.assertTrue(node.is_match_qual(seg_data, 'REF', 'EI'))
