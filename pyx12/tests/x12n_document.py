@@ -34,7 +34,7 @@ class X12DocumentTestCase(unittest.TestCase):
 
     def _isX12Diff(self, fd1, fd2):
         """
-        Just want to know if the important bits of the 997 are different
+        Just want to know if the important bits of the x12 docs are different
         """
         src1 = pyx12.x12file.X12Reader(fd1)
         src2 = pyx12.x12file.X12Reader(fd2)
@@ -48,7 +48,6 @@ class X12DocumentTestCase(unittest.TestCase):
         self.assertIn(datakey, datafiles)
         self.assertIn('source', datafiles[datakey])
         self.assertIn('res997', datafiles[datakey])
-        fd = self._makeFd(datafiles['simple_837p']['source'])
         fd_source = self._makeFd(datafiles[datakey]['source'])
         fd_997_base = self._makeFd(datafiles[datakey]['res997'])
         fd_997 = StringIO()
@@ -60,6 +59,24 @@ class X12DocumentTestCase(unittest.TestCase):
         hdlr = logging.NullHandler()
         #hdlr = logging.StreamHandler()
         #hdlr.setFormatter(formatter)
+        logger.addHandler(hdlr)
+        pyx12.x12n_document.x12n_document(
+            self.param, fd_source, fd_997, fd_html, None)
+        fd_997.seek(0)
+        self._isX12Diff(fd_997_base, fd_997)
+
+    def _test_999(self, datakey):
+        self.assertIn(datakey, datafiles)
+        self.assertIn('source', datafiles[datakey])
+        self.assertIn('resAck', datafiles[datakey])
+        fd_source = self._makeFd(datafiles[datakey]['source'])
+        fd_997_base = self._makeFd(datafiles[datakey]['resAck'])
+        fd_997 = StringIO()
+        fd_html = StringIO()
+        import logging
+        logger = logging.getLogger('pyx12')
+        formatter = logging.Formatter('%(asctime)s %(levelname)s %(message)s')
+        hdlr = logging.NullHandler()
         logger.addHandler(hdlr)
         pyx12.x12n_document.x12n_document(
             self.param, fd_source, fd_997, fd_html, None)
@@ -134,3 +151,9 @@ class X12Structure(X12DocumentTestCase):
 
     def test_simple_837p(self):
         self._test_997('simple_837p')
+
+
+class Test5010(X12DocumentTestCase):
+
+    def test_834_lui_id_5010(self):
+        self._test_999('834_lui_id_5010')
