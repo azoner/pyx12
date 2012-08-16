@@ -8,15 +8,13 @@
 #
 ######################################################################
 
-#    $Id$
-
 """
 Interface to normalized Data Elements
 """
 
-import os
 import os.path
 import xml.etree.cElementTree as et
+from pkg_resources import resource_stream
 
 # Intrapackage imports
 from pyx12.errors import EngineError
@@ -31,10 +29,10 @@ class DataElements(object):
     Interface to normalized Data Elements
     """
 
-    def __init__(self, base_path):
+    def __init__(self, base_path=None):
         """
         Initialize the list of data elements
-        @param base_path: path to dataele.xml
+        @param base_path: deprecated
         @type base_path: string
 
         @note: self.dataele - map to the data element
@@ -42,8 +40,8 @@ class DataElements(object):
         """
 
         self.dataele = {}
-        code_file = os.path.join(base_path, 'dataele.xml')
-        for eElem in et.parse(code_file).iter('data_ele'):
+        fd = resource_stream(__name__, os.path.join('map', 'dataele.xml'))
+        for eElem in et.parse(fd).iter('data_ele'):
             ele_num = eElem.get('ele_num')
             data_type = eElem.get('data_type')
             min_len = int(eElem.get('min_len'))

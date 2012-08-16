@@ -16,6 +16,8 @@ Locate the correct xml map file given:
     - Transaction Set Purpose Code (BHT02) (For 278 only)
 """
 
+import os.path
+from pkg_resources import resource_stream
 import xml.etree.cElementTree as et
 
 
@@ -23,14 +25,15 @@ class map_index(object):
     """
     Interface to the maps.xml file
     """
-    def __init__(self, map_index_file):
+    def __init__(self, map_index_file=None):
         """
-        @param map_index_file: Absolute path of maps.xml
+        @param map_index_file: deprecated
         @type map_index_file: string
         """
         self.maps = []
 
-        t = et.parse(map_index_file)
+        fd = resource_stream(__name__, os.path.join('map', 'maps.xml'))
+        t = et.parse(fd)
         for v in t.iter('version'):
             icvn = v.get('icvn')
             for m in v.iterfind('map'):

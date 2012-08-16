@@ -7,16 +7,12 @@ except:
 import pyx12.error_handler
 import pyx12.x12n_document
 import pyx12.params
-from pyx12.tests.support import getMapPath
 from pyx12.tests.x12testdata import datafiles
 
 
 class X12DocumentTestCase(unittest.TestCase):
     def setUp(self):
-        map_path = getMapPath()
         self.param = pyx12.params.params('pyx12.conf.xml')
-        if map_path:
-            self.param.set('map_path', map_path)
 
     def _makeFd(self, x12str=None):
         try:

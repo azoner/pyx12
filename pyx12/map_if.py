@@ -16,6 +16,7 @@ import string
 import sys
 import re
 import xml.etree.cElementTree as et
+from pkg_resources import resource_stream
 
 # Intrapackage imports
 from errors import EngineError
@@ -188,9 +189,9 @@ class map_if(x12_node):
         #self.cur_iter_node = self
         self.param = param
         #global codes
-        self.ext_codes = codes.ExternalCodes(param.get('map_path'),
+        self.ext_codes = codes.ExternalCodes(None,
                                              param.get('exclude_external_codes'))
-        self.data_elements = dataele.DataElements(param.get('map_path'))
+        self.data_elements = dataele.DataElements()
 
         self.id = eroot.get('xid')
 
@@ -1411,29 +1412,24 @@ class composite_if(x12_node):
         return True
 
 
-def load_map_file(map_file, param, xslt_files=None):
+def load_map_file(map_file, param):
     """
     Create the map object from a file
     @param map_file: absolute path for file
     @type map_file: string
-    @param xslt_files: deprecated: list of absolute paths of xsl files
-    @type xslt_files: list[string]
     @rtype: pyx12.map_if
     """
     logger = logging.getLogger('pyx12')
-    map_path = param.get('map_path')
-    map_full = os.path.join(map_path, map_file)
+    map_fd = resource_stream(__name__, os.path.join('map', map_file))
     imap = None
-    if xslt_files is None:
-        xslt_files = []
     try:
-        logger.debug('Create map from %s' % (map_full))
-        etree = et.parse(map_full)
+        logger.debug('Create map from %s' % (map_file))
+        etree = et.parse(map_fd)
         imap = map_if(etree.getroot(), param)
     except AssertionError:
-        logger.error('Load of map file failed: %s' % (map_full))
+        logger.error('Load of map file failed: %s' % (map_file))
         raise
     except Exception:
         raise
-        raise EngineError('Load of map file failed: %s' % (map_full))
+        #raise EngineError('Load of map file failed: %s' % (map_file))
     return imap

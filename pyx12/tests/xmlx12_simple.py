@@ -11,22 +11,15 @@ import pyx12.x12file
 import pyx12.x12xml_simple
 import pyx12.xmlx12_simple
 import pyx12.params
-from pyx12.tests.support import getMapPath
 from pyx12.tests.x12testdata import datafiles
 
 
 class XmlTransformTestCase(unittest.TestCase):
     def setUp(self):
-        map_path = getMapPath()
         self.param = pyx12.params.params('pyx12.conf.xml')
-        if map_path:
-            self.param.set('map_path', map_path)
         self.logger = logging.getLogger('pyx12')
-        #self.logger.setLevel(logging.DEBUG)
         formatter = logging.Formatter('%(asctime)s %(levelname)s %(message)s')
         hdlr = logging.NullHandler()
-        #hdlr = logging.StreamHandler()
-        #hdlr.setFormatter(formatter)
         self.logger.addHandler(hdlr)
 
     def _makeFd(self, x12str=None):

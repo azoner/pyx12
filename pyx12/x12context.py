@@ -19,8 +19,8 @@ Interface to read and alter segments
 """
 #G{classtree X12DataNode}
 
-import os
-import os.path
+#import os
+#import os.path
 
 # Intrapackage imports
 import pyx12
@@ -739,10 +739,8 @@ class X12ContextReader(object):
         @type src_file_obj: string
         @rtype: boolean
         """
-        map_path = param.get('map_path')
         self.param = param
         self.errh = error_handler.errh_list()
-        self.xslt_files = None
         self.icvn = None
         self.fic = None
         self.vriic = None
@@ -753,10 +751,8 @@ class X12ContextReader(object):
 
         #Get Map of Control Segments
         self.map_file = 'x12.control.00501.xml' if self.src.icvn == '00501' else 'x12.control.00401.xml'
-        self.control_map = map_if.load_map_file(
-            os.path.join(map_path, self.map_file), param)
-        self.map_index_if = map_index.map_index(
-            os.path.join(map_path, 'maps.xml'))
+        self.control_map = map_if.load_map_file(self.map_file, param)
+        self.map_index_if = map_index.map_index()
         self.x12_map_node = self.control_map.getnodebypath('/ISA_LOOP/ISA')
         self.walker = walk_tree()
 
@@ -808,7 +804,7 @@ class X12ContextReader(object):
                         if self.map_file is None:
                             raise pyx12.errors.EngineError("Map not found.  icvn=%s, fic=%s, vriic=%s" %
                                                            (icvn, fic, vriic))
-                        cur_map = map_if.load_map_file(self.map_file, self.param, self.xslt_files)
+                        cur_map = map_if.load_map_file(self.map_file, self.param)
                         if cur_map.id == '837':
                             self.src.check_837_lx = True
                         else:
@@ -832,7 +828,7 @@ class X12ContextReader(object):
                                     (icvn, fic, vriic, tspc)
                                 raise pyx12.errors.EngineError(err_str)
                             cur_map = map_if.load_map_file(self.map_file,
-                                                           self.param, self.xslt_files)
+                                                           self.param)
                             if cur_map.id == '837':
                                 self.src.check_837_lx = True
                             else:

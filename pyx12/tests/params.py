@@ -3,7 +3,7 @@ import sys
 import os.path
 
 import pyx12.params
-from pyx12.errors import *
+#from pyx12.errors import EngineError
 
 
 class Default(unittest.TestCase):
@@ -55,8 +55,6 @@ class ReadConfigFile(unittest.TestCase):
             os.path.join(test_path, 'pyx12test.conf.xml'))
 
     def test_changed(self):
-        self.assertEqual(
-            self.param.get('map_path'), '/opt1/local/share/pyx12/map')
         self.assertEqual(self.param.get(
             'exclude_external_codes'), 'taxonomy,states')
         self.assertEqual(self.param.get('ignore_syntax'), True)

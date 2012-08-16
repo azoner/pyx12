@@ -8,18 +8,14 @@ import pyx12.map_if
 import pyx12.params
 import pyx12.path
 import pyx12.segment
-from pyx12.tests.support import getMapPath
 
 
 class Explicit_Loops(unittest.TestCase):
 
     def setUp(self):
-        map_path = getMapPath()
+
         self.walker = walk_tree()
         param = pyx12.params.params('pyx12.conf.xml')
-        if map_path:
-            param.set('map_path', map_path)
-            param.set('pickle_path', map_path)
         self.map = pyx12.map_if.load_map_file('837.4010.X098.A1.xml', param)
         self.errh = pyx12.error_handler.errh_null()
         #self.logger = logging.getLogger('pyx12')
@@ -144,12 +140,10 @@ class Implicit_Loops(unittest.TestCase):
     """
 
     def setUp(self):
-        map_path = getMapPath()
+
         self.walker = walk_tree()
         self.param = pyx12.params.params('pyx12.conf.xml')
-        if map_path:
-            self.param.set('map_path', map_path)
-            self.param.set('pickle_path', map_path)
+
         self.map = pyx12.map_if.load_map_file(
             '837.4010.X098.A1.xml', self.param)
         self.errh = pyx12.error_handler.errh_null()
@@ -306,12 +300,10 @@ class Implicit_Loops(unittest.TestCase):
                          pop_to_parent_loop(node).get_path())
 
     def test_837i_2420a(self):
-        map_path = getMapPath()
+
         walker = walk_tree()
         param = pyx12.params.params('pyx12.conf.xml')
-        if map_path:
-            param.set('map_path', map_path)
-            param.set('pickle_path', map_path)
+
         cmap = pyx12.map_if.load_map_file(
             '837Q3.I.5010.X223.A1.xml', self.param)
         errh = pyx12.error_handler.errh_null()
@@ -331,12 +323,10 @@ class Implicit_Loops(unittest.TestCase):
 
     def test_999_2110_IK4(self):
         #self.assertNotEqual('A', 'B')
-        map_path = getMapPath()
+
         walker = walk_tree()
         param = pyx12.params.params('pyx12.conf.xml')
-        if map_path:
-            param.set('map_path', map_path)
-            param.set('pickle_path', map_path)
+
         cmap = pyx12.map_if.load_map_file('999.5010.xml', self.param)
         errh = pyx12.error_handler.errh_null()
         path = '/ISA_LOOP/GS_LOOP/ST_LOOP/HEADER/2000/2100/IK3'
@@ -365,12 +355,10 @@ class Implicit_Loops(unittest.TestCase):
 class SegmentWalk(unittest.TestCase):
 
     def setUp(self):
-        map_path = getMapPath()
+
         self.walker = walk_tree()
         self.param = pyx12.params.params('pyx12.conf.xml')
-        if map_path:
-            self.param.set('map_path', map_path)
-            self.param.set('pickle_path', map_path)
+
         self.map = pyx12.map_if.load_map_file(
             '837.4010.X098.A1.xml', self.param)
         self.errh = pyx12.error_handler.errh_null()
@@ -438,12 +426,10 @@ class SegmentWalk(unittest.TestCase):
 class SegmentWalk278(unittest.TestCase):
 
     def setUp(self):
-        map_path = getMapPath()
+
         self.walker = walk_tree()
         self.param = pyx12.params.params('pyx12.conf.xml')
-        if map_path:
-            self.param.set('map_path', map_path)
-            self.param.set('pickle_path', map_path)
+
         self.map = pyx12.map_if.load_map_file(
             '278.4010.X094.A1.xml', self.param)
         self.errh = pyx12.error_handler.errh_null()
@@ -466,12 +452,10 @@ class SegmentWalk278(unittest.TestCase):
 class Segment_ID_Checks(unittest.TestCase):
 
     def setUp(self):
-        map_path = getMapPath()
+
         self.walker = walk_tree()
         param = pyx12.params.params('pyx12.conf.xml')
-        if map_path:
-            param.set('map_path', map_path)
-            param.set('pickle_path', map_path)
+
         self.map = pyx12.map_if.load_map_file('837.4010.X098.A1.xml', param)
         self.errh = pyx12.error_handler.errh_null()
         self.node = self.map.getnodebypath('/ISA_LOOP/GS_LOOP/ST_LOOP/ST')
@@ -502,12 +486,10 @@ class Segment_ID_Checks(unittest.TestCase):
 class Counting(unittest.TestCase):
 
     def setUp(self):
-        map_path = getMapPath()
+
         self.walker = walk_tree()
         param = pyx12.params.params('pyx12.conf.xml')
-        if map_path:
-            param.set('map_path', map_path)
-            param.set('pickle_path', map_path)
+
         self.map = pyx12.map_if.load_map_file('270.4010.X092.A1.xml', param)
         self.errh = pyx12.error_handler.errh_null()
         #self.node = self.map.getnodebypath('/ISA_LOOP/GS_LOOP/ST_LOOP/DETAIL/2000A/2000B/2100B/N4')
@@ -570,12 +552,10 @@ class Counting(unittest.TestCase):
 class LoopCounting(unittest.TestCase):
 
     def setUp(self):
-        map_path = getMapPath()
+
         self.walker = walk_tree()
         param = pyx12.params.params('pyx12.conf.xml')
-        if map_path:
-            param.set('map_path', map_path)
-            param.set('pickle_path', map_path)
+
         self.map = pyx12.map_if.load_map_file('837.4010.X098.A1.xml', param)
         self.errh = pyx12.error_handler.errh_null()
 
@@ -609,12 +589,10 @@ class LoopCounting(unittest.TestCase):
 class CountOrdinal(unittest.TestCase):
 
     def setUp(self):
-        map_path = getMapPath()
+
         self.walker = walk_tree()
         param = pyx12.params.params('pyx12.conf.xml')
-        if map_path:
-            param.set('map_path', map_path)
-            param.set('pickle_path', map_path)
+
         self.map = pyx12.map_if.load_map_file('834.5010.X220.A1.xml', param)
         self.errh = pyx12.error_handler.errh_null()
         #self.node = self.map.getnodebypath('/ISA_LOOP/GS_LOOP/ST_LOOP/DETAIL/2000A/2000B/2100B/N4')
@@ -726,12 +704,10 @@ class CountOrdinal(unittest.TestCase):
 class LoopPathPopPush837(unittest.TestCase):
 
     def setUp(self):
-        map_path = getMapPath()
+
         self.walker = walk_tree()
         param = pyx12.params.params('pyx12.conf.xml')
-        if map_path:
-            param.set('map_path', map_path)
-            param.set('pickle_path', map_path)
+
         self.errh = pyx12.error_handler.errh_null()
         self.map = pyx12.map_if.load_map_file('837.4010.X098.A1.xml', param)
 
@@ -761,12 +737,10 @@ class LoopPathPopPush837(unittest.TestCase):
 class LoopPathPopPush834(unittest.TestCase):
 
     def setUp(self):
-        map_path = getMapPath()
+
         self.walker = walk_tree()
         param = pyx12.params.params('pyx12.conf.xml')
-        if map_path:
-            param.set('map_path', map_path)
-            param.set('pickle_path', map_path)
+
         self.map = pyx12.map_if.load_map_file('834.5010.X220.A1.xml', param)
         self.errh = pyx12.error_handler.errh_null()
 
@@ -841,12 +815,10 @@ class LoopPathPopPush834(unittest.TestCase):
 
 class Bug837i(unittest.TestCase):
     def setUp(self):
-        map_path = getMapPath()
+
         self.walker = walk_tree()
         self.param = pyx12.params.params('pyx12.conf.xml')
-        if map_path:
-            self.param.set('map_path', map_path)
-            self.param.set('pickle_path', map_path)
+
         self.map = pyx12.map_if.load_map_file(
             '837Q3.I.5010.X223.A1.xml', self.param)
         self.errh = pyx12.error_handler.errh_null()

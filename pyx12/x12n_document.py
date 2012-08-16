@@ -13,8 +13,8 @@ Parse a ANSI X12N data file.  Validate against a map and codeset values.
 Create XML, HTML, and 997/999 documents based on the data file.
 """
 
-import os
-import os.path
+#import os
+#import os.path
 import logging
 
 # Intrapackage imports
@@ -73,13 +73,8 @@ def x12n_document(param, src_file, fd_997, fd_html,
     @type fd_xmldoc: file descriptor
     @rtype: boolean
     """
-    map_path = param.get('map_path')
     logger = logging.getLogger('pyx12')
-    logger.debug('MAP PATH: %s' % (map_path))
     errh = pyx12.error_handler.err_handler()
-    #errh = errh_xml.errh_list()
-    #errh.register()
-    #param.set('checkdate', None)
 
     # Get X12 DATA file
     try:
@@ -91,8 +86,8 @@ def x12n_document(param, src_file, fd_997, fd_html,
     #Get Map of Control Segments
     map_file = 'x12.control.00501.xml' if src.icvn == '00501' else 'x12.control.00401.xml'
     logger.debug('X12 control file: %s' % (map_file))
-    control_map = pyx12.map_if.load_map_file(os.path.join(map_path, map_file), param)
-    map_index_if = pyx12.map_index.map_index(os.path.join(map_path, 'maps.xml'))
+    control_map = pyx12.map_if.load_map_file(map_file, param)
+    map_index_if = pyx12.map_index.map_index()
     node = control_map.getnodebypath('/ISA_LOOP/ISA')
     walker = walk_tree()
     icvn = fic = vriic = tspc = None
@@ -171,8 +166,7 @@ def x12n_document(param, src_file, fd_997, fd_html,
                         if map_file is None:
                             raise pyx12.errors.EngineError("Map not found.  icvn=%s, fic=%s, vriic=%s, tspc=%s" %
                                                            (icvn, fic, vriic, tspc))
-                        cur_map = pyx12.map_if.load_map_file(map_file,
-                                                       param)
+                        cur_map = pyx12.map_if.load_map_file(map_file, param)
                         src.check_837_lx = True if cur_map.id == '837' else False
                         logger.debug('Map file: %s' % (map_file))
                         apply_loop_count(node, cur_map)

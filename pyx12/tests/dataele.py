@@ -1,20 +1,12 @@
 import unittest
-import sys
-from os.path import dirname, abspath, join, isdir, isfile
 
 import pyx12.dataele
 from pyx12.errors import EngineError
-import pyx12.params
-from pyx12.tests.support import getMapPath
 
 
 class BadDataElem(unittest.TestCase):
     def setUp(self):
-        map_path = getMapPath()
-        params = pyx12.params.params()
-        if map_path is None:
-            map_path = params.get('map_path')
-        self.de = pyx12.dataele.DataElements(map_path)
+        self.de = pyx12.dataele.DataElements()
 
     def testNone(self):
         self.assertRaises(EngineError, self.de.get_by_elem_num, None)
@@ -28,11 +20,7 @@ class BadDataElem(unittest.TestCase):
 class LookupDataElem(unittest.TestCase):
 
     def setUp(self):
-        map_path = getMapPath()
-        params = pyx12.params.params()
-        if map_path is None:
-            map_path = params.get('map_path')
-        self.de = pyx12.dataele.DataElements(map_path)
+        self.de = pyx12.dataele.DataElements()
 
     def testOK_AN(self):
         self.assertEqual(self.de.get_by_elem_num('1204'), {'max_len': 50, 'name': 'Plan Coverage Description', 'data_type': 'AN', 'min_len': 1})

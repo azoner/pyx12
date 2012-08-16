@@ -1,21 +1,15 @@
-import sys
 import unittest
-from os.path import dirname, abspath, join, isdir, isfile
 
 import pyx12.map_index
 import pyx12.params
-from pyx12.tests.support import getMapPath
 
 
 class GetFilename(unittest.TestCase):
     """
     """
     def setUp(self):
-        map_path = getMapPath()
         param = pyx12.params.params('pyx12.conf.xml')
-        if not map_path:
-            map_path = param.get('map_path')
-        self.idx = pyx12.map_index.map_index(join(map_path, 'maps.xml'))
+        self.idx = pyx12.map_index.map_index()
 
     def test_get_837p(self):
         self.assertEqual(self.idx.get_filename(

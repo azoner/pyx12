@@ -1,39 +1,15 @@
-import sys
-from os.path import dirname, abspath, join, isdir
 import unittest
 
 import pyx12.error_handler
-#from pyx12.errors import *
 import pyx12.map_if
 import pyx12.params
 import pyx12.path
 import pyx12.segment
-from pyx12.tests.support import getMapPath
-
-
-def getMapPathX():
-    """
-    First, try relative path
-    Them look in standard installation location
-    """
-    base_dir = dirname(dirname(abspath(sys.argv[0])))
-    map_path = join(base_dir, 'map')
-    if isdir(map_path):
-        return map_path
-    params = pyx12.params.params()
-    map_path = params.get('map_path')
-    if isdir(map_path):
-        return map_path
-    return None
 
 
 class ElementIsValidDate(unittest.TestCase):
     def setUp(self):
-        map_path = getMapPath()
         param = pyx12.params.params('pyx12.conf.xml')
-        if map_path:
-            param.set('map_path', map_path)
-            param.set('pickle_path', map_path)
         self.map = pyx12.map_if.load_map_file(
             '837Q3.I.5010.X223.A1.xml', param)
         self.node = self.map.getnodebypath(
@@ -122,11 +98,7 @@ class ElementIsValidDate(unittest.TestCase):
 
 class SegmentIsValid(unittest.TestCase):
     def setUp(self):
-        map_path = getMapPath()
         param = pyx12.params.params('pyx12.conf.xml')
-        if map_path:
-            param.set('map_path', map_path)
-            param.set('pickle_path', map_path)
         self.map = pyx12.map_if.load_map_file(
             '837Q3.I.5010.X223.A1.xml', param)
         self.node = self.map.getnodebypath(
@@ -146,11 +118,7 @@ class SegmentIsValid(unittest.TestCase):
 
 class ElementIsValid(unittest.TestCase):
     def setUp(self):
-        map_path = getMapPath()
         param = pyx12.params.params('pyx12.conf.xml')
-        if map_path:
-            param.set('map_path', map_path)
-            param.set('pickle_path', map_path)
         self.map = pyx12.map_if.load_map_file('837.4010.X098.A1.xml', param)
         self.node = self.map.getnodebypath(
             '/ISA_LOOP/GS_LOOP/ST_LOOP/DETAIL/2000A/2000B/2300/CLM')
@@ -366,11 +334,7 @@ class ElementIsValid(unittest.TestCase):
 
 class GetNodeByPath(unittest.TestCase):
     def setUp(self):
-        map_path = getMapPath()
         self.param = pyx12.params.params('pyx12.conf.xml')
-        if map_path:
-            self.param.set('map_path', map_path)
-            self.param.set('pickle_path', map_path)
         self.map = pyx12.map_if.load_map_file(
             '837.4010.X098.A1.xml', self.param)
 
@@ -448,11 +412,7 @@ class GetNodeByPath(unittest.TestCase):
 
 class CompositeRequirement(unittest.TestCase):
     def setUp(self):
-        map_path = getMapPath()
         self.param = pyx12.params.params('pyx12.conf.xml')
-        if map_path:
-            self.param.set('map_path', map_path)
-            self.param.set('pickle_path', map_path)
         self.map = pyx12.map_if.load_map_file(
             '837.4010.X098.A1.xml', self.param)
         self.errh = pyx12.error_handler.errh_null()
@@ -526,11 +486,7 @@ class CompositeRequirement(unittest.TestCase):
 
 class TrailingSpaces(unittest.TestCase):
     def setUp(self):
-        map_path = getMapPath()
         param = pyx12.params.params('pyx12.conf.xml')
-        if map_path:
-            param.set('map_path', map_path)
-            param.set('pickle_path', map_path)
         self.map = pyx12.map_if.load_map_file('837.4010.X098.A1.xml', param)
         self.errh = pyx12.error_handler.errh_null()
 
@@ -575,11 +531,7 @@ class TrailingSpaces(unittest.TestCase):
 
 class ElementRequirement(unittest.TestCase):
     def setUp(self):
-        map_path = getMapPath()
         param = pyx12.params.params('pyx12.conf.xml')
-        if map_path:
-            param.set('map_path', map_path)
-            param.set('pickle_path', map_path)
         self.map = pyx12.map_if.load_map_file('837.4010.X098.A1.xml', param)
         self.errh = pyx12.error_handler.errh_null()
 
@@ -611,79 +563,9 @@ class ElementRequirement(unittest.TestCase):
         self.assertEqual(self.errh.err_cde, None)
 
 
-class MapTransform(unittest.TestCase):
-    """
-    Alter a map using XSL transforms
-    """
-    def setUp(self):
-        map_path = getMapPath()
-        param = pyx12.params.params('pyx12.conf.xml')
-        if map_path:
-            param.set('map_path', map_path)
-            param.set('pickle_path', map_path)
-        testfiledir = abspath('./files')
-        xslt_files = [join(testfiledir, '835_test.xsl')]
-        self.map = pyx12.map_if.load_map_file(
-            '835.4010.X091.A1.xml', param, xslt_files)
-        self.errh = pyx12.error_handler.errh_null()
-
-    def ztest_alter_usage(self):
-        self.errh.err_cde = None
-        node = self.map.getnodebypath('/ISA_LOOP/GS_LOOP/ST_LOOP/HEADER/1000B')
-        self.assertNotEqual(node, None)
-        self.assertEqual(node.id, '1000B')
-        self.assertEqual(
-            node.get_path(), '/ISA_LOOP/GS_LOOP/ST_LOOP/HEADER/1000B')
-        self.assertEqual(node.base_name, 'loop')
-        self.assertEqual(node.usage, 'S')
-
-    def ztest_add_valid_code(self):
-        self.errh.err_cde = None
-        node_str = '/ISA_LOOP/GS_LOOP/ST_LOOP/HEADER/BPR'
-        node = self.map.getnodebypath(node_str)
-        node = node.get_child_node_by_idx(0)
-        self.assertNotEqual(node, None)
-        self.assertEqual(node.id, 'BPR01')
-        self.assertEqual(node.get_path(), node_str + '/01')
-        self.assertEqual(node.base_name, 'element')
-        self.assertTrue('Z' in node.valid_codes)
-
-    def ztest_add_regex_good(self):
-        self.errh.err_cde = None
-        node_str = '/ISA_LOOP/GS_LOOP/ST_LOOP/DETAIL/2000/2100/CLP'
-        node = self.map.getnodebypath(node_str)
-        node = node.get_child_node_by_idx(6)
-        self.assertNotEqual(node, None)
-        self.assertEqual(node.id, 'CLP07')
-        self.assertEqual(node.get_path(), node_str + '/07')
-        self.assertEqual(node.base_name, 'element')
-        ele_data = pyx12.segment.Element('34573234')
-        result = node.is_valid(ele_data, self.errh)
-        self.assertTrue(result)
-        self.assertEqual(self.errh.err_cde, None)
-
-    def ztest_add_regex_bad(self):
-        self.errh.err_cde = None
-        node_str = '/ISA_LOOP/GS_LOOP/ST_LOOP/DETAIL/2000/2100/CLP'
-        node = self.map.getnodebypath(node_str)
-        node = node.get_child_node_by_idx(6)
-        self.assertNotEqual(node, None)
-        self.assertEqual(node.id, 'CLP07')
-        self.assertEqual(node.get_path(), node_str + '/07')
-        self.assertEqual(node.base_name, 'element')
-        ele_data = pyx12.segment.Element('345A73234Z')
-        result = node.is_valid(ele_data, self.errh)
-        self.assertTrue(result)
-        self.assertEqual(self.errh.err_cde, None)
-
-
 class NodeEquality(unittest.TestCase):
     def setUp(self):
-        map_path = getMapPath()
         param = pyx12.params.params('pyx12.conf.xml')
-        if map_path:
-            param.set('map_path', map_path)
-            param.set('pickle_path', map_path)
         self.map = pyx12.map_if.load_map_file('837.4010.X098.A1.xml', param)
         self.errh = pyx12.error_handler.errh_null()
 
@@ -710,11 +592,7 @@ class NodeEquality(unittest.TestCase):
 
 class LoopIsMatch(unittest.TestCase):
     def setUp(self):
-        map_path = getMapPath()
         param = pyx12.params.params('pyx12.conf.xml')
-        if map_path:
-            param.set('map_path', map_path)
-            param.set('pickle_path', map_path)
         self.map = pyx12.map_if.load_map_file(
             '837Q3.I.5010.X223.A1.xml', param)
         self.node = self.map.getnodebypath(
@@ -732,11 +610,7 @@ class GetNodeBySegment(unittest.TestCase):
     Find matching child nodes matching a segment
     """
     def setUp(self):
-        map_path = getMapPath()
         param = pyx12.params.params('pyx12.conf.xml')
-        if map_path:
-            param.set('map_path', map_path)
-            param.set('pickle_path', map_path)
         self.map = pyx12.map_if.load_map_file('834.5010.X220.A1.xml', param)
         self.errh = pyx12.error_handler.errh_null()
 
@@ -783,11 +657,7 @@ class GetNodeBySegment(unittest.TestCase):
 
 class MatchSegmentQual(unittest.TestCase):
     def setUp(self):
-        map_path = getMapPath()
         param = pyx12.params.params('pyx12.conf.xml')
-        if map_path:
-            param.set('map_path', map_path)
-            param.set('pickle_path', map_path)
         self.map = pyx12.map_if.load_map_file(
             '837Q3.I.5010.X223.A1.xml', param)
         self.node = self.map.getnodebypath(
@@ -821,11 +691,7 @@ class MatchSegmentQual(unittest.TestCase):
 
 class X12Path(unittest.TestCase):
     def setUp(self):
-        map_path = getMapPath()
         param = pyx12.params.params('pyx12.conf.xml')
-        if map_path:
-            param.set('map_path', map_path)
-            param.set('pickle_path', map_path)
         self.map = pyx12.map_if.load_map_file('837.4010.X098.A1.xml', param)
 
     def test_837_paths(self):
@@ -843,11 +709,7 @@ class X12Path(unittest.TestCase):
 
 class X12Version(unittest.TestCase):
     def setUp(self):
-        map_path = getMapPath()
         self.param = pyx12.params.params('pyx12.conf.xml')
-        if map_path:
-            self.param.set('map_path', map_path)
-            self.param.set('pickle_path', map_path)
 
     def test_4010(self):
         map = pyx12.map_if.load_map_file('834.4010.X095.A1.xml', self.param)
@@ -860,11 +722,7 @@ class X12Version(unittest.TestCase):
 
 class SegmentChildrenOrdinal(unittest.TestCase):
     def setUp(self):
-        map_path = getMapPath()
         param = pyx12.params.params('pyx12.conf.xml')
-        if map_path:
-            param.set('map_path', map_path)
-            param.set('pickle_path', map_path)
         self.map = pyx12.map_if.load_map_file('999.5010.xml', param)
 
     def test_check_ord_ok(self):

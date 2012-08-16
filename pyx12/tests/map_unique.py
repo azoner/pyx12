@@ -5,17 +5,12 @@ import unittest
 import pyx12.error_handler
 import pyx12.map_if
 import pyx12.params
-from pyx12.tests.support import getMapPath
 
 
 class UniqueNodePath(unittest.TestCase):
 
     def setUp(self):
-        map_path = getMapPath()
         self.param = pyx12.params.params('pyx12.conf.xml')
-        if map_path:
-            self.param.set('map_path', map_path)
-            self.param.set('pickle_path', map_path)
         self.errh = pyx12.error_handler.errh_null()
 
     def _get_paths(self, map_file):

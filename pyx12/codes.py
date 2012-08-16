@@ -8,12 +8,12 @@
 #
 ######################################################################
 
-#    $Id$
-
 """
 External Codes interface
 """
 
+import os.path
+from pkg_resources import resource_stream
 import xml.etree.cElementTree as et
 
 # Intrapackage imports
@@ -29,10 +29,10 @@ class ExternalCodes(object):
     Validates an ID against an external list of codes
     """
 
-    def __init__(self, base_path, exclude=None):
+    def __init__(self, base_path=None, exclude=None):
         """
         Initialize the external list of codes
-        @param base_path: path to codes.xml
+        @param base_path: deprecated
         @type base_path: string
         @param exclude: comma separated string of external codes to ignore
         @type exclude: string
@@ -42,13 +42,13 @@ class ExternalCodes(object):
         """
 
         self.codes = {}
-        code_file = base_path + '/codes.xml'
+        code_fd = resource_stream(__name__, os.path.join('map', 'codes.xml'))
         codeset_id = None
         #base_name = None
 
         self.exclude_list = exclude.split(',') if exclude is not None else []
 
-        for cElem in et.parse(code_file).iter('codeset'):
+        for cElem in et.parse(code_fd).iter('codeset'):
             codeset_id = cElem.findtext('id')
             name = cElem.findtext('name')
             data_ele = cElem.findtext('data_ele')
