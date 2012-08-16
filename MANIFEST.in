@@ -1,3 +1,3 @@
 include *.txt
-recursive-include map *.xml *.xsd README* *.dtd *.rng
+recursive-include pyx12 *.xml *.xsd README* *.dtd
 recursive-include test test*.py *.xml
