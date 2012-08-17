@@ -13,7 +13,7 @@ import tempfile
 import logging
 
 # Intrapackage imports
-libpath = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
+libpath = os.path.abspath(os.path.join(os.path.dirname(__file__), '../..'))
 if os.path.isdir(libpath):
     sys.path.insert(0, libpath)
 import pyx12
@@ -54,7 +54,7 @@ def main():
         fd_out = tempfile.TemporaryFile()
         src = pyx12.x12file.X12Reader(file_in)
         for seg_data in src:
-            if args.fix:
+            if args.fixcounting:
                 err_codes = [(x[1]) for x in src.pop_errors()]
                 if seg_data.get_seg_id() == 'IEA' and '021' in err_codes:
                     seg_data.set('IEA01', '%i' % (src.gs_count))

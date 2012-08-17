@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 ######################################################################
-# Copyright (c) 2001-2008 Kalamazoo Community Mental Health Services,
+# Copyright Kalamazoo Community Mental Health Services,
 #   John Holland <jholland@kazoocmh.org> <john@zoner.org>
 # All rights reserved.
 #
@@ -24,7 +24,7 @@ import logging
 #from types import *
 
 # Intrapackage imports
-libpath = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
+libpath = os.path.abspath(os.path.join(os.path.dirname(__file__), '../..'))
 if os.path.isdir(libpath):
     sys.path.insert(0, libpath)
 import pyx12
@@ -81,7 +81,6 @@ def main():
         logger.setLevel(logging.DEBUG)
     if args.quiet:
         logger.setLevel(logging.ERROR)
-    fd_html = None
     param.set('exclude_external_codes', ','.join(args.exclude_external))
     #if args.map_path:
     #    param.set('map_path', args.map_path)
@@ -99,6 +98,7 @@ def main():
             if not os.path.isfile(src_filename):
                 logger.error('Could not open file "%s"' % (src_filename))
                 continue
+            fd_html = None
             if args.html:
                 if os.path.splitext(src_filename)[1] == '.txt':
                     target_html = os.path.splitext(src_filename)[0] + '.html'
