@@ -83,8 +83,8 @@ def main():
         logger.setLevel(logging.ERROR)
     fd_html = None
     param.set('exclude_external_codes', ','.join(args.exclude_external))
-    if args.map_path:
-        param.set('map_path', args.map_path)
+    #if args.map_path:
+    #    param.set('map_path', args.map_path)
 
     if args.logfile:
         try:
