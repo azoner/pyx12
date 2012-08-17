@@ -20,6 +20,11 @@ setup(
     url="http://github.com/azoner/pyx12#pyx12",
     platforms='All',
     packages=['pyx12', 'pyx12.scripts'],
+    package_data={
+        '': ['*.xml', '*.md'],
+        'pyx12': ['map/*.xml', 'map/*.xsd'],
+    },
+    #data_files=[('config', ['bin/pyx12.conf.xml.sample'])],
     entry_points={
         'console_scripts': [
             'x12html = pyx12.scripts.x12html:main',
@@ -30,7 +35,6 @@ setup(
             'xmlx12 = pyx12.scripts.xmlx12:main',
         ]
     },
-    package_data={'': ['*.xml', '*.md'], 'pyx12': ['*.xml']},
     test_suite="pyx12.tests",
     classifiers=[
         'Development Status :: 5 - Production/Stable',
