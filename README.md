@@ -6,5 +6,21 @@ The Pyx12 project home is <http://sourceforge.net/projects/pyx12/>
 
 # Install
 
-pip install pyx12
+## Prerequisites
 
+Get setuptools <http://pypi.python.org/pypi/setuptools/>
+
+Get pip <http://www.pip-installer.org/en/latest/installing.html>
+
+## Install system-wide
+
+    pip install pyx12
+
+## Install in a virtual environment
+
+    virtualenv my_venv
+    pip -E my_venv install pyx12
+
+# Licensing
+
+Pyx12 has a BSD license. The full license text is included with the source code for the package. 
