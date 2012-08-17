@@ -2173,3 +2173,9 @@ GE*1*13360001~
 IEA*1*703201721~
 """},
 }
+
+if __name__ == '__main__':
+    for k in datafiles:
+        if 'source' in datafiles[k]:
+            with open(k + '.txt', 'w') as f:
+                f.write(datafiles[k]['source'])
