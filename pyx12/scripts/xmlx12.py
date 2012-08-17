@@ -1,7 +1,7 @@
-#! /usr/bin/env python
+#!/usr/bin/env python
 
 ######################################################################
-# Copyright (c) Kalamazoo Community Mental Health Services,
+# Copyright Kalamazoo Community Mental Health Services,
 #   John Holland <jholland@kazoocmh.org> <john@zoner.org>
 # All rights reserved.
 #
@@ -33,10 +33,6 @@ __status__ = pyx12.__status__
 __version__ = pyx12.__version__
 __date__ = pyx12.__date__
 
-NodeType = {'element_start': 1, 'element_end': 15, 'attrib': 2, 'text': 3,
-            'CData': 4, 'entity_ref': 5, 'entity_decl': 6, 'pi': 7, 'comment': 8,
-            'doc': 9, 'dtd': 10, 'doc_frag': 11, 'notation': 12, 'CData2': 14}
-
 
 def usage():
     pgm_nme = os.path.basename(sys.argv[0])
@@ -51,64 +47,62 @@ def usage():
 
 def main():
     """Script main program."""
-    import getopt
-    try:
-        opts, args = getopt.getopt(sys.argv[1:], 'l:o:qvh')
-    except getopt.error, msg:
-        usage()
-        raise
-        return False
-    logger = logging.getLogger('pyx12')
-    #hdlr = logging.FileHandler('./run.log')
-    stderr_hdlr = logging.StreamHandler()
-    formatter = logging.Formatter(
-        '%(asctime)s %(levelname)s %(module)s %(lineno)d %(message)s')
-    #hdlr.setFormatter(formatter)
-    stderr_hdlr.setFormatter(formatter)
-    #logger.addHandler(hdlr)
-    logger.addHandler(stderr_hdlr)
-    logger.setLevel(logging.INFO)
-    target_x12 = None
-    for o, a in opts:
-        if o == '-h':
-            usage()
-            return True
-        if o == '-v':
-            logger.setLevel(logging.DEBUG)
-        if o == '-q':
-            logger.setLevel(logging.ERROR)
-        if o == '-o':
-            target_x12 = a
-        if o == '-l':
-            try:
-                hdlr = logging.FileHandler(a)
-                hdlr.setFormatter(formatter)
-                logger.addHandler(hdlr)
-            except IOError:
-                logger.error('Could not open log file: %s' % (a))
-                return False
+    import argparse
+    parser = argparse.ArgumentParser(description='XML to X12 conversion')
+    parser.add_argument('--log-file', '-l', action='store', dest="logfile", default=None)
+    parser.add_argument('--verbose', '-v', action='count')
+    parser.add_argument('--debug', '-d', action='store_true')
+    parser.add_argument('--quiet', '-q', action='store_true')
+    parser.add_argument('--outputfile', '-o', action='store', help="X12 target filename")
+    parser.add_argument('--version', action='version', version='{prog} {version}'.format(prog=parser.prog, version=__version__))
+    parser.add_argument('input_file')
+    args = parser.parse_args()
 
-    if len(args) > 0:
-        src_filename = args[0]
-        logger.debug('src=%s    xml=%s' % (src_filename, target_x12))
-    else:
-        src_filename = '-'
-    if target_x12:
+    logger = logging.getLogger('pyx12')
+    formatter = logging.Formatter('%(asctime)s %(levelname)s %(message)s')
+
+    stdout_hdlr = logging.StreamHandler()
+    stdout_hdlr.setFormatter(formatter)
+    logger.addHandler(stdout_hdlr)
+    logger.setLevel(logging.INFO)
+
+    if args.debug:
+        logger.setLevel(logging.DEBUG)
+    if args.verbose > 0:
+        logger.setLevel(logging.DEBUG)
+    if args.quiet:
+        logger.setLevel(logging.ERROR)
+    if args.logfile:
         try:
-            fd_x12 = codecs.open(target_x12, mode='w', encoding='ascii')
+            hdlr = logging.FileHandler(args.logfile)
+            hdlr.setFormatter(formatter)
+            logger.addHandler(hdlr)
+        except IOError:
+            logger.exception('Could not open log file: %s' % (args.logfile))
+
+    if args.input_file:
+        try:
+            fd_source = open(args.input_file)
         except:
-            logger.error('Could not open file %s' % (target_x12))
+            logger.error('Could not open file %s' % (args.input_file))
+            return False
+    else:
+        fd_source = sys.stdin
+
+    if args.outputfile:
+        try:
+            fd_x12 = codecs.open(args.outputfile, mode='w', encoding='ascii')
+        except:
+            logger.error('Could not open file %s' % (args.outputfile))
             return False
     else:
         fd_x12 = sys.stdout
 
     try:
-        with open(src_filename) as fd_source:
-            result = pyx12.xmlx12_simple.convert(fd_source, fd_x12)
-            #fd_x12.close()
-            if not result:
-                logger.error('File %s had errors.' % (src_filename))
-                return False
+        result = pyx12.xmlx12_simple.convert(fd_source, fd_x12)
+        if not result:
+            logger.error('Input file had errors.')
+            return False
     except KeyboardInterrupt:
         print "\n[interrupt]"
 

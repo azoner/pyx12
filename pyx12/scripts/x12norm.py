@@ -1,10 +1,16 @@
 #! /usr/bin/env python
 
+"""
+Format a X12 document.  If the option -e is used, it adds newlines.
+If no source file is given, read from stdin.
+If no ouput filename is given with -o,  write to stdout.
+"""
+
 import sys
-import getopt
 import os.path
 import codecs
 import tempfile
+import logging
 
 # Intrapackage imports
 libpath = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
@@ -13,65 +19,42 @@ if os.path.isdir(libpath):
 import pyx12
 import pyx12.x12file
 
-"""
-Format a X12 document.  If the option -e is used, it adds newlines.
-If no source file is given, read from stdin.
-If no ouput filename is given with -o,  write to stdout.
-"""
-
 __author__ = pyx12.__author__
 __status__ = pyx12.__status__
 __version__ = pyx12.__version__
 __date__ = pyx12.__date__
 
 
-def usage():
-    pgm_nme = os.path.basename(sys.argv[0])
-    sys.stdout.write('%s %s (%s)\n' % (pgm_nme, __version__, __date__))
-    sys.stdout.write('usage: %s [options] source_file\n' % (pgm_nme))
-    sys.stdout.write('\noptions:\n')
-    sys.stdout.write('  -h         Help\n')
-    sys.stdout.write('  -d         Debug mode\n')
-    sys.stdout.write('  -e         Add eol to each segment line\n')
-    sys.stdout.write('  -f         Fix.  Try to fix counting errors\n')
-    sys.stdout.write('  -o file    Output file.\n')
-
-
 def main():
-    try:
-        opts, args = getopt.getopt(sys.argv[1:], 'dhefo:')
-    except getopt.error, msg:
-        usage()
-        return False
-    debug = False
-    eol = ''
-    file_out = None
-    fix = False
-    for o, a in opts:
-        if o == '-h':
-            usage()
-            return True
-        if o == '-d':
-            debug = True
-        if o == '-e':
-            eol = '\n'
-        if o == '-f':
-            fix = True
-        if o == '-o':
-            file_out = a
+    import argparse
+    parser = argparse.ArgumentParser(description='X12 Validation')
+    parser.add_argument('--verbose', '-v', action='count')
+    parser.add_argument('--quiet', '-q', action='store_true')
+    parser.add_argument('--debug', '-d', action='store_true')
+    parser.add_argument('--eol', '-e', action='store_true', help="Add eol to each segment line")
+    parser.add_argument('--inplace', '-i', action='store_true', help="Make changes to files in place")
+    parser.add_argument('--fixcounting', '-f', action='store_true', help="Try to fix counting errors")
+    parser.add_argument('--output', '-o', action='store', dest="outputfile", default=None, help="Output filename.  Defaults to stdout")
+    parser.add_argument('--version', action='version', version='{prog} {version}'.format(prog=parser.prog, version=__version__))
+    parser.add_argument('input_files', nargs='*')
+    args = parser.parse_args()
 
-    for file_in in args:
+    logger = logging.getLogger()
+    formatter = logging.Formatter('%(asctime)s %(levelname)s %(message)s')
+    stdout_hdlr = logging.StreamHandler()
+    stdout_hdlr.setFormatter(formatter)
+    logger.addHandler(stdout_hdlr)
+    logger.setLevel(logging.INFO)
+
+    eol = '\n' if args.eol else ''
+    for file_in in args.input_files:
         if not os.path.isfile(file_in):
-            sys.stderr.write('File %s was not found' % (file_in))
+            logger.error('Could not open file "%s"' % (file_in))
 
-        if file_out:
-            fd_out = codecs.open(file_out, mode='w', encoding='ascii')
-        else:
-            #fd_out = sys.stdout
-            fd_out = tempfile.TemporaryFile()
+        fd_out = tempfile.TemporaryFile()
         src = pyx12.x12file.X12Reader(file_in)
         for seg_data in src:
-            if fix:
+            if args.fix:
                 err_codes = [(x[1]) for x in src.pop_errors()]
                 if seg_data.get_seg_id() == 'IEA' and '021' in err_codes:
                     seg_data.set('IEA01', '%i' % (src.gs_count))
@@ -85,19 +68,16 @@ def main():
         if eol == '':
             fd_out.write('\n')
 
-        if not file_out:
-            fd_out.seek(0)
-            if file_in:
-                fd_orig = codecs.open(file_in, mode='w', encoding='ascii')
-                fd_orig.write(fd_out.read())
-                fd_orig.close()
+        fd_out.seek(0)
+        if args.outputfile:
+            fd_out = codecs.open(args.outputfile, mode='w', encoding='ascii')
+        else:
+            if args.inplace:
+                with codecs.open(file_in, mode='w', encoding='ascii') as fd_orig:
+                    fd_orig.write(fd_out.read())
             else:
                 sys.stdout.write(fd_out.read())
     return True
 
 if __name__ == '__main__':
-    #if sys.argv[0] == 'x12normp':
-    #    import profile
-    #    profile.run('pyx12.x12n_document(src_filename)', 'pyx12.prof')
-    #else:
     sys.exit(not main())

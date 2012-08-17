@@ -1,7 +1,7 @@
-#! /usr/bin/env python
+#!/usr/bin/env python
 
 ######################################################################
-# Copyright (c) 2001-2008 Kalamazoo Community Mental Health Services,
+# Copyright Kalamazoo Community Mental Health Services,
 #   John Holland <jholland@kazoocmh.org> <john@zoner.org>
 # All rights reserved.
 #
@@ -20,7 +20,6 @@ import os
 import os.path
 import sys
 import logging
-from types import *
 
 # Intrapackage imports
 libpath = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
@@ -37,140 +36,87 @@ __version__ = pyx12.__version__
 __date__ = pyx12.__date__
 
 
-def usage():
-    pgm_nme = os.path.basename(sys.argv[0])
-    sys.stderr.write('%s %s (%s)\n' % (pgm_nme, __version__, __date__))
-    sys.stderr.write('usage: %s [options] source_file\n' % (pgm_nme))
-    sys.stderr.write('\noptions:\n')
-    sys.stderr.write('  -c <file>  XML configuration file\n')
-    sys.stderr.write('  -d         Debug mode\n')
-    sys.stderr.write(
-        '  -f         Force map load.  Do not use the map pickle file\n')
-    sys.stderr.write('  -l <file>  Output log\n')
-    sys.stderr.write('  -m <path>  Path to map files\n')
-    sys.stderr.write('  -o <file>  Output file\n')
-    sys.stderr.write('  -p <path>  Path to to pickle files\n')
-    sys.stderr.write('  -q         Quiet output\n')
-    sys.stderr.write(
-        '  -s <b|e>   Specify X12 character set: b=basic, e=extended\n')
-    sys.stderr.write('  -t <file>  XSL Transform, applied to the map.  May be used multiple times.\n')
-    sys.stderr.write('  -v         Verbose output\n')
-    sys.stderr.write('  -x <tag>   Exclude external code\n')
-    sys.stderr.write('  -X <simple>   XML output format\n')
-
-
 def main():
     """Script main program."""
-    import getopt
-    try:
-        opts, args = getopt.getopt(sys.argv[1:], 'c:dfl:m:o:p:qs:vx:X:h')
-    except getopt.error, msg:
-        usage()
-        raise
-        return False
+    import argparse
+    parser = argparse.ArgumentParser(description='X12 to XML conversion')
+    parser.add_argument('--config-file', '-c', action='store',
+                        dest="configfile", default=None)
+    parser.add_argument('--log-file', '-l', action='store', dest="logfile", default=None)
+    #parser.add_argument(
+    #    '--map-path', '-m', action='store', dest="map_path", default=None)
+    parser.add_argument('--verbose', '-v', action='count')
+    parser.add_argument('--debug', '-d', action='store_true')
+    parser.add_argument('--quiet', '-q', action='store_true')
+    parser.add_argument('--html', '-H', action='store_true')
+    parser.add_argument('--outputfile', '-o', action='store', help="XML target filename")
+    parser.add_argument('--exclude-external-codes', '-x', action='append', dest="exclude_external",
+                        default=[], help='External Code Names to ignore')
+    parser.add_argument('--charset', '-s', choices=(
+        'b', 'e'), help='Specify X12 character set: b=basic, e=extended')
+    #parser.add_argument('--background', '-b', action='store_true')
+    #parser.add_argument('--test', '-t', action='store_true')
+    #parser.add_argument('--profile', action='store_true',
+    #                    help='Profile the code with plop')
+    parser.add_argument('--version', action='version', version='{prog} {version}'.format(prog=parser.prog, version=__version__))
+    parser.add_argument('input_file')
+    args = parser.parse_args()
+
     logger = logging.getLogger('pyx12')
-    formatter = logging.Formatter(
-        '%(asctime)s %(levelname)s %(module)s %(lineno)d %(message)s')
-    #try:
-    #    hdlr = logging.FileHandler('./run.log')
-    #    hdlr.setFormatter(formatter)
-    #    logger.addHandler(hdlr)
-    #except:
-    #    pass
-    stderr_hdlr = logging.StreamHandler()
-    stderr_hdlr.setFormatter(formatter)
-    logger.addHandler(stderr_hdlr)
+    formatter = logging.Formatter('%(asctime)s %(levelname)s %(message)s')
+
+    stdout_hdlr = logging.StreamHandler()
+    stdout_hdlr.setFormatter(formatter)
+    logger.addHandler(stdout_hdlr)
     logger.setLevel(logging.INFO)
-    target_xml = None
-    configfile = None
-    xslt_files = []
-    for o, a in opts:
-        if o == '-c':
-            configfile = a
-    param = pyx12.params.params(configfile)
 
-    for xslt_file in param.get('xslt_files'):
-        if os.path.isfile(xslt_file):
-            xslt_files.append(xslt_file)
-        else:
-            logger.debug("XSL Transform '%s' not found" % (xslt_file))
+    param = pyx12.params.params(args.configfile)
+    if args.debug:
+        logger.setLevel(logging.DEBUG)
+        param.set('debug', True)
+    if args.verbose > 0:
+        logger.setLevel(logging.DEBUG)
+    if args.quiet:
+        logger.setLevel(logging.ERROR)
 
-    #param.set('map_path', os.path.expanduser('~/src/pyx12/map/'))
-    debug = False
-    for o, a in opts:
-        if o == '-h':
-            usage()
-            return True
-        if o == '-d':
-            logger.setLevel(logging.DEBUG)
-            debug = True
-        if o == '-v':
-            logger.setLevel(logging.DEBUG)
-        if o == '-q':
-            logger.setLevel(logging.ERROR)
-        if o == '-x':
-            param.set('exclude_external_codes', a)
-        if o == '-X':
-            if a not in ('simple'):
-                logger.error('Unknown parameter for -X')
-                usage()
-                return False
-            else:
-                param.set('xmlout', a)
-        if o == '-f':
-            param.set('force_map_load', True)
-        if o == '-m':
-            param.set('map_path', a)
-        if o == '-o':
-            target_xml = a
-        if o == '-p':
-            param.set('pickle_path', a)
-        if o == '-s':
-            param.set('charset', a)
-        if o == '-t':
-            if os.path.isfile(a):
-                xslt_files.append(a)
-            else:
-                logger.debug("XSL Transform '%s' not found" % (a))
-        if o == '-l':
-            try:
-                hdlr = logging.FileHandler(a)
-                hdlr.setFormatter(formatter)
-                logger.addHandler(hdlr)
-            except IOError:
-                logger.error('Could not open log file: %s' % (a))
-                return False
+    param.set('exclude_external_codes', ','.join(args.exclude_external))
+    #if args.map_path:
+    #    param.set('map_path', args.map_path)
 
-    if len(args) > 0:
-        src_filename = args[0]
-        logger.debug('src=%s    xml=%s' % (src_filename, target_xml))
-    else:
-        src_filename = '-'
-    if target_xml:
+    if args.logfile:
         try:
-            fd_xml = open(target_xml, 'w')
+            hdlr = logging.FileHandler(args.logfile)
+            hdlr.setFormatter(formatter)
+            logger.addHandler(hdlr)
+        except IOError:
+            logger.exception('Could not open log file: %s' % (args.logfile))
+
+    if args.input_file:
+        try:
+            fd_src = args.input_file
         except:
-            logger.error('Could not open file %s' % (target_xml))
+            logger.error('Could not open file %s' % (args.input_file))
             return False
-        #target_xml = os.path.splitext(src_filename)[0] + '.xml'
+    else:
+        fd_src = sys.stdin
+    if args.outputfile:
+        try:
+            fd_xml = open(args.outputfile, 'w')
+        except:
+            logger.error('Could not open file %s' % (args.outputfile))
+            return False
     else:
         fd_xml = sys.stdout
-
     try:
-        result = pyx12.x12n_document.x12n_document(
-            param=param, src_file=src_filename,
-            fd_997=None, fd_html=None, fd_xmldoc=fd_xml, xslt_files=xslt_files)
-        fd_xml.close()
+        result = pyx12.x12n_document.x12n_document(param=param, src_file=fd_src,
+            fd_997=None, fd_html=None, fd_xmldoc=fd_xml)
         if not result:
-            logger.error('File %s had errors.' % (src_filename))
-            #if target_xml:
-            #    os.remove(target_xml)
+            logger.error('Input file had errors.')
             return False
     except KeyboardInterrupt:
         print "\n[interrupt]"
 
     return True
 
-#profile.run('x12n_document(src_filename)', 'pyx12.prof')
 if __name__ == '__main__':
     sys.exit(not main())

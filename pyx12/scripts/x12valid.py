@@ -1,4 +1,4 @@
-#! /usr/bin/env python
+#!/usr/bin/env python
 
 ######################################################################
 # Copyright (c) Kalamazoo Community Mental Health Services,
@@ -46,8 +46,8 @@ def main():
                         dest="configfile", default=None)
     parser.add_argument(
         '--log-file', '-l', action='store', dest="logfile", default=None)
-    parser.add_argument(
-        '--map-path', '-m', action='store', dest="map_path", default=None)
+    #parser.add_argument(
+    #    '--map-path', '-m', action='store', dest="map_path", default=None)
     parser.add_argument('--verbose', '-v', action='count')
     parser.add_argument('--debug', '-d', action='store_true')
     parser.add_argument('--quiet', '-q', action='store_true')
