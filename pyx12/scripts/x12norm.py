@@ -1,4 +1,4 @@
-#! /usr/bin/env python
+#!/usr/bin/env python
 
 """
 Format a X12 document.  If the option -e is used, it adds newlines.

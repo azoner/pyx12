@@ -25,7 +25,6 @@ import codecs
 
 # Intrapackage imports
 libpath = abspath(join(dirname(__file__), '../..'))
-print libpath
 if isdir(libpath):
     sys.path.insert(0, libpath)
 import pyx12
@@ -134,7 +133,7 @@ def main():
                         src_filename))[0] + '.plop.out'
                     pfull = os.path.join(os.path.expanduser(
                         '~/.plop.profiles'), pfile)
-                    print pfull
+                    print(pfull)
                     with open(pfull, 'w') as fdp:
                         fdp.write(repr(dict(p.stack_counts)))
                 except Exception:
@@ -164,7 +163,7 @@ def main():
             logger.exception('Could not open files')
             return False
         except KeyboardInterrupt:
-            print "\n[interrupt]"
+            print("\n[interrupt]")
 
     return True
 

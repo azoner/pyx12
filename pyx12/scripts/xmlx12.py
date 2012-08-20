@@ -34,17 +34,6 @@ __version__ = pyx12.__version__
 __date__ = pyx12.__date__
 
 
-def usage():
-    pgm_nme = os.path.basename(sys.argv[0])
-    sys.stdout.write('%s %s (%s)\n' % (pgm_nme, __version__, __date__))
-    sys.stdout.write('usage: %s [options] source_file\n' % (pgm_nme))
-    sys.stdout.write('\noptions:\n')
-    sys.stdout.write('  -l <file>  Output log\n')
-    sys.stdout.write('  -o <file>  Output file\n')
-    sys.stdout.write('  -q         Quiet output\n')
-    sys.stdout.write('  -v         Verbose output\n')
-
-
 def main():
     """Script main program."""
     import argparse
