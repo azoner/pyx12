@@ -16,7 +16,7 @@ Install system-wide
 
     pip install pyx12
 
-Install in a virtual environment
+Or install in a virtual environment
 
     virtualenv my_env
     pip -E my_env install pyx12
