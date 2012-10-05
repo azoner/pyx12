@@ -1761,45 +1761,6 @@
                         <name>Industry Code</name>
                         <usage>R</usage>
                         <seq>02</seq>
-                        <valid_codes>
-                          <code>03</code>
-                          <code>04</code>
-                          <code>05</code>
-                          <code>06</code>
-                          <code>07</code>
-                          <code>08</code>
-                          <code>11</code>
-                          <code>12</code>
-                          <code>15</code>
-                          <code>20</code>
-                          <code>21</code>
-                          <code>22</code>
-                          <code>23</code>
-                          <code>24</code>
-                          <code>25</code>
-                          <code>26</code>
-                          <code>31</code>
-                          <code>32</code>
-                          <code>33</code>
-                          <code>34</code>
-                          <code>41</code>
-                          <code>42</code>
-                          <code>50</code>
-                          <code>51</code>
-                          <code>52</code>
-                          <code>53</code>
-                          <code>54</code>
-                          <code>55</code>
-                          <code>56</code>
-                          <code>60</code>
-                          <code>61</code>
-                          <code>62</code>
-                          <code>65</code>
-                          <code>71</code>
-                          <code>72</code>
-                          <code>81</code>
-                          <code>99</code>
-                        </valid_codes>
                       </element>
                       <element xid="III03">
                         <data_ele>1136</data_ele>
@@ -2759,45 +2720,6 @@
                           <name>Industry Code</name>
                           <usage>R</usage>
                           <seq>02</seq>
-                          <valid_codes>
-                            <code>03</code>
-                            <code>04</code>
-                            <code>05</code>
-                            <code>06</code>
-                            <code>07</code>
-                            <code>08</code>
-                            <code>11</code>
-                            <code>12</code>
-                            <code>15</code>
-                            <code>20</code>
-                            <code>21</code>
-                            <code>22</code>
-                            <code>23</code>
-                            <code>24</code>
-                            <code>25</code>
-                            <code>26</code>
-                            <code>31</code>
-                            <code>32</code>
-                            <code>33</code>
-                            <code>34</code>
-                            <code>41</code>
-                            <code>42</code>
-                            <code>50</code>
-                            <code>51</code>
-                            <code>52</code>
-                            <code>53</code>
-                            <code>54</code>
-                            <code>55</code>
-                            <code>56</code>
-                            <code>60</code>
-                            <code>61</code>
-                            <code>62</code>
-                            <code>65</code>
-                            <code>71</code>
-                            <code>72</code>
-                            <code>81</code>
-                            <code>99</code>
-                          </valid_codes>
                         </element>
                         <element xid="III03">
                           <data_ele>1136</data_ele>
