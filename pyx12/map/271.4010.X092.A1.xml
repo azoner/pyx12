@@ -2481,7 +2481,7 @@
                       <repeat>1</repeat>
                       <segment xid="NM1">
                         <name>Subscriber Benefit Related Entity Name</name>
-                        <usage>R</usage>
+                        <usage>S</usage>
                         <pos>340</pos>
                         <max_use>1</max_use>
                         <element xid="NM101">
@@ -4359,7 +4359,7 @@
                         <repeat>1</repeat>
                         <segment xid="NM1">
                           <name>Dependent Benefit Related Entity Name</name>
-                          <usage>R</usage>
+                          <usage>S</usage>
                           <pos>340</pos>
                           <max_use>1</max_use>
                           <element xid="NM101">
