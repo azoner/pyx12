@@ -119,7 +119,10 @@ class Composite(object):
     def __init__(self, ele_str, subele_term=None):
         """
         @type ele_str: string
+        @raise EngineError: If a terminator is None and no default
         """
+        if subele_term is None or len(subele_term) != 1:
+            raise EngineError('The sub-element terminator must be a single character, is %s' % (subele_term))
         self.subele_term = subele_term
         self.subele_term_orig = subele_term
         members = ele_str.split(self.subele_term)
@@ -253,11 +256,13 @@ class Segment(object):
         self.subele_term_orig = subele_term
         self.repetition_term = repetition_term
         self.seg_id = None
-        if seg_str and seg_str[-1] == seg_term:
+        self.elements = []
+        if seg_str is None or seg_str == '':
+            return
+        if seg_str[-1] == seg_term:
             elems = seg_str[:-1].split(self.ele_term)
         else:
             elems = seg_str.split(self.ele_term)
-        self.elements = []
         if elems:
             self.seg_id = elems[0]
         for ele in elems[1:]:
