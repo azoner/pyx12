@@ -403,18 +403,10 @@ class X12Reader(X12Base):
                 err_str = 'Segment contains trailing element terminators'
                 self._seg_error('SEG1', err_str, None,
                                 src_line=self.cur_line + 1)
-            seg_data = pyx12.segment.Segment(line,
-                                             self.seg_term, self.ele_term, self.subele_term)
+            seg_data = pyx12.segment.Segment(line, self.seg_term, self.ele_term, self.subele_term)
             self._parse_segment(seg_data)
             yield(seg_data)
         #yield(None)
-
-    def get_errors(self):
-        """
-        Get Errors
-        DEPRECATED
-        """
-        raise pyx12.errors.EngineError('X12file.get_errors is no longer used')
 
     def cleanup(self):
         """
