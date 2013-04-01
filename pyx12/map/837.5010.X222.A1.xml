@@ -1005,6 +1005,7 @@
                   <name>Billing Provider Postal Zone or ZIP Code</name>
                   <usage>S</usage>
                   <seq>03</seq>
+                  <regex>[0-9]{9}</regex>
                 </element>
                 <element xid="N404">
                   <data_ele>26</data_ele>
@@ -2475,7 +2476,6 @@
                       <code>A</code>
                       <code>B</code>
                       <code>C</code>
-                      <code>P</code>
                     </valid_codes>
                   </element>
                   <element xid="CLM08">
@@ -2485,6 +2485,7 @@
                     <seq>08</seq>
                     <valid_codes>
                       <code>N</code>
+                      <code>W</code>
                       <code>Y</code>
                     </valid_codes>
                   </element>
@@ -2494,11 +2495,7 @@
                     <usage>R</usage>
                     <seq>09</seq>
                     <valid_codes>
-                      <code>A</code>
                       <code>I</code>
-                      <code>M</code>
-                      <code>N</code>
-                      <code>O</code>
                       <code>Y</code>
                     </valid_codes>
                   </element>
@@ -2508,11 +2505,7 @@
                     <usage>S</usage>
                     <seq>10</seq>
                     <valid_codes>
-                      <code>B</code>
-                      <code>C</code>
-                      <code>M</code>
                       <code>P</code>
-                      <code>S</code>
                     </valid_codes>
                   </element>
                   <composite>
@@ -2527,7 +2520,6 @@
                       <seq>01</seq>
                       <valid_codes>
                         <code>AA</code>
-                        <code>AP</code>
                         <code>EM</code>
                         <code>OA</code>
                       </valid_codes>
@@ -2539,7 +2531,6 @@
                       <seq>02</seq>
                       <valid_codes>
                         <code>AA</code>
-                        <code>AP</code>
                         <code>EM</code>
                         <code>OA</code>
                       </valid_codes>
@@ -2547,14 +2538,8 @@
                     <element xid="CLM11-03">
                       <data_ele>1362</data_ele>
                       <name>Related Causes Code</name>
-                      <usage>S</usage>
+                      <usage>N</usage>
                       <seq>03</seq>
-                      <valid_codes>
-                        <code>AA</code>
-                        <code>AP</code>
-                        <code>EM</code>
-                        <code>OA</code>
-                      </valid_codes>
                     </element>
                     <element xid="CLM11-04">
                       <data_ele>156</data_ele>
@@ -2577,12 +2562,9 @@
                     <usage>S</usage>
                     <seq>12</seq>
                     <valid_codes>
-                      <code>01</code>
                       <code>02</code>
                       <code>03</code>
                       <code>05</code>
-                      <code>07</code>
-                      <code>08</code>
                       <code>09</code>
                     </valid_codes>
                   </element>
@@ -2648,6 +2630,7 @@
                       <code>9</code>
                       <code>10</code>
                       <code>11</code>
+                      <code>15</code>
                     </valid_codes>
                   </element>
                 </segment>
