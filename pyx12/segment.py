@@ -84,7 +84,7 @@ class Element(object):
         @param elem_str: Element string value
         @type elem_str: string
         """
-        self.value = elem_str if ele_str is not None else ''
+        self.value = elem_str if elem_str is not None else ''
 
     def is_composite(self):
         """
