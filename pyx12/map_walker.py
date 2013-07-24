@@ -48,7 +48,7 @@ def pop_to_parent_loop(node):
     return map_node
 
 
-def is_first_seg_match2(child, seg_data):
+def _is_first_seg_match2(child, seg_data):
     """
     Find the first segment in loop, verify it matches segment
 
@@ -83,8 +83,7 @@ def traverse_path(start_node, pop_loops, push_loops):
     start_path = pop_to_parent_loop(start_node).get_path()
     p1 = [p for p in start_path.split('/') if p != '']
     for loop_id in get_id_list(pop_loops):
-        assert loop_id == p1[-1], 'Path %s does not contain %s' % (
-            start_path, loop_id)
+        assert loop_id == p1[-1], 'Path %s does not contain %s' % (start_path, loop_id)
         p1 = p1[:-1]
     for loop_id in get_id_list(push_loops):
         p1.append(loop_id)
@@ -143,9 +142,7 @@ class walk_tree(object):
                             # Is the matched segment the beginning of a loop?
                             if node.is_loop() \
                                     and self._is_loop_match(node, seg_data, errh, seg_count, cur_line, ls_id):
-                                (
-                                    node1, push_node_list) = self._goto_seg_match(node, seg_data,
-                                                                                  errh, seg_count, cur_line, ls_id)
+                                (node1, push_node_list) = self._goto_seg_match(node, seg_data, errh, seg_count, cur_line, ls_id)
                                 if orig_node.is_loop() or orig_node.is_map_root():
                                     orig_loop = orig_node
                                 else:
@@ -163,8 +160,7 @@ class walk_tree(object):
                             self._flush_mandatory_segs(errh, child.pos)
                             return (child, pop_node_list, push_node_list)  # segment node
                         elif child.usage == 'R' and child.get_cur_count() < 1:
-                            fake_seg = pyx12.segment.Segment('%s' % (child.id),
-                                                             '~', '*', ':')
+                            fake_seg = pyx12.segment.Segment('%s' % (child.id), '~', '*', ':')
                             err_str = 'Mandatory segment "%s" (%s) missing' % (child.name, child.id)
                             self.mandatory_segs_missing.append((child, fake_seg, '3', err_str, seg_count, cur_line, ls_id))
                         #else:
@@ -176,15 +172,13 @@ class walk_tree(object):
                             return (node_seg, pop_node_list, push_node_list)  # segment node
             # End for ord1 in pos_keys
             if node.is_map_root():  # If at root and we haven't found the segment yet.
-                walk_tree._seg_not_found_error(orig_node, seg_data,
-                                               errh, seg_count, cur_line, ls_id)
+                walk_tree._seg_not_found_error(orig_node, seg_data, errh, seg_count, cur_line, ls_id)
                 return (None, [], [])
             node_pos = node.pos  # Get position ordinal of current node in tree
             pop_node_list.append(node)
             node = pop_to_parent_loop(node)  # Get enclosing parent loop
 
-        walk_tree._seg_not_found_error(
-            orig_node, seg_data, errh, seg_count, cur_line, ls_id)
+        walk_tree._seg_not_found_error(orig_node, seg_data, errh, seg_count, cur_line, ls_id)
         return (None, [], [])
 
     def setCountState(self, initialCounts={}):
@@ -208,8 +202,7 @@ class walk_tree(object):
         @type errh: L{error_handler.err_handler}
         @raise EngineError: On invalid usage code
         """
-        assert seg_node.usage in (
-            'N', 'R', 'S'), 'Segment usage must be R, S, or N'
+        #assert seg_node.usage in ('N', 'R', 'S'), 'Segment usage must be R, S, or N'
         if seg_node.usage == 'N':
             err_str = "Segment %s found but marked as not used" % (seg_node.id)
             errh.seg_error('2', err_str, None)
@@ -273,22 +266,22 @@ class walk_tree(object):
         @return: Does the segment match the first segment node in the loop?
         @rtype: boolean
         """
-        assert loop_node.is_loop(), "Call to first_seg_match failed, node %s is not a loop. seg %s" \
-            % (loop_node.id, seg_data.get_seg_id())
+        #assert loop_node.is_loop(), "Call to first_seg_match failed, node %s is not a loop. seg %s" \
+        #    % (loop_node.id, seg_data.get_seg_id())
         #assert loop_node.get_cur_count()==self.counter.get_count(loop_node.x12path), \
         #    'loop_node counts not equal: %s=%i / %s=%i' % (loop_node.get_path(), loop_node.get_cur_count(),
         #            loop_node.x12path.format(), self.counter.get_count(loop_node.x12path) )
         if len(loop_node) <= 0:  # Has no children
             return False
         first_child_node = loop_node.get_first_node()
-        assert first_child_node is not None, 'get_first_node failed from loop %s' % (loop_node.id)
+        #assert first_child_node is not None, 'get_first_node failed from loop %s' % (loop_node.id)
         if first_child_node.is_loop():
             #If any loop node matches
             for child_node in loop_node.childIterator():
                 if child_node.is_loop() and self._is_loop_match(child_node,
                                                                 seg_data, errh, seg_count, cur_line, ls_id):
                     return True
-        elif is_first_seg_match2(first_child_node, seg_data):
+        elif _is_first_seg_match2(first_child_node, seg_data):
             return True
         elif loop_node.usage == 'R' and loop_node.get_cur_count() < 1:
             fake_seg = pyx12.segment.Segment('%s' %
@@ -319,10 +312,10 @@ class walk_tree(object):
         @return: The matching segment node and a list of the push loop nodes
         @rtype: (L{node<map_if.segment_if>}, [L{node<map_if.loop_if>}])
         """
-        assert loop_node.is_loop(), "_goto_seg_match failed, node %s is not a loop. seg %s" \
-            % (loop_node.id, seg_data.get_seg_id())
+        #assert loop_node.is_loop(), "_goto_seg_match failed, node %s is not a loop. seg %s" \
+        #    % (loop_node.id, seg_data.get_seg_id())
         first_child_node = loop_node.get_first_seg()
-        if first_child_node is not None and is_first_seg_match2(first_child_node, seg_data):
+        if first_child_node is not None and _is_first_seg_match2(first_child_node, seg_data):
             self._check_loop_usage(loop_node, seg_data,
                                    seg_count, cur_line, ls_id, errh)
             first_child_node.incr_cur_count()
@@ -360,10 +353,8 @@ class walk_tree(object):
         @type errh: L{error_handler.err_handler}
         @raise EngineError: On invalid usage code
         """
-        assert loop_node.is_loop(), "Node %s is not a loop. seg %s" % (
-            loop_node.id, seg_data.get_seg_id())
-        assert loop_node.usage in (
-            'N', 'R', 'S'), 'Loop usage must be R, S, or N'
+        #assert loop_node.is_loop(), "Node %s is not a loop. seg %s" % (loop_node.id, seg_data.get_seg_id())
+        #assert loop_node.usage in ('N', 'R', 'S'), 'Loop usage must be R, S, or N'
         if loop_node.usage == 'N':
             err_str = "Loop %s found but marked as not used" % (loop_node.id)
             errh.seg_error('2', err_str, None)

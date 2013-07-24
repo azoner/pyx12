@@ -386,8 +386,7 @@ class X12LoopDataNode(X12DataNode):
         new_data_loop = self._add_loop_node(x12_loop_node)
         # Now, add the segment
         x12_seg_node = new_data_loop.x12_map_node.get_child_seg_node(seg_data)
-        new_data_node = X12SegmentDataNode(
-            x12_seg_node, seg_data, new_data_loop)
+        new_data_node = X12SegmentDataNode(x12_seg_node, seg_data, new_data_loop)
         new_data_loop.add_node(new_data_node)
         return new_data_loop
 
@@ -780,8 +779,7 @@ class X12ContextReader(object):
                 self.x12_map_node = self.control_map.getnodebypath(tpath)
             else:
                 try:
-                    (
-                        seg_node, pop_loops, push_loops) = self.walker.walk(self.x12_map_node,
+                    (seg_node, pop_loops, push_loops) = self.walker.walk(self.x12_map_node,
                                                                             seg, errh, self.src.get_seg_count(),
                                                                             self.src.get_cur_line(), self.src.get_ls_id())
                     self.x12_map_node = seg_node
@@ -796,8 +794,7 @@ class X12ContextReader(object):
                 elif seg_id == 'GS':
                     fic = seg.get_value('GS01')
                     vriic = seg.get_value('GS08')
-                    map_file_new = self.map_index_if.get_filename(
-                        icvn, vriic, fic)
+                    map_file_new = self.map_index_if.get_filename(icvn, vriic, fic)
                     if self.map_file != map_file_new:
                         #map_abbr = self.map_index_if.get_abbr(icvn, vriic, fic)
                         self.map_file = map_file_new
@@ -817,18 +814,15 @@ class X12ContextReader(object):
                 elif seg_id == 'BHT':
                     if vriic in ('004010X094', '004010X094A1'):
                         tspc = seg.get_value('BHT02')
-                        map_file_new = self.map_index_if.get_filename(icvn,
-                                                                      vriic, fic, tspc)
+                        map_file_new = self.map_index_if.get_filename(icvn, vriic, fic, tspc)
                         if self.map_file != map_file_new:
-                            #map_abbr = self.map_index_if.get_abbr(icvn, \
-                            #    vriic, fic, tspc)
+                            #map_abbr = self.map_index_if.get_abbr(icvn, vriic, fic, tspc)
                             self.map_file = map_file_new
                             if self.map_file is None:
                                 err_str = "Map not found.  icvn=%s, fic=%s, vriic=%s, tspc=%s" % \
                                     (icvn, fic, vriic, tspc)
                                 raise pyx12.errors.EngineError(err_str)
-                            cur_map = map_if.load_map_file(self.map_file,
-                                                           self.param)
+                            cur_map = map_if.load_map_file(self.map_file, self.param)
                             if cur_map.id == '837':
                                 self.src.check_837_lx = True
                             else:
@@ -842,8 +836,7 @@ class X12ContextReader(object):
             if loop_id is not None and loop_id in node_x12path.loop_list:
                 #pdb.set_trace()
                 # Are we at the start of the requested tree?
-                if node_x12path.loop_list[-1] == loop_id and \
-                        self.x12_map_node.is_first_seg_in_loop():
+                if node_x12path.loop_list[-1] == loop_id and self.x12_map_node.is_first_seg_in_loop():
                     if cur_tree is not None:
                         # Found root loop repeat. Yield existing, create new tree
                         yield cur_tree
@@ -868,8 +861,7 @@ class X12ContextReader(object):
                         pop_loops = [x12_node for x12_node in pop_loops if x12_node.get_path().find(loop_id) == -1]
                     assert loop_id not in [x12.id for x12 in push_loops], 'Loop ID %s should not be in push loops' % (loop_id)
                     assert loop_id not in [x12.id for x12 in pop_loops], 'Loop ID %s should not be in pop loops' % (loop_id)
-                    cur_data_node = X12SegmentDataNode(self.x12_map_node,
-                                                       seg, push_loops, pop_loops)
+                    cur_data_node = X12SegmentDataNode(self.x12_map_node, seg, push_loops, pop_loops)
                 else:
                     cur_data_node = X12SegmentDataNode(self.x12_map_node, seg)
                 # Get errors caught by x12Reader
