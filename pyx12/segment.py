@@ -84,7 +84,7 @@ class Element(object):
         @param elem_str: Element string value
         @type elem_str: string
         """
-        self.value = elem_str if ele_str is not None else ''
+        self.value = elem_str if elem_str is not None else ''
 
     def is_composite(self):
         """
@@ -189,10 +189,12 @@ class Composite(object):
         """
         if subele_term is None:
             subele_term = self.subele_term
+        last = 0
         for i in range(len(self.elements) - 1, -1, -1):
             if not self.elements[i].is_empty():
+                last = i
                 break
-        return subele_term.join([Element.__repr__(x) for x in self.elements[:i + 1]])
+        return subele_term.join([Element.__repr__(x) for x in self.elements[:last + 1]])
 
     def get_value(self):
         """
