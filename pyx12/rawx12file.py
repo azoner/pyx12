@@ -18,7 +18,6 @@ Used by X12Reader.
 
 # Intrapackage imports
 import pyx12.errors
-import pyx12.segment
 
 DEFAULT_BUFSIZE = 8 * 1024
 ISA_LEN = 106
