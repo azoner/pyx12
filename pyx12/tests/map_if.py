@@ -9,7 +9,7 @@ import pyx12.segment
 
 class ElementIsValidDate(unittest.TestCase):
     def setUp(self):
-        param = pyx12.params.params('pyx12.conf.xml')
+        param = pyx12.params.params()
         self.map = pyx12.map_if.load_map_file(
             '837Q3.I.5010.X223.A1.xml', param)
         self.node = self.map.getnodebypath(
@@ -98,7 +98,7 @@ class ElementIsValidDate(unittest.TestCase):
 
 class SegmentIsValid(unittest.TestCase):
     def setUp(self):
-        param = pyx12.params.params('pyx12.conf.xml')
+        param = pyx12.params.params()
         self.map = pyx12.map_if.load_map_file(
             '837Q3.I.5010.X223.A1.xml', param)
         self.node = self.map.getnodebypath(
@@ -118,7 +118,7 @@ class SegmentIsValid(unittest.TestCase):
 
 class ElementIsValid(unittest.TestCase):
     def setUp(self):
-        param = pyx12.params.params('pyx12.conf.xml')
+        param = pyx12.params.params()
         self.map = pyx12.map_if.load_map_file('837.4010.X098.A1.xml', param)
         self.node = self.map.getnodebypath(
             '/ISA_LOOP/GS_LOOP/ST_LOOP/DETAIL/2000A/2000B/2300/CLM')
@@ -334,7 +334,7 @@ class ElementIsValid(unittest.TestCase):
 
 class GetNodeByPath(unittest.TestCase):
     def setUp(self):
-        self.param = pyx12.params.params('pyx12.conf.xml')
+        self.param = pyx12.params.params()
         self.map = pyx12.map_if.load_map_file(
             '837.4010.X098.A1.xml', self.param)
 
@@ -412,7 +412,7 @@ class GetNodeByPath(unittest.TestCase):
 
 class CompositeRequirement(unittest.TestCase):
     def setUp(self):
-        self.param = pyx12.params.params('pyx12.conf.xml')
+        self.param = pyx12.params.params()
         self.map = pyx12.map_if.load_map_file(
             '837.4010.X098.A1.xml', self.param)
         self.errh = pyx12.error_handler.errh_null()
@@ -486,7 +486,7 @@ class CompositeRequirement(unittest.TestCase):
 
 class TrailingSpaces(unittest.TestCase):
     def setUp(self):
-        param = pyx12.params.params('pyx12.conf.xml')
+        param = pyx12.params.params()
         self.map = pyx12.map_if.load_map_file('837.4010.X098.A1.xml', param)
         self.errh = pyx12.error_handler.errh_null()
 
@@ -531,7 +531,7 @@ class TrailingSpaces(unittest.TestCase):
 
 class ElementRequirement(unittest.TestCase):
     def setUp(self):
-        param = pyx12.params.params('pyx12.conf.xml')
+        param = pyx12.params.params()
         self.map = pyx12.map_if.load_map_file('837.4010.X098.A1.xml', param)
         self.errh = pyx12.error_handler.errh_null()
 
@@ -565,7 +565,7 @@ class ElementRequirement(unittest.TestCase):
 
 class NodeEquality(unittest.TestCase):
     def setUp(self):
-        param = pyx12.params.params('pyx12.conf.xml')
+        param = pyx12.params.params()
         self.map = pyx12.map_if.load_map_file('837.4010.X098.A1.xml', param)
         self.errh = pyx12.error_handler.errh_null()
 
@@ -592,7 +592,7 @@ class NodeEquality(unittest.TestCase):
 
 class LoopIsMatch(unittest.TestCase):
     def setUp(self):
-        param = pyx12.params.params('pyx12.conf.xml')
+        param = pyx12.params.params()
         self.map = pyx12.map_if.load_map_file(
             '837Q3.I.5010.X223.A1.xml', param)
         self.node = self.map.getnodebypath(
@@ -610,7 +610,7 @@ class GetNodeBySegment(unittest.TestCase):
     Find matching child nodes matching a segment
     """
     def setUp(self):
-        param = pyx12.params.params('pyx12.conf.xml')
+        param = pyx12.params.params()
         self.map = pyx12.map_if.load_map_file('834.5010.X220.A1.xml', param)
         self.errh = pyx12.error_handler.errh_null()
 
@@ -657,7 +657,7 @@ class GetNodeBySegment(unittest.TestCase):
 
 class MatchSegmentQual(unittest.TestCase):
     def setUp(self):
-        param = pyx12.params.params('pyx12.conf.xml')
+        param = pyx12.params.params()
         self.map = pyx12.map_if.load_map_file(
             '837Q3.I.5010.X223.A1.xml', param)
         self.node = self.map.getnodebypath(
@@ -691,7 +691,7 @@ class MatchSegmentQual(unittest.TestCase):
 
 class X12Path(unittest.TestCase):
     def setUp(self):
-        param = pyx12.params.params('pyx12.conf.xml')
+        param = pyx12.params.params()
         self.map = pyx12.map_if.load_map_file('837.4010.X098.A1.xml', param)
 
     def test_837_paths(self):
@@ -709,7 +709,7 @@ class X12Path(unittest.TestCase):
 
 class X12Version(unittest.TestCase):
     def setUp(self):
-        self.param = pyx12.params.params('pyx12.conf.xml')
+        self.param = pyx12.params.params()
 
     def test_4010(self):
         map = pyx12.map_if.load_map_file('834.4010.X095.A1.xml', self.param)
@@ -722,7 +722,7 @@ class X12Version(unittest.TestCase):
 
 class SegmentChildrenOrdinal(unittest.TestCase):
     def setUp(self):
-        param = pyx12.params.params('pyx12.conf.xml')
+        param = pyx12.params.params()
         self.map = pyx12.map_if.load_map_file('999.5010.xml', param)
 
     def test_check_ord_ok(self):

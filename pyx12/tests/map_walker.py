@@ -15,7 +15,7 @@ class Explicit_Loops(unittest.TestCase):
     def setUp(self):
 
         self.walker = walk_tree()
-        param = pyx12.params.params('pyx12.conf.xml')
+        param = pyx12.params.params()
         self.map = pyx12.map_if.load_map_file('837.4010.X098.A1.xml', param)
         self.errh = pyx12.error_handler.errh_null()
         #self.logger = logging.getLogger('pyx12')
@@ -142,7 +142,7 @@ class Implicit_Loops(unittest.TestCase):
     def setUp(self):
 
         self.walker = walk_tree()
-        self.param = pyx12.params.params('pyx12.conf.xml')
+        self.param = pyx12.params.params()
 
         self.map = pyx12.map_if.load_map_file(
             '837.4010.X098.A1.xml', self.param)
@@ -302,7 +302,7 @@ class Implicit_Loops(unittest.TestCase):
     def test_837i_2420a(self):
 
         walker = walk_tree()
-        param = pyx12.params.params('pyx12.conf.xml')
+        param = pyx12.params.params()
 
         cmap = pyx12.map_if.load_map_file(
             '837Q3.I.5010.X223.A1.xml', self.param)
@@ -325,7 +325,7 @@ class Implicit_Loops(unittest.TestCase):
         #self.assertNotEqual('A', 'B')
 
         walker = walk_tree()
-        param = pyx12.params.params('pyx12.conf.xml')
+        param = pyx12.params.params()
 
         cmap = pyx12.map_if.load_map_file('999.5010.xml', self.param)
         errh = pyx12.error_handler.errh_null()
@@ -357,7 +357,7 @@ class SegmentWalk(unittest.TestCase):
     def setUp(self):
 
         self.walker = walk_tree()
-        self.param = pyx12.params.params('pyx12.conf.xml')
+        self.param = pyx12.params.params()
 
         self.map = pyx12.map_if.load_map_file(
             '837.4010.X098.A1.xml', self.param)
@@ -428,7 +428,7 @@ class SegmentWalk278(unittest.TestCase):
     def setUp(self):
 
         self.walker = walk_tree()
-        self.param = pyx12.params.params('pyx12.conf.xml')
+        self.param = pyx12.params.params()
 
         self.map = pyx12.map_if.load_map_file(
             '278.4010.X094.A1.xml', self.param)
@@ -454,7 +454,7 @@ class Segment_ID_Checks(unittest.TestCase):
     def setUp(self):
 
         self.walker = walk_tree()
-        param = pyx12.params.params('pyx12.conf.xml')
+        param = pyx12.params.params()
 
         self.map = pyx12.map_if.load_map_file('837.4010.X098.A1.xml', param)
         self.errh = pyx12.error_handler.errh_null()
@@ -488,7 +488,7 @@ class Counting(unittest.TestCase):
     def setUp(self):
 
         self.walker = walk_tree()
-        param = pyx12.params.params('pyx12.conf.xml')
+        param = pyx12.params.params()
 
         self.map = pyx12.map_if.load_map_file('270.4010.X092.A1.xml', param)
         self.errh = pyx12.error_handler.errh_null()
@@ -554,7 +554,7 @@ class LoopCounting(unittest.TestCase):
     def setUp(self):
 
         self.walker = walk_tree()
-        param = pyx12.params.params('pyx12.conf.xml')
+        param = pyx12.params.params()
 
         self.map = pyx12.map_if.load_map_file('837.4010.X098.A1.xml', param)
         self.errh = pyx12.error_handler.errh_null()
@@ -591,7 +591,7 @@ class CountOrdinal(unittest.TestCase):
     def setUp(self):
 
         self.walker = walk_tree()
-        param = pyx12.params.params('pyx12.conf.xml')
+        param = pyx12.params.params()
 
         self.map = pyx12.map_if.load_map_file('834.5010.X220.A1.xml', param)
         self.errh = pyx12.error_handler.errh_null()
@@ -706,7 +706,7 @@ class LoopPathPopPush837(unittest.TestCase):
     def setUp(self):
 
         self.walker = walk_tree()
-        param = pyx12.params.params('pyx12.conf.xml')
+        param = pyx12.params.params()
 
         self.errh = pyx12.error_handler.errh_null()
         self.map = pyx12.map_if.load_map_file('837.4010.X098.A1.xml', param)
@@ -739,7 +739,7 @@ class LoopPathPopPush834(unittest.TestCase):
     def setUp(self):
 
         self.walker = walk_tree()
-        param = pyx12.params.params('pyx12.conf.xml')
+        param = pyx12.params.params()
 
         self.map = pyx12.map_if.load_map_file('834.5010.X220.A1.xml', param)
         self.errh = pyx12.error_handler.errh_null()
@@ -817,7 +817,7 @@ class Bug837i(unittest.TestCase):
     def setUp(self):
 
         self.walker = walk_tree()
-        self.param = pyx12.params.params('pyx12.conf.xml')
+        self.param = pyx12.params.params()
 
         self.map = pyx12.map_if.load_map_file(
             '837Q3.I.5010.X223.A1.xml', self.param)

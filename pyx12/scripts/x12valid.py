@@ -123,7 +123,7 @@ def main():
                     sys.stderr.write('%s: Failure\n' % (src_filename))
                 #import profile
                 #prof_str = 'pyx12.x12n_document.x12n_document(param, src_filename, ' \
-                #        + 'fd_997, fd_html, None, xslt_files)'
+                #        + 'fd_997, fd_html, None, None)'
                 #print prof_str
                 #print param
                 #profile.run(prof_str, 'pyx12.prof')
