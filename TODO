@@ -21,10 +21,6 @@ x12file:
     check invalid seg term (004)
     check invalid ele term (026)
 
-XML schema for idtag and idtagqual forms
-
-xmlx12.py - handle idtag and idtagqual types
-
 Path/property local overrides
 
 TA1 input
