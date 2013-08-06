@@ -24,34 +24,9 @@
         <value>taxonomy,states</value>
         <comment>Comma separated list of external_codes to exclude</comment>
     </param>
-    <param name="ignore_syntax">
-        <type>boolean</type>
-        <value>True</value>
-        <comment>Ignore syntax validation</comment>
-    </param>
     <param name="charset">
         <value>B</value>
         <comment>E = extended, B = Basic</comment>
-    </param>
-    <param name="ignore_codes">
-        <type>boolean</type>
-        <value>False</value>
-        <comment></comment>
-    </param>
-    <param name="ignore_ext_codes">
-        <type>boolean</type>
-        <value>False</value>
-        <comment></comment>
-    </param>
-    <param name="skip_html">
-        <type>boolean</type>
-        <value>False</value>
-        <comment></comment>
-    </param>
-    <param name="skip_997">
-        <type>boolean</type>
-        <value>False</value>
-        <comment></comment>
     </param>
     <param name="simple_dtd">
         <value></value>

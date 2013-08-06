@@ -10,7 +10,7 @@ import pyx12.params
 class UniqueNodePath(unittest.TestCase):
 
     def setUp(self):
-        self.param = pyx12.params.params('pyx12.conf.xml')
+        self.param = pyx12.params.params()
         self.errh = pyx12.error_handler.errh_null()
 
     def _get_paths(self, map_file):

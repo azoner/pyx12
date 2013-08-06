@@ -8,7 +8,7 @@ class GetFilename(unittest.TestCase):
     """
     """
     def setUp(self):
-        param = pyx12.params.params('pyx12.conf.xml')
+        param = pyx12.params.params()
         self.idx = pyx12.map_index.map_index()
 
     def test_get_837p(self):
