@@ -40,17 +40,10 @@ class ParamsBase(object):
         if not isdir(map_path):
             map_path = join(sys.prefix, 'share', 'pyx12', 'map')
         self.params['map_path'] = map_path
-        self.params['pickle_path'] = map_path
         self.params['exclude_external_codes'] = None
-        self.params['ignore_syntax'] = False
         self.params['charset'] = 'E'
-        self.params['ignore_codes'] = False
-        self.params['ignore_ext_codes'] = False
-        self.params['skip_html'] = False
-        self.params['skip_997'] = False
         self.params['simple_dtd'] = ''
         self.params['xmlout'] = 'simple'
-        self.params['xslt_files'] = []
 
     def get(self, option):
         """

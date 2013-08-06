@@ -12,7 +12,7 @@ from pyx12.tests.x12testdata import datafiles
 
 class X12DocumentTestCase(unittest.TestCase):
     def setUp(self):
-        self.param = pyx12.params.params('pyx12.conf.xml')
+        self.param = pyx12.params.params()
 
     def _makeFd(self, x12str=None):
         try:

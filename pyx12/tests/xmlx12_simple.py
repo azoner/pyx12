@@ -16,7 +16,7 @@ from pyx12.tests.x12testdata import datafiles
 
 class XmlTransformTestCase(unittest.TestCase):
     def setUp(self):
-        self.param = pyx12.params.params('pyx12.conf.xml')
+        self.param = pyx12.params.params()
         self.logger = logging.getLogger('pyx12')
         formatter = logging.Formatter('%(asctime)s %(levelname)s %(message)s')
         hdlr = logging.NullHandler()

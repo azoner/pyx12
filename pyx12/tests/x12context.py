@@ -14,7 +14,7 @@ from pyx12.tests.x12testdata import datafiles
 
 class X12fileTestCase(unittest.TestCase):
     def setUp(self):
-        self.param = pyx12.params.params('pyx12.conf.xml')
+        self.param = pyx12.params.params()
 
     def _makeFd(self, x12str=None):
         try:
@@ -76,7 +76,7 @@ class TreeGetValue(X12fileTestCase):
 
     def setUp(self):
         fd = self._makeFd(datafiles['simple_837p']['source'])
-        param = pyx12.params.params('pyx12.conf.xml')
+        param = pyx12.params.params()
         errh = pyx12.error_handler.errh_null()
         self.src = pyx12.x12context.X12ContextReader(param, errh, fd)
         for datatree in self.src.iter_segments('2300'):
@@ -128,7 +128,7 @@ class TreeSetValue(X12fileTestCase):
 
     def setUp(self):
         fd = self._makeFd(datafiles['simple_837p']['source'])
-        param = pyx12.params.params('pyx12.conf.xml')
+        param = pyx12.params.params()
         errh = pyx12.error_handler.errh_null()
         self.src = pyx12.x12context.X12ContextReader(param, errh, fd)
         for datatree in self.src.iter_segments('2300'):
@@ -150,7 +150,7 @@ class TreeSelect(X12fileTestCase):
 
     def setUp(self):
         fd = self._makeFd(datafiles['simple_837p']['source'])
-        self.param = pyx12.params.params('pyx12.conf.xml')
+        self.param = pyx12.params.params()
         errh = pyx12.error_handler.errh_null()
         src = pyx12.x12context.X12ContextReader(self.param, errh, fd)
         for datatree in src.iter_segments('2300'):
@@ -223,7 +223,7 @@ class TreeSelectFromSegment(X12fileTestCase):
 
     def test_select_from_seg_fail(self):
         fd = self._makeFd(datafiles['835id']['source'])
-        param = pyx12.params.params('pyx12.conf.xml')
+        param = pyx12.params.params()
         errh = pyx12.error_handler.errh_null()
         src = pyx12.x12context.X12ContextReader(param, errh, fd,)
         for datatree in src.iter_segments('ST_LOOP'):
@@ -237,7 +237,7 @@ class TreeAddSegment(X12fileTestCase):
 
     def setUp(self):
         fd = self._makeFd(datafiles['simple_837p']['source'])
-        param = pyx12.params.params('pyx12.conf.xml')
+        param = pyx12.params.params()
         errh = pyx12.error_handler.errh_null()
         self.src = pyx12.x12context.X12ContextReader(param, errh, fd,)
         for datatree in self.src.iter_segments('2300'):
@@ -265,7 +265,7 @@ class TreeAddSegmentString(X12fileTestCase):
 
     def setUp(self):
         fd = self._makeFd(datafiles['simple_837p']['source'])
-        param = pyx12.params.params('pyx12.conf.xml')
+        param = pyx12.params.params()
         errh = pyx12.error_handler.errh_null()
         self.src = pyx12.x12context.X12ContextReader(param, errh, fd,)
         for datatree in self.src.iter_segments('2300'):
@@ -290,7 +290,7 @@ class SegmentExists(X12fileTestCase):
 
     def setUp(self):
         fd = self._makeFd(datafiles['simple_837p']['source'])
-        self.param = pyx12.params.params('pyx12.conf.xml')
+        self.param = pyx12.params.params()
         errh = pyx12.error_handler.errh_null()
         self.src = pyx12.x12context.X12ContextReader(self.param, errh, fd,)
         for datatree in self.src.iter_segments('2300'):
@@ -333,7 +333,7 @@ class TreeAddLoop(X12fileTestCase):
 
     def setUp(self):
         fd = self._makeFd(datafiles['simple_837p']['source'])
-        param = pyx12.params.params('pyx12.conf.xml')
+        param = pyx12.params.params()
         errh = pyx12.error_handler.errh_null()
         self.src = pyx12.x12context.X12ContextReader(param, errh, fd,)
         for datatree in self.src.iter_segments('2300'):
@@ -373,7 +373,7 @@ class TreeAddLoopDetail(X12fileTestCase):
         str1 += 'IEA&1&000010121+\n'
         fd = self._makeFd(str1)
         errors = []
-        param = pyx12.params.params('pyx12.conf.xml')
+        param = pyx12.params.params()
         errh = pyx12.error_handler.errh_null()
         src = pyx12.x12context.X12ContextReader(param, errh, fd,)
         for st_loop in src.iter_segments('ST_LOOP'):
@@ -388,7 +388,7 @@ class TreeAddLoopDetail(X12fileTestCase):
 
 class TreeAddNode(X12fileTestCase):
     def setUp(self):
-        self.param = pyx12.params.params('pyx12.conf.xml')
+        self.param = pyx12.params.params()
 
     def test_add_loop(self):
         fd = self._makeFd(datafiles['simple_837p']['source'])
@@ -445,7 +445,7 @@ class CountRepeatingLoop(X12fileTestCase):
 
     def setUp(self):
         fd = self._makeFd(datafiles['simple_837p']['source'])
-        param = pyx12.params.params('pyx12.conf.xml')
+        param = pyx12.params.params()
         errh = pyx12.error_handler.errh_null()
         self.src = pyx12.x12context.X12ContextReader(param, errh, fd,)
         for datatree in self.src.iter_segments('2300'):
@@ -472,7 +472,7 @@ class IterateTree(X12fileTestCase):
 
     def setUp(self):
         fd = self._makeFd(datafiles['simple_837p']['source'])
-        param = pyx12.params.params('pyx12.conf.xml')
+        param = pyx12.params.params()
         errh = pyx12.error_handler.errh_null()
         self.src = pyx12.x12context.X12ContextReader(param, errh, fd,)
 
@@ -493,7 +493,7 @@ class TreeDeleteSegment(X12fileTestCase):
 
     def setUp(self):
         fd = self._makeFd(datafiles['simple_837p']['source'])
-        param = pyx12.params.params('pyx12.conf.xml')
+        param = pyx12.params.params()
         errh = pyx12.error_handler.errh_null()
         self.src = pyx12.x12context.X12ContextReader(param, errh, fd,)
         for datatree in self.src.iter_segments('2300'):
@@ -516,7 +516,7 @@ class TreeDeleteLoop(X12fileTestCase):
 
     def setUp(self):
         fd = self._makeFd(datafiles['simple_837p']['source'])
-        param = pyx12.params.params('pyx12.conf.xml')
+        param = pyx12.params.params()
         errh = pyx12.error_handler.errh_null()
         self.src = pyx12.x12context.X12ContextReader(param, errh, fd,)
         for datatree in self.src.iter_segments('2300'):
@@ -537,7 +537,7 @@ class NodeDeleteSelf(X12fileTestCase):
 
     def setUp(self):
         fd = self._makeFd(datafiles['simple_837p']['source'])
-        param = pyx12.params.params('pyx12.conf.xml')
+        param = pyx12.params.params()
         errh = pyx12.error_handler.errh_null()
         self.src = pyx12.x12context.X12ContextReader(param, errh, fd,)
         for datatree in self.src.iter_segments('2300'):
@@ -560,7 +560,7 @@ class NodeDeleteSelf(X12fileTestCase):
 
 class TreeCopy(X12fileTestCase):
     def setUp(self):
-        self.param = pyx12.params.params('pyx12.conf.xml')
+        self.param = pyx12.params.params()
 
     def test_add_node(self):
         fd = self._makeFd(datafiles['835id']['source'])

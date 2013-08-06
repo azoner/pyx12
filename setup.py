@@ -35,7 +35,7 @@ setup(
             'xmlx12 = pyx12.scripts.xmlx12:main',
         ]
     },
-    #test_suite="pyx12.tests",
+    test_suite="pyx12.tests",
     #install_requires=['distribute'],
     #setup_requires=['distribute'],
     classifiers=[

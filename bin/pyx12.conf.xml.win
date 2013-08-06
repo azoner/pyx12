@@ -10,7 +10,6 @@
 #
 ######################################################################
 
-#    $Id: pyx12.conf.xml.sample 784 2005-07-22 20:53:50Z johnholland $
 -->
 
 <!-- pyx12 configuration file
@@ -25,59 +24,20 @@ or can be passed on the command line using the -c option
         <value>c:\\python25\\share\\pyx12\\map</value>
         <comment>Where to find the xml maps</comment>
     </param>
-    <param name="pickle_path">
-        <value>c:\\python25\\share\\pyx12\\map</value>
-        <comment>Where to find the serialized versions of the xml maps, if compiled</comment>
-    </param>
 -->
     <param name="exclude_external_codes">
         <!--<value>states</value>-->
         <value></value>
         <comment>Comma separated list of external_codes to exclude</comment>
     </param>
-    <param name="ignore_syntax">
-        <type>boolean</type>
-        <value>False</value>
-        <comment>Ignore syntax validation</comment>
-    </param>
     <param name="charset">
         <value>E</value>
         <comment>E = extended, B = Basic</comment>
-    </param>
-    <param name="ignore_codes">
-        <type>boolean</type>
-        <value>False</value>
-        <comment></comment>
-    </param>
-    <param name="ignore_ext_codes">
-        <type>boolean</type>
-        <value>False</value>
-        <comment></comment>
-    </param>
-    <param name="skip_html">
-        <type>boolean</type>
-        <value>False</value>
-        <comment></comment>
-    </param>
-    <param name="skip_997">
-        <type>boolean</type>
-        <value>False</value>
-        <comment></comment>
     </param>
     <param name="simple_dtd">
         <value></value>
         <comment></comment>
     </param>
-    <!--
-    <param name="idtag_dtd">
-        <value>http://www.kazoocmh.org/dtd/x12idtag.dtd</value>
-        <comment></comment>
-    </param>
-    <param name="idtagqual_dtd">
-        <value>http://www.kazoocmh.org/dtd/x12idtagqual.dtd</value>
-        <comment></comment>
-    </param>
-    -->
     <param name="xmlout">
         <value>simple</value>
         <comment>Style of XML output</comment>
