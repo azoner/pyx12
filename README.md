@@ -21,6 +21,13 @@ Or install in a virtual environment
     virtualenv my_env
     pip -E my_env install pyx12
 
+
+# Usage
+
+As a command line tool
+
+    x12valid <filename>
+
 # Licensing
 
 Pyx12 has a BSD license. The full license text is included with the source code for the package. 
