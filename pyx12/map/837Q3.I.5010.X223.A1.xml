@@ -1000,6 +1000,7 @@
                   <name>Billing Provider Postal Zone or ZIP Code</name>
                   <usage>S</usage>
                   <seq>03</seq>
+                  <regex>[0-9]{9}</regex>
                 </element>
                 <element xid="N404">
                   <data_ele>26</data_ele>
