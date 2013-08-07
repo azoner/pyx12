@@ -25,14 +25,18 @@ class map_index(object):
     """
     Interface to the maps.xml file
     """
-    def __init__(self, map_index_file=None):
+    def __init__(self, base_path=None):
         """
-        @param map_index_file: deprecated
-        @type map_index_file: string
+        @param base_path: Override directory containing maps.xml.  If None,
+                    uses package resource folder
+        @type base_path: string
         """
         self.maps = []
 
-        fd = resource_stream(__name__, os.path.join('map', 'maps.xml'))
+        if base_path is not None:
+            fd = open(os.path.join(base_path, 'maps.xml'))
+        else:
+            fd = resource_stream(__name__, os.path.join('map', 'maps.xml'))
         t = et.parse(fd)
         for v in t.iter('version'):
             icvn = v.get('icvn')

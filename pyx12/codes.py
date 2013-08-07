@@ -32,7 +32,8 @@ class ExternalCodes(object):
     def __init__(self, base_path=None, exclude=None):
         """
         Initialize the external list of codes
-        @param base_path: deprecated
+        @param base_path: Override directory containing codes.xml.  If None, 
+            uses package resource folder
         @type base_path: string
         @param exclude: comma separated string of external codes to ignore
         @type exclude: string
@@ -42,7 +43,10 @@ class ExternalCodes(object):
         """
 
         self.codes = {}
-        code_fd = resource_stream(__name__, os.path.join('map', 'codes.xml'))
+        if base_path is not None:
+            code_fd = open(os.path.join(base_path, 'codes.xml'))
+        else:
+            code_fd = resource_stream(__name__, os.path.join('map', 'codes.xml'))
         codeset_id = None
         #base_name = None
 

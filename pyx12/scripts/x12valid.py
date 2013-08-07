@@ -17,11 +17,12 @@ Validate against a map and codeset values.
 
 import os
 import os.path
-from os.path import abspath, join, dirname, isdir
+from os.path import abspath, join, dirname, isdir, isfile
 import sys
 import logging
 import tempfile
 import codecs
+import argparse
 
 # Intrapackage imports
 libpath = abspath(join(dirname(__file__), '../..'))
@@ -37,18 +38,26 @@ __version__ = pyx12.__version__
 __date__ = pyx12.__date__
 
 
+def check_map_path_arg(map_path):
+    if not isdir(map_path):
+        raise argparse.ArgumentError(None, "The MAP_PATH '{}' is not a valid directory".format(map_path))
+    index_file = 'maps.xml'
+    if not isfile(os.path.join(map_path, index_file)):
+        raise argparse.ArgumentError(None, 
+                    "The MAP_PATH '{}' does not contain the map index file '{}'".format(map_path, index_file))
+    return map_path
+
+
 def main():
     """
     Set up environment for processing
     """
-    import argparse
     parser = argparse.ArgumentParser(description='X12 Validation')
     parser.add_argument('--config-file', '-c', action='store',
                         dest="configfile", default=None)
     parser.add_argument(
         '--log-file', '-l', action='store', dest="logfile", default=None)
-    #parser.add_argument(
-    #    '--map-path', '-m', action='store', dest="map_path", default=None)
+    parser.add_argument('--map-path', '-m', action='store', dest="map_path", default=None, type=check_map_path_arg)
     parser.add_argument('--verbose', '-v', action='count')
     parser.add_argument('--debug', '-d', action='store_true')
     parser.add_argument('--quiet', '-q', action='store_true')
@@ -59,9 +68,9 @@ def main():
         'b', 'e'), help='Specify X12 character set: b=basic, e=extended')
     #parser.add_argument('--background', '-b', action='store_true')
     #parser.add_argument('--test', '-t', action='store_true')
-    parser.add_argument('--profile', action='store_true',
-                        help='Profile the code with plop')
-    parser.add_argument('--version', action='version', version='{prog} {version}'.format(prog=parser.prog, version=__version__))
+    parser.add_argument('--profile', action='store_true', help='Profile the code with plop')
+    parser.add_argument('--version', action='version', 
+                        version='{prog} {version}'.format(prog=parser.prog, version=__version__))
     parser.add_argument('input_files', nargs='*')
     args = parser.parse_args()
 
@@ -85,8 +94,8 @@ def main():
     fd_html = None
     flag_997 = True
     param.set('exclude_external_codes', ','.join(args.exclude_external))
-    #if args.map_path:
-    #    param.set('map_path', args.map_path)
+    if args.map_path:
+        param.set('map_path', args.map_path)
 
     if args.logfile:
         try:
@@ -115,9 +124,8 @@ def main():
                 from plop.collector import Collector
                 p = Collector()
                 p.start()
-                if pyx12.x12n_document.x12n_document(
-                    param=param, src_file=src_filename,
-                        fd_997=fd_997, fd_html=fd_html, fd_xmldoc=None):
+                if pyx12.x12n_document.x12n_document(param=param, src_file=src_filename,
+                        fd_997=fd_997, fd_html=fd_html, fd_xmldoc=None, map_path=args.map_path):
                     sys.stderr.write('%s: OK\n' % (src_filename))
                 else:
                     sys.stderr.write('%s: Failure\n' % (src_filename))
@@ -140,9 +148,8 @@ def main():
                     logger.exception('Failed to write profile data')
                     sys.stderr.write('%s: bad profile save\n' % (src_filename))
             else:
-                if pyx12.x12n_document.x12n_document(
-                    param=param, src_file=src_filename,
-                        fd_997=fd_997, fd_html=fd_html, fd_xmldoc=None):
+                if pyx12.x12n_document.x12n_document(param=param, src_file=src_filename,
+                        fd_997=fd_997, fd_html=fd_html, fd_xmldoc=None, map_path=args.map_path):
                     sys.stderr.write('%s: OK\n' % (src_filename))
                 else:
                     sys.stderr.write('%s: Failure\n' % (src_filename))
@@ -168,8 +175,4 @@ def main():
     return True
 
 if __name__ == '__main__':
-    #if sys.argv[0] == 'x12validp':
-    #    import profile
-    #    profile.run('pyx12.x12n_document(src_filename)', 'pyx12.prof')
-    #else:
     sys.exit(not main())

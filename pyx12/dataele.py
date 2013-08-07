@@ -32,7 +32,8 @@ class DataElements(object):
     def __init__(self, base_path=None):
         """
         Initialize the list of data elements
-        @param base_path: deprecated
+        @param base_path: Override directory containing dataele.xml.  If None,
+            uses package resource folder
         @type base_path: string
 
         @note: self.dataele - map to the data element
@@ -40,7 +41,11 @@ class DataElements(object):
         """
 
         self.dataele = {}
-        fd = resource_stream(__name__, os.path.join('map', 'dataele.xml'))
+
+        if base_path is not None:
+            fd = open(os.path.join(base_path, 'dataele.xml'))
+        else:
+            fd = resource_stream(__name__, os.path.join('map', 'dataele.xml'))
         for eElem in et.parse(fd).iter('data_ele'):
             ele_num = eElem.get('ele_num')
             data_type = eElem.get('data_type')
