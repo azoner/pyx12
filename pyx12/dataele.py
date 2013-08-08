@@ -13,6 +13,7 @@ Interface to normalized Data Elements
 """
 
 import os.path
+import logging
 import xml.etree.cElementTree as et
 from pkg_resources import resource_stream
 
@@ -39,13 +40,15 @@ class DataElements(object):
         @note: self.dataele - map to the data element
         {ele_num: {data_type, min_len, max_len, name}}
         """
-
+        logger = logging.getLogger('pyx12')
         self.dataele = {}
-
+        dataele_file = 'dataele.xml'
         if base_path is not None:
-            fd = open(os.path.join(base_path, 'dataele.xml'))
+            logger.debug("Looking for data element definition file '{}' in map_path '{}'".format(dataele_file, base_path))
+            fd = open(os.path.join(base_path, dataele_file))
         else:
-            fd = resource_stream(__name__, os.path.join('map', 'dataele.xml'))
+            logger.debug("Looking for data element definition file '{}' in pkg_resources".format(dataele_file))
+            fd = resource_stream(__name__, os.path.join('map', dataele_file))
         for eElem in et.parse(fd).iter('data_ele'):
             ele_num = eElem.get('ele_num')
             data_type = eElem.get('data_type')

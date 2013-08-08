@@ -753,7 +753,7 @@ class X12ContextReader(object):
         #Get Map of Control Segments
         self.map_file = 'x12.control.00501.xml' if self.src.icvn == '00501' else 'x12.control.00401.xml'
         self.control_map = map_if.load_map_file(self.map_file, param, self.map_path)
-        self.map_index_if = map_index.map_index()
+        self.map_index_if = map_index.map_index(self.map_path)
         self.x12_map_node = self.control_map.getnodebypath('/ISA_LOOP/ISA')
         self.walker = walk_tree()
 
@@ -797,8 +797,7 @@ class X12ContextReader(object):
                 elif seg_id == 'GS':
                     fic = seg.get_value('GS01')
                     vriic = seg.get_value('GS08')
-                    map_file_new = self.map_index_if.get_filename(
-                        icvn, vriic, fic)
+                    map_file_new = self.map_index_if.get_filename(icvn, vriic, fic)
                     if self.map_file != map_file_new:
                         #map_abbr = self.map_index_if.get_abbr(icvn, vriic, fic)
                         self.map_file = map_file_new
@@ -818,8 +817,7 @@ class X12ContextReader(object):
                 elif seg_id == 'BHT':
                     if vriic in ('004010X094', '004010X094A1'):
                         tspc = seg.get_value('BHT02')
-                        map_file_new = self.map_index_if.get_filename(icvn,
-                                                                      vriic, fic, tspc)
+                        map_file_new = self.map_index_if.get_filename(icvn, vriic, fic, tspc)
                         if self.map_file != map_file_new:
                             #map_abbr = self.map_index_if.get_abbr(icvn, \
                             #    vriic, fic, tspc)

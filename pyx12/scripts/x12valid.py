@@ -43,7 +43,7 @@ def check_map_path_arg(map_path):
         raise argparse.ArgumentError(None, "The MAP_PATH '{}' is not a valid directory".format(map_path))
     index_file = 'maps.xml'
     if not isfile(os.path.join(map_path, index_file)):
-        raise argparse.ArgumentError(None, 
+        raise argparse.ArgumentError(None,
                     "The MAP_PATH '{}' does not contain the map index file '{}'".format(map_path, index_file))
     return map_path
 
@@ -69,7 +69,7 @@ def main():
     #parser.add_argument('--background', '-b', action='store_true')
     #parser.add_argument('--test', '-t', action='store_true')
     parser.add_argument('--profile', action='store_true', help='Profile the code with plop')
-    parser.add_argument('--version', action='version', 
+    parser.add_argument('--version', action='version',
                         version='{prog} {version}'.format(prog=parser.prog, version=__version__))
     parser.add_argument('input_files', nargs='*')
     args = parser.parse_args()

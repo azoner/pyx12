@@ -17,6 +17,7 @@ Locate the correct xml map file given:
 """
 
 import os.path
+import logging
 from pkg_resources import resource_stream
 import xml.etree.cElementTree as et
 
@@ -31,12 +32,15 @@ class map_index(object):
                     uses package resource folder
         @type base_path: string
         """
+        logger = logging.getLogger('pyx12')
         self.maps = []
-
+        maps_index_file = 'maps.xml'
         if base_path is not None:
-            fd = open(os.path.join(base_path, 'maps.xml'))
+            logger.debug("Looking for map index file '{}' in map_path '{}'".format(maps_index_file, base_path))
+            fd = open(os.path.join(base_path, maps_index_file))
         else:
-            fd = resource_stream(__name__, os.path.join('map', 'maps.xml'))
+            logger.debug("Looking for map index file '{}' in pkg_resources".format(maps_index_file))
+            fd = resource_stream(__name__, os.path.join('map', maps_index_file))
         t = et.parse(fd)
         for v in t.iter('version'):
             icvn = v.get('icvn')

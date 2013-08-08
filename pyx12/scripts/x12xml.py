@@ -18,8 +18,10 @@ Create a XML document based on the data file.
 
 import os
 import os.path
+from os.path import isdir, isfile
 import sys
 import logging
+import argparse
 
 # Intrapackage imports
 libpath = os.path.abspath(os.path.join(os.path.dirname(__file__), '../..'))
@@ -48,7 +50,6 @@ def check_map_path_arg(map_path):
 
 def main():
     """Script main program."""
-    import argparse
     parser = argparse.ArgumentParser(description='X12 to XML conversion')
     parser.add_argument('--config-file', '-c', action='store',
                         dest="configfile", default=None)

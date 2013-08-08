@@ -779,7 +779,7 @@ class segment_if(x12_node):
                 and len(self.children[0].valid_codes) > 0 \
                 and seg.get_value('01') not in self.children[0].valid_codes:
                 #logger.debug('is_match: %s %s' % (seg.get_seg_id(), seg[1]), self.children[0].valid_codes)
-                return False
+                    return False
             # Special Case for 820
             elif seg.get_seg_id() == 'ENT' \
                 and self.children[1].is_element() \
@@ -1421,14 +1421,16 @@ def load_map_file(map_file, param, map_path=None):
     """
     logger = logging.getLogger('pyx12')
     if map_path is not None:
+        logger.debug("Looking for map file '{}' in map_path '{}'".format(map_file, map_path))
         map_fd = open(os.path.join(map_path, map_file))
     else:
+        logger.debug("Looking for map file '{}' in pkg_resources".format(map_file))
         map_fd = resource_stream(__name__, os.path.join('map', map_file))
     imap = None
     try:
         logger.debug('Create map from %s' % (map_file))
         etree = et.parse(map_fd)
-        imap = map_if(etree.getroot(), param)
+        imap = map_if(etree.getroot(), param, map_path)
     except AssertionError:
         logger.error('Load of map file failed: %s' % (map_file))
         raise

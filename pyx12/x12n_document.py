@@ -86,7 +86,7 @@ def x12n_document(param, src_file, fd_997, fd_html,
     map_file = 'x12.control.00501.xml' if src.icvn == '00501' else 'x12.control.00401.xml'
     logger.debug('X12 control file: %s' % (map_file))
     control_map = pyx12.map_if.load_map_file(map_file, param, map_path)
-    map_index_if = pyx12.map_index.map_index()
+    map_index_if = pyx12.map_index.map_index(map_path)
     node = control_map.getnodebypath('/ISA_LOOP/ISA')
     walker = walk_tree()
     icvn = fic = vriic = tspc = None
@@ -157,8 +157,7 @@ def x12n_document(param, src_file, fd_997, fd_html,
                     tspc = seg.get_value('BHT02')
                     logger.debug('icvn=%s, fic=%s, vriic=%s, tspc=%s' %
                                  (icvn, fic, vriic, tspc))
-                    map_file_new = map_index_if.get_filename(
-                        icvn, vriic, fic, tspc)
+                    map_file_new = map_index_if.get_filename(icvn, vriic, fic, tspc)
                     logger.debug('New map file: %s' % (map_file_new))
                     if map_file != map_file_new:
                         map_file = map_file_new
