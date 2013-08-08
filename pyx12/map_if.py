@@ -779,7 +779,7 @@ class segment_if(x12_node):
                 and len(self.children[0].valid_codes) > 0 \
                 and seg.get_value('01') not in self.children[0].valid_codes:
                 #logger.debug('is_match: %s %s' % (seg.get_seg_id(), seg[1]), self.children[0].valid_codes)
-                    return False
+                return False
             # Special Case for 820
             elif seg.get_seg_id() == 'ENT' \
                 and self.children[1].is_element() \
