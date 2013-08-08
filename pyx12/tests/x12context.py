@@ -208,7 +208,7 @@ class TreeSelect(X12fileTestCase):
     def test_select_from_gs(self):
         fd = self._makeFd(datafiles['simple_837i']['source'])
         errh = pyx12.error_handler.errh_null()
-        src = pyx12.x12context.X12ContextReader(self.param, errh, fd,)
+        src = pyx12.x12context.X12ContextReader(self.param, errh, fd)
         ct = 0
         for datatree in src.iter_segments('GS_LOOP'):
             if datatree.id == 'GS_LOOP':
@@ -225,7 +225,7 @@ class TreeSelectFromSegment(X12fileTestCase):
         fd = self._makeFd(datafiles['835id']['source'])
         param = pyx12.params.params()
         errh = pyx12.error_handler.errh_null()
-        src = pyx12.x12context.X12ContextReader(param, errh, fd,)
+        src = pyx12.x12context.X12ContextReader(param, errh, fd)
         for datatree in src.iter_segments('ST_LOOP'):
             if datatree.id == 'GS':
                 #self.assertFalseRaises(AttributeError, datatree.select, 'DETAIL/2000/2100')
@@ -239,7 +239,7 @@ class TreeAddSegment(X12fileTestCase):
         fd = self._makeFd(datafiles['simple_837p']['source'])
         param = pyx12.params.params()
         errh = pyx12.error_handler.errh_null()
-        self.src = pyx12.x12context.X12ContextReader(param, errh, fd,)
+        self.src = pyx12.x12context.X12ContextReader(param, errh, fd)
         for datatree in self.src.iter_segments('2300'):
             if datatree.id == '2300':
                 self.loop2300 = datatree
@@ -267,7 +267,7 @@ class TreeAddSegmentString(X12fileTestCase):
         fd = self._makeFd(datafiles['simple_837p']['source'])
         param = pyx12.params.params()
         errh = pyx12.error_handler.errh_null()
-        self.src = pyx12.x12context.X12ContextReader(param, errh, fd,)
+        self.src = pyx12.x12context.X12ContextReader(param, errh, fd)
         for datatree in self.src.iter_segments('2300'):
             if datatree.id == '2300':
                 self.loop2300 = datatree
@@ -292,7 +292,7 @@ class SegmentExists(X12fileTestCase):
         fd = self._makeFd(datafiles['simple_837p']['source'])
         self.param = pyx12.params.params()
         errh = pyx12.error_handler.errh_null()
-        self.src = pyx12.x12context.X12ContextReader(self.param, errh, fd,)
+        self.src = pyx12.x12context.X12ContextReader(self.param, errh, fd)
         for datatree in self.src.iter_segments('2300'):
             if datatree.id == '2300':
                 self.loop2300 = datatree
@@ -320,7 +320,7 @@ class SegmentExists(X12fileTestCase):
     def test_qual_834_dtp(self):
         fd = self._makeFd(datafiles['834_lui_id']['source'])
         errh = pyx12.error_handler.errh_null()
-        src = pyx12.x12context.X12ContextReader(self.param, errh, fd,)
+        src = pyx12.x12context.X12ContextReader(self.param, errh, fd)
         for datatree in src.iter_segments('2300'):
             if datatree.id == '2300':
                 loop2300 = datatree
@@ -335,7 +335,7 @@ class TreeAddLoop(X12fileTestCase):
         fd = self._makeFd(datafiles['simple_837p']['source'])
         param = pyx12.params.params()
         errh = pyx12.error_handler.errh_null()
-        self.src = pyx12.x12context.X12ContextReader(param, errh, fd,)
+        self.src = pyx12.x12context.X12ContextReader(param, errh, fd)
         for datatree in self.src.iter_segments('2300'):
             if datatree.id == '2300':
                 self.loop2300 = datatree
@@ -375,7 +375,7 @@ class TreeAddLoopDetail(X12fileTestCase):
         errors = []
         param = pyx12.params.params()
         errh = pyx12.error_handler.errh_null()
-        src = pyx12.x12context.X12ContextReader(param, errh, fd,)
+        src = pyx12.x12context.X12ContextReader(param, errh, fd)
         for st_loop in src.iter_segments('ST_LOOP'):
             if st_loop.id == 'ST_LOOP' and st_loop.exists('DETAIL'):
                 detail = st_loop.first('DETAIL')
@@ -393,7 +393,7 @@ class TreeAddNode(X12fileTestCase):
     def test_add_loop(self):
         fd = self._makeFd(datafiles['simple_837p']['source'])
         errh = pyx12.error_handler.errh_null()
-        self.src = pyx12.x12context.X12ContextReader(self.param, errh, fd,)
+        self.src = pyx12.x12context.X12ContextReader(self.param, errh, fd)
         for datatree in self.src.iter_segments('2300'):
             if datatree.id == '2300':
                 loop2300 = datatree
@@ -406,7 +406,7 @@ class TreeAddNode(X12fileTestCase):
     def test_add_segment(self):
         fd = self._makeFd(datafiles['simple_837p']['source'])
         errh = pyx12.error_handler.errh_null()
-        self.src = pyx12.x12context.X12ContextReader(self.param, errh, fd,)
+        self.src = pyx12.x12context.X12ContextReader(self.param, errh, fd)
         for datatree in self.src.iter_segments('2300'):
             if datatree.id == '2300':
                 loop2300 = datatree
@@ -419,7 +419,7 @@ class TreeAddNode(X12fileTestCase):
     def test_fail(self):
         fd = self._makeFd(datafiles['simple_837p']['source'])
         errh = pyx12.error_handler.errh_null()
-        self.src = pyx12.x12context.X12ContextReader(self.param, errh, fd,)
+        self.src = pyx12.x12context.X12ContextReader(self.param, errh, fd)
         for datatree in self.src.iter_segments('2300'):
             if datatree.id == '2300':
                 loop2300 = datatree
@@ -447,7 +447,7 @@ class CountRepeatingLoop(X12fileTestCase):
         fd = self._makeFd(datafiles['simple_837p']['source'])
         param = pyx12.params.params()
         errh = pyx12.error_handler.errh_null()
-        self.src = pyx12.x12context.X12ContextReader(param, errh, fd,)
+        self.src = pyx12.x12context.X12ContextReader(param, errh, fd)
         for datatree in self.src.iter_segments('2300'):
             if datatree.id == '2300' and datatree.get_value('CLM01') == '5555':
                 self.loop2300 = datatree
@@ -474,7 +474,7 @@ class IterateTree(X12fileTestCase):
         fd = self._makeFd(datafiles['simple_837p']['source'])
         param = pyx12.params.params()
         errh = pyx12.error_handler.errh_null()
-        self.src = pyx12.x12context.X12ContextReader(param, errh, fd,)
+        self.src = pyx12.x12context.X12ContextReader(param, errh, fd)
 
     def test_iterate_all(self):
         ct_2000a = 0
@@ -495,7 +495,7 @@ class TreeDeleteSegment(X12fileTestCase):
         fd = self._makeFd(datafiles['simple_837p']['source'])
         param = pyx12.params.params()
         errh = pyx12.error_handler.errh_null()
-        self.src = pyx12.x12context.X12ContextReader(param, errh, fd,)
+        self.src = pyx12.x12context.X12ContextReader(param, errh, fd)
         for datatree in self.src.iter_segments('2300'):
             if datatree.id == '2300':
                 self.loop2300 = datatree
@@ -518,7 +518,7 @@ class TreeDeleteLoop(X12fileTestCase):
         fd = self._makeFd(datafiles['simple_837p']['source'])
         param = pyx12.params.params()
         errh = pyx12.error_handler.errh_null()
-        self.src = pyx12.x12context.X12ContextReader(param, errh, fd,)
+        self.src = pyx12.x12context.X12ContextReader(param, errh, fd)
         for datatree in self.src.iter_segments('2300'):
             if datatree.id == '2300':
                 self.loop2300 = datatree
@@ -539,7 +539,7 @@ class NodeDeleteSelf(X12fileTestCase):
         fd = self._makeFd(datafiles['simple_837p']['source'])
         param = pyx12.params.params()
         errh = pyx12.error_handler.errh_null()
-        self.src = pyx12.x12context.X12ContextReader(param, errh, fd,)
+        self.src = pyx12.x12context.X12ContextReader(param, errh, fd)
         for datatree in self.src.iter_segments('2300'):
             if datatree.id == '2300':
                 self.loop2300 = datatree
@@ -565,7 +565,7 @@ class TreeCopy(X12fileTestCase):
     def test_add_node(self):
         fd = self._makeFd(datafiles['835id']['source'])
         errh = pyx12.error_handler.errh_null()
-        src = pyx12.x12context.X12ContextReader(self.param, errh, fd,)
+        src = pyx12.x12context.X12ContextReader(self.param, errh, fd)
         for datatree in src.iter_segments('2100'):
             if datatree.id == '2100':
                 for svc in datatree.select('2110'):
@@ -580,7 +580,7 @@ class TreeCopy(X12fileTestCase):
     def test_copy_seg(self):
         fd = self._makeFd(datafiles['835id']['source'])
         errh = pyx12.error_handler.errh_null()
-        src = pyx12.x12context.X12ContextReader(self.param, errh, fd,)
+        src = pyx12.x12context.X12ContextReader(self.param, errh, fd)
         for datatree in src.iter_segments('2100'):
             if datatree.id == '2100':
                 for svc in datatree.select('2110'):

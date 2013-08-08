@@ -18,8 +18,10 @@ Create a XML document based on the data file.
 
 import os
 import os.path
+from os.path import isdir, isfile
 import sys
 import logging
+import argparse
 
 # Intrapackage imports
 libpath = os.path.abspath(os.path.join(os.path.dirname(__file__), '../..'))
@@ -36,15 +38,23 @@ __version__ = pyx12.__version__
 __date__ = pyx12.__date__
 
 
+def check_map_path_arg(map_path):
+    if not isdir(map_path):
+        raise argparse.ArgumentError(None, "The MAP_PATH '{}' is not a valid directory".format(map_path))
+    index_file = 'maps.xml'
+    if not isfile(os.path.join(map_path, index_file)):
+        raise argparse.ArgumentError(None,
+                    "The MAP_PATH '{}' does not contain the map index file '{}'".format(map_path, index_file))
+    return map_path
+
+
 def main():
     """Script main program."""
-    import argparse
     parser = argparse.ArgumentParser(description='X12 to XML conversion')
     parser.add_argument('--config-file', '-c', action='store',
                         dest="configfile", default=None)
     parser.add_argument('--log-file', '-l', action='store', dest="logfile", default=None)
-    #parser.add_argument(
-    #    '--map-path', '-m', action='store', dest="map_path", default=None)
+    parser.add_argument('--map-path', '-m', action='store', dest="map_path", default=None, type=check_map_path_arg)
     parser.add_argument('--verbose', '-v', action='count')
     parser.add_argument('--debug', '-d', action='store_true')
     parser.add_argument('--quiet', '-q', action='store_true')
@@ -56,8 +66,6 @@ def main():
         'b', 'e'), help='Specify X12 character set: b=basic, e=extended')
     #parser.add_argument('--background', '-b', action='store_true')
     #parser.add_argument('--test', '-t', action='store_true')
-    #parser.add_argument('--profile', action='store_true',
-    #                    help='Profile the code with plop')
     parser.add_argument('--version', action='version', version='{prog} {version}'.format(prog=parser.prog, version=__version__))
     parser.add_argument('input_file')
     args = parser.parse_args()
@@ -80,8 +88,8 @@ def main():
         logger.setLevel(logging.ERROR)
 
     param.set('exclude_external_codes', ','.join(args.exclude_external))
-    #if args.map_path:
-    #    param.set('map_path', args.map_path)
+    if args.map_path:
+        param.set('map_path', args.map_path)
 
     if args.logfile:
         try:
@@ -109,7 +117,7 @@ def main():
         fd_xml = sys.stdout
     try:
         result = pyx12.x12n_document.x12n_document(param=param, src_file=fd_src,
-            fd_997=None, fd_html=None, fd_xmldoc=fd_xml)
+            fd_997=None, fd_html=None, fd_xmldoc=fd_xml, map_path=args.map_path)
         if not result:
             logger.error('Input file had errors.')
             return False

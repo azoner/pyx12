@@ -97,6 +97,5 @@ def main():
 
     return True
 
-#profile.run('x12n_document(src_filename)', 'pyx12.prof')
 if __name__ == '__main__':
     sys.exit(not main())

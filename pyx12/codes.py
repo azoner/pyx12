@@ -13,6 +13,7 @@ External Codes interface
 """
 
 import os.path
+import logging
 from pkg_resources import resource_stream
 import xml.etree.cElementTree as et
 
@@ -32,7 +33,8 @@ class ExternalCodes(object):
     def __init__(self, base_path=None, exclude=None):
         """
         Initialize the external list of codes
-        @param base_path: deprecated
+        @param base_path: Override directory containing codes.xml.  If None,
+            uses package resource folder
         @type base_path: string
         @param exclude: comma separated string of external codes to ignore
         @type exclude: string
@@ -40,9 +42,15 @@ class ExternalCodes(object):
         @note: self.codes - map of a tuple of two dates and a list of codes
         {codeset_id: (eff_dte, exp_dte, [code_values])}
         """
-
+        logger = logging.getLogger('pyx12')
         self.codes = {}
-        code_fd = resource_stream(__name__, os.path.join('map', 'codes.xml'))
+        codes_file = 'codes.xml'
+        if base_path is not None:
+            logger.debug("Looking for codes file '{}' in map_path '{}'".format(codes_file, base_path))
+            code_fd = open(os.path.join(base_path, codes_file))
+        else:
+            logger.debug("Looking for codes file '{}' in pkg_resources".format(codes_file))
+            code_fd = resource_stream(__name__, os.path.join('map', codes_file))
         codeset_id = None
         #base_name = None
 
