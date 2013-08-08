@@ -731,7 +731,7 @@ class X12ContextReader(object):
     Keep context when needed
     """
 
-    def __init__(self, param, errh, src_file_obj, xslt_files=None):
+    def __init__(self, param, errh, src_file_obj, xslt_files=None, map_path=None):
         """
         @param param: pyx12.param instance
         @param errh: Error Handler object
@@ -740,6 +740,7 @@ class X12ContextReader(object):
         @rtype: boolean
         """
         self.param = param
+        self.map_path = map_path
         self.errh = error_handler.errh_list()
         self.icvn = None
         self.fic = None
@@ -751,8 +752,8 @@ class X12ContextReader(object):
 
         #Get Map of Control Segments
         self.map_file = 'x12.control.00501.xml' if self.src.icvn == '00501' else 'x12.control.00401.xml'
-        self.control_map = map_if.load_map_file(self.map_file, param)
-        self.map_index_if = map_index.map_index()
+        self.control_map = map_if.load_map_file(self.map_file, param, self.map_path)
+        self.map_index_if = map_index.map_index(self.map_path)
         self.x12_map_node = self.control_map.getnodebypath('/ISA_LOOP/ISA')
         self.walker = walk_tree()
 
@@ -796,15 +797,14 @@ class X12ContextReader(object):
                 elif seg_id == 'GS':
                     fic = seg.get_value('GS01')
                     vriic = seg.get_value('GS08')
-                    map_file_new = self.map_index_if.get_filename(
-                        icvn, vriic, fic)
+                    map_file_new = self.map_index_if.get_filename(icvn, vriic, fic)
                     if self.map_file != map_file_new:
                         #map_abbr = self.map_index_if.get_abbr(icvn, vriic, fic)
                         self.map_file = map_file_new
                         if self.map_file is None:
                             raise pyx12.errors.EngineError("Map not found.  icvn=%s, fic=%s, vriic=%s" %
                                                            (icvn, fic, vriic))
-                        cur_map = map_if.load_map_file(self.map_file, self.param)
+                        cur_map = map_if.load_map_file(self.map_file, self.param, self.map_path)
                         if cur_map.id == '837':
                             self.src.check_837_lx = True
                         else:
@@ -817,8 +817,7 @@ class X12ContextReader(object):
                 elif seg_id == 'BHT':
                     if vriic in ('004010X094', '004010X094A1'):
                         tspc = seg.get_value('BHT02')
-                        map_file_new = self.map_index_if.get_filename(icvn,
-                                                                      vriic, fic, tspc)
+                        map_file_new = self.map_index_if.get_filename(icvn, vriic, fic, tspc)
                         if self.map_file != map_file_new:
                             #map_abbr = self.map_index_if.get_abbr(icvn, \
                             #    vriic, fic, tspc)
@@ -827,8 +826,7 @@ class X12ContextReader(object):
                                 err_str = "Map not found.  icvn=%s, fic=%s, vriic=%s, tspc=%s" % \
                                     (icvn, fic, vriic, tspc)
                                 raise pyx12.errors.EngineError(err_str)
-                            cur_map = map_if.load_map_file(self.map_file,
-                                                           self.param)
+                            cur_map = map_if.load_map_file(self.map_file, self.param, self.map_path)
                             if cur_map.id == '837':
                                 self.src.check_837_lx = True
                             else:

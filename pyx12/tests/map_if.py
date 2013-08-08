@@ -10,8 +10,7 @@ import pyx12.segment
 class ElementIsValidDate(unittest.TestCase):
     def setUp(self):
         param = pyx12.params.params()
-        self.map = pyx12.map_if.load_map_file(
-            '837Q3.I.5010.X223.A1.xml', param)
+        self.map = pyx12.map_if.load_map_file('837Q3.I.5010.X223.A1.xml', param)
         self.node = self.map.getnodebypath(
             '/ISA_LOOP/GS_LOOP/ST_LOOP/DETAIL/2000A/2000B/2300')
         # 1 096 TM, 2 434 RD8 & D8
@@ -89,7 +88,8 @@ class ElementIsValidDate(unittest.TestCase):
         self.errh.err_cde = None
         seg_data = pyx12.segment.Segment(
             'DTP*434*RD8*20110101-20110220~', '~', '*', ':')
-        node = self.map.getnodebypath('/ISA_LOOP/GS_LOOP/ST_LOOP/DETAIL/2000A/2000B/2300/DTP[434]')
+        seg_path = '/ISA_LOOP/GS_LOOP/ST_LOOP/DETAIL/2000A/2000B/2300/DTP[434]'
+        node = self.map.getnodebypath(seg_path)
         self.assertNotEqual(node, None)
         result = node.is_valid(seg_data, self.errh)
         self.assertTrue(result, self.errh.err_str)
@@ -724,6 +724,31 @@ class SegmentChildrenOrdinal(unittest.TestCase):
     def setUp(self):
         param = pyx12.params.params()
         self.map = pyx12.map_if.load_map_file('999.5010.xml', param)
+
+    def test_check_ord_ok(self):
+        mypath = '/ISA_LOOP/GS_LOOP/ST_LOOP/HEADER/2000/2100/CTX'
+        self.node = self.map.getnodebypath(mypath)
+        #errh = pyx12.error_handler.errh_null()
+        i = 1
+        for c in self.node.children:
+            self.assertEqual(i, c.seq)
+            i += 1
+
+    def test_check_ord_ok2(self):
+        mypath = '/ISA_LOOP/GS_LOOP/ST_LOOP/HEADER/2000/2100/IK3'
+        self.node = self.map.getnodebypath(mypath)
+        i = 1
+        for c in self.node.children:
+            self.assertEqual(i, c.seq)
+            i += 1
+
+
+class SegmentChildrenOrdinalMapPath(unittest.TestCase):
+    def setUp(self):
+        import os.path
+        param = pyx12.params.params()
+        map_path = os.path.join(os.path.dirname(pyx12.codes.__file__), 'map')
+        self.map = pyx12.map_if.load_map_file('999.5010.xml', param, map_path)
 
     def test_check_ord_ok(self):
         mypath = '/ISA_LOOP/GS_LOOP/ST_LOOP/HEADER/2000/2100/CTX'

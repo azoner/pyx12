@@ -58,8 +58,7 @@ def reset_gs_counts(cur_map):
 
 
 def x12n_document(param, src_file, fd_997, fd_html,
-                  fd_xmldoc=None,
-                  xslt_files=None):
+                  fd_xmldoc=None, xslt_files=None, map_path=None):
     """
     Primary X12 validation function
     @param param: pyx12.param instance
@@ -86,8 +85,8 @@ def x12n_document(param, src_file, fd_997, fd_html,
     #Get Map of Control Segments
     map_file = 'x12.control.00501.xml' if src.icvn == '00501' else 'x12.control.00401.xml'
     logger.debug('X12 control file: %s' % (map_file))
-    control_map = pyx12.map_if.load_map_file(map_file, param)
-    map_index_if = pyx12.map_index.map_index()
+    control_map = pyx12.map_if.load_map_file(map_file, param, map_path)
+    map_index_if = pyx12.map_index.map_index(map_path)
     node = control_map.getnodebypath('/ISA_LOOP/ISA')
     walker = walk_tree()
     icvn = fic = vriic = tspc = None
@@ -139,9 +138,9 @@ def x12n_document(param, src_file, fd_997, fd_html,
                 if map_file != map_file_new:
                     map_file = map_file_new
                     if map_file is None:
-                        raise pyx12.errors.EngineError("Map not found.  icvn=%s, fic=%s, vriic=%s" %
-                                                       (icvn, fic, vriic))
-                    cur_map = pyx12.map_if.load_map_file(map_file, param)
+                        err_str = "Map not found.  icvn={}, fic={}, vriic={}".format(icvn, fic, vriic)
+                        raise pyx12.errors.EngineError(err_str)
+                    cur_map = pyx12.map_if.load_map_file(map_file, param, map_path)
                     if cur_map.id == '837':
                         src.check_837_lx = True
                     else:
@@ -158,15 +157,14 @@ def x12n_document(param, src_file, fd_997, fd_html,
                     tspc = seg.get_value('BHT02')
                     logger.debug('icvn=%s, fic=%s, vriic=%s, tspc=%s' %
                                  (icvn, fic, vriic, tspc))
-                    map_file_new = map_index_if.get_filename(
-                        icvn, vriic, fic, tspc)
+                    map_file_new = map_index_if.get_filename(icvn, vriic, fic, tspc)
                     logger.debug('New map file: %s' % (map_file_new))
                     if map_file != map_file_new:
                         map_file = map_file_new
                         if map_file is None:
                             raise pyx12.errors.EngineError("Map not found.  icvn=%s, fic=%s, vriic=%s, tspc=%s" %
                                                            (icvn, fic, vriic, tspc))
-                        cur_map = pyx12.map_if.load_map_file(map_file, param)
+                        cur_map = pyx12.map_if.load_map_file(map_file, param, map_path)
                         src.check_837_lx = True if cur_map.id == '837' else False
                         logger.debug('Map file: %s' % (map_file))
                         apply_loop_count(node, cur_map)

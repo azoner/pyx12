@@ -37,6 +37,16 @@ __version__ = pyx12.__version__
 __date__ = pyx12.__date__
 
 
+def check_map_path_arg(map_path):
+    if not isdir(map_path):
+        raise argparse.ArgumentError(None, "The MAP_PATH '{}' is not a valid directory".format(map_path))
+    index_file = 'maps.xml'
+    if not isfile(os.path.join(map_path, index_file)):
+        raise argparse.ArgumentError(None,
+                    "The MAP_PATH '{}' does not contain the map index file '{}'".format(map_path, index_file))
+    return map_path
+
+
 def main():
     """
     Set up environment for processing
@@ -47,8 +57,7 @@ def main():
                         dest="configfile", default=None)
     parser.add_argument(
         '--log-file', '-l', action='store', dest="logfile", default=None)
-    #parser.add_argument(
-    #    '--map-path', '-m', action='store', dest="map_path", default=None)
+    parser.add_argument('--map-path', '-m', action='store', dest="map_path", default=None, type=check_map_path_arg)
     parser.add_argument('--verbose', '-v', action='count')
     parser.add_argument('--debug', '-d', action='store_true')
     parser.add_argument('--quiet', '-q', action='store_true')
@@ -82,8 +91,8 @@ def main():
     if args.quiet:
         logger.setLevel(logging.ERROR)
     param.set('exclude_external_codes', ','.join(args.exclude_external))
-    #if args.map_path:
-    #    param.set('map_path', args.map_path)
+    if args.map_path:
+        param.set('map_path', args.map_path)
 
     if args.logfile:
         try:
@@ -109,7 +118,7 @@ def main():
                 fd_html = sys.stdout
 
             pyx12.x12n_document.x12n_document(param=param, src_file=src_filename,
-                fd_997=None, fd_html=fd_html, fd_xmldoc=None)
+                fd_997=None, fd_html=fd_html, fd_xmldoc=None, map_path=args.map_path)
 
         except IOError:
             logger.error('Could not open files')

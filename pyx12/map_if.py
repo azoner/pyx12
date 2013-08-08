@@ -174,13 +174,11 @@ class map_if(x12_node):
     """
     Map file interface
     """
-    def __init__(self, eroot, param):
+    def __init__(self, eroot, param, base_path=None):
         """
         @param eroot: ElementTree root
         @param param: map of parameters
         """
-        #codes = codes.ExternalCodes()
-        #tab = Indent()
         x12_node.__init__(self)
         self.children = None
         self.pos_map = {}
@@ -189,14 +187,13 @@ class map_if(x12_node):
         #self.cur_iter_node = self
         self.param = param
         #global codes
-        self.ext_codes = codes.ExternalCodes(None,
+        self.ext_codes = codes.ExternalCodes(base_path,
                                              param.get('exclude_external_codes'))
-        self.data_elements = dataele.DataElements()
+        self.data_elements = dataele.DataElements(base_path)
 
         self.id = eroot.get('xid')
 
-        self.name = eroot.get(
-            'name') if eroot.get('name') else eroot.findtext('name')
+        self.name = eroot.get('name') if eroot.get('name') else eroot.findtext('name')
         self.base_name = 'transaction'
         for e in eroot.findall('loop'):
             loop_node = loop_if(self, self, e)
@@ -1412,20 +1409,28 @@ class composite_if(x12_node):
         return True
 
 
-def load_map_file(map_file, param):
+def load_map_file(map_file, param, map_path=None):
     """
     Create the map object from a file
     @param map_file: absolute path for file
     @type map_file: string
     @rtype: pyx12.map_if
+    @param map_path: Override directory containing map xml files.  If None,
+        uses package resource folder
+    @type map_path: string
     """
     logger = logging.getLogger('pyx12')
-    map_fd = resource_stream(__name__, os.path.join('map', map_file))
+    if map_path is not None:
+        logger.debug("Looking for map file '{}' in map_path '{}'".format(map_file, map_path))
+        map_fd = open(os.path.join(map_path, map_file))
+    else:
+        logger.debug("Looking for map file '{}' in pkg_resources".format(map_file))
+        map_fd = resource_stream(__name__, os.path.join('map', map_file))
     imap = None
     try:
         logger.debug('Create map from %s' % (map_file))
         etree = et.parse(map_fd)
-        imap = map_if(etree.getroot(), param)
+        imap = map_if(etree.getroot(), param, map_path)
     except AssertionError:
         logger.error('Load of map file failed: %s' % (map_file))
         raise
