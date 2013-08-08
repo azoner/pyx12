@@ -1,10 +1,10 @@
 $ python setup.py test
 # update version in setup.py, pyx12.__init__.py
 # verify test is passing on travis
-$ git tag v2.0.1
+$ git tag vX.Y.Z
+$ git push origin vX.Y.Z
 $python setup.py sdist upload -r ppt
 $python setup.py sdist upload
 
 mkvirtualenv pyx12-dist -i pyx12
-python setup.py test
 functional tests

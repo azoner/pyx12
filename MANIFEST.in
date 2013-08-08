@@ -1,3 +1,2 @@
 include *.txt
 recursive-include pyx12 *.xml *.xsd README* *.dtd
-recursive-include test test*.py *.xml
