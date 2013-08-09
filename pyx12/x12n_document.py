@@ -168,7 +168,7 @@ def x12n_document(param, src_file, fd_997, fd_html,
                     logger.debug('Map file: %s' % (map_file))
                     apply_loop_count(orig_node, cur_map)
                     reset_isa_counts(cur_map)
-                    _reset_counter_to_isa_counts(walker)  # new counter
+                    #_reset_counter_to_isa_counts(walker)  # new counter
                 reset_gs_counts(cur_map)
                 _reset_counter_to_gs_counts(walker)  # new counter
                 node = cur_map.getnodebypath('/ISA_LOOP/GS_LOOP/GS')
