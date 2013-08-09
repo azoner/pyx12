@@ -777,12 +777,9 @@ class X12ContextReader(object):
             if seg.get_seg_id() == 'ISA':
                 tpath = '/ISA_LOOP/ISA'
                 self.x12_map_node = self.control_map.getnodebypath(tpath)
-                #self.walker.setCountState({'/ISA_LOOP': 1, '/ISA_LOOP/ISA': 1})
-                #self.walker.forceWalkCounterToLoopStart('/ISA_LOOP', '/ISA_LOOP/ISA')
             elif seg.get_seg_id() == 'GS':
                 tpath = '/ISA_LOOP/GS_LOOP/GS'
                 self.x12_map_node = self.control_map.getnodebypath(tpath)
-                #self.walker.forceWalkCounterToLoopStart('/ISA_LOOP/GS_LOOP', '/ISA_LOOP/GS_LOOP/GS')
             else:
                 try:
                     (seg_node, pop_loops, push_loops) = self.walker.walk(self.x12_map_node,
@@ -802,7 +799,6 @@ class X12ContextReader(object):
                     vriic = seg.get_value('GS08')
                     map_file_new = self.map_index_if.get_filename(icvn, vriic, fic)
                     if self.map_file != map_file_new:
-                        #map_abbr = self.map_index_if.get_abbr(icvn, vriic, fic)
                         self.map_file = map_file_new
                         if self.map_file is None:
                             raise pyx12.errors.EngineError("Map not found.  icvn=%s, fic=%s, vriic=%s" %
@@ -825,8 +821,6 @@ class X12ContextReader(object):
                         tspc = seg.get_value('BHT02')
                         map_file_new = self.map_index_if.get_filename(icvn, vriic, fic, tspc)
                         if self.map_file != map_file_new:
-                            #map_abbr = self.map_index_if.get_abbr(icvn, \
-                            #    vriic, fic, tspc)
                             self.map_file = map_file_new
                             if self.map_file is None:
                                 err_str = "Map not found.  icvn=%s, fic=%s, vriic=%s, tspc=%s" % \
