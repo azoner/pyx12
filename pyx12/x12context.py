@@ -783,8 +783,8 @@ class X12ContextReader(object):
                 try:
                     (
                         seg_node, pop_loops, push_loops) = self.walker.walk(self.x12_map_node,
-                                                                            seg, errh, self.src.get_seg_count(),
-                                                                            self.src.get_cur_line(), self.src.get_ls_id())
+                            seg, errh, self.src.get_seg_count(),
+                            self.src.get_cur_line(), self.src.get_ls_id())
                     self.x12_map_node = seg_node
                 except errors.EngineError:
                     raise
@@ -838,7 +838,6 @@ class X12ContextReader(object):
             node_x12path = self.x12_map_node.x12path
             # If we are in the requested tree, wait until we have the whole thing
             if loop_id is not None and loop_id in node_x12path.loop_list:
-                #pdb.set_trace()
                 # Are we at the start of the requested tree?
                 if node_x12path.loop_list[-1] == loop_id and \
                         self.x12_map_node.is_first_seg_in_loop():

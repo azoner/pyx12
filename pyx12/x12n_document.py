@@ -97,8 +97,7 @@ def x12n_document(param, src_file, fd_997, fd_html,
         html.header()
         err_iter = pyx12.error_handler.err_iter(errh)
     if fd_xmldoc:
-        xmldoc = pyx12.x12xml_simple.x12xml_simple(
-            fd_xmldoc, param.get('simple_dtd'))
+        xmldoc = pyx12.x12xml_simple.x12xml_simple(fd_xmldoc, param.get('simple_dtd'))
 
     #basedir = os.path.dirname(src_file)
     #erx = errh_xml.err_handler(basedir=basedir)
@@ -108,11 +107,14 @@ def x12n_document(param, src_file, fd_997, fd_html,
         #find node
         orig_node = node
 
+        # reset to control map for ISA and GS loops
         if seg.get_seg_id() == 'ISA':
             node = control_map.getnodebypath('/ISA_LOOP/ISA')
         elif seg.get_seg_id() == 'GS':
             node = control_map.getnodebypath('/ISA_LOOP/GS_LOOP/GS')
         else:
+            # from the current node, find the map node matching the segment
+            # keep track of the loops traversed
             try:
                 (node, pop_loops, push_loops) = walker.walk(node, seg, errh,
                                                             src.get_seg_count(), src.get_cur_line(), src.get_ls_id())
@@ -153,6 +155,7 @@ def x12n_document(param, src_file, fd_997, fd_html,
                 errh.add_gs_loop(seg, src)
                 errh.handle_errors(src.pop_errors())
             elif seg.get_seg_id() == 'BHT':
+                # special case for 4010 837P
                 if vriic in ('004010X094', '004010X094A1'):
                     tspc = seg.get_value('BHT02')
                     logger.debug('icvn=%s, fic=%s, vriic=%s, tspc=%s' %
@@ -162,8 +165,9 @@ def x12n_document(param, src_file, fd_997, fd_html,
                     if map_file != map_file_new:
                         map_file = map_file_new
                         if map_file is None:
-                            raise pyx12.errors.EngineError("Map not found.  icvn=%s, fic=%s, vriic=%s, tspc=%s" %
-                                                           (icvn, fic, vriic, tspc))
+                            err_str = "Map not found.  icvn={}, fic={}, vriic={}, tspc={}".format(
+                                        icvn, fic, vriic, tspc)
+                            raise pyx12.errors.EngineError(err_str)
                         cur_map = pyx12.map_if.load_map_file(map_file, param, map_path)
                         src.check_837_lx = True if cur_map.id == '837' else False
                         logger.debug('Map file: %s' % (map_file))
@@ -182,8 +186,7 @@ def x12n_document(param, src_file, fd_997, fd_html,
                 errh.handle_errors(src.pop_errors())
                 errh.close_st_loop(node, seg, src)
             else:
-                errh.add_seg(node, seg, src.get_seg_count(),
-                             src.get_cur_line(), src.get_ls_id())
+                errh.add_seg(node, seg, src.get_seg_count(), src.get_cur_line(), src.get_ls_id())
                 errh.handle_errors(src.pop_errors())
 
             #errh.set_cur_line(src.get_cur_line())
