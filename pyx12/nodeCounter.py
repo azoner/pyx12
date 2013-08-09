@@ -8,57 +8,71 @@
 #
 ######################################################################
 
-#    $Id: map_if.py 1487 2011-10-22 04:52:02Z johnholland $
-
 """
 Loop and segment counter
 """
-#import collections
+from collections import OrderedDict
 import pyx12.path
+from decorators import dump_args
 
 
 class NodeCounter(object):
     """
     X12 Loop and Segment Node Counter
     """
-    def __init__(self, initialCounts={}):
-        self._dict = {}
-# copy constructor
+    def __init__(self, initialCounts=None):
+        if initialCounts is None:
+            initialCounts = {}
+        self._dict = OrderedDict()
+        # copy constructor
         for k, v in initialCounts.items():
-            if isinstance(k, pyx12.path.X12Path):
-                self._dict[k] = v
-            else:
-                self._dict[pyx12.path.X12Path(k)] = v
-# deque, Counter, OrderedDict
-        #self.nodes = OrderedDict()
+            self._dict[NodeCounter.makeX12Path(k)] = v
 
+    #@dump_args
     def reset_to_node(self, xpath):
         """
         Pop to node, deleting all child counts
+        Keep count of xpath node
         """
-        if xpath in self._dict:
-            del self._dict[xpath]
+        parent = NodeCounter.makeX12Path(xpath)
+        child_keys = list([x for x in self._dict.keys() if parent.is_child_path(x.format())])
+        for k in child_keys:
+            del self._dict[k]
 
+    #@dump_args
     def increment(self, xpath):
         """
         Increment path count
         """
-        if xpath in self._dict:
-            self._dict[xpath] += 1
+        k = NodeCounter.makeX12Path(xpath)
+        if k in self._dict:
+            self._dict[k] += 1
         else:
-            self._dict[xpath] = 1
+            self._dict[k] = 1
 
+    #@dump_args
     def setCount(self, xpath, ct):
         """
         Set path count
         """
-        self._dict[xpath] = ct
+        k = NodeCounter.makeX12Path(xpath)
+        self._dict[k] = ct
 
     def get_count(self, xpath):
         """
         Get path count
         """
-        if xpath not in self._dict:
+        k = NodeCounter.makeX12Path(xpath)
+        if k not in self._dict:
             return 0
-            #raise Exception, 'Unknown xpath in counter: %s' % (xpath)
-        return self._dict[xpath]
+        return self._dict[k]
+
+    def getState(self):
+        return self._dict
+
+    @staticmethod
+    def makeX12Path(xpath):
+        if isinstance(xpath, pyx12.path.X12Path):
+            return xpath
+        else:
+            return pyx12.path.X12Path(xpath)

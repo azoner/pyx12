@@ -777,9 +777,12 @@ class X12ContextReader(object):
             if seg.get_seg_id() == 'ISA':
                 tpath = '/ISA_LOOP/ISA'
                 self.x12_map_node = self.control_map.getnodebypath(tpath)
+                #self.walker.setCountState({'/ISA_LOOP': 1, '/ISA_LOOP/ISA': 1})
+                #self.walker.forceWalkCounterToLoopStart('/ISA_LOOP', '/ISA_LOOP/ISA')
             elif seg.get_seg_id() == 'GS':
                 tpath = '/ISA_LOOP/GS_LOOP/GS'
                 self.x12_map_node = self.control_map.getnodebypath(tpath)
+                #self.walker.forceWalkCounterToLoopStart('/ISA_LOOP/GS_LOOP', '/ISA_LOOP/GS_LOOP/GS')
             else:
                 try:
                     (seg_node, pop_loops, push_loops) = self.walker.walk(self.x12_map_node,
@@ -811,9 +814,12 @@ class X12ContextReader(object):
                             self.src.check_837_lx = False
                         self._apply_loop_count(orig_node, cur_map)
                         self._reset_isa_counts(cur_map)
+                        self._reset_counter_to_isa_counts()
                     self._reset_gs_counts(cur_map)
+                    self._reset_counter_to_gs_counts()
                     tpath = '/ISA_LOOP/GS_LOOP/GS'
                     self.x12_map_node = cur_map.getnodebypath(tpath)
+                    #self.walker.forceWalkCounterToLoopStart('/ISA_LOOP/GS_LOOP', '/ISA_LOOP/GS_LOOP/GS')
                 elif seg_id == 'BHT':
                     if vriic in ('004010X094', '004010X094A1'):
                         tspc = seg.get_value('BHT02')
@@ -952,8 +958,9 @@ class X12ContextReader(object):
         try:
             new_node = X12SegmentDataNode(self.x12_map_node, seg_data)
         except Exception:
-            raise errors.EngineError('X12SegmentDataNode failed: x12_path=%s, seg_date=%s ' %
-                                     (self.x12_map_node.get_path(), seg_data))
+            mypath = self.x12_map_node.get_path()
+            err_str = 'X12SegmentDataNode failed: x12_path={}, seg_date={}'.format(mypath, seg_data)
+            raise errors.EngineError(err_str)
         try:
             new_node.parent = cur_loop_node
             cur_loop_node.children.append(new_node)
@@ -990,3 +997,19 @@ class X12ContextReader(object):
         cur_map.getnodebypath('/ISA_LOOP/GS_LOOP').reset_cur_count()
         cur_map.getnodebypath('/ISA_LOOP/GS_LOOP').set_cur_count(1)
         cur_map.getnodebypath('/ISA_LOOP/GS_LOOP/GS').set_cur_count(1)
+
+    def _reset_counter_to_isa_counts(self):
+        """
+        Reset ISA instance counts
+        """
+        self.walker.counter.reset_to_node('/ISA_LOOP')
+        self.walker.counter.increment('/ISA_LOOP')
+        self.walker.counter.increment('/ISA_LOOP/ISA')
+
+    def _reset_counter_to_gs_counts(self):
+        """
+        Reset GS instance counts
+        """
+        self.walker.counter.reset_to_node('/ISA_LOOP/GS_LOOP')
+        self.walker.counter.increment('/ISA_LOOP/GS_LOOP')
+        self.walker.counter.increment('/ISA_LOOP/GS_LOOP/GS')

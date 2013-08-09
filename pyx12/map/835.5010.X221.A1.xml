@@ -229,7 +229,7 @@
           <usage>R</usage>
           <seq>08</seq>
           <valid_codes>
-            <code>005010X218A1</code>
+            <code>005010X221A1</code>
           </valid_codes>
         </element>
       </segment>
@@ -3888,7 +3888,7 @@
         <!--End of Table2 - Area2 loop-->
         <loop xid="FOOTER" type="wrapper">
           <name>Footer</name>
-          <usage>R</usage>
+          <usage>S</usage>
           <pos>0130</pos>
           <repeat>1</repeat>
           <segment xid="PLB">
