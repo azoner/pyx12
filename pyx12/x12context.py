@@ -722,7 +722,8 @@ class X12SegmentDataNode(X12DataNode):
         @return: Count of errors for this segment
         @rtype: int
         """
-        return len(self.err_isa) + len(self.err_gs) + len(self.err_st) + len(self.err_seg) + len(self.err_ele)
+        return len(self.err_isa) + len(self.err_gs) + len(self.err_st) \
+                + len(self.err_seg) + len(self.err_ele)
 
 
 class X12ContextReader(object):
@@ -781,8 +782,7 @@ class X12ContextReader(object):
                 self.x12_map_node = self.control_map.getnodebypath(tpath)
             else:
                 try:
-                    (
-                        seg_node, pop_loops, push_loops) = self.walker.walk(self.x12_map_node,
+                    (seg_node, pop_loops, push_loops) = self.walker.walk(self.x12_map_node,
                             seg, errh, self.src.get_seg_count(),
                             self.src.get_cur_line(), self.src.get_ls_id())
                     self.x12_map_node = seg_node
@@ -865,8 +865,7 @@ class X12ContextReader(object):
                         pop_loops = [x12_node for x12_node in pop_loops if x12_node.get_path().find(loop_id) == -1]
                     assert loop_id not in [x12.id for x12 in push_loops], 'Loop ID %s should not be in push loops' % (loop_id)
                     assert loop_id not in [x12.id for x12 in pop_loops], 'Loop ID %s should not be in pop loops' % (loop_id)
-                    cur_data_node = X12SegmentDataNode(self.x12_map_node,
-                                                       seg, push_loops, pop_loops)
+                    cur_data_node = X12SegmentDataNode(self.x12_map_node, seg, push_loops, pop_loops)
                 else:
                     cur_data_node = X12SegmentDataNode(self.x12_map_node, seg)
                 # Get errors caught by x12Reader

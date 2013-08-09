@@ -83,8 +83,7 @@ def traverse_path(start_node, pop_loops, push_loops):
     start_path = pop_to_parent_loop(start_node).get_path()
     p1 = [p for p in start_path.split('/') if p != '']
     for loop_id in get_id_list(pop_loops):
-        assert loop_id == p1[-1], 'Path %s does not contain %s' % (
-            start_path, loop_id)
+        assert loop_id == p1[-1], 'Path %s does not contain %s' % (start_path, loop_id)
         p1 = p1[:-1]
     for loop_id in get_id_list(push_loops):
         p1.append(loop_id)
@@ -156,7 +155,7 @@ class walk_tree(object):
                                 return (node1, pop_node_list, push_node_list)  # segment node
                             child.incr_cur_count()
                             self.counter.increment(child.x12path)
-                            #assert child.get_cur_count()==self.counter.get_count(child.x12path), 'Child counts not equal'
+                            assert child.get_cur_count()==self.counter.get_count(child.x12path), 'Child counts not equal'
                             self._check_seg_usage(child, seg_data, seg_count, cur_line, ls_id, errh)
                             # Remove any previously missing errors for this segment
                             self.mandatory_segs_missing = [x for x in self.mandatory_segs_missing if x[0] != child]
@@ -208,13 +207,12 @@ class walk_tree(object):
         @type errh: L{error_handler.err_handler}
         @raise EngineError: On invalid usage code
         """
-        assert seg_node.usage in (
-            'N', 'R', 'S'), 'Segment usage must be R, S, or N'
+        assert seg_node.usage in ('N', 'R', 'S'), 'Segment usage must be R, S, or N'
         if seg_node.usage == 'N':
             err_str = "Segment %s found but marked as not used" % (seg_node.id)
             errh.seg_error('2', err_str, None)
         elif seg_node.usage == 'R' or seg_node.usage == 'S':
-            #assert seg_node.get_cur_count()==self.counter.get_count(seg_node.x12path), 'seg_node counts not equal'
+            assert seg_node.get_cur_count()==self.counter.get_count(seg_node.x12path), 'seg_node counts not equal'
             if seg_node.get_cur_count() > seg_node.get_max_repeat():  # handle seg repeat count
                 err_str = "Segment %s exceeded max count.  Found %i, should have %i" \
                     % (seg_data.get_seg_id(), seg_node.get_cur_count(), seg_node.get_max_repeat())
@@ -275,9 +273,10 @@ class walk_tree(object):
         """
         assert loop_node.is_loop(), "Call to first_seg_match failed, node %s is not a loop. seg %s" \
             % (loop_node.id, seg_data.get_seg_id())
-        #assert loop_node.get_cur_count()==self.counter.get_count(loop_node.x12path), \
-        #    'loop_node counts not equal: %s=%i / %s=%i' % (loop_node.get_path(), loop_node.get_cur_count(),
-        #            loop_node.x12path.format(), self.counter.get_count(loop_node.x12path) )
+        assert loop_node.get_cur_count()==self.counter.get_count(loop_node.x12path), \
+                'loop_node counts not equal: old is %s=%i : new is %s=%i' % (\
+                loop_node.get_path(), loop_node.get_cur_count(), \
+                loop_node.x12path.format(), self.counter.get_count(loop_node.x12path) )
         if len(loop_node) <= 0:  # Has no children
             return False
         first_child_node = loop_node.get_first_node()
@@ -327,7 +326,7 @@ class walk_tree(object):
                                    seg_count, cur_line, ls_id, errh)
             first_child_node.incr_cur_count()
             self.counter.increment(first_child_node.x12path)
-            #assert first_child_node.get_cur_count()==self.counter.get_count(first_child_node.x12path), 'first_child_node counts not equal'
+            assert first_child_node.get_cur_count()==self.counter.get_count(first_child_node.x12path), 'first_child_node counts not equal'
             self._flush_mandatory_segs(errh)
             return (first_child_node, [loop_node])
         else:
@@ -372,9 +371,9 @@ class walk_tree(object):
             self.counter.reset_to_node(loop_node.x12path)
             loop_node.incr_cur_count()
             self.counter.increment(loop_node.x12path)
-            #assert loop_node.get_cur_count()==self.counter.get_count(loop_node.x12path), \
-            #    'loop_node counts not equal: %s=%i / %s=%i' % (loop_node.get_path(), loop_node.get_cur_count(),
-            #            loop_node.x12path.format(), self.counter.get_count(loop_node.x12path) )
+            assert loop_node.get_cur_count()==self.counter.get_count(loop_node.x12path), \
+                'loop_node counts not equal: %s=%i / %s=%i' % (loop_node.get_path(), loop_node.get_cur_count(),
+                        loop_node.x12path.format(), self.counter.get_count(loop_node.x12path) )
             #logger.debug('incr loop_node %s %i' % (loop_node.id, loop_node.cur_count))
             #logger.debug('incr first_child_node %s %i' % (first_child_node.id, first_child_node.cur_count))
             if loop_node.get_cur_count() > loop_node.get_max_repeat():
