@@ -125,20 +125,32 @@ def x12n_document(param, src_file, fd_997, fd_html,
         #find node
         orig_node = node
 
-        # reset to control map for ISA and GS loops
+        if False:
+            print('--------------------------------------------')
+            print(seg)
+            print('--------------------------------------------')
+            # reset to control map for ISA and GS loops
+            print('------- counters before --------')
+            print(walker.counter._dict)
         if seg.get_seg_id() == 'ISA':
             node = control_map.getnodebypath('/ISA_LOOP/ISA')
+            walker.forceWalkCounterToLoopStart('/ISA_LOOP', '/ISA_LOOP/ISA')
         elif seg.get_seg_id() == 'GS':
             node = control_map.getnodebypath('/ISA_LOOP/GS_LOOP/GS')
+            walker.forceWalkCounterToLoopStart('/ISA_LOOP/GS_LOOP', '/ISA_LOOP/GS_LOOP/GS')
         else:
             # from the current node, find the map node matching the segment
             # keep track of the loops traversed
             try:
                 (node, pop_loops, push_loops) = walker.walk(node, seg, errh,
-                                                            src.get_seg_count(), src.get_cur_line(), src.get_ls_id())
+                    src.get_seg_count(), src.get_cur_line(), src.get_ls_id())
             except pyx12.errors.EngineError:
                 logger.error('Source file line %i' % (src.get_cur_line()))
                 raise
+
+        if False:
+            print('------- counters after --------')
+            print(walker.counter._dict)
         if node is None:
             node = orig_node
         else:
@@ -170,7 +182,7 @@ def x12n_document(param, src_file, fd_997, fd_html,
                     reset_isa_counts(cur_map)
                     #_reset_counter_to_isa_counts(walker)  # new counter
                 reset_gs_counts(cur_map)
-                _reset_counter_to_gs_counts(walker)  # new counter
+                #_reset_counter_to_gs_counts(walker)  # new counter
                 node = cur_map.getnodebypath('/ISA_LOOP/GS_LOOP/GS')
                 errh.add_gs_loop(seg, src)
                 errh.handle_errors(src.pop_errors())
@@ -193,8 +205,7 @@ def x12n_document(param, src_file, fd_997, fd_html,
                         logger.debug('Map file: %s' % (map_file))
                         apply_loop_count(node, cur_map)
                         node = cur_map.getnodebypath('/ISA_LOOP/GS_LOOP/ST_LOOP/HEADER/BHT')
-                errh.add_seg(node, seg, src.get_seg_count(),
-                             src.get_cur_line(), src.get_ls_id())
+                errh.add_seg(node, seg, src.get_seg_count(), src.get_cur_line(), src.get_ls_id())
                 errh.handle_errors(src.pop_errors())
             elif seg.get_seg_id() == 'GE':
                 errh.handle_errors(src.pop_errors())
@@ -231,6 +242,8 @@ def x12n_document(param, src_file, fd_997, fd_html,
         if fd_xmldoc:
             xmldoc.seg(node, seg)
 
+        if False:
+            print('\n\n')
         #erx.Write(src.cur_line)
 
     #erx.handleErrors(src.pop_errors())

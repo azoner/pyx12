@@ -307,7 +307,7 @@ class IsChild(unittest.TestCase):
         parent = pyx12.path.X12Path(path_str)
         self.assertFalse(parent.is_child_path('/ISA_LOOP/GS_LOOP/ST_LOOP/DETAIL/2000A/2000B/2300/2400'))
 
-    def testLoopSegSame2(self):
-        path_str = '/ISA_LOOP/GS_LOOP/ST_LOOP/DETAIL/2000A/2000B/2300/2400'
-        parent = pyx12.path.X12Path(path_str)
-        self.assertFalse(parent.is_child_path('/ISA_LOOP/GS_LOOP/ST_LOOP/DETAIL/2000A/2000B/2300/2400/'))
+    #def testLoopSegSame2(self):
+    #    path_str = '/ISA_LOOP/GS_LOOP/ST_LOOP/DETAIL/2000A/2000B/2300/2400'
+    #    parent = pyx12.path.X12Path(path_str)
+    #    self.assertFalse(parent.is_child_path('/ISA_LOOP/GS_LOOP/ST_LOOP/DETAIL/2000A/2000B/2300/2400/'))

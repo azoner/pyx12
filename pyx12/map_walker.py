@@ -155,7 +155,10 @@ class walk_tree(object):
                                 return (node1, pop_node_list, push_node_list)  # segment node
                             child.incr_cur_count()
                             self.counter.increment(child.x12path)
-                            assert child.get_cur_count() == self.counter.get_count(child.x12path), 'Child counts not equal'
+                            assert child.get_cur_count() == self.counter.get_count(child.x12path), \
+                                'child counts not equal: old is %s=%i : new is %s=%i' % (
+                                child.get_path(), child.get_cur_count(),
+                                child.x12path.format(), self.counter.get_count(child.x12path))
                             self._check_seg_usage(child, seg_data, seg_count, cur_line, ls_id, errh)
                             # Remove any previously missing errors for this segment
                             self.mandatory_segs_missing = [x for x in self.mandatory_segs_missing if x[0] != child]
@@ -193,10 +196,10 @@ class walk_tree(object):
         self.counter = NodeCounter(initialCounts)
 
     def forceWalkCounterToLoopStart(self, x12_path, child_path):
+        # delete child counts under the x12_path, no longer needed
         self.counter.reset_to_node(x12_path)
-        self.counter.increment(x12_path)
-        self.counter.reset_to_node(x12_path)
-        self.counter.increment(child_path)
+        self.counter.increment(x12_path)  # add a count for this path
+        self.counter.increment(child_path) # count the loop start segment
 
     def _check_seg_usage(self, seg_node, seg_data, seg_count, cur_line, ls_id, errh):
         """
@@ -282,10 +285,11 @@ class walk_tree(object):
         """
         assert loop_node.is_loop(), "Call to first_seg_match failed, node %s is not a loop. seg %s" \
             % (loop_node.id, seg_data.get_seg_id())
-        assert loop_node.get_cur_count() == self.counter.get_count(loop_node.x12path), \
-            'loop_node counts not equal: old is %s=%i : new is %s=%i' % (
-            loop_node.get_path(), loop_node.get_cur_count(),
-            loop_node.x12path.format(), self.counter.get_count(loop_node.x12path))
+        if loop_node.id not in ('ISA_LOOP', 'GS_LOOP'):
+            assert loop_node.get_cur_count() == self.counter.get_count(loop_node.x12path), \
+                'loop_node counts not equal: old is %s=%i : new is %s=%i' % (
+                loop_node.get_path(), loop_node.get_cur_count(),
+                loop_node.x12path.format(), self.counter.get_count(loop_node.x12path))
         if len(loop_node) <= 0:  # Has no children
             return False
         first_child_node = loop_node.get_first_node()
