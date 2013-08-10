@@ -335,7 +335,7 @@ class Implicit_Loops(unittest.TestCase):
         self.assertNotEqual(node, None)
         self.assertEqual(node.base_name, 'segment')
         #node.cur_count = 1
-        self.walker.setCountState({node.parent.x12path: 1, node.x12path: 1})
+        walker.setCountState({node.parent.x12path: 1, node.x12path: 1})
         seg_data = pyx12.segment.Segment('IK4*3*116*7*88888-8888~', '~', '*', ':')
         errh.reset()
         (node, pop, push) = walker.walk(node, seg_data, errh, seg_count=8, cur_line=7, ls_id=None)
