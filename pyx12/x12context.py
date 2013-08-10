@@ -808,10 +808,10 @@ class X12ContextReader(object):
                             self.src.check_837_lx = True
                         else:
                             self.src.check_837_lx = False
-                        self._apply_loop_count(orig_node, cur_map)
-                        self._reset_isa_counts(cur_map)
+                        #self._apply_loop_count(orig_node, cur_map)
+                        #self._reset_isa_counts(cur_map)
                         self._reset_counter_to_isa_counts()
-                    self._reset_gs_counts(cur_map)
+                    #self._reset_gs_counts(cur_map)
                     self._reset_counter_to_gs_counts()
                     tpath = '/ISA_LOOP/GS_LOOP/GS'
                     self.x12_map_node = cur_map.getnodebypath(tpath)
@@ -967,30 +967,30 @@ class X12ContextReader(object):
             raise errors.EngineError(err_str)
         return new_node
 
-    def _apply_loop_count(self, orig_node, new_map):
-        """
-        Apply loop counts to current map
-        """
-        ct_list = []
-        orig_node.get_counts_list(ct_list)
-        for (path1, ct) in ct_list:
-            curnode = new_map.getnodebypath(path1)
-            curnode.set_cur_count(ct)
+    #def _apply_loop_count(self, orig_node, new_map):
+    #    """
+    #    Apply loop counts to current map
+    #    """
+    #    ct_list = []
+    #    orig_node.get_counts_list(ct_list)
+    #    for (path1, ct) in ct_list:
+    #        curnode = new_map.getnodebypath(path1)
+    #        curnode.set_cur_count(ct)
 
-    def _reset_isa_counts(self, cur_map):
-        """
-        Reset ISA instance counts
-        """
-        cur_map.getnodebypath('/ISA_LOOP').set_cur_count(1)
-        cur_map.getnodebypath('/ISA_LOOP/ISA').set_cur_count(1)
+    #def _reset_isa_counts(self, cur_map):
+    #    """
+    #    Reset ISA instance counts
+    #    """
+    #    cur_map.getnodebypath('/ISA_LOOP').set_cur_count(1)
+    #    cur_map.getnodebypath('/ISA_LOOP/ISA').set_cur_count(1)
 
-    def _reset_gs_counts(self, cur_map):
-        """
-        Reset GS instance counts
-        """
-        cur_map.getnodebypath('/ISA_LOOP/GS_LOOP').reset_cur_count()
-        cur_map.getnodebypath('/ISA_LOOP/GS_LOOP').set_cur_count(1)
-        cur_map.getnodebypath('/ISA_LOOP/GS_LOOP/GS').set_cur_count(1)
+    #def _reset_gs_counts(self, cur_map):
+    #    """
+    #    Reset GS instance counts
+    #    """
+    #    cur_map.getnodebypath('/ISA_LOOP/GS_LOOP').reset_cur_count()
+    #    cur_map.getnodebypath('/ISA_LOOP/GS_LOOP').set_cur_count(1)
+    #    cur_map.getnodebypath('/ISA_LOOP/GS_LOOP/GS').set_cur_count(1)
 
     def _reset_counter_to_isa_counts(self):
         """

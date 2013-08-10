@@ -31,30 +31,30 @@ from pyx12.map_walker import walk_tree
 import pyx12.x12xml_simple
 
 
-def apply_loop_count(orig_node, new_map):
-    """
-    Apply loop counts to current map
-    """
-    logger = logging.getLogger('pyx12')
-    ct_list = []
-    orig_node.get_counts_list(ct_list)
-    for (path, ct) in ct_list:
-        try:
-            curnode = new_map.getnodebypath(path)
-            curnode.set_cur_count(ct)
-        except pyx12.errors.EngineError:
-            logger.error('getnodebypath failed:  path "%s" not found' % path)
+#def apply_loop_count(orig_node, new_map):
+#    """
+#    Apply loop counts to current map
+#    """
+#    logger = logging.getLogger('pyx12')
+#    ct_list = []
+#    orig_node.get_counts_list(ct_list)
+#    for (path, ct) in ct_list:
+#        try:
+#            curnode = new_map.getnodebypath(path)
+#            curnode.set_cur_count(ct)
+#        except pyx12.errors.EngineError:
+#            logger.error('getnodebypath failed:  path "%s" not found' % path)
 
 
-def reset_isa_counts(cur_map):
-    cur_map.getnodebypath('/ISA_LOOP').set_cur_count(1)
-    cur_map.getnodebypath('/ISA_LOOP/ISA').set_cur_count(1)
+#def reset_isa_counts(cur_map):
+#    cur_map.getnodebypath('/ISA_LOOP').set_cur_count(1)
+#    cur_map.getnodebypath('/ISA_LOOP/ISA').set_cur_count(1)
 
 
-def reset_gs_counts(cur_map):
-    cur_map.getnodebypath('/ISA_LOOP/GS_LOOP').reset_cur_count()
-    cur_map.getnodebypath('/ISA_LOOP/GS_LOOP').set_cur_count(1)
-    cur_map.getnodebypath('/ISA_LOOP/GS_LOOP/GS').set_cur_count(1)
+#def reset_gs_counts(cur_map):
+#    cur_map.getnodebypath('/ISA_LOOP/GS_LOOP').reset_cur_count()
+#    cur_map.getnodebypath('/ISA_LOOP/GS_LOOP').set_cur_count(1)
+#    cur_map.getnodebypath('/ISA_LOOP/GS_LOOP/GS').set_cur_count(1)
 
 
 def _reset_counter_to_isa_counts(walker):
@@ -178,10 +178,10 @@ def x12n_document(param, src_file, fd_997, fd_html,
                     else:
                         src.check_837_lx = False
                     logger.debug('Map file: %s' % (map_file))
-                    apply_loop_count(orig_node, cur_map)
-                    reset_isa_counts(cur_map)
+                    #apply_loop_count(orig_node, cur_map)
+                    #reset_isa_counts(cur_map)
                     #_reset_counter_to_isa_counts(walker)  # new counter
-                reset_gs_counts(cur_map)
+                #reset_gs_counts(cur_map)
                 #_reset_counter_to_gs_counts(walker)  # new counter
                 node = cur_map.getnodebypath('/ISA_LOOP/GS_LOOP/GS')
                 errh.add_gs_loop(seg, src)
@@ -203,7 +203,7 @@ def x12n_document(param, src_file, fd_997, fd_html,
                         cur_map = pyx12.map_if.load_map_file(map_file, param, map_path)
                         src.check_837_lx = True if cur_map.id == '837' else False
                         logger.debug('Map file: %s' % (map_file))
-                        apply_loop_count(node, cur_map)
+                        #apply_loop_count(node, cur_map)
                         node = cur_map.getnodebypath('/ISA_LOOP/GS_LOOP/ST_LOOP/HEADER/BHT')
                 errh.add_seg(node, seg, src.get_seg_count(), src.get_cur_line(), src.get_ls_id())
                 errh.handle_errors(src.pop_errors())
