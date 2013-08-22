@@ -7,7 +7,7 @@ except:
 import pyx12.error_handler
 import pyx12.x12n_document
 import pyx12.params
-from pyx12.tests.x12testdata import datafiles
+from pyx12.test.x12testdata import datafiles
 
 
 class X12DocumentTestCase(unittest.TestCase):

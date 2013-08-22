@@ -11,7 +11,7 @@ import pyx12.x12file
 import pyx12.x12xml_simple
 import pyx12.xmlx12_simple
 import pyx12.params
-from pyx12.tests.x12testdata import datafiles
+from pyx12.test.x12testdata import datafiles
 
 
 class XmlTransformTestCase(unittest.TestCase):
