@@ -98,13 +98,14 @@ def x12n_fastparser(param, src_file):
                 if hkey in walk_history:
                     node = walk_history[hkey]['node']
                     walk_history[hkey]['count'] += 1
+                    # assert walk_history[hkey]['new_path'] ==
                 else:
                     (node, pop_loops, push_loops) = walker.walk(node, seg, errh,
                                                             src.get_seg_count(), src.get_cur_line(), src.get_ls_id())
                     new_path = node.get_path()
                     #if walk_history[hkey]['newpath'] != new_path:
                     #    raise Exception('Saved newpath "{}" is not walked path "{}"'.format(walk_history[hkey]['newpath'], new_path))
-                    walk_history[hkey] = {'newpath': new_path, 'count': 1, 'node': node}
+                    walk_history[hkey] = {'newpath': new_path, 'count': 1, 'start_path': start_path, 'segid': seg_key, 'node': node}
             except pyx12.errors.EngineError:
                 logger.error('Source file line %i' % (src.get_cur_line()))
                 raise
@@ -144,7 +145,8 @@ def x12n_fastparser(param, src_file):
                 pass
 
     src.cleanup()  # Catch any skipped loop trailers
-    pp.pprint(walk_history)
+    #pp.pprint(walk_history)
+    return walk_history
 
     del node
     del src

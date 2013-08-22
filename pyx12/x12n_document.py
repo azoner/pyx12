@@ -105,6 +105,8 @@ def x12n_document(param, src_file, fd_997, fd_html,
     #erx = errh_xml.err_handler(basedir=basedir)
 
     valid = True
+    walk_history = {}
+    base_path_string = '/ISA_LOOP/GS_LOOP/ST_LOOP/'
     for seg in src:
         #find node
         orig_node = node
@@ -115,8 +117,24 @@ def x12n_document(param, src_file, fd_997, fd_html,
             node = control_map.getnodebypath('/ISA_LOOP/GS_LOOP/GS')
         else:
             try:
+                start_path = node.get_path()
+                if start_path.startswith(base_path_string):
+                    start_path = start_path[len(base_path_string):]
+                seg_key = seg.seg_id
+                hkey = start_path + '__' + seg_key
                 (node, pop_loops, push_loops) = walker.walk(node, seg, errh,
                                                             src.get_seg_count(), src.get_cur_line(), src.get_ls_id())
+                if seg_key not in ('ISA', 'GS', 'ST', 'SE', 'GE', 'IEA'):
+                    newpath = node.get_path()
+                    if newpath.startswith(base_path_string):
+                        newpath = newpath[len(base_path_string):]
+                    if hkey in walk_history:
+                        #node = walk_history[hkey]['node']
+                        walk_history[hkey]['count'] += 1
+                        assert walk_history[hkey]['newpath'] == newpath
+                        assert walk_history[hkey]['segid'] == seg_key
+                    else:
+                        walk_history[hkey] = {'newpath': newpath, 'count': 1, 'start_path': start_path, 'segid': seg_key}
             except pyx12.errors.EngineError:
                 logger.error('Source file line %i' % (src.get_cur_line()))
                 raise
@@ -243,6 +261,7 @@ def x12n_document(param, src_file, fd_997, fd_html,
     del src
     del control_map
     del cur_map
+    return walk_history
     try:
         if not valid or errh.get_error_count() > 0:
             return False

@@ -8,11 +8,15 @@ import os.path
 import logging
 import logging.handlers
 #import tempfile
+import pprint
+import json
+from collections import OrderedDict
 
 import pyx12.error_handler
 import pyx12.x12file
 import pyx12.rawx12file
 import pyx12.x12n_fastparse
+import pyx12.x12n_document
 import pyx12.params
 
 
@@ -33,9 +37,40 @@ def read_rawx12(filename):
 
 
 def read_fastx12(filename):
+    pp = pprint.PrettyPrinter(indent=4)
     param = pyx12.params.params('../../test/pyx12.conf.xml')
     with open(filename) as fd:
-        pyx12.x12n_fastparse.x12n_fastparser(param, fd)
+        hist = pyx12.x12n_fastparse.x12n_fastparser(param, fd)
+        res2 = {}
+        for k, v in hist.iteritems():
+            k1 = v['start_path']
+            v1 = {'segid': v['segid'], 'count': v['count'], 'newpath': v['newpath']}
+            if k1 in hist:
+                res2[k1].append(v1)
+            else:
+                res2[k1] = [v1]
+        #res = [{'segid': v['segid'], 'start_path': v['start_path'], 'count': v['count'], 'newpath': v['newpath']} for k, v in hist.iteritems()]
+        #res = [{'segid': v['segid'], 'start_path': v['start_path'], 'count': v['count'], 'newpath': v['newpath']} for k, v in hist.iteritems()]
+        s = json.dumps(res2, indent=2)
+        print s
+        #pp.pprint(res)
+
+
+def read_x12n(filename):
+    param = pyx12.params.params('../../test/pyx12.conf.xml')
+    with open(filename) as fd:
+        hist = pyx12.x12n_document.x12n_document(param, fd, None, None)
+        res2 = OrderedDict()
+        for k in sorted(hist.keys()):
+            v = hist[k]
+            k1 = v['start_path']
+            v1 = {'segid': v['segid'], 'f': 'seg', 'newpath': v['newpath']}
+            if k1 in hist:
+                res2[k1].append(v1)
+            else:
+                res2[k1] = [v1]
+        s = json.dumps({'Maps': res2}, indent=2)
+        open("834.used.json", 'w').write(s)
 
 
 def main():
@@ -65,9 +100,10 @@ def main():
 
     if len(args.input_files) > 0:
         for file1 in args.input_files:
+            #read_rawx12(file1)
             #read_x12(file1)
-            read_rawx12(file1)
             #read_fastx12(file1)
+            read_x12n(file1)
 
 
 if __name__ == '__main__':
