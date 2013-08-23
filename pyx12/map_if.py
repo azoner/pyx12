@@ -329,6 +329,7 @@ class map_if(x12_node):
         """
         Set cur_count of child nodes to zero
         """
+        raise DeprecationWarning('Moved to nodeCounter')
         for ord1 in sorted(self.pos_map):
             for child in self.pos_map[ord1]:
                 child.reset_cur_count()
@@ -337,6 +338,7 @@ class map_if(x12_node):
         """
         Set cur_count of child nodes to zero
         """
+        raise DeprecationWarning('Moved to nodeCounter')
         self.reset_child_count()
 
     def __iter__(self):
@@ -368,7 +370,7 @@ class loop_if(x12_node):
         #self.path = ''
         self.base_name = 'loop'
         #self.type = 'implicit'
-        self.cur_count = 0
+        self._cur_count = 0
 
         self.id = elem.get('xid')
         self.path = self.id
@@ -599,15 +601,18 @@ class loop_if(x12_node):
         @return: current count
         @rtype: int
         """
-        return self.cur_count
+        raise DeprecationWarning('Moved to nodeCounter')
+        return self._cur_count
 
     def incr_cur_count(self):
-        self.cur_count += 1
+        raise DeprecationWarning('Moved to nodeCounter')
+        self._cur_count += 1
 
     def reset_child_count(self):
         """
         Set cur_count of child nodes to zero
         """
+        raise DeprecationWarning('Moved to nodeCounter')
         for ord1 in sorted(self.pos_map):
             for child in self.pos_map[ord1]:
                 child.reset_cur_count()
@@ -616,11 +621,13 @@ class loop_if(x12_node):
         """
         Set cur_count of node and child nodes to zero
         """
-        self.cur_count = 0
+        raise DeprecationWarning('Moved to nodeCounter')
+        self._cur_count = 0
         self.reset_child_count()
 
     def set_cur_count(self, ct):
-        self.cur_count = ct
+        raise DeprecationWarning('Moved to nodeCounter')
+        self._cur_count = ct
 
     def get_counts_list(self, ct_list):
         """
@@ -629,7 +636,8 @@ class loop_if(x12_node):
         @param ct_list: List to append to
         @type ct_list: list[(string, int)]
         """
-        my_ct = (self.get_path(), self.cur_count)
+        raise DeprecationWarning('Moved to nodeCounter')
+        my_ct = (self.get_path(), self._cur_count)
         ct_list.append(my_ct)
         if not self.parent.is_map_root():
             self.parent.get_counts_list(ct_list)
@@ -659,7 +667,7 @@ class segment_if(x12_node):
         self.children = []
         #self.path = ''
         self.base_name = 'segment'
-        self.cur_count = 0
+        self._cur_count = 0
         self.syntax = []
 
         self.id = elem.get('xid')
@@ -987,19 +995,23 @@ class segment_if(x12_node):
         @return: current count
         @rtype: int
         """
-        return self.cur_count
+        raise DeprecationWarning('Moved to nodeCounter')
+        return self._cur_count
 
     def incr_cur_count(self):
-        self.cur_count += 1
+        raise DeprecationWarning('Moved to nodeCounter')
+        self._cur_count += 1
 
     def reset_cur_count(self):
         """
         Set cur_count of node to zero
         """
-        self.cur_count = 0
+        raise DeprecationWarning('Moved to nodeCounter')
+        self._cur_count = 0
 
     def set_cur_count(self, ct):
-        self.cur_count = ct
+        raise DeprecationWarning('Moved to nodeCounter')
+        self._cur_count = ct
 
     def get_counts_list(self, ct_list):
         """
@@ -1008,7 +1020,8 @@ class segment_if(x12_node):
         @param ct_list: List to append to
         @type ct_list: list[(string, int)]
         """
-        my_ct = (self.get_path(), self.cur_count)
+        raise DeprecationWarning('Moved to nodeCounter')
+        my_ct = (self.get_path(), self._cur_count)
         ct_list.append(my_ct)
         if not self.parent.is_map_root():
             self.parent.get_counts_list(ct_list)
