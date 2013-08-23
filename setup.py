@@ -34,8 +34,6 @@ setup(
         ]
     },
     test_suite="pyx12.test",
-    #install_requires=['distribute'],
-    #setup_requires=['distribute'],
     classifiers=[
         'Development Status :: 5 - Production/Stable',
         'Environment :: Console',
