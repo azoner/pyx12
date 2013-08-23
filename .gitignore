@@ -8,3 +8,4 @@ pkg-plist
 *.pyc
 *.egg-info/
 .ropeproject/
+.coverage
