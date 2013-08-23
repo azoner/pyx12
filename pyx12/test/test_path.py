@@ -1,9 +1,7 @@
 import unittest
-import sys
-import os.path
 
 import pyx12.path
-from pyx12.errors import *
+from pyx12.errors import X12PathError
 
 
 class AbsPath(unittest.TestCase):
@@ -110,8 +108,7 @@ class RelativePath(unittest.TestCase):
             'BB/CC/03-2'
         ]
         for spath in bad_paths:
-            self.assertRaises(pyx12.errors.X12PathError,
-                              pyx12.path.X12Path, spath)
+            self.assertRaises(X12PathError, pyx12.path.X12Path, spath)
 
     def test_plain_loops(self):
         paths = [
@@ -170,8 +167,7 @@ class AbsolutePath(unittest.TestCase):
             '/BB/CC/03-2'
         ]
         for spath in bad_paths:
-            self.assertRaises(pyx12.errors.X12PathError,
-                              pyx12.path.X12Path, spath)
+            self.assertRaises(X12PathError, pyx12.path.X12Path, spath)
 
     def test_plain_loops(self):
         paths = [
@@ -292,3 +288,26 @@ class Empty(unittest.TestCase):
         a = pyx12.path.X12Path(p1)
         self.assertTrue(pyx12.path.X12Path(
             p1).empty(), 'Path "%s" is empty' % (p1))
+
+
+class IsChild(unittest.TestCase):
+
+    def testChildLoopOK1(self):
+        path_str = '/ISA_LOOP/GS_LOOP/ST_LOOP/DETAIL/2000A/2000B/2300/2400'
+        parent = pyx12.path.X12Path(path_str)
+        self.assertTrue(parent.is_child_path('/ISA_LOOP/GS_LOOP/ST_LOOP/DETAIL/2000A/2000B/2300/2400/SV2'))
+
+    def testChildLoopOK2(self):
+        path_str = '/ISA_LOOP/GS_LOOP/ST_LOOP/DETAIL/2000A/2000B/2300/2400'
+        parent = pyx12.path.X12Path(path_str)
+        self.assertTrue(parent.is_child_path('/ISA_LOOP/GS_LOOP/ST_LOOP/DETAIL/2000A/2000B/2300/2400/2500/ASD'))
+
+    def testLoopSegSame1(self):
+        path_str = '/ISA_LOOP/GS_LOOP/ST_LOOP/DETAIL/2000A/2000B/2300/2400'
+        parent = pyx12.path.X12Path(path_str)
+        self.assertFalse(parent.is_child_path('/ISA_LOOP/GS_LOOP/ST_LOOP/DETAIL/2000A/2000B/2300/2400'))
+
+    #def testLoopSegSame2(self):
+    #    path_str = '/ISA_LOOP/GS_LOOP/ST_LOOP/DETAIL/2000A/2000B/2300/2400'
+    #    parent = pyx12.path.X12Path(path_str)
+    #    self.assertFalse(parent.is_child_path('/ISA_LOOP/GS_LOOP/ST_LOOP/DETAIL/2000A/2000B/2300/2400/'))

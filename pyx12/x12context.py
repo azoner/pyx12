@@ -722,7 +722,8 @@ class X12SegmentDataNode(X12DataNode):
         @return: Count of errors for this segment
         @rtype: int
         """
-        return len(self.err_isa) + len(self.err_gs) + len(self.err_st) + len(self.err_seg) + len(self.err_ele)
+        return len(self.err_isa) + len(self.err_gs) + len(self.err_st) \
+                + len(self.err_seg) + len(self.err_ele)
 
 
 class X12ContextReader(object):
@@ -781,10 +782,9 @@ class X12ContextReader(object):
                 self.x12_map_node = self.control_map.getnodebypath(tpath)
             else:
                 try:
-                    (
-                        seg_node, pop_loops, push_loops) = self.walker.walk(self.x12_map_node,
-                                                                            seg, errh, self.src.get_seg_count(),
-                                                                            self.src.get_cur_line(), self.src.get_ls_id())
+                    (seg_node, pop_loops, push_loops) = self.walker.walk(self.x12_map_node,
+                            seg, errh, self.src.get_seg_count(),
+                            self.src.get_cur_line(), self.src.get_ls_id())
                     self.x12_map_node = seg_node
                 except errors.EngineError:
                     raise
@@ -799,7 +799,6 @@ class X12ContextReader(object):
                     vriic = seg.get_value('GS08')
                     map_file_new = self.map_index_if.get_filename(icvn, vriic, fic)
                     if self.map_file != map_file_new:
-                        #map_abbr = self.map_index_if.get_abbr(icvn, vriic, fic)
                         self.map_file = map_file_new
                         if self.map_file is None:
                             raise pyx12.errors.EngineError("Map not found.  icvn=%s, fic=%s, vriic=%s" %
@@ -809,18 +808,19 @@ class X12ContextReader(object):
                             self.src.check_837_lx = True
                         else:
                             self.src.check_837_lx = False
-                        self._apply_loop_count(orig_node, cur_map)
-                        self._reset_isa_counts(cur_map)
-                    self._reset_gs_counts(cur_map)
+                        #self._apply_loop_count(orig_node, cur_map)
+                        #self._reset_isa_counts(cur_map)
+                        self._reset_counter_to_isa_counts()
+                    #self._reset_gs_counts(cur_map)
+                    self._reset_counter_to_gs_counts()
                     tpath = '/ISA_LOOP/GS_LOOP/GS'
                     self.x12_map_node = cur_map.getnodebypath(tpath)
+                    #self.walker.forceWalkCounterToLoopStart('/ISA_LOOP/GS_LOOP', '/ISA_LOOP/GS_LOOP/GS')
                 elif seg_id == 'BHT':
                     if vriic in ('004010X094', '004010X094A1'):
                         tspc = seg.get_value('BHT02')
                         map_file_new = self.map_index_if.get_filename(icvn, vriic, fic, tspc)
                         if self.map_file != map_file_new:
-                            #map_abbr = self.map_index_if.get_abbr(icvn, \
-                            #    vriic, fic, tspc)
                             self.map_file = map_file_new
                             if self.map_file is None:
                                 err_str = "Map not found.  icvn=%s, fic=%s, vriic=%s, tspc=%s" % \
@@ -838,7 +838,6 @@ class X12ContextReader(object):
             node_x12path = self.x12_map_node.x12path
             # If we are in the requested tree, wait until we have the whole thing
             if loop_id is not None and loop_id in node_x12path.loop_list:
-                #pdb.set_trace()
                 # Are we at the start of the requested tree?
                 if node_x12path.loop_list[-1] == loop_id and \
                         self.x12_map_node.is_first_seg_in_loop():
@@ -866,8 +865,7 @@ class X12ContextReader(object):
                         pop_loops = [x12_node for x12_node in pop_loops if x12_node.get_path().find(loop_id) == -1]
                     assert loop_id not in [x12.id for x12 in push_loops], 'Loop ID %s should not be in push loops' % (loop_id)
                     assert loop_id not in [x12.id for x12 in pop_loops], 'Loop ID %s should not be in pop loops' % (loop_id)
-                    cur_data_node = X12SegmentDataNode(self.x12_map_node,
-                                                       seg, push_loops, pop_loops)
+                    cur_data_node = X12SegmentDataNode(self.x12_map_node, seg, push_loops, pop_loops)
                 else:
                     cur_data_node = X12SegmentDataNode(self.x12_map_node, seg)
                 # Get errors caught by x12Reader
@@ -954,8 +952,9 @@ class X12ContextReader(object):
         try:
             new_node = X12SegmentDataNode(self.x12_map_node, seg_data)
         except Exception:
-            raise errors.EngineError('X12SegmentDataNode failed: x12_path=%s, seg_date=%s ' %
-                                     (self.x12_map_node.get_path(), seg_data))
+            mypath = self.x12_map_node.get_path()
+            err_str = 'X12SegmentDataNode failed: x12_path={}, seg_date={}'.format(mypath, seg_data)
+            raise errors.EngineError(err_str)
         try:
             new_node.parent = cur_loop_node
             cur_loop_node.children.append(new_node)
@@ -968,27 +967,43 @@ class X12ContextReader(object):
             raise errors.EngineError(err_str)
         return new_node
 
-    def _apply_loop_count(self, orig_node, new_map):
-        """
-        Apply loop counts to current map
-        """
-        ct_list = []
-        orig_node.get_counts_list(ct_list)
-        for (path1, ct) in ct_list:
-            curnode = new_map.getnodebypath(path1)
-            curnode.set_cur_count(ct)
+    #def _apply_loop_count(self, orig_node, new_map):
+    #    """
+    #    Apply loop counts to current map
+    #    """
+    #    ct_list = []
+    #    orig_node.get_counts_list(ct_list)
+    #    for (path1, ct) in ct_list:
+    #        curnode = new_map.getnodebypath(path1)
+    #        curnode.set_cur_count(ct)
 
-    def _reset_isa_counts(self, cur_map):
+    #def _reset_isa_counts(self, cur_map):
+    #    """
+    #    Reset ISA instance counts
+    #    """
+    #    cur_map.getnodebypath('/ISA_LOOP').set_cur_count(1)
+    #    cur_map.getnodebypath('/ISA_LOOP/ISA').set_cur_count(1)
+
+    #def _reset_gs_counts(self, cur_map):
+    #    """
+    #    Reset GS instance counts
+    #    """
+    #    cur_map.getnodebypath('/ISA_LOOP/GS_LOOP').reset_cur_count()
+    #    cur_map.getnodebypath('/ISA_LOOP/GS_LOOP').set_cur_count(1)
+    #    cur_map.getnodebypath('/ISA_LOOP/GS_LOOP/GS').set_cur_count(1)
+
+    def _reset_counter_to_isa_counts(self):
         """
         Reset ISA instance counts
         """
-        cur_map.getnodebypath('/ISA_LOOP').set_cur_count(1)
-        cur_map.getnodebypath('/ISA_LOOP/ISA').set_cur_count(1)
+        self.walker.counter.reset_to_node('/ISA_LOOP')
+        self.walker.counter.increment('/ISA_LOOP')
+        self.walker.counter.increment('/ISA_LOOP/ISA')
 
-    def _reset_gs_counts(self, cur_map):
+    def _reset_counter_to_gs_counts(self):
         """
         Reset GS instance counts
         """
-        cur_map.getnodebypath('/ISA_LOOP/GS_LOOP').reset_cur_count()
-        cur_map.getnodebypath('/ISA_LOOP/GS_LOOP').set_cur_count(1)
-        cur_map.getnodebypath('/ISA_LOOP/GS_LOOP/GS').set_cur_count(1)
+        self.walker.counter.reset_to_node('/ISA_LOOP/GS_LOOP')
+        self.walker.counter.increment('/ISA_LOOP/GS_LOOP')
+        self.walker.counter.increment('/ISA_LOOP/GS_LOOP/GS')

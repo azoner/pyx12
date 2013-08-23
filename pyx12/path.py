@@ -96,7 +96,7 @@ class X12Path(object):
         @return: True if contains no path data
         @rtype: boolean
         """
-        return self.relative == True and len(self.loop_list) == 0 and self.seg_id is None and self.ele_idx is None
+        return self.relative is True and len(self.loop_list) == 0 and self.seg_id is None and self.ele_idx is None
 
     def _is_child_path(self, root_path, child_path):
         """
@@ -176,3 +176,19 @@ class X12Path(object):
             if self.subele_idx:
                 ret += '-%i' % self.subele_idx
         return ret
+
+    def is_child_path(self, child_path):
+        """
+        Is the child path a child of this path?
+        @type child_path: string
+        @return: True if a child
+        @rtype: boolean
+        """
+        root = self.format().split('/')
+        child = child_path.split('/')
+        if len(root) >= len(child):
+            return False
+        for i in range(len(root)):
+            if root[i] != child[i]:
+                return False
+        return True

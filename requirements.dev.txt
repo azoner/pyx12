@@ -1,0 +1,8 @@
+autopep8
+ipdb
+ipython
+pep8
+pylint
+yolk
+coverage
+nose
