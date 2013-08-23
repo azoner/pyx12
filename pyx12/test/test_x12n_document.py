@@ -56,8 +56,7 @@ class X12DocumentTestCase(unittest.TestCase):
         #hdlr = logging.StreamHandler()
         #hdlr.setFormatter(formatter)
         logger.addHandler(hdlr)
-        pyx12.x12n_document.x12n_document(
-            self.param, fd_source, fd_997, fd_html, None)
+        pyx12.x12n_document.x12n_document(self.param, fd_source, fd_997, fd_html, None)
         fd_997.seek(0)
         self._isX12Diff(fd_997_base, fd_997)
 

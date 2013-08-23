@@ -173,10 +173,7 @@ def x12n_document(param, src_file, fd_997, fd_html,
                         err_str = "Map not found.  icvn={}, fic={}, vriic={}".format(icvn, fic, vriic)
                         raise pyx12.errors.EngineError(err_str)
                     cur_map = pyx12.map_if.load_map_file(map_file, param, map_path)
-                    if cur_map.id == '837':
-                        src.check_837_lx = True
-                    else:
-                        src.check_837_lx = False
+                    src.check_837_lx = True if cur_map.id == '837' else False
                     logger.debug('Map file: %s' % (map_file))
                     #apply_loop_count(orig_node, cur_map)
                     #reset_isa_counts(cur_map)
