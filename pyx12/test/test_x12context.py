@@ -9,7 +9,7 @@ import pyx12.error_handler
 from pyx12.errors import EngineError  # , X12PathError
 import pyx12.x12context
 import pyx12.params
-from pyx12.tests.x12testdata import datafiles
+from pyx12.test.x12testdata import datafiles
 
 
 class X12fileTestCase(unittest.TestCase):

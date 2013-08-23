@@ -2,6 +2,7 @@ import os
 import os.path
 import unittest
 
+import pyx12.map_if
 import pyx12.syntax
 import pyx12.segment
 from pyx12.errors import *
