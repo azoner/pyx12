@@ -7,3 +7,12 @@ omit =
     */site-packages/nose/*
     */unittest2/*
     */pyx12/test/*
+    */pyx12/scripts/*
+
+[report]
+exclude_lines =
+    pragma: no cover
+    def __repr__
+    raise AssertionError
+    raise NotImplementedError
+    def debug_print
