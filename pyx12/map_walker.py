@@ -163,8 +163,7 @@ class walk_tree(object):
                             self._flush_mandatory_segs(errh, child.pos)
                             return (child, pop_node_list, push_node_list)  # segment node
                         elif child.usage == 'R' and child.get_cur_count() < 1:
-                            fake_seg = pyx12.segment.Segment('%s' % (child.id),
-                                                             '~', '*', ':')
+                            fake_seg = pyx12.segment.Segment('%s' % (child.id), '~', '*', ':')
                             err_str = 'Mandatory segment "%s" (%s) missing' % (child.name, child.id)
                             self.mandatory_segs_missing.append((child, fake_seg, '3', err_str, seg_count, cur_line, ls_id))
                         #else:
@@ -183,8 +182,7 @@ class walk_tree(object):
             pop_node_list.append(node)
             node = pop_to_parent_loop(node)  # Get enclosing parent loop
 
-        walk_tree._seg_not_found_error(
-            orig_node, seg_data, errh, seg_count, cur_line, ls_id)
+        walk_tree._seg_not_found_error(orig_node, seg_data, errh, seg_count, cur_line, ls_id)
         return (None, [], [])
 
     def setCountState(self, initialCounts={}):
@@ -208,8 +206,7 @@ class walk_tree(object):
         @type errh: L{error_handler.err_handler}
         @raise EngineError: On invalid usage code
         """
-        assert seg_node.usage in (
-            'N', 'R', 'S'), 'Segment usage must be R, S, or N'
+        assert seg_node.usage in ('N', 'R', 'S'), 'Segment usage must be R, S, or N'
         if seg_node.usage == 'N':
             err_str = "Segment %s found but marked as not used" % (seg_node.id)
             errh.seg_error('2', err_str, None)
@@ -236,10 +233,8 @@ class walk_tree(object):
         if seg_data.get_seg_id() == 'HL':
             seg_str = seg_data.format('', '*', ':')
         else:
-            seg_str = '%s*%s' % (
-                seg_data.get_seg_id(), seg_data.get_value('01'))
-        err_str = 'Segment %s not found.  Started at %s' % (
-            seg_str, orig_node.get_path())
+            seg_str = '%s*%s' % (seg_data.get_seg_id(), seg_data.get_value('01'))
+        err_str = 'Segment %s not found.  Started at %s' % (seg_str, orig_node.get_path())
         errh.add_seg(orig_node, seg_data, seg_count, cur_line, ls_id)
         errh.seg_error('1', err_str, None)
 
@@ -362,8 +357,7 @@ class walk_tree(object):
         """
         assert loop_node.is_loop(), "Node %s is not a loop. seg %s" % (
             loop_node.id, seg_data.get_seg_id())
-        assert loop_node.usage in (
-            'N', 'R', 'S'), 'Loop usage must be R, S, or N'
+        assert loop_node.usage in ('N', 'R', 'S'), 'Loop usage must be R, S, or N'
         if loop_node.usage == 'N':
             err_str = "Loop %s found but marked as not used" % (loop_node.id)
             errh.seg_error('2', err_str, None)

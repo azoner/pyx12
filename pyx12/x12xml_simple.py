@@ -12,13 +12,12 @@
 Create a XML rendering of the X12 document
 """
 
-import os.path
+from os.path import commonprefix
 import logging
 
 # Intrapackage imports
-from errors import *
+from errors import EngineError
 from x12xml import x12xml
-from xmlwriter import XMLWriter
 from map_walker import pop_to_parent_loop
 
 logger = logging.getLogger('pyx12.x12xml.simple')
@@ -47,11 +46,17 @@ class x12xml_simple(x12xml):
         parent = pop_to_parent_loop(seg_node)  # Get enclosing loop
         # check path for new loops to be added
         cur_path = self._path_list(parent.get_path())
-        if self.last_path != cur_path:
+        #if seg_node.id == 'GS':
+        #    import ipdb; ipdb.set_trace()
+        if self.last_path == cur_path and seg_node.is_first_seg_in_loop():
+            # loop repeat
+            self.writer.pop()
+            (xname, attrib) = self._get_loop_info(cur_path[-1])
+            self.writer.push(xname, attrib)
+        else:
             last_path = self.last_path
             match_idx = self._get_path_match_idx(last_path, cur_path)
-            root_path = self._path_list(os.path.commonprefix(
-                ['/'.join(cur_path), '/'.join(last_path)]))
+            root_path = self._path_list(commonprefix(['/'.join(cur_path), '/'.join(last_path)]))
             if seg_node.is_first_seg_in_loop() and root_path == cur_path:
                 match_idx -= 1
             for i in range(len(last_path) - 1, match_idx - 1, -1):
@@ -81,8 +86,7 @@ class x12xml_simple(x12xml):
                     #self.writer.empty(u"ele", attrs={u'id': child_node.id})
                 else:
                     (xname, attrib) = self._get_ele_info(child_node.id)
-                    self.writer.elem(xname, seg_data.get_value(
-                        '%02i' % (i + 1)), attrib)
+                    self.writer.elem(xname, seg_data.get_value('%02i' % (i + 1)), attrib)
             else:
                 raise EngineError('Node must be a either an element or a composite')
         self.writer.pop()  # end segment
@@ -92,43 +96,28 @@ class x12xml_simple(x12xml):
         """
         Override loop node value
         """
-        loop_name = "loop"
-        attrib = {}
-        attrib['id'] = loop_id
-        return (loop_name, attrib)
+        return ("loop", {'id': loop_id})
 
     def _get_seg_info(self, seg_id):
         """
         Override segment node value
         """
-        seg_name = "seg"
-        attrib = {}
-        attrib['id'] = seg_id
-        return (seg_name, attrib)
+        return ("seg", {'id': seg_id})
 
     def _get_comp_info(self, comp_id):
         """
         Override composite node value
         """
-        comp_name = "comp"
-        attrib = {}
-        attrib['id'] = comp_id
-        return (comp_name, attrib)
+        return ("comp",  {'id': comp_id})
 
     def _get_ele_info(self, ele_id):
         """
         Override element node value
         """
-        name = 'ele'
-        attrib = {}
-        attrib['id'] = ele_id
-        return (name, attrib)
+        return ("ele", {'id': ele_id})
 
     def _get_subele_info(self, subele_id):
         """
         Override sub-element node value
         """
-        name = 'subele'
-        attrib = {}
-        attrib['id'] = subele_id
-        return (name, attrib)
+        return ("subele", {'id': subele_id})
