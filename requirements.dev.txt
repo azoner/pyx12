@@ -4,3 +4,5 @@ ipython
 pep8
 pylint
 yolk
+coverage
+nose

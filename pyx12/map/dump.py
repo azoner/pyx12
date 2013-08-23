@@ -1,12 +1,9 @@
-#! /usr/bin/env /usr/local/bin/python
+#! /usr/bin/env python
 
 import os.path
-import pdb
 import sys
 
 import pyx12.error_handler
-#from error_handler import ErrorErrhNull
-from pyx12.errors import *
 import pyx12.map_if
 from pyx12.params import params
 import pyx12.segment
@@ -20,6 +17,5 @@ def donode(node):
 
 param = params()
 param.set('map_path', os.path.expanduser('~/src/pyx12/map/'))
-param.set('pickle_path', os.path.expanduser('~/src/pyx12/map/'))
 map = pyx12.map_if.load_map_file(sys.argv[1], param)
 donode(map)
