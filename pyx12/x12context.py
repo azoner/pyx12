@@ -178,7 +178,7 @@ class X12DataNode(object):
             return idx + 1
         return len(self.children)
 
-    def _get_first_matching_segment(self, x12_path_str):
+    def get_first_matching_segment(self, x12_path_str):
         """
         Get first found Segment at the given relative path.  If the path is not a
         valid relative path or if the given segment index does not exist, the function
@@ -301,7 +301,7 @@ class X12LoopDataNode(X12DataNode):
         @raise X12PathError: On blank or invalid path
         """
         (curr, new_path) = self._get_start_node(x12_path_str)
-        seg_data = curr._get_first_matching_segment(new_path)
+        seg_data = curr.get_first_matching_segment(new_path)
         if seg_data is None:
             return None
         xpath = path.X12Path(new_path)
@@ -319,7 +319,7 @@ class X12LoopDataNode(X12DataNode):
         @type val: string
         """
         (curr, new_path) = self._get_start_node(x12_path_str)
-        seg_data = curr._get_first_matching_segment(new_path)
+        seg_data = curr.get_first_matching_segment(new_path)
         if seg_data is None:
             raise errors.X12PathError('X12 Path is invalid or was not found: %s' % (x12_path_str))
         xpath = path.X12Path(new_path)
@@ -466,7 +466,7 @@ class X12LoopDataNode(X12DataNode):
         self.children.insert(child_idx, new_node)
         return new_node
 
-    def _get_first_matching_segment(self, x12_path_str):
+    def get_first_matching_segment(self, x12_path_str):
         """
         Get first found Segment at the given relative path.  If the path is not a
         valid relative path or if the given segment index does not exist, the function
@@ -500,7 +500,7 @@ class X12LoopDataNode(X12DataNode):
             try:
                 for loop in [loop for loop in curr.children if loop.type == 'loop']:
                     if loop.id == next_id:
-                        return loop._get_first_matching_segment(xpath.format())
+                        return loop.get_first_matching_segment(xpath.format())
                 return None
             except errors.EngineError as e:
                 raise errors.X12PathError('X12 Path is invalid or was not found: %s' % (x12_path_str))
@@ -593,7 +593,7 @@ class X12SegmentDataNode(X12DataNode):
         @return: the element value at the relative X12 path
         @rtype: string
         """
-        seg_data = self._get_first_matching_segment(x12_path_str)
+        seg_data = self.get_first_matching_segment(x12_path_str)
         if seg_data is None:
             return None
         return seg_data.get_value(x12_path_str)
@@ -606,14 +606,14 @@ class X12SegmentDataNode(X12DataNode):
         @param val: The new element value
         @type val: string
         """
-        seg_data = self._get_first_matching_segment(x12_path_str)
+        seg_data = self.get_first_matching_segment(x12_path_str)
         if seg_data is None:
             raise errors.X12PathError('X12 Path is invalid or was not found: %s' % (x12_path_str))
         #ele_idx = self.get_ele_idx(x12_path_str)
         #seg_data.set(ele_idx, val)
         seg_data.set(x12_path_str, val)
 
-    def _get_first_matching_segment(self, x12_path_str):
+    def get_first_matching_segment(self, x12_path_str):
         """
         Get first found Segment at the given relative path.  If the path is not a
         valid relative path or if the given segment index does not exist, the function
@@ -722,8 +722,7 @@ class X12SegmentDataNode(X12DataNode):
         @return: Count of errors for this segment
         @rtype: int
         """
-        return len(self.err_isa) + len(self.err_gs) + len(self.err_st) \
-                + len(self.err_seg) + len(self.err_ele)
+        return len(self.err_isa) + len(self.err_gs) + len(self.err_st) + len(self.err_seg) + len(self.err_ele)
 
 
 class X12ContextReader(object):
