@@ -152,3 +152,6 @@ class Test5010(X12DocumentTestCase):
 
     def test_834_lui_id_5010(self):
         self._test_999('834_lui_id_5010')
+
+    def test_834_eol_in_element(self):
+        self._test_999('834_eol_in_element')

@@ -2172,10 +2172,51 @@ SE*6*0001~
 GE*1*13360001~
 IEA*1*703201721~
 """},
+    '834_eol_in_element': {
+        'source': """ISA*00*          *00*          *ZZ*D00XXX         *ZZ*00AA           *070305*1832*U*00501*000701336*0*P*:~
+GS*BE*D00XXX*00AA*20070305*1832*13360001*X*005010X220A1~
+ST*834*0001*005010X220A1~
+BGN*00*88880070301  00*20070305*181245****4~
+DTP*007*D8*20070301~
+N1*P5*PAYER 1*FI*999999999~
+N1*IN*KCMHSAS*FI*999999999~
+INS*Y*18*030*XN*A*C**FT~
+REF*0F*00389999~
+REF*1L*000003409999~
+REF*3H*K129999A~
+DTP*356*D8*20070301~
+NM1*IL*1*DOE*JOHN*A***34*999999999~
+N3*777 ELM ST
+APT 55~
+N4*ALLEGAN*MI*49010**CY*03~
+DMG*D8*19670330*M**O~
+LUI***ESSPANISH~
+HD*030**AK*064703*IND~
+DTP*348*D8*20070301~
+AMT*P3*45.34~
+REF*17*E  1F~
+SE*20*0001~
+GE*1*13360001~
+IEA*1*000701336~
+""",
+        'resAck': """ISA*00*          *00*          *ZZ*00AA           *ZZ*D00XXX         *131107*1503*^*00501*311071503*0*P*:~
+GS*FA*00AA*D00XXX*20131107*150355*608852007*X*005010X231~
+ST*999*0001*005010X231~
+AK1*BE*13360001*005010X220A1~
+AK2*834*0001*005010X220A1~
+IK3*N3*12**8~
+IK4*1*166*6*777 ELM ST APT 55~
+IK5*R*5~
+AK9*R*1*1*0~
+SE*8*0001~
+GE*1*608852007~
+IEA*1*311071503~
+"""},
 }
 
 if __name__ == '__main__':
+    import os.path
     for k in datafiles:
         if 'source' in datafiles[k]:
-            with open(k + '.txt', 'w') as f:
+            with open(os.path.join('files', k + '.txt'), 'w') as f:
                 f.write(datafiles[k]['source'])

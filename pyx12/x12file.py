@@ -88,8 +88,7 @@ class X12Base(object):
             interchange_control_number = seg_data.get_value('ISA13')
             if interchange_control_number in self.isa_ids:
                 err_str = 'ISA Interchange Control Number '
-                err_str += '%s not unique within file' \
-                    % (interchange_control_number)
+                err_str += '%s not unique within file' % (interchange_control_number)
                 self._isa_error('025', err_str)
             self.loops.append(('ISA', interchange_control_number))
             self.isa_ids.append(interchange_control_number)
@@ -100,8 +99,7 @@ class X12Base(object):
             group_control_number = seg_data.get_value('GS06')
             if group_control_number in self.gs_ids:
                 err_str = 'GS Interchange Control Number '
-                err_str += '%s not unique within file' \
-                    % (group_control_number)
+                err_str += '%s not unique within file' % (group_control_number)
                 self._gs_error('6', err_str)
             self.gs_count += 1
             self.gs_ids.append(group_control_number)
@@ -114,8 +112,7 @@ class X12Base(object):
             transaction_control_number = seg_data.get_value('ST02')
             if transaction_control_number in self.st_ids:
                 err_str = 'ST Interchange Control Number '
-                err_str += '%s not unique within file' \
-                    % (transaction_control_number)
+                err_str += '%s not unique within file' % (transaction_control_number)
                 self._st_error('23', err_str)
             self.st_count += 1
             self.st_ids.append(transaction_control_number)
@@ -135,14 +132,12 @@ class X12Base(object):
                 #raise pyx12.errors.X12Error, \
                 #   'My HL count %i does not match your HL count %s' \
                 #    % (self.hl_count, seg[1])
-                err_str = 'My HL count %i does not match your HL count %s' \
-                    % (self.hl_count, hl_count)
+                err_str = 'My HL count %i does not match your HL count %s' % (self.hl_count, hl_count)
                 self._seg_error('HL1', err_str)
             if seg_data.get_value('HL02') != '':
                 hl_parent = self._int(seg_data.get_value('HL02'))
                 if hl_parent not in self.hl_stack:
-                    err_str = 'HL parent (%i) is not a valid parent' \
-                        % (hl_parent)
+                    err_str = 'HL parent (%i) is not a valid parent' % (hl_parent)
                     self._seg_error('HL2', err_str)
                 while self.hl_stack and hl_parent != self.hl_stack[-1]:
                     del self.hl_stack[-1]
@@ -324,8 +319,7 @@ class X12Reader(X12Base):
             self.raw = RawX12File(self.fd_in)
         except pyx12.errors.X12Error:
             raise
-        (seg_term, ele_term, subele_term, eol,
-            repetition_term) = self.raw.get_term()
+        (seg_term, ele_term, subele_term, eol, repetition_term) = self.raw.get_term()
         self.seg_term = seg_term
         self.ele_term = ele_term
         self.subele_term = subele_term
@@ -401,8 +395,7 @@ class X12Reader(X12Base):
             # We have not yet incremented cur_line
             if line[-1] == self.ele_term:
                 err_str = 'Segment contains trailing element terminators'
-                self._seg_error('SEG1', err_str, None,
-                                src_line=self.cur_line + 1)
+                self._seg_error('SEG1', err_str, None, src_line=self.cur_line + 1)
             seg_data = pyx12.segment.Segment(line, self.seg_term, self.ele_term, self.subele_term)
             self._parse_segment(seg_data)
             yield(seg_data)
