@@ -484,9 +484,7 @@ class Segment(object):
                 break
         for ele in self.elements[:i + 1]:
             str_elems.append(ele.format(subele_term))
-        return '%s%s%s%s' % (self.seg_id, ele_term,
-                             ele_term.join(str_elems),
-                             seg_term)
+        return '%s%s%s%s' % (self.seg_id, ele_term, ele_term.join(str_elems), seg_term)
 
     def format_ele_list(self, str_elems, subele_term=None):
         """

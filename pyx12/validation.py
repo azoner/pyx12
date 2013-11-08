@@ -208,7 +208,8 @@ def is_valid_time(val):
 
 
 def contains_control_character(str_val, charset='B', icvn='00401'):
-    """ 07 09 0A 0B 0"""
-    if '\n' in str_val or '\r' in str_val:
-        return True
-    return False
+    if '\n' in str_val:
+        return (True, '<LF>')
+    if '\r' in str_val:
+        return (True, '<CR>')
+    return (False, None)

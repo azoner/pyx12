@@ -74,13 +74,11 @@ class X12Base(object):
         """
         if seg_data.is_empty():
             err_str = 'Segment "%s" is empty' % (seg_data)
-            self._seg_error('8', err_str, None,
-                            src_line=self.cur_line + 1)
+            self._seg_error('8', err_str, None, src_line=self.cur_line + 1)
         if not seg_data.is_seg_id_valid():
             err_str = 'Segment identifier "%s" is invalid' % (
                 seg_data.get_seg_id())
-            self._seg_error('1', err_str, None,
-                            src_line=self.cur_line + 1)
+            self._seg_error('1', err_str, None, src_line=self.cur_line + 1)
         seg_id = seg_data.get_seg_id()
         if seg_id == 'ISA':
             if len(seg_data) != 16:
@@ -556,8 +554,7 @@ class X12Writer(X12Base):
         @param seg_data: segment to write
         @type seg_data: L{segment<segment.Segment>}
         """
-        out = seg_data.format(
-            self.seg_term, self.ele_term, self.subele_term) + self.eol
+        out = seg_data.format(self.seg_term, self.ele_term, self.subele_term) + self.eol
         self.fd_out.write(out.decode('ascii'))
 
     def _write_isa_segment(self, seg_data):

@@ -1210,10 +1210,11 @@ class element_if(x12_node):
                 self._error(errh, err_str, '5', elem_val)
                 valid = False
 
-        if validation.contains_control_character(elem_val):
+        (res, bad_string) = validation.contains_control_character(elem_val)
+        if res:
             err_str = 'Data element "%s" (%s), contains an invalid control character(%s)' % \
-                (self.name, self.refdes, elem_val)
-            self._error(errh, err_str, '6', elem_val)
+                (self.name, self.refdes, bad_string)
+            self._error(errh, err_str, '6', bad_string)
             valid = False
         if data_type in ['AN', 'ID'] and elem_val[-1] == ' ':
             if len(elem_val.rstrip()) >= min_len:
