@@ -59,6 +59,8 @@ class RawX12File(object):
     def __iter__(self):
         """
         Iterate over input lines
+        Often, X12 files have a CR-LF after the segment delimiter.
+        Split the input stream on the delimiter and remove any leading CR-LF
         """
         while True:
             if self.buffer.find(self.seg_term) == -1:
@@ -69,7 +71,7 @@ class RawX12File(object):
                 break
             # Get first segment in buffer
             (line, self.buffer) = self.buffer.split(self.seg_term, 1)
-            line = line.replace('\n', '').replace('\r', '')
+            line = line.lstrip('\n\r')
             if line == '':
                 break
             yield(line)

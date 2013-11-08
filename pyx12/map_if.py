@@ -782,36 +782,36 @@ class segment_if(x12_node):
         """
         if seg.get_seg_id() == self.id:
             if self.children[0].is_element() \
-                and self.children[0].get_data_type() == 'ID' \
-                and self.children[0].usage == 'R' \
-                and len(self.children[0].valid_codes) > 0 \
-                and seg.get_value('01') not in self.children[0].valid_codes:
+                    and self.children[0].get_data_type() == 'ID' \
+                    and self.children[0].usage == 'R' \
+                    and len(self.children[0].valid_codes) > 0 \
+                    and seg.get_value('01') not in self.children[0].valid_codes:
                 #logger.debug('is_match: %s %s' % (seg.get_seg_id(), seg[1]), self.children[0].valid_codes)
                 return False
             # Special Case for 820
             elif seg.get_seg_id() == 'ENT' \
-                and self.children[1].is_element() \
-                and self.children[1].get_data_type() == 'ID' \
-                and len(self.children[1].valid_codes) > 0 \
-                and seg.get_value('02') not in self.children[1].valid_codes:
+                    and self.children[1].is_element() \
+                    and self.children[1].get_data_type() == 'ID' \
+                    and len(self.children[1].valid_codes) > 0 \
+                    and seg.get_value('02') not in self.children[1].valid_codes:
                 #logger.debug('is_match: %s %s' % (seg.get_seg_id(), seg[1]), self.children[0].valid_codes)
                 return False
             # Special Case for 999 CTX
             # IG defines the dataelement 2100/CT01-1 as an AN, but acts like an ID
             elif seg.get_seg_id() == 'CTX' \
-                and self.children[0].is_composite() \
-                and self.children[0].children[0].get_data_type() == 'AN' \
-                and len(self.children[0].children[0].valid_codes) > 0 \
-                and seg.get_value('01-1') not in self.children[0].children[0].valid_codes:
+                    and self.children[0].is_composite() \
+                    and self.children[0].children[0].get_data_type() == 'AN' \
+                    and len(self.children[0].children[0].valid_codes) > 0 \
+                    and seg.get_value('01-1') not in self.children[0].children[0].valid_codes:
                 return False
             elif self.children[0].is_composite() \
-                and self.children[0].children[0].get_data_type() == 'ID' \
-                and len(self.children[0].children[0].valid_codes) > 0 \
-                and seg.get_value('01-1') not in self.children[0].children[0].valid_codes:
+                    and self.children[0].children[0].get_data_type() == 'ID' \
+                    and len(self.children[0].children[0].valid_codes) > 0 \
+                    and seg.get_value('01-1') not in self.children[0].children[0].valid_codes:
                 return False
             elif seg.get_seg_id() == 'HL' and self.children[2].is_element() \
-                and len(self.children[2].valid_codes) > 0 \
-                and seg.get_value('03') not in self.children[2].valid_codes:
+                    and len(self.children[2].valid_codes) > 0 \
+                    and seg.get_value('03') not in self.children[2].valid_codes:
                 return False
             else:
                 return True
@@ -1071,8 +1071,7 @@ class element_if(x12_node):
             if self.res is not None and self.res != '':
                 self.rec = re.compile(self.res, re.S)
         except Exception:
-            raise EngineError('Element regex "%s" failed to compile' %
-                (self.res))
+            raise EngineError('Element regex "%s" failed to compile' % (self.res))
 
         v = elem.find('valid_codes')
         if v is not None:
@@ -1161,7 +1160,6 @@ class element_if(x12_node):
                 (self.name, self.refdes)
             self._error(errh, err_str, '6', elem.__repr__())
             return False
-
         if elem is None or elem.get_value() == '':
             if self.usage in ('N', 'S'):
                 return True
@@ -1212,6 +1210,12 @@ class element_if(x12_node):
                 self._error(errh, err_str, '5', elem_val)
                 valid = False
 
+        (res, bad_string) = validation.contains_control_character(elem_val)
+        if res:
+            err_str = 'Data element "%s" (%s), contains an invalid control character(%s)' % \
+                (self.name, self.refdes, bad_string)
+            self._error(errh, err_str, '6', bad_string)
+            valid = False
         if data_type in ['AN', 'ID'] and elem_val[-1] == ' ':
             if len(elem_val.rstrip()) >= min_len:
                 err_str = 'Element "%s" (%s) has unnecessary trailing spaces. (%s)' % \
@@ -1240,8 +1244,7 @@ class element_if(x12_node):
         if len(type_list) > 0:
             valid_type = False
             for dtype in type_list:
-                valid_type |= validation.IsValidDataType(elem_val,
-                    dtype, self.root.param.get('charset'))
+                valid_type |= validation.IsValidDataType(elem_val, dtype, self.root.param.get('charset'))
             if not valid_type:
                 if 'TM' in type_list:
                     err_str = 'Data element "%s" (%s) contains an invalid time (%s)' % \
@@ -1273,7 +1276,7 @@ class element_if(x12_node):
         if elem_val in self.valid_codes:
             bValidCode = True
         if self.external_codes is not None and \
-            self.root.ext_codes.isValid(self.external_codes, elem_val):
+                self.root.ext_codes.isValid(self.external_codes, elem_val):
             bValidCode = True
         if not bValidCode:
             err_str = '(%s) is not a valid code for %s (%s)' % (
@@ -1341,7 +1344,9 @@ class composite_if(x12_node):
         """
         Forward the error to an error_handler
         """
-        errh.ele_error(err_cde, err_str, elem_val, self.refdes)
+        err_str2 = err_str.replace('\n', '').replace('\r', '')
+        elem_val2 = elem_val.replace('\n', '').replace('\r', '')
+        errh.ele_error(err_cde, err_str2, elem_val2, self.refdes)
             #, pos=self.seq, data_ele=self.data_ele)
 
     def debug_print(self):
@@ -1408,8 +1413,7 @@ class composite_if(x12_node):
             valid = False
         for i in range(min(len(comp_data), self.get_child_count())):
             valid &= self.get_child_node_by_idx(i).is_valid(comp_data[i], errh)
-        for i in range(min(len(comp_data), self.get_child_count()),
-                self.get_child_count()):
+        for i in range(min(len(comp_data), self.get_child_count()), self.get_child_count()):
             if i < self.get_child_count():
                 #Check missing required elements
                 valid &= self.get_child_node_by_idx(i).is_valid(None, errh)

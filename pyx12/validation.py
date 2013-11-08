@@ -28,6 +28,7 @@ def IsValidDataType(str_val, data_type, charset='B', icvn='00401'):
     @param charset: [optional] - 'B' for Basic X12 character set, 'E' for extended
     @type charset: string
     @rtype: boolean
+    @todo: need to generalize control character validation
     """
     if not data_type:
         return True
@@ -204,3 +205,11 @@ def is_valid_time(val):
     except IsValidError:
         return False
     return True
+
+
+def contains_control_character(str_val, charset='B', icvn='00401'):
+    if '\n' in str_val:
+        return (True, '<LF>')
+    if '\r' in str_val:
+        return (True, '<CR>')
+    return (False, None)
