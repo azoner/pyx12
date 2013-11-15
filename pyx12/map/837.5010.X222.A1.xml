@@ -16225,7 +16225,7 @@
                       <element xid="SBR05">
                         <data_ele>1336</data_ele>
                         <name>Insurance Type Code</name>
-                        <usage>R</usage>
+                        <usage>S</usage>
                         <seq>05</seq>
                         <valid_codes>
                         <code>12</code>
