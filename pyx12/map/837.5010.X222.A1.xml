@@ -15929,7 +15929,7 @@
                     <!--End of REF segment-->
                     <segment xid="PER">
                       <name>Service Facility Contact Information</name>
-                      <usage>R</usage>
+                      <usage>S</usage>
                       <pos>2750</pos>
                       <max_use>1</max_use>
                       <syntax>P0304</syntax>
