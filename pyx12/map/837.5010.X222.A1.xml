@@ -6411,7 +6411,7 @@
                     <!--End of N3 segment-->
                     <segment xid="N4">
                       <name>Other Payer City/State/ZIP Code</name>
-                      <usage>S</usage>
+                      <usage>R</usage>
                       <pos>3400</pos>
                       <max_use>1</max_use>
                       <syntax>C0605</syntax>
@@ -16228,15 +16228,15 @@
                         <usage>S</usage>
                         <seq>05</seq>
                         <valid_codes>
-                        <code>12</code>
-                        <code>13</code>
-                        <code>14</code>
-                        <code>15</code>
-                        <code>16</code>
-                        <code>41</code>
-                        <code>42</code>
-                        <code>43</code>
-                        <code>47</code>
+                          <code>12</code>
+                          <code>13</code>
+                          <code>14</code>
+                          <code>15</code>
+                          <code>16</code>
+                          <code>41</code>
+                          <code>42</code>
+                          <code>43</code>
+                          <code>47</code>
                         </valid_codes>
                       </element>
                       <element xid="SBR06">
@@ -17218,93 +17218,77 @@
                         </element>
                       </segment>
                       <!--End of NM1 segment-->
-                      <segment xid="PER">
-                        <name>Other Payer Contact Information</name>
+                      <segment xid="N3">
+                        <name>Other Payer Address</name>
                         <usage>S</usage>
-                        <pos>3450</pos>
-                        <max_use>2</max_use>
-                        <syntax>P0304</syntax>
-                        <syntax>P0506</syntax>
-                        <syntax>P0708</syntax>
-                        <element xid="PER01">
-                          <data_ele>366</data_ele>
-                          <name>Contact Function Code</name>
+                        <pos>3320</pos>
+                        <max_use>1</max_use>
+                        <element xid="N301">
+                          <data_ele>166</data_ele>
+                          <name>Address Line 1</name>
                           <usage>R</usage>
                           <seq>01</seq>
-                          <valid_codes>
-                            <code>IC</code>
-                          </valid_codes>
                         </element>
-                        <element xid="PER02">
-                          <data_ele>93</data_ele>
-                          <name>Other Payer Contact Name</name>
-                          <usage>R</usage>
+                        <element xid="N302">
+                          <data_ele>166</data_ele>
+                          <name>Address Line 2</name>
+                          <usage>S</usage>
                           <seq>02</seq>
                         </element>
-                        <element xid="PER03">
-                          <data_ele>365</data_ele>
-                          <name>Communication Number Qualifier</name>
+                      </segment>
+                      <!--End of N3 segment-->
+                      <segment xid="N4">
+                        <name>Other Payer City/State/ZIP Code</name>
+                        <usage>R</usage>
+                        <pos>3400</pos>
+                        <max_use>1</max_use>
+                        <syntax>C0605</syntax>
+                        <element xid="N401">
+                          <data_ele>19</data_ele>
+                          <name>Other Payer City Name</name>
                           <usage>R</usage>
+                          <seq>01</seq>
+                        </element>
+                        <element xid="N402">
+                          <data_ele>156</data_ele>
+                          <name>Other Payer State Code</name>
+                          <usage>S</usage>
+                          <seq>02</seq>
+                          <valid_codes external="states"/>
+                        </element>
+                        <element xid="N403">
+                          <data_ele>116</data_ele>
+                          <name>Other Payer Postal Zone or ZIP Code</name>
+                          <usage>S</usage>
                           <seq>03</seq>
-                          <valid_codes>
-                            <code>ED</code>
-                            <code>EM</code>
-                            <code>FX</code>
-                            <code>TE</code>
-                          </valid_codes>
                         </element>
-                        <element xid="PER04">
-                          <data_ele>364</data_ele>
-                          <name>Communication Number</name>
-                          <usage>R</usage>
+                        <element xid="N404">
+                          <data_ele>26</data_ele>
+                          <name>Country Code</name>
+                          <usage>S</usage>
                           <seq>04</seq>
+                          <valid_codes external="country"/>
                         </element>
-                        <element xid="PER05">
-                          <data_ele>365</data_ele>
-                          <name>Communication Number Qualifier</name>
-                          <usage>S</usage>
+                        <element xid="N405">
+                          <data_ele>309</data_ele>
+                          <name>Location Qualifier</name>
+                          <usage>N</usage>
                           <seq>05</seq>
-                          <valid_codes>
-                            <code>ED</code>
-                            <code>EM</code>
-                            <code>EX</code>
-                            <code>FX</code>
-                            <code>TE</code>
-                          </valid_codes>
                         </element>
-                        <element xid="PER06">
-                          <data_ele>364</data_ele>
-                          <name>Communication Number</name>
-                          <usage>S</usage>
+                        <element xid="N406">
+                          <data_ele>310</data_ele>
+                          <name>Location Identifier</name>
+                          <usage>N</usage>
                           <seq>06</seq>
                         </element>
-                        <element xid="PER07">
-                          <data_ele>365</data_ele>
-                          <name>Communication Number Qualifier</name>
+                        <element xid="N407">
+                          <data_ele>1715</data_ele>
+                          <name>Country Subdivision Code</name>
                           <usage>S</usage>
                           <seq>07</seq>
-                          <valid_codes>
-                            <code>ED</code>
-                            <code>EM</code>
-                            <code>EX</code>
-                            <code>FX</code>
-                            <code>TE</code>
-                          </valid_codes>
-                        </element>
-                        <element xid="PER08">
-                          <data_ele>364</data_ele>
-                          <name>Communication Number</name>
-                          <usage>S</usage>
-                          <seq>08</seq>
-                        </element>
-                        <element xid="PER09">
-                          <data_ele>443</data_ele>
-                          <name>Contact Inquiry Reference</name>
-                          <usage>N</usage>
-                          <seq>09</seq>
                         </element>
                       </segment>
-                      <!--End of PER segment-->
+                      <!--End of N4 segment-->
                       <segment xid="DTP">
                         <name>Claim Adjudication Date</name>
                         <usage>S</usage>
