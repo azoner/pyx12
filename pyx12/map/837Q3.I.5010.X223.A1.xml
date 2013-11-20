@@ -2595,7 +2595,7 @@
                   <element xid="CL101">
                     <data_ele>1315</data_ele>
                     <name>Admission Type Code</name>
-                    <usage>R</usage>
+                    <usage>S</usage>
                     <seq>01</seq>
                   </element>
                   <element xid="CL102">
@@ -16666,7 +16666,7 @@
                     <element xid="CL101">
                       <data_ele>1315</data_ele>
                       <name>Admission Type Code</name>
-                      <usage>R</usage>
+                      <usage>S</usage>
                       <seq>01</seq>
                     </element>
                     <element xid="CL102">
