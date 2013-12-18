@@ -5454,6 +5454,79 @@
                     </composite>
                   </segment>
                   <!--End of REF segment-->
+                  <segment xid="PER">
+                    <name>Service Facility Contact Information</name>
+                    <usage>S</usage>
+                    <pos>2750</pos>
+                    <max_use>1</max_use>
+                    <syntax>P0304</syntax>
+                    <syntax>P0506</syntax>
+                    <syntax>P0708</syntax>
+                    <element xid="PER01">
+                      <data_ele>366</data_ele>
+                      <name>Contact Function Code</name>
+                      <usage>R</usage>
+                      <seq>01</seq>
+                      <valid_codes>
+                        <code>IC</code>
+                      </valid_codes>
+                    </element>
+                    <element xid="PER02">
+                      <data_ele>93</data_ele>
+                      <name>Contact Name</name>
+                      <usage>R</usage>
+                      <seq>02</seq>
+                    </element>
+                    <element xid="PER03">
+                      <data_ele>365</data_ele>
+                      <name>Communication Number Qualifier</name>
+                      <usage>R</usage>
+                      <seq>03</seq>
+                      <valid_codes>
+                        <code>TE</code>
+                      </valid_codes>
+                    </element>
+                    <element xid="PER04">
+                      <data_ele>364</data_ele>
+                      <name>Communication Number</name>
+                      <usage>R</usage>
+                      <seq>04</seq>
+                    </element>
+                    <element xid="PER05">
+                      <data_ele>365</data_ele>
+                      <name>Communication Number Qualifier</name>
+                      <usage>S</usage>
+                      <seq>05</seq>
+                      <valid_codes>
+                        <code>EX</code>
+                      </valid_codes>
+                    </element>
+                    <element xid="PER06">
+                      <data_ele>364</data_ele>
+                      <name>Communication Number</name>
+                      <usage>S</usage>
+                      <seq>06</seq>
+                    </element>
+                    <element xid="PER07">
+                      <data_ele>365</data_ele>
+                      <name>Communication Number Qualifier</name>
+                      <usage>N</usage>
+                      <seq>07</seq>
+                    </element>
+                    <element xid="PER08">
+                      <data_ele>364</data_ele>
+                      <name>Communication Number</name>
+                      <usage>N</usage>
+                      <seq>08</seq>
+                    </element>
+                    <element xid="PER09">
+                      <data_ele>443</data_ele>
+                      <name>Contact Inquiry Reference</name>
+                      <usage>N</usage>
+                      <seq>09</seq>
+                    </element>
+                  </segment>
+                  <!--End of PER segment-->
                 </loop>
                 <!--End of 2310C loop-->
                 <loop xid="2310D">
