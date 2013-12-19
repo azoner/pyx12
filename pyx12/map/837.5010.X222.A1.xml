@@ -15716,7 +15716,7 @@
                         <usage>R</usage>
                         <seq>02</seq>
                         <valid_codes>
-                          <code>ZZ</code>
+                          <code>PXC</code>
                         </valid_codes>
                       </element>
                       <element xid="PRV03">
