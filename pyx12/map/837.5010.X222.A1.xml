@@ -20695,9 +20695,10 @@
                       <!--End of LIN segment-->
                       <segment xid="CTP">
                         <name>Drug Pricing</name>
-                        <usage>S</usage>
+                        <usage>R</usage>
                         <pos>4950</pos>
                         <max_use>1</max_use>
+						<syntax>P0405</syntax>				
                         <element xid="CTP01">
                           <data_ele>687</data_ele>
                           <name>Trade Code Class</name>
@@ -20713,7 +20714,7 @@
                         <element xid="CTP03">
                           <data_ele>212</data_ele>
                           <name>Drug Unit Price</name>
-                          <usage>R</usage>
+                          <usage>N</usage>
                           <seq>03</seq>
                         </element>
                         <element xid="CTP04">
@@ -20736,6 +20737,7 @@
                               <code>F2</code>
                               <code>GR</code>
                               <code>ML</code>
+							  <code>ME</code>
                               <code>UN</code>
                             </valid_codes>
                           </element>
