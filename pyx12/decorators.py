@@ -4,8 +4,7 @@ def dump_args(func):
     fname = func.func_name
 
     def echo_func(*args, **kwargs):
-        print(fname, ":", ', '.join(
-            '%s=%r' % entry
+        print(fname, ":", ', '.join('%s=%r' % entry
             for entry in zip(argnames, args) + kwargs.items()))
         return func(*args, **kwargs)
 

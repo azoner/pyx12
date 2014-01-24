@@ -158,14 +158,15 @@ class TreeSelect(X12fileTestCase):
                 self.loop2300 = datatree
                 break
 
-    def test_select_loops(self):
-        loop2400 = self.loop2300.first('2400')
-        assert loop2400.id == '2400', 'Not in 2400'
-        ct = 0
-        for newtree in loop2400.select('../'):
-            self.assertEqual(newtree.id, '2300')
-            ct += 1
-        self.assertEqual(ct, 1)
+    #def test_select_loop_and_parent(self):
+    #    loop2400 = self.loop2300.first('2400')
+    #    assert loop2400.id == '2400', 'Not in 2400'
+    #    ct = 0
+    #    newtree = loop2400.parent
+    #    for newtree in loop2400.select('../'):
+    #        self.assertEqual(newtree.id, '2300')
+    #        ct += 1
+    #    self.assertEqual(ct, 1)
 
     def test_select_loops(self):
         ct = 0

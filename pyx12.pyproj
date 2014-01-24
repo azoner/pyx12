@@ -1,0 +1,148 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{111e19ba-8d6f-4e11-b7e1-c1f38c7a07cb}</ProjectGuid>
+    <ProjectHome />
+    <StartupFile />
+    <SearchPath />
+    <WorkingDirectory>.</WorkingDirectory>
+    <OutputPath>.</OutputPath>
+    <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
+    <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
+    <InterpreterId>{d3290547-e53e-4da0-b574-5b9b7088fce9}</InterpreterId>
+    <InterpreterVersion>2.7</InterpreterVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)' == 'Debug'" />
+  <PropertyGroup Condition="'$(Configuration)' == 'Release'" />
+  <ItemGroup>
+    <Content Include="LICENSE.txt" />
+    <Content Include="requirements.dev.txt" />
+    <Compile Include="setup.py" />
+    <Compile Include="pyx12\codes.py" />
+    <Compile Include="pyx12\dataele.py" />
+    <Compile Include="pyx12\decorators.py" />
+    <Compile Include="pyx12\errh_xml.py" />
+    <Compile Include="pyx12\errors.py" />
+    <Compile Include="pyx12\error_997.py" />
+    <Compile Include="pyx12\error_999.py" />
+    <Compile Include="pyx12\error_debug.py" />
+    <Compile Include="pyx12\error_handler.py" />
+    <Compile Include="pyx12\error_html.py" />
+    <Compile Include="pyx12\error_item.py" />
+    <Compile Include="pyx12\error_visitor.py" />
+    <Compile Include="pyx12\map_if.py" />
+    <Compile Include="pyx12\map_index.py" />
+    <Compile Include="pyx12\map_override.py" />
+    <Compile Include="pyx12\map_walker.py" />
+    <Compile Include="pyx12\nodeCounter.py" />
+    <Compile Include="pyx12\params.py" />
+    <Compile Include="pyx12\path.py" />
+    <Compile Include="pyx12\rawx12file.py" />
+    <Compile Include="pyx12\segment.py" />
+    <Compile Include="pyx12\syntax.py" />
+    <Compile Include="pyx12\validation.py" />
+    <Compile Include="pyx12\version.py" />
+    <Compile Include="pyx12\x12context.py" />
+    <Compile Include="pyx12\x12file.py" />
+    <Compile Include="pyx12\x12n_document.py" />
+    <Compile Include="pyx12\x12xml.py" />
+    <Compile Include="pyx12\x12xml_simple.py" />
+    <Compile Include="pyx12\xmlwriter.py" />
+    <Compile Include="pyx12\xmlx12_simple.py" />
+    <Compile Include="pyx12\__init__.py" />
+    <Content Include="pyx12\examples\multiple_st_loops.txt" />
+    <Compile Include="pyx12\examples\st_context_iterator.py" />
+    <Compile Include="pyx12\examples\st_iterator.py" />
+    <Content Include="pyx12\map\270.4010.X092.A1.xml" />
+    <Content Include="pyx12\map\271.4010.X092.A1.xml" />
+    <Content Include="pyx12\map\276.4010.X093.A1.xml" />
+    <Content Include="pyx12\map\277.4010.X093.A1.xml" />
+    <Content Include="pyx12\map\277U.4010.X070.xml" />
+    <Content Include="pyx12\map\278.4010.X094.27.A1.xml" />
+    <Content Include="pyx12\map\278.4010.X094.A1.xml" />
+    <Content Include="pyx12\map\820.4010.X061.A1.xml" />
+    <Content Include="pyx12\map\820.5010.X218.v2.xml" />
+    <Content Include="pyx12\map\820.5010.X218.xml" />
+    <Content Include="pyx12\map\830.4010.PS.xml" />
+    <Content Include="pyx12\map\834.4010.X095.A1.xml" />
+    <Content Include="pyx12\map\834.5010.X220.A1.v2.xml" />
+    <Content Include="pyx12\map\834.5010.X220.A1.xml" />
+    <Content Include="pyx12\map\835.4010.X091.A1.xml" />
+    <Content Include="pyx12\map\835.5010.X221.A1.v2.xml" />
+    <Content Include="pyx12\map\835.5010.X221.A1.xml" />
+    <Content Include="pyx12\map\837.4010.X096.A1.xml" />
+    <Content Include="pyx12\map\837.4010.X097.A1.xml" />
+    <Content Include="pyx12\map\837.4010.X098.A1.xml" />
+    <Content Include="pyx12\map\837.5010.X222.A1.xml" />
+    <Content Include="pyx12\map\837Q3.I.5010.X223.A1.v2.xml" />
+    <Content Include="pyx12\map\837Q3.I.5010.X223.A1.xml" />
+    <Content Include="pyx12\map\841.4010.XXXC.xml" />
+    <Content Include="pyx12\map\997.4010.xml" />
+    <Content Include="pyx12\map\999.5010.xml" />
+    <Content Include="pyx12\map\codes.xml" />
+    <Content Include="pyx12\map\comp_test.xml" />
+    <Content Include="pyx12\map\dataele.xml" />
+    <Content Include="pyx12\map\maps.xml" />
+    <Content Include="pyx12\map\x12.control.00401.xml" />
+    <Content Include="pyx12\map\x12.control.00501.xml" />
+    <Content Include="pyx12\map\codes.xsd" />
+    <Content Include="pyx12\map\dataele.xsd" />
+    <Content Include="pyx12\map\map.v2.xsd" />
+    <Content Include="pyx12\map\map.xsd" />
+    <Content Include="pyx12\map\maps.xsd" />
+    <Compile Include="pyx12\map\dump.py" />
+    <Compile Include="pyx12\map\ord.py" />
+    <Compile Include="pyx12\scripts\x12html.py" />
+    <Compile Include="pyx12\scripts\x12info.py" />
+    <Compile Include="pyx12\scripts\x12norm.py" />
+    <Compile Include="pyx12\scripts\x12valid.py" />
+    <Compile Include="pyx12\scripts\x12xml.py" />
+    <Compile Include="pyx12\scripts\xmlx12.py" />
+    <Compile Include="pyx12\scripts\__init__.py" />
+    <Compile Include="pyx12\test\test_codes.py" />
+    <Compile Include="pyx12\test\test_dataele.py" />
+    <Compile Include="pyx12\test\test_map_if.py" />
+    <Compile Include="pyx12\test\test_map_index.py" />
+    <Compile Include="pyx12\test\test_map_unique.py" />
+    <Compile Include="pyx12\test\test_map_walker.py" />
+    <Compile Include="pyx12\test\test_params.py" />
+    <Compile Include="pyx12\test\test_path.py" />
+    <Compile Include="pyx12\test\test_rawx12file.py" />
+    <Compile Include="pyx12\test\test_segment.py" />
+    <Compile Include="pyx12\test\test_syntax.py" />
+    <Compile Include="pyx12\test\test_validation.py" />
+    <Compile Include="pyx12\test\test_x12context.py" />
+    <Compile Include="pyx12\test\test_x12file.py" />
+    <Compile Include="pyx12\test\test_x12n_document.py" />
+    <Compile Include="pyx12\test\test_xmlwriter.py" />
+    <Compile Include="pyx12\test\test_xmlx12_simple.py" />
+    <Compile Include="pyx12\test\x12testdata.py" />
+    <Compile Include="pyx12\test\__init__.py" />
+    <Content Include="pyx12\tests\834_lui_id_5010.999.txt" />
+    <Content Include="pyx12\tests\835_mult_loops.txt" />
+    <Compile Include="pyx12\tests\nodeCounter.py" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="pyx12" />
+    <Folder Include="pyx12\examples" />
+    <Folder Include="pyx12\map" />
+    <Folder Include="pyx12\scripts" />
+    <Folder Include="pyx12\test" />
+    <Folder Include="pyx12\tests" />
+  </ItemGroup>
+  <ItemGroup>
+    <Interpreter Include="testenv\">
+      <Id>{d3290547-e53e-4da0-b574-5b9b7088fce9}</Id>
+      <BaseInterpreter>{2af0f10d-7135-4994-9156-5d01c9c11b7e}</BaseInterpreter>
+      <Version>2.7</Version>
+      <Description>testenv (Python 2.7)</Description>
+      <InterpreterPath>Scripts\python.exe</InterpreterPath>
+      <WindowsInterpreterPath>Scripts\pythonw.exe</WindowsInterpreterPath>
+      <LibraryPath>Lib\</LibraryPath>
+      <PathEnvironmentVariable>PYTHONPATH</PathEnvironmentVariable>
+    </Interpreter>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.Common.targets" />
+</Project>

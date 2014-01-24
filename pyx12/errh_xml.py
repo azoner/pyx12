@@ -27,11 +27,9 @@ from xmlwriter import XMLWriter
 
 #class error_node:
 #    def __init__(self)
-
 logger = logging.getLogger('pyx12.errh_xml')
 #logger.setLevel(logging.DEBUG)
 #logger.setLevel(logging.ERROR)
-
 
 class err_handler(object):
     """
@@ -63,7 +61,8 @@ class err_handler(object):
             raise EngineError('Could not open temp error xml file')
         self.writer = XMLWriter(fd)
         #self.writer.doctype(
-        #    u"x12simple", u"-//J Holland//DTD XML X12 Document Conversion1.0//EN//XML",
+        #    u"x12simple", u"-//J Holland//DTD XML X12 Document
+        #    Conversion1.0//EN//XML",
         #    u"%s" % (dtd_urn))
         self.writer.push("x12err")
 
@@ -111,7 +110,8 @@ class err_handler(object):
                 if err_val:
                     self.writer.elem("errval", err_val)
                 #self.writer.push(u"seg", {u'line': '%i'%(cur_line)})
-                        #self.writer.elem(u'ele', seg_data.get_value('%02i' % (i+1)),
+                        #self.writer.elem(u'ele', seg_data.get_value('%02i' %
+                        #(i+1)),
                         #    attrs={u'id': child_node.id})
                 self.writer.pop()  # end err
             self.writer.pop()  # end segment

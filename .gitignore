@@ -9,3 +9,7 @@ pkg-plist
 *.egg-info/
 .ropeproject/
 .coverage
+*.suo
+TestResults/
+obj/
+testenv/

@@ -50,6 +50,7 @@ class error_999_visitor(pyx12.error_visitor.error_visitor):
         self.st_control_num = 0
         self.vriic = '005010X231'
 
+
     def visit_root_pre(self, errh):
         """
         @param errh: Error handler
