@@ -150,6 +150,7 @@ class error_999_visitor(pyx12.error_visitor.error_visitor):
         @param err_isa: ISA Loop error handler
         @type err_isa: L{error_handler.err_isa}
         """
+        pass
 
     def visit_isa_post(self, err_isa):
         """

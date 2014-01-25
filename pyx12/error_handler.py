@@ -15,7 +15,7 @@ Interface to X12 Errors
 import logging
 
 # Intrapackage imports
-from errors import IterOutOfBounds  # , IterDone
+from errors import IterOutOfBounds
 
 logger = logging.getLogger('pyx12.error_handler')
 
@@ -93,6 +93,7 @@ class err_handler(object):
         self.seg_node_added = False
         self.cur_ele_node = None
         self.cur_line = 0
+        self.error_buffer = []
 
     def accept(self, visitor):
         """
@@ -108,6 +109,7 @@ class err_handler(object):
         @param err_list: list of errors to apply
         """
         for (err_type, err_cde, err_str, err_val, src_line) in err_list:
+            self.error_buffer.append((err_type, err_cde, err_str, err_val, src_line))
             if err_type == 'isa':
                 self.isa_error(err_cde, err_str)
             elif err_type == 'gs':
@@ -178,8 +180,7 @@ class err_handler(object):
         @type ls_id: string
         """
         parent = self.cur_st_node
-        self.cur_seg_node = err_seg(
-            parent, map_node, seg_data, seg_count, cur_line, ls_id)
+        self.cur_seg_node = err_seg(parent, map_node, seg_data, seg_count, cur_line, ls_id)
         self.seg_node_added = False
         #logger.debug('add_seg: %s' % map_node.name)
         #if len(parent.children) > 0:
@@ -216,7 +217,7 @@ class err_handler(object):
         if not self.ele_node_added and self.cur_seg_node is not None:
             self.cur_seg_node.elements.append(self.cur_ele_node)
             self.ele_node_added = True
-        #logger.debug('----  add_ele: %s' % self.cur_seg_node.elements[-1].name)
+        #logger.debug('---- add_ele: %s' % self.cur_seg_node.elements[-1].name)
 
     def isa_error(self, err_cde, err_str):
         """
@@ -230,6 +231,7 @@ class err_handler(object):
         sout += 'ISA:%s - %s' % (err_cde, err_str)
         logger.error(sout)
         self.cur_isa_node.add_error(err_cde, err_str)
+        #self.error_buffer.append((err_type, err_cde, err_str, err_val, src_line))
 
     def gs_error(self, err_cde, err_str):
         """
@@ -288,8 +290,7 @@ class err_handler(object):
         @type err_str: string
         """
         self._add_cur_ele()
-        self.cur_ele_node.add_error(
-            err_cde, err_str, bad_value)  # , pos, data_ele)
+        self.cur_ele_node.add_error(err_cde, err_str, bad_value)  # , pos, data_ele)
         sout = ''
         sout += 'Line:%i ' % (self.cur_seg_node.get_cur_line())
         sout += 'ELE:%s - %s' % (err_cde, err_str)
@@ -324,8 +325,7 @@ class err_handler(object):
         Find the last node of a type
         """
         new_node = self.cur_node
-        node_order = {'ROOT': 1, 'ISA': 2, 'GS': 3, 'ST': 4, 'SEG':
-                      5, 'ELE': 6}
+        node_order = {'ROOT': 1, 'ISA': 2, 'GS': 3, 'ST': 4, 'SEG': 5, 'ELE': 6}
         while node_order[type] > new_node[new_node.get_id()]:
             new_node = new_node.get_parent()
         #walk error tree to find place to append
@@ -385,6 +385,15 @@ class err_handler(object):
         """
         """
         return '%i: %s' % (-1, self.id)
+
+    def pop_errors(self):
+        """
+        Pop error list
+        @return: List of errors
+        """
+        tmp = self.error_buffer
+        self.error_buffer = []
+        return tmp
 
 
 class err_node(object):
@@ -929,8 +938,6 @@ class err_seg(err_node):
     def get_first_child(self):
         return None
         #raise IterOutOfBounds
-
-
 class err_ele(err_node):
     """
     Element Errors - Holds and generates output for element and

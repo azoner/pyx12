@@ -6,7 +6,7 @@
     <ProjectGuid>{111e19ba-8d6f-4e11-b7e1-c1f38c7a07cb}</ProjectGuid>
     <ProjectHome />
     <StartupFile />
-    <SearchPath />
+    <SearchPath>pyx12</SearchPath>
     <WorkingDirectory>.</WorkingDirectory>
     <OutputPath>.</OutputPath>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
@@ -19,6 +19,8 @@
   <ItemGroup>
     <Content Include="LICENSE.txt" />
     <Content Include="requirements.dev.txt" />
+    <Compile Include="pyx12\error_json.py" />
+    <Compile Include="pyx12\error_router.py" />
     <Compile Include="setup.py" />
     <Compile Include="pyx12\codes.py" />
     <Compile Include="pyx12\dataele.py" />

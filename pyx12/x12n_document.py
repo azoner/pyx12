@@ -31,50 +31,6 @@ from pyx12.map_walker import walk_tree
 import pyx12.x12xml_simple
 
 
-#def apply_loop_count(orig_node, new_map):
-#    """
-#    Apply loop counts to current map
-#    """
-#    logger = logging.getLogger('pyx12')
-#    ct_list = []
-#    orig_node.get_counts_list(ct_list)
-#    for (path, ct) in ct_list:
-#        try:
-#            curnode = new_map.getnodebypath(path)
-#            curnode.set_cur_count(ct)
-#        except pyx12.errors.EngineError:
-#            logger.error('getnodebypath failed:  path "%s" not found' % path)
-
-
-#def reset_isa_counts(cur_map):
-#    cur_map.getnodebypath('/ISA_LOOP').set_cur_count(1)
-#    cur_map.getnodebypath('/ISA_LOOP/ISA').set_cur_count(1)
-
-
-#def reset_gs_counts(cur_map):
-#    cur_map.getnodebypath('/ISA_LOOP/GS_LOOP').reset_cur_count()
-#    cur_map.getnodebypath('/ISA_LOOP/GS_LOOP').set_cur_count(1)
-#    cur_map.getnodebypath('/ISA_LOOP/GS_LOOP/GS').set_cur_count(1)
-
-
-def _reset_counter_to_isa_counts(walker):
-    """
-    Reset ISA instance counts
-    """
-    walker.counter.reset_to_node('/ISA_LOOP')
-    walker.counter.increment('/ISA_LOOP')
-    walker.counter.increment('/ISA_LOOP/ISA')
-
-
-def _reset_counter_to_gs_counts(walker):
-    """
-    Reset GS instance counts
-    """
-    walker.counter.reset_to_node('/ISA_LOOP/GS_LOOP')
-    walker.counter.increment('/ISA_LOOP/GS_LOOP')
-    walker.counter.increment('/ISA_LOOP/GS_LOOP/GS')
-
-
 def x12n_document(param, src_file, fd_997, fd_html,
                   fd_xmldoc=None, xslt_files=None, map_path=None):
     """
@@ -125,13 +81,6 @@ def x12n_document(param, src_file, fd_997, fd_html,
         #find node
         orig_node = node
 
-        if False:
-            print('--------------------------------------------')
-            print(seg)
-            print('--------------------------------------------')
-            # reset to control map for ISA and GS loops
-            print('------- counters before --------')
-            print(walker.counter._dict)
         if seg.get_seg_id() == 'ISA':
             node = control_map.getnodebypath('/ISA_LOOP/ISA')
             walker.forceWalkCounterToLoopStart('/ISA_LOOP', '/ISA_LOOP/ISA')
@@ -177,9 +126,7 @@ def x12n_document(param, src_file, fd_997, fd_html,
                     logger.debug('Map file: %s' % (map_file))
                     #apply_loop_count(orig_node, cur_map)
                     #reset_isa_counts(cur_map)
-                    #_reset_counter_to_isa_counts(walker)  # new counter
                 #reset_gs_counts(cur_map)
-                #_reset_counter_to_gs_counts(walker)  # new counter
                 node = cur_map.getnodebypath('/ISA_LOOP/GS_LOOP/GS')
                 errh.add_gs_loop(seg, src)
                 errh.handle_errors(src.pop_errors())
@@ -187,15 +134,13 @@ def x12n_document(param, src_file, fd_997, fd_html,
                 # special case for 4010 837P
                 if vriic in ('004010X094', '004010X094A1'):
                     tspc = seg.get_value('BHT02')
-                    logger.debug('icvn=%s, fic=%s, vriic=%s, tspc=%s' %
-                                 (icvn, fic, vriic, tspc))
+                    logger.debug('icvn=%s, fic=%s, vriic=%s, tspc=%s' % (icvn, fic, vriic, tspc))
                     map_file_new = map_index_if.get_filename(icvn, vriic, fic, tspc)
                     logger.debug('New map file: %s' % (map_file_new))
                     if map_file != map_file_new:
                         map_file = map_file_new
                         if map_file is None:
-                            err_str = "Map not found.  icvn={}, fic={}, vriic={}, tspc={}".format(
-                                        icvn, fic, vriic, tspc)
+                            err_str = "Map not found.  icvn={}, fic={}, vriic={}, tspc={}".format(icvn, fic, vriic, tspc)
                             raise pyx12.errors.EngineError(err_str)
                         cur_map = pyx12.map_if.load_map_file(map_file, param, map_path)
                         src.check_837_lx = True if cur_map.id == '837' else False
@@ -239,8 +184,6 @@ def x12n_document(param, src_file, fd_997, fd_html,
         if fd_xmldoc:
             xmldoc.seg(node, seg)
 
-        if False:
-            print('\n\n')
         #erx.Write(src.cur_line)
 
     #erx.handleErrors(src.pop_errors())
@@ -260,7 +203,6 @@ def x12n_document(param, src_file, fd_997, fd_html,
     #errh.accept(visit_debug)
 
     #If this transaction is not a 997/999, generate one.
-    #import ipdb; ipdb.set_trace()
     if fd_997 and fic != 'FA':
         if vriic and vriic[:6] == '004010':
             visit_997 = pyx12.error_997.error_997_visitor(fd_997, src.get_term())
