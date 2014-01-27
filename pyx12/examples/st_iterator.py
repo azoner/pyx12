@@ -16,7 +16,7 @@ def x12_split_on_st(source_filename, isa_id=11, gs_id=21):
         #import ipdb; ipdb.set_trace()
         st_id = int(k['st_seg'].get_value('ST02'))
         fd_temp = tempfile.TemporaryFile()
-        wr = pyx12.x12file.X12Writer(fd_temp)
+        wr = pyx12.x12file.X12Writer(fd_temp, '~', '*', ':', '\n', '^')
         wr.Write(update_isa_id(k['isa_seg'], isa_id + idx))
         wr.Write(update_gs_id(k['gs_seg'], gs_id + idx))
         for seg in g:

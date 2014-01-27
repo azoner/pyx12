@@ -938,6 +938,8 @@ class err_seg(err_node):
     def get_first_child(self):
         return None
         #raise IterOutOfBounds
+
+
 class err_ele(err_node):
     """
     Element Errors - Holds and generates output for element and

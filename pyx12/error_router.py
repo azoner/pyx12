@@ -1,29 +1,31 @@
+import logging
+import error_router
 
-class error_router(object):
+class error_router(ErrorHandlerBase):
     """
-    A null error object - used for testing.
+    A error object - used for testing.
     Stores the current error in simple variables.
     """
-    def __init__(self):
-        self.id = 'ROOT'
-        #self.children = []
-        self.cur_node = self
-        #self.cur_isa_node = None
-        #self.cur_gs_node = None
-        #self.cur_st_node = None
-        #self.cur_seg_node = None
-        #self.seg_node_added = False
-        #self.cur_ele_node = None
-        self.cur_line = 0
-        self.err_cde = None
-        self.err_str = None
+    def __init__(self, targets=None):
+        self.targets = []
+        if targets is not None:
+            self.targets.extend(targets)
+
+    def add_target(self, target):
+        self.targets.append(targets)
+
+
+    #def _call_targets(self, f):
+    #    for target in self.targets:
+    #        try:
+
 
     def reset(self):
         """
         Clear any errors
         """
-        self.err_cde = None
-        self.err_str = None
+        for target in self.targets:
+            target.reset()
 
     def get_cur_line(self):
         """
