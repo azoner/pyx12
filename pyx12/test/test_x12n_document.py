@@ -155,3 +155,6 @@ class Test5010(X12DocumentTestCase):
 
     def test_834_eol_in_element(self):
         self._test_999('834_eol_in_element')
+
+    def test_simple_837p_5010(self):
+        self._test_999('simple_837p_5010')

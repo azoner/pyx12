@@ -109,13 +109,13 @@ class err_handler(object):
         @param err_list: list of errors to apply
         """
         for (err_type, err_cde, err_str, err_val, src_line) in err_list:
-            self.error_buffer.append((err_type, err_cde, err_str, err_val, src_line))
+            #self.error_buffer.append((err_type, err_cde, err_str, err_val, src_line))
             if err_type == 'isa':
-                self.isa_error(err_cde, err_str)
+                self.isa_error(err_cde, err_str, err_val, src_line)
             elif err_type == 'gs':
-                self.gs_error(err_cde, err_str)
+                self.gs_error(err_cde, err_str, err_val, src_line)
             elif err_type == 'st':
-                self.st_error(err_cde, err_str)
+                self.st_error(err_cde, err_str, err_val, src_line)
             elif err_type == 'seg':
                 self.seg_error(err_cde, err_str, err_val, src_line)
 
@@ -219,45 +219,51 @@ class err_handler(object):
             self.ele_node_added = True
         #logger.debug('---- add_ele: %s' % self.cur_seg_node.elements[-1].name)
 
-    def isa_error(self, err_cde, err_str):
+    def isa_error(self, err_cde, err_str, err_value=None, src_line=None):
         """
         @param err_cde: ISA level error code
         @type err_cde: string
         @param err_str: Description of the error
         @type err_str: string
         """
+        if src_line is None:
+            src_line = self.cur_isa_node.get_cur_line()
         sout = ''
-        sout += 'Line:%i ' % (self.cur_isa_node.get_cur_line())
+        sout += 'Line:%i ' % (src_line)
         sout += 'ISA:%s - %s' % (err_cde, err_str)
         logger.error(sout)
-        self.cur_isa_node.add_error(err_cde, err_str)
-        #self.error_buffer.append((err_type, err_cde, err_str, err_val, src_line))
+        self.cur_isa_node.add_error(err_cde, err_str, err_value, src_line)
+        self.error_buffer.append(('ISA', err_cde, err_str, err_value, src_line))
 
-    def gs_error(self, err_cde, err_str):
+    def gs_error(self, err_cde, err_str, err_value=None, src_line=None):
         """
         @param err_cde: GS level error code
         @type err_cde: string
         @param err_str: Description of the error
         @type err_str: string
         """
+        if src_line is None:
+            src_line = self.cur_isa_node.get_cur_line()
         sout = ''
-        sout += 'Line:%i ' % (self.cur_gs_node.get_cur_line())
+        sout += 'Line:%i ' % (src_line)
         sout += 'GS:%s - %s' % (err_cde, err_str)
         logger.error(sout)
-        self.cur_gs_node.add_error(err_cde, err_str)
+        self.cur_gs_node.add_error(err_cde, err_str, err_value, src_line)
 
-    def st_error(self, err_cde, err_str):
+    def st_error(self, err_cde, err_str, err_value=None, src_line=None):
         """
         @param err_cde: Segment level error code
         @type err_cde: string
         @param err_str: Description of the error
         @type err_str: string
         """
+        if src_line is None:
+           src_line = self.cur_st_node.get_cur_line()
         sout = ''
         sout += 'Line:%i ' % (self.cur_st_node.get_cur_line())
         sout += 'ST:%s - %s' % (err_cde, err_str)
         logger.error(sout)
-        self.cur_st_node.add_error(err_cde, err_str)
+        self.cur_st_node.add_error(err_cde, err_str, err_value, src_line)
 
     def seg_error(self, err_cde, err_str, err_value=None, src_line=None):
         """
@@ -266,23 +272,25 @@ class err_handler(object):
         @param err_str: Description of the error
         @type err_str: string
         """
+        if src_line is None:
+            src_line = self.cur_seg_node.get_cur_line()
         sout = ''
         try:
             self._add_cur_seg()
-            self.cur_seg_node.add_error(err_cde, err_str, err_value)
+            self.cur_seg_node.add_error(err_cde, err_str, err_value, src_line)
         except:
             sout += 'No current segment in error_handler. '
         if src_line:
             sout += 'Line:%i ' % (src_line)
         else:
             if self.cur_seg_node is not None:
-                sout += 'Line:%i ' % (self.cur_seg_node.get_cur_line())
+                sout += 'Line:%i ' % (src_line)
         sout += 'SEG:%s - %s' % (err_cde, err_str)
         if err_value:
             sout += ' (%s)' % err_value
         logger.error(sout)
 
-    def ele_error(self, err_cde, err_str, bad_value, refdes=None):
+    def ele_error(self, err_cde, err_str, bad_value, refdes=None, src_line=None):
         """
         @param err_cde: Element level error code
         @type err_cde: string
@@ -290,9 +298,11 @@ class err_handler(object):
         @type err_str: string
         """
         self._add_cur_ele()
-        self.cur_ele_node.add_error(err_cde, err_str, bad_value)  # , pos, data_ele)
+        self.cur_ele_node.add_error(err_cde, err_str, bad_value, src_line)  # , pos, data_ele)
+        if src_line is None:
+            src_line = self.cur_seg_node.get_cur_line()
         sout = ''
-        sout += 'Line:%i ' % (self.cur_seg_node.get_cur_line())
+        sout += 'Line:%i ' % (src_line)
         sout += 'ELE:%s - %s' % (err_cde, err_str)
         if bad_value:
             sout += ' (%s)' % (bad_value)
@@ -526,14 +536,14 @@ class err_isa(err_node):
             child.accept(visitor)
         visitor.visit_isa_post(self)
 
-    def add_error(self, err_cde, err_str):
+    def add_error(self, err_cde, err_str, err_value=None, src_line=None):
         """
         @param err_cde: Error code
         @type err_cde: string
         @param err_str: Description of the error
         @type err_str: string
         """
-        self.errors.append((err_cde, err_str))
+        self.errors.append((err_cde, err_str, err_value, src_line))
 
     def close(self, node, seg, src):
         self.cur_line_iea = src.get_cur_line()
@@ -629,14 +639,14 @@ class err_gs(err_node):
             child.accept(visitor)
         visitor.visit_gs_post(self)
 
-    def add_error(self, err_cde, err_str):
+    def add_error(self, err_cde, err_str, err_value=None, src_line=None):
         """
         @param err_cde: Error code
         @type err_cde: string
         @param err_str: Description of the error
         @type err_str: string
         """
-        self.errors.append((err_cde, err_str))
+        self.errors.append((err_cde, err_str, err_value, src_line))
 
     def close(self, node, seg_data, src):
         """
@@ -768,14 +778,14 @@ class err_st(err_node):
             child.accept(visitor)
         visitor.visit_st_post(self)
 
-    def add_error(self, err_cde, err_str):
+    def add_error(self, err_cde, err_str, err_value=None, src_line=None):
         """
         @param err_cde: Error code
         @type err_cde: string
         @param err_str: Description of the error
         @type err_str: string
         """
-        self.errors.append((err_cde, err_str))
+        self.errors.append((err_cde, err_str, err_value, src_line))
 
     def close(self, node, seg_data, src):
         """
@@ -894,14 +904,14 @@ class err_seg(err_node):
         for elem in self.elements:
             elem.accept(visitor)
 
-    def add_error(self, err_cde, err_str, err_value=None):
+    def add_error(self, err_cde, err_str, err_value=None, src_line=None):
         """
         @param err_cde: Error code
         @type err_cde: string
         @param err_str: Description of the error
         @type err_str: string
         """
-        self.errors.append((err_cde, err_str, err_value))
+        self.errors.append((err_cde, err_str, err_value, src_line))
 
     def err_count(self):
         """
@@ -974,7 +984,7 @@ class err_ele(err_node):
         """
         visitor.visit_ele(self)
 
-    def add_error(self, err_cde, err_str, bad_value):
+    def add_error(self, err_cde, err_str, bad_value, src_line=None):
         """
         @param err_cde: Error code
         @type err_cde: string
@@ -982,7 +992,7 @@ class err_ele(err_node):
         @type err_str: string
         """
         #logger.debug('err_ele.add_error: %s %s %s' % (err_cde, err_str, bad_value))
-        self.errors.append((err_cde, err_str, bad_value))
+        self.errors.append((err_cde, err_str, bad_value, src_line))
 
     def err_count(self):
         return len(self.errors)
@@ -1061,7 +1071,7 @@ class errh_null(object):
         """
         pass
 
-    def isa_error(self, err_cde, err_str):
+    def isa_error(self, err_cde, err_str, err_value=None, src_line=None):
         """
         @param err_cde: ISA level error code
         @type err_cde: string
@@ -1070,8 +1080,10 @@ class errh_null(object):
         """
         self.err_cde = err_cde
         self.err_str = err_str
+        self.err_value = err_value
+        self.src_line = src_line
 
-    def gs_error(self, err_cde, err_str):
+    def gs_error(self, err_cde, err_str, err_value=None, src_line=None):
         """
         @param err_cde: GS level error code
         @type err_cde: string
@@ -1080,8 +1092,10 @@ class errh_null(object):
         """
         self.err_cde = err_cde
         self.err_str = err_str
+        self.err_value = err_value
+        self.src_line = src_line
 
-    def st_error(self, err_cde, err_str):
+    def st_error(self, err_cde, err_str, err_value=None, src_line=None):
         """
         @param err_cde: Segment level error code
         @type err_cde: string
@@ -1090,6 +1104,8 @@ class errh_null(object):
         """
         self.err_cde = err_cde
         self.err_str = err_str
+        self.err_value = err_value
+        self.src_line = src_line
 
     def seg_error(self, err_cde, err_str, err_value=None, src_line=None):
         """
@@ -1100,6 +1116,8 @@ class errh_null(object):
         """
         self.err_cde = err_cde
         self.err_str = err_str
+        self.err_value = err_value
+        self.src_line = src_line
 
     def ele_error(self, err_cde, err_str, bad_value, refdes=None):
         """
@@ -1110,6 +1128,7 @@ class errh_null(object):
         """
         self.err_cde = err_cde
         self.err_str = err_str
+        self.err_value = bad_value
 
     def close_isa_loop(self, node, seg, src):
         """
@@ -1225,32 +1244,32 @@ class errh_list(object):
     def add_ele(self, map_node):
         pass
 
-    def isa_error(self, err_cde, err_str):
+    def isa_error(self, err_cde, err_str, err_value=None, src_line=None):
         """
         @param err_cde: ISA level error code
         @type err_cde: string
         @param err_str: Description of the error
         @type err_str: string
         """
-        self.err_isa.append((err_cde, err_str))
+        self.err_isa.append((err_cde, err_str, err_value))
 
-    def gs_error(self, err_cde, err_str):
+    def gs_error(self, err_cde, err_str, err_value=None, src_line=None):
         """
         @param err_cde: GS level error code
         @type err_cde: string
         @param err_str: Description of the error
         @type err_str: string
         """
-        self.err_gs.append((err_cde, err_str))
+        self.err_gs.append((err_cde, err_str, err_value, src_line))
 
-    def st_error(self, err_cde, err_str):
+    def st_error(self, err_cde, err_str, err_value=None, src_line=None):
         """
         @param err_cde: Segment level error code
         @type err_cde: string
         @param err_str: Description of the error
         @type err_str: string
         """
-        self.err_st.append((err_cde, err_str))
+        self.err_st.append((err_cde, err_str, err_value, src_line))
 
     def seg_error(self, err_cde, err_str, err_value=None, src_line=None):
         """
@@ -1259,16 +1278,16 @@ class errh_list(object):
         @param err_str: Description of the error
         @type err_str: string
         """
-        self.err_seg.append((err_cde, err_str, err_value))
+        self.err_seg.append((err_cde, err_str, err_value, src_line))
 
-    def ele_error(self, err_cde, err_str, bad_value, refdes=None):
+    def ele_error(self, err_cde, err_str, bad_value, refdes=None, src_line=None):
         """
         @param err_cde: Element level error code
         @type err_cde: string
         @param err_str: Description of the error
         @type err_str: string
         """
-        self.err_ele.append((err_cde, err_str, bad_value, refdes))
+        self.err_ele.append((err_cde, err_str, bad_value, refdes, src_line))
 
     def close_isa_loop(self, node, seg, src):
         pass
@@ -1299,11 +1318,11 @@ class errh_list(object):
         """
         for (etype, err_cde, err_str, err_value, src_line) in err_list:
             if etype == 'isa':
-                self.isa_error(err_cde, err_str)
+                self.isa_error(err_cde, err_str, err_value, src_line)
             elif etype == 'gs':
-                self.gs_error(err_cde, err_str)
+                self.gs_error(err_cde, err_str, err_value, src_line)
             elif etype == 'st':
-                self.st_error(err_cde, err_str)
+                self.st_error(err_cde, err_str, err_value, src_line)
             elif etype == 'seg':
                 self.seg_error(err_cde, err_str, err_value, src_line)
 

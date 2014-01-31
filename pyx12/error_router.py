@@ -67,7 +67,7 @@ class error_router(ErrorHandlerBase):
         """
         pass
 
-    def isa_error(self, err_cde, err_str):
+    def isa_error(self, err_cde, err_str, err_value=None, src_line=None):
         """
         @param err_cde: ISA level error code
         @type err_cde: string
@@ -77,7 +77,7 @@ class error_router(ErrorHandlerBase):
         self.err_cde = err_cde
         self.err_str = err_str
 
-    def gs_error(self, err_cde, err_str):
+    def gs_error(self, err_cde, err_str, err_value=None, src_line=None):
         """
         @param err_cde: GS level error code
         @type err_cde: string
@@ -87,7 +87,7 @@ class error_router(ErrorHandlerBase):
         self.err_cde = err_cde
         self.err_str = err_str
 
-    def st_error(self, err_cde, err_str):
+    def st_error(self, err_cde, err_str, err_value=None, src_line=None):
         """
         @param err_cde: Segment level error code
         @type err_cde: string

@@ -97,9 +97,9 @@ def x12n_document(param, src_file, fd_997, fd_html,
                 logger.error('Source file line %i' % (src.get_cur_line()))
                 raise
 
-        if False:
-            print('------- counters after --------')
-            print(walker.counter._dict)
+        #if False:
+        #    print('------- counters after --------')
+        #    print(walker.counter._dict)
         if node is None:
             node = orig_node
         else:

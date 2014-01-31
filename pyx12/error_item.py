@@ -48,8 +48,7 @@ class ISAError(ErrorItem):
     def __init__(self, err_cde, err_str):
         ErrorItem.__init__(self, 'isa', err_cde, err_str)
         if self.err_cde not in isa_errors:
-            raise EngineError('Invalid ISA level error code "%s"' %
-                              (self.err_cde))
+            raise EngineError('Invalid ISA level error code "%s"' % (self.err_cde))
 
 
 class SegError(ErrorItem):
@@ -57,8 +56,7 @@ class SegError(ErrorItem):
         ErrorItem.__init__(self, 'seg', err_cde, err_str)
         self.err_val = err_val
         if self.err_cde not in seg_errors:
-            raise EngineError('Invalid segment level error code "%s"' %
-                              (self.err_cde))
+            raise EngineError('Invalid segment level error code "%s"' % (self.err_cde))
 
     def getErrVal(self):
         return self.err_val
@@ -72,8 +70,7 @@ class EleError(ErrorItem):
         self.ele_idx = ele_idx
         self.subele_idx = subele_idx
         if self.err_cde not in ele_errors:
-            raise EngineError('Invalid element level error code "%s"' %
-                              (self.err_cde))
+            raise EngineError('Invalid element level error code "%s"' % (self.err_cde))
 
     def getErrVal(self):
         return self.err_val

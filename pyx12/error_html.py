@@ -62,19 +62,19 @@ class error_html(object):
     def footer(self):
         err_st = self.errh.cur_st_node
         if not err_st.is_closed():
-            for (err_cde, err_str) in err_st.errors:
+            for (err_cde, err_str, err_value, src_line) in err_st.errors:
                 if err_cde == '2':
                     self.fd.write('<span class="error">&nbsp;%s (Segment Error Code: %s)</span><br />\n' %
                                   (err_str, err_cde))
         err_gs = self.errh.cur_gs_node
         if not err_gs.is_closed():
-            for (err_cde, err_str) in err_gs.errors:
+            for (err_cde, err_str, err_value, src_line) in err_gs.errors:
                 if err_cde == '3':
                     self.fd.write('<span class="error">&nbsp;%s (Segment Error Code: %s)</span><br />\n' %
                                   (err_str, err_cde))
         err_isa = self.errh.cur_isa_node
         if not err_isa.is_closed():
-            for (err_cde, err_str) in err_isa.errors:
+            for (err_cde, err_str, err_value, src_line) in err_isa.errors:
                 if err_cde == '023':
                     self.fd.write('<span class="error">&nbsp;%s (Segment Error Code: %s)</span><br />\n' %
                                   (err_str, err_cde))
@@ -132,6 +132,7 @@ class error_html(object):
             for err_tuple in err_node.get_error_list(seg_data.get_seg_id(), True):
                 err_cde = err_tuple[0]
                 err_str = err_tuple[1]
+                err_value = err_tuple[2]
                 if err_cde == '3':
                     self.fd.write('<span class="error">&nbsp;%s (Segment Error Code: %s)</span><br />\n' %
                                   (err_str, err_cde))
@@ -145,11 +146,12 @@ class error_html(object):
             #for err_tuple in err_node.errors:
                 err_cde = err_tuple[0]
                 err_str = err_tuple[1]
+                err_value = err_tuple[2]
                 if err_cde != '3':
                     self.fd.write('<span class="error">&nbsp;%s (Segment Error Code: %s)</span><br />\n' %
                                   (err_str, err_cde))
             for ele in err_node.elements:
-                for (err_cde, err_str, err_val) in ele.get_error_list(seg_data.get_seg_id(), False):
+                for (err_cde, err_str, err_val, src_line) in ele.get_error_list(seg_data.get_seg_id(), False):
                 #for (err_cde, err_str, err_val) in ele.errors:
                     if not (seg_data.get_seg_id() == 'GE' and 'GS' in err_str):  # Ugly hack
                         self.fd.write('<span class="error">&nbsp;%s (Element Error Code: %s)</span><br />\n' %

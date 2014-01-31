@@ -199,7 +199,7 @@ class errh_list(object):
         sout += 'ISA:%s - %s' % (err_cde, err_str)
         logger.error(sout)
 
-    def gs_error(self, err_cde, err_str):
+    def gs_error(self, err_cde, err_str, err_value):
         """
         @param err_cde: GS level error code
         @type err_cde: string

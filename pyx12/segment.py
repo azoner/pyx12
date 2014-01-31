@@ -125,7 +125,7 @@ class Composite(object):
             raise EngineError('The sub-element terminator must be a single character, is %s' % (subele_term))
         self.subele_term = subele_term
         self.subele_term_orig = subele_term
-        members = ele_str.split(self.subele_term)
+        members = ele_str.split(self.subele_term) if ele_str is not None else ('')
         self.elements = []
         for elem in members:
             self.elements.append(Element(elem))

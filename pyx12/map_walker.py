@@ -152,13 +152,11 @@ class walk_tree(object):
                                     pop_node_list = [node]
                                     push_node_list = [node]
                                 return (node1, pop_node_list, push_node_list)  # segment node
-                            #child.incr_cur_count()
                             self.counter.increment(child.x12path)
-                            #assert child.get_cur_count() == self.counter.get_count(child.x12path), \
-                            #    'child counts not equal: old is %s=%i : new is %s=%i' % (
-                            #    child.get_path(), child.get_cur_count(),
-                            #    child.x12path.format(), self.counter.get_count(child.x12path))
-                            self._check_seg_usage(child, seg_data, seg_count, cur_line, ls_id, errh)
+                            (isOk, errorCode, errorString) = self._check_seg_usage(child, seg_data) # , seg_count, cur_line, ls_id, errh)
+                            if not isOk:
+                                errh.add_seg(child, seg_data, seg_count, cur_line, ls_id)
+                                errh.seg_error(errorCode, errorString, None, cur_line)
                             # Remove any previously missing errors for this segment
                             self.mandatory_segs_missing = [x for x in self.mandatory_segs_missing if x[0] != child]
                             self._flush_mandatory_segs(errh, child.pos)
@@ -176,14 +174,19 @@ class walk_tree(object):
                             return (node_seg, pop_node_list, push_node_list)  # segment node
             # End for ord1 in pos_keys
             if node.is_map_root():  # If at root and we haven't found the segment yet.
-                walk_tree._seg_not_found_error(orig_node, seg_data,
-                                               errh, seg_count, cur_line, ls_id)
+                (isOk, errorCode, errorString) = walk_tree._seg_not_found_error(orig_node, seg_data)
+                if not isOk:
+                    errh.add_seg(orig_node, seg_data, seg_count, cur_line, ls_id)
+                    errh.seg_error(errorCode, errorString, None, cur_line)
                 return (None, [], [])
             node_pos = node.pos  # Get position ordinal of current node in tree
             pop_node_list.append(node)
             node = pop_to_parent_loop(node)  # Get enclosing parent loop
 
-        walk_tree._seg_not_found_error(orig_node, seg_data, errh, seg_count, cur_line, ls_id)
+        (isOk, errorCode, errorString) = walk_tree._seg_not_found_error(orig_node, seg_data)
+        if not isOk:
+            errh.add_seg(orig_node, seg_data, seg_count, cur_line, ls_id)
+            errh.seg_error(errorCode, errorString, None, cur_line)
         return (None, [], [])
 
     def getCountState(self):
@@ -198,7 +201,7 @@ class walk_tree(object):
         self.counter.increment(x12_path)  # add a count for this path
         self.counter.increment(child_path) # count the loop start segment
 
-    def _check_seg_usage(self, seg_node, seg_data, seg_count, cur_line, ls_id, errh):
+    def _check_seg_usage(self, seg_node, seg_data):  # , seg_count, cur_line, ls_id, errh):
         """
         Check segment usage requirement and count
 
@@ -215,21 +218,25 @@ class walk_tree(object):
         @param errh: Error handler
         @type errh: L{error_handler.err_handler}
         @raise EngineError: On invalid usage code
+        @return: (IsOk, ErrorCode, ErrorString)
         """
         assert seg_node.usage in ('N', 'R', 'S'), 'Segment usage must be R, S, or N'
         if seg_node.usage == 'N':
             err_str = "Segment %s found but marked as not used" % (seg_node.id)
-            errh.seg_error('2', err_str, None)
+            #errh.seg_error('2', err_str, None)
+            return (False, '2', err_str)
         elif seg_node.usage == 'R' or seg_node.usage == 'S':
             #assert seg_node.get_cur_count() == self.counter.get_count(seg_node.x12path), 'seg_node counts not equal'
             if self.counter.get_count(seg_node.x12path) > seg_node.get_max_repeat():  # handle seg repeat count
                 err_str = "Segment %s exceeded max count.  Found %i, should have %i" \
                     % (seg_data.get_seg_id(), self.counter.get_count(seg_node.x12path), seg_node.get_max_repeat())
-                errh.add_seg(seg_node, seg_data, seg_count, cur_line, ls_id)
-                errh.seg_error('5', err_str, None)
+                #errh.add_seg(seg_node, seg_data, seg_count, cur_line, ls_id)
+                #errh.seg_error('5', err_str, None)
+                return (False, '5', err_str)
+        return (True, None, None)
 
     @staticmethod
-    def _seg_not_found_error(orig_node, seg_data, errh, seg_count, cur_line, ls_id):
+    def _seg_not_found_error(orig_node, seg_data):
         """
         Create error for not found segments
 
@@ -237,16 +244,13 @@ class walk_tree(object):
         @type orig_node: L{node<map_if.x12_node>}
         @param seg_data: Segment object
         @type seg_data: L{segment<segment.Segment>}
-        @param errh: Error handler
-        @type errh: L{error_handler.err_handler}
         """
         if seg_data.get_seg_id() == 'HL':
             seg_str = seg_data.format('', '*', ':')
         else:
             seg_str = '%s*%s' % (seg_data.get_seg_id(), seg_data.get_value('01'))
         err_str = 'Segment %s not found.  Started at %s' % (seg_str, orig_node.get_path())
-        errh.add_seg(orig_node, seg_data, seg_count, cur_line, ls_id)
-        errh.seg_error('1', err_str, None)
+        return (False, '1', err_str)
 
     def _flush_mandatory_segs(self, errh, cur_pos=None):
         """
@@ -294,8 +298,7 @@ class walk_tree(object):
             return True
         elif loop_node.usage == 'R' and self.counter.get_count(loop_node.x12path) < 1:
             fake_seg = pyx12.segment.Segment('%s' % (first_child_node.id), '~', '*', ':')
-            err_str = 'Mandatory loop "%s" (%s) missing' % \
-                (loop_node.name, loop_node.id)
+            err_str = 'Mandatory loop "%s" (%s) missing' % (loop_node.name, loop_node.id)
             self.mandatory_segs_missing.append((first_child_node, fake_seg,
                                                 '3', err_str, seg_count, cur_line, ls_id))
         return False
@@ -324,24 +327,25 @@ class walk_tree(object):
             % (loop_node.id, seg_data.get_seg_id())
         first_child_node = loop_node.get_first_seg()
         if first_child_node is not None and is_first_seg_match2(first_child_node, seg_data):
-            self._check_loop_usage(loop_node, seg_data,
-                                   seg_count, cur_line, ls_id, errh)
+            (isOk, errorCode, errorString) = self._check_loop_usage(loop_node, seg_data) 
+                                   # seg_count, cur_line, ls_id, errh)
+            if not isOk:
+                errh.add_seg(loop_node, seg_data, seg_count, cur_line, ls_id)
+                errh.seg_error(errorCode, errorString, None, cur_line)
             self.counter.increment(first_child_node.x12path)
             self._flush_mandatory_segs(errh)
             return (first_child_node, [loop_node])
         else:
             for child in loop_node.childIterator():
                 if child.is_loop():
-                    (
-                        node1, push1) = self._goto_seg_match(child, seg_data, errh,
-                                                             seg_count, cur_line, ls_id)
+                    (node1, push1) = self._goto_seg_match(child, seg_data, errh, seg_count, cur_line, ls_id)
                     if node1:
                         push_node_list = [loop_node]
                         push_node_list.extend(push1)
                         return (node1, push_node_list)
         return (None, [])
 
-    def _check_loop_usage(self, loop_node, seg_data, seg_count, cur_line, ls_id, errh):
+    def _check_loop_usage(self, loop_node, seg_data):
         """
         Check loop usage requirement and count
 
@@ -363,13 +367,17 @@ class walk_tree(object):
             loop_node.id, seg_data.get_seg_id())
         assert loop_node.usage in ('N', 'R', 'S'), 'Loop usage must be R, S, or N'
         if loop_node.usage == 'N':
-            err_str = "Loop %s found but marked as not used" % (loop_node.id)
-            errh.seg_error('2', err_str, None)
+            #err_str = "Loop %s found but marked as not used" % (loop_node.id)
+            #errh.seg_xerror('2', err_str, None)
+            return (False, '2', err_str)
         elif loop_node.usage in ('R', 'S'):
             self.counter.reset_to_node(loop_node.x12path)
             self.counter.increment(loop_node.x12path)
             if self.counter.get_count(loop_node.x12path) > loop_node.get_max_repeat():
                 err_str = "Loop %s exceeded max count.  Found %i, should have %i" \
                     % (loop_node.id, self.counter.get_count(loop_node.x12path), loop_node.get_max_repeat())
-                errh.add_seg(loop_node, seg_data, seg_count, cur_line, ls_id)
-                errh.seg_error('4', err_str, None)
+                #errh.add_xseg(loop_node, seg_data, seg_count, cur_line, ls_id)
+                #errh.seg_xerror('4', err_str, None)
+                return (False, '4', err_str)
+        return (True, None, None)
+

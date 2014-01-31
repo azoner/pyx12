@@ -75,7 +75,7 @@ class error_json_visitor(pyx12.error_visitor.error_visitor):
         @type err_isa: L{error_handler.err_isa}
         """
         line_num = err_isa.cur_line_isa
-        for (err_cde, err_str) in err_isa.errors:
+        for (err_cde, err_str, err_value) in err_isa.errors:
             self.errors.append(self._get_error_dict(line_num, err_cde, err_str))
         for ele in err_isa.elements:
             #self.fd.write(' %s %s\n' % (ele.id, ele.name))

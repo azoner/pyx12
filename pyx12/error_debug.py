@@ -52,7 +52,7 @@ class error_debug_visitor(error_visitor):
         self.fd.write('%s\n' % err_isa.id)
         self.fd.write('-- ISA errors --\n')
         for err in err_isa.errors:
-            self.fd.write('  %s %s\n' % err)
+            self.fd.write('  %s %s %s\n' % err)
         for ele in err_isa.elements:
             self.fd.write('  %s %s\n' % (ele.id, ele.name))
             print((ele.parent))

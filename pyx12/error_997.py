@@ -114,7 +114,7 @@ class error_997_visitor(error_visitor.error_visitor):
         iea_ele_err_map = {1: '021', 2: '018'}
         err_codes = [err[0] for err in err_isa.errors]
         for elem in err_isa.elements:
-            for (err_cde, err_str, bad_value) in elem.errors:
+            for (err_cde, err_str, bad_value, src_line) in elem.errors:
                 # Ugly
                 if 'ISA' in err_str:
                     err_codes.append(isa_ele_err_map[elem.ele_pos])
@@ -196,7 +196,7 @@ class error_997_visitor(error_visitor.error_visitor):
         ge_ele_err_map = {2: '6'}
         err_codes = [err[0] for err in err_gs.errors]
         for elem in err_gs.elements:
-            for (err_cde, err_str, bad_value) in elem.errors:
+            for (err_cde, err_str, bad_value, src_line) in elem.errors:
                 # Ugly
                 if 'GS' in err_str:
                     #if elem.ele_pos in gs_ele_err_map.keys():
@@ -288,7 +288,7 @@ class error_997_visitor(error_visitor.error_visitor):
         if err_st.child_err_count() > 0:
             err_codes.append('5')
         for elem in err_st.elements:
-            for (err_cde, err_str, bad_value) in elem.errors:
+            for (err_cde, err_str, bad_value, src_line) in elem.errors:
                 # Ugly
                 if 'ST' in err_str:
                     err_codes.append(st_ele_err_map[elem.ele_pos])
@@ -364,7 +364,7 @@ class error_997_visitor(error_visitor.error_visitor):
         #else:
         #    seg_base.append('')
         seg_str = seg_base.format('~', '*', ':')
-        for (err_cde, err_str, bad_value) in err_ele.errors:
+        for (err_cde, err_str, bad_value, src_line) in err_ele.errors:
             if err_cde in valid_AK4_codes:
                 seg_data = pyx12.segment.Segment(seg_str, '~', '*', ':')
                 seg_data.set('AK403', err_cde)
