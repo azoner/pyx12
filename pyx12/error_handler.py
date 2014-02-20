@@ -1119,7 +1119,7 @@ class errh_null(object):
         self.err_value = err_value
         self.src_line = src_line
 
-    def ele_error(self, err_cde, err_str, bad_value, refdes=None):
+    def ele_error(self, err_cde, err_str, bad_value, refdes=None, src_line=None):
         """
         @param err_cde: Element level error code
         @type err_cde: string
@@ -1129,6 +1129,7 @@ class errh_null(object):
         self.err_cde = err_cde
         self.err_str = err_str
         self.err_value = bad_value
+        self.src_line = src_line
 
     def close_isa_loop(self, node, seg, src):
         """

@@ -90,8 +90,7 @@ class error_html(object):
     def gen_info(self, info_str):
         """
         """
-        self.fd.write('<span class="info">&nbsp;&nbsp;%s</span><br />\n' %
-                      (info_str))
+        self.fd.write('<span class="info">&nbsp;&nbsp;%s</span><br />\n' % (info_str))
 
     def gen_seg(self, seg_data, src, err_node_list):
         """

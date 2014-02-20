@@ -213,3 +213,8 @@ def contains_control_character(str_val, charset='B', icvn='00401'):
     if '\r' in str_val:
         return (True, '<CR>')
     return (False, None)
+
+
+def strip_eol_error_str(string_val):
+    return string_val.replace('\n', '').replace('\r', '')
+
