@@ -21,6 +21,7 @@ import logging
 from errors import EngineError
 import pyx12.segment
 from nodeCounter import NodeCounter
+from error_item import ISAError, SegError, EleError
 
 logger = logging.getLogger('pyx12.walk_tree')
 #logger.setLevel(logging.DEBUG)
@@ -126,6 +127,7 @@ class walk_tree(object):
         pop_node_list = []
         push_node_list = []
         orig_node = node
+        error_items = []
         #logger.info('%s seg_count=%i / cur_line=%i' % (node.id, seg_count, cur_line))
         self.mandatory_segs_missing = []
         node_pos = node.pos  # Get original position ordinal of starting node
@@ -151,16 +153,17 @@ class walk_tree(object):
                                 if node == orig_loop:
                                     pop_node_list = [node]
                                     push_node_list = [node]
-                                return (node1, pop_node_list, push_node_list)  # segment node
+                                return (node1, pop_node_list, push_node_list, error_items)  # segment node
                             self.counter.increment(child.x12path)
                             (isOk, errorCode, errorString) = self._check_seg_usage(child, seg_data) # , seg_count, cur_line, ls_id, errh)
                             if not isOk:
                                 errh.add_seg(child, seg_data, seg_count, cur_line, ls_id)
                                 errh.seg_error(errorCode, errorString, None, cur_line)
+                                error_items.append(SegError(errorCode, errorString, None))
                             # Remove any previously missing errors for this segment
                             self.mandatory_segs_missing = [x for x in self.mandatory_segs_missing if x[0] != child]
                             self._flush_mandatory_segs(errh, child.pos)
-                            return (child, pop_node_list, push_node_list)  # segment node
+                            return (child, pop_node_list, push_node_list, error_items)  # segment node
                         elif child.usage == 'R' and self.counter.get_count(child.x12path) < 1:
                             fake_seg = pyx12.segment.Segment('%s' % (child.id), '~', '*', ':')
                             err_str = 'Mandatory segment "%s" (%s) missing' % (child.name, child.id)
@@ -171,14 +174,15 @@ class walk_tree(object):
                     elif child.is_loop():
                         if self._is_loop_match(child, seg_data, errh, seg_count, cur_line, ls_id):
                             (node_seg, push_node_list) = self._goto_seg_match(child, seg_data, errh, seg_count, cur_line, ls_id)
-                            return (node_seg, pop_node_list, push_node_list)  # segment node
+                            return (node_seg, pop_node_list, push_node_list, error_items)  # segment node
             # End for ord1 in pos_keys
             if node.is_map_root():  # If at root and we haven't found the segment yet.
                 (isOk, errorCode, errorString) = walk_tree._seg_not_found_error(orig_node, seg_data)
                 if not isOk:
                     errh.add_seg(orig_node, seg_data, seg_count, cur_line, ls_id)
                     errh.seg_error(errorCode, errorString, None, cur_line)
-                return (None, [], [])
+                    error_items.append(SegError(errorCode, errorString, None))
+                return (None, [], [], error_items)
             node_pos = node.pos  # Get position ordinal of current node in tree
             pop_node_list.append(node)
             node = pop_to_parent_loop(node)  # Get enclosing parent loop
@@ -187,7 +191,8 @@ class walk_tree(object):
         if not isOk:
             errh.add_seg(orig_node, seg_data, seg_count, cur_line, ls_id)
             errh.seg_error(errorCode, errorString, None, cur_line)
-        return (None, [], [])
+            error_items.append(SegError(errorCode, errorString, None))
+        return (None, [], [], error_items)
 
     def getCountState(self):
         return self.counter.getState()
@@ -323,6 +328,7 @@ class walk_tree(object):
         @return: The matching segment node and a list of the push loop nodes
         @rtype: (L{node<map_if.segment_if>}, [L{node<map_if.loop_if>}])
         """
+        error_items = []
         assert loop_node.is_loop(), "_goto_seg_match failed, node %s is not a loop. seg %s" \
             % (loop_node.id, seg_data.get_seg_id())
         first_child_node = loop_node.get_first_seg()
@@ -332,6 +338,7 @@ class walk_tree(object):
             if not isOk:
                 errh.add_seg(loop_node, seg_data, seg_count, cur_line, ls_id)
                 errh.seg_error(errorCode, errorString, None, cur_line)
+                #error_items.append(SegError(errorCode, errorString, None))
             self.counter.increment(first_child_node.x12path)
             self._flush_mandatory_segs(errh)
             return (first_child_node, [loop_node])

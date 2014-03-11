@@ -11,6 +11,8 @@
 """
 Generates error debug output
 Visitor - Visits an error_handler composite
+
+
 """
 
 import logging
@@ -74,9 +76,10 @@ class error_json_visitor(pyx12.error_visitor.error_visitor):
         @param err_isa: ISA Loop error handler
         @type err_isa: L{error_handler.err_isa}
         """
+        # line_number, code, message, fieldname='', bad_value='', log_level=
         line_num = err_isa.cur_line_isa
         for (err_cde, err_str, err_value) in err_isa.errors:
-            self.errors.append(self._get_error_dict(line_num, err_cde, err_str))
+            self.errors.append(self._get_error_dict(line_num, err_cde, err_str, bad_value=err_value))
         for ele in err_isa.elements:
             #self.fd.write(' %s %s\n' % (ele.id, ele.name))
             #print((ele.parent))

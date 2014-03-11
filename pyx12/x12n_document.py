@@ -91,7 +91,7 @@ def x12n_document(param, src_file, fd_997, fd_html,
             # from the current node, find the map node matching the segment
             # keep track of the loops traversed
             try:
-                (node, pop_loops, push_loops) = walker.walk(node, seg, errh,
+                (node, pop_loops, push_loops, error_items) = walker.walk(node, seg, errh,
                     src.get_seg_count(), src.get_cur_line(), src.get_ls_id())
             except pyx12.errors.EngineError:
                 logger.error('Source file line %i' % (src.get_cur_line()))

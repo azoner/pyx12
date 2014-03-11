@@ -596,53 +596,6 @@ class loop_if(x12_node):
                 return child
         return None
 
-    def get_cur_count(self):
-        """
-        @return: current count
-        @rtype: int
-        """
-        raise DeprecationWarning('Moved to nodeCounter')
-        return self._cur_count
-
-    def incr_cur_count(self):
-        raise DeprecationWarning('Moved to nodeCounter')
-        self._cur_count += 1
-
-    def reset_child_count(self):
-        """
-        Set cur_count of child nodes to zero
-        """
-        raise DeprecationWarning('Moved to nodeCounter')
-        for ord1 in sorted(self.pos_map):
-            for child in self.pos_map[ord1]:
-                child.reset_cur_count()
-
-    def reset_cur_count(self):
-        """
-        Set cur_count of node and child nodes to zero
-        """
-        raise DeprecationWarning('Moved to nodeCounter')
-        self._cur_count = 0
-        self.reset_child_count()
-
-    def set_cur_count(self, ct):
-        raise DeprecationWarning('Moved to nodeCounter')
-        self._cur_count = ct
-
-    def get_counts_list(self, ct_list):
-        """
-        Build a list of (path, ct) of the current node and parents
-        Gets the node counts to apply to another map
-        @param ct_list: List to append to
-        @type ct_list: list[(string, int)]
-        """
-        raise DeprecationWarning('Moved to nodeCounter')
-        my_ct = (self.get_path(), self._cur_count)
-        ct_list.append(my_ct)
-        if not self.parent.is_map_root():
-            self.parent.get_counts_list(ct_list)
-        return True
-
     def loop_segment_iterator(self):
         yield self
         for ord1 in sorted(self.pos_map):
@@ -674,19 +627,13 @@ class segment_if(x12_node):
         self.path = self.id
         self.type = elem.get('type')
 
-        self.name = elem.get(
-            'name') if elem.get('name') else elem.findtext('name')
-        self.usage = elem.get(
-            'usage') if elem.get('usage') else elem.findtext('usage')
-        self.pos = int(elem.get(
-            'pos')) if elem.get('pos') else int(elem.findtext('pos'))
-        self.max_use = elem.get('max_use') if elem.get(
-            'max_use') else elem.findtext('max_use')
-        self.repeat = elem.get('repeat') if elem.get(
-            'repeat') else elem.findtext('repeat')
+        self.name = elem.get('name') if elem.get('name') else elem.findtext('name')
+        self.usage = elem.get('usage') if elem.get('usage') else elem.findtext('usage')
+        self.pos = int(elem.get('pos')) if elem.get('pos') else int(elem.findtext('pos'))
+        self.max_use = elem.get('max_use') if elem.get('max_use') else elem.findtext('max_use')
+        self.repeat = elem.get('repeat') if elem.get('repeat') else elem.findtext('repeat')
 
-        self.end_tag = elem.get('end_tag') if elem.get(
-            'end_tag') else elem.findtext('end_tag')
+        self.end_tag = elem.get('end_tag') if elem.get('end_tag') else elem.findtext('end_tag')
 
         for s in elem.findall('syntax'):
             syn_list = self._split_syntax(s.text)
@@ -916,6 +863,7 @@ class segment_if(x12_node):
         @rtype: boolean
         """
         valid = True
+        errors = []
         child_count = self.get_child_count()
         if len(seg_data) > child_count:
             #child_node = self.get_child_node_by_idx(child_count+1)
@@ -1153,11 +1101,11 @@ class element_if(x12_node):
         @return: True if valid
         @rtype: boolean
         """
+        errors = []
         errh.add_ele(self)
 
         if elem and elem.is_composite():
-            err_str = 'Data element "%s" (%s) is an invalid composite' % \
-                (self.name, self.refdes)
+            err_str = 'Data element "%s" (%s) is an invalid composite' % (self.name, self.refdes)
             self._error(errh, err_str, '6', elem.__repr__())
             return False
         if elem is None or elem.get_value() == '':
@@ -1223,7 +1171,9 @@ class element_if(x12_node):
                 self._error(errh, err_str, '6', elem_val)
                 valid = False
 
-        if not self._is_valid_code(elem_val, errh):
+        (res, err_cde, err_str, err_value) = self._is_valid_code(elem_val)
+        if not res:
+            self._error(errh, err_str, err_cde, err_value)
             valid = False
         if not validation.IsValidDataType(elem_val, data_type, self.root.param.get('charset'), self.root.icvn):
             if data_type in ('RD8', 'DT', 'D8', 'D6'):
@@ -1260,17 +1210,18 @@ class element_if(x12_node):
             if not m:
                 err_str = 'Data element "%s" with a value of (%s)' % \
                     (self.name, elem_val)
-                err_str += ' failed to match the regular expression "%s"' % (
-                    self.res)
+                err_str += ' failed to match the regular expression "%s"' % (elf.res)
                 self._error(errh, err_str, '7', elem_val)
                 valid = False
         return valid
 
-    def _is_valid_code(self, elem_val, errh):
+    def _is_valid_code(self, elem_val):
         """
-        @rtype: boolean
+        @rtype: (boolean, error_code, error_message)
+        (bool result, err_cde, err_str, err_value)
         """
         bValidCode = False
+        error_message = None
         if len(self.valid_codes) == 0 and self.external_codes is None:
             bValidCode = True
         if elem_val in self.valid_codes:
@@ -1279,11 +1230,9 @@ class element_if(x12_node):
                 self.root.ext_codes.isValid(self.external_codes, elem_val):
             bValidCode = True
         if not bValidCode:
-            err_str = '(%s) is not a valid code for %s (%s)' % (
-                elem_val, self.name, self.refdes)
-            self._error(errh, err_str, '7', elem_val)
-            return False
-        return True
+            err_str = '(%s) is not a valid code for %s (%s)' % (elem_val, self.name, self.refdes)
+            return (False, '7', err_str, elem_val)
+        return (True, None, None, None)
 
     def get_data_type(self):
         """
@@ -1344,8 +1293,8 @@ class composite_if(x12_node):
         """
         Forward the error to an error_handler
         """
-        err_str2 = err_str.replace('\n', '').replace('\r', '')
-        elem_val2 = elem_val.replace('\n', '').replace('\r', '')
+        err_str2 = validation.strip_eol_error_str(err_str)
+        elem_val2 = validation.strip_eol_error_str(elem_val)
         errh.ele_error(err_cde, err_str2, elem_val2, self.refdes)
             #, pos=self.seq, data_ele=self.data_ele)
 
