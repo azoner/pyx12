@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <!--
 ######################################################################
-# Copyright (c) 2001-2005 Kalamazoo Community Mental Health Services,
+# Copyright (c) 2001-2014 Kalamazoo Community Mental Health Services,
 #   John Holland <jholland@kazoocmh.org> <john@zoner.org>
 # All rights reserved.
 #
@@ -9,8 +9,6 @@
 # you should have received as part of this distribution.
 #
 ######################################################################
-
-#    $Id: 837.4010.X098.A1.xml 1174 2008-03-27 13:42:27Z johnholland $
 -->
 <transaction xid="837">
   <name>HIPAA Health Care Claim: Professional X098A1-837</name>
@@ -622,7 +620,7 @@
           <pos>0200</pos>
           <repeat>&gt;1</repeat>
           <loop xid="2000A">
-            <name>Billing/Pay-To Provider Hierarchical Level</name>
+            <name>Billing Provider Hierarchical Level</name>
             <usage>R</usage>
             <pos>0010</pos>
             <repeat>&gt;1</repeat>
@@ -668,6 +666,7 @@
               <usage>S</usage>
               <pos>0030</pos>
               <max_use>1</max_use>
+              <syntax>P0203</syntax>
               <element xid="PRV01">
                 <data_ele>1221</data_ele>
                 <name>Provider Code</name>
@@ -675,7 +674,6 @@
                 <seq>01</seq>
                 <valid_codes>
                   <code>BI</code>
-                  <code>PT</code>
                 </valid_codes>
               </element>
               <element xid="PRV02">
@@ -698,9 +696,8 @@
                 <name>State or Province Code</name>
                 <usage>N</usage>
                 <seq>04</seq>
-                <valid_codes external="states"/>
               </element>
-              <composite>
+              <composite xid="PRV05">
                 <data_ele>C035</data_ele>
                 <name>Provider Specialty Information</name>
                 <usage>N</usage>
@@ -747,7 +744,7 @@
                 <name>Currency Code</name>
                 <usage>R</usage>
                 <seq>02</seq>
-                <valid_codes external="currency"/>
+                <valid_codes external="currency" />
               </element>
               <element xid="CUR03">
                 <data_ele>280</data_ele>
@@ -766,7 +763,6 @@
                 <name>Currency Code</name>
                 <usage>N</usage>
                 <seq>05</seq>
-                <valid_codes external="currency"/>
               </element>
               <element xid="CUR06">
                 <data_ele>669</data_ele>
@@ -878,6 +874,7 @@
                 <max_use>1</max_use>
                 <syntax>P0809</syntax>
                 <syntax>C1110</syntax>
+                <syntax>C1203</syntax>
                 <element xid="NM101">
                   <data_ele>98</data_ele>
                   <name>Entity Identifier Code</name>
@@ -911,7 +908,7 @@
                 </element>
                 <element xid="NM105">
                   <data_ele>1037</data_ele>
-                  <name>Billing Provider Middle Name</name>
+                  <name>Billing Provider Middle Name or Initial</name>
                   <usage>S</usage>
                   <seq>05</seq>
                 </element>
@@ -969,24 +966,26 @@
                 <max_use>1</max_use>
                 <element xid="N301">
                   <data_ele>166</data_ele>
-                  <name>Billing Provider Address Line 1</name>
+                  <name>Billing Provider Address Line</name>
                   <usage>R</usage>
                   <seq>01</seq>
                 </element>
                 <element xid="N302">
                   <data_ele>166</data_ele>
-                  <name>Billing Provider Address Line 2</name>
+                  <name>Billing Provider Address Line</name>
                   <usage>S</usage>
                   <seq>02</seq>
                 </element>
               </segment>
               <!--End of N3 segment-->
               <segment xid="N4">
-                <name>Billing Provider City/State/ZIP Code</name>
+                <name>Billing Provider City, State, ZIP Code</name>
                 <usage>R</usage>
                 <pos>0300</pos>
                 <max_use>1</max_use>
+                <syntax>E0207</syntax>
                 <syntax>C0605</syntax>
+                <syntax>C0704</syntax>
                 <element xid="N401">
                   <data_ele>19</data_ele>
                   <name>Billing Provider City Name</name>
@@ -998,21 +997,19 @@
                   <name>Billing Provider State or Province Code</name>
                   <usage>S</usage>
                   <seq>02</seq>
-                  <valid_codes external="states"/>
                 </element>
                 <element xid="N403">
                   <data_ele>116</data_ele>
                   <name>Billing Provider Postal Zone or ZIP Code</name>
                   <usage>S</usage>
                   <seq>03</seq>
-                  <regex>[0-9]{9}</regex>
                 </element>
                 <element xid="N404">
                   <data_ele>26</data_ele>
-                  <name>Billing Provider Country Code</name>
+                  <name>Country Code</name>
                   <usage>S</usage>
                   <seq>04</seq>
-                  <valid_codes external="country"/>
+                  <valid_codes external="country" />
                 </element>
                 <element xid="N405">
                   <data_ele>309</data_ele>
@@ -1052,7 +1049,7 @@
                 </element>
                 <element xid="REF02">
                   <data_ele>127</data_ele>
-                  <name>Billing Provider Additional Identifier</name>
+                  <name>Billing Provider Tax Identification Number</name>
                   <usage>R</usage>
                   <seq>02</seq>
                 </element>
@@ -1062,12 +1059,11 @@
                   <usage>N</usage>
                   <seq>03</seq>
                 </element>
-                <composite>
+                <composite xid="REF04">
                   <data_ele>C040</data_ele>
                   <name>Reference Identifier</name>
                   <usage>N</usage>
                   <seq>04</seq>
-                  <refdes>REF04</refdes>
                 </composite>
               </segment>
               <!--End of REF segment-->
@@ -1089,7 +1085,7 @@
                 </element>
                 <element xid="REF02">
                   <data_ele>127</data_ele>
-                  <name>Billing Provider Credit Card Identifier</name>
+                  <name>Billing Provider License and/or UPIN Information</name>
                   <usage>R</usage>
                   <seq>02</seq>
                 </element>
@@ -1099,12 +1095,11 @@
                   <usage>N</usage>
                   <seq>03</seq>
                 </element>
-                <composite>
+                <composite xid="REF04">
                   <data_ele>C040</data_ele>
                   <name>Reference Identifier</name>
                   <usage>N</usage>
                   <seq>04</seq>
-                  <refdes>REF04</refdes>
                 </composite>
               </segment>
               <!--End of REF segment-->
@@ -1195,17 +1190,18 @@
             </loop>
             <!--End of 2010AA loop-->
             <loop xid="2010AB">
-              <name>Pay-To Address Name</name>
+              <name>Pay-to Address Name</name>
               <usage>S</usage>
               <pos>0150</pos>
               <repeat>1</repeat>
               <segment xid="NM1">
-                <name>Pay-To Provider Name</name>
+                <name>Pay-to Address Name</name>
                 <usage>R</usage>
                 <pos>0150</pos>
                 <max_use>1</max_use>
                 <syntax>P0809</syntax>
                 <syntax>C1110</syntax>
+                <syntax>C1203</syntax>
                 <element xid="NM101">
                   <data_ele>98</data_ele>
                   <name>Entity Identifier Code</name>
@@ -1227,19 +1223,19 @@
                 </element>
                 <element xid="NM103">
                   <data_ele>1035</data_ele>
-                  <name>Pay-To Provider Last or Organizational Name</name>
+                  <name>Name Last or Organization Name</name>
                   <usage>N</usage>
                   <seq>03</seq>
                 </element>
                 <element xid="NM104">
                   <data_ele>1036</data_ele>
-                  <name>Pay-To Provider First Name</name>
-                  <usage>S</usage>
+                  <name>Name First</name>
+                  <usage>N</usage>
                   <seq>04</seq>
                 </element>
                 <element xid="NM105">
                   <data_ele>1037</data_ele>
-                  <name>Pay-To Provider Middle Name</name>
+                  <name>Name Middle</name>
                   <usage>N</usage>
                   <seq>05</seq>
                 </element>
@@ -1251,7 +1247,7 @@
                 </element>
                 <element xid="NM107">
                   <data_ele>1039</data_ele>
-                  <name>Pay-To Provider Name Suffix</name>
+                  <name>Name Suffix</name>
                   <usage>N</usage>
                   <seq>07</seq>
                 </element>
@@ -1260,15 +1256,10 @@
                   <name>Identification Code Qualifier</name>
                   <usage>N</usage>
                   <seq>08</seq>
-                  <valid_codes>
-                    <code>24</code>
-                    <code>34</code>
-                    <code>XX</code>
-                  </valid_codes>
                 </element>
                 <element xid="NM109">
                   <data_ele>67</data_ele>
-                  <name>Pay-To Provider Identifier</name>
+                  <name>Identification Code</name>
                   <usage>N</usage>
                   <seq>09</seq>
                 </element>
@@ -1293,55 +1284,57 @@
               </segment>
               <!--End of NM1 segment-->
               <segment xid="N3">
-                <name>Pay-To Provider Address</name>
+                <name>Pay-to Address - ADDRESS</name>
                 <usage>R</usage>
                 <pos>0250</pos>
                 <max_use>1</max_use>
                 <element xid="N301">
                   <data_ele>166</data_ele>
-                  <name>Pay-To Provider Address Line 1</name>
+                  <name>Pay-To Address Line</name>
                   <usage>R</usage>
                   <seq>01</seq>
                 </element>
                 <element xid="N302">
                   <data_ele>166</data_ele>
-                  <name>Pay-To Provider Address Line 2</name>
+                  <name>Pay-To Address Line</name>
                   <usage>S</usage>
                   <seq>02</seq>
                 </element>
               </segment>
               <!--End of N3 segment-->
               <segment xid="N4">
-                <name>Pay-To Provider City/State/ZIP Code</name>
+                <name>Pay-To Address City, State, ZIP Code</name>
                 <usage>R</usage>
                 <pos>0300</pos>
                 <max_use>1</max_use>
+                <syntax>E0207</syntax>
                 <syntax>C0605</syntax>
+                <syntax>C0704</syntax>
                 <element xid="N401">
                   <data_ele>19</data_ele>
-                  <name>Pay-To Provider City Name</name>
+                  <name>Pay-to Address City Name</name>
                   <usage>R</usage>
                   <seq>01</seq>
                 </element>
                 <element xid="N402">
                   <data_ele>156</data_ele>
-                  <name>Pay-To Provider State Code</name>
+                  <name>Pay-to Address State Code</name>
                   <usage>S</usage>
                   <seq>02</seq>
-                  <valid_codes external="states"/>
+                  <valid_codes external="states" />
                 </element>
                 <element xid="N403">
                   <data_ele>116</data_ele>
-                  <name>Pay-To Provider Postal Zone or ZIP Code</name>
+                  <name>Pay-to Address Postal Zone or ZIP Code</name>
                   <usage>S</usage>
                   <seq>03</seq>
                 </element>
                 <element xid="N404">
                   <data_ele>26</data_ele>
-                  <name>Pay-To Provider Country Code</name>
+                  <name>Country Code</name>
                   <usage>S</usage>
                   <seq>04</seq>
-                  <valid_codes external="country"/>
+                  <valid_codes external="country" />
                 </element>
                 <element xid="N405">
                   <data_ele>309</data_ele>
@@ -1398,7 +1391,7 @@
                 </element>
                 <element xid="NM103">
                   <data_ele>1035</data_ele>
-                  <name>Pay-To Plan Last or Organizational Name</name>
+                  <name>Pay-To Plan Organizational Name</name>
                   <usage>R</usage>
                   <seq>03</seq>
                 </element>
@@ -1438,7 +1431,7 @@
                 </element>
                 <element xid="NM109">
                   <data_ele>67</data_ele>
-                  <name>Pay-To Plan Identifier</name>
+                  <name>Pay-To Plan Primary Identifier</name>
                   <usage>R</usage>
                   <seq>09</seq>
                 </element>
@@ -1463,26 +1456,26 @@
               </segment>
               <!--End of NM1 segment-->
               <segment xid="N3">
-                <name>Pay-To Plan Address</name>
+                <name>Pay-to Plan Address</name>
                 <usage>R</usage>
                 <pos>0250</pos>
                 <max_use>1</max_use>
                 <element xid="N301">
                   <data_ele>166</data_ele>
-                  <name>Pay-To Plan Address Line 1</name>
+                  <name>Pay-To Plan Address Line</name>
                   <usage>R</usage>
                   <seq>01</seq>
                 </element>
                 <element xid="N302">
                   <data_ele>166</data_ele>
-                  <name>Pay-To Plan Address Line 2</name>
+                  <name>Pay-To Plan Address Line</name>
                   <usage>S</usage>
                   <seq>02</seq>
                 </element>
               </segment>
               <!--End of N3 segment-->
               <segment xid="N4">
-                <name>Pay-To Plan City/State/ZIP Code</name>
+                <name>Pay-To Plan City, State, ZIP Code</name>
                 <usage>R</usage>
                 <pos>0300</pos>
                 <max_use>1</max_use>
@@ -1497,10 +1490,9 @@
                 </element>
                 <element xid="N402">
                   <data_ele>156</data_ele>
-                  <name>Pay-To Plan State Code</name>
+                  <name>Pay-To Plan State or Province Code</name>
                   <usage>S</usage>
                   <seq>02</seq>
-                  <valid_codes external="states"/>
                 </element>
                 <element xid="N403">
                   <data_ele>116</data_ele>
@@ -1510,10 +1502,10 @@
                 </element>
                 <element xid="N404">
                   <data_ele>26</data_ele>
-                  <name>Pay-To Plan Country Code</name>
+                  <name>Country Code</name>
                   <usage>S</usage>
                   <seq>04</seq>
-                  <valid_codes external="country"/>
+                  <valid_codes external="country" />
                 </element>
                 <element xid="N405">
                   <data_ele>309</data_ele>
@@ -1536,7 +1528,7 @@
               </segment>
               <!--End of N4 segment-->
               <segment xid="REF">
-                <name>Pay-To Plan Secondary Identification</name>
+                <name>Pay-to Plan Secondary Identification</name>
                 <usage>S</usage>
                 <pos>0350</pos>
                 <max_use>1</max_use>
@@ -1554,7 +1546,7 @@
                 </element>
                 <element xid="REF02">
                   <data_ele>127</data_ele>
-                  <name>Pay-To Plan Identifier</name>
+                  <name>Pay-to Plan Secondary Identifier</name>
                   <usage>R</usage>
                   <seq>02</seq>
                 </element>
@@ -1564,12 +1556,11 @@
                   <usage>N</usage>
                   <seq>03</seq>
                 </element>
-                <composite>
+                <composite xid="REF04">
                   <data_ele>C040</data_ele>
                   <name>Reference Identifier</name>
                   <usage>N</usage>
                   <seq>04</seq>
-                  <refdes>REF04</refdes>
                 </composite>
               </segment>
               <!--End of REF segment-->
@@ -1590,7 +1581,7 @@
                 </element>
                 <element xid="REF02">
                   <data_ele>127</data_ele>
-                  <name>Pay-To Plan Identifier</name>
+                  <name>Pay-To Plan Tax Identification Number</name>
                   <usage>R</usage>
                   <seq>02</seq>
                 </element>
@@ -1600,12 +1591,11 @@
                   <usage>N</usage>
                   <seq>03</seq>
                 </element>
-                <composite>
+                <composite xid="REF04">
                   <data_ele>C040</data_ele>
                   <name>Reference Identifier</name>
                   <usage>N</usage>
                   <seq>04</seq>
-                  <refdes>REF04</refdes>
                 </composite>
               </segment>
               <!--End of REF segment-->
@@ -1681,7 +1671,7 @@
                 </element>
                 <element xid="SBR02">
                   <data_ele>1069</data_ele>
-                  <name>Relationship Code</name>
+                  <name>Individual Relationship Code</name>
                   <usage>S</usage>
                   <seq>02</seq>
                   <valid_codes>
@@ -1690,13 +1680,13 @@
                 </element>
                 <element xid="SBR03">
                   <data_ele>127</data_ele>
-                  <name>Insured Group or Policy Number</name>
+                  <name>Subscriber Group or Policy Number</name>
                   <usage>S</usage>
                   <seq>03</seq>
                 </element>
                 <element xid="SBR04">
                   <data_ele>93</data_ele>
-                  <name>Insured Group Name</name>
+                  <name>Subscriber Group Name</name>
                   <usage>S</usage>
                   <seq>04</seq>
                 </element>
@@ -1810,7 +1800,7 @@
                 </element>
                 <element xid="PAT06">
                   <data_ele>1251</data_ele>
-                  <name>Insured Individual Death Date</name>
+                  <name>Patient Death Date</name>
                   <usage>S</usage>
                   <seq>06</seq>
                 </element>
@@ -1852,6 +1842,7 @@
                   <max_use>1</max_use>
                   <syntax>P0809</syntax>
                   <syntax>C1110</syntax>
+                  <syntax>C1203</syntax>
                   <element xid="NM101">
                     <data_ele>98</data_ele>
                     <name>Entity Identifier Code</name>
@@ -1885,7 +1876,7 @@
                   </element>
                   <element xid="NM105">
                     <data_ele>1037</data_ele>
-                    <name>Subscriber Middle Name</name>
+                    <name>Subscriber Middle Name or Initial</name>
                     <usage>S</usage>
                     <seq>05</seq>
                   </element>
@@ -1944,24 +1935,26 @@
                   <max_use>1</max_use>
                   <element xid="N301">
                     <data_ele>166</data_ele>
-                    <name>Subscriber Address Line 1</name>
+                    <name>Subscriber Address Line</name>
                     <usage>R</usage>
                     <seq>01</seq>
                   </element>
                   <element xid="N302">
                     <data_ele>166</data_ele>
-                    <name>Subscriber Address Line 2</name>
+                    <name>Subscriber Address Line</name>
                     <usage>S</usage>
                     <seq>02</seq>
                   </element>
                 </segment>
                 <!--End of N3 segment-->
                 <segment xid="N4">
-                  <name>Subscriber City/State/ZIP Code</name>
+                  <name>Subscriber City, State, ZIP Code</name>
                   <usage>S</usage>
                   <pos>0300</pos>
                   <max_use>1</max_use>
+                  <syntax>E0207</syntax>
                   <syntax>C0605</syntax>
+                  <syntax>C0704</syntax>
                   <element xid="N401">
                     <data_ele>19</data_ele>
                     <name>Subscriber City Name</name>
@@ -1973,7 +1966,7 @@
                     <name>Subscriber State Code</name>
                     <usage>S</usage>
                     <seq>02</seq>
-                    <valid_codes external="states"/>
+                    <valid_codes external="states" />
                   </element>
                   <element xid="N403">
                     <data_ele>116</data_ele>
@@ -1983,10 +1976,10 @@
                   </element>
                   <element xid="N404">
                     <data_ele>26</data_ele>
-                    <name>Subscriber Country Code</name>
+                    <name>Country Code</name>
                     <usage>S</usage>
                     <seq>04</seq>
-                    <valid_codes external="country"/>
+                    <valid_codes external="country" />
                   </element>
                   <element xid="N405">
                     <data_ele>309</data_ele>
@@ -2014,6 +2007,8 @@
                   <pos>0320</pos>
                   <max_use>1</max_use>
                   <syntax>P0102</syntax>
+                  <syntax>P1011</syntax>
+                  <syntax>C1105</syntax>
                   <element xid="DMG01">
                     <data_ele>1250</data_ele>
                     <name>Date Time Period Format Qualifier</name>
@@ -2046,12 +2041,13 @@
                     <usage>N</usage>
                     <seq>04</seq>
                   </element>
-                  <element xid="DMG05">
-                    <data_ele>1109</data_ele>
-                    <name>Race or Ethnicity Code</name>
+                  <composite xid="DMG05">
+                    <data_ele>C056</data_ele>
+                    <name>Composite Race or Ethnicity Information</name>
                     <usage>N</usage>
                     <seq>05</seq>
-                  </element>
+                    <repeat>10</repeat>
+                  </composite>
                   <element xid="DMG06">
                     <data_ele>1066</data_ele>
                     <name>Citizenship Status Code</name>
@@ -2063,7 +2059,6 @@
                     <name>Country Code</name>
                     <usage>N</usage>
                     <seq>07</seq>
-                    <valid_codes external="country"/>
                   </element>
                   <element xid="DMG08">
                     <data_ele>659</data_ele>
@@ -2077,13 +2072,25 @@
                     <usage>N</usage>
                     <seq>09</seq>
                   </element>
+                  <element xid="DMG10">
+                    <data_ele>1270</data_ele>
+                    <name>Code List Qualifier Code</name>
+                    <usage>N</usage>
+                    <seq>10</seq>
+                  </element>
+                  <element xid="DMG11">
+                    <data_ele>1271</data_ele>
+                    <name>Industry Code</name>
+                    <usage>N</usage>
+                    <seq>11</seq>
+                  </element>
                 </segment>
                 <!--End of DMG segment-->
                 <segment xid="REF">
                   <name>Subscriber Secondary Identification</name>
                   <usage>S</usage>
                   <pos>0350</pos>
-                  <max_use>4</max_use>
+                  <max_use>1</max_use>
                   <syntax>R0203</syntax>
                   <element xid="REF01">
                     <data_ele>128</data_ele>
@@ -2107,12 +2114,11 @@
                     <usage>N</usage>
                     <seq>03</seq>
                   </element>
-                  <composite>
+                  <composite xid="REF04">
                     <data_ele>C040</data_ele>
                     <name>Reference Identifier</name>
                     <usage>N</usage>
                     <seq>04</seq>
-                    <refdes>REF04</refdes>
                   </composite>
                 </segment>
                 <!--End of REF segment-->
@@ -2143,29 +2149,102 @@
                     <usage>N</usage>
                     <seq>03</seq>
                   </element>
-                  <composite>
+                  <composite xid="REF04">
                     <data_ele>C040</data_ele>
                     <name>Reference Identifier</name>
                     <usage>N</usage>
                     <seq>04</seq>
-                    <refdes>REF04</refdes>
                   </composite>
                 </segment>
                 <!--End of REF segment-->
+                <segment xid="PER">
+                  <name>Property and Casualty Subscriber Contact Information</name>
+                  <usage>S</usage>
+                  <pos>0400</pos>
+                  <max_use>1</max_use>
+                  <syntax>P0304</syntax>
+                  <syntax>P0506</syntax>
+                  <syntax>P0708</syntax>
+                  <element xid="PER01">
+                    <data_ele>366</data_ele>
+                    <name>Contact Function Code</name>
+                    <usage>R</usage>
+                    <seq>01</seq>
+                    <valid_codes>
+                      <code>IC</code>
+                    </valid_codes>
+                  </element>
+                  <element xid="PER02">
+                    <data_ele>93</data_ele>
+                    <name>Name</name>
+                    <usage>S</usage>
+                    <seq>02</seq>
+                  </element>
+                  <element xid="PER03">
+                    <data_ele>365</data_ele>
+                    <name>Communication Number Qualifier</name>
+                    <usage>R</usage>
+                    <seq>03</seq>
+                    <valid_codes>
+                      <code>TE</code>
+                    </valid_codes>
+                  </element>
+                  <element xid="PER04">
+                    <data_ele>364</data_ele>
+                    <name>Communication Number</name>
+                    <usage>R</usage>
+                    <seq>04</seq>
+                  </element>
+                  <element xid="PER05">
+                    <data_ele>365</data_ele>
+                    <name>Communication Number Qualifier</name>
+                    <usage>S</usage>
+                    <seq>05</seq>
+                    <valid_codes>
+                      <code>EX</code>
+                    </valid_codes>
+                  </element>
+                  <element xid="PER06">
+                    <data_ele>364</data_ele>
+                    <name>Communication Number</name>
+                    <usage>S</usage>
+                    <seq>06</seq>
+                  </element>
+                  <element xid="PER07">
+                    <data_ele>365</data_ele>
+                    <name>Communication Number Qualifier</name>
+                    <usage>N</usage>
+                    <seq>07</seq>
+                  </element>
+                  <element xid="PER08">
+                    <data_ele>364</data_ele>
+                    <name>Communication Number</name>
+                    <usage>N</usage>
+                    <seq>08</seq>
+                  </element>
+                  <element xid="PER09">
+                    <data_ele>443</data_ele>
+                    <name>Contact Inquiry Reference</name>
+                    <usage>N</usage>
+                    <seq>09</seq>
+                  </element>
+                </segment>
+                <!--End of PER segment-->
               </loop>
               <!--End of 2010BA loop-->
               <loop xid="2010BB">
-                <name>Destination Payer</name>
+                <name>Payer Name</name>
                 <usage>R</usage>
                 <pos>0150</pos>
                 <repeat>1</repeat>
                 <segment xid="NM1">
-                  <name>Destination Payer Name</name>
+                  <name>Payer Name</name>
                   <usage>R</usage>
                   <pos>0150</pos>
                   <max_use>1</max_use>
                   <syntax>P0809</syntax>
                   <syntax>C1110</syntax>
+                  <syntax>C1203</syntax>
                   <element xid="NM101">
                     <data_ele>98</data_ele>
                     <name>Entity Identifier Code</name>
@@ -2251,30 +2330,32 @@
                 </segment>
                 <!--End of NM1 segment-->
                 <segment xid="N3">
-                  <name>Destination Payer Address</name>
+                  <name>Payer Address</name>
                   <usage>S</usage>
                   <pos>0250</pos>
                   <max_use>1</max_use>
                   <element xid="N301">
                     <data_ele>166</data_ele>
-                    <name>Payer Address Line 1</name>
+                    <name>Payer Address Line</name>
                     <usage>R</usage>
                     <seq>01</seq>
                   </element>
                   <element xid="N302">
                     <data_ele>166</data_ele>
-                    <name>Payer Address Line 2</name>
+                    <name>Payer Address Line</name>
                     <usage>S</usage>
                     <seq>02</seq>
                   </element>
                 </segment>
                 <!--End of N3 segment-->
                 <segment xid="N4">
-                  <name>Destination Payer City/State/ZIP Code</name>
+                  <name>Payer City, State, ZIP Code</name>
                   <usage>S</usage>
                   <pos>0300</pos>
                   <max_use>1</max_use>
+                  <syntax>E0207</syntax>
                   <syntax>C0605</syntax>
+                  <syntax>C0704</syntax>
                   <element xid="N401">
                     <data_ele>19</data_ele>
                     <name>Payer City Name</name>
@@ -2283,10 +2364,10 @@
                   </element>
                   <element xid="N402">
                     <data_ele>156</data_ele>
-                    <name>Payer State Code</name>
+                    <name>Payer State or Province Code</name>
                     <usage>S</usage>
                     <seq>02</seq>
-                    <valid_codes external="states"/>
+                    <valid_codes external="states" />
                   </element>
                   <element xid="N403">
                     <data_ele>116</data_ele>
@@ -2296,10 +2377,10 @@
                   </element>
                   <element xid="N404">
                     <data_ele>26</data_ele>
-                    <name>Payer Country Code</name>
+                    <name>Country Code</name>
                     <usage>S</usage>
                     <seq>04</seq>
-                    <valid_codes external="country"/>
+                    <valid_codes external="country" />
                   </element>
                   <element xid="N405">
                     <data_ele>309</data_ele>
@@ -2341,7 +2422,7 @@
                   </element>
                   <element xid="REF02">
                     <data_ele>127</data_ele>
-                    <name>Payer Additional Identifier</name>
+                    <name>Payer Secondary Identifier</name>
                     <usage>R</usage>
                     <seq>02</seq>
                   </element>
@@ -2351,12 +2432,11 @@
                     <usage>N</usage>
                     <seq>03</seq>
                   </element>
-                  <composite>
+                  <composite xid="REF04">
                     <data_ele>C040</data_ele>
                     <name>Reference Identifier</name>
                     <usage>N</usage>
                     <seq>04</seq>
-                    <refdes>REF04</refdes>
                   </composite>
                 </segment>
                 <!--End of REF segment-->
@@ -2378,7 +2458,7 @@
                   </element>
                   <element xid="REF02">
                     <data_ele>127</data_ele>
-                    <name>Payer Additional Identifier</name>
+                    <name>Billing Provider Secondary Identifier</name>
                     <usage>R</usage>
                     <seq>02</seq>
                   </element>
@@ -2388,12 +2468,11 @@
                     <usage>N</usage>
                     <seq>03</seq>
                   </element>
-                  <composite>
+                  <composite xid="REF04">
                     <data_ele>C040</data_ele>
                     <name>Reference Identifier</name>
                     <usage>N</usage>
                     <seq>04</seq>
-                    <refdes>REF04</refdes>
                   </composite>
                 </segment>
                 <!--End of REF segment-->
@@ -11897,33 +11976,16 @@
                   <syntax>P0708</syntax>
                   <element xid="PAT01">
                     <data_ele>1069</data_ele>
-                    <name>Patients Relationship to Insured</name>
+                    <name>Individual Relationship Code</name>
                     <usage>R</usage>
                     <seq>01</seq>
                     <valid_codes>
                       <code>01</code>
-                      <code>04</code>
-                      <code>05</code>
-                      <code>07</code>
-                      <code>09</code>
-                      <code>10</code>
-                      <code>15</code>
-                      <code>17</code>
                       <code>19</code>
                       <code>20</code>
                       <code>21</code>
-                      <code>22</code>
-                      <code>23</code>
-                      <code>24</code>
-                      <code>29</code>
-                      <code>32</code>
-                      <code>33</code>
-                      <code>34</code>
-                      <code>36</code>
                       <code>39</code>
                       <code>40</code>
-                      <code>41</code>
-                      <code>43</code>
                       <code>53</code>
                       <code>G8</code>
                     </valid_codes>
@@ -11999,6 +12061,7 @@
                     <max_use>1</max_use>
                     <syntax>P0809</syntax>
                     <syntax>C1110</syntax>
+                    <syntax>C1203</syntax>
                     <element xid="NM101">
                       <data_ele>98</data_ele>
                       <name>Entity Identifier Code</name>
@@ -12026,12 +12089,12 @@
                     <element xid="NM104">
                       <data_ele>1036</data_ele>
                       <name>Patient First Name</name>
-                      <usage>R</usage>
+                      <usage>S</usage>
                       <seq>04</seq>
                     </element>
                     <element xid="NM105">
                       <data_ele>1037</data_ele>
-                      <name>Patient Middle Name</name>
+                      <name>Patient Middle Name or Initial</name>
                       <usage>S</usage>
                       <seq>05</seq>
                     </element>
@@ -12050,17 +12113,13 @@
                     <element xid="NM108">
                       <data_ele>66</data_ele>
                       <name>Identification Code Qualifier</name>
-                      <usage>S</usage>
+                      <usage>N</usage>
                       <seq>08</seq>
-                      <valid_codes>
-                        <code>MI</code>
-                        <code>ZZ</code>
-                      </valid_codes>
                     </element>
                     <element xid="NM109">
                       <data_ele>67</data_ele>
-                      <name>Patient Primary Identifier</name>
-                      <usage>S</usage>
+                      <name>Identification Code</name>
+                      <usage>N</usage>
                       <seq>09</seq>
                     </element>
                     <element xid="NM110">
@@ -12090,24 +12149,26 @@
                     <max_use>1</max_use>
                     <element xid="N301">
                       <data_ele>166</data_ele>
-                      <name>Patient Address Line 1</name>
+                      <name>Patient Address Line</name>
                       <usage>R</usage>
                       <seq>01</seq>
                     </element>
                     <element xid="N302">
                       <data_ele>166</data_ele>
-                      <name>Patient Address Line 2</name>
+                      <name>Patient Address Line</name>
                       <usage>S</usage>
                       <seq>02</seq>
                     </element>
                   </segment>
                   <!--End of N3 segment-->
                   <segment xid="N4">
-                    <name>Patient City/State/ZIP Code</name>
+                    <name>Patient City, State, ZIP Code</name>
                     <usage>R</usage>
                     <pos>0300</pos>
                     <max_use>1</max_use>
+                    <syntax>E0207</syntax>
                     <syntax>C0605</syntax>
+                    <syntax>C0704</syntax>
                     <element xid="N401">
                       <data_ele>19</data_ele>
                       <name>Patient City Name</name>
@@ -12119,7 +12180,7 @@
                       <name>Patient State Code</name>
                       <usage>S</usage>
                       <seq>02</seq>
-                      <valid_codes external="states"/>
+                      <valid_codes external="states" />
                     </element>
                     <element xid="N403">
                       <data_ele>116</data_ele>
@@ -12129,10 +12190,10 @@
                     </element>
                     <element xid="N404">
                       <data_ele>26</data_ele>
-                      <name>Patient Country Code</name>
+                      <name>Country Code</name>
                       <usage>S</usage>
                       <seq>04</seq>
-                      <valid_codes external="country"/>
+                      <valid_codes external="country" />
                     </element>
                     <element xid="N405">
                       <data_ele>309</data_ele>
@@ -12159,6 +12220,9 @@
                     <usage>R</usage>
                     <pos>0320</pos>
                     <max_use>1</max_use>
+                    <syntax>P0102</syntax>
+                    <syntax>P1011</syntax>
+                    <syntax>C1105</syntax>
                     <element xid="DMG01">
                       <data_ele>1250</data_ele>
                       <name>Date Time Period Format Qualifier</name>
@@ -12191,12 +12255,13 @@
                       <usage>N</usage>
                       <seq>04</seq>
                     </element>
-                    <element xid="DMG05">
-                      <data_ele>1109</data_ele>
-                      <name>Race or Ethnicity Code</name>
+                    <composite xid="DMG05">
+                      <data_ele>C056</data_ele>
+                      <name>Composite Race or Ethnicity Information</name>
                       <usage>N</usage>
                       <seq>05</seq>
-                    </element>
+                      <repeat>10</repeat>
+                    </composite>
                     <element xid="DMG06">
                       <data_ele>1066</data_ele>
                       <name>Citizenship Status Code</name>
@@ -12208,7 +12273,6 @@
                       <name>Country Code</name>
                       <usage>N</usage>
                       <seq>07</seq>
-                      <valid_codes external="country"/>
                     </element>
                     <element xid="DMG08">
                       <data_ele>659</data_ele>
@@ -12222,47 +12286,20 @@
                       <usage>N</usage>
                       <seq>09</seq>
                     </element>
+                    <element xid="DMG10">
+                      <data_ele>1270</data_ele>
+                      <name>Code List Qualifier Code</name>
+                      <usage>N</usage>
+                      <seq>10</seq>
+                    </element>
+                    <element xid="DMG11">
+                      <data_ele>1271</data_ele>
+                      <name>Industry Code</name>
+                      <usage>N</usage>
+                      <seq>11</seq>
+                    </element>
                   </segment>
                   <!--End of DMG segment-->
-                  <segment xid="REF">
-                    <name>Patient Secondary Identification</name>
-                    <usage>S</usage>
-                    <pos>0350</pos>
-                    <max_use>5</max_use>
-                    <syntax>R0203</syntax>
-                    <element xid="REF01">
-                      <data_ele>128</data_ele>
-                      <name>Reference Identification Qualifier</name>
-                      <usage>R</usage>
-                      <seq>01</seq>
-                      <valid_codes>
-                        <code>1W</code>
-                        <code>23</code>
-                        <code>IG</code>
-                        <code>SY</code>
-                      </valid_codes>
-                    </element>
-                    <element xid="REF02">
-                      <data_ele>127</data_ele>
-                      <name>Patient Secondary Identifier</name>
-                      <usage>R</usage>
-                      <seq>02</seq>
-                    </element>
-                    <element xid="REF03">
-                      <data_ele>352</data_ele>
-                      <name>Description</name>
-                      <usage>N</usage>
-                      <seq>03</seq>
-                    </element>
-                    <composite>
-                      <data_ele>C040</data_ele>
-                      <name>Reference Identifier</name>
-                      <usage>N</usage>
-                      <seq>04</seq>
-                      <refdes>REF04</refdes>
-                    </composite>
-                  </segment>
-                  <!--End of REF segment-->
                   <segment xid="REF">
                     <name>Property and Casualty Claim Number</name>
                     <usage>S</usage>
@@ -12290,15 +12327,123 @@
                       <usage>N</usage>
                       <seq>03</seq>
                     </element>
-                    <composite>
+                    <composite xid="REF04">
                       <data_ele>C040</data_ele>
                       <name>Reference Identifier</name>
                       <usage>N</usage>
                       <seq>04</seq>
-                      <refdes>REF04</refdes>
                     </composite>
                   </segment>
                   <!--End of REF segment-->
+                  <segment xid="REF">
+                    <name>Property and Casualty Patient Identifier</name>
+                    <usage>S</usage>
+                    <pos>0350</pos>
+                    <max_use>1</max_use>
+                    <syntax>R0203</syntax>
+                    <element xid="REF01">
+                      <data_ele>128</data_ele>
+                      <name>Reference Identification Qualifier</name>
+                      <usage>R</usage>
+                      <seq>01</seq>
+                      <valid_codes>
+                        <code>1W</code>
+                        <code>SY</code>
+                      </valid_codes>
+                    </element>
+                    <element xid="REF02">
+                      <data_ele>127</data_ele>
+                      <name>Property and Casualty Patient Identifier</name>
+                      <usage>R</usage>
+                      <seq>02</seq>
+                    </element>
+                    <element xid="REF03">
+                      <data_ele>352</data_ele>
+                      <name>Description</name>
+                      <usage>N</usage>
+                      <seq>03</seq>
+                    </element>
+                    <composite xid="REF04">
+                      <data_ele>C040</data_ele>
+                      <name>Reference Identifier</name>
+                      <usage>N</usage>
+                      <seq>04</seq>
+                    </composite>
+                  </segment>
+                  <!--End of REF segment-->
+                  <segment xid="PER">
+                    <name>Property and Casualty Patient Contact Information</name>
+                    <usage>S</usage>
+                    <pos>0400</pos>
+                    <max_use>1</max_use>
+                    <syntax>P0304</syntax>
+                    <syntax>P0506</syntax>
+                    <syntax>P0708</syntax>
+                    <element xid="PER01">
+                      <data_ele>366</data_ele>
+                      <name>Contact Function Code</name>
+                      <usage>R</usage>
+                      <seq>01</seq>
+                      <valid_codes>
+                        <code>IC</code>
+                      </valid_codes>
+                    </element>
+                    <element xid="PER02">
+                      <data_ele>93</data_ele>
+                      <name>Name</name>
+                      <usage>S</usage>
+                      <seq>02</seq>
+                    </element>
+                    <element xid="PER03">
+                      <data_ele>365</data_ele>
+                      <name>Communication Number Qualifier</name>
+                      <usage>R</usage>
+                      <seq>03</seq>
+                      <valid_codes>
+                        <code>TE</code>
+                      </valid_codes>
+                    </element>
+                    <element xid="PER04">
+                      <data_ele>364</data_ele>
+                      <name>Communication Number</name>
+                      <usage>R</usage>
+                      <seq>04</seq>
+                    </element>
+                    <element xid="PER05">
+                      <data_ele>365</data_ele>
+                      <name>Communication Number Qualifier</name>
+                      <usage>S</usage>
+                      <seq>05</seq>
+                      <valid_codes>
+                        <code>EX</code>
+                      </valid_codes>
+                    </element>
+                    <element xid="PER06">
+                      <data_ele>364</data_ele>
+                      <name>Communication Number</name>
+                      <usage>S</usage>
+                      <seq>06</seq>
+                    </element>
+                    <element xid="PER07">
+                      <data_ele>365</data_ele>
+                      <name>Communication Number Qualifier</name>
+                      <usage>N</usage>
+                      <seq>07</seq>
+                    </element>
+                    <element xid="PER08">
+                      <data_ele>364</data_ele>
+                      <name>Communication Number</name>
+                      <usage>N</usage>
+                      <seq>08</seq>
+                    </element>
+                    <element xid="PER09">
+                      <data_ele>443</data_ele>
+                      <name>Contact Inquiry Reference</name>
+                      <usage>N</usage>
+                      <seq>09</seq>
+                    </element>
+                  </segment>
+                  <!--End of PER segment-->
                 </loop>
                 <!--End of 2010CA loop-->
                 <loop xid="2300">
@@ -20698,7 +20843,7 @@
                         <usage>R</usage>
                         <pos>4950</pos>
                         <max_use>1</max_use>
-						<syntax>P0405</syntax>				
+                        <syntax>P0405</syntax>
                         <element xid="CTP01">
                           <data_ele>687</data_ele>
                           <name>Trade Code Class</name>
@@ -20737,7 +20882,7 @@
                               <code>F2</code>
                               <code>GR</code>
                               <code>ML</code>
-							  <code>ME</code>
+                              <code>ME</code>
                               <code>UN</code>
                             </valid_codes>
                           </element>
