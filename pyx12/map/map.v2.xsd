@@ -9,8 +9,6 @@
 # you should have received as part of this distribution.
 #
 ######################################################################
-
-#    $Id$
 -->
 
 <xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema">
@@ -26,10 +24,10 @@
 
   <xsd:complexType name="transactionType">
     <xsd:sequence>
-      <xsd:element name="name" type="xsd:token"/>
       <xsd:element name="loop" type="LoopType" />
     </xsd:sequence>
     <xsd:attribute name="xid" type="xsd:NMTOKEN" use="required" />
+    <xsd:attribute name="name" type="xsd:token" use="required" />
   </xsd:complexType>
 
   <!-- A loop can contain multiple segments and multiple child loops -->
@@ -94,6 +92,7 @@
             <xsd:element name="code" type="xsd:token" minOccurs="0" maxOccurs="unbounded"/>
           </xsd:sequence>
           <xsd:attribute name="external" type="xsd:NMTOKEN"/>
+          <xsd:attribute name="values" type="xsd:token"/>
         </xsd:complexType>
       </xsd:element>
       <xsd:element name="regex" type="xsd:token" minOccurs="0"/>
