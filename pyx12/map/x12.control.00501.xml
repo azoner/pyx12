@@ -9,8 +9,6 @@
 # you should have received as part of this distribution.
 #
 ######################################################################
-
-#    $Id: x12.control.00401.xml 1124 2007-06-08 04:21:58Z johnholland $
 -->
 <transaction xid="X12">
   <name>X12 Control</name>
