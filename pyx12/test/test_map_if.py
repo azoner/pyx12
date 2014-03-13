@@ -766,3 +766,94 @@ class SegmentChildrenOrdinalMapPath(unittest.TestCase):
         for c in self.node.children:
             self.assertEqual(i, c.seq)
             i += 1
+
+class LoadMapFileCtor(unittest.TestCase):
+    def setUp(self):
+        import os.path
+        self.param = pyx12.params.params()
+        self.map_path = os.path.join(os.path.dirname(pyx12.codes.__file__), 'map')
+
+    def _check_root(self, node):
+        """
+        Has the node been properly initialized?
+        """
+        context = '{}'.format(node.get_path())
+        #self.assertIsNotNone(node.root)
+        self.assertIsNotNone(node.id)
+        self.assertIsNotNone(node.name)
+        #self.assertIsNotNone(node.type)
+        #self.assertIsNotNone(node.parent)
+        self.assertIsNone(node.children)
+        self.assertEqual(node.path, '/')
+
+    def _check_loop(self, node):
+        """
+        Has the node been properly initialized?
+        """
+        context = '{}'.format(node.get_path())
+        self.assertIsNotNone(node.id, context)
+        self.assertIsNotNone(node.name, context)
+        #assert self.type is not None
+        self.assertIsNotNone(node.parent, context)
+        self.assertEqual(0, len(node.children), context)
+        self.assertEqual(node.path, node.id, context)
+        #self.assertTrue(len(node.pos_map.keys()) > 0, context)
+        self.assertIsNotNone(node.usage, context)
+        self.assertIsNotNone(node.pos, context)
+        self.assertIsNotNone(node.repeat, context)
+
+    def _check_segment(self, node):
+        """
+        Has the node been properly initialized?
+        """
+        context = '{}'.format(node.get_path())
+        self.assertIsNotNone(node.root)
+        self.assertIsNotNone(node.id)
+        self.assertIsNotNone(node.name)
+        self.assertIsNotNone(node.parent)
+
+        self.assertNotEqual(0, len(node.children))
+        #self.assertEqual(node.path, node.id)
+        #print(node.id)
+        #self.assertTrue(len(node.pos_map) > 0)
+        self.assertIsNotNone(node.usage)
+        self.assertIsNotNone(node.pos)
+        self.assertIsNotNone(node.max_use)
+
+    def _check_element(self, node):
+        """
+        Has the node been properly initialized?
+        """
+        context = '{}'.format(node.get_path())
+        self.assertIsNotNone(node.root)
+        self.assertIsNotNone(node.id)
+        self.assertIsNotNone(node.name)
+        self.assertIsNotNone(node.type)
+        self.assertIsNotNone(node.parent)
+
+        self.assertIsNone(node.children)
+        self.assertEqual(node.path, node.id)
+        self.assertTrue(len(node.pos_map) > 0)
+        self.assertIsNotNone(node.usage)
+        self.assertIsNotNone(node.pos)
+        self.assertIsNotNone(node.max_use)
+        self.assertIsNotNone(node.repeat)
+        self.assertIsNotNone(node.refdes)
+        self.assertIsNotNone(node.seq)
+
+    def test_map_file_load(self):
+        map_files = [
+            '835.4010.X091.A1.xml',
+            #'999.5010.xml',
+            '837.4010.X098.A1.xml'
+        ]
+        for map_file in map_files:
+            map = pyx12.map_if.load_map_file(map_file, self.param, self.map_path)
+            #map.assert_node_complete()
+            for n in map.loop_segment_iterator():
+                if n.is_map_root():
+                    self._check_root(n)
+                elif n.is_loop():
+                    self._check_loop(n)
+                else:
+                    self._check_segment(n)
