@@ -19,6 +19,8 @@
   <ItemGroup>
     <Content Include="LICENSE.txt" />
     <Content Include="requirements.dev.txt" />
+    <Compile Include="pyx12\map\xmlformat.py" />
+    <Compile Include="pyx12\test\test_map_loop_paths.py" />
     <Compile Include="setup.py" />
     <Compile Include="pyx12\codes.py" />
     <Compile Include="pyx12\dataele.py" />
