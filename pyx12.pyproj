@@ -18,6 +18,10 @@
   <PropertyGroup Condition="'$(Configuration)' == 'Release'" />
   <ItemGroup>
     <Content Include="LICENSE.txt" />
+    <Content Include="pyx12\map\270.5010.X279.A1.v2.xml" />
+    <Content Include="pyx12\map\270.5010.X279.A1.xml" />
+    <Content Include="pyx12\map\271.5010.X279.A1.v2.xml" />
+    <Content Include="pyx12\map\271.5010.X279.A1.xml" />
     <Content Include="requirements.dev.txt" />
     <Compile Include="pyx12\map\xmlformat.py" />
     <Compile Include="pyx12\test\test_map_loop_paths.py" />
