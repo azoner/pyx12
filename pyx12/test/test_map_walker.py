@@ -1,8 +1,6 @@
-#from os.path import dirname, abspath, join, isdir, isfile
 import unittest
 
 import pyx12.error_handler
-#from pyx12.errors import *
 from pyx12.map_walker import walk_tree, get_id_list, traverse_path, pop_to_parent_loop
 import pyx12.map_if
 import pyx12.params
@@ -213,6 +211,8 @@ class Implicit_Loops(unittest.TestCase):
         #result = node.is_valid(seg_data, self.errh)
         #self.assertFalse(result)
         self.assertEqual(self.errh.err_cde, '3', self.errh.err_str)
+        self.assertEqual(self.errh.cur_seg_node.id, 'NM1')
+        self.assertEqual(self.errh.seg_id, 'NM1')
         self.assertEqual(get_id_list(pop), [])
         self.assertEqual(get_id_list(push), ['2000B'])
 
@@ -396,6 +396,8 @@ class SegmentWalk(unittest.TestCase):
         (node, pop, push, error_items) = self.walker.walk(
             node, seg_data, self.errh, 5, 4, None)
         self.assertEqual(self.errh.err_cde, '3', self.errh.err_str)
+        self.assertEqual(self.errh.cur_seg_node.id, 'NM1')
+        self.assertEqual(self.errh.seg_id, 'NM1')
         self.assertEqual(get_id_list(pop), [])
         self.assertEqual(get_id_list(push), [])
 

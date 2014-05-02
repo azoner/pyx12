@@ -1017,12 +1017,13 @@ class errh_null(object):
         #self.cur_isa_node = None
         #self.cur_gs_node = None
         #self.cur_st_node = None
-        #self.cur_seg_node = None
+        self.cur_seg_node = None
         #self.seg_node_added = False
         #self.cur_ele_node = None
         self.cur_line = 0
         self.err_cde = None
         self.err_str = None
+        self.seg_id = None
 
     def reset(self):
         """
@@ -1064,7 +1065,8 @@ class errh_null(object):
     def add_seg(self, map_node, seg, seg_count, cur_line, ls_id):
         """
         """
-        pass
+        self.cur_seg_node = map_node
+        self.seg_id = seg.get_seg_id()
 
     def add_ele(self, map_node):
         """
