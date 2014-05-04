@@ -7,21 +7,37 @@ import pyx12.params
 import pyx12.path
 import pyx12.segment
 
+class WalkerTest(unittest.TestCase):
+    def setUp(self):
+        self.walker = walk_tree()
+        self.errh = pyx12.error_handler.errh_null()
+    
+    def _test_find_found(self, startPath, seg_data, popList, pushList):
+        node = self.map.getnodebypath(startPath)
+        self.assertNotEqual(node, None, 'node not found')
+        #seg_data = pyx12.segment.Segment('GS*HC', '~', '*', ':')
+        (node, pop, push) = self.walker.find(node, seg_data)
+        self.assertNotEqual(node, None, 'walker failed')
+        self.assertEqual(seg_data.get_seg_id(), node.id)
+        self.assertEqual(get_id_list(pop), popList)
+        self.assertEqual(get_id_list(push), pushList)
 
-class Explicit_Loops(unittest.TestCase):
+    def _test_find_notfound(self, startPath, seg_data):
+        node = self.map.getnodebypath(startPath)
+        self.assertNotEqual(node, None, 'node not found')
+        #seg_data = pyx12.segment.Segment('GS*HC', '~', '*', ':')
+        (node, pop, push) = self.walker.find(node, seg_data)
+        self.assertEqual(node, None)
+        self.assertEqual(get_id_list(pop), [])
+        self.assertEqual(get_id_list(push), [])
+
+
+class Explicit_Loops(WalkerTest):
 
     def setUp(self):
-
-        self.walker = walk_tree()
+        super(Explicit_Loops, self).setUp()
         param = pyx12.params.params()
         self.map = pyx12.map_if.load_map_file('837.4010.X098.A1.xml', param)
-        self.errh = pyx12.error_handler.errh_null()
-        #self.logger = logging.getLogger('pyx12')
-        #self.logger.setLevel(logging.DEBUG)
-        #formatter = logging.Formatter('%(asctime)s %(levelname)s %(message)s')
-        #hdlr = logging.FileHandler('debug.txt')
-        #hdlr.setFormatter(formatter)
-        #self.logger.addHandler(hdlr)
 
     def test_ISA_to_GS(self):
         self.errh.reset()
@@ -33,6 +49,7 @@ class Explicit_Loops(unittest.TestCase):
         self.assertEqual(seg_data.get_seg_id(), node.id)
         self.assertEqual(get_id_list(pop), [])
         self.assertEqual(get_id_list(push), ['GS_LOOP'])
+        self._test_find_found('/ISA_LOOP/ISA', seg_data, [], ['GS_LOOP'])
 
     def test_GS_to_ST(self):
         self.errh.reset()
@@ -44,6 +61,7 @@ class Explicit_Loops(unittest.TestCase):
         self.assertEqual(seg_data.get_seg_id(), node.id)
         self.assertEqual(get_id_list(pop), [])
         self.assertEqual(get_id_list(push), ['ST_LOOP'])
+        self._test_find_found('/ISA_LOOP/GS_LOOP/GS', seg_data, [], ['ST_LOOP'])
 
     def test_SE_to_ST(self):
         self.errh.reset()
@@ -55,6 +73,7 @@ class Explicit_Loops(unittest.TestCase):
         self.assertEqual(seg_data.get_seg_id(), node.id)
         self.assertEqual(get_id_list(pop), ['ST_LOOP'])
         self.assertEqual(get_id_list(push), ['ST_LOOP'])
+        self._test_find_found('/ISA_LOOP/GS_LOOP/ST_LOOP/SE', seg_data, ['ST_LOOP'], ['ST_LOOP'])
 
     def test_SE_to_GE(self):
         self.errh.reset()
@@ -66,6 +85,7 @@ class Explicit_Loops(unittest.TestCase):
         self.assertEqual(seg_data.get_seg_id(), node.id)
         self.assertEqual(get_id_list(pop), ['ST_LOOP'])
         self.assertEqual(get_id_list(push), [])
+        self._test_find_found('/ISA_LOOP/GS_LOOP/ST_LOOP/SE', seg_data, ['ST_LOOP'], [])
 
     def test_GE_to_GS(self):
         self.errh.reset()
@@ -77,6 +97,7 @@ class Explicit_Loops(unittest.TestCase):
         self.assertEqual(seg_data.get_seg_id(), node.id)
         self.assertEqual(get_id_list(pop), ['GS_LOOP'])
         self.assertEqual(get_id_list(push), ['GS_LOOP'])
+        self._test_find_found('/ISA_LOOP/GS_LOOP/GE', seg_data, ['GS_LOOP'], ['GS_LOOP'])
 
     def test_GE_to_IEA(self):
         self.errh.reset()
@@ -89,6 +110,7 @@ class Explicit_Loops(unittest.TestCase):
         self.assertEqual(seg_data.get_seg_id(), node.id)
         self.assertEqual(get_id_list(pop), ['GS_LOOP'])
         self.assertEqual(get_id_list(push), [])
+        self._test_find_found('/ISA_LOOP/GS_LOOP/GE', seg_data, ['GS_LOOP'], [])
 
     def test_IEA_to_ISA(self):
         self.errh.reset()
@@ -101,6 +123,7 @@ class Explicit_Loops(unittest.TestCase):
         self.assertEqual(seg_data.get_seg_id(), node.id)
         self.assertEqual(get_id_list(pop), ['ISA_LOOP'])
         self.assertEqual(get_id_list(push), ['ISA_LOOP'])
+        self._test_find_found('/ISA_LOOP/IEA', seg_data, ['ISA_LOOP'], ['ISA_LOOP'])
 
     def test_ST_to_BHT_fail(self):
         self.errh.reset()
@@ -111,6 +134,7 @@ class Explicit_Loops(unittest.TestCase):
         self.assertEqual(node, None)
         self.assertEqual(get_id_list(pop), [])
         self.assertEqual(get_id_list(push), [])
+        self._test_find_notfound('/ISA_LOOP/ISA', seg_data)
 
     def tearDown(self):
         del self.errh
@@ -118,7 +142,7 @@ class Explicit_Loops(unittest.TestCase):
         del self.walker
 
 
-class Implicit_Loops(unittest.TestCase):
+class Implicit_Loops(WalkerTest):
     """
     TA1 segment
 
@@ -135,15 +159,10 @@ class Implicit_Loops(unittest.TestCase):
     FAIL - loop repeat exceeds max count
     OK - loop repeat does not exceed max count
     """
-
     def setUp(self):
-
-        self.walker = walk_tree()
-        self.param = pyx12.params.params()
-
-        self.map = pyx12.map_if.load_map_file(
-            '837.4010.X098.A1.xml', self.param)
-        self.errh = pyx12.error_handler.errh_null()
+        super(Implicit_Loops, self).setUp()
+        param = pyx12.params.params()
+        self.map = pyx12.map_if.load_map_file('837.4010.X098.A1.xml', param)
 
     def test_ST_to_BHT(self):
         self.errh.reset()
@@ -154,6 +173,7 @@ class Implicit_Loops(unittest.TestCase):
         self.assertEqual(seg_data.get_seg_id(), node.id)
         self.assertEqual(get_id_list(pop), [])
         self.assertEqual(get_id_list(push), ['HEADER'])
+        self._test_find_found('/ISA_LOOP/GS_LOOP/ST_LOOP/ST', seg_data, [], ['HEADER'])
 
     def xtest_repeat_loop_with_one_segment(self):
         cmap = pyx12.map_if.load_map_file('841.4010.XXXC.xml', self.param)
@@ -171,10 +191,12 @@ class Implicit_Loops(unittest.TestCase):
         self.assertEqual(get_id_list(pop), ['2100'])
         self.assertEqual(get_id_list(push), ['2100'])
         self.assertEqual(traverse_path(start_node, pop, push), pop_to_parent_loop(node).get_path())
+        self._test_find_found('/ISA_LOOP/GS_LOOP/ST_LOOP/DETAIL/2000/2100/SPI', seg_data, ['2100'], ['2100'])
 
     def test_repeat_loop_with_one_segment_EQ(self):
         #errh = pyx12.error_handler.errh_null()
-        cmap = pyx12.map_if.load_map_file('270.4010.X092.A1.xml', self.param)
+        param = pyx12.params.params()
+        cmap = pyx12.map_if.load_map_file('270.4010.X092.A1.xml', param)
         node = cmap.getnodebypath('/ISA_LOOP/GS_LOOP/ST_LOOP/DETAIL/2000A/2000B/2000C/2100C/2110C/EQ')
         start_node = node
         self.assertNotEqual(node, None, 'Node not found')
@@ -191,6 +213,7 @@ class Implicit_Loops(unittest.TestCase):
         self.assertEqual(get_id_list(push), ['2110C'])
         self.assertEqual(traverse_path(start_node, pop, push),
                          pop_to_parent_loop(node).get_path())
+        self._test_find_found('/ISA_LOOP/GS_LOOP/ST_LOOP/DETAIL/2000A/2000B/2000C/2100C/2110C/EQ', seg_data, ['2110C'], ['2110C'])
 
     def test_loop_required_fail1(self):
         """
@@ -208,6 +231,7 @@ class Implicit_Loops(unittest.TestCase):
         self.errh.reset()
         seg_data = pyx12.segment.Segment('HL*2*1*22*0~', '~', '*', ':')
         (node, pop, push, error_items) = self.walker.walk(node, seg_data, self.errh, 5, 4, None)
+        self._test_find_found('/ISA_LOOP/GS_LOOP/ST_LOOP/DETAIL/2000A/HL', seg_data, [], ['2000B'])
         #result = node.is_valid(seg_data, self.errh)
         #self.assertFalse(result)
         self.assertEqual(self.errh.err_cde, '3', self.errh.err_str)
@@ -227,6 +251,7 @@ class Implicit_Loops(unittest.TestCase):
         seg_data = pyx12.segment.Segment('HL*1**20*1~', '~', '*', ':')
         (node, pop, push, error_items) = self.walker.walk(
             node, seg_data, self.errh, 5, 4, None)
+        self._test_find_found('/ISA_LOOP/GS_LOOP/ST_LOOP/DETAIL/2000A', seg_data, ['2000A'], ['2000A'])
         result = node.is_valid(seg_data, self.errh)
         self.assertEqual(self.errh.err_cde, None, self.errh.err_str)
         self.assertEqual(get_id_list(pop), ['2000A'])
@@ -244,6 +269,7 @@ class Implicit_Loops(unittest.TestCase):
         self.errh.reset()
         (node, pop, push, error_items) = self.walker.walk(
             node, seg_data, self.errh, 5, 4, None)
+        self._test_find_found('/ISA_LOOP/GS_LOOP/ST_LOOP/DETAIL/2000A', seg_data, ['2000A'], ['2000A'])
         result = node.is_valid(seg_data, self.errh)
         self.assertEqual(self.errh.err_cde, None, self.errh.err_str)
         self.assertEqual(get_id_list(pop), ['2000A'])
@@ -252,6 +278,7 @@ class Implicit_Loops(unittest.TestCase):
         seg_data = pyx12.segment.Segment(
             'NM1*85*2*Provider Name*****XX*24423423~', '~', '*', ':')
         self.errh.reset()
+        #self._test_find_found('/ISA_LOOP/GS_LOOP/ST_LOOP/DETAIL/2000A', seg_data, ['2000A'], ['2000A'])
         (node, pop, push, error_items) = self.walker.walk(
             node, seg_data, self.errh, 5, 4, None)
         self.assertEqual(self.errh.err_cde, None, self.errh.err_str)
@@ -265,7 +292,8 @@ class Implicit_Loops(unittest.TestCase):
         """
         Test for match of 820 Individual Remittance Loop
         """
-        cmap = pyx12.map_if.load_map_file('820.5010.X218.xml', self.param)
+        param = pyx12.params.params()
+        cmap = pyx12.map_if.load_map_file('820.5010.X218.xml', param)
         node = cmap.getnodebypath('/ISA_LOOP/GS_LOOP/ST_LOOP/HEADER')
         self.assertNotEqual(node, None)
         self.assertEqual(node.base_name, 'loop')
@@ -308,7 +336,7 @@ class Implicit_Loops(unittest.TestCase):
         param = pyx12.params.params()
 
         cmap = pyx12.map_if.load_map_file(
-            '837Q3.I.5010.X223.A1.xml', self.param)
+            '837Q3.I.5010.X223.A1.xml', param)
         errh = pyx12.error_handler.errh_null()
         path = '/ISA_LOOP/GS_LOOP/ST_LOOP/DETAIL/2000A/2000B/2300/2400/DTP'
         node = cmap.getnodebypath(path)
@@ -326,8 +354,7 @@ class Implicit_Loops(unittest.TestCase):
     def test_999_2110_IK4(self):
         walker = walk_tree()
         param = pyx12.params.params()
-
-        cmap = pyx12.map_if.load_map_file('999.5010.xml', self.param)
+        cmap = pyx12.map_if.load_map_file('999.5010.xml', param)
         errh = pyx12.error_handler.errh_null()
         path = '/ISA_LOOP/GS_LOOP/ST_LOOP/HEADER/2000/2100/IK3'
         node = cmap.getnodebypath(path)

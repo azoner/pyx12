@@ -80,7 +80,7 @@ def x12n_document(param, src_file, fd_997, fd_html,
     for seg in src:
         #find node
         orig_node = node
-
+        error_items = [] # [('seg', err_cde, err_str, err_value, src_line)]
         if seg.get_seg_id() == 'ISA':
             node = control_map.getnodebypath('/ISA_LOOP/ISA')
             walker.forceWalkCounterToLoopStart('/ISA_LOOP', '/ISA_LOOP/ISA')
@@ -91,13 +91,27 @@ def x12n_document(param, src_file, fd_997, fd_html,
             # from the current node, find the map node matching the segment
             # keep track of the loops traversed
             try:
-                (node, pop_loops, push_loops, error_items) = walker.walk(node, seg, errh,
-                    src.get_seg_count(), src.get_cur_line(), src.get_ls_id())
+                # try to find match
+                (_find_node, _find_pop_loops, _find_push_loops) = walker.find(node, seg)
+                if _find_node:
+                    # get missing and count errors for nodes between the start and end
+                    errors = walker.wander(node, seg, _find_pop_loops, _find_push_loops)
+                    # do matched segment counting
+                    (isOk, errorCode, errorString) = walker.check_seg_usage(child, seg_data)
+                    if not isOk:
+                        error_items.append(('seg', errorCode, errorString, None, src.get_cur_line()))
+                else:
+                    # was not matched
+                    (isOk, errorCode, errorString) = walk_tree.format_seg_not_found_error(node, seg)
+                    error_items.append(('seg', errorCode, errorString, None, src.get_cur_line()))
+                #(node, pop_loops, push_loops, error_items) = walker.walk(node, seg, errh,
+                #    src.get_seg_count(), src.get_cur_line(), src.get_ls_id())
             except pyx12.errors.EngineError:
                 logger.error('Source file line %i' % (src.get_cur_line()))
                 raise
 
         if node is None:
+            # was not found
             node = orig_node
         else:
             if seg.get_seg_id() == 'ISA':
@@ -159,11 +173,7 @@ def x12n_document(param, src_file, fd_997, fd_html,
                 errh.add_seg(node, seg, src.get_seg_count(), src.get_cur_line(), src.get_ls_id())
                 errh.handle_errors(src.pop_errors())
 
-            #errh.set_cur_line(src.get_cur_line())
             valid &= node.is_valid(seg, errh)
-            #erx.handleErrors(src.pop_errors())
-            #erx.handleErrors(errh.get_errors())
-            #errh.reset()
 
         if fd_html:
             if node is not None and node.is_first_seg_in_loop():
@@ -181,13 +191,8 @@ def x12n_document(param, src_file, fd_997, fd_html,
         if fd_xmldoc:
             xmldoc.seg(node, seg)
 
-        #erx.Write(src.cur_line)
-
-    #erx.handleErrors(src.pop_errors())
     src.cleanup()  # Catch any skipped loop trailers
     errh.handle_errors(src.pop_errors())
-    #erx.handleErrors(src.pop_errors())
-    #erx.handleErrors(errh.get_errors())
 
     if fd_html:
         html.footer()
@@ -195,9 +200,6 @@ def x12n_document(param, src_file, fd_997, fd_html,
 
     if fd_xmldoc:
         del xmldoc
-
-    #visit_debug = pyx12.error_debug.error_debug_visitor(sys.stdout)
-    #errh.accept(visit_debug)
 
     #If this transaction is not a 997/999, generate one.
     if fd_997 and fic != 'FA':
