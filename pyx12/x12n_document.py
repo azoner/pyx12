@@ -92,20 +92,21 @@ def x12n_document(param, src_file, fd_997, fd_html,
             # keep track of the loops traversed
             try:
                 # try to find match
-                (_find_node, _find_pop_loops, _find_push_loops) = walker.find(node, seg)
-                if _find_node:
+                #(_find_node, _find_pop_loops, _find_push_loops) = walker.find(node, seg)
+                #if _find_node:
+                #    pass
                     # get missing and count errors for nodes between the start and end
-                    errors = walker.wander(node, seg, _find_pop_loops, _find_push_loops)
+                    #errors = walker.wander(node, seg, _find_pop_loops, _find_push_loops)
                     # do matched segment counting
-                    (isOk, errorCode, errorString) = walker.check_seg_usage(child, seg_data)
-                    if not isOk:
-                        error_items.append(('seg', errorCode, errorString, None, src.get_cur_line()))
-                else:
+                    #(isOk, errorCode, errorString) = walker.check_seg_usage(child, seg_data)
+                    #if not isOk:
+                    #    error_items.append(('seg', errorCode, errorString, None, src.get_cur_line()))
+                #else:
                     # was not matched
-                    (isOk, errorCode, errorString) = walk_tree.format_seg_not_found_error(node, seg)
-                    error_items.append(('seg', errorCode, errorString, None, src.get_cur_line()))
-                #(node, pop_loops, push_loops, error_items) = walker.walk(node, seg, errh,
-                #    src.get_seg_count(), src.get_cur_line(), src.get_ls_id())
+                #    (isOk, errorCode, errorString) = walk_tree.format_seg_not_found_error(node, seg)
+                #    error_items.append(('seg', errorCode, errorString, None, src.get_cur_line()))
+                (node, pop_loops, push_loops, error_items) = walker.walk(node, seg, errh,
+                    src.get_seg_count(), src.get_cur_line(), src.get_ls_id())
             except pyx12.errors.EngineError:
                 logger.error('Source file line %i' % (src.get_cur_line()))
                 raise

@@ -196,7 +196,7 @@ class walk_tree(object):
             errh.seg_error(errorCode, errorString, None, cur_line)
             error_items.append(SegError(errorCode, errorString, None))
         return (None, [], [], error_items)
-    
+
     @staticmethod
     def iterate_paths(start_node, pop_loops, push_loops):
         """
@@ -241,13 +241,19 @@ class walk_tree(object):
         @param seg_data: Segment object
         @type seg_data: L{segment<segment.Segment>}
 
+        @return: list of errors found in walk
+
         @todo: check single segment loop repeat
         """
         #first, check rest of sibling segments in current loop, checks
         # walk into sibling loops, checks
 
         #finally, check for matched loop counts
-
+        # Missing required loop
+        #elif loop_node.usage == 'R' and self.counter.get_count(loop_node.x12path) < 1:
+        #    fake_seg = pyx12.segment.Segment('%s' % (first_child_node.id), '~', '*', ':')
+        #    err_str = 'Mandatory loop "%s" (%s) missing' % (loop_node.name, loop_node.id)
+        #    fake_err = (first_child_node, fake_seg, '3', err_str, seg_count, cur_line, ls_id)
 
         #for node in walk_tree.iterate_paths(node, pop_node_list, push_node_list):
         #    print node
@@ -457,8 +463,8 @@ class walk_tree(object):
         elif loop_node.usage == 'R' and self.counter.get_count(loop_node.x12path) < 1:
             fake_seg = pyx12.segment.Segment('%s' % (first_child_node.id), '~', '*', ':')
             err_str = 'Mandatory loop "%s" (%s) missing' % (loop_node.name, loop_node.id)
-            #self.mandatory_segs_missing.append((first_child_node, fake_seg,
-            #                                    '3', err_str, seg_count, cur_line, ls_id))
+            self.mandatory_segs_missing.append((first_child_node, fake_seg,
+                                                '3', err_str, seg_count, cur_line, ls_id))
             fake_err = (first_child_node, fake_seg, '3', err_str, seg_count, cur_line, ls_id)
             _mandatory_segs_missing.append(fake_err)
             return (False, _mandatory_segs_missing)
@@ -524,17 +530,16 @@ class walk_tree(object):
                 errh.seg_error(errorCode, errorString, None, cur_line)
                 error_items.append(SegError(errorCode, errorString, None))
             self.counter.increment(first_child_node.x12path)
+            #if self.mandatory_segs_missing is not None:
+            #    for (_seg_node, _seg_data, _err_cde, _err_str, _seg_count, _cur_line, _ls_id) in self.mandatory_segs_missing:
+            #        # Create errors if not also at current position
+            #        if _seg_node.pos != cur_pos:
+            #            errh.add_seg(_seg_node, _seg_data, _seg_count, _cur_line, _ls_id)
+            #            errh.seg_error(_err_cde, _err_str, None)
+            #            #error_items.append(SegError(_err_cde, _err_str, None))
+            #    self.mandatory_segs_missing = [x for x in self.mandatory_segs_missing if x[0].pos == cur_pos]
 
-            if mandatory_segs_missing is not None:
-                for (_seg_node, _seg_data, _err_cde, _err_str, _seg_count, _cur_line, _ls_id) in mandatory_segs_missing:
-                    # Create errors if not also at current position
-                    if _seg_node.pos != cur_pos:
-                        errh.add_seg(_seg_node, _seg_data, _seg_count, _cur_line, _ls_id)
-                        errh.seg_error(_err_cde, _err_str, None)
-                        #error_items.append(SegError(_err_cde, _err_str, None))
-                mandatory_segs_missing = [x for x in mandatory_segs_missing if x[0].pos == cur_pos]
-
-            #_m_error_items = self._flush_mandatory_segs(errh)
+            _m_error_items = self._flush_mandatory_segs(errh)
             #error_items.extend(_m_error_items)
             return (first_child_node, [loop_node], error_items)
         else:

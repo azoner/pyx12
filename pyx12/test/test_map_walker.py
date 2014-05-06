@@ -51,6 +51,16 @@ class Explicit_Loops(WalkerTest):
         self.assertEqual(get_id_list(push), ['GS_LOOP'])
         self._test_find_found('/ISA_LOOP/ISA', seg_data, [], ['GS_LOOP'])
 
+    def test_ISA_to_GS_find(self):
+        node = self.map.getnodebypath('/ISA_LOOP/ISA')
+        self.assertNotEqual(node, None, 'node not found')
+        seg_data = pyx12.segment.Segment('GS*HC', '~', '*', ':')
+        (node, pop, push) = self.walker.find(node, seg_data)
+        self.assertNotEqual(node, None, 'walker failed')
+        self.assertEqual(seg_data.get_seg_id(), node.id)
+        self.assertEqual(get_id_list(pop), [])
+        self.assertEqual(get_id_list(push), ['GS_LOOP'])
+
     def test_GS_to_ST(self):
         self.errh.reset()
         node = self.map.getnodebypath('/ISA_LOOP/GS_LOOP/GS')
@@ -213,7 +223,7 @@ class Implicit_Loops(WalkerTest):
         self.assertEqual(get_id_list(push), ['2110C'])
         self.assertEqual(traverse_path(start_node, pop, push),
                          pop_to_parent_loop(node).get_path())
-        self._test_find_found('/ISA_LOOP/GS_LOOP/ST_LOOP/DETAIL/2000A/2000B/2000C/2100C/2110C/EQ', seg_data, ['2110C'], ['2110C'])
+        #self._test_find_found('/ISA_LOOP/GS_LOOP/ST_LOOP/DETAIL/2000A/2000B/2000C/2100C/2110C/EQ', seg_data, ['2110C'], ['2110C'])
 
     def test_loop_required_fail1(self):
         """
@@ -231,7 +241,7 @@ class Implicit_Loops(WalkerTest):
         self.errh.reset()
         seg_data = pyx12.segment.Segment('HL*2*1*22*0~', '~', '*', ':')
         (node, pop, push, error_items) = self.walker.walk(node, seg_data, self.errh, 5, 4, None)
-        self._test_find_found('/ISA_LOOP/GS_LOOP/ST_LOOP/DETAIL/2000A/HL', seg_data, [], ['2000B'])
+        #self._test_find_found('/ISA_LOOP/GS_LOOP/ST_LOOP/DETAIL/2000A/HL', seg_data, [], ['2000B'])
         #result = node.is_valid(seg_data, self.errh)
         #self.assertFalse(result)
         self.assertEqual(self.errh.err_cde, '3', self.errh.err_str)
@@ -239,6 +249,13 @@ class Implicit_Loops(WalkerTest):
         self.assertEqual(self.errh.seg_id, 'NM1')
         self.assertEqual(get_id_list(pop), [])
         self.assertEqual(get_id_list(push), ['2000B'])
+
+        (node, pop, push) = self.walker.find(node, seg_data)
+        self.walker.wander(node, seg_data, pop, push, 0)
+        self.assertNotEqual(node, None, 'walker failed')
+        self.assertEqual(seg_data.get_seg_id(), node.id)
+        self.assertEqual(get_id_list(pop), popList)
+        self.assertEqual(get_id_list(push), pushList)
 
     def test_match_loop_by_hl_ok(self):
         """
