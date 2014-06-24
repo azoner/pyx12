@@ -179,7 +179,7 @@
           <usage>R</usage>
           <seq>01</seq>
           <valid_codes>
-            <code>RA</code>
+            <code>HS</code>
           </valid_codes>
         </element>
         <element xid="GS02">
@@ -229,7 +229,7 @@
           <usage>R</usage>
           <seq>08</seq>
           <valid_codes>
-            <code>005010X218</code>
+            <code>005010X279A1</code>
           </valid_codes>
         </element>
       </segment>
