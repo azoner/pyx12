@@ -5203,7 +5203,7 @@
                     <element xid="SVD03-07" data_ele="352" usage="S" seq="07" name="Procedure Code Description"/>
                     <element xid="SVD03-08" data_ele="234" usage="N" seq="08" name="Product/Service ID"/>
                   </composite>
-                  <element xid="SVD04" data_ele="234" usage="N" seq="04" name="Service Line Revenue Code"/>
+                  <element xid="SVD04" data_ele="234" usage="R" seq="04" name="Service Line Revenue Code"/>
                   <element xid="SVD05" data_ele="380" usage="R" seq="05" name="Paid Service Unit Count"/>
                   <element xid="SVD06" data_ele="554" usage="S" seq="06" name="Bundled Line Number"/>
                 </segment>
@@ -9902,7 +9902,7 @@
                       <element xid="SVD03-07" data_ele="352" usage="S" seq="07" name="Procedure Code Description"/>
                       <element xid="SVD03-08" data_ele="234" usage="N" seq="08" name="Product/Service ID"/>
                     </composite>
-                    <element xid="SVD04" data_ele="234" usage="N" seq="04" name="Service Line Revenue Code"/>
+                    <element xid="SVD04" data_ele="234" usage="R" seq="04" name="Service Line Revenue Code"/>
                     <element xid="SVD05" data_ele="380" usage="R" seq="05" name="Paid Service Unit Count"/>
                     <element xid="SVD06" data_ele="554" usage="S" seq="06" name="Bundled Line Number"/>
                   </segment>

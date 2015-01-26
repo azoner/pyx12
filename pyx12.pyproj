@@ -11,9 +11,8 @@
     <OutputPath>.</OutputPath>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
-    <InterpreterId>{88fc03ac-2a4e-41cb-aa45-542dd393339c}</InterpreterId>
+    <InterpreterId>{d3290547-e53e-4da0-b574-5b9b7088fce9}</InterpreterId>
     <InterpreterVersion>2.7</InterpreterVersion>
-    <IsWindowsApplication>False</IsWindowsApplication>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)' == 'Debug'" />
   <PropertyGroup Condition="'$(Configuration)' == 'Release'" />
@@ -134,11 +133,8 @@
     <Folder Include="pyx12\tests" />
   </ItemGroup>
   <ItemGroup>
-    <InterpreterReference Include="{2af0f10d-7135-4994-9156-5d01c9c11b7e}\2.7" />
-  </ItemGroup>
-  <ItemGroup>
     <Interpreter Include="testenv\">
-      <Id>{88fc03ac-2a4e-41cb-aa45-542dd393339c}</Id>
+      <Id>{d3290547-e53e-4da0-b574-5b9b7088fce9}</Id>
       <BaseInterpreter>{2af0f10d-7135-4994-9156-5d01c9c11b7e}</BaseInterpreter>
       <Version>2.7</Version>
       <Description>testenv (Python 2.7)</Description>

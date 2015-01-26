@@ -15682,7 +15682,7 @@
                       <element xid="SVD04">
                         <data_ele>234</data_ele>
                         <name>Service Line Revenue Code</name>
-                        <usage>N</usage>
+                        <usage>R</usage>
                         <seq>04</seq>
                       </element>
                       <element xid="SVD05">
@@ -29753,7 +29753,7 @@
                         <element xid="SVD04">
                           <data_ele>234</data_ele>
                           <name>Service Line Revenue Code</name>
-                          <usage>N</usage>
+                          <usage>R</usage>
                           <seq>04</seq>
                         </element>
                         <element xid="SVD05">
