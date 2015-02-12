@@ -244,7 +244,10 @@ def x12n_document(param, src_file, fd_997, fd_html,
     del node
     del src
     del control_map
-    del cur_map
+    try:
+        del cur_map
+    except UnboundLocalError:
+        pass
     try:
         if not valid or errh.get_error_count() > 0:
             return False
