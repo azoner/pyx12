@@ -13,15 +13,12 @@ Parse a ANSI X12N data file.  Validate against a map and codeset values.
 Create XML, HTML, and 997/999 documents based on the data file.
 """
 
-#import os
-#import os.path
 import logging
 
 # Intrapackage imports
 import pyx12.error_handler
 import pyx12.error_997
 import pyx12.error_999
-#import pyx12.error_debug
 import pyx12.error_html
 import pyx12.errors
 import pyx12.map_index
@@ -29,32 +26,6 @@ import pyx12.map_if
 import pyx12.x12file
 from pyx12.map_walker import walk_tree
 import pyx12.x12xml_simple
-
-
-#def apply_loop_count(orig_node, new_map):
-#    """
-#    Apply loop counts to current map
-#    """
-#    logger = logging.getLogger('pyx12')
-#    ct_list = []
-#    orig_node.get_counts_list(ct_list)
-#    for (path, ct) in ct_list:
-#        try:
-#            curnode = new_map.getnodebypath(path)
-#            curnode.set_cur_count(ct)
-#        except pyx12.errors.EngineError:
-#            logger.error('getnodebypath failed:  path "%s" not found' % path)
-
-
-#def reset_isa_counts(cur_map):
-#    cur_map.getnodebypath('/ISA_LOOP').set_cur_count(1)
-#    cur_map.getnodebypath('/ISA_LOOP/ISA').set_cur_count(1)
-
-
-#def reset_gs_counts(cur_map):
-#    cur_map.getnodebypath('/ISA_LOOP/GS_LOOP').reset_cur_count()
-#    cur_map.getnodebypath('/ISA_LOOP/GS_LOOP').set_cur_count(1)
-#    cur_map.getnodebypath('/ISA_LOOP/GS_LOOP/GS').set_cur_count(1)
 
 
 def _reset_counter_to_isa_counts(walker):
@@ -108,6 +79,7 @@ def x12n_document(param, src_file, fd_997, fd_html,
     node = control_map.getnodebypath('/ISA_LOOP/ISA')
     walker = walk_tree()
     icvn = fic = vriic = tspc = None
+    cur_map = None  # we do not initially know the X12 transaction type
     #XXX Generate TA1 if needed.
 
     if fd_html:
@@ -260,7 +232,6 @@ def x12n_document(param, src_file, fd_997, fd_html,
     #errh.accept(visit_debug)
 
     #If this transaction is not a 997/999, generate one.
-    #import ipdb; ipdb.set_trace()
     if fd_997 and fic != 'FA':
         if vriic and vriic[:6] == '004010':
             visit_997 = pyx12.error_997.error_997_visitor(fd_997, src.get_term())
