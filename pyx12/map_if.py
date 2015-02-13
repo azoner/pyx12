@@ -1,5 +1,5 @@
 ######################################################################
-# Copyright (c) Kalamazoo Community Mental Health Services,
+# Copyright (c) 
 # All rights reserved.
 #
 # This software is licensed as described in the file LICENSE.txt, which
