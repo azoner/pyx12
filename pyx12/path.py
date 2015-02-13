@@ -36,7 +36,7 @@ class X12Path(object):
     Interface to an x12 path
     """
 
-    re_seg_id = '(?P<seg_id>[A-Z][A-Z0-9]{1,2})?'
+    re_seg_id = '(?P<seg_id>[A-Za-z][A-Za-z0-9]{1,2})?'
     re_id_val = '(\[(?P<id_val>[A-Z0-9]+)\])?'
     re_ele_idx = '(?P<ele_idx>[0-9]{2})?'
     re_subele_idx = '(-(?P<subele_idx>[0-9]+))?'

@@ -234,13 +234,19 @@ def x12n_document(param, src_file, fd_997, fd_html,
     #If this transaction is not a 997/999, generate one.
     if fd_997 and fic != 'FA':
         if vriic and vriic[:6] == '004010':
-            visit_997 = pyx12.error_997.error_997_visitor(fd_997, src.get_term())
-            errh.accept(visit_997)
-            del visit_997
+            try:
+                visit_997 = pyx12.error_997.error_997_visitor(fd_997, src.get_term())
+                errh.accept(visit_997)
+                del visit_997
+            except Exception:
+                logger.exception('Failed to create 997 response')
         if vriic and vriic[:6] == '005010':
-            visit_999 = pyx12.error_999.error_999_visitor(fd_997, src.get_term())
-            errh.accept(visit_999)
-            del visit_999
+            try:
+                visit_999 = pyx12.error_999.error_999_visitor(fd_997, src.get_term())
+                errh.accept(visit_999)
+                del visit_999
+            except Exception:
+                logger.exception('Failed to create 999 response')
     del node
     del src
     del control_map

@@ -236,6 +236,14 @@ class error_999_visitor(pyx12.error_visitor.error_visitor):
         @param err_st: ST Loop error handler
         @type err_st: L{error_handler.err_st}
         """
+        if err_st is None:
+            raise EngineError('Cannot create AK2 : err_st is None')
+        if err_st.trn_set_id is None:
+            raise EngineError('Cannot create AK2: err_st.trn_set_id was not set')
+        if err_st.trn_set_control_num is None:
+            raise EngineError('Cannot create AK2: err_st.trn_set_control_num was not set')
+        if err_st.vriic is None:
+            raise EngineError('Cannot create AK2: err_st.vriic was not set')
         seg_data = pyx12.segment.Segment('AK2', '~', '*', ':')
         seg_data.set('01', err_st.trn_set_id)
         seg_data.set('02', err_st.trn_set_control_num.strip())

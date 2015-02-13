@@ -17,10 +17,12 @@ treated as a composite element with one sub-element.
 
 All indexing is zero based.
 """
+import re
 
 import pyx12.path
 from pyx12.errors import EngineError
 
+rec_seg_id = re.compile('^[A-Za-z0-9]{2,3}$', re.S)
 
 class Element(object):
     """
@@ -125,6 +127,8 @@ class Composite(object):
             raise EngineError('The sub-element terminator must be a single character, is %s' % (subele_term))
         self.subele_term = subele_term
         self.subele_term_orig = subele_term
+        if ele_str is None:
+            raise EngineError('Element string is None')
         members = ele_str.split(self.subele_term)
         self.elements = []
         for elem in members:
@@ -513,13 +517,18 @@ class Segment(object):
 
     def is_seg_id_valid(self):
         """
-        Is the Segment identifier the correct length
+        Is the Segment identifier valid?
+        EBNF: 
+        <seg_id> ::= <letter_or_digit> <letter_or_digit> [<letter_or_digit>]
         @rtype: boolean
         """
         if not self.seg_id or len(self.seg_id) < 2 or len(self.seg_id) > 3:
             return False
         else:
-            return True
+            m = rec_seg_id.search(self.seg_id)
+            if not m:
+                return False # Invalid char matched
+        return True
 
     def copy(self):
         return self.__copy__()
