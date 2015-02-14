@@ -1,16 +1,14 @@
 <?xml version="1.0"?>
 <!-- 
 ######################################################################
-# Copyright (c) 2001-2005 Kalamazoo Community Mental Health Services,
-#   John Holland <jholland@kazoocmh.org> <john@zoner.org>
+# Copyright (c)
+#   John Holland <john@zoner.org>
 # All rights reserved.
 #
 # This software is licensed as described in the file LICENSE.txt, which
 # you should have received as part of this distribution.
 #
 ######################################################################
-
-#    $Id$
 -->
 
 <xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema">
@@ -35,9 +33,6 @@
 
   <xsd:complexType name="VersionType">
     <xsd:sequence>
-      <xsd:element name="id" type="xsd:token" minOccurs="0"/>
-      <xsd:element name="eff_dte" type="xsd:token" minOccurs="0"/>
-      <xsd:element name="exp_dte" type="xsd:token" minOccurs="0"/>
       <xsd:element name="code" type="xsd:token" maxOccurs="unbounded"/>
     </xsd:sequence>
   </xsd:complexType>

@@ -1,6 +1,6 @@
 ######################################################################
-# Copyright Kalamazoo Community Mental Health Services,
-#   John Holland <jholland@kazoocmh.org> <john@zoner.org>
+# Copyright 
+#   John Holland <john@zoner.org>
 # All rights reserved.
 #
 # This software is licensed as described in the file LICENSE.txt, which

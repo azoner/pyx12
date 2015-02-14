@@ -1,16 +1,14 @@
 <?xml version="1.0"?>
 <!--
 ######################################################################
-# Copyright (c) 2001-2005 Kalamazoo Community Mental Health Services,
-#   John Holland <jholland@kazoocmh.org> <john@zoner.org>
+# Copyright (c)
+#   John Holland <john@zoner.org>
 # All rights reserved.
 #
 # This software is licensed as described in the file LICENSE.txt, which
 # you should have received as part of this distribution.
 #
 ######################################################################
-
-#    $Id$
 -->
 <transaction xid="271">
   <name>HIPAA Health Care Eligibility Benefit Response X092A1-271</name>

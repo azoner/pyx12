@@ -8,13 +8,13 @@ document or can translate to and from an XML representation of the data file."""
 
 setup(
     name="pyx12",
-    version="2.1.1",
+    version="2.2.0",
     long_description=long_description,
     license='BSD',
     description="HIPAA X12 validator, parser and converter",
     keywords='x12 hipaa healthcare edi',
     author="John Holland",
-    author_email="jholland@kazoocmh.org",
+    author_email="john.holland@swmbh.org",
     url="http://github.com/azoner/pyx12",
     platforms='All',
     packages=['pyx12', 'pyx12.scripts'],

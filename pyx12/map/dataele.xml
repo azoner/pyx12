@@ -1,16 +1,14 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <!--
 ######################################################################
-# Copyright (c) 2001-2011 Kalamazoo Community Mental Health Services,
-#   John Holland <jholland@kazoocmh.org> <john@zoner.org>
+# Copyright (c)
+#   John Holland <john@zoner.org>
 # All rights reserved.
 #
 # This software is licensed as described in the file LICENSE.txt, which
 # you should have received as part of this distribution.
 #
 ######################################################################
-
-#    $Id$
 -->
 <data_elements>
   <data_ele ele_num="100" data_type="ID" min_len="3" max_len="3" name="Currency Code"/>

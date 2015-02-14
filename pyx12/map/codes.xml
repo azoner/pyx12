@@ -1,16 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- 
 ######################################################################
-# Copyright (c) 2001-2007 Kalamazoo Community Mental Health Services,
-#   John Holland <jholland@kazoocmh.org> <john@zoner.org>
+# Copyright (c)
+#   John Holland <john@zoner.org>
 # All rights reserved.
 #
 # This software is licensed as described in the file LICENSE.txt, which
 # you should have received as part of this distribution.
 #
 ######################################################################
-
-#    $Id$
 -->
 <codesets xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <codeset>
@@ -18,8 +16,6 @@
     <name>US State or Province Codes</name>
     <data_ele>156</data_ele>
     <version>
-      <id>20020101</id>
-      <eff_dte>20000101</eff_dte>
       <code>AA</code>
       <code>AB</code>
       <code>AE</code>
@@ -101,8 +97,6 @@
     <source>ISO 3166-1 alpha-2</source>
     <data_ele>26</data_ele>
     <version>
-      <id>20000101</id>
-      <eff_dte>20000101</eff_dte>
       <code>AF</code>
       <code>AL</code>
       <code>DZ</code>
@@ -349,8 +343,6 @@
     <name>Currency Code</name>
     <data_ele>100</data_ele>
     <version>
-      <id>20000101</id>
-      <eff_dte>20000101</eff_dte>
       <code>ADP</code>
       <code>AED</code>
       <code>AFA</code>
@@ -513,8 +505,6 @@
     <id>entity_id</id>
     <name>Entity Identifier Code</name>
     <version>
-      <id>20000101</id>
-      <eff_dte>20000101</eff_dte>
       <code>13</code>
       <code>17</code>
       <code>1E</code>
@@ -740,8 +730,7 @@
     <name>Adjustment Reason Code</name>
     <data_ele>1034</data_ele>
     <version>
-      <id>20000101</id>
-      <eff_dte>20000101</eff_dte>
+      <!-- <eff_dte>20141101</eff_dte> -->
       <code>1</code>
       <code>2</code>
       <code>3</code>
@@ -946,6 +935,70 @@
       <code>202</code>
       <code>203</code>
       <code>204</code>
+      <code>205</code>
+      <code>206</code>
+      <code>207</code>
+      <code>208</code>
+      <code>209</code>
+      <code>210</code>
+      <code>211</code>
+      <code>212</code>
+      <code>213</code>
+      <code>214</code>
+      <code>215</code>
+      <code>216</code>
+      <code>217</code>
+      <code>218</code>
+      <code>219</code>
+      <code>220</code>
+      <code>221</code>
+      <code>222</code>
+      <code>223</code>
+      <code>224</code>
+      <code>225</code>
+      <code>226</code>
+      <code>227</code>
+      <code>228</code>
+      <code>229</code>
+      <code>230</code>
+      <code>231</code>
+      <code>232</code>
+      <code>233</code>
+      <code>234</code>
+      <code>235</code>
+      <code>236</code>
+      <code>237</code>
+      <code>238</code>
+      <code>239</code>
+      <code>240</code>
+      <code>241</code>
+      <code>242</code>
+      <code>243</code>
+      <code>244</code>
+      <code>245</code>
+      <code>246</code>
+      <code>247</code>
+      <code>248</code>
+      <code>249</code>
+      <code>250</code>
+      <code>251</code>
+      <code>252</code>
+      <code>253</code>
+      <code>254</code>
+      <code>255</code>
+      <code>256</code>
+      <code>257</code>
+      <code>258</code>
+      <code>259</code>
+      <code>260</code>
+      <code>261</code>
+      <code>262</code>
+      <code>263</code>
+      <code>264</code>
+      <code>265</code>
+      <code>266</code>
+      <code>267</code>
+      <code>268</code>
       <code>A0</code>
       <code>A1</code>
       <code>A2</code>
@@ -999,6 +1052,29 @@
       <code>D19</code>
       <code>D20</code>
       <code>D21</code>
+      <code>P1</code>
+      <code>P2</code>
+      <code>P3</code>
+      <code>P4</code>
+      <code>P5</code>
+      <code>P6</code>
+      <code>P7</code>
+      <code>P8</code>
+      <code>P9</code>
+      <code>P10</code>
+      <code>P11</code>
+      <code>P12</code>
+      <code>P13</code>
+      <code>P14</code>
+      <code>P15</code>
+      <code>P16</code>
+      <code>P17</code>
+      <code>P18</code>
+      <code>P19</code>
+      <code>P20</code>
+      <code>P21</code>
+      <code>P22</code>
+      <code>P23</code>
       <code>W1</code>
     </version>
   </codeset>
@@ -1007,8 +1083,7 @@
     <name>Remark Code</name>
     <data_ele>127</data_ele>
     <version>
-      <id>20000101</id>
-      <eff_dte>20000101</eff_dte>
+      <!-- <eff_dte>20141101</eff_dte> -->
       <code>M1</code>
       <code>M2</code>
       <code>M3</code>
@@ -1367,14 +1442,653 @@
       <code>N92</code>
       <code>N93</code>
       <code>N94</code>
-    </version>
+      <code>N95</code>
+      <code>N96</code>
+      <code>N97</code>
+      <code>N98</code>
+      <code>N99</code>
+      <code>N100</code>
+      <code>N101</code>
+      <code>N102</code>
+      <code>N103</code>
+      <code>N104</code>
+      <code>N105</code>
+      <code>N106</code>
+      <code>N107</code>
+      <code>N108</code>
+      <code>N109</code>
+      <code>N110</code>
+      <code>N111</code>
+      <code>N112</code>
+      <code>N113</code>
+      <code>N114</code>
+      <code>N115</code>
+      <code>N116</code>
+      <code>N117</code>
+      <code>N118</code>
+      <code>N119</code>
+      <code>N120</code>
+      <code>N121</code>
+      <code>N122</code>
+      <code>N123</code>
+      <code>N124</code>
+      <code>N125</code>
+      <code>N126</code>
+      <code>N127</code>
+      <code>N128</code>
+      <code>N129</code>
+      <code>N130</code>
+      <code>N131</code>
+      <code>N132</code>
+      <code>N133</code>
+      <code>N134</code>
+      <code>N135</code>
+      <code>N136</code>
+      <code>N137</code>
+      <code>N138</code>
+      <code>N139</code>
+      <code>N140</code>
+      <code>N141</code>
+      <code>N142</code>
+      <code>N143</code>
+      <code>N144</code>
+      <code>N145</code>
+      <code>N146</code>
+      <code>N147</code>
+      <code>N148</code>
+      <code>N149</code>
+      <code>N150</code>
+      <code>N151</code>
+      <code>N152</code>
+      <code>N153</code>
+      <code>N154</code>
+      <code>N155</code>
+      <code>N156</code>
+      <code>N157</code>
+      <code>N158</code>
+      <code>N159</code>
+      <code>N160</code>
+      <code>N161</code>
+      <code>N162</code>
+      <code>N163</code>
+      <code>N164</code>
+      <code>N165</code>
+      <code>N166</code>
+      <code>N167</code>
+      <code>N168</code>
+      <code>N169</code>
+      <code>N170</code>
+      <code>N171</code>
+      <code>N172</code>
+      <code>N173</code>
+      <code>N174</code>
+      <code>N175</code>
+      <code>N176</code>
+      <code>N177</code>
+      <code>N178</code>
+      <code>N179</code>
+      <code>N180</code>
+      <code>N181</code>
+      <code>N182</code>
+      <code>N183</code>
+      <code>N184</code>
+      <code>N185</code>
+      <code>N186</code>
+      <code>N187</code>
+      <code>N188</code>
+      <code>N189</code>
+      <code>N190</code>
+      <code>N191</code>
+      <code>N192</code>
+      <code>N193</code>
+      <code>N194</code>
+      <code>N195</code>
+      <code>N196</code>
+      <code>N197</code>
+      <code>N198</code>
+      <code>N199</code>
+      <code>N200</code>
+      <code>N201</code>
+      <code>N202</code>
+      <code>N203</code>
+      <code>N204</code>
+      <code>N205</code>
+      <code>N206</code>
+      <code>N207</code>
+      <code>N208</code>
+      <code>N209</code>
+      <code>N210</code>
+      <code>N211</code>
+      <code>N212</code>
+      <code>N213</code>
+      <code>N214</code>
+      <code>N215</code>
+      <code>N216</code>
+      <code>N217</code>
+      <code>N218</code>
+      <code>N219</code>
+      <code>N220</code>
+      <code>N221</code>
+      <code>N222</code>
+      <code>N223</code>
+      <code>N224</code>
+      <code>N225</code>
+      <code>N226</code>
+      <code>N227</code>
+      <code>N228</code>
+      <code>N229</code>
+      <code>N230</code>
+      <code>N231</code>
+      <code>N232</code>
+      <code>N233</code>
+      <code>N234</code>
+      <code>N235</code>
+      <code>N236</code>
+      <code>N237</code>
+      <code>N238</code>
+      <code>N239</code>
+      <code>N240</code>
+      <code>N241</code>
+      <code>N242</code>
+      <code>N243</code>
+      <code>N244</code>
+      <code>N245</code>
+      <code>N246</code>
+      <code>N247</code>
+      <code>N248</code>
+      <code>N249</code>
+      <code>N250</code>
+      <code>N251</code>
+      <code>N252</code>
+      <code>N253</code>
+      <code>N254</code>
+      <code>N255</code>
+      <code>N256</code>
+      <code>N257</code>
+      <code>N258</code>
+      <code>N259</code>
+      <code>N260</code>
+      <code>N261</code>
+      <code>N262</code>
+      <code>N263</code>
+      <code>N264</code>
+      <code>N265</code>
+      <code>N266</code>
+      <code>N267</code>
+      <code>N268</code>
+      <code>N269</code>
+      <code>N270</code>
+      <code>N271</code>
+      <code>N272</code>
+      <code>N273</code>
+      <code>N274</code>
+      <code>N275</code>
+      <code>N276</code>
+      <code>N277</code>
+      <code>N278</code>
+      <code>N279</code>
+      <code>N280</code>
+      <code>N281</code>
+      <code>N282</code>
+      <code>N283</code>
+      <code>N284</code>
+      <code>N285</code>
+      <code>N286</code>
+      <code>N287</code>
+      <code>N288</code>
+      <code>N289</code>
+      <code>N290</code>
+      <code>N291</code>
+      <code>N292</code>
+      <code>N293</code>
+      <code>N294</code>
+      <code>N295</code>
+      <code>N296</code>
+      <code>N297</code>
+      <code>N298</code>
+      <code>N299</code>
+      <code>N300</code>
+      <code>N301</code>
+      <code>N302</code>
+      <code>N303</code>
+      <code>N304</code>
+      <code>N305</code>
+      <code>N306</code>
+      <code>N307</code>
+      <code>N308</code>
+      <code>N309</code>
+      <code>N310</code>
+      <code>N311</code>
+      <code>N312</code>
+      <code>N313</code>
+      <code>N314</code>
+      <code>N315</code>
+      <code>N316</code>
+      <code>N317</code>
+      <code>N318</code>
+      <code>N319</code>
+      <code>N320</code>
+      <code>N321</code>
+      <code>N322</code>
+      <code>N323</code>
+      <code>N324</code>
+      <code>N325</code>
+      <code>N326</code>
+      <code>N327</code>
+      <code>N328</code>
+      <code>N329</code>
+      <code>N330</code>
+      <code>N331</code>
+      <code>N332</code>
+      <code>N333</code>
+      <code>N334</code>
+      <code>N335</code>
+      <code>N336</code>
+      <code>N337</code>
+      <code>N338</code>
+      <code>N339</code>
+      <code>N340</code>
+      <code>N341</code>
+      <code>N342</code>
+      <code>N343</code>
+      <code>N344</code>
+      <code>N345</code>
+      <code>N346</code>
+      <code>N347</code>
+      <code>N348</code>
+      <code>N349</code>
+      <code>N350</code>
+      <code>N351</code>
+      <code>N352</code>
+      <code>N353</code>
+      <code>N354</code>
+      <code>N355</code>
+      <code>N356</code>
+      <code>N357</code>
+      <code>N358</code>
+      <code>N359</code>
+      <code>N360</code>
+      <code>N361</code>
+      <code>N362</code>
+      <code>N363</code>
+      <code>N364</code>
+      <code>N365</code>
+      <code>N366</code>
+      <code>N367</code>
+      <code>N368</code>
+      <code>N369</code>
+      <code>N370</code>
+      <code>N371</code>
+      <code>N372</code>
+      <code>N373</code>
+      <code>N374</code>
+      <code>N375</code>
+      <code>N376</code>
+      <code>N377</code>
+      <code>N378</code>
+      <code>N379</code>
+      <code>N380</code>
+      <code>N381</code>
+      <code>N382</code>
+      <code>N383</code>
+      <code>N384</code>
+      <code>N385</code>
+      <code>N386</code>
+      <code>N387</code>
+      <code>N388</code>
+      <code>N389</code>
+      <code>N390</code>
+      <code>N391</code>
+      <code>N392</code>
+      <code>N393</code>
+      <code>N394</code>
+      <code>N395</code>
+      <code>N396</code>
+      <code>N397</code>
+      <code>N398</code>
+      <code>N399</code>
+      <code>N400</code>
+      <code>N401</code>
+      <code>N402</code>
+      <code>N403</code>
+      <code>N404</code>
+      <code>N405</code>
+      <code>N406</code>
+      <code>N407</code>
+      <code>N408</code>
+      <code>N409</code>
+      <code>N410</code>
+      <code>N411</code>
+      <code>N412</code>
+      <code>N413</code>
+      <code>N414</code>
+      <code>N415</code>
+      <code>N416</code>
+      <code>N417</code>
+      <code>N418</code>
+      <code>N419</code>
+      <code>N420</code>
+      <code>N421</code>
+      <code>N422</code>
+      <code>N423</code>
+      <code>N424</code>
+      <code>N425</code>
+      <code>N426</code>
+      <code>N427</code>
+      <code>N428</code>
+      <code>N429</code>
+      <code>N430</code>
+      <code>N431</code>
+      <code>N432</code>
+      <code>N433</code>
+      <code>N434</code>
+      <code>N435</code>
+      <code>N436</code>
+      <code>N437</code>
+      <code>N438</code>
+      <code>N439</code>
+      <code>N440</code>
+      <code>N441</code>
+      <code>N442</code>
+      <code>N443</code>
+      <code>N444</code>
+      <code>N445</code>
+      <code>N446</code>
+      <code>N447</code>
+      <code>N448</code>
+      <code>N449</code>
+      <code>N450</code>
+      <code>N451</code>
+      <code>N452</code>
+      <code>N453</code>
+      <code>N454</code>
+      <code>N455</code>
+      <code>N456</code>
+      <code>N457</code>
+      <code>N458</code>
+      <code>N459</code>
+      <code>N460</code>
+      <code>N461</code>
+      <code>N462</code>
+      <code>N463</code>
+      <code>N464</code>
+      <code>N465</code>
+      <code>N466</code>
+      <code>N467</code>
+      <code>N468</code>
+      <code>N469</code>
+      <code>N470</code>
+      <code>N471</code>
+      <code>N472</code>
+      <code>N473</code>
+      <code>N474</code>
+      <code>N475</code>
+      <code>N476</code>
+      <code>N477</code>
+      <code>N478</code>
+      <code>N479</code>
+      <code>N480</code>
+      <code>N481</code>
+      <code>N482</code>
+      <code>N483</code>
+      <code>N484</code>
+      <code>N485</code>
+      <code>N486</code>
+      <code>N487</code>
+      <code>N488</code>
+      <code>N489</code>
+      <code>N490</code>
+      <code>N491</code>
+      <code>N492</code>
+      <code>N493</code>
+      <code>N494</code>
+      <code>N495</code>
+      <code>N496</code>
+      <code>N497</code>
+      <code>N498</code>
+      <code>N499</code>
+      <code>N500</code>
+      <code>N501</code>
+      <code>N502</code>
+      <code>N503</code>
+      <code>N504</code>
+      <code>N505</code>
+      <code>N506</code>
+      <code>N507</code>
+      <code>N508</code>
+      <code>N509</code>
+      <code>N510</code>
+      <code>N511</code>
+      <code>N512</code>
+      <code>N513</code>
+      <code>N514</code>
+      <code>N515</code>
+      <code>N516</code>
+      <code>N517</code>
+      <code>N518</code>
+      <code>N519</code>
+      <code>N520</code>
+      <code>N521</code>
+      <code>N522</code>
+      <code>N523</code>
+      <code>N524</code>
+      <code>N525</code>
+      <code>N526</code>
+      <code>N527</code>
+      <code>N528</code>
+      <code>N529</code>
+      <code>N530</code>
+      <code>N531</code>
+      <code>N532</code>
+      <code>N533</code>
+      <code>N534</code>
+      <code>N535</code>
+      <code>N536</code>
+      <code>N537</code>
+      <code>N538</code>
+      <code>N539</code>
+      <code>N540</code>
+      <code>N541</code>
+      <code>N542</code>
+      <code>N543</code>
+      <code>N544</code>
+      <code>N545</code>
+      <code>N546</code>
+      <code>N547</code>
+      <code>N548</code>
+      <code>N549</code>
+      <code>N550</code>
+      <code>N551</code>
+      <code>N552</code>
+      <code>N553</code>
+      <code>N554</code>
+      <code>N555</code>
+      <code>N556</code>
+      <code>N557</code>
+      <code>N558</code>
+      <code>N559</code>
+      <code>N560</code>
+      <code>N561</code>
+      <code>N562</code>
+      <code>N563</code>
+      <code>N564</code>
+      <code>N565</code>
+      <code>N566</code>
+      <code>N567</code>
+      <code>N568</code>
+      <code>N569</code>
+      <code>N570</code>
+      <code>N571</code>
+      <code>N572</code>
+      <code>N573</code>
+      <code>N574</code>
+      <code>N575</code>
+      <code>N576</code>
+      <code>N577</code>
+      <code>N578</code>
+      <code>N579</code>
+      <code>N580</code>
+      <code>N581</code>
+      <code>N582</code>
+      <code>N583</code>
+      <code>N584</code>
+      <code>N585</code>
+      <code>N586</code>
+      <code>N587</code>
+      <code>N588</code>
+      <code>N589</code>
+      <code>N590</code>
+      <code>N591</code>
+      <code>N592</code>
+      <code>N593</code>
+      <code>N594</code>
+      <code>N595</code>
+      <code>N596</code>
+      <code>N597</code>
+      <code>N598</code>
+      <code>N599</code>
+      <code>N600</code>
+      <code>N601</code>
+      <code>N602</code>
+      <code>N603</code>
+      <code>N604</code>
+      <code>N605</code>
+      <code>N606</code>
+      <code>N607</code>
+      <code>N608</code>
+      <code>N609</code>
+      <code>N610</code>
+      <code>N611</code>
+      <code>N612</code>
+      <code>N613</code>
+      <code>N614</code>
+      <code>N615</code>
+      <code>N616</code>
+      <code>N617</code>
+      <code>N618</code>
+      <code>N619</code>
+      <code>N620</code>
+      <code>N621</code>
+      <code>N622</code>
+      <code>N623</code>
+      <code>N624</code>
+      <code>N625</code>
+      <code>N626</code>
+      <code>N627</code>
+      <code>N628</code>
+      <code>N629</code>
+      <code>N630</code>
+      <code>N631</code>
+      <code>N632</code>
+      <code>N633</code>
+      <code>N634</code>
+      <code>N635</code>
+      <code>N636</code>
+      <code>N637</code>
+      <code>N638</code>
+      <code>N639</code>
+      <code>N640</code>
+      <code>N641</code>
+      <code>N642</code>
+      <code>N643</code>
+      <code>N644</code>
+      <code>N645</code>
+      <code>N646</code>
+      <code>N647</code>
+      <code>N648</code>
+      <code>N649</code>
+      <code>N650</code>
+      <code>N651</code>
+      <code>N652</code>
+      <code>N653</code>
+      <code>N654</code>
+      <code>N655</code>
+      <code>N656</code>
+      <code>N657</code>
+      <code>N658</code>
+      <code>N659</code>
+      <code>N660</code>
+      <code>N661</code>
+      <code>N662</code>
+      <code>N663</code>
+      <code>N664</code>
+      <code>N665</code>
+      <code>N666</code>
+      <code>N667</code>
+      <code>N668</code>
+      <code>N669</code>
+      <code>N670</code>
+      <code>N671</code>
+      <code>N672</code>
+      <code>N673</code>
+      <code>N674</code>
+      <code>N675</code>
+      <code>N676</code>
+      <code>N677</code>
+      <code>N678</code>
+      <code>N679</code>
+      <code>N680</code>
+      <code>N681</code>
+      <code>N682</code>
+      <code>N683</code>
+      <code>N684</code>
+      <code>N685</code>
+      <code>N686</code>
+      <code>N687</code>
+      <code>N688</code>
+      <code>N689</code>
+      <code>N690</code>
+      <code>N691</code>
+      <code>N692</code>
+      <code>N693</code>
+      <code>N694</code>
+      <code>N695</code>
+      <code>N696</code>
+      <code>N697</code>
+      <code>N698</code>
+      <code>N699</code>
+      <code>N700</code>
+      <code>N701</code>
+      <code>N702</code>
+      <code>N703</code>
+      <code>N704</code>
+      <code>N705</code>
+      <code>N706</code>
+      <code>N707</code>
+      <code>N708</code>
+      <code>N709</code>
+      <code>N710</code>
+      <code>N711</code>
+      <code>N712</code>
+      <code>N713</code>
+      <code>N714</code>
+      <code>N715</code>
+      <code>N716</code>
+      <code>N717</code>
+      <code>N718</code>
+      <code>N719</code>
+      <code>N720</code>
+      <code>N721</code>
+      <code>N722</code>
+      <code>N723</code>
+      <code>N724</code>
+      <code>N725</code>
+      <code>N726</code>
+      <code>N727</code>
+      <code>N728</code>
+      <code>N729</code>
+      <code>N730</code>
+      <code>N731</code>
+      <code>N732</code>
+      <code>N733</code>
+      <code>N734</code>
+   </version>
   </codeset>
   <codeset>
     <id>service_type</id>
     <name>Service Type Code</name>
     <version>
-      <id>20000101</id>
-      <eff_dte>20000101</eff_dte>
+        <!-- <eff_dte>20140701</eff_dte> -->
       <code>1</code>
       <code>2</code>
       <code>3</code>
@@ -1499,6 +2213,9 @@
       <code>AO</code>
       <code>AQ</code>
       <code>AR</code>
+      <code>B1</code>
+      <code>B1</code>
+      <code>B3</code>
       <code>BA</code>
       <code>BB</code>
       <code>BC</code>
@@ -1517,6 +2234,82 @@
       <code>BQ</code>
       <code>BR</code>
       <code>BS</code>
+      <code>BT</code>
+      <code>BU</code>
+      <code>BV</code>
+      <code>BW</code>
+      <code>BX</code>
+      <code>BY</code>
+      <code>BZ</code>
+      <code>C1</code>
+      <code>CK</code>
+      <code>CL</code>
+      <code>CM</code>
+      <code>CN</code>
+      <code>CO</code>
+      <code>CP</code>
+      <code>CQ</code>
+      <code>DG</code>
+      <code>DM</code>
+      <code>DS</code>
+      <code>E1</code>
+      <code>E2</code>
+      <code>E3</code>
+      <code>E4</code>
+      <code>E5</code>
+      <code>E6</code>
+      <code>E7</code>
+      <code>E8</code>
+      <code>E9</code>
+      <code>E10</code>
+      <code>E11</code>
+      <code>E12</code>
+      <code>E13</code>
+      <code>E14</code>
+      <code>E15</code>
+      <code>E16</code>
+      <code>E17</code>
+      <code>E18</code>
+      <code>E19</code>
+      <code>E20</code>
+      <code>E21</code>
+      <code>E22</code>
+      <code>E23</code>
+      <code>E24</code>
+      <code>E25</code>
+      <code>E26</code>
+      <code>E27</code>
+      <code>E28</code>
+      <code>E29</code>
+      <code>E30</code>
+      <code>E31</code>
+      <code>E32</code>
+      <code>E33</code>
+      <code>E34</code>
+      <code>E35</code>
+      <code>E36</code>
+      <code>EA</code>
+      <code>EB</code>
+      <code>EC</code>
+      <code>ED</code>
+      <code>EE</code>
+      <code>EF</code>
+      <code>GF</code>
+      <code>GN</code>
+      <code>GY</code>
+      <code>IC</code>
+      <code>MH</code>
+      <code>NI</code>
+      <code>ON</code>
+      <code>PE</code>
+      <code>PT</code>
+      <code>PU</code>
+      <code>RN</code>
+      <code>RT</code>
+      <code>SMH</code>
+      <code>TC</code>
+      <code>TN</code>
+      <code>UC</code>
     </version>
   </codeset>
   <codeset>
@@ -1524,16 +2317,22 @@
     <name>Health Care Claim Status Category Code (Code Source 507)</name>
     <data_ele>1271</data_ele>
     <version>
-      <id>20000101</id>
-      <eff_dte>20000101</eff_dte>
+        <!-- <eff_dte>20140701</eff_dte> -->
       <code>A0</code>
       <code>A1</code>
       <code>A2</code>
       <code>A3</code>
       <code>A4</code>
+      <code>A5</code>
+      <code>A6</code>
+      <code>A7</code>
+      <code>A8</code>
       <code>D0</code>
       <code>E0</code>
       <code>E1</code>
+      <code>E2</code>
+      <code>E3</code>
+      <code>E4</code>
       <code>F0</code>
       <code>F1</code>
       <code>F2</code>
@@ -1547,11 +2346,24 @@
       <code>P2</code>
       <code>P3</code>
       <code>P4</code>
+      <code>P5</code>
       <code>R0</code>
       <code>R1</code>
       <code>R3</code>
       <code>R4</code>
       <code>R5</code>
+      <code>R6</code>
+      <code>R7</code>
+      <code>R8</code>
+      <code>R9</code>
+      <code>R10</code>
+      <code>R11</code>
+      <code>R12</code>
+      <code>R13</code>
+      <code>R14</code>
+      <code>R15</code>
+      <code>R16</code>
+      <code>R17</code>
       <code>RQ</code>
       <code>X0</code>
     </version>
@@ -1561,8 +2373,7 @@
     <name>Health Care Claim Status Code (Code Source 508)</name>
     <data_ele>1271</data_ele>
     <version>
-      <id>20000101</id>
-      <eff_dte>20000101</eff_dte>
+        <!-- <eff_dte>20141101</eff_dte> -->
       <code>0</code>
       <code>1</code>
       <code>2</code>
@@ -2037,6 +2848,291 @@
       <code>484</code>
       <code>485</code>
       <code>486</code>
+      <code>487</code>
+      <code>488</code>
+      <code>489</code>
+      <code>490</code>
+      <code>491</code>
+      <code>492</code>
+      <code>493</code>
+      <code>494</code>
+      <code>495</code>
+      <code>496</code>
+      <code>497</code>
+      <code>498</code>
+      <code>499</code>
+      <code>500</code>
+      <code>501</code>
+      <code>502</code>
+      <code>503</code>
+      <code>504</code>
+      <code>505</code>
+      <code>506</code>
+      <code>507</code>
+      <code>508</code>
+      <code>509</code>
+      <code>510</code>
+      <code>511</code>
+      <code>512</code>
+      <code>513</code>
+      <code>514</code>
+      <code>515</code>
+      <code>516</code>
+      <code>517</code>
+      <code>518</code>
+      <code>519</code>
+      <code>520</code>
+      <code>521</code>
+      <code>522</code>
+      <code>523</code>
+      <code>524</code>
+      <code>525</code>
+      <code>526</code>
+      <code>527</code>
+      <code>528</code>
+      <code>529</code>
+      <code>530</code>
+      <code>531</code>
+      <code>532</code>
+      <code>533</code>
+      <code>534</code>
+      <code>535</code>
+      <code>536</code>
+      <code>537</code>
+      <code>538</code>
+      <code>539</code>
+      <code>540</code>
+      <code>541</code>
+      <code>542</code>
+      <code>543</code>
+      <code>544</code>
+      <code>545</code>
+      <code>546</code>
+      <code>547</code>
+      <code>548</code>
+      <code>549</code>
+      <code>550</code>
+      <code>551</code>
+      <code>552</code>
+      <code>553</code>
+      <code>554</code>
+      <code>555</code>
+      <code>556</code>
+      <code>557</code>
+      <code>558</code>
+      <code>559</code>
+      <code>560</code>
+      <code>561</code>
+      <code>562</code>
+      <code>563</code>
+      <code>564</code>
+      <code>565</code>
+      <code>566</code>
+      <code>567</code>
+      <code>568</code>
+      <code>569</code>
+      <code>570</code>
+      <code>571</code>
+      <code>572</code>
+      <code>573</code>
+      <code>574</code>
+      <code>575</code>
+      <code>576</code>
+      <code>577</code>
+      <code>578</code>
+      <code>579</code>
+      <code>580</code>
+      <code>581</code>
+      <code>582</code>
+      <code>583</code>
+      <code>584</code>
+      <code>585</code>
+      <code>586</code>
+      <code>587</code>
+      <code>588</code>
+      <code>589</code>
+      <code>590</code>
+      <code>591</code>
+      <code>592</code>
+      <code>593</code>
+      <code>594</code>
+      <code>595</code>
+      <code>596</code>
+      <code>597</code>
+      <code>598</code>
+      <code>599</code>
+      <code>600</code>
+      <code>601</code>
+      <code>602</code>
+      <code>603</code>
+      <code>604</code>
+      <code>605</code>
+      <code>606</code>
+      <code>607</code>
+      <code>608</code>
+      <code>609</code>
+      <code>610</code>
+      <code>611</code>
+      <code>612</code>
+      <code>613</code>
+      <code>614</code>
+      <code>615</code>
+      <code>616</code>
+      <code>617</code>
+      <code>618</code>
+      <code>619</code>
+      <code>620</code>
+      <code>621</code>
+      <code>622</code>
+      <code>623</code>
+      <code>624</code>
+      <code>625</code>
+      <code>626</code>
+      <code>627</code>
+      <code>628</code>
+      <code>629</code>
+      <code>630</code>
+      <code>631</code>
+      <code>632</code>
+      <code>633</code>
+      <code>634</code>
+      <code>635</code>
+      <code>636</code>
+      <code>637</code>
+      <code>638</code>
+      <code>639</code>
+      <code>640</code>
+      <code>641</code>
+      <code>642</code>
+      <code>643</code>
+      <code>644</code>
+      <code>645</code>
+      <code>646</code>
+      <code>647</code>
+      <code>648</code>
+      <code>649</code>
+      <code>650</code>
+      <code>651</code>
+      <code>652</code>
+      <code>653</code>
+      <code>654</code>
+      <code>655</code>
+      <code>656</code>
+      <code>657</code>
+      <code>658</code>
+      <code>659</code>
+      <code>660</code>
+      <code>661</code>
+      <code>662</code>
+      <code>663</code>
+      <code>664</code>
+      <code>665</code>
+      <code>666</code>
+      <code>667</code>
+      <code>668</code>
+      <code>669</code>
+      <code>670</code>
+      <code>671</code>
+      <code>672</code>
+      <code>673</code>
+      <code>674</code>
+      <code>675</code>
+      <code>676</code>
+      <code>677</code>
+      <code>678</code>
+      <code>679</code>
+      <code>680</code>
+      <code>681</code>
+      <code>682</code>
+      <code>683</code>
+      <code>684</code>
+      <code>685</code>
+      <code>686</code>
+      <code>687</code>
+      <code>688</code>
+      <code>689</code>
+      <code>690</code>
+      <code>691</code>
+      <code>692</code>
+      <code>693</code>
+      <code>694</code>
+      <code>695</code>
+      <code>696</code>
+      <code>697</code>
+      <code>698</code>
+      <code>699</code>
+      <code>700</code>
+      <code>701</code>
+      <code>702</code>
+      <code>703</code>
+      <code>704</code>
+      <code>705</code>
+      <code>706</code>
+      <code>707</code>
+      <code>708</code>
+      <code>709</code>
+      <code>710</code>
+      <code>711</code>
+      <code>712</code>
+      <code>713</code>
+      <code>714</code>
+      <code>715</code>
+      <code>716</code>
+      <code>717</code>
+      <code>718</code>
+      <code>719</code>
+      <code>720</code>
+      <code>721</code>
+      <code>722</code>
+      <code>723</code>
+      <code>724</code>
+      <code>725</code>
+      <code>726</code>
+      <code>727</code>
+      <code>728</code>
+      <code>729</code>
+      <code>730</code>
+      <code>731</code>
+      <code>732</code>
+      <code>733</code>
+      <code>734</code>
+      <code>735</code>
+      <code>736</code>
+      <code>737</code>
+      <code>738</code>
+      <code>739</code>
+      <code>740</code>
+      <code>741</code>
+      <code>742</code>
+      <code>743</code>
+      <code>744</code>
+      <code>745</code>
+      <code>746</code>
+      <code>747</code>
+      <code>748</code>
+      <code>749</code>
+      <code>750</code>
+      <code>751</code>
+      <code>752</code>
+      <code>753</code>
+      <code>754</code>
+      <code>755</code>
+      <code>756</code>
+      <code>757</code>
+      <code>758</code>
+      <code>759</code>
+      <code>760</code>
+      <code>761</code>
+      <code>762</code>
+      <code>763</code>
+      <code>764</code>
+      <code>765</code>
+      <code>766</code>
+      <code>767</code>
+      <code>768</code>
+      <code>769</code>
+      <code>770</code>
+      <code>771</code>
     </version>
   </codeset>
   <codeset>
@@ -2044,8 +3140,6 @@
     <name>Place of Service - code source 237</name>
     <data_ele>1331</data_ele>
     <version>
-      <id>20020101</id>
-      <eff_dte>20000101</eff_dte>
       <code>01</code>
       <code>03</code>
       <code>04</code>

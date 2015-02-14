@@ -1,8 +1,8 @@
 #!/usr/bin/env python
 
 ######################################################################
-# Copyright (c) Kalamazoo Community Mental Health Services,
-#   John Holland <jholland@kazoocmh.org> <john@zoner.org>
+# Copyright (c) 
+#   John Holland <john@zoner.org>
 # All rights reserved.
 #
 # This software is licensed as described in the file LICENSE.txt, which

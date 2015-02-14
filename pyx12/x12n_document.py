@@ -1,6 +1,6 @@
 #####################################################################
-# Copyright Kalamazoo Community Mental Health Services,
-#   John Holland <jholland@kazoocmh.org> <john@zoner.org>
+# Copyright 
+#   John Holland <john@zoner.org>
 # All rights reserved.
 #
 # This software is licensed as described in the file LICENSE.txt, which
@@ -13,15 +13,12 @@ Parse a ANSI X12N data file.  Validate against a map and codeset values.
 Create XML, HTML, and 997/999 documents based on the data file.
 """
 
-#import os
-#import os.path
 import logging
 
 # Intrapackage imports
 import pyx12.error_handler
 import pyx12.error_997
 import pyx12.error_999
-#import pyx12.error_debug
 import pyx12.error_html
 import pyx12.errors
 import pyx12.map_index
@@ -64,6 +61,7 @@ def x12n_document(param, src_file, fd_997, fd_html,
     node = control_map.getnodebypath('/ISA_LOOP/ISA')
     walker = walk_tree()
     icvn = fic = vriic = tspc = None
+    cur_map = None  # we do not initially know the X12 transaction type
     #XXX Generate TA1 if needed.
 
     if fd_html:
@@ -205,17 +203,26 @@ def x12n_document(param, src_file, fd_997, fd_html,
     #If this transaction is not a 997/999, generate one.
     if fd_997 and fic != 'FA':
         if vriic and vriic[:6] == '004010':
-            visit_997 = pyx12.error_997.error_997_visitor(fd_997, src.get_term())
-            errh.accept(visit_997)
-            del visit_997
+            try:
+                visit_997 = pyx12.error_997.error_997_visitor(fd_997, src.get_term())
+                errh.accept(visit_997)
+                del visit_997
+            except Exception:
+                logger.exception('Failed to create 997 response')
         if vriic and vriic[:6] == '005010':
-            visit_999 = pyx12.error_999.error_999_visitor(fd_997, src.get_term())
-            errh.accept(visit_999)
-            del visit_999
+            try:
+                visit_999 = pyx12.error_999.error_999_visitor(fd_997, src.get_term())
+                errh.accept(visit_999)
+                del visit_999
+            except Exception:
+                logger.exception('Failed to create 999 response')
     del node
     del src
     del control_map
-    del cur_map
+    try:
+        del cur_map
+    except UnboundLocalError:
+        pass
     try:
         if not valid or errh.get_error_count() > 0:
             return False
