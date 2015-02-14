@@ -51,8 +51,6 @@ class ExternalCodes(object):
         else:
             logger.debug("Looking for codes file '{}' in pkg_resources".format(codes_file))
             code_fd = resource_stream(__name__, os.path.join('map', codes_file))
-        codeset_id = None
-        #base_name = None
 
         self.exclude_list = exclude.split(',') if exclude is not None else []
 
@@ -65,6 +63,7 @@ class ExternalCodes(object):
                 codes.append(code.text)
             self.codes[codeset_id] = {'name': name, 'dataele':
                                       data_ele, 'codes': codes}
+
 
     def isValid(self, key, code, check_dte=None):
         """
@@ -91,9 +90,10 @@ class ExternalCodes(object):
                 return True
         return False
 
-    def debug_print(self):
+
+    def debug_print(self, count=10):
         """
-        Debug print first 10 codes
+        Debug print first <count> codes
         """
         for key in list(self.codes.keys()):
-            print((self.codes[key][:10]))
+            print((self.codes[key][:count]))
