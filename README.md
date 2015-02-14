@@ -31,6 +31,14 @@ As a command line tool
 
     x12valid <filename>
 
+To fix common X12 structural errors
+
+    x12norm --fix --eol <filename>
+
+Examples
+
+    Iterate over a loop
+
 # Licensing
 
 Pyx12 has a BSD license. The full license text is included with the source code for the package. 

@@ -34,6 +34,7 @@ def main():
     parser.add_argument('--eol', '-e', action='store_true', help="Add eol to each segment line")
     parser.add_argument('--inplace', '-i', action='store_true', help="Make changes to files in place")
     parser.add_argument('--fixcounting', '-f', action='store_true', help="Try to fix counting errors")
+    parser.add_argument('--fixwhitespace', '-w', action='store_true', help="Try to fix extra whitespace errors.")
     parser.add_argument('--output', '-o', action='store', dest="outputfile", default=None, help="Output filename.  Defaults to stdout")
     parser.add_argument('--version', action='version', version='{prog} {version}'.format(prog=parser.prog, version=__version__))
     parser.add_argument('input_files', nargs='*')
@@ -64,6 +65,9 @@ def main():
                     seg_data.set('SE01', '%i' % (src.seg_count + 1))
                 elif seg_data.get_seg_id() == 'HL' and 'HL1' in err_codes:
                     seg_data.set('HL01', '%i' % (src.hl_count))
+            if args.fixwhitespace:
+                err_codes = [(x[1]) for x in src.pop_errors()]
+                if 'SEG1' in err_codes:
             fd_out.write(seg_data.format() + eol)
         if eol == '':
             fd_out.write('\n')
