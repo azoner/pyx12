@@ -1188,25 +1188,27 @@ class element_if(x12_node):
         if (not data_type is None) and (data_type == 'R' or data_type[0] == 'N'):
             elem_strip = string.replace(
                 string.replace(elem_val, '-', ''), '.', '')
+            elem_len = len(elem_strip)
             if len(elem_strip) < min_len:
-                err_str = 'Data element "%s" (%s) is too short: "%s" should be at least %i characters' % \
-                    (self.name, self.refdes, elem_val, min_len)
+                err_str = 'Data element "%s" (%s) is too short: len("%s") = %i < %i (min_len)' % \
+                    (self.name, self.refdes, elem_val, elem_len, min_len)
                 self._error(errh, err_str, '4', elem_val)
                 valid = False
             if len(elem_strip) > max_len:
-                err_str = 'Element "%s" (%s) is too long: "%s" should only be %i characters' % \
-                    (self.name, self.refdes, elem_val, max_len)
+                err_str = 'Data element "%s" (%s) is too long: len("%s") = %i > %i (max_len)' % \
+                    (self.name, self.refdes, elem_val, elem_len, max_len)
                 self._error(errh, err_str, '5', elem_val)
                 valid = False
         else:
+            elem_len = len(elem_val)
             if len(elem_val) < min_len:
-                err_str = 'Data element "%s" (%s) is too short: "%s" should be at least %i characters' % \
-                    (self.name, self.refdes, elem_val, min_len)
+                err_str = 'Data element "%s" (%s) is too short: len("%s") = %i < %i (min_len)' % \
+                    (self.name, self.refdes, elem_val, elem_len, min_len)
                 self._error(errh, err_str, '4', elem_val)
                 valid = False
             if len(elem_val) > max_len:
-                err_str = 'Element "%s" (%s) is too long: "%s" should only be %i characters' % \
-                    (self.name, self.refdes, elem_val, max_len)
+                err_str = 'Data element "%s" (%s) is too long: len("%s") = %i > %i (max_len)' % \
+                    (self.name, self.refdes, elem_val, elem_len, max_len)
                 self._error(errh, err_str, '5', elem_val)
                 valid = False
 
@@ -1218,7 +1220,7 @@ class element_if(x12_node):
             valid = False
         if data_type in ['AN', 'ID'] and elem_val[-1] == ' ':
             if len(elem_val.rstrip()) >= min_len:
-                err_str = 'Element "%s" (%s) has unnecessary trailing spaces. (%s)' % \
+                err_str = 'Data element "%s" (%s) has unnecessary trailing spaces. (%s)' % \
                     (self.name, self.refdes, elem_val)
                 self._error(errh, err_str, '6', elem_val)
                 valid = False
