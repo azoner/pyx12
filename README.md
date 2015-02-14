@@ -37,7 +37,24 @@ To fix common X12 structural errors
 
 Examples
 
-    Iterate over a loop
+    Iterate over a loop.  Alter children. Show changes
+
+```python
+    src = pyx12.x12context.X12ContextReader(param, errh, fd_in)
+    for datatree in src.iter_segments('2300'):
+        # do something with a 2300 claim loop
+        # we have access to the 2300 loop and all its children
+        for loop2400 in datatree.select('2400'):
+            print(loop2400.get_value('SV101'))
+            # update something
+            loop2400.set_value('SV102', 'xx')
+            # delete something
+            if loop2400.exists('PWK'):
+                loop2400.delete('PWK')
+        # iterate over all the child segments
+        for seg_node in datatree.iterate_segments():
+            print(seg_node.format())
+```
 
 # Licensing
 
