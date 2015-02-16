@@ -22,7 +22,7 @@ import re
 import pyx12.path
 from pyx12.errors import EngineError
 
-rec_seg_id = re.compile('^[A-Za-z0-9]{2,3}$', re.S)
+rec_seg_id = re.compile('^[A-Z][A-Z0-9]{1,2}$', re.S)
 
 class Element(object):
     """

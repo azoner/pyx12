@@ -280,10 +280,10 @@ class IsValidSegID(unittest.TestCase):
         seg = pyx12.segment.Segment(seg_str, '~', '*', ':')
         self.assertTrue(seg.is_seg_id_valid())
 
-    def test_valid_seg_id_leading_digit(self):
-        seg_str = '543'
-        seg = pyx12.segment.Segment(seg_str, '~', '*', ':')
-        self.assertTrue(seg.is_seg_id_valid())
+    #def test_valid_seg_id_leading_digit(self):
+    #    seg_str = '543'
+    #    seg = pyx12.segment.Segment(seg_str, '~', '*', ':')
+    #    self.assertTrue(seg.is_seg_id_valid())
 
     def test_empty_seg(self):
         seg_str = ''
