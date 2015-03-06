@@ -69,7 +69,7 @@ class x12xml_simple(x12xml):
         self.writer.push(xname, attrib)
         for i in range(len(seg_data)):
             child_node = seg_node.get_child_node_by_idx(i)
-            if child_node.usage == 'N' or seg_data.get('%02i' % (i + 1)).is_empty():
+            if child_node is None or child_node.usage == 'N' or seg_data.get('%02i' % (i + 1)).is_empty():
                 pass  # Do not try to ouput for invalid or empty elements
             elif child_node.is_composite():
                 (xname, attrib) = self._get_comp_info(seg_node_id)

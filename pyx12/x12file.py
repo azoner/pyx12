@@ -341,6 +341,10 @@ class X12Reader(X12Base):
         X12Base._parse_segment(self, seg_data)
         seg_id = seg_data.get_seg_id()
         if seg_id == 'IEA':
+            if not self.loops:
+                err_str = 'IEA loop with malformed preceding segment'
+                self._isa_error('000', err_str) # what is the correct code to use?
+                return # nothing to delete
             if self.loops[-1][0] != 'ISA':
                 # Unterminated GS loop
                 err_str = 'Unterminated Loop %s' % (self.loops[-1][0])
