@@ -1,6 +1,6 @@
 from setuptools import setup
 
-from pyx12.version import __version__
+# from pyx12.version import __version__
 
 
 long_description = """Pyx12 is a HIPAA X12 document validator and converter. It parses an ANSI X12N data file and
@@ -10,7 +10,7 @@ document or can translate to and from an XML representation of the data file."""
 
 setup(
     name="pyx12",
-    version=__version__,
+    version="2.2.0",
     long_description=long_description,
     license='BSD',
     description="HIPAA X12 validator, parser and converter",
