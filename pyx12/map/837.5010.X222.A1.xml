@@ -2480,7 +2480,7 @@
               <!--End of 2010BB loop-->
               <loop xid="2300">
                 <name>Claim Information</name>
-                <usage>R</usage>
+                <usage>S</usage>
                 <pos>1300</pos>
                 <repeat>100</repeat>
                 <segment xid="CLM">
