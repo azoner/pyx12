@@ -109,6 +109,8 @@ class Element(object):
         else:
             return True
 
+    # return ''.join([`num` for num in xrange(loop_count)])
+    # def has_invalid_character(self, 
 
 class Composite(object):
     """
@@ -190,9 +192,12 @@ class Composite(object):
         Format a composite
 
         @return: string
+        @raise EngineError: If terminator is None and no default
         """
         if subele_term is None:
             subele_term = self.subele_term
+        if subele_term is None:
+            raise EngineError('subele_term is None')
         for i in range(len(self.elements) - 1, -1, -1):
             if not self.elements[i].is_empty():
                 break
@@ -388,7 +393,7 @@ class Segment(object):
         @type ref_des: string
         @attention: Deprecated - use get_value
         """
-        raise DeprecationWarning('User Segment.get_value')
+        raise DeprecationWarning('Use Segment.get_value')
 
     def set(self, ref_des, val):
         """
@@ -482,6 +487,7 @@ class Segment(object):
         if subele_term is None:
             raise EngineError('subele_term is None')
         str_elems = []
+        # get index of last non-empty element
         i = 0
         for i in range(len(self.elements) - 1, -1, -1):
             if not self.elements[i].is_empty():
