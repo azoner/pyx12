@@ -1441,6 +1441,10 @@ def load_map_file(map_file, param, map_path=None):
     logger = logging.getLogger('pyx12')
     if map_path is not None:
         logger.debug("Looking for map file '{}' in map_path '{}'".format(map_file, map_path))
+        if not os.path.isdir(map_path):
+            raise OSError(2, "Map path does not exist", map_path)
+        if not os.path.isdir(map_path):
+            raise OSError(2, "Pyx12 map file '{}' does not exist in map path".format(map_file), map_path)
         map_fd = open(os.path.join(map_path, map_file))
     else:
         logger.debug("Looking for map file '{}' in pkg_resources".format(map_file))

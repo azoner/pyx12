@@ -37,6 +37,10 @@ class map_index(object):
         maps_index_file = 'maps.xml'
         if base_path is not None:
             logger.debug("Looking for map index file '{}' in map_path '{}'".format(maps_index_file, base_path))
+            if not os.path.isdir(base_path):
+                raise OSError(2, "Map path does not exist", base_path)
+            if not os.path.isdir(base_path):
+                raise OSError(2, "Pyx12 Map file '{}' does not exist in map path".format(maps_index_file), base_path)
             fd = open(os.path.join(base_path, maps_index_file))
         else:
             logger.debug("Looking for map index file '{}' in pkg_resources".format(maps_index_file))
