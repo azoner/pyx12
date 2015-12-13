@@ -37,7 +37,7 @@ def save_many(src_filename, targetformat=None):
         fd_temp.seek(0)
         fd_out.write(fd_temp.read())
         fd_out.close()
-        print newname, isa_id, gs_id, st_id
+        print(newname, isa_id, gs_id, st_id)
 
 
 def update_isa_id(seg_data, isa_id):

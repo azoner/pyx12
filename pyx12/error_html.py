@@ -1,5 +1,5 @@
 ######################################################################
-# Copyright 
+# Copyright
 #   John Holland <john@zoner.org>
 # All rights reserved.
 #
@@ -14,7 +14,6 @@ Generates HTML error output
 
 import time
 import logging
-from types import ListType
 
 # Intrapackage imports
 
@@ -191,7 +190,7 @@ def seg_str(seg, seg_term, ele_term, subele_term, eol=''):
     #    logger.debug(seg)
     tmp = []
     for a in seg:
-        if type(a) is ListType:
+        if type(a) is list:
             tmp.append(subele_term.join(a))
         else:
             tmp.append(a)

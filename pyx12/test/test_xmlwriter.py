@@ -2,10 +2,11 @@ import os.path
 import sys
 import os
 import unittest
+
 try:
-    from io import StringIO
-except:
     from StringIO import StringIO
+except:
+    from io import StringIO
 
 import tempfile
 
@@ -21,10 +22,12 @@ class TestWriter(unittest.TestCase):
     def test_write1(self):
         try:
             fd = StringIO(encoding='ascii')
+            print('CASE 1:')
         except:
             fd = StringIO()
+            print('CASE 2:')
         writer = XMLWriter(fd)
-        writer.push(u"x12err")
+        writer.push("x12err")
 
         while len(writer) > 0:
             writer.pop()
@@ -37,16 +40,18 @@ class TestWriter(unittest.TestCase):
 
     def test_write_temp(self):
         (fdesc, filename) = tempfile.mkstemp('.xml', 'pyx12_')
-        fd = os.fdopen(fdesc, 'w+b')
-        #fd = file(filename, 'rw')
-        writer = XMLWriter(fd)
-        writer.push(u"x12err")
+        with open(filename, 'w') as fd:
+        # print(fdesc, filename, fd)
+            #fd = open(filename, 'rw')
+            writer = XMLWriter(fd)
+            writer.push("x12err")
 
-        while len(writer) > 0:
-            writer.pop()
-        fd.seek(0)
-        self.assertEqual(fd.read(), self.res)
-        fd.close()
+            while len(writer) > 0:
+                writer.pop()
+
+        with open(filename, 'r') as fd:
+            self.assertEqual(fd.read(), self.res)
+
         try:
             os.remove(filename)
         except:

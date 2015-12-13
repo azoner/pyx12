@@ -1,5 +1,5 @@
 ######################################################################
-# Copyright (c) 
+# Copyright (c)
 # All rights reserved.
 #
 # This software is licensed as described in the file LICENSE.txt, which
@@ -12,19 +12,18 @@ Interface to a X12N IG Map
 """
 import logging
 import os.path
-import string
 import sys
 import re
 import xml.etree.cElementTree as et
 from pkg_resources import resource_stream
 
 # Intrapackage imports
-from errors import EngineError
-import codes
-import dataele
-import path
-import validation
-from syntax import is_syntax_valid
+from .errors import EngineError
+from . import codes
+from . import dataele
+from . import path
+from . import validation
+from .syntax import is_syntax_valid
 
 MAXINT = 2147483647
 
@@ -85,7 +84,7 @@ class x12_node(object):
                     return child
                 else:
                     if child.is_loop():
-                        return child.getnodebypath(string.join(pathl[1:], '/'))
+                        return child.getnodebypath(str.join('/', pathl[1:]))
                     else:
                         break
         raise EngineError('getnodebypath failed. Path "%s" not found' % path)
@@ -297,7 +296,7 @@ class map_if(x12_node):
                     if len(pathl) == 1:
                         return child
                     else:
-                        return child.getnodebypath(string.join(pathl[1:], '/'))
+                        return child.getnodebypath(str.join('/', pathl[1:]))
         raise EngineError('getnodebypath failed. Path "%s" not found' % spath)
 
     def getnodebypath2(self, path_str):
@@ -485,7 +484,7 @@ class loop_if(x12_node):
                         if len(pathl) == 1:
                             return child
                         else:
-                            return child.getnodebypath(string.join(pathl[1:], '/'))
+                            return child.getnodebypath(str.join('/', pathl[1:]))
                 elif child.is_segment() and len(pathl) == 1:
                     if pathl[0].find('[') == -1:  # No id to match
                         if pathl[0] == child.id:
@@ -986,7 +985,7 @@ class segment_if(x12_node):
             #self.logger.error('Syntax %s is not valid' % (syntax))
             return None
         syn = [syntax[0]]
-        for i in range(len(syntax[1:]) / 2):
+        for i in range(len(syntax[1:]) // 2):
             syn.append(int(syntax[i * 2 + 1:i * 2 + 3]))
         return syn
 
@@ -1186,8 +1185,8 @@ class element_if(x12_node):
 # Validate based on data_elem_num
 # Then, validate on more specific criteria
         if (not data_type is None) and (data_type == 'R' or data_type[0] == 'N'):
-            elem_strip = string.replace(
-                string.replace(elem_val, '-', ''), '.', '')
+            elem_strip = str.replace(
+                str.replace(elem_val, '-', ''), '.', '')
             elem_len = len(elem_strip)
             if len(elem_strip) < min_len:
                 err_str = 'Data element "%s" (%s) is too short: len("%s") = %i < %i (min_len)' % \

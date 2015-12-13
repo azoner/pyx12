@@ -58,16 +58,16 @@ class RandomDeidentify(object):
         if primaryId in self.identities:
             return self.identities[primaryId]
         demo = Demographic(
-                primaryId = "{0:0>10}".format(random.randint(1000, 99999999999)), 
-                ssn = "{0:0>9}".format(random.randint(10000, 999999999)), 
-                medicaidId = "{0:0>10}".format(random.randint(1000, 99999999999)), 
-                dob = '19520101', 
-                dod = '', 
-                firstname = 'AA', 
-                lastname = 'Smith', 
-                middlename = '', 
-                street = "{0} Oak".format(random.randint(10, 9999)), 
-                street2 = '', 
+                primaryId = "{0:0>10}".format(random.randint(1000, 99999999999)),
+                ssn = "{0:0>9}".format(random.randint(10000, 999999999)),
+                medicaidId = "{0:0>10}".format(random.randint(1000, 99999999999)),
+                dob = '19520101',
+                dod = '',
+                firstname = 'AA',
+                lastname = 'Smith',
+                middlename = '',
+                street = "{0} Oak".format(random.randint(10, 9999)),
+                street2 = '',
                 county = '98'
         )
         self.identities[primaryId] = demo
@@ -96,16 +96,16 @@ def deidentify_file(fd_in):
 def scrub2000(loop_sub, deident):
     primaryId = loop_sub.get_value('2100A/NM109')
     demo = deident.getDeidentified(primaryId, loop_sub)
-    loop_sub.set_value('INS12', demo.dod) 
-    loop_sub.set_value('REF[0F]02', demo.primaryId) 
-    loop_sub.set_value('2100A/NM103', demo.lastname) 
-    loop_sub.set_value('2100A/NM104', demo.firstname) 
-    loop_sub.set_value('2100A/NM105', demo.middlename) 
-    loop_sub.set_value('2100A/NM109', demo.medicaidId) 
-    loop_sub.set_value('2100A/N301', demo.street) 
-    loop_sub.set_value('2100A/N302', demo.street2) 
-    loop_sub.set_value('2100A/N406', demo.county) 
-    loop_sub.set_value('2100A/DMG02', demo.dob) 
+    loop_sub.set_value('INS12', demo.dod)
+    loop_sub.set_value('REF[0F]02', demo.primaryId)
+    loop_sub.set_value('2100A/NM103', demo.lastname)
+    loop_sub.set_value('2100A/NM104', demo.firstname)
+    loop_sub.set_value('2100A/NM105', demo.middlename)
+    loop_sub.set_value('2100A/NM109', demo.medicaidId)
+    loop_sub.set_value('2100A/N301', demo.street)
+    loop_sub.set_value('2100A/N302', demo.street2)
+    loop_sub.set_value('2100A/N406', demo.county)
+    loop_sub.set_value('2100A/DMG02', demo.dob)
 
 
 def usage():
@@ -121,7 +121,7 @@ def usage():
 def main():
     try:
         opts, args = getopt.getopt(sys.argv[1:], 'dhv')
-    except getopt.error, msg:
+    except getopt.error as msg:
         usage()
         return False
     formatter = logging.Formatter('%(asctime)s %(levelname)s %(message)s')
@@ -146,7 +146,7 @@ def main():
             usage()
             return False
         #file_name = os.path.basename(file_in)
-        fd_in = file(file_in, 'r')
+        fd_in = open(file_in, 'r')
         deidentify_file(fd_in)
     return True
 

@@ -18,9 +18,9 @@ If seg indicates a segment has been entered, returns the segment node.
 import logging
 
 # Intrapackage imports
-from errors import EngineError
+from .errors import EngineError
 import pyx12.segment
-from nodeCounter import NodeCounter
+from .nodeCounter import NodeCounter
 
 logger = logging.getLogger('pyx12.walk_tree')
 #logger.setLevel(logging.DEBUG)

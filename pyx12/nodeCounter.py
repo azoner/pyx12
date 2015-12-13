@@ -1,5 +1,5 @@
 ######################################################################
-# Copyright 
+# Copyright
 #   John Holland <john@zoner.org>
 # All rights reserved.
 #
@@ -13,7 +13,7 @@ Loop and segment counter
 """
 from collections import OrderedDict
 import pyx12.path
-from decorators import dump_args
+from .decorators import dump_args
 
 
 class NodeCounter(object):

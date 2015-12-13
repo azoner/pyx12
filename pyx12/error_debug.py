@@ -14,7 +14,7 @@ Visitor - Visits an error_handler composite
 """
 
 # Intrapackage imports
-from error_visitor import error_visitor
+from .error_visitor import error_visitor
 
 
 class error_debug_visitor(error_visitor):

@@ -20,8 +20,8 @@ import tempfile
 import os
 
 # Intrapackage imports
-from errors import EngineError
-from xmlwriter import XMLWriter
+from .errors import EngineError
+from .xmlwriter import XMLWriter
 
 #class error_node:
 #    def __init__(self)
@@ -52,7 +52,7 @@ class err_handler(object):
                 (fdesc, self.filename) = tempfile.mkstemp(suffix='.xml',
                                                           prefix='pyx12_', dir=basedir)
                 fd = os.fdopen(fdesc, 'w+b')
-                #fd = file(os.path.join(basedir, self.filename), 'w')
+                #fd = open(os.path.join(basedir, self.filename), 'w')
         self.cur_line = None
         self.errors = []
         if not fd:

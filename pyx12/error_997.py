@@ -18,8 +18,8 @@ import time
 import logging
 
 # Intrapackage imports
-from errors import EngineError
-import error_visitor
+from .errors import EngineError
+from . import error_visitor
 import pyx12.segment
 
 logger = logging.getLogger('pyx12.error_997')

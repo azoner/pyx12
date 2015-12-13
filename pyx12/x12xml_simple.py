@@ -16,9 +16,9 @@ from os.path import commonprefix
 import logging
 
 # Intrapackage imports
-from errors import EngineError
-from x12xml import x12xml
-from map_walker import pop_to_parent_loop
+from .errors import EngineError
+from .x12xml import x12xml
+from .map_walker import pop_to_parent_loop
 
 logger = logging.getLogger('pyx12.x12xml.simple')
 

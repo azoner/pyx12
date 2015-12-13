@@ -1,5 +1,5 @@
 ######################################################################
-# Copyright 
+# Copyright
 #   John Holland <john@zoner.org>
 # All rights reserved.
 #
@@ -14,7 +14,7 @@ X12 data element validation
 import re
 
 # Intrapackage imports
-from errors import IsValidError, EngineError
+from .errors import IsValidError, EngineError
 
 
 def IsValidDataType(str_val, data_type, charset='B', icvn='00401'):
@@ -68,10 +68,10 @@ def IsValidDataType(str_val, data_type, charset='B', icvn='00401'):
 rec_N = re.compile("^-?[0-9]+", re.S)
 rec_R = re.compile("^-?[0-9]*(\.[0-9]+)?", re.S)
 rec_ID_E = re.compile(
-    "[^A-Z0-9!\"&'()*+,\-\./:;?=\sa-z%~@\[\]_{}\\\|<>#$\s]", re.S)
+    "[^A-Z0-9!\"&'()*+,\-\./:;?=\sa-z%~@\[\]_{}\\\|<>#$\s]", re.S | re.ASCII)
 rec_ID_E5 = re.compile(
-    "[^A-Z0-9!\"&'()*+,\-\./:;?=\sa-z%~@\[\]_{}\\\|<>^`#$\s]", re.S)
-rec_ID_B = re.compile("[^A-Z0-9!\"&'()*+,\-\./:;?=\s]", re.S)
+    "[^A-Z0-9!\"&'()*+,\-\./:;?=\sa-z%~@\[\]_{}\\\|<>^`#$\s]", re.S | re.ASCII)
+rec_ID_B = re.compile("[^A-Z0-9!\"&'()*+,\-\./:;?=\s]", re.S | re.ASCII)
 rec_DT = re.compile("[^0-9]+", re.S)
 rec_TM = re.compile("[^0-9]+", re.S)
 
@@ -149,7 +149,8 @@ def is_valid_date(data_type, val):
         if len(val) in (6, 8, 12):  # valid lengths for date
             try:
                 if 6 == len(val):  # if 2 digit year, add CC
-                    val = '20' + val if val[0:2] < 50 else '19' + val
+                    val = '20' + val if int(val[0:2]) < 50 else '19' + val
+                # print("IXVALID:", data_type, val, int(val[0:4]), int(val[4:6]))
                 year = int(val[0:4])  # get year
                 month = int(val[4:6])
                 day = int(val[6:8])
@@ -175,7 +176,7 @@ def is_valid_date(data_type, val):
                 if len(val) == 12:
                     if not is_valid_time(val[8:12]):
                         raise IsValidError
-            except TypeError:
+            except TypeError as te:
                 raise IsValidError
         else:
             raise IsValidError
@@ -190,19 +191,21 @@ def is_valid_time(val):
     @type val: string
     """
     try:
-        not_match_re('TM', val)
-        if val[0:2] > '23' or val[2:4] > '59':  # check hour, minute segment
+        if not_match_re('TM', val):
+            raise IsValidError
+
+        if int(val[0:2]) > 23 or int(val[2:4]) > 59:  # check hour, minute segment
             raise IsValidError
         elif len(val) > 4:  # time contains seconds
             if len(val) < 6:  # length is munted
                 raise IsValidError
-            elif val[4:6] > '59':  # check seconds
+            elif int(val[4:6]) > 59:  # check seconds
                 raise IsValidError
             # check decimal seconds here in the future
             elif len(val) > 8:
                 # print 'unhandled decimal seconds encountered'
                 raise IsValidError
-    except IsValidError:
+    except (IsValidError, ValueError) as e:
         return False
     return True
 

@@ -1,5 +1,5 @@
 ######################################################################
-# Copyright 
+# Copyright
 #   John Holland <john@zoner.org>
 # All rights reserved.
 #
@@ -15,7 +15,7 @@ Interface to X12 Errors
 import logging
 
 # Intrapackage imports
-from errors import IterOutOfBounds  # , IterDone
+from .errors import IterOutOfBounds  # , IterDone
 
 logger = logging.getLogger('pyx12.error_handler')
 
