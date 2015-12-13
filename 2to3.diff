@@ -1,0 +1,432 @@
+--- ./decorators.py (original)
++++ ./decorators.py (refactored)
+@@ -1,11 +1,11 @@
+ def dump_args(func):
+     "This decorator dumps out the arguments passed to a function before calling it"
+-    argnames = func.func_code.co_varnames[:func.func_code.co_argcount]
+-    fname = func.func_name
++    argnames = func.__code__.co_varnames[:func.__code__.co_argcount]
++    fname = func.__name__
+ 
+     def echo_func(*args, **kwargs):
+-        print(fname, ":", ', '.join('%s=%r' % entry
+-            for entry in zip(argnames, args) + kwargs.items()))
++        print((fname, ":", ', '.join('%s=%r' % entry
++            for entry in list(zip(argnames, args)) + list(kwargs.items()))))
+         return func(*args, **kwargs)
+ 
+     return echo_func
+--- ./errh_xml.py   (original)
++++ ./errh_xml.py   (refactored)
+@@ -20,8 +20,8 @@
+ import os
+ 
+ # Intrapackage imports
+-from errors import EngineError
+-from xmlwriter import XMLWriter
++from .errors import EngineError
++from .xmlwriter import XMLWriter
+ 
+ #class error_node:
+ #    def __init__(self)
+--- ./error_997.py  (original)
++++ ./error_997.py  (refactored)
+@@ -18,8 +18,8 @@
+ import logging
+ 
+ # Intrapackage imports
+-from errors import EngineError
+-import error_visitor
++from .errors import EngineError
++from . import error_visitor
+ import pyx12.segment
+ 
+ logger = logging.getLogger('pyx12.error_997')
+--- ./error_debug.py    (original)
++++ ./error_debug.py    (refactored)
+@@ -14,7 +14,7 @@
+ """
+ 
+ # Intrapackage imports
+-from error_visitor import error_visitor
++from .error_visitor import error_visitor
+ 
+ 
+ class error_debug_visitor(error_visitor):
+--- ./error_handler.py  (original)
++++ ./error_handler.py  (refactored)
+@@ -15,7 +15,7 @@
+ import logging
+ 
+ # Intrapackage imports
+-from errors import IterOutOfBounds  # , IterDone
++from .errors import IterOutOfBounds  # , IterDone
+ 
+ logger = logging.getLogger('pyx12.error_handler')
+ 
+@@ -39,7 +39,7 @@
+     def first(self):
+         self.cur_node = self.errh
+ 
+-    def next(self):
++    def __next__(self):
+         self.__next__()
+ 
+     def __next__(self):
+--- ./error_item.py (original)
++++ ./error_item.py (refactored)
+@@ -11,7 +11,7 @@
+ """
+ """
+ 
+-from errors import EngineError
++from .errors import EngineError
+ 
+ isa_errors = ('000', '001', '002', '003', '004', '005', '006', '007', '008',
+               '009', '010', '011', '012', '013', '014', '015', '016',
+--- ./map_if.py (original)
++++ ./map_if.py (refactored)
+@@ -19,12 +19,12 @@
+ from pkg_resources import resource_stream
+ 
+ # Intrapackage imports
+-from errors import EngineError
+-import codes
+-import dataele
+-import path
+-import validation
+-from syntax import is_syntax_valid
++from .errors import EngineError
++from . import codes
++from . import dataele
++from . import path
++from . import validation
++from .syntax import is_syntax_valid
+ 
+ MAXINT = 2147483647
+ 
+--- ./map_walker.py (original)
++++ ./map_walker.py (refactored)
+@@ -18,9 +18,9 @@
+ import logging
+ 
+ # Intrapackage imports
+-from errors import EngineError
++from .errors import EngineError
+ import pyx12.segment
+-from nodeCounter import NodeCounter
++from .nodeCounter import NodeCounter
+ 
+ logger = logging.getLogger('pyx12.walk_tree')
+ #logger.setLevel(logging.DEBUG)
+--- ./nodeCounter.py    (original)
++++ ./nodeCounter.py    (refactored)
+@@ -13,7 +13,7 @@
+ """
+ from collections import OrderedDict
+ import pyx12.path
+-from decorators import dump_args
++from .decorators import dump_args
+ 
+ 
+ class NodeCounter(object):
+@@ -25,7 +25,7 @@
+             initialCounts = {}
+         self._dict = OrderedDict()
+         # copy constructor
+-        for k, v in initialCounts.items():
++        for k, v in list(initialCounts.items()):
+             self._dict[NodeCounter.makeX12Path(k)] = v
+ 
+     #@dump_args
+@@ -35,7 +35,7 @@
+         Keep count of xpath node
+         """
+         parent = NodeCounter.makeX12Path(xpath)
+-        child_keys = list([x for x in self._dict.keys() if parent.is_child_path(x.format())])
++        child_keys = list([x for x in list(self._dict.keys()) if parent.is_child_path(x.format())])
+         for k in child_keys:
+             del self._dict[k]
+ 
+--- ./validation.py (original)
++++ ./validation.py (refactored)
+@@ -14,7 +14,7 @@
+ import re
+ 
+ # Intrapackage imports
+-from errors import IsValidError, EngineError
++from .errors import IsValidError, EngineError
+ 
+ 
+ def IsValidDataType(str_val, data_type, charset='B', icvn='00401'):
+--- ./x12context.py (original)
++++ ./x12context.py (refactored)
+@@ -24,13 +24,13 @@
+ 
+ # Intrapackage imports
+ import pyx12
+-import error_handler
+-import errors
+-import map_index
+-import map_if
+-import x12file
+-import path
+-from map_walker import walk_tree, pop_to_parent_loop  # get_pop_loops, get_push_loops
++from . import error_handler
++from . import errors
++from . import map_index
++from . import map_if
++from . import x12file
++from . import path
++from .map_walker import walk_tree, pop_to_parent_loop  # get_pop_loops, get_push_loops
+ 
+ 
+ class X12DataNode(object):
+--- ./x12n_document.py  (original)
++++ ./x12n_document.py  (refactored)
+@@ -103,7 +103,7 @@
+             print('--------------------------------------------')
+             # reset to control map for ISA and GS loops
+             print('------- counters before --------')
+-            print(walker.counter._dict)
++            print((walker.counter._dict))
+         if seg.get_seg_id() == 'ISA':
+             node = control_map.getnodebypath('/ISA_LOOP/ISA')
+             walker.forceWalkCounterToLoopStart('/ISA_LOOP', '/ISA_LOOP/ISA')
+@@ -122,7 +122,7 @@
+ 
+         if False:
+             print('------- counters after --------')
+-            print(walker.counter._dict)
++            print((walker.counter._dict))
+         if node is None:
+             node = orig_node
+         else:
+@@ -201,7 +201,7 @@
+             err_node_list = []
+             while True:
+                 try:
+-                    err_iter.next()
++                    next(err_iter)
+                     err_node = err_iter.get_cur_node()
+                     err_node_list.append(err_node)
+                 except pyx12.errors.IterOutOfBounds:
+--- ./x12xml.py (original)
++++ ./x12xml.py (refactored)
+@@ -15,9 +15,9 @@
+ import os.path
+ 
+ # Intrapackage imports
+-from errors import EngineError
+-from xmlwriter import XMLWriter
+-from map_walker import pop_to_parent_loop
++from .errors import EngineError
++from .xmlwriter import XMLWriter
++from .map_walker import pop_to_parent_loop
+ 
+ 
+ class x12xml(object):
+--- ./x12xml_simple.py  (original)
++++ ./x12xml_simple.py  (refactored)
+@@ -16,9 +16,9 @@
+ import logging
+ 
+ # Intrapackage imports
+-from errors import EngineError
+-from x12xml import x12xml
+-from map_walker import pop_to_parent_loop
++from .errors import EngineError
++from .x12xml import x12xml
++from .map_walker import pop_to_parent_loop
+ 
+ logger = logging.getLogger('pyx12.x12xml.simple')
+ 
+--- ./xmlwriter.py  (original)
++++ ./xmlwriter.py  (refactored)
+@@ -31,8 +31,8 @@
+         >>>#Close currently open element ("vendor)
+         >>>writer.pop()
+         >>>#Element with an attribute
+-        >>>writer.push(u"product", {u"id": u"100\u00B0"})
+-        >>>writer.elem(u"name", u"100\u00B0 Server")
++        >>>writer.push(u"product", {u"id": u"100\\u00B0"})
++        >>>writer.elem(u"name", u"100\\u00B0 Server")
+         >>>writer.elem(u"version", u"1.0")
+         >>>writer.elem(u"last-release", u"20030401")
+         >>>#Empty element
+--- ./examples/deident834.py    (original)
++++ ./examples/deident834.py    (refactored)
+@@ -90,7 +90,7 @@
+             scrub2000(datatree, deident)
+         for seg1 in datatree.iterate_segments():
+             #wr.Write(seg1['segment'].format())
+-            print(seg1['segment'].format())
++            print((seg1['segment'].format()))
+ 
+ 
+ def scrub2000(loop_sub, deident):
+@@ -121,7 +121,7 @@
+ def main():
+     try:
+         opts, args = getopt.getopt(sys.argv[1:], 'dhv')
+-    except getopt.error, msg:
++    except getopt.error as msg:
+         usage()
+         return False
+     formatter = logging.Formatter('%(asctime)s %(levelname)s %(message)s')
+--- ./examples/st_context_iterator.py   (original)
++++ ./examples/st_context_iterator.py   (refactored)
+@@ -22,11 +22,11 @@
+     #for k, g in groupby(iterate_2000(fd_in), lambda x: x['st_id']):
+     for k, g in groupby(iterate_2000(fd_in), lambda x: x[0]):
+         #yield (k, g)
+-        print '-----------------------------------------------------------'
+-        print k
++        print('-----------------------------------------------------------')
++        print(k)
+         for d in g:
+             yield d
+-        print '-----------------------------------------------------------'
++        print('-----------------------------------------------------------')
+     #for d in iterate_2000(fd_in):
+     #    yield d
+ 
+@@ -37,12 +37,12 @@
+     #for d in get_headers_stream(src):
+     #    print d
+     for k, g in groupby(get_headers_stream(src), lambda x: x[0]):
+-        print '-----------------------------------------------------------'
+-        print k
++        print('-----------------------------------------------------------')
++        print(k)
+         for d in g:
+             #yield d
+-            print d
+-        print '-----------------------------------------------------------'
++            print(d)
++        print('-----------------------------------------------------------')
+ 
+ 
+ def x12_split_on_st(source_filename, isa_id=11, gs_id=21):
+@@ -74,7 +74,7 @@
+         fd_temp.seek(0)
+         fd_out.write(fd_temp.read())
+         fd_out.close()
+-        print newname, isa_id, gs_id, st_id
++        print(newname, isa_id, gs_id, st_id)
+ 
+ 
+ def update_isa_id(seg_data, isa_id):
+--- ./examples/st_iterator.py   (original)
++++ ./examples/st_iterator.py   (refactored)
+@@ -37,7 +37,7 @@
+         fd_temp.seek(0)
+         fd_out.write(fd_temp.read())
+         fd_out.close()
+-        print newname, isa_id, gs_id, st_id
++        print(newname, isa_id, gs_id, st_id)
+ 
+ 
+ def update_isa_id(seg_data, isa_id):
+--- ./map/dump.py   (original)
++++ ./map/dump.py   (refactored)
+@@ -10,7 +10,7 @@
+ 
+ 
+ def donode(node):
+-    print node.get_path()
++    print(node.get_path())
+     for child in node.children:
+         if child.is_loop() or child.is_segment():
+             donode(child)
+--- ./scripts/xmlx12.py (original)
++++ ./scripts/xmlx12.py (refactored)
+@@ -93,7 +93,7 @@
+             logger.error('Input file had errors.')
+             return False
+     except KeyboardInterrupt:
+-        print "\n[interrupt]"
++        print("\n[interrupt]")
+ 
+     return True
+ 
+--- ./test/test_rawx12file.py   (original)
++++ ./test/test_rawx12file.py   (refactored)
+@@ -1,6 +1,6 @@
+ import unittest
+ try:
+-    from StringIO import StringIO
++    from io import StringIO
+ except:
+     from io import StringIO
+ 
+--- ./test/test_x12context.py   (original)
++++ ./test/test_x12context.py   (refactored)
+@@ -1,7 +1,7 @@
+ import unittest
+ #import tempfile
+ try:
+-    from StringIO import StringIO
++    from io import StringIO
+ except:
+     from io import StringIO
+ 
+--- ./test/test_x12file.py  (original)
++++ ./test/test_x12file.py  (refactored)
+@@ -1,6 +1,6 @@
+ import unittest
+ try:
+-    from StringIO import StringIO
++    from io import StringIO
+ except:
+     from io import StringIO
+ 
+--- ./test/test_x12n_document.py    (original)
++++ ./test/test_x12n_document.py    (refactored)
+@@ -1,6 +1,6 @@
+ import unittest
+ try:
+-    from StringIO import StringIO
++    from io import StringIO
+ except:
+     from io import StringIO
+ 
+--- ./test/test_xmlwriter.py    (original)
++++ ./test/test_xmlwriter.py    (refactored)
+@@ -5,7 +5,7 @@
+ try:
+     from io import StringIO
+ except:
+-    from StringIO import StringIO
++    from io import StringIO
+ 
+ import tempfile
+ 
+@@ -24,7 +24,7 @@
+         except:
+             fd = StringIO()
+         writer = XMLWriter(fd)
+-        writer.push(u"x12err")
++        writer.push("x12err")
+ 
+         while len(writer) > 0:
+             writer.pop()
+@@ -40,7 +40,7 @@
+         fd = os.fdopen(fdesc, 'w+b')
+         #fd = file(filename, 'rw')
+         writer = XMLWriter(fd)
+-        writer.push(u"x12err")
++        writer.push("x12err")
+ 
+         while len(writer) > 0:
+             writer.pop()
+--- ./test/test_xmlx12_simple.py    (original)
++++ ./test/test_xmlx12_simple.py    (refactored)
+@@ -1,6 +1,6 @@
+ import unittest
+ try:
+-    from StringIO import StringIO
++    from io import StringIO
+ except:
+     from io import StringIO
+ import logging
