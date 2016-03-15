@@ -251,7 +251,7 @@ class Implicit_Loops(WalkerTest):
         self.assertEqual(get_id_list(push), ['2000B'])
 
         (node, pop, push) = self.walker.find(node, seg_data)
-        self.walker.wander(node, seg_data, pop, push, 0)
+        self.walker.wander(node, seg_data, pop, push, 0, 1)
         self.assertNotEqual(node, None, 'walker failed')
         self.assertEqual(seg_data.get_seg_id(), node.id)
         self.assertEqual(get_id_list(pop), popList)
@@ -351,7 +351,7 @@ class Implicit_Loops(WalkerTest):
 
         walker = walk_tree()
         param = pyx12.params.params()
-
+        # arrange
         cmap = pyx12.map_if.load_map_file(
             '837Q3.I.5010.X223.A1.xml', param)
         errh = pyx12.error_handler.errh_null()

@@ -220,16 +220,12 @@ class walk_tree(object):
         #assert loop_id == node.id
         #yield node
 
-    def wander(self, node, seg_data, pop_node_list, push_node_list, seg_count):
+    def wander(self, node, seg_data, pop_node_list, push_node_list, seg_count, cur_line):
         """
         Walk the node tree from the starting node to the node matching
         seg_data.  We already have a match.
 
-        Match has already been found.  Just need to walk the tree.
-            - segments in current loop at or after starting
-            - pop loops, decrement count
-            - push loops, increment count
-            - final segment, increment count
+
         Do segment and loop counting increments/decrements
         Handle counting errors
         Handle any segment or loop counting errors.
@@ -257,10 +253,40 @@ class walk_tree(object):
 
         #for node in walk_tree.iterate_paths(node, pop_node_list, push_node_list):
         #    print node
+        
+        # Match has already been found.  Just need to walk the tree.
+        # segments in current loop at or after starting
+        # and before the matched segment
+        # either we have matched a segment in the same loop, in which case
+        # we only need to check for any required segments between
+        # or we have matched another loop, in which case
+        # we need to check all following required segments 
+        node_pos = node.pos  # Get original position ordinal of starting node
+        if not (node.is_loop() or node.is_map_root()):
+            node = pop_to_parent_loop(node)  # Get enclosing loop
+        for ord1 in [a for a in sorted(node.pos_map) if a >= node_pos]:
+            for child in node.pos_map[ord1]:
+                if child.is_segment():
+                    if child.is_match(seg_data):
+                        if child.usage == 'R' and self.counter.get_count(child.x12path) < 1:
+                            fake_seg = pyx12.segment.Segment('%s' % (child.id), '~', '*', ':')
+                            err_str = 'Mandatory segment "%s" (%s) missing' % (child.name, child.id)
+                            self.mandatory_segs_missing.append((child, fake_seg, '3', err_str, seg_count, cur_line, ls_id))
+
+        #    - pop loops, decrement count
+        #    - push loops, increment count
+        #    - final segment, increment count
+
         orig_node = node
         error_items = []
         mandatory_segs_missing = []
-
+        #node_pos = node.pos  # Get original position ordinal of starting node
+        #if not (node.is_loop() or node.is_map_root()):
+        #    node = pop_to_parent_loop(node)  # Get enclosing loop
+        for popped in pop_node_list:
+            pass
+        for pushed in push_node_list:
+            pass
         while True:
             # Iterate through sibling nodes with position >= current position
             for ord1 in [a for a in sorted(node.pos_map) if a >= node_pos]:
