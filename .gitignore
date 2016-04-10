@@ -13,3 +13,5 @@ pkg-plist
 TestResults/
 obj/
 testenv/
+Backup/pyx12.sln
+*.htm
