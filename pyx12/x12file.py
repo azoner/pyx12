@@ -1,5 +1,5 @@
 ######################################################################
-# Copyright 
+# Copyright
 #   John Holland <john@zoner.org>
 # All rights reserved.
 #
@@ -391,7 +391,7 @@ class X12Reader(X12Base):
         self.err_list = []
         for line in self.raw:
             # We have not yet incremented cur_line
-            if line.startswith(' ') :
+            if line.startswith(' '):
                 err_str = 'Segment contains a leading space'
                 self._seg_error('1', err_str, None, src_line=self.cur_line + 1)
                 line = line.lstrip()
