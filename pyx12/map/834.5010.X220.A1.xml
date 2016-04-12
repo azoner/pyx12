@@ -4787,196 +4787,190 @@
               <!--End of 2320 loop-->
             </loop>
             <!--End of 2300 loop-->
-            <loop xid="2700">
+            <segment xid="LS">
               <name>Additional Reporting Categories</name>
-              <usage>S</usage>
-              <pos>6800</pos>
-              <repeat>&gt;1</repeat>
-              <segment xid="LS">
-                <name>Additional Reporting Categories</name>
+              <usage>R</usage>
+              <pos>6880</pos>
+              <max_use>1</max_use>
+              <element xid="LS01">
+                <data_ele>447</data_ele>
+                <name>Loop Identifier Code</name>
                 <usage>R</usage>
-                <pos>6880</pos>
+                <seq>01</seq>
+              </element>
+            </segment>
+            <!--End of LS segment-->
+            <loop xid="2700">
+              <name>Member Reporting Categories</name>
+              <usage>S</usage>
+              <pos>6881</pos>
+              <repeat>&gt;1</repeat>
+
+              <segment xid="LX">
+                <name>Member Reporting Categories</name>
+                <usage>R</usage>
+                <pos>6801</pos>
                 <max_use>1</max_use>
-                <element xid="LS01">
-                  <data_ele>447</data_ele>
-                  <name>Loop Identifier Code</name>
+                <element xid="LX01">
+                  <data_ele>554</data_ele>
+                  <name>Assigned Number</name>
                   <usage>R</usage>
                   <seq>01</seq>
                 </element>
               </segment>
-              <!--End of LS segment-->
-              <loop xid="2710">
-                <name>Member Reporting Categories</name>
+              <!--End of LX segment-->
+              <loop xid="2750">
+                <name>Reporting Category</name>
                 <usage>S</usage>
-                <pos>6801</pos>
-                <repeat>&gt;1</repeat>
-                <segment xid="LX">
-                  <name>Member Reporting Categories</name>
-                  <usage>R</usage>
-                  <pos>6881</pos>
-                  <max_use>1</max_use>
-                  <element xid="LX01">
-                    <data_ele>554</data_ele>
-                    <name>Assigned Number</name>
-                    <usage>R</usage>
-                    <seq>01</seq>
-                  </element>
-                </segment>
-                <!--End of LX segment-->
-                <loop xid="2750">
+                <pos>6802</pos>
+                <repeat>1</repeat>
+                <segment xid="N1">
                   <name>Reporting Category</name>
-                  <usage>S</usage>
-                  <pos>6802</pos>
-                  <repeat>1</repeat>
-                  <segment xid="N1">
-                    <name>Reporting Category</name>
-                    <usage>R</usage>
-                    <pos>6882</pos>
-                    <max_use>1</max_use>
-                    <syntax>R0203</syntax>
-                    <syntax>P0304</syntax>
-                    <element xid="N101">
-                      <data_ele>98</data_ele>
-                      <name>Entity Identifier Code</name>
-                      <usage>R</usage>
-                      <seq>01</seq>
-                      <valid_codes>
-                        <code>75</code>
-                      </valid_codes>
-                    </element>
-                    <element xid="N102">
-                      <data_ele>93</data_ele>
-                      <name>Member Reporting Category Name</name>
-                      <usage>R</usage>
-                      <seq>02</seq>
-                    </element>
-                    <element xid="N103">
-                      <data_ele>66</data_ele>
-                      <name>Identification Code Qualifier</name>
-                      <usage>N</usage>
-                      <seq>03</seq>
-                    </element>
-                    <element xid="N104">
-                      <data_ele>67</data_ele>
-                      <name>Identification Code</name>
-                      <usage>N</usage>
-                      <seq>04</seq>
-                    </element>
-                    <element xid="N105">
-                      <data_ele>706</data_ele>
-                      <name>Entity Relationship Code</name>
-                      <usage>N</usage>
-                      <seq>05</seq>
-                    </element>
-                    <element xid="N106">
-                      <data_ele>98</data_ele>
-                      <name>Entity Identifier Code</name>
-                      <usage>N</usage>
-                      <seq>06</seq>
-                    </element>
-                  </segment>
-                  <!--End of N1 segment-->
-                  <segment xid="REF">
-                    <name>Reporting Category Reference</name>
-                    <usage>S</usage>
-                    <pos>6883</pos>
-                    <max_use>1</max_use>
-                    <syntax>R0203</syntax>
-                    <element xid="REF01">
-                      <data_ele>128</data_ele>
-                      <name>Reference Identification Qualifier</name>
-                      <usage>R</usage>
-                      <seq>01</seq>
-                      <valid_codes>
-                        <code>00</code>
-                        <code>17</code>
-                        <code>18</code>
-                        <code>19</code>
-                        <code>26</code>
-                        <code>3L</code>
-                        <code>6M</code>
-                        <code>9V</code>
-                        <code>9X</code>
-                        <code>GE</code>
-                        <code>LU</code>
-                        <code>PID</code>
-                        <code>XX1</code>
-                        <code>XX2</code>
-                        <code>YY</code>
-                        <code>ZZ</code>
-                      </valid_codes>
-                    </element>
-                    <element xid="REF02">
-                      <data_ele>127</data_ele>
-                      <name>Member Reporting Category Reference ID</name>
-                      <usage>R</usage>
-                      <seq>02</seq>
-                    </element>
-                    <element xid="REF03">
-                      <data_ele>352</data_ele>
-                      <name>Description</name>
-                      <usage>N</usage>
-                      <seq>03</seq>
-                    </element>
-                    <composite xid="REF04">
-                      <data_ele>C040</data_ele>
-                      <name>Reference Identifier</name>
-                      <usage>N</usage>
-                      <seq>04</seq>
-                    </composite>
-                  </segment>
-                  <!--End of REF segment-->
-                  <segment xid="DTP">
-                    <name>Reporting Category Date</name>
-                    <usage>S</usage>
-                    <pos>6884</pos>
-                    <max_use>1</max_use>
-                    <element xid="DTP01">
-                      <data_ele>374</data_ele>
-                      <name>Date Time Qualifier</name>
-                      <usage>R</usage>
-                      <seq>01</seq>
-                      <valid_codes>
-                        <code>007</code>
-                      </valid_codes>
-                    </element>
-                    <element xid="DTP02">
-                      <data_ele>1250</data_ele>
-                      <name>Date Time Period Format Qualifier</name>
-                      <usage>R</usage>
-                      <seq>02</seq>
-                      <valid_codes>
-                        <code>D8</code>
-                        <code>RD8</code>
-                      </valid_codes>
-                    </element>
-                    <element xid="DTP03">
-                      <data_ele>1251</data_ele>
-                      <name>Member Reporting Category Effective Date(s)</name>
-                      <usage>R</usage>
-                      <seq>03</seq>
-                    </element>
-                  </segment>
-                  <!--End of DTP segment-->
-                </loop>
-                <!--End of 2750 loop-->
-                <segment xid="LE">
-                  <name>Additional Reporting Categories Loop Termination</name>
-                  <usage>S</usage>
-                  <pos>6885</pos>
+                  <usage>R</usage>
+                  <pos>6882</pos>
                   <max_use>1</max_use>
-                  <element xid="LE01">
-                    <data_ele>447</data_ele>
-                    <name>Loop Identifier Code</name>
+                  <syntax>R0203</syntax>
+                  <syntax>P0304</syntax>
+                  <element xid="N101">
+                    <data_ele>98</data_ele>
+                    <name>Entity Identifier Code</name>
                     <usage>R</usage>
                     <seq>01</seq>
+                    <valid_codes>
+                      <code>75</code>
+                    </valid_codes>
+                  </element>
+                  <element xid="N102">
+                    <data_ele>93</data_ele>
+                    <name>Member Reporting Category Name</name>
+                    <usage>R</usage>
+                    <seq>02</seq>
+                  </element>
+                  <element xid="N103">
+                    <data_ele>66</data_ele>
+                    <name>Identification Code Qualifier</name>
+                    <usage>N</usage>
+                    <seq>03</seq>
+                  </element>
+                  <element xid="N104">
+                    <data_ele>67</data_ele>
+                    <name>Identification Code</name>
+                    <usage>N</usage>
+                    <seq>04</seq>
+                  </element>
+                  <element xid="N105">
+                    <data_ele>706</data_ele>
+                    <name>Entity Relationship Code</name>
+                    <usage>N</usage>
+                    <seq>05</seq>
+                  </element>
+                  <element xid="N106">
+                    <data_ele>98</data_ele>
+                    <name>Entity Identifier Code</name>
+                    <usage>N</usage>
+                    <seq>06</seq>
                   </element>
                 </segment>
-                <!--End of LE segment-->                
+                <!--End of N1 segment-->
+                <segment xid="REF">
+                  <name>Reporting Category Reference</name>
+                  <usage>S</usage>
+                  <pos>6883</pos>
+                  <max_use>1</max_use>
+                  <syntax>R0203</syntax>
+                  <element xid="REF01">
+                    <data_ele>128</data_ele>
+                    <name>Reference Identification Qualifier</name>
+                    <usage>R</usage>
+                    <seq>01</seq>
+                    <valid_codes>
+                      <code>00</code>
+                      <code>17</code>
+                      <code>18</code>
+                      <code>19</code>
+                      <code>26</code>
+                      <code>3L</code>
+                      <code>6M</code>
+                      <code>9V</code>
+                      <code>9X</code>
+                      <code>GE</code>
+                      <code>LU</code>
+                      <code>PID</code>
+                      <code>XX1</code>
+                      <code>XX2</code>
+                      <code>YY</code>
+                      <code>ZZ</code>
+                    </valid_codes>
+                  </element>
+                  <element xid="REF02">
+                    <data_ele>127</data_ele>
+                    <name>Member Reporting Category Reference ID</name>
+                    <usage>R</usage>
+                    <seq>02</seq>
+                  </element>
+                  <element xid="REF03">
+                    <data_ele>352</data_ele>
+                    <name>Description</name>
+                    <usage>N</usage>
+                    <seq>03</seq>
+                  </element>
+                  <composite xid="REF04">
+                    <data_ele>C040</data_ele>
+                    <name>Reference Identifier</name>
+                    <usage>N</usage>
+                    <seq>04</seq>
+                  </composite>
+                </segment>
+                <!--End of REF segment-->
+                <segment xid="DTP">
+                  <name>Reporting Category Date</name>
+                  <usage>S</usage>
+                  <pos>6884</pos>
+                  <max_use>1</max_use>
+                  <element xid="DTP01">
+                    <data_ele>374</data_ele>
+                    <name>Date Time Qualifier</name>
+                    <usage>R</usage>
+                    <seq>01</seq>
+                    <valid_codes>
+                      <code>007</code>
+                    </valid_codes>
+                  </element>
+                  <element xid="DTP02">
+                    <data_ele>1250</data_ele>
+                    <name>Date Time Period Format Qualifier</name>
+                    <usage>R</usage>
+                    <seq>02</seq>
+                    <valid_codes>
+                      <code>D8</code>
+                      <code>RD8</code>
+                    </valid_codes>
+                  </element>
+                  <element xid="DTP03">
+                    <data_ele>1251</data_ele>
+                    <name>Member Reporting Category Effective Date(s)</name>
+                    <usage>R</usage>
+                    <seq>03</seq>
+                  </element>
+                </segment>
+                <!--End of DTP segment-->
               </loop>
-              <!--End of 2710 loop-->
+              <!--End of 2750 loop-->
             </loop>
             <!--End of 2700 loop-->
+            <segment xid="LE">
+              <name>Additional Reporting Categories Loop Termination</name>
+              <usage>S</usage>
+              <pos>6885</pos>
+              <max_use>1</max_use>
+              <element xid="LE01">
+                <data_ele>447</data_ele>
+                <name>Loop Identifier Code</name>
+                <usage>R</usage>
+                <seq>01</seq>
+              </element>
+            </segment>
+            <!--End of LE segment-->
           </loop>
           <!--End of 2000 loop-->
         </loop>
