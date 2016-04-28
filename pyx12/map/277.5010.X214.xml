@@ -1717,13 +1717,13 @@
                       </element>
                       <element xid="TRN02">
                         <data_ele>127</data_ele>
-                        <name>Trace Number</name>
+                        <name>Patient Control Number</name>
                         <usage>R</usage>
                         <seq>02</seq>
                       </element>
                       <element xid="TRN03">
                         <data_ele>509</data_ele>
-                        <name>Patient Control Number</name>
+                        <name>Originating Company Identifier</name>
                         <usage>N</usage>
                         <seq>03</seq>
                       </element>
@@ -1764,7 +1764,44 @@
                           <name>Entity Identifier Code</name>
                           <usage>S</usage>
                           <seq>03</seq>
-                          <valid_codes external="entity_id"/>
+                          <valid_codes>
+                            <code>03</code>
+                            <code>1P</code>
+                            <code>1Z</code>
+                            <code>40</code>
+                            <code>41</code>
+                            <code>71</code>
+                            <code>72</code>
+                            <code>73</code>
+                            <code>77</code>
+                            <code>82</code>
+                            <code>85</code>
+                            <code>87</code>
+                            <code>DK</code>
+                            <code>DN</code>
+                            <code>DQ</code>
+                            <code>FA</code>
+                            <code>GB</code>
+                            <code>HK</code>
+                            <code>IL</code>
+                            <code>LI</code>
+                            <code>MSC</code>
+                            <code>PR</code>
+                            <code>PRP</code>
+                            <code>QB</code>
+                            <code>QC</code>
+                            <code>QD</code>
+                            <code>SEP</code>
+                            <code>TL</code>
+                            <code>TTP</code>
+                            <code>TU</code>
+                          </valid_codes>
+                        </element>
+                        <element xid="STC01-04">
+                          <data_ele>1270</data_ele>
+                          <name>Code List Qualifier Code</name>
+                          <usage>N</usage>
+                          <seq>04</seq>
                         </element>
                       </composite>
                       <element xid="STC02">
@@ -1772,16 +1809,16 @@
                         <name>Status Information Effective Date</name>
                         <usage>R</usage>
                         <seq>02</seq>
-                        <valid_codes>
-                          <code>U</code>
-                          <code>WQ</code>
-                        </valid_codes>
                       </element>
                       <element xid="STC03">
                         <data_ele>306</data_ele>
                         <name>Action Code</name>
                         <usage>R</usage>
                         <seq>03</seq>
+                        <valid_codes>
+                          <code>U</code>
+                          <code>WQ</code>
+                        </valid_codes>
                       </element>
                       <element xid="STC04">
                         <data_ele>782</data_ele>
@@ -1961,7 +1998,7 @@
                     <segment xid="REF">
                       <name>Institutional Bill Type Identification</name>
                       <usage>S</usage>
-                      <pos>110</pos>
+                      <pos>1100</pos>
                       <max_use>1</max_use>
                       <element xid="REF01">
                         <data_ele>128</data_ele>
@@ -2133,7 +2170,7 @@
                       <segment xid="STC">
                         <name>Service Line Level Status Information</name>
                         <usage>R</usage>
-                        <pos>190</pos>
+                        <pos>1900</pos>
                         <max_use>1</max_use>
                         <composite>
                           <data_ele>C043</data_ele>
@@ -2159,15 +2196,45 @@
                             <name>Entity Identifier Code</name>
                             <usage>S</usage>
                             <seq>03</seq>
-                            <valid_codes external="entity_id"/>
+                            <valid_codes>
+                              <code>03</code>
+                              <code>1P</code>
+                              <code>1Z</code>
+                              <code>40</code>
+                              <code>41</code>
+                              <code>71</code>
+                              <code>72</code>
+                              <code>73</code>
+                              <code>77</code>
+                              <code>82</code>
+                              <code>85</code>
+                              <code>87</code>
+                              <code>DK</code>
+                              <code>DN</code>
+                              <code>DQ</code>
+                              <code>FA</code>
+                              <code>GB</code>
+                              <code>HK</code>
+                              <code>IL</code>
+                              <code>LI</code>
+                              <code>MSC</code>
+                              <code>PR</code>
+                              <code>PRP</code>
+                              <code>QB</code>
+                              <code>QC</code>
+                              <code>QD</code>
+                              <code>SEP</code>
+                              <code>TL</code>
+                              <code>TTP</code>
+                              <code>TU</code>
+                            </valid_codes>
                           </element>
                         </composite>
                         <element xid="STC02">
                           <data_ele>373</data_ele>
                           <name>Status Information Effective Date</name>
-                          <usage>N</usage>
+                          <usage>R</usage>
                           <seq>02</seq>
-                          <valid_codes />
                         </element>
                         <element xid="STC03">
                           <data_ele>306</data_ele>
