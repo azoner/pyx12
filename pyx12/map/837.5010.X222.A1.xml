@@ -11,7 +11,7 @@
 ######################################################################
 -->
 <transaction xid="837">
-  <name>HIPAA Health Care Claim: Professional X098A1-837</name>
+  <name>HIPAA Health Care Claim: Professional X222A1-837</name>
   <loop xid="ISA_LOOP" type="explicit">
     <name>Interchange Control Header</name>
     <usage>R</usage>

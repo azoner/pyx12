@@ -239,6 +239,7 @@
           <seq>08</seq>
           <valid_codes>
             <code>005010</code>
+            <code>005010X214</code>
             <code>005010X218</code>
             <code>005010X279</code>
             <code>005010X220A1</code>

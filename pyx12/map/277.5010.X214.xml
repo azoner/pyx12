@@ -242,7 +242,7 @@
         <segment xid="ST">
           <name>Transaction Set Header</name>
           <usage>R</usage>
-          <pos>0100</pos>
+          <pos>0050</pos>
           <max_use>1</max_use>
           <element xid="ST01">
             <data_ele>143</data_ele>
@@ -286,7 +286,7 @@
               <usage>R</usage>
               <seq>01</seq>
               <valid_codes>
-                <code>0010</code>
+                <code>0085</code>
               </valid_codes>
             </element>
             <element xid="BHT02">
@@ -322,7 +322,7 @@
               <usage>R</usage>
               <seq>06</seq>
               <valid_codes>
-                <code>DG</code>
+                <code>TH</code>
               </valid_codes>
             </element>
           </segment>
@@ -481,7 +481,7 @@
             <loop xid="2200A">
               <name>Transmission Receipt Control Identifier</name>
               <usage>R</usage>
-              <pos>0100</pos>
+              <pos>0900</pos>
               <repeat>&gt;1</repeat>
               <segment xid="TRN">
                 <name>Transmission Receipt Control Identifier</name>
@@ -584,7 +584,7 @@
             <loop xid="2000B">
               <name>Information Receiver Level</name>
               <usage>R</usage>
-              <pos>0100</pos>
+              <pos>2000</pos>
               <repeat>1</repeat>
               <segment xid="HL">
                 <name>Information Receiver Level</name>
@@ -1057,7 +1057,7 @@
               <loop xid="2000C">
                 <name>Billing Provider of Service Level</name>
                 <usage>R</usage>
-                <pos>0100</pos>
+                <pos>2000</pos>
                 <repeat>&gt;1</repeat>
                 <segment xid="HL">
                   <name>Billing Provider of Service Level</name>
@@ -1112,7 +1112,7 @@
                       <usage>R</usage>
                       <seq>01</seq>
                       <valid_codes>
-                        <code>1P</code>
+                        <code>85</code>
                       </valid_codes>
                     </element>
                     <element xid="NM102">
@@ -1276,7 +1276,7 @@
                     <element xid="STC02">
                       <data_ele>373</data_ele>
                       <name>Status Information Effective Date</name>
-                      <usage>R</usage>
+                      <usage>N</usage>
                       <seq>02</seq>
                     </element>
                     <element xid="STC03">
@@ -1566,7 +1566,7 @@
                 <loop xid="2000D">
                   <name>Patient Level</name>
                   <usage>R</usage>
-                  <pos>0100</pos>
+                  <pos>2000</pos>
                   <repeat>&gt;1</repeat>
                   <segment xid="HL">
                     <name>Patient Level</name>
@@ -1890,7 +1890,6 @@
                       </element>
                     </segment>
                     <!--End of STC segment-->
-
                     <segment xid="REF">
                       <name>Payer Claim Control Number</name>
                       <usage>S</usage>
@@ -2394,14 +2393,14 @@
         <loop xid="FOOTER" type="wrapper">
           <name>Table 3 - Footer</name>
           <usage>N</usage>
-          <pos>0300</pos>
+          <pos>3000</pos>
           <repeat>1</repeat>
         </loop>
-        <!--End of FOOTER loop-->
+<!--End of FOOTER loop-->
         <segment xid="SE">
           <name>Transaction Set Trailer</name>
           <usage>R</usage>
-          <pos>2700</pos>
+          <pos>5550</pos>
           <max_use>1</max_use>
           <element xid="SE01">
             <data_ele>96</data_ele>
@@ -2443,7 +2442,7 @@
     <segment xid="TA1">
       <name>Interchange Acknowledgement</name>
       <usage>S</usage>
-      <pos>020</pos>
+      <pos>0200</pos>
       <max_use>1</max_use>
       <element xid="TA101">
         <data_ele>I12</data_ele>
