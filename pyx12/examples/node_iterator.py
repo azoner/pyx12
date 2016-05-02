@@ -126,34 +126,40 @@ def x12n_iterator(param, src_file, map_path=None):
         x12path = node.get_path()
         #parent
         if x12path in res:
-            res[x12path]['ct'] += 1
+            res[x12path]['Count'] += 1
         else:
             res[x12path] = {
-                'ordinal': res_ordinal,
-                'ct': 1,
-                'base_name': node.base_name,
-                'id': node.id,
-                'name': node.name,
-                'max_use': node.max_use,
-                'parent_path': node.parent.get_path(),
+                'Ordinal': res_ordinal,
+                'Count': 1,
+                'NodeType': node.base_name,
+                'Id': node.id,
+                'Name': node.name,
+                'FormattedName': clean_name(node.name),
+                'LoopMaxUse': node.max_use,
+                'ParentPath': node.parent.get_path(),
             }
             res_ordinal += 1
-
+            
         for (refdes, ele_ord, comp_ord, val) in seg.values_iterator():
             elepath = node.parent.get_path() + '/' + refdes
             if elepath in res:
-                res[elepath]['ct'] += 1
+                res[elepath]['Count'] += 1
             else:
                 ele_node = node.getnodebypath2(refdes)
                 #node.get_child_node_by_ordinal(
                 res[elepath] = {
-                    'ordinal': res_ordinal,
-                    'ct': 1,
-                    'base_name': ele_node.base_name,
-                    'id': ele_node.id,
-                    'name': ele_node.name,
+                    'Ordinal': res_ordinal,
+                    'Count': 1,
+                    'NodeType': ele_node.base_name,
+                    'Id': ele_node.id,
+                    'Name': ele_node.name,
+                    'FormattedName': clean_name(ele_node.name),
                     #'max_use': ele_node.max_use,
-                    'parent_path': ele_node.parent.get_path(),
+                    'ParentPath': ele_node.parent.get_path(),
+                    'Usage': ele_node.usage,
+                    'DataType': ele_node.data_type,
+                    'MinLength': ele_node.min_len,
+                    'MaxLength': ele_node.max_len,
                 }
                 res_ordinal += 1
 
@@ -169,6 +175,9 @@ def x12n_iterator(param, src_file, map_path=None):
         pass
     return res
 
+def clean_name(name):
+    return name.replace(' ', '').replace('/', '').replace("'", '')
+
 def check_map_path_arg(map_path):
     if not os.path.isdir(map_path):
         raise argparse.ArgumentError(None, "The MAP_PATH '{}' is not a valid directory".format(map_path))
@@ -177,6 +186,57 @@ def check_map_path_arg(map_path):
         raise argparse.ArgumentError(None,
                     "The MAP_PATH '{}' does not contain the map index file '{}'".format(map_path, index_file))
     return map_path
+
+def save_csv(rows, csv_file):
+    import csv
+    fields = ['Ordinal', 'Id', 'NodeType', 'Name', 'FormattedName', 'Count', 'Section', 'RelativePath', 'FullPath', 'ParentPath', 'LoopMaxUse', 
+              'Usage', 'DataType', 'MinLength', 'MaxLength']
+    with open(csv_file, 'wb') as outfile:
+        writer = csv.DictWriter(outfile, fieldnames=fields, delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL)
+        writer.writeheader()
+        for row in rows:
+            writer.writerow(row)
+
+def save_mapping(rows, json_file):
+    import json
+    sections = set([x['Section'] for x in rows])
+    maps = {}
+    for s in sections:
+        maps[s] = [{'FieldName': x['FormattedName'], 'X12Path': x['RelativePath'], 'Type': x['DataType'] if 'DataType' in x else None} for x in rows if x['Section'] == s]
+    with file(json_file, 'w') as fd:
+        json.dump(maps, fd, indent=4, sort_keys=True)
+
+def make_dict(data):
+    rows = []
+    for k, v in data.items():
+        row = v
+        row['FullPath'] = k
+        if '2220D' in k:
+            row['Section'] = 'ServiceLine'
+        elif '2200D' in k:
+            row['Section'] = 'Claim'
+        elif '2000D' in k:
+            row['Section'] = 'Patient'
+        elif '2000C' in k:
+            row['Section'] = 'BillingProvider'
+        elif '2000A' in k:
+            row['Section'] = 'Header'
+        else:
+            row['Section'] = 'Batch'
+        rows.append(row)
+    base_paths = {}
+    for row in rows:
+        section = row['Section']
+        if section not in base_paths:
+            base_paths[section] = row['ParentPath']
+        elif len(base_paths[section]) > len(row['ParentPath']):
+            base_paths[section] = row['ParentPath']
+    for row in rows:
+        basepath = base_paths[row['Section']]
+        if row['FullPath'].startswith(basepath):
+            row['RelativePath'] = row['FullPath'][len(basepath)+1:]
+    return rows
+
 
 def main():
     """
@@ -230,19 +290,27 @@ def main():
                 logger.error('Could not open file "%s"' % (src_filename))
                 continue
             res = x12n_iterator(param=param, src_file=src_filename, map_path=args.map_path)
-            pp = pprint.PrettyPrinter()
+            #pp = pprint.PrettyPrinter()
             #pp.pprint(res)
+            rows = make_dict(res)
+            if False:
+                import json
+                json_file = os.path.join(os.path.dirname(os.path.abspath(src_filename)), 'out.json')
+                with file(json_file, 'w') as fd:
+                    json.dump(res, fd, indent=4, sort_keys=True)
+            if True:
+                csv_file = os.path.join(os.path.dirname(os.path.abspath(src_filename)), 'out.csv')
+                save_csv(rows, csv_file)
+            json_map_file = os.path.join(os.path.dirname(os.path.abspath(src_filename)), 'map.json')
+            save_mapping(rows, json_map_file)
 
-            import json
-            json_file = os.path.join(os.path.dirname(os.path.abspath(src_filename)), 'out.json')
-            with file(json_file, 'w') as fd:
-                json.dump(res, fd, indent=4, sort_keys=True)
         except IOError:
             logger.exception('Could not open files')
             return False
         except KeyboardInterrupt:
             print("\n[interrupt]")
-
+        #except Exception as e:
+        #    raise e
     return True
 
 if __name__ == '__main__':
