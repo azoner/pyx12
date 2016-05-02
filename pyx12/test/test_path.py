@@ -305,7 +305,7 @@ class Empty(unittest.TestCase):
 
     def test_empty_1(self):
         p1 = ''
-        a = pyx12.path.X12Path(p)
+        a = pyx12.path.X12Path(p1)
         self.assertTrue(pyx12.path.X12Path(
             p1).empty(), 'Path "%s" is empty' % (p1))
 
