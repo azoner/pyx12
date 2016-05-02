@@ -371,8 +371,11 @@ class Segment(object):
         @type ref_des: string
         @return: Element or Composite
         @rtype: L{segment.Composite}
+        @raise IndexError: If ref_des does not contain a valid element index
         """
         (ele_idx, comp_idx) = self._parse_refdes(ref_des)
+        if ele_idx is None:
+            raise IndexError('{} is not a valid element index'.format(ref_des))
         if ele_idx >= self.__len__():
             return None
         if comp_idx is None:
