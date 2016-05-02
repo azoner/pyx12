@@ -1341,6 +1341,26 @@ class element_if(x12_node):
         data_ele = self.root.data_elements.get_by_elem_num(self.data_ele)
         return data_ele['data_type']
 
+    @property
+    def data_type(self):
+        data_ele = self.root.data_elements.get_by_elem_num(self.data_ele)
+        return data_ele['data_type']
+
+    @property
+    def min_len(self):
+        data_ele = self.root.data_elements.get_by_elem_num(self.data_ele)
+        return data_ele['min_len']
+
+    @property
+    def max_len(self):
+        data_ele = self.root.data_elements.get_by_elem_num(self.data_ele)
+        return data_ele['max_len']
+
+    @property
+    def data_element_name(self):
+        data_ele = self.root.data_elements.get_by_elem_num(self.data_ele)
+        return data_ele['name']
+
     def get_seg_count(self):
         """
         """
