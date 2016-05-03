@@ -202,9 +202,9 @@ def save_mapping(rows, json_file):
     sections = set([x['Section'] for x in rows])
     maps = {}
     for s in sections:
-        maps[s] = [{'FieldName': x['FormattedName'], 'X12Path': x['RelativePath'], 'Type': x['DataType'] if 'DataType' in x else None} for x in rows if x['Section'] == s]
+        maps[s] = [{'X12Path': x['RelativePath'], 'Type': x['DataType'] if 'DataType' in x else None, 'FieldName': x['FormattedName']} for x in rows if x['Section'] == s and x['NodeType'] == 'element']
     with file(json_file, 'w') as fd:
-        json.dump(maps, fd, indent=4, sort_keys=True)
+        json.dump(maps, fd)
 
 def make_dict(data):
     rows = []
