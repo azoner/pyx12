@@ -800,7 +800,6 @@ class GetCompositeNodeByPath(unittest.TestCase):
 
     def test_get_composite_node(self):
         self.errh.err_cde = None
-
         node = self.map.getnodebypath2('/ISA_LOOP/GS_LOOP/ST_LOOP/DETAIL/2000A/2000B/2200B/STC02')
         self.assertNotEqual(node, None)
         self.assertEqual(node.id, 'STC02')
@@ -810,3 +809,12 @@ class GetCompositeNodeByPath(unittest.TestCase):
         #self.assertTrue(seg_node.is_match_qual(seg_data, 'INS', None))
         #self.assertNotEqual(seg_node, None)
         #self.assertEqual(seg_node.id, 'INS')
+
+    def test_get_node_path_refdes(self):
+        self.errh.err_cde = None
+        node = self.map.getnodebypath2('/ISA_LOOP/GS_LOOP/ST_LOOP/DETAIL/2000A/2000B/2200B/STC02')
+        self.assertNotEqual(node, None)
+        self.assertEqual(node.id, 'STC02')
+        refdes = 'STC02'
+        newnode = node.parent.getnodebypath2(refdes)
+        self.assertEqual(newnode.get_path(), '/ISA_LOOP/GS_LOOP/ST_LOOP/DETAIL/2000A/2000B/2200B/STC02')

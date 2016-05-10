@@ -45,6 +45,7 @@ def x12n_iterator(param, src_file, map_path=None):
 
     res = {}
     res_ordinal = 0
+    last_x12_segment_path = None
     for seg in src:
         #find node
         orig_node = node
@@ -114,13 +115,12 @@ def x12n_iterator(param, src_file, map_path=None):
                         logger.debug('Map file: %s' % (map_file))
                         #apply_loop_count(node, cur_map)
                         node = cur_map.getnodebypath('/ISA_LOOP/GS_LOOP/ST_LOOP/HEADER/BHT')
-                pass
-            elif seg.get_seg_id() == 'GE':
-                pass
-            elif seg.get_seg_id() == 'ST':
-                pass
-            elif seg.get_seg_id() == 'SE':
-                pass
+            #elif seg.get_seg_id() == 'GE':
+            #    pass
+            #elif seg.get_seg_id() == 'ST':
+            #    pass
+            #elif seg.get_seg_id() == 'SE':
+            #    pass
             else:
                 pass
 
@@ -128,6 +128,8 @@ def x12n_iterator(param, src_file, map_path=None):
         #parent
         if x12path in res:
             res[x12path]['Count'] += 1
+            if last_x12_segment_path not in res[x12path]['prefix_nodes']:
+                res[x12path]['prefix_nodes'].append(last_x12_segment_path)
         else:
             res[x12path] = {
                 'Ordinal': res_ordinal,
@@ -139,6 +141,7 @@ def x12n_iterator(param, src_file, map_path=None):
                 'ParentName': clean_name(node.parent.name),
                 'LoopMaxUse': node.max_use,
                 'ParentPath': node.parent.get_path(),
+                'prefix_nodes': [last_x12_segment_path]
             }
             res_ordinal += 1
             
@@ -167,7 +170,7 @@ def x12n_iterator(param, src_file, map_path=None):
                 res_ordinal += 1
 
             #print (refdes, val)
-
+        last_x12_segment_path = x12path
 
     del node
     del src
@@ -244,7 +247,7 @@ def main():
             res = x12n_iterator(param=param, src_file=src_filename, map_path=args.map_path)
             json_file = os.path.join(os.path.dirname(os.path.abspath(src_filename)), 'node_list.json')
             with file(json_file, 'w') as fd:
-                json.dump(res, fd, indent=4, sort_keys=True)
+                json.dump(res, fd, indent=4)
 
         except IOError:
             logger.exception('Could not open files')
