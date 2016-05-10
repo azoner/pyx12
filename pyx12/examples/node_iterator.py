@@ -5,6 +5,7 @@ import os.path
 import logging
 import argparse
 import pprint
+import json
 
 libpath = os.path.abspath(os.path.join(os.path.dirname(__file__), '../..'))
 if os.path.isdir(libpath):
@@ -135,6 +136,7 @@ def x12n_iterator(param, src_file, map_path=None):
                 'Id': node.id,
                 'Name': node.name,
                 'FormattedName': clean_name(node.name),
+                'ParentName': clean_name(node.parent.name),
                 'LoopMaxUse': node.max_use,
                 'ParentPath': node.parent.get_path(),
             }
@@ -154,6 +156,7 @@ def x12n_iterator(param, src_file, map_path=None):
                     'Id': ele_node.id,
                     'Name': ele_node.name,
                     'FormattedName': clean_name(ele_node.name),
+                    'ParentName': clean_name(ele_node.parent.name),
                     #'max_use': ele_node.max_use,
                     'ParentPath': ele_node.parent.get_path(),
                     'Usage': ele_node.usage,
@@ -186,57 +189,6 @@ def check_map_path_arg(map_path):
         raise argparse.ArgumentError(None,
                     "The MAP_PATH '{}' does not contain the map index file '{}'".format(map_path, index_file))
     return map_path
-
-def save_csv(rows, csv_file):
-    import csv
-    fields = ['Ordinal', 'Id', 'NodeType', 'Name', 'FormattedName', 'Count', 'Section', 'RelativePath', 'FullPath', 'ParentPath', 'LoopMaxUse', 
-              'Usage', 'DataType', 'MinLength', 'MaxLength']
-    with open(csv_file, 'wb') as outfile:
-        writer = csv.DictWriter(outfile, fieldnames=fields, delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL)
-        writer.writeheader()
-        for row in rows:
-            writer.writerow(row)
-
-def save_mapping(rows, json_file):
-    import json
-    sections = set([x['Section'] for x in rows])
-    maps = {}
-    for s in sections:
-        maps[s] = [{'X12Path': x['RelativePath'], 'Type': x['DataType'] if 'DataType' in x else None, 'FieldName': x['FormattedName']} for x in rows if x['Section'] == s and x['NodeType'] == 'element']
-    with file(json_file, 'w') as fd:
-        json.dump(maps, fd)
-
-def make_dict(data):
-    rows = []
-    for k, v in data.items():
-        row = v
-        row['FullPath'] = k
-        if '2220D' in k:
-            row['Section'] = 'ServiceLine'
-        elif '2200D' in k:
-            row['Section'] = 'Claim'
-        elif '2000D' in k:
-            row['Section'] = 'Patient'
-        elif '2000C' in k:
-            row['Section'] = 'BillingProvider'
-        elif '2000A' in k:
-            row['Section'] = 'Header'
-        else:
-            row['Section'] = 'Batch'
-        rows.append(row)
-    base_paths = {}
-    for row in rows:
-        section = row['Section']
-        if section not in base_paths:
-            base_paths[section] = row['ParentPath']
-        elif len(base_paths[section]) > len(row['ParentPath']):
-            base_paths[section] = row['ParentPath']
-    for row in rows:
-        basepath = base_paths[row['Section']]
-        if row['FullPath'].startswith(basepath):
-            row['RelativePath'] = row['FullPath'][len(basepath)+1:]
-    return rows
-
 
 def main():
     """
@@ -290,19 +242,9 @@ def main():
                 logger.error('Could not open file "%s"' % (src_filename))
                 continue
             res = x12n_iterator(param=param, src_file=src_filename, map_path=args.map_path)
-            #pp = pprint.PrettyPrinter()
-            #pp.pprint(res)
-            rows = make_dict(res)
-            if False:
-                import json
-                json_file = os.path.join(os.path.dirname(os.path.abspath(src_filename)), 'out.json')
-                with file(json_file, 'w') as fd:
-                    json.dump(res, fd, indent=4, sort_keys=True)
-            if True:
-                csv_file = os.path.join(os.path.dirname(os.path.abspath(src_filename)), 'out.csv')
-                save_csv(rows, csv_file)
-            json_map_file = os.path.join(os.path.dirname(os.path.abspath(src_filename)), 'map.json')
-            save_mapping(rows, json_map_file)
+            json_file = os.path.join(os.path.dirname(os.path.abspath(src_filename)), 'node_list.json')
+            with file(json_file, 'w') as fd:
+                json.dump(res, fd, indent=4, sort_keys=True)
 
         except IOError:
             logger.exception('Could not open files')
