@@ -1372,6 +1372,17 @@ class element_if(x12_node):
         """
         return True
 
+    def get_path(self):
+        """
+        @return: path - XPath style
+        @rtype: string
+        """
+        if self._fullpath:
+            return self._fullpath
+        parent_path = self.parent.get_path()
+        self._fullpath = parent_path + self.path
+        return self._fullpath
+
 
 ############################################################
 # Composite Interface
