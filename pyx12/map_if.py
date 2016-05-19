@@ -1379,8 +1379,13 @@ class element_if(x12_node):
         """
         if self._fullpath:
             return self._fullpath
-        parent_path = self.parent.get_path()
-        self._fullpath = parent_path + self.path
+        # pop to enclosing loop
+        p = self.parent
+        while not p.is_segment():
+            p = p.parent
+        parent_path = p.parent.get_path()
+        # add the segment, element, and sub-element path
+        self._fullpath = parent_path + '/' + self.id
         return self._fullpath
 
 
