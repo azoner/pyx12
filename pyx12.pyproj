@@ -5,7 +5,7 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{111e19ba-8d6f-4e11-b7e1-c1f38c7a07cb}</ProjectGuid>
     <ProjectHome />
-    <StartupFile />
+    <StartupFile>pyx12\scripts\x12info.py</StartupFile>
     <SearchPath />
     <WorkingDirectory>.</WorkingDirectory>
     <OutputPath>.</OutputPath>
@@ -13,6 +13,10 @@
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
     <InterpreterId>{9a7a9026-48c1-4688-9d5d-e5699d47d074}</InterpreterId>
     <InterpreterVersion>2.7</InterpreterVersion>
+    <LaunchProvider>Standard Python launcher</LaunchProvider>
+    <CommandLineArguments>
+    </CommandLineArguments>
+    <EnableNativeCodeDebugging>False</EnableNativeCodeDebugging>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)' == 'Debug'" />
   <PropertyGroup Condition="'$(Configuration)' == 'Release'" />
@@ -22,6 +26,10 @@
   <ItemGroup>
     <Content Include="LICENSE.txt" />
     <Content Include="requirements.dev.txt" />
+    <Compile Include="pyx12\examples\deident834.py" />
+    <Compile Include="pyx12\examples\generate_spec.py" />
+    <Compile Include="pyx12\examples\node_iterator.py" />
+    <Compile Include="pyx12\x12metadata.py" />
     <Compile Include="setup.py" />
     <Compile Include="pyx12\codes.py" />
     <Compile Include="pyx12\dataele.py" />
