@@ -5,7 +5,7 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{111e19ba-8d6f-4e11-b7e1-c1f38c7a07cb}</ProjectGuid>
     <ProjectHome />
-    <StartupFile />
+    <StartupFile>pyx12\examples\node_iterator.py</StartupFile>
     <SearchPath />
     <WorkingDirectory>.</WorkingDirectory>
     <OutputPath>.</OutputPath>
@@ -13,12 +13,48 @@
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
     <InterpreterId>{9a7a9026-48c1-4688-9d5d-e5699d47d074}</InterpreterId>
     <InterpreterVersion>2.7</InterpreterVersion>
+    <LaunchProvider>Standard Python launcher</LaunchProvider>
+    <CommandLineArguments>-v -v -H -m C:\Users\jholland\Source\GitHub\pyx12\pyx12\map X:\MdchDegFile\Enrollment\MacapDaily\5877.160509.1211.09qtfrg9.txt</CommandLineArguments>
+    <InterpreterPath />
+    <InterpreterArguments />
+    <EnableNativeCodeDebugging>False</EnableNativeCodeDebugging>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)' == 'Debug'" />
   <PropertyGroup Condition="'$(Configuration)' == 'Release'" />
+  <PropertyGroup>
+    <PtvsTargetsFile>$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\Python Tools\Microsoft.PythonTools.targets</PtvsTargetsFile>
+  </PropertyGroup>
   <ItemGroup>
     <Content Include="LICENSE.txt" />
+    <Content Include="pyx12\map\277.5010.X214.xml" />
+    <Content Include="pyx12\map\loop_only.xsl" />
+    <Content Include="pyx12\test\files\834_eol_in_element.txt" />
+    <Content Include="pyx12\test\files\834_lui_id.txt" />
+    <Content Include="pyx12\test\files\834_lui_id_5010.txt" />
+    <Content Include="pyx12\test\files\835id.txt" />
+    <Content Include="pyx12\test\files\837miss.txt" />
+    <Content Include="pyx12\test\files\bad_2010AA_bug.txt" />
+    <Content Include="pyx12\test\files\bad_header_looping.txt" />
+    <Content Include="pyx12\test\files\blank1.txt" />
+    <Content Include="pyx12\test\files\ele.txt" />
+    <Content Include="pyx12\test\files\elements.txt" />
+    <Content Include="pyx12\test\files\fail_no_IEA.txt" />
+    <Content Include="pyx12\test\files\loop_counting.txt" />
+    <Content Include="pyx12\test\files\loop_counting2.txt" />
+    <Content Include="pyx12\test\files\multiple_trn.txt" />
+    <Content Include="pyx12\test\files\mult_isa.txt" />
+    <Content Include="pyx12\test\files\ordinal.txt" />
+    <Content Include="pyx12\test\files\per_segment_repeat.txt" />
+    <Content Include="pyx12\test\files\repeat_init_segment.txt" />
+    <Content Include="pyx12\test\files\simple1.txt" />
+    <Content Include="pyx12\test\files\simple_837i.txt" />
+    <Content Include="pyx12\test\files\simple_837p.txt" />
+    <Content Include="pyx12\test\files\trailer_errors.txt" />
+    <Content Include="pyx12\test\files\trailing_terms.txt" />
     <Content Include="requirements.dev.txt" />
+    <Compile Include="pyx12\examples\generate_spec.py" />
+    <Compile Include="pyx12\examples\node_iterator.py" />
+    <Compile Include="pyx12\test\test_map_if_load.py" />
     <Compile Include="setup.py" />
     <Compile Include="pyx12\codes.py" />
     <Compile Include="pyx12\dataele.py" />
@@ -131,6 +167,7 @@
     <Folder Include="pyx12\scripts" />
     <Folder Include="pyx12\test" />
     <Folder Include="pyx12\tests" />
+    <Folder Include="pyx12\test\files\" />
   </ItemGroup>
   <ItemGroup>
     <InterpreterReference Include="{9a7a9026-48c1-4688-9d5d-e5699d47d074}\2.7" />
@@ -138,5 +175,6 @@
   <ItemGroup>
     <InterpreterReference Include="{9a7a9026-48c1-4688-9d5d-e5699d47d074}\2.7" />
   </ItemGroup>
-  <Import Project="$(MSBuildToolsPath)\Microsoft.Common.targets" />
+  <Import Project="$(PtvsTargetsFile)" Condition="Exists($(PtvsTargetsFile))" />
+  <Import Project="$(MSBuildToolsPath)\Microsoft.Common.targets" Condition="!Exists($(PtvsTargetsFile))" />
 </Project>
