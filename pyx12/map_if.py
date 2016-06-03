@@ -1372,6 +1372,26 @@ class element_if(x12_node):
         """
         return True
 
+    def get_path(self):
+        """
+        @return: path - XPath style
+        @rtype: string
+        """
+        if self._fullpath:
+            return self._fullpath
+        #get enclosing loop
+        parent_path = self.get_parent_segment().parent.get_path()
+        # add the segment, element, and sub-element path
+        self._fullpath = parent_path + '/' + self.id
+        return self._fullpath
+    
+    def get_parent_segment(self):
+        # pop to enclosing loop
+        p = self.parent
+        while not p.is_segment():
+            p = p.parent
+        return p
+
 
 ############################################################
 # Composite Interface

@@ -5,7 +5,7 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{111e19ba-8d6f-4e11-b7e1-c1f38c7a07cb}</ProjectGuid>
     <ProjectHome />
-    <StartupFile>pyx12\examples\node_iterator.py</StartupFile>
+    <StartupFile>pyx12\scripts\x12info.py</StartupFile>
     <SearchPath />
     <WorkingDirectory>.</WorkingDirectory>
     <OutputPath>.</OutputPath>
@@ -14,9 +14,8 @@
     <InterpreterId>{9a7a9026-48c1-4688-9d5d-e5699d47d074}</InterpreterId>
     <InterpreterVersion>2.7</InterpreterVersion>
     <LaunchProvider>Standard Python launcher</LaunchProvider>
-    <CommandLineArguments>-v -v -H -m C:\Users\jholland\Source\GitHub\pyx12\pyx12\map X:\MdchDegFile\Enrollment\MacapDaily\5877.160509.1211.09qtfrg9.txt</CommandLineArguments>
-    <InterpreterPath />
-    <InterpreterArguments />
+    <CommandLineArguments>
+    </CommandLineArguments>
     <EnableNativeCodeDebugging>False</EnableNativeCodeDebugging>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)' == 'Debug'" />

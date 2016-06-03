@@ -3,8 +3,8 @@ $ python setup.py test
 # verify test is passing on travis
 $ git tag vX.Y.Z
 $ git push origin vX.Y.Z
-$python setup.py sdist upload -r ppt
-$python setup.py bdist_wheel upload -r ppt
+$python setup.py sdist upload -r pypitest
+$python setup.py bdist_wheel upload -r pypitest
 $python setup.py sdist upload
 $python setup.py bdist_wheel upload
 
