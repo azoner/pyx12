@@ -552,6 +552,9 @@ class Segment(object):
         return Segment(self.format(), self.seg_term, self.ele_term, self.subele_term)
 
     def values_iterator(self):
+        """
+        Enumerate over the values in the segment, adding the path, element index and sub-element index
+        """
         for i in range(len(self.elements)):
             if self.elements[i].is_composite():
                 for (comp_ord, val) in self.elements[i].values_iterator():
