@@ -987,13 +987,13 @@ class segment_if(x12_node):
                 comp_data = seg_data.get(ref_des)
                 subele_count = child_node.get_child_count()
                 if seg_data.ele_max_len(ref_des) > subele_count and child_node.usage != 'N':
-                    subele_node = child_node.get_child_node_by_idx(
-                        subele_count + 1)
                     err_str = 'Too many sub-elements in composite "%s" (%s)' % \
-                        (subele_node.name, subele_node.refdes)
+                        (child_node.name, child_node.refdes)
                     err_value = seg_data.get_value(ref_des)
                     errh.ele_error('3', err_str, err_value, ref_des)
-                valid &= child_node.is_valid(comp_data, errh)
+                    valid = False
+                else:
+                    valid &= child_node.is_valid(comp_data, errh)
             elif child_node.is_element():
                 # Validate Element
                 if i == 1 and seg_data.get_seg_id() == 'DTP' \
@@ -1500,6 +1500,10 @@ class composite_if(x12_node):
             err_str = 'Too many sub-elements in composite "%s" (%s)' % (
                 self.name, self.refdes)
             errh.ele_error('3', err_str, None, self.refdes)
+            valid = False
+        if self.repeat < comp_data.get_repetitions():
+            err_str = 'Too many repetitions in composite "%s" (%s)' % (self.name, self.refdes)
+            errh.ele_error('12', err_str, None, self.refdes)
             valid = False
         idx = 0
         for i in range(min(len(comp_data), self.get_child_count() * self.repeat)):

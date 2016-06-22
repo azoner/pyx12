@@ -845,3 +845,19 @@ class RepeatElement(unittest.TestCase):
         result = node.is_valid(seg_data, self.errh)
         self.assertTrue(result, '%s should be valid' % (seg_data.format()))
         self.assertEqual(self.errh.err_cde, None)
+
+    def test_composite_segment_err_in_repetition(self):
+        self.errh.err_cde = None
+        seg_data = pyx12.segment.Segment('DMG*D8*19670722*M*I*:RET:2106-3^:RET:1002-5:*1~', '~', '*', ':', '^')
+        node = self.map.getnodebypath('/ISA_LOOP/GS_LOOP/ST_LOOP/DETAIL/2000/2100A/DMG')
+        result = node.is_valid(seg_data, self.errh)
+        self.assertFalse(result, '%s should not be valid' % (seg_data.format()))
+        self.assertEqual(self.errh.err_cde, '3')
+
+    def test_composite_segment_too_long(self):
+        self.errh.err_cde = None
+        seg_data = pyx12.segment.Segment('DMG*D8*19670722*M*I*:RET:2106-3^:RET:1002-5^:RET:1002-5^:RET:1002-5^:RET:1002-5^:RET:1002-5^:RET:1002-5^:RET:1002-5^:RET:1002-5^:RET:1002-5^:RET:1002-5*1~', '~', '*', ':', '^')
+        node = self.map.getnodebypath('/ISA_LOOP/GS_LOOP/ST_LOOP/DETAIL/2000/2100A/DMG')
+        result = node.is_valid(seg_data, self.errh)
+        self.assertFalse(result, '%s should not be valid' % (seg_data.format()))
+        self.assertEqual(self.errh.err_cde, '12')
