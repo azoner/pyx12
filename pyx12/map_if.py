@@ -1512,11 +1512,16 @@ class composite_if(x12_node):
                 for j in range(min(idx, self.get_child_count()), self.get_child_count()):
                     if j < self.get_child_count():
                         # Check missing required elements
-                        valid &= self.get_child_node_by_idx(i).is_valid(None, errh)
+                        valid &= self.get_child_node_by_idx(j).is_valid(None, errh)
                 idx = 0
                 continue
             valid &= self.get_child_node_by_idx(idx).is_valid(comp_data[i], errh)
             idx += 1
+        # validate the non-repeating segments (or last repeat seg)
+        for j in range(min(idx, self.get_child_count()), self.get_child_count()):
+            if j < self.get_child_count():
+                # Check missing required elements
+                valid &= self.get_child_node_by_idx(j).is_valid(None, errh)
 
         return valid
 
