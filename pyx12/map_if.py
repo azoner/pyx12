@@ -986,7 +986,7 @@ class segment_if(x12_node):
                 ref_des = '%02i' % (i + 1)
                 comp_data = seg_data.get(ref_des)
                 subele_count = child_node.get_child_count()
-                if seg_data.ele_len(ref_des) > subele_count and child_node.usage != 'N':
+                if seg_data.ele_max_len(ref_des) > subele_count and child_node.usage != 'N':
                     subele_node = child_node.get_child_node_by_idx(
                         subele_count + 1)
                     err_str = 'Too many sub-elements in composite "%s" (%s)' % \
@@ -1496,17 +1496,24 @@ class composite_if(x12_node):
             errh.ele_error('5', err_str, None, self.refdes)
             return False
 
-        if len(comp_data) > self.get_child_count():
+        if comp_data.max_len() > self.get_child_count():
             err_str = 'Too many sub-elements in composite "%s" (%s)' % (
                 self.name, self.refdes)
             errh.ele_error('3', err_str, None, self.refdes)
             valid = False
-        for i in range(min(len(comp_data), self.get_child_count())):
-            valid &= self.get_child_node_by_idx(i).is_valid(comp_data[i], errh)
-        for i in range(min(len(comp_data), self.get_child_count()), self.get_child_count()):
-            if i < self.get_child_count():
-                #Check missing required elements
-                valid &= self.get_child_node_by_idx(i).is_valid(None, errh)
+        idx = 0
+        for i in range(min(len(comp_data), self.get_child_count() * self.repeat)):
+            # repeating, reset the idx counter
+            if comp_data[i] == comp_data.repetition_term:
+                for j in range(min(idx, self.get_child_count()), self.get_child_count()):
+                    if j < self.get_child_count():
+                        # Check missing required elements
+                        valid &= self.get_child_node_by_idx(i).is_valid(None, errh)
+                idx = 0
+                continue
+            valid &= self.get_child_node_by_idx(idx).is_valid(comp_data[i], errh)
+            idx += 1
+
         return valid
 
     def is_composite(self):

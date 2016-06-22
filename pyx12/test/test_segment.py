@@ -107,13 +107,26 @@ class Composite(unittest.TestCase):
     def setUp(self):
         seg_str = 'TST*AA:1:Y*BB:5*ZZ'
         self.seg = pyx12.segment.Segment(seg_str, '~', '*', ':')
+        seg_str_repeats = 'TST*AA:1:Y^AA:2:Z*BB:5*Z'
+        self.repeat_seg = pyx12.segment.Segment(seg_str_repeats, '~', '*', ':', '^')
 
     def test_composite_is_a(self):
         self.assertTrue(self.seg.is_composite('TST01'))
         self.assertFalse(self.seg.is_element('TST01'))
+        self.assertTrue(self.repeat_seg.is_composite('TST01'))
+        self.assertFalse(self.repeat_seg.is_element('TST01'))
 
     def test_composite_len(self):
         self.assertEqual(len(self.seg.get('01')), 3)
+        self.assertEqual(len(self.repeat_seg.get('01')), 7)
+
+    def test_composite_max_len(self):
+        self.assertEqual(self.seg.get('01').max_len(), 3)
+        self.assertEqual(self.repeat_seg.get('01').max_len(), 3)
+
+    def test_repetitions(self):
+        self.assertEqual(self.seg.get('01').get_repetitions(), 1)
+        self.assertEqual(self.repeat_seg.get('01').get_repetitions(), 2)
 
     def test_composite_indexing(self):
         self.assertEqual(self.seg.get_value('TST01-1'), 'AA')
@@ -121,19 +134,39 @@ class Composite(unittest.TestCase):
         self.assertEqual(self.seg.get_value('TST01-4'), None)
         #self.assertRaises(IndexError, lambda x: self.seg.get('TST01-%i' % (x)), 4)
 
+        self.assertEqual(self.repeat_seg.get_value('TST01-1'), 'AA')
+        self.assertEqual(self.repeat_seg.get_value('TST01-3'), 'Y')
+        self.assertEqual(self.repeat_seg.get_value('TST01-4'), '^')
+        self.assertEqual(self.repeat_seg.get_value('TST01-5'), 'AA')
+        self.assertEqual(self.repeat_seg.get_value('TST01-6'),  '2')
+        self.assertEqual(self.repeat_seg.get_value('TST01-8'), None)
+
 
 class Simple(unittest.TestCase):
 
     def setUp(self):
-        seg_str = 'TST*AA*1*Y*BB:5*ZZ'
+        seg_str = 'TST*AA*1*Y*BB*ZZ'
+        repeat_seg_str = 'TST*AA^BB*1*Y*BB*ZZ'
         self.seg = pyx12.segment.Segment(seg_str, '~', '*', ':')
+        self.repeat_seg = pyx12.segment.Segment(repeat_seg_str, '~', '*', ':', '^')
 
     def test_simple_is_a(self):
         self.assertTrue(self.seg.is_element('TST01'))
         self.assertFalse(self.seg.is_composite('TST01'))
+        self.assertTrue(self.repeat_seg.is_element('TST01'))
+        self.assertFalse(self.repeat_seg.is_composite('TST01'))
 
     def test_simple_len(self):
         self.assertEqual(len(self.seg.get('01')), 1)
+        self.assertEqual(len(self.repeat_seg.get('01')), 3)
+
+    def test_simple_max_len(self):
+        self.assertEqual(self.seg.get('01').max_len(), 1)
+        self.assertEqual(self.repeat_seg.get('01').max_len(), 1)
+
+    def test_repetitions(self):
+        self.assertEqual(self.seg.get('01').get_repetitions(), 1)
+        self.assertEqual(self.repeat_seg.get('01').get_repetitions(), 2)
 
     def test_simple_indexing(self):
         self.assertEqual(self.seg.get_value('TST01'), 'AA')
@@ -142,6 +175,17 @@ class Simple(unittest.TestCase):
         self.assertEqual(self.seg.get_value('TST05'), 'ZZ')
         self.assertEqual(self.seg.get_value('TST06'), None)
         #self.assertRaises(IndexError, lambda x: self.seg[0][x].get_value(), 1)
+
+        self.assertEqual(self.repeat_seg.get_value('TST01'), 'AA^BB')
+        self.assertEqual(self.seg.get_value('TST02'), '1')
+        self.assertEqual(self.seg.get_value('TST03'), 'Y')
+        self.assertEqual(self.seg.get_value('TST05'), 'ZZ')
+        self.assertEqual(self.seg.get_value('TST06'), None)
+
+    def test_indexing(self):
+        self.assertEqual(self.repeat_seg.get_value('TST01-1'), 'AA')
+        self.assertEqual(self.repeat_seg.get_value('TST01-2'), '^')
+        self.assertEqual(self.repeat_seg.get_value('TST01-3'), 'BB')
 
     def test_simple_spaces(self):
         seg_str = 'TST*AA*          *BB~'

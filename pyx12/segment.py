@@ -10,11 +10,9 @@
 
 """
 Implements an interface to a x12 segment.
-
 A segment is comprised of a segment identifier and a sequence of elements.
 An element can be a simple element or a composite.  A simple element is
 treated as a composite element with one sub-element.
-
 All indexing is zero based.
 """
 import re
@@ -23,6 +21,7 @@ import pyx12.path
 from pyx12.errors import EngineError
 
 rec_seg_id = re.compile('^[A-Z][A-Z0-9]{1,2}$', re.S)
+
 
 class Element(object):
     """
@@ -33,9 +32,9 @@ class Element(object):
         """
         @param ele_str: 1::2
         @type ele_str: string
-
         """
         self.value = ele_str if ele_str is not None else ''
+        self.repetitions = 1
 
     def __eq__(self, other):
         if isinstance(other, Element):
@@ -68,6 +67,12 @@ class Element(object):
         @rtype: string
         """
         return self.value
+
+    def max_len(self):
+        """
+        @rtype 1
+        """
+        return 1
 
     def format(self):
         """
@@ -109,8 +114,12 @@ class Element(object):
         else:
             return True
 
+    def get_repetitions(self):
+        return self.repetitions
+
     # return ''.join([`num` for num in xrange(loop_count)])
-    # def has_invalid_character(self, 
+    # def has_invalid_character(self,
+
 
 class Composite(object):
     """
@@ -120,7 +129,7 @@ class Composite(object):
     # Attributes:
 
     # Operations
-    def __init__(self, ele_str, subele_term=None):
+    def __init__(self, ele_str, subele_term=None, repetition_term=None):
         """
         @type ele_str: string
         @raise EngineError: If a terminator is None and no default
@@ -129,12 +138,29 @@ class Composite(object):
             raise EngineError('The sub-element terminator must be a single character, is %s' % (subele_term))
         self.subele_term = subele_term
         self.subele_term_orig = subele_term
+        self.repetition_term = repetition_term
         if ele_str is None:
             raise EngineError('Element string is None')
-        members = ele_str.split(self.subele_term)
+
+        if self.repetition_term:
+            reps = ele_str.split(self.repetition_term)
+            self.repetitions = len(reps)
+        else:
+            self.repetitions = 1
+
         self.elements = []
-        for elem in members:
-            self.elements.append(Element(elem))
+        # there's at least 1 repetition
+        if self.repetitions > 1:
+            for rep in reps:
+                members = rep.split(self.subele_term)
+                for elem in members:
+                    self.elements.append(Element(elem))
+                self.elements.append(self.repetition_term)
+            self.elements.pop()
+        else:
+            members = ele_str.split(self.subele_term)
+            for elem in members:
+                self.elements.append(Element(elem))
 
     def __eq__(self, other):
         if isinstance(other, Composite):
@@ -187,10 +213,23 @@ class Composite(object):
         """
         return self.format(self.subele_term)
 
+    def max_len(self):
+        """
+        returns the maximum length for a repitition
+        @retype: int
+        """
+        temp_list = list()
+        temp_list.append([])
+        for elem in self.elements:
+            if elem == self.repetition_term:
+                temp_list.append([])
+            else:
+                temp_list[-1].append(elem)
+        return max(map(len, temp_list))
+
     def format(self, subele_term=None):
         """
         Format a composite
-
         @return: string
         @raise EngineError: If terminator is None and no default
         """
@@ -201,7 +240,17 @@ class Composite(object):
         for i in range(len(self.elements) - 1, -1, -1):
             if not self.elements[i].is_empty():
                 break
-        return subele_term.join([Element.__repr__(x) for x in self.elements[:i + 1]])
+        res = []
+        for itr, x in enumerate(self.elements[:i + 1]):
+            if isinstance(x, str):
+                if res[-1] == self.subele_term:
+                    res.pop()
+                res.append(x)
+            else:
+                res.append(x.__repr__())
+                res.append(subele_term)
+        res.pop()
+        return ''.join(res)
 
     def get_value(self):
         """
@@ -223,7 +272,7 @@ class Composite(object):
         """
         @rtype: boolean
         """
-        if len(self.elements) > 1:
+        if self.max_len() > 1:
             return True
         else:
             return False
@@ -232,7 +281,7 @@ class Composite(object):
         """
         @rtype: boolean
         """
-        if len(self.elements) == 1:
+        if self.max_len() == 1:
             return True
         else:
             return False
@@ -251,6 +300,9 @@ class Composite(object):
             if not self.elements[j].is_empty():
                 subele_ord = '{comp}'.format(comp=j+1)
                 yield (subele_ord, self.elements[j].get_value())
+
+    def get_repetitions(self):
+        return self.repetitions
 
 
 class Segment(object):
@@ -286,7 +338,7 @@ class Segment(object):
                 #guarantee subele_term will not be matched
                 self.elements.append(Composite(ele, ele_term))
             else:
-                self.elements.append(Composite(ele, subele_term))
+                self.elements.append(Composite(ele, subele_term, repetition_term))
 
     def __eq__(self, other):
         if isinstance(other, Segment):
@@ -324,7 +376,6 @@ class Segment(object):
     def append(self, val):
         """
         Append a composite to the segment
-
         @param val: String value of composite
         @type val: string
         """
@@ -349,7 +400,6 @@ class Segment(object):
             - a composite: TST03 where TST03 is a composite
             - a sub-element: TST03-2
             - or any of the above with the segment ID omitted (02, 03, 03-1)
-
         @param ref_des: X12 Reference Designator
         @type ref_des: string
         @rtype: tuple(ele_idx, subele_idx)
@@ -408,7 +458,6 @@ class Segment(object):
         """
         Set the value of an element or subelement identified by the
         Reference Designator
-
         @param ref_des: X12 Reference Designator
         @type ref_des: string
         @param val: New value
@@ -456,6 +505,16 @@ class Segment(object):
         """
         ele_idx = self._parse_refdes(ref_des)[0]
         return len(self.elements[ele_idx])
+
+    def ele_max_len(self, ref_des):
+        """
+        @param ref_des: X12 Reference Designator
+        @type ref_des: string
+        @return: max number of sub-elements in an element or composite repititon
+        @rtype: int
+        """
+        ele_idx = self._parse_refdes(ref_des)[0]
+        return self.elements[ele_idx].max_len()
 
     def set_seg_term(self, seg_term):
         """
@@ -533,7 +592,7 @@ class Segment(object):
     def is_seg_id_valid(self):
         """
         Is the Segment identifier valid?
-        EBNF: 
+        EBNF:
         <seg_id> ::= <letter_or_digit> <letter_or_digit> [<letter_or_digit>]
         @rtype: boolean
         """
