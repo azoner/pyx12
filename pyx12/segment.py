@@ -80,6 +80,12 @@ class Element(object):
         """
         return self.value
 
+    def format_list(self):
+        """
+        @rtype: list(string)
+        """
+        return [self.value]
+
     def get_value(self):
         """
         @rtype: string
@@ -243,14 +249,45 @@ class Composite(object):
         res = []
         for itr, x in enumerate(self.elements[:i + 1]):
             if isinstance(x, str):
-                if res[-1] == self.subele_term:
-                    res.pop()
                 res.append(x)
             else:
                 res.append(x.__repr__())
-                res.append(subele_term)
-        res.pop()
+                if itr + 1 < len(self.elements) and not isinstance(self.elements[itr+1], str):
+                    res.append(subele_term)
+        if itr+1 < len(self.elements) and self.elements[itr+1].is_empty():
+            res.pop()
         return ''.join(res)
+
+    def format_list(self, subele_term=None):
+        """
+        Format a composite and return a tuple of repetitions
+        @return: list(string)
+        @raise EngineError: If terminator is None and no default
+        """
+        if subele_term is None:
+            subele_term = self.subele_term
+        if subele_term is None:
+            raise EngineError('subele_term is None')
+        for i in range(len(self.elements) - 1, -1, -1):
+            if not self.elements[i].is_empty():
+                break
+        res = []
+        rep = []
+        for itr, x in enumerate(self.elements[:i + 1]):
+            if isinstance(x, str):
+                if itr+1 < len(self.elements) and self.elements[itr+1].is_empty():
+                    rep.pop()
+                res.append(''.join(rep))
+                rep = []
+            else:
+                rep.append(x.__repr__())
+                if itr + 1 < len(self.elements) and not isinstance(self.elements[itr+1], str):
+                    rep.append(subele_term)
+        if len(rep) > 0:
+            if itr+1 < len(self.elements) and self.elements[itr+1].is_empty():
+                rep.pop()
+            res.append(''.join(rep))
+        return res
 
     def get_value(self):
         """
@@ -445,6 +482,17 @@ class Segment(object):
             return None
         else:
             return comp1.format()
+
+    def get_values_list(self, ref_des):
+        """
+        @param ref_des: X12 Reference Designator
+        @type ref_des: string
+        """
+        comp1 = self.get(ref_des)
+        if comp1 is None:
+            return None
+        else:
+            return comp1.format_list()
 
     def get_value_by_ref_des(self, ref_des):
         """

@@ -128,6 +128,26 @@ class Composite(unittest.TestCase):
         self.assertEqual(self.seg.get('01').get_repetitions(), 1)
         self.assertEqual(self.repeat_seg.get('01').get_repetitions(), 2)
 
+    def test_simple_indexing(self):
+        self.assertEqual(self.seg.get_value('TST01'), 'AA:1:Y')
+        self.assertEqual(self.seg.get_value('TST02'), 'BB:5')
+        self.assertEqual(self.seg.get_value('TST03'), 'ZZ')
+        self.assertEqual(self.seg.get_value('TST06'), None)
+
+        self.assertEqual(self.repeat_seg.get_value('TST01'), 'AA:1:Y^AA:2:Z')
+        self.assertEqual(self.repeat_seg.get_value('TST02'), 'BB:5')
+        self.assertEqual(self.repeat_seg.get_value('TST03'), 'Z')
+        self.assertEqual(self.repeat_seg.get_value('TST06'), None)
+
+        self.assertEqual(self.seg.get_values_list('TST01'), ['AA:1:Y'])
+        self.assertEqual(self.seg.get_values_list('TST02'), ['BB:5'])
+        self.assertEqual(self.seg.get_values_list('TST03'), ['ZZ'])
+        self.assertEqual(self.seg.get_values_list('TST06'), None)
+
+        self.assertEqual(self.repeat_seg.get_values_list('TST01'), ['AA:1:Y', 'AA:2:Z'])
+        self.assertEqual(self.repeat_seg.get_values_list('TST02'), ['BB:5'])
+        self.assertEqual(self.repeat_seg.get_values_list('TST03'), ['Z'])
+
     def test_composite_indexing(self):
         self.assertEqual(self.seg.get_value('TST01-1'), 'AA')
         self.assertEqual(self.seg.get_value('TST01-3'), 'Y')
