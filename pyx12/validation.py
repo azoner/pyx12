@@ -16,6 +16,12 @@ import re
 # Intrapackage imports
 from .errors import IsValidError, EngineError
 
+try:
+    # Python 3.x
+    REGEX_MODE = re.S | re.ASCII
+except AttributeError:
+    # Python 2.x
+    REGEX_MODE = re.S
 
 def IsValidDataType(str_val, data_type, charset='B', icvn='00401'):
     """
@@ -65,15 +71,15 @@ def IsValidDataType(str_val, data_type, charset='B', icvn='00401'):
         return False
     return True
 
-rec_N = re.compile("^-?[0-9]+", re.S)
-rec_R = re.compile("^-?[0-9]*(\.[0-9]+)?", re.S)
+rec_N = re.compile("^-?[0-9]+", REGEX_MODE)
+rec_R = re.compile("^-?[0-9]*(\.[0-9]+)?", REGEX_MODE)
 rec_ID_E = re.compile(
-    "[^A-Z0-9!\"&'()*+,\-\./:;?=\sa-z%~@\[\]_{}\\\|<>#$\s]", re.S | re.ASCII)
+    "[^A-Z0-9!\"&'()*+,\-\./:;?=\sa-z%~@\[\]_{}\\\|<>#$\s]", REGEX_MODE)
 rec_ID_E5 = re.compile(
-    "[^A-Z0-9!\"&'()*+,\-\./:;?=\sa-z%~@\[\]_{}\\\|<>^`#$\s]", re.S | re.ASCII)
-rec_ID_B = re.compile("[^A-Z0-9!\"&'()*+,\-\./:;?=\s]", re.S | re.ASCII)
-rec_DT = re.compile("[^0-9]+", re.S)
-rec_TM = re.compile("[^0-9]+", re.S)
+    "[^A-Z0-9!\"&'()*+,\-\./:;?=\sa-z%~@\[\]_{}\\\|<>^`#$\s]", REGEX_MODE)
+rec_ID_B = re.compile("[^A-Z0-9!\"&'()*+,\-\./:;?=\s]", REGEX_MODE)
+rec_DT = re.compile("[^0-9]+", REGEX_MODE)
+rec_TM = re.compile("[^0-9]+", REGEX_MODE)
 
 
 def match_re(short_data_type, val):
