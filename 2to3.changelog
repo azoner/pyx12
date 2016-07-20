@@ -1,3 +1,4 @@
+- Fix intermittent error due to list(set([...])) will return element in random orders with Python 3. See [error_997.py:124]
 - Add a switch to select re.ASCII so the tests run succesfully with Python 2.7
 - Note: test_x12n_document.py fails intermittently at _test_997('trailer_errors')
 - Fix test test_xmlwriter.py, test_xmlx12_simple.py file opening to accept writing strings into buffer

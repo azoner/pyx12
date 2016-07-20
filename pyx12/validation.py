@@ -182,7 +182,7 @@ def is_valid_date(data_type, val):
                 if len(val) == 12:
                     if not is_valid_time(val[8:12]):
                         raise IsValidError
-            except TypeError as te:
+            except TypeError:
                 raise IsValidError
         else:
             raise IsValidError
@@ -200,18 +200,18 @@ def is_valid_time(val):
         if not_match_re('TM', val):
             raise IsValidError
 
-        if int(val[0:2]) > 23 or int(val[2:4]) > 59:  # check hour, minute segment
+        if val[0:2] > '23' or val[2:4] > '59':  # check hour, minute segment
             raise IsValidError
         elif len(val) > 4:  # time contains seconds
             if len(val) < 6:  # length is munted
                 raise IsValidError
-            elif int(val[4:6]) > 59:  # check seconds
+            elif val[4:6] > '59':  # check seconds
                 raise IsValidError
             # check decimal seconds here in the future
             elif len(val) > 8:
                 # print 'unhandled decimal seconds encountered'
                 raise IsValidError
-    except (IsValidError, ValueError) as e:
+    except (IsValidError, ValueError):
         return False
     return True
 

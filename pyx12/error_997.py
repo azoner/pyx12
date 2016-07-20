@@ -1,5 +1,5 @@
 ######################################################################
-# Copyright 
+# Copyright
 #   John Holland <john@zoner.org>
 # All rights reserved.
 #
@@ -120,8 +120,26 @@ class error_997_visitor(error_visitor.error_visitor):
                     err_codes.append(isa_ele_err_map[elem.ele_pos])
                 elif 'IEA' in err_str:
                     err_codes.append(iea_ele_err_map[elem.ele_pos])
-        # return unique codes
-        return list(set(err_codes))
+
+        # Codes extracted from https://msdn.microsoft.com/en-us/library/bb246074.aspx
+        reject_suspend_codes = set([
+            '004', '005', '007', '010', '011',
+            '012', '013', '014', '015', '016',
+            '017', '018', '022', '023', '024',
+            '025', '026', '027'])
+
+        # return unique codes, while trying to keep the order of the list
+        # this is to ensure that test results is deterministic on Python 3
+        uniq_codes = []
+        for err in err_codes:
+            if err not in uniq_codes:
+                # priotize reject codes, rather than accept with errors
+                if err in reject_suspend_codes:
+                    uniq_codes.insert(0, err)
+                else:
+                    uniq_codes.append(err)
+
+        return uniq_codes
 
     def visit_root_post(self, errh):
         """
