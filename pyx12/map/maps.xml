@@ -58,6 +58,7 @@ vriic - Version / Release / Industry Identifier Code (GS08)
     <map vriic="005010X094A1" fic="HI" tspc="11" abbr="278a">278.5010.X094.27.A1.xml</map>
     <map vriic="005010X094A1" fic="HI" tspc="13" abbr="278b">278.5010.X094.A1.xml</map>
     -->
+    <map vriic="005010X214" fic="HN" abbr="277">277.5010.X214.xml</map>
     <map vriic="005010X218" fic="RA" abbr="820">820.5010.X218.xml</map>
     <map vriic="005010X220A1" fic="BE" abbr="834">834.5010.X220.A1.xml</map>
     <map vriic="005010X221A1" fic="HP" abbr="835W1">835.5010.X221.A1.xml</map>

@@ -77,7 +77,7 @@ class error_999_visitor(pyx12.error_visitor.error_visitor):
         isa_seg.set('11', self.repetition_term)
         isa_seg.set('12', icvn)
         isa_seg.set('13', self.isa_control_num)  # ISA Interchange Control Number
-        isa_seg.set('14', seg.get_value('ISA14'))
+        isa_seg.set('14', '0')
         isa_seg.set('15', seg.get_value('ISA15'))
         isa_seg.set('16', self.subele_term)
         self.wr.Write(isa_seg)

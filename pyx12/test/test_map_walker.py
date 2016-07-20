@@ -120,6 +120,21 @@ class Explicit_Loops(unittest.TestCase):
         del self.map
         del self.walker
 
+    def test_GS_to_ST_277(self):
+        map_file = '277.5010.X214.xml'
+        walker = walk_tree()
+        param = pyx12.params.params()
+        map = pyx12.map_if.load_map_file(map_file, param)
+        errh = pyx12.error_handler.errh_null()
+        errh.reset()
+        node = map.getnodebypath('/ISA_LOOP/GS_LOOP/GS')
+        seg_data = pyx12.segment.Segment('ST*277*0001*005010X214', '~', '*', ':')
+        (node, pop, push) = walker.walk(
+            node, seg_data, errh, 5, 4, None)
+        self.assertNotEqual(node, None)
+        self.assertEqual(seg_data.get_seg_id(), node.id)
+        self.assertEqual(get_id_list(pop), [])
+        self.assertEqual(get_id_list(push), ['ST_LOOP'])
 
 class Implicit_Loops(unittest.TestCase):
     """

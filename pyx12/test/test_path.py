@@ -220,6 +220,26 @@ class Equality(unittest.TestCase):
         self.assertEqual(p1, p2)
         self.assertEqual(p1.format(), p2.format())
         self.assertEqual(p1.__hash__(), p2.__hash__())
+        
+    def test_equal5(self):
+        x12path = pyx12.path.X12Path('/1000A/SD01')
+        self.assertEqual(len(x12path.loop_list), 1)
+        del x12path.loop_list[0]
+        self.assertEqual(len(x12path.loop_list), 0)
+        self.assertEqual(x12path.format(), '/SD01')
+        self.assertEqual(x12path.seg_id, 'SD')
+        self.assertEqual(x12path.ele_idx, 1)
+        self.assertEqual(x12path.subele_idx, None)
+
+    def test_equal6(self):
+        x12path = pyx12.path.X12Path('/1000A/SD01')
+        self.assertEqual(len(x12path.loop_list), 1)
+        del x12path.loop_list[0]
+        self.assertEqual(len(x12path.loop_list), 0)
+        self.assertEqual(x12path.format(), '/SD01')
+        self.assertEqual(x12path.seg_id, 'SD')
+        self.assertEqual(x12path.ele_idx, 1)
+        self.assertEqual(x12path.subele_idx, None)
 
 
 class NonEquality(unittest.TestCase):
