@@ -129,15 +129,17 @@ class error_997_visitor(error_visitor.error_visitor):
             '025', '026', '027'])
 
         # return unique codes, while trying to keep the order of the list
-        # this is to ensure that test results is deterministic on Python 3
+        # this is to ensure that test result is deterministic on Python 3
         uniq_codes = []
         for err in err_codes:
-            if err not in uniq_codes:
-                # priotize reject codes, rather than accept with errors
-                if err in reject_suspend_codes:
-                    uniq_codes.insert(0, err)
-                else:
-                    uniq_codes.append(err)
+            if err in uniq_codes:
+                continue
+
+            # priotize reject codes, rather than accept with errors codes
+            if err in reject_suspend_codes:
+                uniq_codes.insert(0, err)
+            else:
+                uniq_codes.append(err)
 
         return uniq_codes
 
