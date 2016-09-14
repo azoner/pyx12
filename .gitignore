@@ -16,3 +16,4 @@ testenv/
 Backup/
 *.htm
 *.pyperf
+.tox
