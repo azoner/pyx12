@@ -310,7 +310,7 @@ class X12Reader(X12Base):
             if src_file_obj == '-':
                 self.fd_in = sys.stdin
             else:
-                self.fd_in = file(src_file_obj, 'U')
+                self.fd_in = open(src_file_obj, 'U')
                 self.need_to_close = True
         X12Base.__init__(self)
         try:
@@ -559,7 +559,8 @@ class X12Writer(X12Base):
         @type seg_data: L{segment<segment.Segment>}
         """
         out = seg_data.format(self.seg_term, self.ele_term, self.subele_term) + self.eol
-        self.fd_out.write(out.decode('ascii'))
+        # self.fd_out.write(out.decode('ascii'))
+        self.fd_out.write(out)
 
     def _write_isa_segment(self, seg_data):
         """
@@ -577,7 +578,8 @@ class X12Writer(X12Base):
         seg_data.set('ISA16', self.subele_term)
         out = seg_data.format(
             self.seg_term, self.ele_term, self.subele_term) + self.eol
-        self.fd_out.write(out.decode('ascii'))
+        # self.fd_out.write(out.decode('ascii'))
+        self.fd_out.write(out)
 
     def _get_trailer_segment(self, seg_id, count, id):
         """

@@ -24,13 +24,13 @@ Interface to read and alter segments
 
 # Intrapackage imports
 import pyx12
-import error_handler
-import errors
-import map_index
-import map_if
-import x12file
-import path
-from map_walker import walk_tree, pop_to_parent_loop  # get_pop_loops, get_push_loops
+from . import error_handler
+from . import errors
+from . import map_index
+from . import map_if
+from . import x12file
+from . import path
+from .map_walker import walk_tree, pop_to_parent_loop  # get_pop_loops, get_push_loops
 
 
 class X12DataNode(object):

@@ -22,11 +22,11 @@ def st_generator():
     #for k, g in groupby(iterate_2000(fd_in), lambda x: x['st_id']):
     for k, g in groupby(iterate_2000(fd_in), lambda x: x[0]):
         #yield (k, g)
-        print '-----------------------------------------------------------'
-        print k
+        print('-----------------------------------------------------------')
+        print(k)
         for d in g:
             yield d
-        print '-----------------------------------------------------------'
+        print('-----------------------------------------------------------')
     #for d in iterate_2000(fd_in):
     #    yield d
 
@@ -37,12 +37,12 @@ def simple_reader():
     #for d in get_headers_stream(src):
     #    print d
     for k, g in groupby(get_headers_stream(src), lambda x: x[0]):
-        print '-----------------------------------------------------------'
-        print k
+        print('-----------------------------------------------------------')
+        print(k)
         for d in g:
             #yield d
-            print d
-        print '-----------------------------------------------------------'
+            print(d)
+        print('-----------------------------------------------------------')
 
 
 def x12_split_on_st(source_filename, isa_id=11, gs_id=21):
@@ -74,7 +74,7 @@ def save_many(src_filename, targetformat=None):
         fd_temp.seek(0)
         fd_out.write(fd_temp.read())
         fd_out.close()
-        print newname, isa_id, gs_id, st_id
+        print(newname, isa_id, gs_id, st_id)
 
 
 def update_isa_id(seg_data, isa_id):

@@ -1,5 +1,5 @@
 #####################################################################
-# Copyright 
+# Copyright
 #   John Holland <john@zoner.org>
 # All rights reserved.
 #
@@ -201,7 +201,7 @@ def x12n_document(param, src_file, fd_997, fd_html,
             err_node_list = []
             while True:
                 try:
-                    err_iter.next()
+                    next(err_iter)
                     err_node = err_iter.get_cur_node()
                     err_node_list.append(err_node)
                 except pyx12.errors.IterOutOfBounds:
