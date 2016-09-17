@@ -827,3 +827,37 @@ class GetCompositeNodeByPath(unittest.TestCase):
         refdes = 'STC01-01'
         newnode = node.parent.parent.getnodebypath2(refdes)
         self.assertEqual(newnode.get_path(), '/ISA_LOOP/GS_LOOP/ST_LOOP/DETAIL/2000A/2000B/2200B/STC01-01')
+
+
+class RepeatElement(unittest.TestCase):
+    """
+    Verify that we can handle repeat elements
+    """
+    def setUp(self):
+        param = pyx12.params.params()
+        self.map = pyx12.map_if.load_map_file('834.5010.X220.A1.xml', param)
+        self.errh = pyx12.error_handler.errh_null()
+
+    def test_composite_segment_validity(self):
+        self.errh.err_cde = None
+        seg_data = pyx12.segment.Segment('DMG*D8*19670722*M*I*:RET:2106-3^:RET:1002-5*1~', '~', '*', ':', '^')
+        node = self.map.getnodebypath('/ISA_LOOP/GS_LOOP/ST_LOOP/DETAIL/2000/2100A/DMG')
+        result = node.is_valid(seg_data, self.errh)
+        self.assertTrue(result, '%s should be valid' % (seg_data.format()))
+        self.assertEqual(self.errh.err_cde, None)
+
+    def test_composite_segment_err_in_repetition(self):
+        self.errh.err_cde = None
+        seg_data = pyx12.segment.Segment('DMG*D8*19670722*M*I*:RET:2106-3^:RET:1002-5:*1~', '~', '*', ':', '^')
+        node = self.map.getnodebypath('/ISA_LOOP/GS_LOOP/ST_LOOP/DETAIL/2000/2100A/DMG')
+        result = node.is_valid(seg_data, self.errh)
+        self.assertFalse(result, '%s should not be valid' % (seg_data.format()))
+        self.assertEqual(self.errh.err_cde, '3')
+
+    def test_composite_segment_too_long(self):
+        self.errh.err_cde = None
+        seg_data = pyx12.segment.Segment('DMG*D8*19670722*M*I*:RET:2106-3^:RET:1002-5^:RET:1002-5^:RET:1002-5^:RET:1002-5^:RET:1002-5^:RET:1002-5^:RET:1002-5^:RET:1002-5^:RET:1002-5^:RET:1002-5*1~', '~', '*', ':', '^')
+        node = self.map.getnodebypath('/ISA_LOOP/GS_LOOP/ST_LOOP/DETAIL/2000/2100A/DMG')
+        result = node.is_valid(seg_data, self.errh)
+        self.assertFalse(result, '%s should not be valid' % (seg_data.format()))
+        self.assertEqual(self.errh.err_cde, '12')

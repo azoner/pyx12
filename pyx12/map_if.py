@@ -985,14 +985,14 @@ class segment_if(x12_node):
                 ref_des = '%02i' % (i + 1)
                 comp_data = seg_data.get(ref_des)
                 subele_count = child_node.get_child_count()
-                if seg_data.ele_len(ref_des) > subele_count and child_node.usage != 'N':
-                    subele_node = child_node.get_child_node_by_idx(
-                        subele_count + 1)
+                if seg_data.ele_max_len(ref_des) > subele_count and child_node.usage != 'N':
                     err_str = 'Too many sub-elements in composite "%s" (%s)' % \
-                        (subele_node.name, subele_node.refdes)
+                        (child_node.name, child_node.refdes)
                     err_value = seg_data.get_value(ref_des)
                     errh.ele_error('3', err_str, err_value, ref_des)
-                valid &= child_node.is_valid(comp_data, errh)
+                    valid = False
+                else:
+                    valid &= child_node.is_valid(comp_data, errh)
             elif child_node.is_element():
                 # Validate Element
                 if i == 1 and seg_data.get_seg_id() == 'DTP' \
@@ -1495,17 +1495,33 @@ class composite_if(x12_node):
             errh.ele_error('5', err_str, None, self.refdes)
             return False
 
-        if len(comp_data) > self.get_child_count():
+        if comp_data.max_len() > self.get_child_count():
             err_str = 'Too many sub-elements in composite "%s" (%s)' % (
                 self.name, self.refdes)
             errh.ele_error('3', err_str, None, self.refdes)
             valid = False
-        for i in range(min(len(comp_data), self.get_child_count())):
-            valid &= self.get_child_node_by_idx(i).is_valid(comp_data[i], errh)
-        for i in range(min(len(comp_data), self.get_child_count()), self.get_child_count()):
-            if i < self.get_child_count():
-                #Check missing required elements
-                valid &= self.get_child_node_by_idx(i).is_valid(None, errh)
+        if self.repeat < comp_data.get_repetitions():
+            err_str = 'Too many repetitions in composite "%s" (%s)' % (self.name, self.refdes)
+            errh.ele_error('12', err_str, None, self.refdes)
+            valid = False
+        idx = 0
+        for i in range(min(len(comp_data), self.get_child_count() * self.repeat)):
+            # repeating, reset the idx counter
+            if comp_data[i] == comp_data.repetition_term:
+                for j in range(min(idx, self.get_child_count()), self.get_child_count()):
+                    if j < self.get_child_count():
+                        # Check missing required elements
+                        valid &= self.get_child_node_by_idx(j).is_valid(None, errh)
+                idx = 0
+                continue
+            valid &= self.get_child_node_by_idx(idx).is_valid(comp_data[i], errh)
+            idx += 1
+        # validate the non-repeating segments (or last repeat seg)
+        for j in range(min(idx, self.get_child_count()), self.get_child_count()):
+            if j < self.get_child_count():
+                # Check missing required elements
+                valid &= self.get_child_node_by_idx(j).is_valid(None, errh)
+
         return valid
 
     def is_composite(self):
