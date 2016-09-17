@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 ######################################################################
-# Copyright (c) 
+# Copyright (c)
 #   John Holland <john@zoner.org>
 # All rights reserved.
 #
@@ -110,7 +110,6 @@ def main():
             if not os.path.isfile(src_filename):
                 logger.error('Could not open file "%s"' % (src_filename))
                 continue
-            #fd_src = open(src_filename, 'U')
             if flag_997:
                 fd_997 = tempfile.TemporaryFile()
             if args.html:

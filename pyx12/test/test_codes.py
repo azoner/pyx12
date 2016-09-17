@@ -1,5 +1,3 @@
-#import sys
-#from os.path import dirname, abspath, join, isdir, isfile
 import unittest
 
 import pyx12.codes

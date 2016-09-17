@@ -82,15 +82,15 @@ def deidentify_file(fd_in):
     src = pyx12.x12context.X12ContextReader(param, errh, fd_in)
     #deident = FakeDeidentify()
     deident = RandomDeidentify()
-    fd_out = open('newfile.txt', 'w')
-    wr = pyx12.x12file.X12Writer(fd_out)
 
-    for datatree in src.iter_segments('2000'):
-        if datatree.id == '2000':
-            scrub2000(datatree, deident)
-        for seg1 in datatree.iterate_segments():
-            #wr.Write(seg1['segment'].format())
-            print(seg1['segment'].format())
+    with open('newfile.txt', 'w') as fd_out:
+        wr = pyx12.x12file.X12Writer(fd_out)
+        for datatree in src.iter_segments('2000'):
+            if datatree.id == '2000':
+                scrub2000(datatree, deident)
+            for seg1 in datatree.iterate_segments():
+                #wr.Write(seg1['segment'].format())
+                print(seg1['segment'].format())
 
 
 def scrub2000(loop_sub, deident):

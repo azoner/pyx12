@@ -1,5 +1,5 @@
 ######################################################################
-# Copyright 
+# Copyright
 #   John Holland <john@zoner.org>
 # All rights reserved.
 #
@@ -51,6 +51,7 @@ class map_index(object):
             for m in v.iterfind('map'):
                 self.add_map(icvn, m.get('vriic'), m.get('fic'),
                              m.get('tspc'), m.text, m.get('abbr'))
+        fd.close()
 
     def add_map(self, icvn, vriic, fic, tspc, map_file, abbr):
         self.maps.append({'icvn': icvn, 'vriic': vriic, 'fic': fic,

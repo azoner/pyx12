@@ -33,16 +33,10 @@ class TestWriter(unittest.TestCase):
             writer.pop()
         self.assertEqual(fd.getvalue(), self.res)
         fd.close()
-        try:
-            os.remove(filename)
-        except:
-            pass
 
     def test_write_temp(self):
         (fdesc, filename) = tempfile.mkstemp('.xml', 'pyx12_')
         with open(filename, 'w') as fd:
-        # print(fdesc, filename, fd)
-            #fd = open(filename, 'rw')
             writer = XMLWriter(fd)
             writer.push("x12err")
 

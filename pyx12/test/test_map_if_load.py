@@ -15,6 +15,3 @@ class LoadAllMapsNoErrors(unittest.TestCase):
     def test_load_837p(self):
         param = pyx12.params.params()
         map = pyx12.map_if.load_map_file('837.5010.X222.A1.xml', param)
-
-
-    

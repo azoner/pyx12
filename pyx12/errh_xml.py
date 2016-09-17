@@ -13,21 +13,15 @@ Capture X12 Errors
 """
 
 import logging
-#from types import *
-#import pdb
 import tempfile
-#import lxml
 import os
 
 # Intrapackage imports
 from .errors import EngineError
 from .xmlwriter import XMLWriter
 
-#class error_node:
-#    def __init__(self)
 logger = logging.getLogger('pyx12.errh_xml')
-#logger.setLevel(logging.DEBUG)
-#logger.setLevel(logging.ERROR)
+
 
 class err_handler(object):
     """
@@ -40,33 +34,27 @@ class err_handler(object):
         """
         if xml_out:
             self.filename = xml_out
-            fd = open(xml_out, 'w')
+            self.fd = open(xml_out, 'w')
         else:
             try:
                 (fdesc, self.filename) = tempfile.mkstemp('.xml', 'pyx12_')
-                fd = os.fdopen(fdesc, 'w+b')
-                #fd = tempfile.NamedTemporaryFile()
-                #self.filename = fd.name
+                self.fd = os.fdopen(fdesc, 'w+b')
             except:
-                #self.filename = '997.tmp.xml'
                 (fdesc, self.filename) = tempfile.mkstemp(suffix='.xml',
                                                           prefix='pyx12_', dir=basedir)
-                fd = os.fdopen(fdesc, 'w+b')
-                #fd = open(os.path.join(basedir, self.filename), 'w')
+                self.fd = os.fdopen(fdesc, 'w+b')
         self.cur_line = None
         self.errors = []
-        if not fd:
+        if not self.fd:
             raise EngineError('Could not open temp error xml file')
-        self.writer = XMLWriter(fd)
-        #self.writer.doctype(
-        #    u"x12simple", u"-//J Holland//DTD XML X12 Document
-        #    Conversion1.0//EN//XML",
-        #    u"%s" % (dtd_urn))
+        self.writer = XMLWriter(self.fd)
         self.writer.push("x12err")
 
     def __del__(self):
         while len(self.writer) > 0:
             self.writer.pop()
+        if not self.fd.closed:
+            self.fd.close()
 
     def getFilename(self):
         return self.filename

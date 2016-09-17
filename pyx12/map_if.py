@@ -1383,7 +1383,7 @@ class element_if(x12_node):
         # add the segment, element, and sub-element path
         self._fullpath = parent_path + '/' + self.id
         return self._fullpath
-    
+
     def get_parent_segment(self):
         # pop to enclosing loop
         p = self.parent
@@ -1547,4 +1547,5 @@ def load_map_file(map_file, param, map_path=None):
     except Exception:
         raise
         #raise EngineError('Load of map file failed: %s' % (map_file))
+    map_fd.close()
     return imap
