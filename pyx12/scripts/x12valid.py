@@ -21,7 +21,6 @@ from os.path import abspath, join, dirname, isdir, isfile
 import sys
 import logging
 import tempfile
-import codecs
 import argparse
 
 # Intrapackage imports
@@ -36,6 +35,7 @@ __author__ = pyx12.__author__
 __status__ = pyx12.__status__
 __version__ = pyx12.__version__
 __date__ = pyx12.__date__
+DEFAULT_BUFSIZE = 8 * 1024
 
 
 def check_map_path_arg(map_path):
@@ -43,8 +43,8 @@ def check_map_path_arg(map_path):
         raise argparse.ArgumentError(None, "The MAP_PATH '{}' is not a valid directory".format(map_path))
     index_file = 'maps.xml'
     if not isfile(os.path.join(map_path, index_file)):
-        raise argparse.ArgumentError(None,
-                    "The MAP_PATH '{}' does not contain the map index file '{}'".format(map_path, index_file))
+        err_str = "The MAP_PATH '{}' does not contain the map index file '{}'".format(map_path, index_file)
+        raise argparse.ArgumentError(None, err_str)
     return map_path
 
 
@@ -58,7 +58,7 @@ def main():
     parser.add_argument(
         '--log-file', '-l', action='store', dest="logfile", default=None)
     parser.add_argument('--map-path', '-m', action='store', dest="map_path", default=None, type=check_map_path_arg)
-    parser.add_argument('--verbose', '-v', action='count')
+    parser.add_argument('--verbose', '-v', action='count', default=0)
     parser.add_argument('--debug', '-d', action='store_true')
     parser.add_argument('--quiet', '-q', action='store_true')
     parser.add_argument('--html', '-H', action='store_true')
@@ -111,7 +111,7 @@ def main():
                 logger.error('Could not open file "%s"' % (src_filename))
                 continue
             if flag_997:
-                fd_997 = tempfile.TemporaryFile()
+                fd_997 = tempfile.TemporaryFile('w+', encoding='ascii')
             if args.html:
                 if os.path.splitext(src_filename)[1] == '.txt':
                     target_html = os.path.splitext(src_filename)[0] + '.html'
@@ -158,8 +158,12 @@ def main():
                     target_997 = os.path.splitext(src_filename)[0] + '.997'
                 else:
                     target_997 = src_filename + '.997'
-                codecs.open(target_997, mode='w',
-                            encoding='ascii').write(fd_997.read())
+                with open(target_997, mode='w', encoding='ascii') as fd_target_997:
+                    while True:
+                        buf = fd_997.read(DEFAULT_BUFSIZE)
+                        if not buf:
+                            break
+                        fd_target_997.write(buf)
 
             if fd_997:
                 fd_997.close()

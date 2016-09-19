@@ -5,7 +5,6 @@ except:
     from io import StringIO
 
 import pyx12.error_handler
-#from pyx12.errors import *
 import pyx12.x12file
 
 

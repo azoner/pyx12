@@ -10,7 +10,7 @@ document or can translate to and from an XML representation of the data file."""
 
 setup(
     name="pyx12",
-    version="2.3.1",
+    version="2.4.0",
     long_description=long_description,
     license='BSD',
     description="HIPAA X12 validator, parser and converter",

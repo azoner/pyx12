@@ -134,7 +134,7 @@ def x12n_document(param, src_file, fd_997, fd_html,
                 errh.handle_errors(src.pop_errors())
                 errh.close_isa_loop(node, seg, src)
                 # Generate 997
-                #XXX Generate TA1 if needed.
+                # XXX Generate TA1 if needed.
             elif seg.get_seg_id() == 'GS':
                 fic = seg.get_value('GS01')
                 vriic = seg.get_value('GS08')
@@ -147,11 +147,11 @@ def x12n_document(param, src_file, fd_997, fd_html,
                     cur_map = pyx12.map_if.load_map_file(map_file, param, map_path)
                     src.check_837_lx = True if cur_map.id == '837' else False
                     logger.debug('Map file: %s' % (map_file))
-                    #apply_loop_count(orig_node, cur_map)
-                    #reset_isa_counts(cur_map)
-                    #_reset_counter_to_isa_counts(walker)  # new counter
-                #reset_gs_counts(cur_map)
-                #_reset_counter_to_gs_counts(walker)  # new counter
+                    # apply_loop_count(orig_node, cur_map)
+                    # reset_isa_counts(cur_map)
+                    # _reset_counter_to_isa_counts(walker)  # new counter
+                # reset_gs_counts(cur_map)
+                # _reset_counter_to_gs_counts(walker)  # new counter
                 node = cur_map.getnodebypath('/ISA_LOOP/GS_LOOP/GS')
                 errh.add_gs_loop(seg, src)
                 errh.handle_errors(src.pop_errors())
@@ -167,12 +167,12 @@ def x12n_document(param, src_file, fd_997, fd_html,
                         map_file = map_file_new
                         if map_file is None:
                             err_str = "Map not found.  icvn={}, fic={}, vriic={}, tspc={}".format(
-                                        icvn, fic, vriic, tspc)
+                                    icvn, fic, vriic, tspc)
                             raise pyx12.errors.EngineError(err_str)
                         cur_map = pyx12.map_if.load_map_file(map_file, param, map_path)
                         src.check_837_lx = True if cur_map.id == '837' else False
                         logger.debug('Map file: %s' % (map_file))
-                        #apply_loop_count(node, cur_map)
+                        # apply_loop_count(node, cur_map)
                         node = cur_map.getnodebypath('/ISA_LOOP/GS_LOOP/ST_LOOP/HEADER/BHT')
                 errh.add_seg(node, seg, src.get_seg_count(), src.get_cur_line(), src.get_ls_id())
                 errh.handle_errors(src.pop_errors())

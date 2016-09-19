@@ -32,7 +32,7 @@ def check_map_path_arg(map_path):
 def main():
     import argparse
     parser = argparse.ArgumentParser(description='X12 File Metatdata')
-    parser.add_argument('--verbose', '-v', action='count')
+    parser.add_argument('--verbose', '-v', action='count', default=0)
     parser.add_argument('--quiet', '-q', action='store_true')
     parser.add_argument('--debug', '-d', action='store_true')
     parser.add_argument('--eol', '-e', action='store_true', help="Add eol to each segment line")

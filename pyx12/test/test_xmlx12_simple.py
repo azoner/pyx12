@@ -19,7 +19,6 @@ class XmlTransformTestCase(unittest.TestCase):
     def setUp(self):
         self.param = pyx12.params.params()
         self.logger = logging.getLogger('pyx12')
-        formatter = logging.Formatter('%(asctime)s %(levelname)s %(message)s')
         hdlr = logging.NullHandler()
         self.logger.addHandler(hdlr)
 

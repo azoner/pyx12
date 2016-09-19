@@ -28,7 +28,7 @@ __date__ = pyx12.__date__
 def main():
     import argparse
     parser = argparse.ArgumentParser(description='X12 Validation')
-    parser.add_argument('--verbose', '-v', action='count')
+    parser.add_argument('--verbose', '-v', action='count', default=0)
     parser.add_argument('--quiet', '-q', action='store_true')
     parser.add_argument('--debug', '-d', action='store_true')
     parser.add_argument('--eol', '-e', action='store_true', help="Add eol to each segment line")
@@ -52,7 +52,7 @@ def main():
         if not os.path.isfile(file_in):
             logger.error('Could not open file "%s"' % (file_in))
 
-        fd_out = tempfile.TemporaryFile()
+        fd_out = tempfile.TemporaryFile('w+', encoding='ascii')
         src = pyx12.x12file.X12Reader(file_in)
         for seg_data in src:
             if args.fixcounting:
