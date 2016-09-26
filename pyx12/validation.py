@@ -21,6 +21,7 @@ try:
     REGEX_MODE = re.S | re.ASCII
 except AttributeError:
     # Python 2.x
+    REGEX_MODE = re.S
 
 
 def IsValidDataType(str_val, data_type, charset='B', icvn='00401'):
