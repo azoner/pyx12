@@ -18,9 +18,9 @@ Interface to an X12 data stream.
    837 HL tree
 """
 
-import codecs
 import sys
 import logging
+from io import open
 
 # Intrapackage imports
 import pyx12.errors
@@ -127,8 +127,7 @@ class X12Base(object):
             self.hl_count += 1
             hl_count = seg_data.get_value('HL01')
             if self.hl_count != self._int(hl_count):
-                #raise pyx12.errors.X12Error, \
-                #   'My HL count %i does not match your HL count %s' \
+                #raise pyx12.errors.X12Error('My HL count %i does not match your HL count %s' \
                 #    % (self.hl_count, seg[1])
                 err_str = 'My HL count %i does not match your HL count %s' % (self.hl_count, hl_count)
                 self._seg_error('HL1', err_str)
@@ -293,7 +292,7 @@ class X12Reader(X12Base):
     errors can be retrieved using the pop_errors function
     """
 
-    def __init__(self, src_file_obj):
+    def __init__(self, src_file_obj, encoding='ascii'):
         """
         Initialize the file X12 file reader
 
@@ -310,8 +309,9 @@ class X12Reader(X12Base):
             if src_file_obj == '-':
                 self.fd_in = sys.stdin
             else:
-                self.fd_in = open(src_file_obj, 'U')
+                self.fd_in = open(src_file_obj, 'U', encoding=encoding)
                 self.need_to_close = True
+        #assert self.fd_in.encoding == encoding, 'Input file should have encoding {}, is {}'.format(encoding, self.fd_out.encoding)
         X12Base.__init__(self)
         try:
             self.raw = RawX12File(self.fd_in)
@@ -434,7 +434,7 @@ class X12Writer(X12Base):
     X12 file and stream writer
     """
 
-    def __init__(self, src_file_obj, seg_term='~', ele_term='*', subele_term='\\', eol='\n', repetition_term='^'):
+    def __init__(self, src_file_obj, seg_term='~', ele_term='*', subele_term='\\', eol='\n', repetition_term='^', encoding='ascii'):
         """
         Initialize the file X12 file writer
 
@@ -444,18 +444,17 @@ class X12Writer(X12Base):
         """
         self.fd_out = None
         try:
-            res = src_file_obj.write
+            # res = src_file_obj.write
             # isinstance(f, file)
             self.fd_out = src_file_obj
         except AttributeError:
             if src_file_obj == '-':
                 self.fd_out = sys.stdout
             else:
-                self.fd_out = codecs.open(
-                    src_file_obj, mode='w', encoding='ascii')
-        #assert self.fd_out.encoding in ('ascii', 'US-ASCII'), 'Outfile file must have ASCII encoding, is %s' % (self.fd_out.encoding)
+                self.fd_out = open(src_file_obj, mode='w', encoding=encoding)
+        # assert self.fd_out.encoding == encoding, 'Outfile file should have encoding {}, is {}'.format(encoding, self.fd_out.encoding)
         X12Base.__init__(self)
-        #terms = set([seg_term, ele_term, subele_term, repetition_term])
+        #   terms = set([seg_term, ele_term, subele_term, repetition_term])
         self.seg_term = seg_term
         self.ele_term = ele_term
         self.subele_term = subele_term

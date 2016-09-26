@@ -17,15 +17,14 @@ Validate against a map and codeset values.
 
 import os
 import os.path
-from os.path import abspath, join, dirname, isdir, isfile
 import sys
 import logging
 import tempfile
 import argparse
 
 # Intrapackage imports
-libpath = abspath(join(dirname(__file__), '../..'))
-if isdir(libpath):
+libpath = os.path.abspath(os.path.join(os.path.dirname(__file__), '../..'))
+if os.path.isdir(libpath):
     sys.path.insert(0, libpath)
 import pyx12
 import pyx12.x12n_document
@@ -39,13 +38,23 @@ DEFAULT_BUFSIZE = 8 * 1024
 
 
 def check_map_path_arg(map_path):
-    if not isdir(map_path):
+    if not os.path.isdir(map_path):
         raise argparse.ArgumentError(None, "The MAP_PATH '{}' is not a valid directory".format(map_path))
     index_file = 'maps.xml'
-    if not isfile(os.path.join(map_path, index_file)):
+    if not os.path.isfile(os.path.join(map_path, index_file)):
         err_str = "The MAP_PATH '{}' does not contain the map index file '{}'".format(map_path, index_file)
         raise argparse.ArgumentError(None, err_str)
     return map_path
+
+
+def get_default_encoding():
+    """
+    Based on python major version, get the default file encoding
+    """
+    if sys.version_info[0] > 2:
+        return 'utf-8'
+    else:
+        return 'ascii'
 
 
 def main():
@@ -66,6 +75,7 @@ def main():
                         default=[], help='External Code Names to ignore')
     parser.add_argument('--charset', '-s', choices=(
         'b', 'e'), help='Specify X12 character set: b=basic, e=extended')
+    parser.add_argument('--encoding', '-e', choices=('utf-8', 'ascii'), help='Specify file encoding')
     #parser.add_argument('--background', '-b', action='store_true')
     #parser.add_argument('--test', '-t', action='store_true')
     parser.add_argument('--profile', action='store_true', help='Profile the code with plop')
@@ -96,6 +106,10 @@ def main():
     param.set('exclude_external_codes', ','.join(args.exclude_external))
     if args.map_path:
         param.set('map_path', args.map_path)
+    if args.encoding is not None:
+        param.set('encoding', args.encoding)
+    else:
+        param.set('encoding', get_default_encoding())
 
     if args.logfile:
         try:
@@ -111,7 +125,7 @@ def main():
                 logger.error('Could not open file "%s"' % (src_filename))
                 continue
             if flag_997:
-                fd_997 = tempfile.TemporaryFile('w+', encoding='ascii')
+                fd_997 = tempfile.TemporaryFile('wt+')
             if args.html:
                 if os.path.splitext(src_filename)[1] == '.txt':
                     target_html = os.path.splitext(src_filename)[0] + '.html'

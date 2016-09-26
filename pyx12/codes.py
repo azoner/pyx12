@@ -14,8 +14,8 @@ External Codes interface
 
 import os.path
 import logging
-from pkg_resources import resource_stream
-import xml.etree.cElementTree as et
+import xml.etree.cElementTree as ET
+import pkgutil
 
 # Intrapackage imports
 from pyx12.errors import EngineError
@@ -47,23 +47,26 @@ class ExternalCodes(object):
         codes_file = 'codes.xml'
         if base_path is not None:
             logger.debug("Looking for codes file '{}' in map_path '{}'".format(codes_file, base_path))
-            code_fd = open(os.path.join(base_path, codes_file))
+            with open(os.path.join(base_path, codes_file)) as fd:
+                et = ET.parse(fd).getroot()
         else:
+            filepath = os.path.join('map', codes_file)
             logger.debug("Looking for codes file '{}' in pkg_resources".format(codes_file))
-            code_fd = resource_stream(__name__, os.path.join('map', codes_file))
+            contents = pkgutil.get_data('pyx12', filepath)
+            if contents is None:
+                raise CodesError("Could not find codes file '{}' in pkg_util".format(filepath))
+            et = ET.fromstring(contents)
 
         self.exclude_list = exclude.split(',') if exclude is not None else []
 
-        for cElem in et.parse(code_fd).iter('codeset'):
+        for cElem in et.iter('codeset'):
             codeset_id = cElem.findtext('id')
             name = cElem.findtext('name')
             data_ele = cElem.findtext('data_ele')
             codes = []
             for code in cElem.iterfind('version/code'):
                 codes.append(code.text)
-            self.codes[codeset_id] = {'name': name, 'dataele':
-                                      data_ele, 'codes': codes}
-        code_fd.close()
+            self.codes[codeset_id] = {'name': name, 'dataele': data_ele, 'codes': codes}
 
     def isValid(self, key, code, check_dte=None):
         """

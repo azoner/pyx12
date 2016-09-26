@@ -18,7 +18,6 @@ Create a XML document based on the data file.
 
 import os
 import os.path
-from os.path import isdir, isfile
 import sys
 import logging
 import argparse
@@ -39,13 +38,23 @@ __date__ = pyx12.__date__
 
 
 def check_map_path_arg(map_path):
-    if not isdir(map_path):
+    if not os.path.isdir(map_path):
         raise argparse.ArgumentError(None, "The MAP_PATH '{}' is not a valid directory".format(map_path))
     index_file = 'maps.xml'
-    if not isfile(os.path.join(map_path, index_file)):
+    if not os.path.isfile(os.path.join(map_path, index_file)):
         raise argparse.ArgumentError(None,
                     "The MAP_PATH '{}' does not contain the map index file '{}'".format(map_path, index_file))
     return map_path
+
+
+def get_default_encoding():
+    """
+    Based on python major version, get the default file encoding
+    """
+    if sys.version_info[0] > 2:
+        return 'utf-8'
+    else:
+        return 'ascii'
 
 
 def main():
@@ -62,8 +71,8 @@ def main():
     parser.add_argument('--outputfile', '-o', action='store', help="XML target filename")
     parser.add_argument('--exclude-external-codes', '-x', action='append', dest="exclude_external",
                         default=[], help='External Code Names to ignore')
-    parser.add_argument('--charset', '-s', choices=(
-        'b', 'e'), help='Specify X12 character set: b=basic, e=extended')
+    parser.add_argument('--charset', '-s', choices=('b', 'e'), help='Specify X12 character set: b=basic, e=extended')
+    parser.add_argument('--encoding', '-e', choices=('utf-8', 'ascii'), help='Specify file encoding')
     #parser.add_argument('--background', '-b', action='store_true')
     #parser.add_argument('--test', '-t', action='store_true')
     parser.add_argument('--version', action='version', version='{prog} {version}'.format(prog=parser.prog, version=__version__))
@@ -90,6 +99,10 @@ def main():
     param.set('exclude_external_codes', ','.join(args.exclude_external))
     if args.map_path:
         param.set('map_path', args.map_path)
+    if args.encoding is not None:
+        param.set('encoding', args.encoding)
+    else:
+        param.set('encoding', get_default_encoding())
 
     if args.logfile:
         try:

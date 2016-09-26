@@ -237,6 +237,7 @@ def x12n_document(param, src_file, fd_997, fd_html,
             try:
                 visit_997 = pyx12.error_997.error_997_visitor(fd_997, src.get_term())
                 errh.accept(visit_997)
+                visit_997.close()
                 del visit_997
             except Exception:
                 logger.exception('Failed to create 997 response')

@@ -7,7 +7,6 @@
 # *  use PEP 8 style
 
 import sys
-#import codecs
 
 
 class XMLWriter(object):

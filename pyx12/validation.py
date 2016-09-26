@@ -21,7 +21,7 @@ try:
     REGEX_MODE = re.S | re.ASCII
 except AttributeError:
     # Python 2.x
-    REGEX_MODE = re.S
+
 
 def IsValidDataType(str_val, data_type, charset='B', icvn='00401'):
     """
@@ -38,8 +38,9 @@ def IsValidDataType(str_val, data_type, charset='B', icvn='00401'):
     """
     if not data_type:
         return True
-    if not isinstance(str_val, str):
-        return False
+    #if not isinstance(str_val, str):
+    #    raise IsValidError('Not a string')
+        #return False
 
     try:
         if data_type[0] == 'N':

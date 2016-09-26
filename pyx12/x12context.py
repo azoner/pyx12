@@ -1,5 +1,5 @@
 #####################################################################
-# Copyright 
+# Copyright
 #   John Holland <john@zoner.org>
 # All rights reserved.
 #
@@ -426,8 +426,6 @@ class X12LoopDataNode(X12DataNode):
         x12_seg_node = self.x12_map_node.get_child_seg_node(seg_data)
         if x12_seg_node is None:
             return False
-            #raise errors.X12PathError, 'The segment %s is not a member of loop %s' % \
-            #    (seg_data.__repr__(), self.id)
         # Iterate over data nodes, except first
         self._cleanup()
         for i in range(1, len(self.children)):
@@ -548,7 +546,7 @@ class X12LoopDataNode(X12DataNode):
     def seg_count(self):
         for child in [x for x in self.children if x.type == 'seg']:
             return child.seg_count
-        
+
     @property
     def cur_line_number(self):
         for child in [x for x in self.children if x.type == 'seg']:
@@ -671,7 +669,7 @@ class X12SegmentDataNode(X12DataNode):
 #        if pos != -1:
 #            end = x12_path.find(']')
 #            if end == -1 or end < pos:
-#                raise errors.X12PathError, 'Bad X12 path: %s' % (x12_path)
+#                raise errors.X12PathError('Bad X12 path: %s' % (x12_path))
 #            qual = x12_path[pos+1:end]
 #            seg_id = x12_path[:pos]
 #            idx = x12_path[end+1:]
@@ -696,7 +694,7 @@ class X12SegmentDataNode(X12DataNode):
         for loop in self.start_loops:
             yield {'node': loop, 'type': 'loop_start', 'id': loop.id}
         yield {'type': 'seg', 'id': self.id, 'segment': self.seg_data,
-               'start_loops': self.start_loops, 'end_loops': self.end_loops, 
+               'start_loops': self.start_loops, 'end_loops': self.end_loops,
                'seg_count': self.seg_count, 'cur_line_number': self.cur_line_number,}
 
     def copy(self):

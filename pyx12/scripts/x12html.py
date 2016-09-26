@@ -21,7 +21,7 @@ import os
 import os.path
 import sys
 import logging
-#from types import *
+import argparse
 
 # Intrapackage imports
 libpath = os.path.abspath(os.path.join(os.path.dirname(__file__), '../..'))
@@ -38,20 +38,27 @@ __date__ = pyx12.__date__
 
 
 def check_map_path_arg(map_path):
-    if not isdir(map_path):
+    if not os.path.isdir(map_path):
         raise argparse.ArgumentError(None, "The MAP_PATH '{}' is not a valid directory".format(map_path))
     index_file = 'maps.xml'
-    if not isfile(os.path.join(map_path, index_file)):
-        raise argparse.ArgumentError(None,
-                    "The MAP_PATH '{}' does not contain the map index file '{}'".format(map_path, index_file))
+    if not os.path.isfile(os.path.join(map_path, index_file)):
+        err_str = "The MAP_PATH '{}' does not contain the map index file '{}'".format(map_path, index_file)
+        raise argparse.ArgumentError(None, err_str)
     return map_path
 
+def get_default_encoding():
+    """
+    Based on python major version, get the default file encoding
+    """
+    if sys.version_info[0] > 2:
+        return 'utf-8'
+    else:
+        return 'ascii'
 
 def main():
     """
     Set up environment for processing
     """
-    import argparse
     parser = argparse.ArgumentParser(description='Format an X12 file as HTML')
     parser.add_argument('--config-file', '-c', action='store',
                         dest="configfile", default=None)
@@ -66,8 +73,10 @@ def main():
                         default=[], help='External Code Names to ignore')
     parser.add_argument('--charset', '-s', choices=(
         'b', 'e'), help='Specify X12 character set: b=basic, e=extended')
-    #parser.add_argument('--background', '-b', action='store_true')
-    #parser.add_argument('--test', '-t', action='store_true')
+    parser.add_argument('--encoding', '-e', choices=(
+        'utf-8', 'ascii'), help='Specify file encoding')
+    # parser.add_argument('--background', '-b', action='store_true')
+    # parser.add_argument('--test', '-t', action='store_true')
     parser.add_argument('--profile', action='store_true',
                         help='Profile the code with plop')
     parser.add_argument('--version', action='version', version='{prog} {version}'.format(prog=parser.prog, version=__version__))
@@ -93,6 +102,10 @@ def main():
     param.set('exclude_external_codes', ','.join(args.exclude_external))
     if args.map_path:
         param.set('map_path', args.map_path)
+    if args.encoding is not None:
+        param.set('encoding', args.encoding)
+    else:
+        param.set('encoding', get_default_encoding())
 
     if args.logfile:
         try:

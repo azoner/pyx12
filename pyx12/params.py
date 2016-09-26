@@ -18,7 +18,7 @@ Order of precedence:
 """
 from os.path import dirname, abspath, join, isdir, isfile, expanduser
 import sys
-import xml.etree.cElementTree as et
+import xml.etree.cElementTree as ET
 import logging
 
 from pyx12.errors import EngineError
@@ -31,15 +31,19 @@ class ParamsBase(object):
     def __init__(self):
         self.logger = logging.getLogger('pyx12.params')
         self.params = {}
-        #First, try relative path
+        # First, try relative path
         base_dir = dirname(dirname(abspath(sys.argv[0])))
         map_path = join(base_dir, 'map')
-        #Then look in standard installation location
+        # Then look in standard installation location
         if not isdir(map_path):
             map_path = join(sys.prefix, 'share', 'pyx12', 'map')
         self.params['map_path'] = map_path
         self.params['exclude_external_codes'] = None
         self.params['charset'] = 'E'
+        if sys.version_info[0] > 2:
+            self.params['encoding'] = 'utf-8'
+        else:
+            self.params['encoding'] = 'ascii'
         self.params['simple_dtd'] = ''
         self.params['xmlout'] = 'simple'
 
@@ -83,7 +87,7 @@ class ParamsBase(object):
                               (filename))
         try:
             self.logger.debug('parsing config file %s' % (filename))
-            t = et.parse(filename)
+            t = ET.parse(filename)
             for c in t.iter('param'):
                 option = c.get('name')
                 value = c.findtext('value')

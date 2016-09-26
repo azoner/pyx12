@@ -14,8 +14,8 @@ Interface to normalized Data Elements
 
 import os.path
 import logging
-import xml.etree.cElementTree as et
-from pkg_resources import resource_stream
+import xml.etree.cElementTree as ET
+import pkgutil
 
 # Intrapackage imports
 from pyx12.errors import EngineError
@@ -45,19 +45,22 @@ class DataElements(object):
         dataele_file = 'dataele.xml'
         if base_path is not None:
             logger.debug("Looking for data element definition file '{}' in map_path '{}'".format(dataele_file, base_path))
-            fd = open(os.path.join(base_path, dataele_file))
+            with open(os.path.join(base_path, dataele_file)) as fd:
+                et = ET.parse(fd).getroot()
         else:
-            logger.debug("Looking for data element definition file '{}' in pkg_resources".format(dataele_file))
-            fd = resource_stream(__name__, os.path.join('map', dataele_file))
-        for eElem in et.parse(fd).iter('data_ele'):
+            filepath = os.path.join('map', dataele_file)
+            logger.debug("Looking for data element definition file '{}' in pkg_util".format(filepath))
+            contents = pkgutil.get_data('pyx12', filepath)
+            if contents is None:
+                raise DataElementsError("Could not find data element definition file '{}' in pkg_util".format(filepath))
+            et = ET.fromstring(contents)
+        for eElem in et.iter('data_ele'):
             ele_num = eElem.get('ele_num')
             data_type = eElem.get('data_type')
             min_len = int(eElem.get('min_len'))
             max_len = int(eElem.get('max_len'))
             name = eElem.get('name')
-            self.dataele[ele_num] = {'data_type': data_type, 'min_len':
-                                     min_len, 'max_len': max_len, 'name': name}
-        fd.close()
+            self.dataele[ele_num] = {'data_type': data_type, 'min_len': min_len, 'max_len': max_len, 'name': name}
 
     def get_by_elem_num(self, ele_num):
         """

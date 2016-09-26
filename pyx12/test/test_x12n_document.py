@@ -50,11 +50,7 @@ class X12DocumentTestCase(unittest.TestCase):
         fd_html = StringIO()
         import logging
         logger = logging.getLogger('pyx12')
-        #logger.setLevel(logging.DEBUG)
-        formatter = logging.Formatter('%(asctime)s %(levelname)s %(message)s')
         hdlr = logging.NullHandler()
-        #hdlr = logging.StreamHandler()
-        #hdlr.setFormatter(formatter)
         logger.addHandler(hdlr)
         pyx12.x12n_document.x12n_document(self.param, fd_source, fd_997, fd_html, None)
         fd_997.seek(0)
@@ -70,7 +66,6 @@ class X12DocumentTestCase(unittest.TestCase):
         fd_html = StringIO()
         import logging
         logger = logging.getLogger('pyx12')
-        formatter = logging.Formatter('%(asctime)s %(levelname)s %(message)s')
         hdlr = logging.NullHandler()
         logger.addHandler(hdlr)
         pyx12.x12n_document.x12n_document(

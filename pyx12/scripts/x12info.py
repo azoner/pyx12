@@ -20,6 +20,7 @@ __status__ = pyx12.__status__
 __version__ = pyx12.__version__
 __date__ = pyx12.__date__
 
+
 def check_map_path_arg(map_path):
     if not os.path.isdir(map_path):
         raise argparse.ArgumentError(None, "The MAP_PATH '{}' is not a valid directory".format(map_path))
@@ -28,6 +29,17 @@ def check_map_path_arg(map_path):
         raise argparse.ArgumentError(None,
                     "The MAP_PATH '{}' does not contain the map index file '{}'".format(map_path, index_file))
     return map_path
+
+
+def get_default_encoding():
+    """
+    Based on python major version, get the default file encoding
+    """
+    if sys.version_info[0] > 2:
+        return 'utf-8'
+    else:
+        return 'ascii'
+
 
 def main():
     import argparse
@@ -41,6 +53,7 @@ def main():
     #parser.add_argument('--fixwhitespace', '-w', action='store_true', help="Try to fix extra whitespace errors.")
     #parser.add_argument('--output', '-o', action='store', dest="outputfile", default=None, help="Output filename.  Defaults to stdout")
     parser.add_argument('--output-dir', '-t', action='store', dest="outputdirectory", default=None, help="Output directory")
+    parser.add_argument('--encoding', '-e', choices=('utf-8', 'ascii'), help='Specify file encoding')
     parser.add_argument('--version', action='version', version='{prog} {version}'.format(prog=parser.prog, version=__version__))
     parser.add_argument('--map-path', '-m', action='store', dest="map_path", default=None, type=check_map_path_arg)
     parser.add_argument('input_files', nargs='*')
@@ -63,6 +76,10 @@ def main():
         logger.setLevel(logging.ERROR)
     if args.map_path:
         param.set('map_path', args.map_path)
+    if args.encoding is not None:
+        param.set('encoding', args.encoding)
+    else:
+        param.set('encoding', get_default_encoding())
 
     for src_filename in args.input_files:
         try:

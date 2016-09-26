@@ -8,9 +8,9 @@ If no ouput filename is given with -o,  write to stdout.
 
 import sys
 import os.path
-import codecs
 import tempfile
 import logging
+import codecs
 
 # Intrapackage imports
 libpath = os.path.abspath(os.path.join(os.path.dirname(__file__), '../..'))
@@ -23,6 +23,17 @@ __author__ = pyx12.__author__
 __status__ = pyx12.__status__
 __version__ = pyx12.__version__
 __date__ = pyx12.__date__
+DEFAULT_BUFSIZE = 8 * 1024
+
+
+def get_default_encoding():
+    """
+    Based on python major version, get the default file encoding
+    """
+    if sys.version_info[0] > 2:
+        return 'utf-8'
+    else:
+        return 'ascii'
 
 
 def main():
@@ -35,10 +46,15 @@ def main():
     parser.add_argument('--inplace', '-i', action='store_true', help="Make changes to files in place")
     parser.add_argument('--fixcounting', '-f', action='store_true', help="Try to fix counting errors")
     #parser.add_argument('--fixwhitespace', '-w', action='store_true', help="Try to fix extra whitespace errors.")
+    parser.add_argument('--encoding', '-e', choices=('utf-8', 'ascii'), help='Specify file encoding')
     parser.add_argument('--output', '-o', action='store', dest="outputfile", default=None, help="Output filename.  Defaults to stdout")
     parser.add_argument('--version', action='version', version='{prog} {version}'.format(prog=parser.prog, version=__version__))
     parser.add_argument('input_files', nargs='*')
     args = parser.parse_args()
+    #if args.encoding is not None:
+    #    param.set('encoding', args.encoding)
+    #else:
+    #    param.set('encoding', get_default_encoding())
 
     logger = logging.getLogger()
     formatter = logging.Formatter('%(asctime)s %(levelname)s %(message)s')
@@ -53,7 +69,7 @@ def main():
             logger.error('Could not open file "%s"' % (file_in))
 
         fd_out = tempfile.TemporaryFile('w+', encoding='ascii')
-        src = pyx12.x12file.X12Reader(file_in)
+        src = pyx12.x12file.X12Reader(file_in, encoding='ascii')
         for seg_data in src:
             if args.fixcounting:
                 err_codes = [(x[1]) for x in src.pop_errors()]
@@ -74,13 +90,22 @@ def main():
 
         fd_out.seek(0)
         if args.outputfile:
-            fd_out = codecs.open(args.outputfile, mode='w', encoding='ascii')
+            fd_out = open(args.outputfile, mode='w', encoding='ascii')
         else:
             if args.inplace:
-                with codecs.open(file_in, mode='w', encoding='ascii') as fd_orig:
-                    fd_orig.write(fd_out.read())
+                with open(file_in, mode='w', encoding='ascii') as fd_orig:
+                    while True:
+                        buf = fd_out.read(DEFAULT_BUFSIZE)
+                        if not buf:
+                            break
+                        fd_orig.write(buf)
             else:
-                sys.stdout.write(fd_out.read())
+                while True:
+                    buf = fd_out.read(DEFAULT_BUFSIZE)
+                    if not buf:
+                        break
+                sys.stdout.write(buf)
+        fd_out.close()
     return True
 
 if __name__ == '__main__':

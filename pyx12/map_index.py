@@ -18,8 +18,12 @@ Locate the correct xml map file given:
 
 import os.path
 import logging
-from pkg_resources import resource_stream
-import xml.etree.cElementTree as et
+import xml.etree.cElementTree as ET
+import pkgutil
+
+
+class MapIndexError(Exception):
+    """Class for data elements module errors."""
 
 
 class map_index(object):
@@ -41,17 +45,19 @@ class map_index(object):
                 raise OSError(2, "Map path does not exist", base_path)
             if not os.path.isdir(base_path):
                 raise OSError(2, "Pyx12 Map file '{}' does not exist in map path".format(maps_index_file), base_path)
-            fd = open(os.path.join(base_path, maps_index_file))
+            with open(os.path.join(base_path, maps_index_file)) as fd:
+                et = ET.parse(fd).getroot()
         else:
-            logger.debug("Looking for map index file '{}' in pkg_resources".format(maps_index_file))
-            fd = resource_stream(__name__, os.path.join('map', maps_index_file))
-        t = et.parse(fd)
-        for v in t.iter('version'):
+            filepath = os.path.join('map', maps_index_file)
+            logger.debug("Looking for map index file '{}' in pkg_util".format(filepath))
+            contents = pkgutil.get_data('pyx12', filepath)
+            if contents is None:
+                raise MapIndexError("Could not find map index file '{}' in pkg_util".format(filepath))
+            et = ET.fromstring(contents)
+        for v in et.iter('version'):
             icvn = v.get('icvn')
             for m in v.iterfind('map'):
-                self.add_map(icvn, m.get('vriic'), m.get('fic'),
-                             m.get('tspc'), m.text, m.get('abbr'))
-        fd.close()
+                self.add_map(icvn, m.get('vriic'), m.get('fic'), m.get('tspc'), m.text, m.get('abbr'))
 
     def add_map(self, icvn, vriic, fic, tspc, map_file, abbr):
         self.maps.append({'icvn': icvn, 'vriic': vriic, 'fic': fic,

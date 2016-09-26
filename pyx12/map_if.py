@@ -14,8 +14,8 @@ import logging
 import os.path
 import sys
 import re
-import xml.etree.cElementTree as et
-from pkg_resources import resource_stream
+import xml.etree.cElementTree as ET
+import pkgutil
 
 # Intrapackage imports
 from .errors import EngineError
@@ -1532,20 +1532,23 @@ def load_map_file(map_file, param, map_path=None):
             raise OSError(2, "Map path does not exist", map_path)
         if not os.path.isdir(map_path):
             raise OSError(2, "Pyx12 map file '{}' does not exist in map path".format(map_file), map_path)
-        map_fd = open(os.path.join(map_path, map_file))
+        with open(os.path.join(map_path, map_file)) as fd:
+            et = ET.parse(fd).getroot()
     else:
-        logger.debug("Looking for map file '{}' in pkg_resources".format(map_file))
-        map_fd = resource_stream(__name__, os.path.join('map', map_file))
+        filepath = os.path.join('map', map_file)
+        logger.debug("Looking for map file '{}' in pkg_util".format(filepath))
+        contents = pkgutil.get_data('pyx12', filepath)
+        if contents is None:
+            raise Exception("Could not find map file '{}' in pkg_util".format(filepath))
+        et = ET.fromstring(contents)
     imap = None
     try:
         logger.debug('Create map from %s' % (map_file))
-        etree = et.parse(map_fd)
-        imap = map_if(etree.getroot(), param, map_path)
+        imap = map_if(et, param, map_path)
     except AssertionError:
         logger.error('Load of map file failed: %s' % (map_file))
         raise
     except Exception:
         raise
         #raise EngineError('Load of map file failed: %s' % (map_file))
-    map_fd.close()
     return imap
