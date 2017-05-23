@@ -23,6 +23,7 @@ import logging
 import tempfile
 import codecs
 import argparse
+import glob
 
 # Intrapackage imports
 libpath = abspath(join(dirname(__file__), '../..'))
@@ -105,71 +106,75 @@ def main():
         except IOError:
             logger.exception('Could not open log file: %s' % (args.logfile))
 
-    for src_filename in args.input_files:
-        try:
-            if not os.path.isfile(src_filename):
-                logger.error('Could not open file "%s"' % (src_filename))
-                continue
-            if flag_997:
-                fd_997 = tempfile.TemporaryFile()
-            if args.html:
-                if os.path.splitext(src_filename)[1] == '.txt':
-                    target_html = os.path.splitext(src_filename)[0] + '.html'
-                else:
-                    target_html = src_filename + '.html'
-                fd_html = open(target_html, 'w')
+    for fn in args.input_files:
+        for src_filename in glob.iglob(fn):
+            try:
+                if not os.path.isfile(src_filename):
+                    logger.error('Could not open file "%s"' % (src_filename))
+                    continue
+                #fd_src = open(src_filename, 'U')
+                if flag_997:
+                    fd_997 = tempfile.TemporaryFile()
+                if args.html:
+                    if os.path.splitext(src_filename)[1] == '.txt':
+                        target_html = os.path.splitext(src_filename)[0] + '.html'
+                    else:
+                        target_html = src_filename + '.html'
+                    fd_html = open(target_html, 'w')
 
-            if args.profile:
-                from plop.collector import Collector
-                p = Collector()
-                p.start()
-                if pyx12.x12n_document.x12n_document(param=param, src_file=src_filename,
-                        fd_997=fd_997, fd_html=fd_html, fd_xmldoc=None, map_path=args.map_path):
-                    sys.stderr.write('%s: OK\n' % (src_filename))
+                if args.profile:
+                    from plop.collector import Collector
+                    p = Collector()
+                    p.start()
+                    if pyx12.x12n_document.x12n_document(param=param, src_file=src_filename,
+                            fd_997=fd_997, fd_html=fd_html, fd_xmldoc=None, map_path=args.map_path):
+                        sys.stderr.write('%s: OK\n' % (src_filename))
+                    else:
+                        sys.stderr.write('%s: Failure\n' % (src_filename))
+                    #import profile
+                    #prof_str = 'pyx12.x12n_document.x12n_document(param, src_filename, ' \
+                    #        + 'fd_997, fd_html, None, None)'
+                    #print prof_str
+                    #print param
+                    #profile.run(prof_str, 'pyx12.prof')
+                    p.stop()
+                    try:
+                        pfile = os.path.splitext(os.path.basename(
+                            src_filename))[0] + '.plop.out'
+                        pfull = os.path.join(os.path.expanduser(
+                            '~/.plop.profiles'), pfile)
+                        print(pfull)
+                        with open(pfull, 'w') as fdp:
+                            fdp.write(repr(dict(p.stack_counts)))
+                    except Exception:
+                        logger.exception('Failed to write profile data')
+                        sys.stderr.write('%s: bad profile save\n' % (src_filename))
                 else:
-                    sys.stderr.write('%s: Failure\n' % (src_filename))
-                #import profile
-                #prof_str = 'pyx12.x12n_document.x12n_document(param, src_filename, ' \
-                #        + 'fd_997, fd_html, None, None)'
-                #print prof_str
-                #print param
-                #profile.run(prof_str, 'pyx12.prof')
-                p.stop()
-                try:
-                    pfile = os.path.splitext(os.path.basename(
-                        src_filename))[0] + '.plop.out'
-                    pfull = os.path.join(os.path.expanduser(
-                        '~/.plop.profiles'), pfile)
-                    print(pfull)
-                    with open(pfull, 'w') as fdp:
-                        fdp.write(repr(dict(p.stack_counts)))
-                except Exception:
-                    logger.exception('Failed to write profile data')
-                    sys.stderr.write('%s: bad profile save\n' % (src_filename))
-            else:
-                if pyx12.x12n_document.x12n_document(param=param, src_file=src_filename,
-                        fd_997=fd_997, fd_html=fd_html, fd_xmldoc=None, map_path=args.map_path):
-                    sys.stderr.write('%s: OK\n' % (src_filename))
-                else:
-                    sys.stderr.write('%s: Failure\n' % (src_filename))
-            if flag_997 and fd_997.tell() != 0:
-                fd_997.seek(0)
-                if os.path.splitext(src_filename)[1] == '.txt':
-                    target_997 = os.path.splitext(src_filename)[0] + '.997'
-                else:
-                    target_997 = src_filename + '.997'
-                codecs.open(target_997, mode='w',
-                            encoding='ascii').write(fd_997.read())
+                    logger.debug('Before x12n_document for {}'.format(src_filename))
+                    if pyx12.x12n_document.x12n_document(param=param, src_file=src_filename,
+                            fd_997=fd_997, fd_html=fd_html, fd_xmldoc=None, map_path=args.map_path):
+                        sys.stderr.write('%s: OK\n' % (src_filename))
+                    else:
+                        sys.stderr.write('%s: Failure\n' % (src_filename))
+                    logger.debug('after x12n_document for {}'.format(src_filename))
+                if flag_997 and fd_997.tell() != 0:
+                    fd_997.seek(0)
+                    if os.path.splitext(src_filename)[1] == '.txt':
+                        target_997 = os.path.splitext(src_filename)[0] + '.997'
+                    else:
+                        target_997 = src_filename + '.997'
+                    codecs.open(target_997, mode='w',
+                                encoding='ascii').write(fd_997.read())
 
-            if fd_997:
-                fd_997.close()
-            if fd_html:
-                fd_html.close()
-        except IOError:
-            logger.exception('Could not open files')
-            return False
-        except KeyboardInterrupt:
-            print("\n[interrupt]")
+                if fd_997:
+                    fd_997.close()
+                if fd_html:
+                    fd_html.close()
+            except IOError:
+                logger.exception('Could not open files')
+                return False
+            except KeyboardInterrupt:
+                print("\n[interrupt]")
 
     return True
 
