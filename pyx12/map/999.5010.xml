@@ -9,8 +9,6 @@
 # you should have received as part of this distribution.
 #
 ######################################################################
-
-#    $Id: 997.4010.xml 1465 2011-01-11 20:29:48Z johnholland $
 -->
 <transaction xid="999">
   <name>HIPAA Implementation Acknowledgment 999</name>
