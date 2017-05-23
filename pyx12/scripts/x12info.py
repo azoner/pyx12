@@ -11,7 +11,7 @@ if os.path.isdir(libpath):
     sys.path.insert(0, libpath)
 
 import pyx12
-from pyx12.x12metadata import get_x12file_metadata
+from pyx12.x12metadata import get_x12file_metadata, get_x12file_metadata_headers
 #import pyx12.x12file
 #import pyx12.error_handler
 
@@ -66,7 +66,10 @@ def main():
 
     for src_filename in args.input_files:
         try:
+            logger.debug('Before get_x12file_metadata_headers')
             (result, headers, node_summary) = get_x12file_metadata(param, src_filename, args.map_path)
+            #(result, headers) = get_x12file_metadata_headers(param, src_filename, args.map_path)
+            logger.debug('After get_x12file_metadata_headers')
             if not result:
                 raise pyx12.errors.EngineError()
             res = {

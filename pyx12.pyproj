@@ -17,6 +17,7 @@
     <CommandLineArguments>
     </CommandLineArguments>
     <EnableNativeCodeDebugging>False</EnableNativeCodeDebugging>
+    <IsWindowsApplication>False</IsWindowsApplication>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)' == 'Debug'" />
   <PropertyGroup Condition="'$(Configuration)' == 'Release'" />
@@ -54,6 +55,7 @@
     <Compile Include="pyx12\examples\generate_spec.py" />
     <Compile Include="pyx12\examples\node_iterator.py" />
     <Compile Include="pyx12\test\test_map_if_load.py" />
+    <Compile Include="pyx12\x12metadata.py" />
     <Compile Include="setup.py" />
     <Compile Include="pyx12\codes.py" />
     <Compile Include="pyx12\dataele.py" />
