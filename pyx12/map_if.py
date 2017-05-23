@@ -867,51 +867,51 @@ class segment_if(x12_node):
 
     def is_match_qual(self, seg_data, seg_id, qual_code):
         """
-        Is segment id and qualifier a match to this segment node and to this particulary segment data?
+        Is segment id and qualifier a match to this segment node and to this particular segment data?
         @param seg_data: data segment instance
         @type seg_data: L{segment<segment.Segment>}
         @param seg_id: data segment ID
         @param qual_code: an ID qualifier code
-        @return: True if a match
-        @rtype: boolean
+        @return: (True if a match, qual_code, element_index, subelement_index)
+        @rtype: tuple(boolean, string, int, int)
         """
         if seg_id == self.id:
             if qual_code is None:
-                return True
+                return (True, None, None, None)
             elif self.children[0].is_element() \
                     and self.children[0].get_data_type() == 'ID' \
                     and self.children[0].usage == 'R' \
                     and len(self.children[0].valid_codes) > 0:
                 if qual_code in self.children[0].valid_codes and seg_data.get_value('01') == qual_code:
-                    return True
+                    return (True, qual_code, 1, None)
                 else:
-                    return False
+                    return (False, None, None, None)
             # Special Case for 820
             elif seg_id == 'ENT' \
                     and self.children[1].is_element() \
                     and self.children[1].get_data_type() == 'ID' \
                     and len(self.children[1].valid_codes) > 0:
                 if qual_code in self.children[1].valid_codes and seg_data.get_value('02') == qual_code:
-                    return True
+                    return (True, qual_code, 2, None)
                 else:
-                    return False
+                    return (False, None, None, None)
             elif self.children[0].is_composite() \
                     and self.children[0].children[0].get_data_type() == 'ID' \
                     and len(self.children[0].children[0].valid_codes) > 0:
                 if qual_code in self.children[0].children[0].valid_codes and seg_data.get_value('01-1') == qual_code:
-                    return True
+                    return (True, qual_code, 1, 1)
                 else:
-                    return False
+                    return (False, None, None, None)
             elif seg_id == 'HL' and self.children[2].is_element() \
                     and len(self.children[2].valid_codes) > 0:
                 if qual_code in self.children[2].valid_codes and seg_data.get_value('03') == qual_code:
-                    return True
+                    return (True, qual_code, 3, None)
                 else:
-                    return False
+                    return (False, None, None, None)
             else:
-                return True
+                return (True, None, None, None)
         else:
-            return False
+            return (False, None, None, None)
 
     def guess_unique_key_id_element(self):
         """
