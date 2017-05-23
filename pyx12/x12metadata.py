@@ -193,3 +193,67 @@ def get_x12file_metadata(param, src_file, map_path=None):
                 node_ordinal += 1
         last_x12_segment_path = x12path
     return (True, isa_data, node_summary)
+
+def get_x12file_metadata_headers(param, src_file, map_path=None):
+    logger = logging.getLogger('pyx12')
+    errh = pyx12.error_handler.errh_null()
+
+    # Get X12 DATA file
+    try:
+        src = pyx12.x12file.X12Reader(src_file)
+    except pyx12.errors.X12Error:
+        logger.error('"%s" does not look like an X12 data file' % (src_file))
+        return (False, None)
+    isa_data = None
+    for seg in src:
+        if seg.get_seg_id() == 'ISA':
+            isa_data = {
+                'InterchangeSenderIDQualifier': seg.get_value('ISA05'),
+                'InterchangeSenderID': seg.get_value('ISA06'),
+                'InterchangeReceiverIDQualifier': seg.get_value('ISA07'),
+                'InterchangeReceiverID': seg.get_value('ISA08'),
+                'InterchangeDate': seg.get_value('ISA09'),
+                'InterchangeTime': seg.get_value('ISA10'),
+                'InterchangeControlStandardsIdentifier': seg.get_value('ISA11'),
+                'InterchangeControlVersionNumber': seg.get_value('ISA12'),
+                'InterchangeControlNumber': seg.get_value('ISA13'),
+                'AcknowledgmentRequested': seg.get_value('ISA14'),
+                'UsageIndicator': seg.get_value('ISA15'),
+                'GSLoops': []
+                }
+            icvn = isa_data['InterchangeControlVersionNumber']
+        elif seg.get_seg_id() == 'IEA':
+            isa_data['NumberofIncludedFunctionalGroups'] = seg.get_value('IEA01')
+        elif seg.get_seg_id() == 'GS':
+            gs_data = {
+                'FunctionalGroupHeader': seg.get_value('GS01'),
+                'ApplicationSendersCode': seg.get_value('GS02'),
+                'ApplicationReceiversCode': seg.get_value('GS03'),
+                'FunctionalGroupDate': seg.get_value('GS04'),
+                'FunctionalGroupTime': seg.get_value('GS05'),
+                'GroupControlNumber': seg.get_value('GS06'),
+                'ResponsibleAgencyCode': seg.get_value('GS07'),
+                'VersionReleaseIndustryIdentifierCode': seg.get_value('GS08'),
+                'STLoops': []
+                }
+        elif seg.get_seg_id() == 'GE':
+            gs_data['NumberofTransactionSetsIncluded'] = seg.get_value('GE01')
+            isa_data['GSLoops'].append(gs_data)
+        elif seg.get_seg_id() == 'ST':
+            st_data = {
+                'TransactionSetIdentifierCode': seg.get_value('ST01'),
+                'TransactionSetControlNumber': seg.get_value('ST02'),
+                'ImplementationConventionReference': seg.get_value('ST03'),
+                }
+        elif seg.get_seg_id() == 'SE':
+            st_data['TransactionSegmentCount'] = seg.get_value('SE01')
+            gs_data['STLoops'].append(st_data)
+        elif seg.get_seg_id() == 'BHT':
+            st_data['HierarchicalStructureCode'] = seg.get_value('BHT01')
+            st_data['TransactionSetPurposeCode'] = seg.get_value('BHT02')
+            st_data['OriginatorApplicationTransactionIdentifier'] = seg.get_value('BHT03')
+            st_data['TransactionSetCreationDate'] = seg.get_value('BHT04')
+            st_data['TransactionSetCreationTime'] = seg.get_value('BHT05')
+            st_data['ClaimorEncounterIdentifier'] = seg.get_value('BHT06')
+
+    return (True, isa_data)
