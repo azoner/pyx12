@@ -77,7 +77,7 @@ class error_997_visitor(error_visitor.error_visitor):
         isa_seg.append(seg.get_value('ISA11'))
         isa_seg.append(icvn)
         isa_seg.append(self.isa_control_num)  # ISA Interchange Control Number
-        isa_seg.append(seg.get_value('ISA14'))
+        isa_seg.append('0') # No need for TA1 response to 997
         isa_seg.append(seg.get_value('ISA15'))
         isa_seg.append(self.subele_term)
         self._write(isa_seg)
