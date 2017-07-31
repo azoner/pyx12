@@ -231,7 +231,7 @@
           <usage>R</usage>
           <seq>08</seq>
           <valid_codes>
-            <code>005010X231</code>
+            <code>005010X231A1</code>
           </valid_codes>
         </element>
       </segment>
@@ -267,7 +267,7 @@
             <usage>R</usage>
             <seq>03</seq>
             <valid_codes>
-              <code>005010X231</code>
+              <code>005010X231A1</code>
             </valid_codes>
           </element>
         </segment>
@@ -747,7 +747,7 @@
                     <element xid="CTX06-02">
                       <data_ele>725</data_ele>
                       <name>Data Element Reference Number</name>
-                      <usage>S</usage>
+                      <usage>N</usage>
                       <seq>02</seq>
                     </element>
                   </composite>
