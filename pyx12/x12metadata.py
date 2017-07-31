@@ -16,7 +16,7 @@ import pyx12.params
 import pyx12.x12file
 from pyx12.map_walker import walk_tree
 
-def get_x12file_metadata(param, src_file, map_path=None):
+def get_x12file_metadata(param, src_file, map_path=None, do_node_summary=False):
     logger = logging.getLogger('pyx12')
     errh = pyx12.error_handler.errh_null()
 
@@ -38,9 +38,12 @@ def get_x12file_metadata(param, src_file, map_path=None):
     cur_map = None  # we do not initially know the X12 transaction type
 
     isa_data = {}
-    node_summary = {}
-    node_ordinal = 0
-    last_x12_segment_path = None
+    if do_node_summary:
+        node_summary = {}
+        node_ordinal = 0
+        last_x12_segment_path = None
+    else:
+        node_summary = None
     for seg in src:
         orig_node = node
         if seg.get_seg_id() == 'ISA':
@@ -150,48 +153,49 @@ def get_x12file_metadata(param, src_file, map_path=None):
 
         x12path = node.get_path()
         #parent
-        if x12path in node_summary:
-            node_summary[x12path]['Count'] += 1
-            if last_x12_segment_path not in node_summary[x12path]['prefix_nodes']:
-                node_summary[x12path]['prefix_nodes'].append(last_x12_segment_path)
-        else:
-            node_summary[x12path] = {
-                'Ordinal': node_ordinal,
-                'Count': 1,
-                'NodeType': node.base_name,
-                'Id': node.id,
-                'Name': node.name,
-                'ParentName': node.parent.name,
-                'LoopMaxUse': node.max_use,
-                'ParentPath': node.parent.get_path(),
-                'prefix_nodes': [last_x12_segment_path]
-            }
-            node_ordinal += 1
-            
-        for (refdes, ele_ord, comp_ord, val) in seg.values_iterator():
-            ele_node = node.getnodebypath2(refdes)
-            if ele_node.is_composite():
-                ele_node = ele_node.get_child_node_by_ordinal(1)
-            elepath = ele_node.get_path()
-
-            if elepath in node_summary:
-                node_summary[elepath]['Count'] += 1
+        if do_node_summary:
+            if x12path in node_summary:
+                node_summary[x12path]['Count'] += 1
+                if last_x12_segment_path not in node_summary[x12path]['prefix_nodes']:
+                    node_summary[x12path]['prefix_nodes'].append(last_x12_segment_path)
             else:
-                node_summary[elepath] = {
+                node_summary[x12path] = {
                     'Ordinal': node_ordinal,
                     'Count': 1,
-                    'NodeType': ele_node.base_name,
-                    'Id': ele_node.id,
-                    'Name': ele_node.name,
-                    'ParentName': ele_node.parent.name,
-                    'ParentPath': ele_node.parent.get_path(),
-                    'Usage': ele_node.usage,
-                    'DataType': ele_node.data_type,
-                    'MinLength': ele_node.min_len,
-                    'MaxLength': ele_node.max_len,
+                    'NodeType': node.base_name,
+                    'Id': node.id,
+                    'Name': node.name,
+                    'ParentName': node.parent.name,
+                    'LoopMaxUse': node.max_use,
+                    'ParentPath': node.parent.get_path(),
+                    'prefix_nodes': [last_x12_segment_path]
                 }
                 node_ordinal += 1
-        last_x12_segment_path = x12path
+            
+            for (refdes, ele_ord, comp_ord, val) in seg.values_iterator():
+                ele_node = node.getnodebypath2(refdes)
+                if ele_node.is_composite():
+                    ele_node = ele_node.get_child_node_by_ordinal(1)
+                elepath = ele_node.get_path()
+
+                if elepath in node_summary:
+                    node_summary[elepath]['Count'] += 1
+                else:
+                    node_summary[elepath] = {
+                        'Ordinal': node_ordinal,
+                        'Count': 1,
+                        'NodeType': ele_node.base_name,
+                        'Id': ele_node.id,
+                        'Name': ele_node.name,
+                        'ParentName': ele_node.parent.name,
+                        'ParentPath': ele_node.parent.get_path(),
+                        'Usage': ele_node.usage,
+                        'DataType': ele_node.data_type,
+                        'MinLength': ele_node.min_len,
+                        'MaxLength': ele_node.max_len,
+                    }
+                    node_ordinal += 1
+            last_x12_segment_path = x12path
     return (True, isa_data, node_summary)
 
 def get_x12file_metadata_headers(param, src_file, map_path=None):
