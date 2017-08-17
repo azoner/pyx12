@@ -217,7 +217,7 @@ class ElementIsValid(unittest.TestCase):
         self.assertNotEqual(node, None)
         self.assertEqual(node.id, 'CLM05-01')
         self.assertEqual(node.base_name, 'element')
-        elem = pyx12.segment.Element('02')
+        elem = pyx12.segment.Element('AA')
         self.assertFalse(node.is_valid(elem, self.errh))
         self.assertEqual(self.errh.err_cde, '7')
 
