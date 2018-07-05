@@ -13,3 +13,5 @@ pkg-plist
 TestResults/
 obj/
 testenv/
+/Backup
+*.pyperf
