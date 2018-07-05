@@ -31,8 +31,8 @@ class XMLWriter(object):
         >>>#Close currently open element ("vendor)
         >>>writer.pop()
         >>>#Element with an attribute
-        >>>writer.push(u"product", {u"id": u"100\u00B0"})
-        >>>writer.elem(u"name", u"100\u00B0 Server")
+        >>>writer.push(u"product", {u"id": u"100\\u00B0"})
+        >>>writer.elem(u"name", u"100\\u00B0 Server")
         >>>writer.elem(u"version", u"1.0")
         >>>writer.elem(u"last-release", u"20030401")
         >>>#Empty element
@@ -138,4 +138,5 @@ class XMLWriter(object):
             .replace(">", "&gt;")
 
     def _write(self, strval):
-        self.out.write(strval.decode(self.encoding))
+        # self.out.write(strval.encode(self.encoding))
+        self.out.write(strval)

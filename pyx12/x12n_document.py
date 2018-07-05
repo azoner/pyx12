@@ -1,5 +1,5 @@
 #####################################################################
-# Copyright 
+# Copyright
 #   John Holland <john@zoner.org>
 # All rights reserved.
 #
@@ -47,7 +47,8 @@ def _reset_counter_to_gs_counts(walker):
 
 
 def x12n_document(param, src_file, fd_997, fd_html,
-                  fd_xmldoc=None, xslt_files=None, map_path=None):
+                  fd_xmldoc=None, xslt_files=None, map_path=None,
+                  callback=None):
     """
     Primary X12 validation function
     @param param: pyx12.param instance
@@ -194,14 +195,19 @@ def x12n_document(param, src_file, fd_997, fd_html,
             #erx.handleErrors(src.pop_errors())
             #erx.handleErrors(errh.get_errors())
             #errh.reset()
-
+        if callback:
+            try:
+                callback(seg, src, node, valid)
+            except:
+                logger.error('callback failed')
+                pass
         if fd_html:
             if node is not None and node.is_first_seg_in_loop():
                 html.loop(node.get_parent())
             err_node_list = []
             while True:
                 try:
-                    err_iter.next()
+                    next(err_iter)
                     err_node = err_iter.get_cur_node()
                     err_node_list.append(err_node)
                 except pyx12.errors.IterOutOfBounds:

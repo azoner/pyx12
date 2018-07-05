@@ -84,9 +84,30 @@ class TreeGetValue(X12fileTestCase):
                 self.loop2300 = datatree
                 break
 
+    def test_get_line_numbers_2200(self):
+        loop2400 = self.loop2300.first('2400')
+        self.assertEqual(self.loop2300.seg_count, 19)
+        self.assertEqual(self.loop2300.cur_line_number, 21)
+        for seg in loop2400.select('CLM'):
+            self.assertEqual(seg.seg_count, 25)
+            self.assertEqual(seg.cur_line_number, 2271)
+            break
+
+    def test_get_line_numbers_2400(self):
+        loop2400 = self.loop2300.first('2400')
+        self.assertEqual(loop2400.seg_count, 35)
+        self.assertEqual(loop2400.cur_line_number, 37)
+        for svc in loop2400.select('SV1'):
+            self.assertEqual(svc.seg_count, 36)
+            self.assertEqual(svc.cur_line_number, 38)
+            break
+
     def test_get_seg_value(self):
         self.assertEqual(self.loop2300.get_value('CLM02'), '21')
         self.assertEqual(self.loop2300.get_value('CLM99'), None)
+
+    def test_get_seg_value_fail_no_element_index(self):
+        self.assertRaises(IndexError, self.loop2300.get_value, 'CLM')
 
     def test_get_parent_value(self):
         loop2400 = self.loop2300.first('2400')

@@ -1,5 +1,5 @@
 ######################################################################
-# Copyright 
+# Copyright
 #   John Holland <john@zoner.org>
 # All rights reserved.
 #
@@ -63,7 +63,7 @@ class ExternalCodes(object):
                 codes.append(code.text)
             self.codes[codeset_id] = {'name': name, 'dataele':
                                       data_ele, 'codes': codes}
-
+        code_fd.close()
 
     def isValid(self, key, code, check_dte=None):
         """
@@ -77,10 +77,10 @@ class ExternalCodes(object):
         @return: True if code is valid, False if not
         @rtype: boolean
         """
-        #if not given a key, do not flag an error
+        # if not given a key, do not flag an error
         if not key:
             raise EngineError('bad key %s' % (key))
-        #check the code against the list indexed by key
+        # check the code against the list indexed by key
         else:
             if key in self.exclude_list:
                 return True
@@ -89,7 +89,6 @@ class ExternalCodes(object):
             if code in self.codes[key]['codes']:
                 return True
         return False
-
 
     def debug_print(self, count=10):
         """

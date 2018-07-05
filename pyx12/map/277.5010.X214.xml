@@ -1,0 +1,2606 @@
+<?xml version="1.0"?>
+<!--
+######################################################################
+# Copyright (c) SWMBH
+#   John Holland <john@zoner.org>
+# All rights reserved.
+#
+# This software is licensed as described in the file LICENSE.txt, which
+# you should have received as part of this distribution.
+#
+######################################################################
+-->
+<transaction xid="277" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="map.xsd">
+  <name>HIPAA Health Care Claim Acknowledgement X214-277</name>
+  <loop xid="ISA_LOOP" type="explicit">
+    <name>Interchange Control Header</name>
+    <usage>R</usage>
+    <pos>0010</pos>
+    <repeat>&gt;1</repeat>
+    <segment xid="ISA">
+      <name>Interchange Control Header</name>
+      <usage>R</usage>
+      <pos>0100</pos>
+      <max_use>1</max_use>
+      <element xid="ISA01">
+        <data_ele>I01</data_ele>
+        <name>Authorization Information Qualifier</name>
+        <usage>R</usage>
+        <seq>01</seq>
+        <valid_codes>
+          <code>00</code>
+          <code>03</code>
+        </valid_codes>
+      </element>
+      <element xid="ISA02">
+        <data_ele>I02</data_ele>
+        <name>Authorization Information</name>
+        <usage>R</usage>
+        <seq>02</seq>
+      </element>
+      <element xid="ISA03">
+        <data_ele>I03</data_ele>
+        <name>Security Information Qualifier</name>
+        <usage>R</usage>
+        <seq>03</seq>
+        <valid_codes>
+          <code>00</code>
+          <code>01</code>
+        </valid_codes>
+      </element>
+      <element xid="ISA04">
+        <data_ele>I04</data_ele>
+        <name>Security Information</name>
+        <usage>R</usage>
+        <seq>04</seq>
+      </element>
+      <element xid="ISA05">
+        <data_ele>I05</data_ele>
+        <name>Interchange Sender ID Qualifier</name>
+        <usage>R</usage>
+        <seq>05</seq>
+        <valid_codes>
+          <code>01</code>
+          <code>14</code>
+          <code>20</code>
+          <code>27</code>
+          <code>28</code>
+          <code>29</code>
+          <code>30</code>
+          <code>33</code>
+          <code>ZZ</code>
+        </valid_codes>
+      </element>
+      <element xid="ISA06">
+        <data_ele>I06</data_ele>
+        <name>Interchange Sender ID</name>
+        <usage>R</usage>
+        <seq>06</seq>
+      </element>
+      <element xid="ISA07">
+        <data_ele>I05</data_ele>
+        <name>Interchange Receiver ID Qualifier</name>
+        <usage>R</usage>
+        <seq>07</seq>
+        <valid_codes>
+          <code>01</code>
+          <code>14</code>
+          <code>20</code>
+          <code>27</code>
+          <code>28</code>
+          <code>29</code>
+          <code>30</code>
+          <code>33</code>
+          <code>ZZ</code>
+        </valid_codes>
+      </element>
+      <element xid="ISA08">
+        <data_ele>I07</data_ele>
+        <name>Interchange Receiver ID</name>
+        <usage>R</usage>
+        <seq>08</seq>
+      </element>
+      <element xid="ISA09">
+        <data_ele>I08</data_ele>
+        <name>Interchange Date</name>
+        <usage>R</usage>
+        <seq>09</seq>
+        <valid_codes />
+      </element>
+      <element xid="ISA10">
+        <data_ele>I09</data_ele>
+        <name>Interchange Time</name>
+        <usage>R</usage>
+        <seq>10</seq>
+        <valid_codes />
+      </element>
+      <element xid="ISA11">
+        <data_ele>I65</data_ele>
+        <name>Interchange Control Standards Identifier</name>
+        <usage>R</usage>
+        <seq>11</seq>
+      </element>
+      <element xid="ISA12">
+        <data_ele>I11</data_ele>
+        <name>Interchange Control Version Number</name>
+        <usage>R</usage>
+        <seq>12</seq>
+        <valid_codes>
+          <code>00501</code>
+        </valid_codes>
+      </element>
+      <element xid="ISA13">
+        <data_ele>I12</data_ele>
+        <name>Interchange Control Number</name>
+        <usage>R</usage>
+        <seq>13</seq>
+      </element>
+      <element xid="ISA14">
+        <data_ele>I13</data_ele>
+        <name>Acknowledgment Requested</name>
+        <usage>R</usage>
+        <seq>14</seq>
+        <valid_codes>
+          <code>0</code>
+          <code>1</code>
+        </valid_codes>
+      </element>
+      <element xid="ISA15">
+        <data_ele>I14</data_ele>
+        <name>Usage Indicator</name>
+        <usage>R</usage>
+        <seq>15</seq>
+        <valid_codes>
+          <code>P</code>
+          <code>T</code>
+        </valid_codes>
+      </element>
+      <element xid="ISA16">
+        <data_ele>I15</data_ele>
+        <name>Component Element Separator</name>
+        <usage>R</usage>
+        <seq>16</seq>
+      </element>
+    </segment>
+    <!--End of ISA segment-->
+    <loop xid="GS_LOOP" type="explicit">
+      <name>Functional Group Header</name>
+      <usage>R</usage>
+      <pos>0200</pos>
+      <repeat>&gt;1</repeat>
+      <segment xid="GS">
+        <name>Functional Group Header</name>
+        <usage>R</usage>
+        <pos>0100</pos>
+        <max_use>1</max_use>
+        <element xid="GS01">
+          <data_ele>479</data_ele>
+          <name>Functional Identifier Code</name>
+          <usage>R</usage>
+          <seq>01</seq>
+          <valid_codes>
+            <code>HN</code>
+          </valid_codes>
+        </element>
+        <element xid="GS02">
+          <data_ele>142</data_ele>
+          <name>Application Sender's Code</name>
+          <usage>R</usage>
+          <seq>02</seq>
+        </element>
+        <element xid="GS03">
+          <data_ele>124</data_ele>
+          <name>Application Receiver's Code</name>
+          <usage>R</usage>
+          <seq>03</seq>
+        </element>
+        <element xid="GS04">
+          <data_ele>373</data_ele>
+          <name>Functional Group Date</name>
+          <usage>R</usage>
+          <seq>04</seq>
+          <valid_codes />
+        </element>
+        <element xid="GS05">
+          <data_ele>337</data_ele>
+          <name>Functional Group Time</name>
+          <usage>R</usage>
+          <seq>05</seq>
+          <valid_codes />
+        </element>
+        <element xid="GS06">
+          <data_ele>28</data_ele>
+          <name>Group Control Number</name>
+          <usage>R</usage>
+          <seq>06</seq>
+        </element>
+        <element xid="GS07">
+          <data_ele>455</data_ele>
+          <name>Responsible Agency Code</name>
+          <usage>R</usage>
+          <seq>07</seq>
+          <valid_codes>
+            <code>X</code>
+          </valid_codes>
+        </element>
+        <element xid="GS08">
+          <data_ele>480</data_ele>
+          <name>Version / Release / Industry Identifier Code</name>
+          <usage>R</usage>
+          <seq>08</seq>
+          <valid_codes>
+            <code>005010X214</code>
+          </valid_codes>
+        </element>
+      </segment>
+      <!--End of GS segment-->
+      <loop xid="ST_LOOP" type="explicit">
+        <name>Transaction Set Header</name>
+        <usage>R</usage>
+        <pos>0200</pos>
+        <repeat>&gt;1</repeat>
+        <segment xid="ST">
+          <name>Transaction Set Header</name>
+          <usage>R</usage>
+          <pos>0050</pos>
+          <max_use>1</max_use>
+          <element xid="ST01">
+            <data_ele>143</data_ele>
+            <name>Transaction Set Identifier Code</name>
+            <usage>R</usage>
+            <seq>01</seq>
+            <valid_codes>
+              <code>277</code>
+            </valid_codes>
+          </element>
+          <element xid="ST02">
+            <data_ele>329</data_ele>
+            <name>Transaction Set Control Number</name>
+            <usage>R</usage>
+            <seq>02</seq>
+          </element>
+          <element xid="ST03">
+            <data_ele>1705</data_ele>
+            <name>Version, Release, or Industry Identifier</name>
+            <usage>R</usage>
+            <seq>03</seq>
+            <valid_codes>
+              <code>005010X214</code>
+            </valid_codes>
+          </element>
+        </segment>
+        <!--End of ST segment-->
+        <loop xid="HEADER" type="wrapper">
+          <name>Header</name>
+          <usage>R</usage>
+          <pos>0100</pos>
+          <repeat>1</repeat>
+          <segment xid="BHT">
+            <name>Beginning of Hierarchical Transaction</name>
+            <usage>R</usage>
+            <pos>0200</pos>
+            <max_use>1</max_use>
+            <element xid="BHT01">
+              <data_ele>1005</data_ele>
+              <name>Hierarchical Structure Code</name>
+              <usage>R</usage>
+              <seq>01</seq>
+              <valid_codes>
+                <code>0085</code>
+              </valid_codes>
+            </element>
+            <element xid="BHT02">
+              <data_ele>353</data_ele>
+              <name>Transaction Set Purpose Code</name>
+              <usage>R</usage>
+              <seq>02</seq>
+              <valid_codes>
+                <code>08</code>
+              </valid_codes>
+            </element>
+            <element xid="BHT03">
+              <data_ele>127</data_ele>
+              <name>Originator Application Transaction Identifier</name>
+              <usage>R</usage>
+              <seq>03</seq>
+            </element>
+            <element xid="BHT04">
+              <data_ele>373</data_ele>
+              <name>Transaction Set Creation Date</name>
+              <usage>R</usage>
+              <seq>04</seq>
+            </element>
+            <element xid="BHT05">
+              <data_ele>337</data_ele>
+              <name>Transaction Set Creation Time</name>
+              <usage>R</usage>
+              <seq>05</seq>
+            </element>
+            <element xid="BHT06">
+              <data_ele>640</data_ele>
+              <name>Transaction Type Code</name>
+              <usage>R</usage>
+              <seq>06</seq>
+              <valid_codes>
+                <code>TH</code>
+              </valid_codes>
+            </element>
+          </segment>
+          <!--End of BHT segment-->
+        </loop>
+        <!--End of HEADER loop-->
+        <loop xid="DETAIL" type="wrapper">
+          <name>Table 2 - Detail</name>
+          <usage>R</usage>
+          <pos>0200</pos>
+          <repeat>&gt;1</repeat>
+          <loop xid="2000A">
+            <name>Information Source Level</name>
+            <usage>R</usage>
+            <pos>0100</pos>
+            <repeat>&gt;1</repeat>
+            <segment xid="HL">
+              <name>Information Source Level</name>
+              <usage>R</usage>
+              <pos>0100</pos>
+              <max_use>1</max_use>
+              <element xid="HL01">
+                <data_ele>628</data_ele>
+                <name>Hierarchical ID Number</name>
+                <usage>R</usage>
+                <seq>01</seq>
+              </element>
+              <element xid="HL02">
+                <data_ele>734</data_ele>
+                <name>Hierarchical Parent ID Number</name>
+                <usage>N</usage>
+                <seq>02</seq>
+              </element>
+              <element xid="HL03">
+                <data_ele>735</data_ele>
+                <name>Hierarchical Level Code</name>
+                <usage>R</usage>
+                <seq>03</seq>
+                <valid_codes>
+                  <code>20</code>
+                </valid_codes>
+              </element>
+              <element xid="HL04">
+                <data_ele>736</data_ele>
+                <name>Hierarchical Child Code</name>
+                <usage>R</usage>
+                <seq>04</seq>
+                <valid_codes>
+                  <code>1</code>
+                </valid_codes>
+              </element>
+            </segment>
+            <!--End of HL segment-->
+            <loop xid="2100A">
+              <name>Information Source Name</name>
+              <usage>R</usage>
+              <pos>0500</pos>
+              <repeat>1</repeat>
+              <segment xid="NM1">
+                <name>Information Source Name</name>
+                <usage>R</usage>
+                <pos>0500</pos>
+                <max_use>1</max_use>
+                <syntax>P0809</syntax>
+                <syntax>C1110</syntax>
+                <syntax>C1203</syntax>
+                <element xid="NM101">
+                  <data_ele>98</data_ele>
+                  <name>Entity Identifier Code</name>
+                  <usage>R</usage>
+                  <seq>01</seq>
+                  <valid_codes>
+                    <code>PR</code>
+                    <code>AY</code>
+                  </valid_codes>
+                </element>
+                <element xid="NM102">
+                  <data_ele>1065</data_ele>
+                  <name>Entity Type Qualifier</name>
+                  <usage>R</usage>
+                  <seq>02</seq>
+                  <valid_codes>
+                    <code>2</code>
+                  </valid_codes>
+                </element>
+                <element xid="NM103">
+                  <data_ele>1035</data_ele>
+                  <name>Payer Name</name>
+                  <usage>R</usage>
+                  <seq>03</seq>
+                </element>
+                <element xid="NM104">
+                  <data_ele>1036</data_ele>
+                  <name>Name First</name>
+                  <usage>N</usage>
+                  <seq>04</seq>
+                </element>
+                <element xid="NM105">
+                  <data_ele>1037</data_ele>
+                  <name>Name Middle</name>
+                  <usage>N</usage>
+                  <seq>05</seq>
+                </element>
+                <element xid="NM106">
+                  <data_ele>1038</data_ele>
+                  <name>Name Prefix</name>
+                  <usage>N</usage>
+                  <seq>06</seq>
+                </element>
+                <element xid="NM107">
+                  <data_ele>1039</data_ele>
+                  <name>Name Suffix</name>
+                  <usage>N</usage>
+                  <seq>07</seq>
+                </element>
+                <element xid="NM108">
+                  <data_ele>66</data_ele>
+                  <name>Identification Code Qualifier</name>
+                  <usage>R</usage>
+                  <seq>08</seq>
+                  <valid_codes>
+                    <code>46</code>
+                    <code>FI</code>
+                    <code>PI</code>
+                    <code>XV</code>
+                  </valid_codes>
+                </element>
+                <element xid="NM109">
+                  <data_ele>67</data_ele>
+                  <name>Payer Identifier</name>
+                  <usage>R</usage>
+                  <seq>09</seq>
+                </element>
+                <element xid="NM110">
+                  <data_ele>706</data_ele>
+                  <name>Entity Relationship Code</name>
+                  <usage>N</usage>
+                  <seq>10</seq>
+                </element>
+                <element xid="NM111">
+                  <data_ele>98</data_ele>
+                  <name>Entity Identifier Code</name>
+                  <usage>N</usage>
+                  <seq>11</seq>
+                </element>
+                <element xid="NM112">
+                  <data_ele>1035</data_ele>
+                  <name>Name Last or Organization Name</name>
+                  <usage>N</usage>
+                  <seq>12</seq>
+                </element>
+              </segment>
+              <!--End of NM1 segment-->
+            </loop>
+            <!--End of 2100A loop-->
+            <loop xid="2200A">
+              <name>Transmission Receipt Control Identifier</name>
+              <usage>R</usage>
+              <pos>0900</pos>
+              <repeat>&gt;1</repeat>
+              <segment xid="TRN">
+                <name>Transmission Receipt Control Identifier</name>
+                <usage>R</usage>
+                <pos>0900</pos>
+                <max_use>1</max_use>
+                <element xid="TRN01">
+                  <data_ele>481</data_ele>
+                  <name>Trace Type Code</name>
+                  <usage>R</usage>
+                  <seq>01</seq>
+                  <valid_codes>
+                    <code>1</code>
+                  </valid_codes>
+                </element>
+                <element xid="TRN02">
+                  <data_ele>127</data_ele>
+                  <name>Information Source Application Trace Identifier</name>
+                  <usage>R</usage>
+                  <seq>02</seq>
+                </element>
+                <element xid="TRN03">
+                  <data_ele>509</data_ele>
+                  <name>Originating Company Identifier</name>
+                  <usage>N</usage>
+                  <seq>03</seq>
+                </element>
+                <element xid="TRN04">
+                  <data_ele>127</data_ele>
+                  <name>Reference Identification</name>
+                  <usage>N</usage>
+                  <seq>04</seq>
+                </element>
+              </segment>
+              <!--End of TRN segment-->
+              <segment xid="DTP">
+                <name>Information Source Receipt Date</name>
+                <usage>R</usage>
+                <pos>1200</pos>
+                <max_use>1</max_use>
+                <element xid="DTP01">
+                  <data_ele>374</data_ele>
+                  <name>Date Time Qualifier</name>
+                  <usage>R</usage>
+                  <seq>01</seq>
+                  <valid_codes>
+                    <code>050</code>
+                  </valid_codes>
+                </element>
+                <element xid="DTP02">
+                  <data_ele>1250</data_ele>
+                  <name>Date Time Period Format Qualifier</name>
+                  <usage>R</usage>
+                  <seq>02</seq>
+                  <valid_codes>
+                    <code>D8</code>
+                  </valid_codes>
+                </element>
+                <element xid="DTP03">
+                  <data_ele>1251</data_ele>
+                  <name>Information Source Receipt Date</name>
+                  <usage>R</usage>
+                  <seq>03</seq>
+                </element>
+              </segment>
+              <!--End of DTP segment-->
+              <segment xid="DTP">
+                <name>Information Source Process Date</name>
+                <usage>R</usage>
+                <pos>1200</pos>
+                <max_use>1</max_use>
+                <element xid="DTP01">
+                  <data_ele>374</data_ele>
+                  <name>Date Time Qualifier</name>
+                  <usage>R</usage>
+                  <seq>01</seq>
+                  <valid_codes>
+                    <code>009</code>
+                  </valid_codes>
+                </element>
+                <element xid="DTP02">
+                  <data_ele>1250</data_ele>
+                  <name>Date Time Period Format Qualifier</name>
+                  <usage>R</usage>
+                  <seq>02</seq>
+                  <valid_codes>
+                    <code>D8</code>
+                  </valid_codes>
+                </element>
+                <element xid="DTP03">
+                  <data_ele>1251</data_ele>
+                  <name>Information Source Process Date</name>
+                  <usage>R</usage>
+                  <seq>03</seq>
+                </element>
+              </segment>
+              <!--End of DTP segment-->
+            </loop>
+            <!--End of 2200A loop-->
+            <loop xid="2000B">
+              <name>Information Receiver Level</name>
+              <usage>R</usage>
+              <pos>2000</pos>
+              <repeat>1</repeat>
+              <segment xid="HL">
+                <name>Information Receiver Level</name>
+                <usage>R</usage>
+                <pos>0100</pos>
+                <max_use>1</max_use>
+                <element xid="HL01">
+                  <data_ele>628</data_ele>
+                  <name>Hierarchical ID Number</name>
+                  <usage>R</usage>
+                  <seq>01</seq>
+                </element>
+                <element xid="HL02">
+                  <data_ele>734</data_ele>
+                  <name>Hierarchical Parent ID Number</name>
+                  <usage>R</usage>
+                  <seq>02</seq>
+                </element>
+                <element xid="HL03">
+                  <data_ele>735</data_ele>
+                  <name>Hierarchical Level Code</name>
+                  <usage>R</usage>
+                  <seq>03</seq>
+                  <valid_codes>
+                    <code>21</code>
+                  </valid_codes>
+                </element>
+                <element xid="HL04">
+                  <data_ele>736</data_ele>
+                  <name>Hierarchical Child Code</name>
+                  <usage>R</usage>
+                  <seq>04</seq>
+                  <valid_codes>
+                    <code>0</code>
+                    <code>1</code>
+                  </valid_codes>
+                </element>
+              </segment>
+              <!--End of HL segment-->
+              <loop xid="2100B">
+                <name>Information Receiver Name</name>
+                <usage>R</usage>
+                <pos>0500</pos>
+                <repeat>1</repeat>
+                <segment xid="NM1">
+                  <name>Information Receiver Name</name>
+                  <usage>R</usage>
+                  <pos>0500</pos>
+                  <max_use>1</max_use>
+                  <syntax>P0809</syntax>
+                  <syntax>C1110</syntax>
+                  <syntax>C1203</syntax>
+                  <element xid="NM101">
+                    <data_ele>98</data_ele>
+                    <name>Entity Identifier Code</name>
+                    <usage>R</usage>
+                    <seq>01</seq>
+                    <valid_codes>
+                      <code>41</code>
+                    </valid_codes>
+                  </element>
+                  <element xid="NM102">
+                    <data_ele>1065</data_ele>
+                    <name>Entity Type Qualifier</name>
+                    <usage>R</usage>
+                    <seq>02</seq>
+                    <valid_codes>
+                      <code>1</code>
+                      <code>2</code>
+                    </valid_codes>
+                  </element>
+                  <element xid="NM103">
+                    <data_ele>1035</data_ele>
+                    <name>Information Receiver Last or Organization Name</name>
+                    <usage>R</usage>
+                    <seq>03</seq>
+                  </element>
+                  <element xid="NM104">
+                    <data_ele>1036</data_ele>
+                    <name>Information Receiver First Name</name>
+                    <usage>S</usage>
+                    <seq>04</seq>
+                  </element>
+                  <element xid="NM105">
+                    <data_ele>1037</data_ele>
+                    <name>Information Receiver Middle Name</name>
+                    <usage>S</usage>
+                    <seq>05</seq>
+                  </element>
+                  <element xid="NM106">
+                    <data_ele>1038</data_ele>
+                    <name>Information Receiver Name Prefix</name>
+                    <usage>N</usage>
+                    <seq>06</seq>
+                  </element>
+                  <element xid="NM107">
+                    <data_ele>1039</data_ele>
+                    <name>Information Receiver Name Suffix</name>
+                    <usage>N</usage>
+                    <seq>07</seq>
+                  </element>
+                  <element xid="NM108">
+                    <data_ele>66</data_ele>
+                    <name>Identification Code Qualifier</name>
+                    <usage>R</usage>
+                    <seq>08</seq>
+                    <valid_codes>
+                      <code>46</code>
+                    </valid_codes>
+                  </element>
+                  <element xid="NM109">
+                    <data_ele>67</data_ele>
+                    <name>Information Receiver Identification Number</name>
+                    <usage>R</usage>
+                    <seq>09</seq>
+                  </element>
+                  <element xid="NM110">
+                    <data_ele>706</data_ele>
+                    <name>Entity Relationship Code</name>
+                    <usage>N</usage>
+                    <seq>10</seq>
+                  </element>
+                  <element xid="NM111">
+                    <data_ele>98</data_ele>
+                    <name>Entity Identifier Code</name>
+                    <usage>N</usage>
+                    <seq>11</seq>
+                  </element>
+                  <element xid="NM112">
+                    <data_ele>1035</data_ele>
+                    <name>Name Last or Organization Name</name>
+                    <usage>N</usage>
+                    <seq>12</seq>
+                  </element>
+                </segment>
+                <!--End of NM1 segment-->
+              </loop>
+              <!--End of 2100B loop-->
+              <loop xid="2200B">
+                <name>Information Receiver Trace Identifier</name>
+                <usage>R</usage>
+                <pos>0900</pos>
+                <repeat>1</repeat>
+                <segment xid="TRN">
+                  <name>Information Receiver Trace Identifier</name>
+                  <usage>R</usage>
+                  <pos>0900</pos>
+                  <max_use>1</max_use>
+                  <element xid="TRN01">
+                    <data_ele>481</data_ele>
+                    <name>Trace Type Code</name>
+                    <usage>R</usage>
+                    <seq>01</seq>
+                    <valid_codes>
+                      <code>2</code>
+                    </valid_codes>
+                  </element>
+                  <element xid="TRN02">
+                    <data_ele>127</data_ele>
+                    <name>Claim Transaction Batch Number</name>
+                    <usage>R</usage>
+                    <seq>02</seq>
+                  </element>
+                  <element xid="TRN03">
+                    <data_ele>509</data_ele>
+                    <name>Originating Company Identifier</name>
+                    <usage>N</usage>
+                    <seq>03</seq>
+                  </element>
+                  <element xid="TRN04">
+                    <data_ele>127</data_ele>
+                    <name>Reference Identification</name>
+                    <usage>N</usage>
+                    <seq>04</seq>
+                  </element>
+                </segment>
+                <!--End of TRN segment-->
+                <segment xid="STC">
+                  <name>Information Receiver Status Information</name>
+                  <usage>R</usage>
+                  <pos>1000</pos>
+                  <max_use>&gt;1</max_use>
+                  <composite xid="STC01">
+                    <data_ele>C043</data_ele>
+                    <name>Health Care Claim Status</name>
+                    <usage>R</usage>
+                    <seq>01</seq>
+                    <element xid="STC01-01">
+                      <data_ele>1271</data_ele>
+                      <name>Health Care Claim Status Category Code</name>
+                      <usage>R</usage>
+                      <seq>01</seq>
+                    </element>
+                    <element xid="STC01-02">
+                      <data_ele>1271</data_ele>
+                      <name>Status Code</name>
+                      <usage>R</usage>
+                      <seq>02</seq>
+                    </element>
+                    <element xid="STC01-03">
+                      <data_ele>98</data_ele>
+                      <name>Entity Identifier Code</name>
+                      <usage>S</usage>
+                      <seq>03</seq>
+                      <valid_codes>
+                        <code>36</code>
+                        <code>40</code>
+                        <code>41</code>
+                        <code>AY</code>
+                        <code>PR</code>
+                      </valid_codes>
+                    </element>
+                    <element xid="STC01-04">
+                      <data_ele>1270</data_ele>
+                      <name>Code List Qualifier Code</name>
+                      <usage>N</usage>
+                      <seq>04</seq>
+                    </element>
+                  </composite>
+                  <element xid="STC02">
+                    <data_ele>373</data_ele>
+                    <name>Status Information Effective Date</name>
+                    <usage>R</usage>
+                    <seq>02</seq>
+                  </element>
+                  <element xid="STC03">
+                    <data_ele>306</data_ele>
+                    <name>Action Code</name>
+                    <usage>R</usage>
+                    <seq>03</seq>
+                    <valid_codes>
+                      <code>U</code>
+                      <code>WQ</code>
+                    </valid_codes>
+                  </element>
+                  <element xid="STC04">
+                    <data_ele>782</data_ele>
+                    <name>Total Submitted Charges for Unit Work</name>
+                    <usage>R</usage>
+                    <seq>04</seq>
+                  </element>
+                  <element xid="STC05">
+                    <data_ele>782</data_ele>
+                    <name>Monetary Amount</name>
+                    <usage>N</usage>
+                    <seq>05</seq>
+                  </element>
+                  <element xid="STC06">
+                    <data_ele>373</data_ele>
+                    <name>Date</name>
+                    <usage>N</usage>
+                    <seq>06</seq>
+                  </element>
+                  <element xid="STC07">
+                    <data_ele>591</data_ele>
+                    <name>Payment Method Code</name>
+                    <usage>N</usage>
+                    <seq>07</seq>
+                  </element>
+                  <element xid="STC08">
+                    <data_ele>373</data_ele>
+                    <name>Date</name>
+                    <usage>N</usage>
+                    <seq>08</seq>
+                  </element>
+                  <element xid="STC09">
+                    <data_ele>429</data_ele>
+                    <name>Check Number</name>
+                    <usage>N</usage>
+                    <seq>09</seq>
+                  </element>
+                  <composite xid="STC10">
+                    <data_ele>C043</data_ele>
+                    <name>Health Care Claim Status</name>
+                    <usage>S</usage>
+                    <seq>10</seq>
+                    <element xid="STC10-01">
+                      <data_ele>1271</data_ele>
+                      <name>Health Care Claim Status Category Code</name>
+                      <usage>R</usage>
+                      <seq>01</seq>
+                    </element>
+                    <element xid="STC10-02">
+                      <data_ele>1271</data_ele>
+                      <name>Status Code</name>
+                      <usage>R</usage>
+                      <seq>02</seq>
+                    </element>
+                    <element xid="STC10-03">
+                      <data_ele>98</data_ele>
+                      <name>Entity Identifier Code</name>
+                      <usage>S</usage>
+                      <seq>03</seq>
+                    </element>
+                    <element xid="STC10-04">
+                      <data_ele>1270</data_ele>
+                      <name>Code List Qualifier Code</name>
+                      <usage>N</usage>
+                      <seq>04</seq>
+                    </element>
+                  </composite>
+                  <composite xid="STC11">
+                    <data_ele>C043</data_ele>
+                    <name>Health Care Claim Status</name>
+                    <usage>S</usage>
+                    <seq>11</seq>
+                    <element xid="STC11-01">
+                      <data_ele>1271</data_ele>
+                      <name>Health Care Claim Status Category Code</name>
+                      <usage>R</usage>
+                      <seq>01</seq>
+                    </element>
+                    <element xid="STC11-02">
+                      <data_ele>1271</data_ele>
+                      <name>Status Code</name>
+                      <usage>R</usage>
+                      <seq>02</seq>
+                    </element>
+                    <element xid="STC11-03">
+                      <data_ele>98</data_ele>
+                      <name>Entity Identifier Code</name>
+                      <usage>S</usage>
+                      <seq>03</seq>
+                    </element>
+                    <element xid="STC11-04">
+                      <data_ele>1270</data_ele>
+                      <name>Code List Qualifier Code</name>
+                      <usage>N</usage>
+                      <seq>04</seq>
+                    </element>
+                  </composite>
+                  <element xid="STC12">
+                    <data_ele>933</data_ele>
+                    <name>Free-form Message Text</name>
+                    <usage>N</usage>
+                    <seq>12</seq>
+                  </element>
+                </segment>
+                <!--End of STC segment-->
+                <segment xid="QTY">
+                  <name>Total Accepted Quantity</name>
+                  <usage>S</usage>
+                  <pos>1210</pos>
+                  <max_use>1</max_use>
+                  <syntax>E0204</syntax>
+                  <syntax>R0204</syntax>
+                  <element xid="QTY01">
+                    <data_ele>673</data_ele>
+                    <name>Quantity Qualifier</name>
+                    <usage>R</usage>
+                    <seq>01</seq>
+                    <valid_codes>
+                      <code>90</code>
+                    </valid_codes>
+                  </element>
+                  <element xid="QTY02">
+                    <data_ele>380</data_ele>
+                    <name>Total Accepted Quantity</name>
+                    <usage>R</usage>
+                    <seq>02</seq>
+                  </element>
+                  <composite xid="QTY03">
+                    <data_ele>C001</data_ele>
+                    <name>Composite Unit of Measure</name>
+                    <usage>N</usage>
+                    <seq>03</seq>
+                  </composite>
+                  <element xid="QTY04">
+                    <data_ele>61</data_ele>
+                    <name>Free-form Information</name>
+                    <usage>N</usage>
+                    <seq>04</seq>
+                  </element>
+                </segment>
+                <!--End of QTY segment-->
+                <segment xid="QTY">
+                  <name>Total Rejected Quantity</name>
+                  <usage>S</usage>
+                  <pos>1210</pos>
+                  <max_use>1</max_use>
+                  <syntax>E0204</syntax>
+                  <syntax>R0204</syntax>
+                  <element xid="QTY01">
+                    <data_ele>673</data_ele>
+                    <name>Quantity Qualifier</name>
+                    <usage>R</usage>
+                    <seq>01</seq>
+                    <valid_codes>
+                      <code>AA</code>
+                    </valid_codes>
+                  </element>
+                  <element xid="QTY02">
+                    <data_ele>380</data_ele>
+                    <name>Total Rejected Quantity</name>
+                    <usage>R</usage>
+                    <seq>02</seq>
+                  </element>
+                  <composite xid="QTY03">
+                    <data_ele>C001</data_ele>
+                    <name>Composite Unit of Measure</name>
+                    <usage>N</usage>
+                    <seq>03</seq>
+                  </composite>
+                  <element xid="QTY04">
+                    <data_ele>61</data_ele>
+                    <name>Free-form Information</name>
+                    <usage>N</usage>
+                    <seq>04</seq>
+                  </element>
+                </segment>
+                <!--End of QTY segment-->
+                <segment xid="AMT">
+                  <name>Total Accepted Amount</name>
+                  <usage>S</usage>
+                  <pos>1220</pos>
+                  <max_use>1</max_use>
+                  <element xid="AMT01">
+                    <data_ele>522</data_ele>
+                    <name>Amount Qualifier Code</name>
+                    <usage>R</usage>
+                    <seq>01</seq>
+                    <valid_codes>
+                      <code>YU</code>
+                    </valid_codes>
+                  </element>
+                  <element xid="AMT02">
+                    <data_ele>782</data_ele>
+                    <name>Total Accepted Amount</name>
+                    <usage>R</usage>
+                    <seq>02</seq>
+                  </element>
+                  <element xid="AMT03">
+                    <data_ele>478</data_ele>
+                    <name>Credit/Debit Flag Code</name>
+                    <usage>N</usage>
+                    <seq>03</seq>
+                  </element>
+                </segment>
+                <!--End of AMT segment-->
+                <segment xid="AMT">
+                  <name>Total Rejected Amount</name>
+                  <usage>S</usage>
+                  <pos>1220</pos>
+                  <max_use>1</max_use>
+                  <element xid="AMT01">
+                    <data_ele>522</data_ele>
+                    <name>Amount Qualifier Code</name>
+                    <usage>R</usage>
+                    <seq>01</seq>
+                    <valid_codes>
+                      <code>YY</code>
+                    </valid_codes>
+                  </element>
+                  <element xid="AMT02">
+                    <data_ele>782</data_ele>
+                    <name>Total Rejected Amount</name>
+                    <usage>R</usage>
+                    <seq>02</seq>
+                  </element>
+                  <element xid="AMT03">
+                    <data_ele>478</data_ele>
+                    <name>Credit/Debit Flag Code</name>
+                    <usage>N</usage>
+                    <seq>03</seq>
+                  </element>
+                </segment>
+                <!--End of AMT segment-->
+              </loop>
+              <!--End of 2200B loop-->
+              <loop xid="2000C">
+                <name>Billing Provider of Service Level</name>
+                <usage>R</usage>
+                <pos>2000</pos>
+                <repeat>&gt;1</repeat>
+                <segment xid="HL">
+                  <name>Billing Provider of Service Level</name>
+                  <usage>R</usage>
+                  <pos>0100</pos>
+                  <max_use>1</max_use>
+                  <element xid="HL01">
+                    <data_ele>628</data_ele>
+                    <name>Hierarchical ID Number</name>
+                    <usage>R</usage>
+                    <seq>01</seq>
+                  </element>
+                  <element xid="HL02">
+                    <data_ele>734</data_ele>
+                    <name>Hierarchical Parent ID Number</name>
+                    <usage>R</usage>
+                    <seq>02</seq>
+                  </element>
+                  <element xid="HL03">
+                    <data_ele>735</data_ele>
+                    <name>Hierarchical Level Code</name>
+                    <usage>R</usage>
+                    <seq>03</seq>
+                    <valid_codes>
+                      <code>19</code>
+                    </valid_codes>
+                  </element>
+                  <element xid="HL04">
+                    <data_ele>736</data_ele>
+                    <name>Hierarchical Child Code</name>
+                    <usage>R</usage>
+                    <seq>04</seq>
+                    <valid_codes>
+                      <code>1</code>
+                    </valid_codes>
+                  </element>
+                </segment>
+                <!--End of HL segment-->
+                <loop xid="2100C">
+                  <name>Billing Provider Name</name>
+                  <usage>R</usage>
+                  <pos>0500</pos>
+                  <repeat>&gt;1</repeat>
+                  <segment xid="NM1">
+                    <name>Billing Provider Name</name>
+                    <usage>R</usage>
+                    <pos>0500</pos>
+                    <max_use>1</max_use>
+                    <element xid="NM101">
+                      <data_ele>98</data_ele>
+                      <name>Entity Identifier Code</name>
+                      <usage>R</usage>
+                      <seq>01</seq>
+                      <valid_codes>
+                        <code>85</code>
+                      </valid_codes>
+                    </element>
+                    <element xid="NM102">
+                      <data_ele>1065</data_ele>
+                      <name>Entity Type Qualifier</name>
+                      <usage>R</usage>
+                      <seq>02</seq>
+                      <valid_codes>
+                        <code>1</code>
+                        <code>2</code>
+                      </valid_codes>
+                    </element>
+                    <element xid="NM103">
+                      <data_ele>1035</data_ele>
+                      <name>Provider Last or Organization Name</name>
+                      <usage>R</usage>
+                      <seq>03</seq>
+                    </element>
+                    <element xid="NM104">
+                      <data_ele>1036</data_ele>
+                      <name>Provider First Name</name>
+                      <usage>S</usage>
+                      <seq>04</seq>
+                    </element>
+                    <element xid="NM105">
+                      <data_ele>1037</data_ele>
+                      <name>Provider Middle Name</name>
+                      <usage>S</usage>
+                      <seq>05</seq>
+                    </element>
+                    <element xid="NM106">
+                      <data_ele>1038</data_ele>
+                      <name>Provider Name Prefix</name>
+                      <usage>S</usage>
+                      <seq>06</seq>
+                    </element>
+                    <element xid="NM107">
+                      <data_ele>1039</data_ele>
+                      <name>Provider Name Suffix</name>
+                      <usage>S</usage>
+                      <seq>07</seq>
+                    </element>
+                    <element xid="NM108">
+                      <data_ele>66</data_ele>
+                      <name>Identification Code Qualifier</name>
+                      <usage>R</usage>
+                      <seq>08</seq>
+                      <valid_codes>
+                        <code>FI</code>
+                        <code>SV</code>
+                        <code>XX</code>
+                      </valid_codes>
+                    </element>
+                    <element xid="NM109">
+                      <data_ele>67</data_ele>
+                      <name>Provider Identifier</name>
+                      <usage>R</usage>
+                      <seq>09</seq>
+                    </element>
+                    <element xid="NM110">
+                      <data_ele>706</data_ele>
+                      <name>Entity Relationship Code</name>
+                      <usage>N</usage>
+                      <seq>10</seq>
+                    </element>
+                    <element xid="NM111">
+                      <data_ele>98</data_ele>
+                      <name>Entity Identifier Code</name>
+                      <usage>N</usage>
+                      <seq>11</seq>
+                    </element>
+                  </segment>
+                  <!--End of NM1 segment-->
+                </loop>
+                <!--End of 2100C loop-->
+                <loop xid="2200C">
+                  <name>Provider of Service Information Trace Identifier</name>
+                  <usage>R</usage>
+                  <pos>0900</pos>
+                  <repeat>1</repeat>
+                  <segment xid="TRN">
+                    <name>Provider of Service Information Trace Identifier</name>
+                    <usage>R</usage>
+                    <pos>0900</pos>
+                    <max_use>1</max_use>
+                    <element xid="TRN01">
+                      <data_ele>481</data_ele>
+                      <name>Trace Type Code</name>
+                      <usage>R</usage>
+                      <seq>01</seq>
+                      <valid_codes>
+                        <code>1</code>
+                      </valid_codes>
+                    </element>
+                    <element xid="TRN02">
+                      <data_ele>127</data_ele>
+                      <name>Provider of Service Information Trace Identifier</name>
+                      <usage>R</usage>
+                      <seq>02</seq>
+                    </element>
+                    <element xid="TRN03">
+                      <data_ele>509</data_ele>
+                      <name>Originating Company Identifier</name>
+                      <usage>N</usage>
+                      <seq>03</seq>
+                    </element>
+                    <element xid="TRN04">
+                      <data_ele>127</data_ele>
+                      <name>Reference Identification</name>
+                      <usage>N</usage>
+                      <seq>04</seq>
+                    </element>
+                  </segment>
+                  <!--End of TRN segment-->
+                  <segment xid="STC">
+                    <name>Billing Provider Status Information</name>
+                    <usage>R</usage>
+                    <pos>1000</pos>
+                    <max_use>&gt;1</max_use>
+                    <composite xid="STC01">
+                      <data_ele>C043</data_ele>
+                      <name>Health Care Claim Status</name>
+                      <usage>R</usage>
+                      <seq>01</seq>
+                      <element xid="STC01-01">
+                        <data_ele>1271</data_ele>
+                        <name>Health Care Claim Status Category Code</name>
+                        <usage>R</usage>
+                        <seq>01</seq>
+                      </element>
+                      <element xid="STC01-02">
+                        <data_ele>1271</data_ele>
+                        <name>Status Code</name>
+                        <usage>R</usage>
+                        <seq>02</seq>
+                      </element>
+                      <element xid="STC01-03">
+                        <data_ele>98</data_ele>
+                        <name>Entity Identifier Code</name>
+                        <usage>S</usage>
+                        <seq>03</seq>
+                        <valid_codes>
+                          <code>36</code>
+                          <code>40</code>
+                          <code>41</code>
+                          <code>77</code>
+                          <code>82</code>
+                          <code>85</code>
+                          <code>87</code>
+                          <code>AY</code>
+                          <code>PR</code>
+                        </valid_codes>
+                      </element>
+                      <element xid="STC01-04">
+                        <data_ele>1270</data_ele>
+                        <name>Code List Qualifier Code</name>
+                        <usage>N</usage>
+                        <seq>04</seq>
+                      </element>
+                    </composite>
+                    <element xid="STC02">
+                      <data_ele>373</data_ele>
+                      <name>Status Information Effective Date</name>
+                      <usage>N</usage>
+                      <seq>02</seq>
+                    </element>
+                    <element xid="STC03">
+                      <data_ele>306</data_ele>
+                      <name>Action Code</name>
+                      <usage>R</usage>
+                      <seq>03</seq>
+                      <valid_codes>
+                        <code>U</code>
+                        <code>WQ</code>
+                      </valid_codes>
+                    </element>
+                    <element xid="STC04">
+                      <data_ele>782</data_ele>
+                      <name>Total Submitted Charges for Unit Work</name>
+                      <usage>R</usage>
+                      <seq>04</seq>
+                    </element>
+                    <element xid="STC05">
+                      <data_ele>782</data_ele>
+                      <name>Monetary Amount</name>
+                      <usage>N</usage>
+                      <seq>05</seq>
+                    </element>
+                    <element xid="STC06">
+                      <data_ele>373</data_ele>
+                      <name>Date</name>
+                      <usage>N</usage>
+                      <seq>06</seq>
+                    </element>
+                    <element xid="STC07">
+                      <data_ele>591</data_ele>
+                      <name>Payment Method Code</name>
+                      <usage>N</usage>
+                      <seq>07</seq>
+                    </element>
+                    <element xid="STC08">
+                      <data_ele>373</data_ele>
+                      <name>Date</name>
+                      <usage>N</usage>
+                      <seq>08</seq>
+                    </element>
+                    <element xid="STC09">
+                      <data_ele>429</data_ele>
+                      <name>Check Number</name>
+                      <usage>N</usage>
+                      <seq>09</seq>
+                    </element>
+                    <composite xid="STC10">
+                      <data_ele>C043</data_ele>
+                      <name>Health Care Claim Status</name>
+                      <usage>S</usage>
+                      <seq>10</seq>
+                      <element xid="STC10-01">
+                        <data_ele>1271</data_ele>
+                        <name>Health Care Claim Status Category Code</name>
+                        <usage>R</usage>
+                        <seq>01</seq>
+                      </element>
+                      <element xid="STC10-02">
+                        <data_ele>1271</data_ele>
+                        <name>Status Code</name>
+                        <usage>R</usage>
+                        <seq>02</seq>
+                      </element>
+                      <element xid="STC10-03">
+                        <data_ele>98</data_ele>
+                        <name>Entity Identifier Code</name>
+                        <usage>S</usage>
+                        <seq>03</seq>
+                      </element>
+                      <element xid="STC10-04">
+                        <data_ele>1270</data_ele>
+                        <name>Code List Qualifier Code</name>
+                        <usage>N</usage>
+                        <seq>04</seq>
+                      </element>
+                    </composite>
+                    <composite xid="STC11">
+                      <data_ele>C043</data_ele>
+                      <name>Health Care Claim Status</name>
+                      <usage>S</usage>
+                      <seq>11</seq>
+                      <element xid="STC11-01">
+                        <data_ele>1271</data_ele>
+                        <name>Health Care Claim Status Category Code</name>
+                        <usage>R</usage>
+                        <seq>01</seq>
+                      </element>
+                      <element xid="STC11-02">
+                        <data_ele>1271</data_ele>
+                        <name>Status Code</name>
+                        <usage>R</usage>
+                        <seq>02</seq>
+                      </element>
+                      <element xid="STC11-03">
+                        <data_ele>98</data_ele>
+                        <name>Entity Identifier Code</name>
+                        <usage>S</usage>
+                        <seq>03</seq>
+                      </element>
+                      <element xid="STC11-04">
+                        <data_ele>1270</data_ele>
+                        <name>Code List Qualifier Code</name>
+                        <usage>N</usage>
+                        <seq>04</seq>
+                      </element>
+                    </composite>
+                    <element xid="STC12">
+                      <data_ele>933</data_ele>
+                      <name>Free-form Message Text</name>
+                      <usage>N</usage>
+                      <seq>12</seq>
+                    </element>
+                  </segment>
+                  <!--End of STC segment-->
+                  <segment xid="REF">
+                    <name>Provider Secondary Identifier</name>
+                    <usage>S</usage>
+                    <pos>1100</pos>
+                    <max_use>1</max_use>
+                    <element xid="REF01">
+                      <data_ele>128</data_ele>
+                      <name>Reference Identification Qualifier</name>
+                      <usage>R</usage>
+                      <seq>01</seq>
+                      <valid_codes>
+                        <code>0B</code>
+                        <code>1G</code>
+                        <code>G2</code>
+                        <code>LU</code>
+                        <code>SY</code>
+                        <code>TJ</code>
+                      </valid_codes>
+                    </element>
+                    <element xid="REF02">
+                      <data_ele>127</data_ele>
+                      <name>Provider Secondary Identifier</name>
+                      <usage>R</usage>
+                      <seq>02</seq>
+                    </element>
+                    <element xid="REF03">
+                      <data_ele>352</data_ele>
+                      <name>Description</name>
+                      <usage>N</usage>
+                      <seq>03</seq>
+                    </element>
+                    <composite>
+                      <data_ele>C040</data_ele>
+                      <name>Reference Identifier</name>
+                      <usage>N</usage>
+                      <seq>04</seq>
+                    </composite>
+                  </segment>
+                  <!--End of REF segment-->
+
+                  <segment xid="QTY">
+                    <name>Total Accepted Quantity</name>
+                    <usage>S</usage>
+                    <pos>1210</pos>
+                    <max_use>1</max_use>
+                    <syntax>E0204</syntax>
+                    <syntax>R0204</syntax>
+                    <element xid="QTY01">
+                      <data_ele>673</data_ele>
+                      <name>Quantity Qualifier</name>
+                      <usage>R</usage>
+                      <seq>01</seq>
+                      <valid_codes>
+                        <code>QA</code>
+                      </valid_codes>
+                    </element>
+                    <element xid="QTY02">
+                      <data_ele>380</data_ele>
+                      <name>Total Accepted Quantity</name>
+                      <usage>R</usage>
+                      <seq>02</seq>
+                    </element>
+                    <composite xid="QTY03">
+                      <data_ele>C001</data_ele>
+                      <name>Composite Unit of Measure</name>
+                      <usage>N</usage>
+                      <seq>03</seq>
+                    </composite>
+                    <element xid="QTY04">
+                      <data_ele>61</data_ele>
+                      <name>Free-form Information</name>
+                      <usage>N</usage>
+                      <seq>04</seq>
+                    </element>
+                  </segment>
+                  <!--End of QTY segment-->
+                  <segment xid="QTY">
+                    <name>Total Rejected Quantity</name>
+                    <usage>S</usage>
+                    <pos>1210</pos>
+                    <max_use>1</max_use>
+                    <syntax>E0204</syntax>
+                    <syntax>R0204</syntax>
+                    <element xid="QTY01">
+                      <data_ele>673</data_ele>
+                      <name>Quantity Qualifier</name>
+                      <usage>R</usage>
+                      <seq>01</seq>
+                      <valid_codes>
+                        <code>QC</code>
+                      </valid_codes>
+                    </element>
+                    <element xid="QTY02">
+                      <data_ele>380</data_ele>
+                      <name>Total Rejected Quantity</name>
+                      <usage>R</usage>
+                      <seq>02</seq>
+                    </element>
+                    <composite xid="QTY03">
+                      <data_ele>C001</data_ele>
+                      <name>Composite Unit of Measure</name>
+                      <usage>N</usage>
+                      <seq>03</seq>
+                    </composite>
+                    <element xid="QTY04">
+                      <data_ele>61</data_ele>
+                      <name>Free-form Information</name>
+                      <usage>N</usage>
+                      <seq>04</seq>
+                    </element>
+                  </segment>
+                  <!--End of QTY segment-->
+                  <segment xid="AMT">
+                    <name>Total Accepted Amount</name>
+                    <usage>S</usage>
+                    <pos>1220</pos>
+                    <max_use>1</max_use>
+                    <element xid="AMT01">
+                      <data_ele>522</data_ele>
+                      <name>Amount Qualifier Code</name>
+                      <usage>R</usage>
+                      <seq>01</seq>
+                      <valid_codes>
+                        <code>YU</code>
+                      </valid_codes>
+                    </element>
+                    <element xid="AMT02">
+                      <data_ele>782</data_ele>
+                      <name>Total Accepted Amount</name>
+                      <usage>R</usage>
+                      <seq>02</seq>
+                    </element>
+                    <element xid="AMT03">
+                      <data_ele>478</data_ele>
+                      <name>Credit/Debit Flag Code</name>
+                      <usage>N</usage>
+                      <seq>03</seq>
+                    </element>
+                  </segment>
+                  <!--End of AMT segment-->
+                  <segment xid="AMT">
+                    <name>Total Rejected Amount</name>
+                    <usage>S</usage>
+                    <pos>1220</pos>
+                    <max_use>1</max_use>
+                    <element xid="AMT01">
+                      <data_ele>522</data_ele>
+                      <name>Amount Qualifier Code</name>
+                      <usage>R</usage>
+                      <seq>01</seq>
+                      <valid_codes>
+                        <code>YY</code>
+                      </valid_codes>
+                    </element>
+                    <element xid="AMT02">
+                      <data_ele>782</data_ele>
+                      <name>Total Rejected Amount</name>
+                      <usage>R</usage>
+                      <seq>02</seq>
+                    </element>
+                    <element xid="AMT03">
+                      <data_ele>478</data_ele>
+                      <name>Credit/Debit Flag Code</name>
+                      <usage>N</usage>
+                      <seq>03</seq>
+                    </element>
+                  </segment>
+                  <!--End of AMT segment-->
+                </loop>
+                <!--End of 2200C loop-->
+                <loop xid="2000D">
+                  <name>Patient Level</name>
+                  <usage>R</usage>
+                  <pos>2000</pos>
+                  <repeat>&gt;1</repeat>
+                  <segment xid="HL">
+                    <name>Patient Level</name>
+                    <usage>R</usage>
+                    <pos>0100</pos>
+                    <max_use>1</max_use>
+                    <element xid="HL01">
+                      <data_ele>628</data_ele>
+                      <name>Hierarchical ID Number</name>
+                      <usage>R</usage>
+                      <seq>01</seq>
+                    </element>
+                    <element xid="HL02">
+                      <data_ele>734</data_ele>
+                      <name>Hierarchical Parent ID Number</name>
+                      <usage>R</usage>
+                      <seq>02</seq>
+                    </element>
+                    <element xid="HL03">
+                      <data_ele>735</data_ele>
+                      <name>Hierarchical Level Code</name>
+                      <usage>R</usage>
+                      <seq>03</seq>
+                      <valid_codes>
+                        <code>PT</code>
+                      </valid_codes>
+                    </element>
+                    <element xid="HL04">
+                      <data_ele>736</data_ele>
+                      <name>Hierarchical Child Code</name>
+                      <usage>N</usage>
+                      <seq>04</seq>
+                      <valid_codes>
+                        <code>0</code>
+                        <code>1</code>
+                      </valid_codes>
+                    </element>
+                  </segment>
+                  <!--End of HL segment-->
+                  <loop xid="2100D">
+                    <name>Patient Name</name>
+                    <usage>R</usage>
+                    <pos>0500</pos>
+                    <repeat>1</repeat>
+                    <segment xid="NM1">
+                      <name>Patient Name</name>
+                      <usage>R</usage>
+                      <pos>0500</pos>
+                      <max_use>1</max_use>
+                      <element xid="NM101">
+                        <data_ele>98</data_ele>
+                        <name>Entity Identifier Code</name>
+                        <usage>R</usage>
+                        <seq>01</seq>
+                        <valid_codes>
+                          <code>QC</code>
+                        </valid_codes>
+                      </element>
+                      <element xid="NM102">
+                        <data_ele>1065</data_ele>
+                        <name>Entity Type Qualifier</name>
+                        <usage>R</usage>
+                        <seq>02</seq>
+                        <valid_codes>
+                          <code>1</code>
+                        </valid_codes>
+                      </element>
+                      <element xid="NM103">
+                        <data_ele>1035</data_ele>
+                        <name>Patient Last Name</name>
+                        <usage>R</usage>
+                        <seq>03</seq>
+                      </element>
+                      <element xid="NM104">
+                        <data_ele>1036</data_ele>
+                        <name>Patient First Name</name>
+                        <usage>S</usage>
+                        <seq>04</seq>
+                      </element>
+                      <element xid="NM105">
+                        <data_ele>1037</data_ele>
+                        <name>Patient Middle Name</name>
+                        <usage>S</usage>
+                        <seq>05</seq>
+                      </element>
+                      <element xid="NM106">
+                        <data_ele>1038</data_ele>
+                        <name>Patient Name Prefix</name>
+                        <usage>S</usage>
+                        <seq>06</seq>
+                      </element>
+                      <element xid="NM107">
+                        <data_ele>1039</data_ele>
+                        <name>Patient Name Suffix</name>
+                        <usage>S</usage>
+                        <seq>07</seq>
+                      </element>
+                      <element xid="NM108">
+                        <data_ele>66</data_ele>
+                        <name>Identification Code Qualifier</name>
+                        <usage>R</usage>
+                        <seq>08</seq>
+                        <valid_codes>
+                          <code>II</code>
+                          <code>MI</code>
+                        </valid_codes>
+                      </element>
+                      <element xid="NM109">
+                        <data_ele>67</data_ele>
+                        <name>Patient Identifier</name>
+                        <usage>R</usage>
+                        <seq>09</seq>
+                      </element>
+                      <element xid="NM110">
+                        <data_ele>706</data_ele>
+                        <name>Entity Relationship Code</name>
+                        <usage>N</usage>
+                        <seq>10</seq>
+                      </element>
+                      <element xid="NM111">
+                        <data_ele>98</data_ele>
+                        <name>Entity Identifier Code</name>
+                        <usage>N</usage>
+                        <seq>11</seq>
+                      </element>
+                    </segment>
+                    <!--End of NM1 segment-->
+                  </loop>
+                  <!--End of 2100D loop-->
+                  <loop xid="2200D">
+                    <name>Claim Status Tracking Number</name>
+                    <usage>S</usage>
+                    <pos>0900</pos>
+                    <repeat>&gt;1</repeat>
+                    <segment xid="TRN">
+                      <name>Claim Status Tracking Number</name>
+                      <usage>R</usage>
+                      <pos>0900</pos>
+                      <max_use>1</max_use>
+                      <element xid="TRN01">
+                        <data_ele>481</data_ele>
+                        <name>Trace Type Code</name>
+                        <usage>R</usage>
+                        <seq>01</seq>
+                        <valid_codes>
+                          <code>2</code>
+                        </valid_codes>
+                      </element>
+                      <element xid="TRN02">
+                        <data_ele>127</data_ele>
+                        <name>Patient Control Number</name>
+                        <usage>R</usage>
+                        <seq>02</seq>
+                      </element>
+                      <element xid="TRN03">
+                        <data_ele>509</data_ele>
+                        <name>Originating Company Identifier</name>
+                        <usage>N</usage>
+                        <seq>03</seq>
+                      </element>
+                      <element xid="TRN04">
+                        <data_ele>127</data_ele>
+                        <name>Reference Identification</name>
+                        <usage>N</usage>
+                        <seq>04</seq>
+                      </element>
+                    </segment>
+                    <!--End of TRN segment-->
+                    <segment xid="STC">
+                      <name>Claim Level Status Information</name>
+                      <usage>R</usage>
+                      <pos>1000</pos>
+                      <max_use>&gt;1</max_use>
+                      <composite>
+                        <data_ele>C043</data_ele>
+                        <name>Health Care Claim Status</name>
+                        <usage>R</usage>
+                        <seq>01</seq>
+                        <element xid="STC01-01">
+                          <data_ele>1271</data_ele>
+                          <name>Health Care Claim Status Category Code</name>
+                          <usage>R</usage>
+                          <seq>01</seq>
+                          <valid_codes external="claim_status_cat"/>
+                        </element>
+                        <element xid="STC01-02">
+                          <data_ele>1271</data_ele>
+                          <name>Health Care Claim Status Code</name>
+                          <usage>R</usage>
+                          <seq>02</seq>
+                          <valid_codes external="claim_status"/>
+                        </element>
+                        <element xid="STC01-03">
+                          <data_ele>98</data_ele>
+                          <name>Entity Identifier Code</name>
+                          <usage>S</usage>
+                          <seq>03</seq>
+                          <valid_codes>
+                            <code>03</code>
+                            <code>1P</code>
+                            <code>1Z</code>
+                            <code>40</code>
+                            <code>41</code>
+                            <code>71</code>
+                            <code>72</code>
+                            <code>73</code>
+                            <code>77</code>
+                            <code>82</code>
+                            <code>85</code>
+                            <code>87</code>
+                            <code>DK</code>
+                            <code>DN</code>
+                            <code>DQ</code>
+                            <code>FA</code>
+                            <code>GB</code>
+                            <code>HK</code>
+                            <code>IL</code>
+                            <code>LI</code>
+                            <code>MSC</code>
+                            <code>PR</code>
+                            <code>PRP</code>
+                            <code>QB</code>
+                            <code>QC</code>
+                            <code>QD</code>
+                            <code>SEP</code>
+                            <code>TL</code>
+                            <code>TTP</code>
+                            <code>TU</code>
+                          </valid_codes>
+                        </element>
+                        <element xid="STC01-04">
+                          <data_ele>1270</data_ele>
+                          <name>Code List Qualifier Code</name>
+                          <usage>N</usage>
+                          <seq>04</seq>
+                        </element>
+                      </composite>
+                      <element xid="STC02">
+                        <data_ele>373</data_ele>
+                        <name>Status Information Effective Date</name>
+                        <usage>R</usage>
+                        <seq>02</seq>
+                      </element>
+                      <element xid="STC03">
+                        <data_ele>306</data_ele>
+                        <name>Action Code</name>
+                        <usage>R</usage>
+                        <seq>03</seq>
+                        <valid_codes>
+                          <code>U</code>
+                          <code>WQ</code>
+                        </valid_codes>
+                      </element>
+                      <element xid="STC04">
+                        <data_ele>782</data_ele>
+                        <name>Total Claim Charge Amount</name>
+                        <usage>R</usage>
+                        <seq>04</seq>
+                      </element>
+                      <element xid="STC05">
+                        <data_ele>782</data_ele>
+                        <name>Claim Payment Amount</name>
+                        <usage>N</usage>
+                        <seq>05</seq>
+                      </element>
+                      <element xid="STC06">
+                        <data_ele>373</data_ele>
+                        <name>Adjudication or Payment Date</name>
+                        <usage>N</usage>
+                        <seq>06</seq>
+                        <valid_codes />
+                      </element>
+                      <element xid="STC07">
+                        <data_ele>591</data_ele>
+                        <name>Payment Method Code</name>
+                        <usage>N</usage>
+                        <seq>07</seq>
+                        <valid_codes>
+                          <code>ACH</code>
+                          <code>BOP</code>
+                          <code>CHK</code>
+                          <code>FWT</code>
+                          <code>NON</code>
+                        </valid_codes>
+                      </element>
+                      <element xid="STC08">
+                        <data_ele>373</data_ele>
+                        <name>Check Issue or EFT Effective Date</name>
+                        <usage>N</usage>
+                        <seq>08</seq>
+                        <valid_codes />
+                      </element>
+                      <element xid="STC09">
+                        <data_ele>429</data_ele>
+                        <name>Check or EFT Trace Number</name>
+                        <usage>N</usage>
+                        <seq>09</seq>
+                      </element>
+                      <composite>
+                        <data_ele>C043</data_ele>
+                        <name>Health Care Claim Status</name>
+                        <usage>S</usage>
+                        <seq>10</seq>
+                        <element xid="STC10-01">
+                          <data_ele>1271</data_ele>
+                          <name>Health Care Claim Status Category Code</name>
+                          <usage>R</usage>
+                          <seq>01</seq>
+                          <valid_codes external="claim_status_cat"/>
+                        </element>
+                        <element xid="STC10-02">
+                          <data_ele>1271</data_ele>
+                          <name>Health Care Claim Status Code</name>
+                          <usage>R</usage>
+                          <seq>02</seq>
+                          <valid_codes external="claim_status"/>
+                        </element>
+                        <element xid="STC10-03">
+                          <data_ele>98</data_ele>
+                          <name>Entity Identifier Code</name>
+                          <usage>S</usage>
+                          <seq>03</seq>
+                          <valid_codes external="entity_id"/>
+                        </element>
+                      </composite>
+                      <composite>
+                        <data_ele>C043</data_ele>
+                        <name>Health Care Claim Status</name>
+                        <usage>S</usage>
+                        <seq>11</seq>
+                        <element xid="STC11-01">
+                          <data_ele>1271</data_ele>
+                          <name>Health Care Claim Status Category Code</name>
+                          <usage>R</usage>
+                          <seq>01</seq>
+                          <valid_codes external="claim_status_cat"/>
+                        </element>
+                        <element xid="STC11-02">
+                          <data_ele>1271</data_ele>
+                          <name>Health Care Claim Status Code</name>
+                          <usage>R</usage>
+                          <seq>02</seq>
+                          <valid_codes external="claim_status"/>
+                        </element>
+                        <element xid="STC11-03">
+                          <data_ele>98</data_ele>
+                          <name>Entity Identifier Code</name>
+                          <usage>S</usage>
+                          <seq>03</seq>
+                          <valid_codes external="entity_id"/>
+                        </element>
+                      </composite>
+                      <element xid="STC12">
+                        <data_ele>933</data_ele>
+                        <name>Free-Form Message Text</name>
+                        <usage>S</usage>
+                        <seq>12</seq>
+                      </element>
+                    </segment>
+                    <!--End of STC segment-->
+                    <segment xid="REF">
+                      <name>Payer Claim Control Number</name>
+                      <usage>S</usage>
+                      <pos>1100</pos>
+                      <max_use>1</max_use>
+                      <element xid="REF01">
+                        <data_ele>128</data_ele>
+                        <name>Reference Identification Qualifier</name>
+                        <usage>R</usage>
+                        <seq>01</seq>
+                        <valid_codes>
+                          <code>1K</code>
+                        </valid_codes>
+                      </element>
+                      <element xid="REF02">
+                        <data_ele>127</data_ele>
+                        <name>Payer Claim Control Number</name>
+                        <usage>R</usage>
+                        <seq>02</seq>
+                      </element>
+                      <element xid="REF03">
+                        <data_ele>352</data_ele>
+                        <name>Description</name>
+                        <usage>N</usage>
+                        <seq>03</seq>
+                      </element>
+                      <composite>
+                        <data_ele>C040</data_ele>
+                        <name>Reference Identifier</name>
+                        <usage>N</usage>
+                        <seq>04</seq>
+                      </composite>
+                    </segment>
+                    <!--End of REF segment-->
+                    <segment xid="REF">
+                      <name>Claim Indentifier Number For Clearinghouses and Other Transmission Intermediaries</name>
+                      <usage>S</usage>
+                      <pos>1100</pos>
+                      <max_use>1</max_use>
+                      <element xid="REF01">
+                        <data_ele>128</data_ele>
+                        <name>Reference Identification Qualifier</name>
+                        <usage>R</usage>
+                        <seq>01</seq>
+                        <valid_codes>
+                          <code>D9</code>
+                        </valid_codes>
+                      </element>
+                      <element xid="REF02">
+                        <data_ele>127</data_ele>
+                        <name>Claim Indentifier Number For Clearinghouses and Other Transmission Intermediaries</name>
+                        <usage>R</usage>
+                        <seq>02</seq>
+                      </element>
+                      <element xid="REF03">
+                        <data_ele>352</data_ele>
+                        <name>Description</name>
+                        <usage>N</usage>
+                        <seq>03</seq>
+                      </element>
+                      <composite>
+                        <data_ele>C040</data_ele>
+                        <name>Reference Identifier</name>
+                        <usage>N</usage>
+                        <seq>04</seq>
+                      </composite>
+                    </segment>
+                    <!--End of REF segment-->
+                    <segment xid="REF">
+                      <name>Institutional Bill Type Identification</name>
+                      <usage>S</usage>
+                      <pos>1100</pos>
+                      <max_use>1</max_use>
+                      <element xid="REF01">
+                        <data_ele>128</data_ele>
+                        <name>Reference Identification Qualifier</name>
+                        <usage>R</usage>
+                        <seq>01</seq>
+                        <valid_codes>
+                          <code>BLT</code>
+                        </valid_codes>
+                      </element>
+                      <element xid="REF02">
+                        <data_ele>127</data_ele>
+                        <name>Bill Type Identifier</name>
+                        <usage>R</usage>
+                        <seq>02</seq>
+                      </element>
+                      <element xid="REF03">
+                        <data_ele>352</data_ele>
+                        <name>Description</name>
+                        <usage>N</usage>
+                        <seq>03</seq>
+                      </element>
+                      <composite>
+                        <data_ele>C040</data_ele>
+                        <name>Reference Identifier</name>
+                        <usage>N</usage>
+                        <seq>04</seq>
+                      </composite>
+                    </segment>
+                    <!--End of REF segment-->
+                    <segment xid="DTP">
+                      <name>Claim Level Service Date</name>
+                      <usage>R</usage>
+                      <pos>1200</pos>
+                      <max_use>1</max_use>
+                      <element xid="DTP01">
+                        <data_ele>374</data_ele>
+                        <name>Date Time Qualifier</name>
+                        <usage>R</usage>
+                        <seq>01</seq>
+                        <valid_codes>
+                          <code>472</code>
+                        </valid_codes>
+                      </element>
+                      <element xid="DTP02">
+                        <data_ele>1250</data_ele>
+                        <name>Date Time Period Format Qualifier</name>
+                        <usage>R</usage>
+                        <seq>02</seq>
+                        <valid_codes>
+                          <code>RD8</code>
+                          <code>D8</code>
+                        </valid_codes>
+                      </element>
+                      <element xid="DTP03">
+                        <data_ele>1251</data_ele>
+                        <name>Claim Service Period</name>
+                        <usage>R</usage>
+                        <seq>03</seq>
+                      </element>
+                    </segment>
+                    <!--End of DTP segment-->
+                    <loop xid="2220D">
+                      <name>Service Line Information</name>
+                      <usage>S</usage>
+                      <pos>1800</pos>
+                      <repeat>&gt;1</repeat>
+                      <segment xid="SVC">
+                        <name>Service Line Information</name>
+                        <usage>R</usage>
+                        <pos>1800</pos>
+                        <max_use>1</max_use>
+                        <composite>
+                          <data_ele>C003</data_ele>
+                          <name>Composite Medical Procedure Identifier</name>
+                          <usage>R</usage>
+                          <seq>01</seq>
+                          <element xid="SVC01-01">
+                            <data_ele>235</data_ele>
+                            <name>Product or Service ID Qualifier</name>
+                            <usage>R</usage>
+                            <seq>01</seq>
+                            <valid_codes>
+                              <code>AD</code>
+                              <code>ER</code>
+                              <code>HC</code>
+                              <code>HP</code>
+                              <code>IV</code>
+                              <code>NU</code>
+                              <code>NU</code>
+                              <code>WK</code>
+                            </valid_codes>
+                          </element>
+                          <element xid="SVC01-02">
+                            <data_ele>234</data_ele>
+                            <name>Service Identification Code</name>
+                            <usage>R</usage>
+                            <seq>02</seq>
+                          </element>
+                          <element xid="SVC01-03">
+                            <data_ele>1339</data_ele>
+                            <name>Procedure Modifier</name>
+                            <usage>S</usage>
+                            <seq>03</seq>
+                          </element>
+                          <element xid="SVC01-04">
+                            <data_ele>1339</data_ele>
+                            <name>Procedure Modifier</name>
+                            <usage>S</usage>
+                            <seq>04</seq>
+                          </element>
+                          <element xid="SVC01-05">
+                            <data_ele>1339</data_ele>
+                            <name>Procedure Modifier</name>
+                            <usage>S</usage>
+                            <seq>05</seq>
+                          </element>
+                          <element xid="SVC01-06">
+                            <data_ele>1339</data_ele>
+                            <name>Procedure Modifier</name>
+                            <usage>S</usage>
+                            <seq>06</seq>
+                          </element>
+                          <element xid="SVC01-07">
+                            <data_ele>352</data_ele>
+                            <name>Description</name>
+                            <usage>N</usage>
+                            <seq>07</seq>
+                          </element>
+                        </composite>
+                        <element xid="SVC02">
+                          <data_ele>782</data_ele>
+                          <name>Line Item Charge Amount</name>
+                          <usage>R</usage>
+                          <seq>02</seq>
+                        </element>
+                        <element xid="SVC03">
+                          <data_ele>782</data_ele>
+                          <name>Line Item Provider Payment Amount</name>
+                          <usage>N</usage>
+                          <seq>03</seq>
+                        </element>
+                        <element xid="SVC04">
+                          <data_ele>234</data_ele>
+                          <name>Revenue Code</name>
+                          <usage>S</usage>
+                          <seq>04</seq>
+                        </element>
+                        <element xid="SVC05">
+                          <data_ele>380</data_ele>
+                          <name>Quantity</name>
+                          <usage>N</usage>
+                          <seq>05</seq>
+                        </element>
+                        <composite>
+                          <data_ele>C003</data_ele>
+                          <name>Composite Medical Procedure Identifier</name>
+                          <usage>N</usage>
+                          <seq>06</seq>
+                        </composite>
+                        <element xid="SVC07">
+                          <data_ele>380</data_ele>
+                          <name>Original Units of Service Count</name>
+                          <usage>S</usage>
+                          <seq>07</seq>
+                        </element>
+                      </segment>
+                      <!--End of SVC segment-->
+                      <segment xid="STC">
+                        <name>Service Line Level Status Information</name>
+                        <usage>R</usage>
+                        <pos>1900</pos>
+                        <max_use>1</max_use>
+                        <composite>
+                          <data_ele>C043</data_ele>
+                          <name>Health Care Claim Status</name>
+                          <usage>R</usage>
+                          <seq>01</seq>
+                          <element xid="STC01-01">
+                            <data_ele>1271</data_ele>
+                            <name>Health Care Claim Status Category Code</name>
+                            <usage>R</usage>
+                            <seq>01</seq>
+                            <valid_codes external="claim_status_cat"/>
+                          </element>
+                          <element xid="STC01-02">
+                            <data_ele>1271</data_ele>
+                            <name>Health Care Claim Status Code</name>
+                            <usage>R</usage>
+                            <seq>02</seq>
+                            <valid_codes external="claim_status"/>
+                          </element>
+                          <element xid="STC01-03">
+                            <data_ele>98</data_ele>
+                            <name>Entity Identifier Code</name>
+                            <usage>S</usage>
+                            <seq>03</seq>
+                            <valid_codes>
+                              <code>03</code>
+                              <code>1P</code>
+                              <code>1Z</code>
+                              <code>40</code>
+                              <code>41</code>
+                              <code>71</code>
+                              <code>72</code>
+                              <code>73</code>
+                              <code>77</code>
+                              <code>82</code>
+                              <code>85</code>
+                              <code>87</code>
+                              <code>DK</code>
+                              <code>DN</code>
+                              <code>DQ</code>
+                              <code>FA</code>
+                              <code>GB</code>
+                              <code>HK</code>
+                              <code>IL</code>
+                              <code>LI</code>
+                              <code>MSC</code>
+                              <code>PR</code>
+                              <code>PRP</code>
+                              <code>QB</code>
+                              <code>QC</code>
+                              <code>QD</code>
+                              <code>SEP</code>
+                              <code>TL</code>
+                              <code>TTP</code>
+                              <code>TU</code>
+                            </valid_codes>
+                          </element>
+                        </composite>
+                        <element xid="STC02">
+                          <data_ele>373</data_ele>
+                          <name>Status Information Effective Date</name>
+                          <usage>R</usage>
+                          <seq>02</seq>
+                        </element>
+                        <element xid="STC03">
+                          <data_ele>306</data_ele>
+                          <name>Action Code</name>
+                          <usage>R</usage>
+                          <seq>03</seq>
+                          <valid_codes>
+                            <code>U</code>
+                          </valid_codes>
+                        </element>
+                        <element xid="STC04">
+                          <data_ele>782</data_ele>
+                          <name>Line Item Charge Amount</name>
+                          <usage>N</usage>
+                          <seq>04</seq>
+                        </element>
+                        <element xid="STC05">
+                          <data_ele>782</data_ele>
+                          <name>Line Item Provider Payment Amount</name>
+                          <usage>N</usage>
+                          <seq>05</seq>
+                        </element>
+                        <element xid="STC06">
+                          <data_ele>373</data_ele>
+                          <name>Date</name>
+                          <usage>N</usage>
+                          <seq>06</seq>
+                        </element>
+                        <element xid="STC07">
+                          <data_ele>591</data_ele>
+                          <name>Payment Method Code</name>
+                          <usage>N</usage>
+                          <seq>07</seq>
+                        </element>
+                        <element xid="STC08">
+                          <data_ele>373</data_ele>
+                          <name>Date</name>
+                          <usage>N</usage>
+                          <seq>08</seq>
+                        </element>
+                        <element xid="STC09">
+                          <data_ele>429</data_ele>
+                          <name>Check Number</name>
+                          <usage>N</usage>
+                          <seq>09</seq>
+                        </element>
+                        <composite>
+                          <data_ele>C043</data_ele>
+                          <name>Health Care Claim Status</name>
+                          <usage>S</usage>
+                          <seq>10</seq>
+                          <element xid="STC10-01">
+                            <data_ele>1271</data_ele>
+                            <name>Health Care Claim Status Category Code</name>
+                            <usage>R</usage>
+                            <seq>01</seq>
+                            <valid_codes external="claim_status_cat"/>
+                          </element>
+                          <element xid="STC10-02">
+                            <data_ele>1271</data_ele>
+                            <name>Health Care Claim Status Code</name>
+                            <usage>R</usage>
+                            <seq>02</seq>
+                            <valid_codes external="claim_status"/>
+                          </element>
+                          <element xid="STC10-03">
+                            <data_ele>98</data_ele>
+                            <name>Entity Identifier Code</name>
+                            <usage>S</usage>
+                            <seq>03</seq>
+                            <valid_codes external="entity_id"/>
+                          </element>
+                        </composite>
+                        <composite>
+                          <data_ele>C043</data_ele>
+                          <name>Health Care Claim Status</name>
+                          <usage>S</usage>
+                          <seq>11</seq>
+                          <element xid="STC11-01">
+                            <data_ele>1271</data_ele>
+                            <name>Health Care Claim Status Category Code</name>
+                            <usage>R</usage>
+                            <seq>01</seq>
+                            <valid_codes external="claim_status_cat"/>
+                          </element>
+                          <element xid="STC11-02">
+                            <data_ele>1271</data_ele>
+                            <name>Health Care Claim Status Code</name>
+                            <usage>R</usage>
+                            <seq>02</seq>
+                            <valid_codes external="claim_status"/>
+                          </element>
+                          <element xid="STC11-03">
+                            <data_ele>98</data_ele>
+                            <name>Entity Identifier Code</name>
+                            <usage>S</usage>
+                            <seq>03</seq>
+                            <valid_codes external="entity_id"/>
+                          </element>
+                        </composite>
+                        <element xid="STC12">
+                          <data_ele>933</data_ele>
+                          <name>Free-Form Message Text</name>
+                          <usage>N</usage>
+                          <seq>12</seq>
+                        </element>
+                      </segment>
+                      <!--End of STC segment-->
+                      <segment xid="REF">
+                        <name>Service Line Item Identification</name>
+                        <usage>S</usage>
+                        <pos>2000</pos>
+                        <max_use>1</max_use>
+                        <element xid="REF01">
+                          <data_ele>128</data_ele>
+                          <name>Reference Identification Qualifier</name>
+                          <usage>R</usage>
+                          <seq>01</seq>
+                          <valid_codes>
+                            <code>FJ</code>
+                          </valid_codes>
+                        </element>
+                        <element xid="REF02">
+                          <data_ele>127</data_ele>
+                          <name>Line Item Control Number</name>
+                          <usage>R</usage>
+                          <seq>02</seq>
+                        </element>
+                        <element xid="REF03">
+                          <data_ele>352</data_ele>
+                          <name>Description</name>
+                          <usage>N</usage>
+                          <seq>03</seq>
+                        </element>
+                        <composite>
+                          <data_ele>C040</data_ele>
+                          <name>Reference Identifier</name>
+                          <usage>N</usage>
+                          <seq>04</seq>
+                        </composite>
+                      </segment>
+                      <!--End of REF segment-->
+                      <segment xid="REF">
+                        <name>Pharmacy Prescription Number</name>
+                        <usage>S</usage>
+                        <pos>2000</pos>
+                        <max_use>1</max_use>
+                        <element xid="REF01">
+                          <data_ele>128</data_ele>
+                          <name>Reference Identification Qualifier</name>
+                          <usage>R</usage>
+                          <seq>01</seq>
+                          <valid_codes>
+                            <code>XZ</code>
+                          </valid_codes>
+                        </element>
+                        <element xid="REF02">
+                          <data_ele>127</data_ele>
+                          <name>Pharmacy Prescription Number</name>
+                          <usage>R</usage>
+                          <seq>02</seq>
+                        </element>
+                        <element xid="REF03">
+                          <data_ele>352</data_ele>
+                          <name>Description</name>
+                          <usage>N</usage>
+                          <seq>03</seq>
+                        </element>
+                        <composite>
+                          <data_ele>C040</data_ele>
+                          <name>Reference Identifier</name>
+                          <usage>N</usage>
+                          <seq>04</seq>
+                        </composite>
+                      </segment>
+                      <!--End of REF segment-->
+                      <segment xid="DTP">
+                        <name>Service Line Date</name>
+                        <usage>S</usage>
+                        <pos>2100</pos>
+                        <max_use>1</max_use>
+                        <element xid="DTP01">
+                          <data_ele>374</data_ele>
+                          <name>Date Time Qualifier</name>
+                          <usage>R</usage>
+                          <seq>01</seq>
+                          <valid_codes>
+                            <code>472</code>
+                          </valid_codes>
+                        </element>
+                        <element xid="DTP02">
+                          <data_ele>1250</data_ele>
+                          <name>Date Time Period Format Qualifier</name>
+                          <usage>R</usage>
+                          <seq>02</seq>
+                          <valid_codes>
+                            <code>D8</code>
+                            <code>RD8</code>
+                          </valid_codes>
+                        </element>
+                        <element xid="DTP03">
+                          <data_ele>1251</data_ele>
+                          <name>Service Line Date</name>
+                          <usage>R</usage>
+                          <seq>03</seq>
+                        </element>
+                      </segment>
+                      <!--End of DTP segment-->
+                    </loop>
+                    <!--End of 2220D loop-->
+                  </loop>
+                  <!--End of 2200D loop-->
+                </loop>
+                <!--End of 2000D loop-->
+              </loop>
+              <!--End of 2000C loop-->
+            </loop>
+            <!--End of 2000B loop-->
+          </loop>
+          <!--End of 2000A loop-->
+        </loop>
+        <!--End of DETAIL loop-->
+        <loop xid="FOOTER" type="wrapper">
+          <name>Table 3 - Footer</name>
+          <usage>N</usage>
+          <pos>3000</pos>
+          <repeat>1</repeat>
+        </loop>
+<!--End of FOOTER loop-->
+        <segment xid="SE">
+          <name>Transaction Set Trailer</name>
+          <usage>R</usage>
+          <pos>5550</pos>
+          <max_use>1</max_use>
+          <element xid="SE01">
+            <data_ele>96</data_ele>
+            <name>Transaction Segment Count</name>
+            <usage>R</usage>
+            <seq>01</seq>
+          </element>
+          <element xid="SE02">
+            <data_ele>329</data_ele>
+            <name>Transaction Set Control Number</name>
+            <usage>R</usage>
+            <seq>02</seq>
+          </element>
+        </segment>
+        <!--End of SE segment-->
+      </loop>
+      <!--End of ST loop-->
+      <segment xid="GE">
+        <name>Functional Group Trailer</name>
+        <usage>R</usage>
+        <pos>0300</pos>
+        <max_use>1</max_use>
+        <element xid="GE01">
+          <data_ele>97</data_ele>
+          <name>Number of Transaction Sets Included</name>
+          <usage>R</usage>
+          <seq>01</seq>
+        </element>
+        <element xid="GE02">
+          <data_ele>28</data_ele>
+          <name>Group Control Number</name>
+          <usage>R</usage>
+          <seq>02</seq>
+        </element>
+      </segment>
+      <!--End of GE segment-->
+    </loop>
+    <!--End of GS loop-->
+    <segment xid="TA1">
+      <name>Interchange Acknowledgement</name>
+      <usage>S</usage>
+      <pos>0200</pos>
+      <max_use>1</max_use>
+      <element xid="TA101">
+        <data_ele>I12</data_ele>
+        <name>Interchange Control Number</name>
+        <usage>R</usage>
+        <seq>01</seq>
+      </element>
+      <element xid="TA102">
+        <data_ele>I08</data_ele>
+        <name>Interchange Date</name>
+        <usage>R</usage>
+        <seq>02</seq>
+      </element>
+      <element xid="TA103">
+        <data_ele>I09</data_ele>
+        <name>Interchange Time</name>
+        <usage>R</usage>
+        <seq>03</seq>
+      </element>
+      <element xid="TA104">
+        <data_ele>I17</data_ele>
+        <name>Interchange Acknowledgement Code</name>
+        <usage>R</usage>
+        <seq>04</seq>
+        <valid_codes>
+          <code>A</code>
+          <code>E</code>
+          <code>R</code>
+        </valid_codes>
+      </element>
+      <element xid="TA105">
+        <data_ele>I18</data_ele>
+        <name>Interchange Note Code</name>
+        <usage>R</usage>
+        <seq>05</seq>
+        <valid_codes>
+          <code>000</code>
+          <code>001</code>
+          <code>002</code>
+          <code>003</code>
+          <code>004</code>
+          <code>005</code>
+          <code>006</code>
+          <code>007</code>
+          <code>008</code>
+          <code>009</code>
+          <code>010</code>
+          <code>011</code>
+          <code>012</code>
+          <code>013</code>
+          <code>014</code>
+          <code>015</code>
+          <code>016</code>
+          <code>017</code>
+          <code>018</code>
+          <code>019</code>
+          <code>020</code>
+          <code>021</code>
+          <code>022</code>
+          <code>023</code>
+          <code>024</code>
+          <code>025</code>
+          <code>026</code>
+          <code>027</code>
+          <code>028</code>
+          <code>029</code>
+          <code>030</code>
+          <code>031</code>
+        </valid_codes>
+      </element>
+    </segment>
+    <!--End of TA1 segment-->
+    <segment xid="IEA">
+      <name>Interchange Control Trailer</name>
+      <usage>R</usage>
+      <pos>0300</pos>
+      <max_use>1</max_use>
+      <element xid="IEA01">
+        <data_ele>I16</data_ele>
+        <name>Number of Included Functional Groups</name>
+        <usage>R</usage>
+        <seq>01</seq>
+      </element>
+      <element xid="IEA02">
+        <data_ele>I12</data_ele>
+        <name>Interchange Control Number</name>
+        <usage>R</usage>
+        <seq>02</seq>
+      </element>
+    </segment>
+    <!--End of IEA segment-->
+  </loop>
+  <!--End of ISA loop-->
+</transaction>

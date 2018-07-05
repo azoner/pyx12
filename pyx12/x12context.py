@@ -24,13 +24,13 @@ Interface to read and alter segments
 
 # Intrapackage imports
 import pyx12
-import error_handler
-import errors
-import map_index
-import map_if
-import x12file
-import path
-from map_walker import walk_tree, pop_to_parent_loop  # get_pop_loops, get_push_loops
+from . import error_handler
+from . import errors
+from . import map_index
+from . import map_if
+from . import x12file
+from . import path
+from .map_walker import walk_tree, pop_to_parent_loop  # get_pop_loops, get_push_loops
 
 
 class X12DataNode(object):
@@ -48,6 +48,8 @@ class X12DataNode(object):
         self.parent = None
         self.children = []
         self.errors = []
+        self.seg_count = None
+        self.cur_line_number = None
 
     #{ Public Methods
     def delete(self):
@@ -216,7 +218,8 @@ class X12DataNode(object):
             qual = x12path.id_val
             for child in [x for x in self.children if x.type is not None]:
                 if child.type == 'seg':
-                    if child.x12_map_node.is_match_qual(child.seg_data, cur_node_id, qual):
+                    (is_match, qual_code, ele_idx, subele_idx) = child.x12_map_node.is_match_qual(child.seg_data, cur_node_id, qual)
+                    if is_match:
                         yield child
                 else:
                     if child.id == cur_node_id:
@@ -489,7 +492,8 @@ class X12LoopDataNode(X12DataNode):
             qual = xpath.id_val
             try:
                 for seg in [seg for seg in curr.children if seg.type == 'seg']:
-                    if seg.x12_map_node.is_match_qual(seg.seg_data, seg_id, qual):
+                    (is_match, qual_code, ele_idx, subele_idx) = seg.x12_map_node.is_match_qual(seg.seg_data, seg_id, qual)
+                    if is_match:
                         return seg.seg_data
                 return None
             except errors.EngineError as e:
@@ -542,6 +546,16 @@ class X12LoopDataNode(X12DataNode):
             ret.children.append(child.copy())
         return ret
 
+    @property
+    def seg_count(self):
+        for child in [x for x in self.children if x.type == 'seg']:
+            return child.seg_count
+        
+    @property
+    def cur_line_number(self):
+        for child in [x for x in self.children if x.type == 'seg']:
+            return child.cur_line_number
+
 
 class X12SegmentDataNode(X12DataNode):
     """
@@ -563,6 +577,8 @@ class X12SegmentDataNode(X12DataNode):
         self.err_st = []
         self.err_seg = []
         self.err_ele = []
+        self.seg_count = None
+        self.cur_line_number = None
 
     #{ Public Methods
     def handle_errh_errors(self, errh):
@@ -636,7 +652,8 @@ class X12SegmentDataNode(X12DataNode):
             return self.seg_data
         #subele_idx = xpath.subele_idx
         try:
-            if curr.x12_map_node.is_match_qual(curr.seg_data, seg_id, qual):
+            (is_match, qual_code, matched_ele_idx, matched_subele_idx) = curr.x12_map_node.is_match_qual(curr.seg_data, seg_id, qual)
+            if is_match:
                 return curr.seg_data
             return None
         except errors.EngineError as e:
@@ -670,7 +687,7 @@ class X12SegmentDataNode(X12DataNode):
         Iterate on this node, return the segment
         """
         yield {'type': 'seg', 'id': self.x12_map_node.id, 'path': self.x12_map_node.x12path,
-               'segment': self.seg_data}
+               'segment': self.seg_data, 'seg_count': self.seg_count, 'cur_line_number': self.cur_line_number}
 
     def iterate_loop_segments(self):
         """
@@ -682,7 +699,8 @@ class X12SegmentDataNode(X12DataNode):
         for loop in self.start_loops:
             yield {'node': loop, 'type': 'loop_start', 'id': loop.id}
         yield {'type': 'seg', 'id': self.id, 'segment': self.seg_data,
-               'start_loops': self.start_loops, 'end_loops': self.end_loops}
+               'start_loops': self.start_loops, 'end_loops': self.end_loops, 
+               'seg_count': self.seg_count, 'cur_line_number': self.cur_line_number,}
 
     def copy(self):
         return self.__copy__()
@@ -848,10 +866,14 @@ class X12ContextReader(object):
                     #pop_loops = [x12_node for x12_node in pop_loops if x12_node.get_path().find(loop_id) == -1]
                     cur_tree = X12LoopDataNode(x12_node=self.x12_map_node.parent, end_loops=pop_loops)  # parent=cur_data_node)
                     cur_data_node = self._add_segment(cur_tree, self.x12_map_node, seg, pop_loops, push_loops)
+                    cur_data_node.seg_count = self.src.get_seg_count()
+                    cur_data_node.cur_line_number = self.src.get_cur_line()
                 else:
                     if cur_data_node is None or self.x12_map_node is None:
                         raise errors.EngineError('Either cur_data_node or self.x12_map_node is None')
                     cur_data_node = self._add_segment(cur_data_node, self.x12_map_node, seg, pop_loops, push_loops)
+                    cur_data_node.seg_count = self.src.get_seg_count()
+                    cur_data_node.cur_line_number = self.src.get_cur_line()
             else:
                 if cur_tree is not None:
                     # We have completed a tree
@@ -865,8 +887,12 @@ class X12ContextReader(object):
                     assert loop_id not in [x12.id for x12 in push_loops], 'Loop ID %s should not be in push loops' % (loop_id)
                     assert loop_id not in [x12.id for x12 in pop_loops], 'Loop ID %s should not be in pop loops' % (loop_id)
                     cur_data_node = X12SegmentDataNode(self.x12_map_node, seg, push_loops, pop_loops)
+                    cur_data_node.seg_count = self.src.get_seg_count()
+                    cur_data_node.cur_line_number = self.src.get_cur_line()
                 else:
                     cur_data_node = X12SegmentDataNode(self.x12_map_node, seg)
+                    cur_data_node.seg_count = self.src.get_seg_count()
+                    cur_data_node.cur_line_number = self.src.get_cur_line()
                 # Get errors caught by x12Reader
                 errh.handle_errors(self.src.pop_errors())
                 # Handle errors captured in errh_list
@@ -905,6 +931,14 @@ class X12ContextReader(object):
         @rtype: string
         """
         return self.src.subele_term
+
+    @property
+    def cur_seg_count(self):
+        return self.src.get_seg_count()
+
+    @property
+    def get_cur_line(self):
+        return self.src.get_cur_line()
 
     #{ Private Methods
     def _add_segment(self, cur_data_node, segment_x12_node, seg_data, pop_loops, push_loops):

@@ -1,5 +1,5 @@
 ######################################################################
-# Copyright (c) 
+# Copyright (c)
 # All rights reserved.
 #
 # This software is licensed as described in the file LICENSE.txt, which
@@ -12,19 +12,18 @@ Interface to a X12N IG Map
 """
 import logging
 import os.path
-import string
 import sys
 import re
 import xml.etree.cElementTree as et
 from pkg_resources import resource_stream
 
 # Intrapackage imports
-from errors import EngineError
-import codes
-import dataele
-import path
-import validation
-from syntax import is_syntax_valid
+from .errors import EngineError
+from . import codes
+from . import dataele
+from . import path
+from . import validation
+from .syntax import is_syntax_valid
 
 MAXINT = 2147483647
 
@@ -85,7 +84,7 @@ class x12_node(object):
                     return child
                 else:
                     if child.is_loop():
-                        return child.getnodebypath(string.join(pathl[1:], '/'))
+                        return child.getnodebypath(str.join('/', pathl[1:]))
                     else:
                         break
         raise EngineError('getnodebypath failed. Path "%s" not found' % path)
@@ -101,6 +100,14 @@ class x12_node(object):
             return None
         else:
             return self.children[idx]
+
+    def get_child_node_by_ordinal(self, ord):
+        """
+        Get a child element or composite by the X12 ordinal
+        @param ord: one based element/composite index.  Corresponds to the map <seq> element
+        @type ord: int
+        """
+        return self.get_child_node_by_idx(ord - 1)
 
     def get_path(self):
         """
@@ -197,12 +204,22 @@ class map_if(x12_node):
         self.base_name = 'transaction'
         for e in eroot.findall('loop'):
             loop_node = loop_if(self, self, e)
+            #if loop_node.pos in self.pos_map:
+            #    if self.pos_map[loop_node.pos][0].id != loop_node.id:
+            #        raise EngineError('Invalid pos {} for path {}'.format(loop_node.pos, loop_node.x12path))
+            #if len(self.pos_map) > 0 and loop_node.pos < max(self.pos_map.keys()):
+            #    raise EngineError('Loop position should only increment.  Is not for path {}'.format(loop_node.x12path))
             try:
                 self.pos_map[loop_node.pos].append(loop_node)
             except KeyError:
                 self.pos_map[loop_node.pos] = [loop_node]
         for e in eroot.findall('segment'):
             seg_node = segment_if(self, self, e)
+            #if seg_node.pos in self.pos_map:
+            #    if self.pos_map[seg_node.pos][0].id != seg_node.id:
+            #        raise EngineError('Invalid pos {} for path {}'.format(seg_node.pos, seg_node.x12path))
+            #if len(self.pos_map) > 0 and seg_node.pos < max(self.pos_map.keys()):
+            #    raise EngineError('Segment position should only increment.  Is not for path {}'.format(seg_node.x12path))
             try:
                 self.pos_map[seg_node.pos].append(seg_node)
             except KeyError:
@@ -297,7 +314,7 @@ class map_if(x12_node):
                     if len(pathl) == 1:
                         return child
                     else:
-                        return child.getnodebypath(string.join(pathl[1:], '/'))
+                        return child.getnodebypath(str.join('/', pathl[1:]))
         raise EngineError('getnodebypath failed. Path "%s" not found' % spath)
 
     def getnodebypath2(self, path_str):
@@ -311,13 +328,13 @@ class map_if(x12_node):
         for ord1 in sorted(self.pos_map):
             for child in self.pos_map[ord1]:
                 if child.id.upper() == x12path.loop_list[0]:
-                    if len(x12path.loop_list) > 1:
+                    if len(x12path.loop_list) == 1:
                         return child
                     else:
                         del x12path.loop_list[0]
-                        return child.getnodebypath(x12path.format())
+                        return child.getnodebypath2(x12path.format())
         raise EngineError(
-            'getnodebypath failed. Path "%s" not found' % path_str)
+            'getnodebypath2 failed. Path "%s" not found' % path_str)
 
     def is_map_root(self):
         """
@@ -387,6 +404,11 @@ class loop_if(x12_node):
 
         for e in elem.findall('loop'):
             loop_node = loop_if(self.root, self, e)
+            #if loop_node.pos in self.pos_map:
+            #    if self.pos_map[loop_node.pos][0].id != loop_node.id:
+            #        raise EngineError('Invalid pos {} for path {}'.format(loop_node.pos, loop_node.x12path))
+            #if len(self.pos_map) > 0 and loop_node.pos < max(self.pos_map.keys()):
+            #    raise EngineError('Loop position should only increment.  Is not for path {}'.format(loop_node.pos, loop_node.x12path))
             #if self.pos_map:
             #    assert loop_node.pos >= max(self.pos_map.keys()), 'Bad ordinal %s' % (loop_node)
             try:
@@ -395,6 +417,11 @@ class loop_if(x12_node):
                 self.pos_map[loop_node.pos] = [loop_node]
         for e in elem.findall('segment'):
             seg_node = segment_if(self.root, self, e)
+            #if seg_node.pos in self.pos_map:
+            #    if self.pos_map[seg_node.pos][0].id != seg_node.id:
+            #        raise EngineError('Invalid pos {} for path {}'.format(seg_node.pos, seg_node.x12path))
+            #if len(self.pos_map) > 0 and seg_node.pos < max(self.pos_map.keys()):
+            #    raise EngineError('Loop position should only increment.  Is not for path {}'.format(seg_node.pos, seg_node.x12path))
             #if self.pos_map:
             #    assert seg_node.pos >= max(self.pos_map.keys()), 'Bad ordinal %s' % (seg_node)
             try:
@@ -485,7 +512,7 @@ class loop_if(x12_node):
                         if len(pathl) == 1:
                             return child
                         else:
-                            return child.getnodebypath(string.join(pathl[1:], '/'))
+                            return child.getnodebypath(str.join('/', pathl[1:]))
                 elif child.is_segment() and len(pathl) == 1:
                     if pathl[0].find('[') == -1:  # No id to match
                         if pathl[0] == child.id:
@@ -518,20 +545,21 @@ class loop_if(x12_node):
                         if len(x12path.loop_list) == 1 and x12path.seg_id is None:
                             return child
                         else:
-                            return child.getnodebypath(x12path.format())
+                            del x12path.loop_list[0]
+                            return child.getnodebypath2(x12path.format())
                 elif child.is_segment() and len(x12path.loop_list) == 0 and x12path.seg_id is not None:
                     if x12path.id_val is None:
                         if x12path.seg_id == child.id:
-                            return child
+                            return child.getnodebypath2(x12path.format())
                     else:
                         seg_id = x12path.seg_id
                         id_val = x12path.id_val
                         if seg_id == child.id:
                             possible = child.get_unique_key_id_element(id_val)
                             if possible is not None:
-                                return child
+                                return child.getnodebypath2(x12path.format())
         raise EngineError(
-            'getnodebypath failed. Path "%s" not found' % path_str)
+            'getnodebypath2 failed. Path "%s" not found' % path_str)
 
     def get_child_count(self):
         return self.__len__()
@@ -752,6 +780,25 @@ class segment_if(x12_node):
         """
         return self.get_child_node_by_idx(ord - 1)
 
+    def getnodebypath2(self, path_str):
+        """
+        Try x12 path
+
+        @param path_str: remaining path to match
+        @type path_str: string
+        @return: matching node, or None is no match
+        """
+        x12path = path.X12Path(path_str)
+        if x12path.empty():
+            return None
+        if x12path.ele_idx is None:
+            return self # matched segment only
+        ele = self.get_child_node_by_ordinal(x12path.ele_idx)
+        if x12path.subele_idx is None:
+            return ele
+        return ele.get_child_node_by_ordinal(x12path.subele_idx)
+        raise EngineError('getnodebypath2 failed. Path "%s" not found' % path_str)
+
     def get_max_repeat(self):
         if self.max_use is None or self.max_use == '>1':
             return MAXINT
@@ -820,51 +867,51 @@ class segment_if(x12_node):
 
     def is_match_qual(self, seg_data, seg_id, qual_code):
         """
-        Is segment id and qualifier a match to this segment node and to this particulary segment data?
+        Is segment id and qualifier a match to this segment node and to this particular segment data?
         @param seg_data: data segment instance
         @type seg_data: L{segment<segment.Segment>}
         @param seg_id: data segment ID
         @param qual_code: an ID qualifier code
-        @return: True if a match
-        @rtype: boolean
+        @return: (True if a match, qual_code, element_index, subelement_index)
+        @rtype: tuple(boolean, string, int, int)
         """
         if seg_id == self.id:
             if qual_code is None:
-                return True
+                return (True, None, None, None)
             elif self.children[0].is_element() \
                     and self.children[0].get_data_type() == 'ID' \
                     and self.children[0].usage == 'R' \
                     and len(self.children[0].valid_codes) > 0:
                 if qual_code in self.children[0].valid_codes and seg_data.get_value('01') == qual_code:
-                    return True
+                    return (True, qual_code, 1, None)
                 else:
-                    return False
+                    return (False, None, None, None)
             # Special Case for 820
             elif seg_id == 'ENT' \
                     and self.children[1].is_element() \
                     and self.children[1].get_data_type() == 'ID' \
                     and len(self.children[1].valid_codes) > 0:
                 if qual_code in self.children[1].valid_codes and seg_data.get_value('02') == qual_code:
-                    return True
+                    return (True, qual_code, 2, None)
                 else:
-                    return False
+                    return (False, None, None, None)
             elif self.children[0].is_composite() \
                     and self.children[0].children[0].get_data_type() == 'ID' \
                     and len(self.children[0].children[0].valid_codes) > 0:
                 if qual_code in self.children[0].children[0].valid_codes and seg_data.get_value('01-1') == qual_code:
-                    return True
+                    return (True, qual_code, 1, 1)
                 else:
-                    return False
+                    return (False, None, None, None)
             elif seg_id == 'HL' and self.children[2].is_element() \
                     and len(self.children[2].valid_codes) > 0:
                 if qual_code in self.children[2].valid_codes and seg_data.get_value('03') == qual_code:
-                    return True
+                    return (True, qual_code, 3, None)
                 else:
-                    return False
+                    return (False, None, None, None)
             else:
-                return True
+                return (True, None, None, None)
         else:
-            return False
+            return (False, None, None, None)
 
     def guess_unique_key_id_element(self):
         """
@@ -986,7 +1033,7 @@ class segment_if(x12_node):
             #self.logger.error('Syntax %s is not valid' % (syntax))
             return None
         syn = [syntax[0]]
-        for i in range(len(syntax[1:]) / 2):
+        for i in range(len(syntax[1:]) // 2):
             syn.append(int(syntax[i * 2 + 1:i * 2 + 3]))
         return syn
 
@@ -1186,8 +1233,8 @@ class element_if(x12_node):
 # Validate based on data_elem_num
 # Then, validate on more specific criteria
         if (not data_type is None) and (data_type == 'R' or data_type[0] == 'N'):
-            elem_strip = string.replace(
-                string.replace(elem_val, '-', ''), '.', '')
+            elem_strip = str.replace(
+                str.replace(elem_val, '-', ''), '.', '')
             elem_len = len(elem_strip)
             if len(elem_strip) < min_len:
                 err_str = 'Data element "%s" (%s) is too short: len("%s") = %i < %i (min_len)' % \
@@ -1293,6 +1340,26 @@ class element_if(x12_node):
         data_ele = self.root.data_elements.get_by_elem_num(self.data_ele)
         return data_ele['data_type']
 
+    @property
+    def data_type(self):
+        data_ele = self.root.data_elements.get_by_elem_num(self.data_ele)
+        return data_ele['data_type']
+
+    @property
+    def min_len(self):
+        data_ele = self.root.data_elements.get_by_elem_num(self.data_ele)
+        return data_ele['min_len']
+
+    @property
+    def max_len(self):
+        data_ele = self.root.data_elements.get_by_elem_num(self.data_ele)
+        return data_ele['max_len']
+
+    @property
+    def data_element_name(self):
+        data_ele = self.root.data_elements.get_by_elem_num(self.data_ele)
+        return data_ele['name']
+
     def get_seg_count(self):
         """
         """
@@ -1303,6 +1370,26 @@ class element_if(x12_node):
         @rtype: boolean
         """
         return True
+
+    def get_path(self):
+        """
+        @return: path - XPath style
+        @rtype: string
+        """
+        if self._fullpath:
+            return self._fullpath
+        #get enclosing loop
+        parent_path = self.get_parent_segment().parent.get_path()
+        # add the segment, element, and sub-element path
+        self._fullpath = parent_path + '/' + self.id
+        return self._fullpath
+
+    def get_parent_segment(self):
+        # pop to enclosing loop
+        p = self.parent
+        while not p.is_segment():
+            p = p.parent
+        return p
 
 
 ############################################################
@@ -1460,4 +1547,5 @@ def load_map_file(map_file, param, map_path=None):
     except Exception:
         raise
         #raise EngineError('Load of map file failed: %s' % (map_file))
+    map_fd.close()
     return imap

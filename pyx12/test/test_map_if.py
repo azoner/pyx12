@@ -58,7 +58,8 @@ class ElementIsValidDate(unittest.TestCase):
         node = self.map.getnodebypath(
             '/ISA_LOOP/GS_LOOP/ST_LOOP/DETAIL/2000A/2000B/2010BA/DMG')
         self.assertNotEqual(node, None)
-        self.assertTrue(node.is_match_qual(seg_data, 'DMG', None))
+        (is_match, qual_code, matched_ele_idx, matched_subele_idx) = node.is_match_qual(seg_data, 'DMG', None)
+        self.assertTrue(is_match)
         result = node.is_valid(seg_data, self.errh)
         self.assertTrue(result)
         self.assertEqual(self.errh.err_cde, None)
@@ -119,7 +120,7 @@ class SegmentIsValid(unittest.TestCase):
 class ElementIsValid(unittest.TestCase):
     def setUp(self):
         param = pyx12.params.params()
-        self.map = pyx12.map_if.load_map_file('837.4010.X098.A1.xml', param)
+        self.map = pyx12.map_if.load_map_file('837.5010.X222.A1.xml', param)
         self.node = self.map.getnodebypath(
             '/ISA_LOOP/GS_LOOP/ST_LOOP/DETAIL/2000A/2000B/2300/CLM')
         self.errh = pyx12.error_handler.errh_null()
@@ -136,7 +137,7 @@ class ElementIsValid(unittest.TestCase):
         #self.assertEqual(self.errh.err_cde, '4')
 
         self.errh.err_cde = None
-        elem = pyx12.segment.Element('01')
+        elem = pyx12.segment.Element('02')
         result = node.is_valid(elem, self.errh)
         self.assertTrue(result)
         self.assertEqual(self.errh.err_cde, None)
@@ -216,7 +217,7 @@ class ElementIsValid(unittest.TestCase):
         self.assertNotEqual(node, None)
         self.assertEqual(node.id, 'CLM05-01')
         self.assertEqual(node.base_name, 'element')
-        elem = pyx12.segment.Element('02')
+        elem = pyx12.segment.Element('AA')
         self.assertFalse(node.is_valid(elem, self.errh))
         self.assertEqual(self.errh.err_cde, '7')
 
@@ -621,7 +622,8 @@ class GetNodeBySegment(unittest.TestCase):
         self.assertEqual(node.id, '2000')
         seg_data = pyx12.segment.Segment('INS*Y*18*030*20*A', '~', '*', ':')
         seg_node = node.get_child_seg_node(seg_data)
-        self.assertTrue(seg_node.is_match_qual(seg_data, 'INS', None))
+        (is_match, qual_code, matched_ele_idx, matched_subele_idx) = seg_node.is_match_qual(seg_data, 'INS', None)
+        self.assertTrue(is_match)
         self.assertNotEqual(seg_node, None)
         self.assertEqual(seg_node.id, 'INS')
 
@@ -668,13 +670,15 @@ class MatchSegmentQual(unittest.TestCase):
         self.errh.err_cde = None
         node = self.node.getnodebypath('CLM')
         seg_data = pyx12.segment.Segment('CLM*Y', '~', '*', ':')
-        self.assertTrue(node.is_match_qual(seg_data, 'CLM', None))
+        (is_match, qual_code, matched_ele_idx, matched_subele_idx) = node.is_match_qual(seg_data, 'CLM', None)
+        self.assertTrue(is_match)
 
     def test_match_qual_ok1(self):
         self.errh.err_cde = None
         node = self.node.getnodebypath('DTP[435]')
         seg_data = pyx12.segment.Segment('DTP*435*D8*20090101~', '~', '*', ':')
-        self.assertTrue(node.is_match_qual(seg_data, 'DTP', '435'))
+        (is_match, qual_code, matched_ele_idx, matched_subele_idx) = node.is_match_qual(seg_data, 'DTP', '435')
+        self.assertTrue(is_match)
 
     def test_match_qual_ok2(self):
         self.errh.err_cde = None
@@ -686,7 +690,8 @@ class MatchSegmentQual(unittest.TestCase):
         ), '/ISA_LOOP/GS_LOOP/ST_LOOP/DETAIL/2000A/2010AA/REF')
         self.assertEqual(node.base_name, 'segment')
         seg_data = pyx12.segment.Segment('REF*EI*5555~', '~', '*', ':')
-        self.assertTrue(node.is_match_qual(seg_data, 'REF', 'EI'))
+        (is_match, qual_code, matched_ele_idx, matched_subele_idx) = node.is_match_qual(seg_data, 'REF', 'EI')
+        self.assertTrue(is_match)
 
 
 class X12Path(unittest.TestCase):
@@ -766,3 +771,58 @@ class SegmentChildrenOrdinalMapPath(unittest.TestCase):
         for c in self.node.children:
             self.assertEqual(i, c.seq)
             i += 1
+
+
+class GetCompositeNodeByPath(unittest.TestCase):
+    """
+    Find matching child nodes matching a segment
+    """
+    def setUp(self):
+        param = pyx12.params.params()
+        self.map = pyx12.map_if.load_map_file('277.5010.X214.xml', param)
+        self.errh = pyx12.error_handler.errh_null()
+
+    def test_get_segment_node_absolute(self):
+        self.errh.err_cde = None
+        node = self.map.getnodebypath2('/ISA_LOOP/GS_LOOP/ST_LOOP/DETAIL/2000A/2000B/2200B/STC02')
+        self.assertNotEqual(node, None)
+        self.assertEqual(node.id, 'STC02')
+
+    def test_get_composite_node_absolute(self):
+        self.errh.err_cde = None
+        node = self.map.getnodebypath2('/ISA_LOOP/GS_LOOP/ST_LOOP/DETAIL/2000A/2000B/2200B/STC01-01')
+        self.assertNotEqual(node, None)
+        self.assertEqual(node.id, 'STC01-01')
+
+    def test_get_segment_node_relative(self):
+        self.errh.err_cde = None
+        node = self.map.getnodebypath2('/ISA_LOOP/GS_LOOP/ST_LOOP/DETAIL/2000A/2000B/2200B')
+        self.assertNotEqual(node, None)
+        self.assertEqual(node.id, '2200B')
+        node2 = node.getnodebypath2('STC02')
+        self.assertNotEqual(node2, None)
+        self.assertEqual(node2.id, 'STC02')
+
+    def test_get_composite_node(self):
+        self.errh.err_cde = None
+        node = self.map.getnodebypath2('/ISA_LOOP/GS_LOOP/ST_LOOP/DETAIL/2000A/2000B/2200B/STC02')
+        self.assertNotEqual(node, None)
+        self.assertEqual(node.id, 'STC02')
+
+    def test_get_node_path_refdes(self):
+        self.errh.err_cde = None
+        node = self.map.getnodebypath2('/ISA_LOOP/GS_LOOP/ST_LOOP/DETAIL/2000A/2000B/2200B/STC02')
+        self.assertNotEqual(node, None)
+        self.assertEqual(node.id, 'STC02')
+        refdes = 'STC02'
+        newnode = node.parent.getnodebypath2(refdes)
+        self.assertEqual(newnode.get_path(), '/ISA_LOOP/GS_LOOP/ST_LOOP/DETAIL/2000A/2000B/2200B/STC02')
+
+    def test_get_composite_node_path_refdes(self):
+        self.errh.err_cde = None
+        node = self.map.getnodebypath2('/ISA_LOOP/GS_LOOP/ST_LOOP/DETAIL/2000A/2000B/2200B/STC01-01')
+        self.assertNotEqual(node, None)
+        self.assertEqual(node.id, 'STC01-01')
+        refdes = 'STC01-01'
+        newnode = node.parent.parent.getnodebypath2(refdes)
+        self.assertEqual(newnode.get_path(), '/ISA_LOOP/GS_LOOP/ST_LOOP/DETAIL/2000A/2000B/2200B/STC01-01')

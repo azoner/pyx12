@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 ######################################################################
-# Copyright 
+# Copyright
 #   John Holland <john@zoner.org>
 # All rights reserved.
 #
@@ -117,7 +117,7 @@ def main():
         fd_xml = sys.stdout
     try:
         result = pyx12.x12n_document.x12n_document(param=param, src_file=fd_src,
-            fd_997=None, fd_html=None, fd_xmldoc=fd_xml, map_path=args.map_path)
+                fd_997=None, fd_html=None, fd_xmldoc=fd_xml, map_path=args.map_path)
         if not result:
             logger.error('Input file had errors.')
             return False

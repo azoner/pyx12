@@ -9,8 +9,6 @@
 # you should have received as part of this distribution.
 #
 ######################################################################
-
-#    $Id: 997.4010.xml 1465 2011-01-11 20:29:48Z johnholland $
 -->
 <transaction xid="999">
   <name>HIPAA Implementation Acknowledgment 999</name>
@@ -31,7 +29,12 @@
         <seq>01</seq>
         <valid_codes>
           <code>00</code>
+          <code>01</code>
+          <code>02</code>
           <code>03</code>
+          <code>04</code>
+          <code>05</code>
+          <code>06</code>
         </valid_codes>
       </element>
       <element xid="ISA02">
@@ -61,7 +64,7 @@
         <name>Interchange ID Qualifier</name>
         <usage>R</usage>
         <seq>05</seq>
-        <valid_codes>
+        <!--<valid_codes>
           <code>01</code>
           <code>14</code>
           <code>20</code>
@@ -71,7 +74,7 @@
           <code>30</code>
           <code>33</code>
           <code>ZZ</code>
-        </valid_codes>
+        </valid_codes>-->
       </element>
       <element xid="ISA06">
         <data_ele>I06</data_ele>
@@ -84,7 +87,7 @@
         <name>Interchange ID Qualifier</name>
         <usage>R</usage>
         <seq>07</seq>
-        <valid_codes>
+        <!--<valid_codes>
           <code>01</code>
           <code>14</code>
           <code>20</code>
@@ -94,7 +97,7 @@
           <code>30</code>
           <code>33</code>
           <code>ZZ</code>
-        </valid_codes>
+        </valid_codes>-->
       </element>
       <element xid="ISA08">
         <data_ele>I07</data_ele>
@@ -115,13 +118,10 @@
         <seq>10</seq>
       </element>
       <element xid="ISA11">
-        <data_ele>I10</data_ele>
-        <name>Interchange Control Standards Identifier</name>
+        <data_ele>I65</data_ele>
+        <name>Repetition Separator</name>
         <usage>R</usage>
         <seq>11</seq>
-        <valid_codes>
-          <code>U</code>
-        </valid_codes>
       </element>
       <element xid="ISA12">
         <data_ele>I11</data_ele>
@@ -129,7 +129,7 @@
         <usage>R</usage>
         <seq>12</seq>
         <valid_codes>
-          <code>00401</code>
+          <code>00501</code>
         </valid_codes>
       </element>
       <element xid="ISA13">
@@ -154,6 +154,7 @@
         <usage>R</usage>
         <seq>15</seq>
         <valid_codes>
+          <code>I</code>
           <code>P</code>
           <code>T</code>
         </valid_codes>
@@ -182,15 +183,6 @@
           <usage>R</usage>
           <seq>01</seq>
           <valid_codes>
-            <code>HI</code>
-            <code>HC</code>
-            <code>BE</code>
-            <code>HP</code>
-            <code>HB</code>
-            <code>HS</code>
-            <code>RA</code>
-            <code>HN</code>
-            <code>HR</code>
             <code>FA</code>
           </valid_codes>
         </element>
@@ -238,7 +230,9 @@
           <name>Version / Release / Industry Identifier Code</name>
           <usage>R</usage>
           <seq>08</seq>
-          <valid_codes/>
+          <valid_codes>
+            <code>005010X231</code>
+          </valid_codes>
         </element>
       </segment>
       <!--End of GS segment-->
@@ -272,6 +266,9 @@
             <name>Implementation Convention Reference</name>
             <usage>R</usage>
             <seq>03</seq>
+            <valid_codes>
+              <code>005010X231</code>
+            </valid_codes>
           </element>
         </segment>
         <!--End of ST segment-->

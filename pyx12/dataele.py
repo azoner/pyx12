@@ -1,5 +1,5 @@
 ######################################################################
-# Copyright (c) 2001-2011 
+# Copyright (c) 2001-2011
 #   John Holland <john@zoner.org>
 # All rights reserved.
 #
@@ -57,6 +57,7 @@ class DataElements(object):
             name = eElem.get('name')
             self.dataele[ele_num] = {'data_type': data_type, 'min_len':
                                      min_len, 'max_len': max_len, 'name': name}
+        fd.close()
 
     def get_by_elem_num(self, ele_num):
         """

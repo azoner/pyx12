@@ -93,7 +93,7 @@ def main():
             logger.error('Input file had errors.')
             return False
     except KeyboardInterrupt:
-        print "\n[interrupt]"
+        print("\n[interrupt]")
 
     return True
 

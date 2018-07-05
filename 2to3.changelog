@@ -1,0 +1,14 @@
+- Fix intermittent error at _test_997('trailer_errors') due to list(set([...])) will return elements in random order with Python 3. See [error_997.py:124]
+- Add a switch to select re.ASCII so the tests run succesfully with Python 2.7
+- Note: test_x12n_document.py fails intermittently at _test_997('trailer_errors')
+- Fix test test_xmlwriter.py, test_xmlx12_simple.py file opening to accept writing strings into buffer
+- Set re.ASCII for regexes: rec_ID_E, rec_ID_5, rec_ID_B
+- Change ListType to use primitive type list() in error_html.py
+- Change division operator from / to // in map_if.py
+- Replace file() with open()
+- Remove dependency on string module in map_if.py
+- Revert changes on [2to3.diff]:
+    - next iterator alias
+    - wrapping dict iterators with list()
+    - StringIO imports
+- Apply 2to3 patch

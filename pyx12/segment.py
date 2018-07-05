@@ -246,6 +246,12 @@ class Composite(object):
                 return False
         return True
 
+    def values_iterator(self):
+        for j in range(len(self.elements)):
+            if not self.elements[j].is_empty():
+                subele_ord = '{comp}'.format(comp=j+1)
+                yield (subele_ord, self.elements[j].get_value())
+
 
 class Segment(object):
     """
@@ -365,8 +371,11 @@ class Segment(object):
         @type ref_des: string
         @return: Element or Composite
         @rtype: L{segment.Composite}
+        @raise IndexError: If ref_des does not contain a valid element index
         """
         (ele_idx, comp_idx) = self._parse_refdes(ref_des)
+        if ele_idx is None:
+            raise IndexError('{} is not a valid element index'.format(ref_des))
         if ele_idx >= self.__len__():
             return None
         if comp_idx is None:
@@ -541,3 +550,19 @@ class Segment(object):
 
     def __copy__(self):
         return Segment(self.format(), self.seg_term, self.ele_term, self.subele_term)
+
+    def values_iterator(self):
+        """
+        Enumerate over the values in the segment, adding the path, element index and sub-element index
+        """
+        for i in range(len(self.elements)):
+            if self.elements[i].is_composite():
+                for (comp_ord, val) in self.elements[i].values_iterator():
+                    ele_ord = '{idx:0>2}'.format(idx=i+1)
+                    refdes = '{segid}{ele_ord}-{comp_ord}'.format(segid=self.seg_id, ele_ord=ele_ord, comp_ord=comp_ord)
+                    yield (refdes, ele_ord, comp_ord, val)
+            else:
+                if not self.elements[i].is_empty():
+                    ele_ord = '{idx:0>2}'.format(idx=i+1)
+                    refdes = '{segid}{ele_ord}'.format(segid=self.seg_id, ele_ord=ele_ord)
+                    yield (refdes, ele_ord, None, self.elements[i].get_value())

@@ -14,21 +14,21 @@ def st_generator():
     """
     testfile = 'multiple_st_loops.txt'
     #wr = edifile.WriteFile(conn)
-    fd_in = open(testfile)
-    isa_seg = None
-    gs_seg = None
-    isa_id = 11
-    gs_id = 21
-    #for k, g in groupby(iterate_2000(fd_in), lambda x: x['st_id']):
-    for k, g in groupby(iterate_2000(fd_in), lambda x: x[0]):
-        #yield (k, g)
-        print '-----------------------------------------------------------'
-        print k
-        for d in g:
-            yield d
-        print '-----------------------------------------------------------'
-    #for d in iterate_2000(fd_in):
-    #    yield d
+    with open(testfile) as fd_in:
+        isa_seg = None
+        gs_seg = None
+        isa_id = 11
+        gs_id = 21
+        #for k, g in groupby(iterate_2000(fd_in), lambda x: x['st_id']):
+        for k, g in groupby(iterate_2000(fd_in), lambda x: x[0]):
+            #yield (k, g)
+            print('-----------------------------------------------------------')
+            print(k)
+            for d in g:
+                yield d
+            print('-----------------------------------------------------------')
+        #for d in iterate_2000(fd_in):
+        #    yield d
 
 
 def simple_reader():
@@ -37,12 +37,12 @@ def simple_reader():
     #for d in get_headers_stream(src):
     #    print d
     for k, g in groupby(get_headers_stream(src), lambda x: x[0]):
-        print '-----------------------------------------------------------'
-        print k
+        print('-----------------------------------------------------------')
+        print(k)
         for d in g:
             #yield d
-            print d
-        print '-----------------------------------------------------------'
+            print(d)
+        print('-----------------------------------------------------------')
 
 
 def x12_split_on_st(source_filename, isa_id=11, gs_id=21):
@@ -50,7 +50,6 @@ def x12_split_on_st(source_filename, isa_id=11, gs_id=21):
     idx = -1
     for k, g in groupby(get_headers_stream(src), lambda x: x[0]):
         idx += 1
-        #import ipdb; ipdb.set_trace()
         st_id = int(k['st_seg'].get_value('ST02'))
         fd_temp = tempfile.TemporaryFile()
         wr = pyx12.x12file.X12Writer(fd_temp, '~', '*', ':', '\n', '^')
@@ -70,11 +69,10 @@ def save_many(src_filename, targetformat=None):
             newname = targetformat.format(isa_id=isa_id, gs_id=gs_id, st_id=st_id)
         else:
             newname = "newfile_{isa_id}.txt".format(isa_id=isa_id)
-        fd_out = open(newname, 'w')
-        fd_temp.seek(0)
-        fd_out.write(fd_temp.read())
-        fd_out.close()
-        print newname, isa_id, gs_id, st_id
+        with open(newname, 'w') as fd_out:
+            fd_temp.seek(0)
+            fd_out.write(fd_temp.read())
+            print(newname, isa_id, gs_id, st_id)
 
 
 def update_isa_id(seg_data, isa_id):

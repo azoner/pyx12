@@ -1,0 +1,1283 @@
+<?xml version="1.0"?>
+<!--
+######################################################################
+# Copyright (c)
+#   John Holland <john@zoner.org>
+# All rights reserved.
+#
+# This software is licensed as described in the file LICENSE.txt, which
+# you should have received as part of this distribution.
+#
+######################################################################
+-->
+<transaction xid="999">
+  <name>HIPAA Implementation Acknowledgment 999</name>
+  <loop xid="ISA_LOOP" type="explicit">
+    <name>Interchange Control Header</name>
+    <usage>R</usage>
+    <pos>0010</pos>
+    <repeat>&gt;1</repeat>
+    <segment xid="ISA">
+      <name>Interchange Control Header</name>
+      <usage>R</usage>
+      <pos>0100</pos>
+      <max_use>1</max_use>
+      <element xid="ISA01">
+        <data_ele>I01</data_ele>
+        <name>Authorization Information Qualifier</name>
+        <usage>R</usage>
+        <seq>01</seq>
+        <valid_codes>
+          <code>00</code>
+          <code>01</code>
+          <code>02</code>
+          <code>03</code>
+          <code>04</code>
+          <code>05</code>
+          <code>06</code>
+        </valid_codes>
+      </element>
+      <element xid="ISA02">
+        <data_ele>I02</data_ele>
+        <name>Authorization Information</name>
+        <usage>R</usage>
+        <seq>02</seq>
+      </element>
+      <element xid="ISA03">
+        <data_ele>I03</data_ele>
+        <name>Security Information Qualifier</name>
+        <usage>R</usage>
+        <seq>03</seq>
+        <valid_codes>
+          <code>00</code>
+          <code>01</code>
+        </valid_codes>
+      </element>
+      <element xid="ISA04">
+        <data_ele>I04</data_ele>
+        <name>Security Information</name>
+        <usage>R</usage>
+        <seq>04</seq>
+      </element>
+      <element xid="ISA05">
+        <data_ele>I05</data_ele>
+        <name>Interchange ID Qualifier</name>
+        <usage>R</usage>
+        <seq>05</seq>
+        <!--<valid_codes>
+          <code>01</code>
+          <code>14</code>
+          <code>20</code>
+          <code>27</code>
+          <code>28</code>
+          <code>29</code>
+          <code>30</code>
+          <code>33</code>
+          <code>ZZ</code>
+        </valid_codes>-->
+      </element>
+      <element xid="ISA06">
+        <data_ele>I06</data_ele>
+        <name>Interchange Sender ID</name>
+        <usage>R</usage>
+        <seq>06</seq>
+      </element>
+      <element xid="ISA07">
+        <data_ele>I05</data_ele>
+        <name>Interchange ID Qualifier</name>
+        <usage>R</usage>
+        <seq>07</seq>
+        <!--<valid_codes>
+          <code>01</code>
+          <code>14</code>
+          <code>20</code>
+          <code>27</code>
+          <code>28</code>
+          <code>29</code>
+          <code>30</code>
+          <code>33</code>
+          <code>ZZ</code>
+        </valid_codes>-->
+      </element>
+      <element xid="ISA08">
+        <data_ele>I07</data_ele>
+        <name>Interchange Receiver ID</name>
+        <usage>R</usage>
+        <seq>08</seq>
+      </element>
+      <element xid="ISA09">
+        <data_ele>I08</data_ele>
+        <name>Interchange Date</name>
+        <usage>R</usage>
+        <seq>09</seq>
+      </element>
+      <element xid="ISA10">
+        <data_ele>I09</data_ele>
+        <name>Interchange Time</name>
+        <usage>R</usage>
+        <seq>10</seq>
+      </element>
+      <element xid="ISA11">
+        <data_ele>I65</data_ele>
+        <name>Repetition Separator</name>
+        <usage>R</usage>
+        <seq>11</seq>
+      </element>
+      <element xid="ISA12">
+        <data_ele>I11</data_ele>
+        <name>Interchange Control Version Number</name>
+        <usage>R</usage>
+        <seq>12</seq>
+        <valid_codes>
+          <code>00501</code>
+        </valid_codes>
+      </element>
+      <element xid="ISA13">
+        <data_ele>I12</data_ele>
+        <name>Interchange Control Number</name>
+        <usage>R</usage>
+        <seq>13</seq>
+      </element>
+      <element xid="ISA14">
+        <data_ele>I13</data_ele>
+        <name>Acknowledgment Requested</name>
+        <usage>R</usage>
+        <seq>14</seq>
+        <valid_codes>
+          <code>0</code>
+          <code>1</code>
+        </valid_codes>
+      </element>
+      <element xid="ISA15">
+        <data_ele>I14</data_ele>
+        <name>Usage Indicator</name>
+        <usage>R</usage>
+        <seq>15</seq>
+        <valid_codes>
+          <code>I</code>
+          <code>P</code>
+          <code>T</code>
+        </valid_codes>
+      </element>
+      <element xid="ISA16">
+        <data_ele>I15</data_ele>
+        <name>Component Element Separator</name>
+        <usage>R</usage>
+        <seq>16</seq>
+      </element>
+    </segment>
+    <!--End of ISA segment-->
+    <loop xid="GS_LOOP" type="explicit">
+      <name>Functional Group Header</name>
+      <usage>R</usage>
+      <pos>0200</pos>
+      <repeat>&gt;1</repeat>
+      <segment xid="GS">
+        <name>Functional Group Header</name>
+        <usage>R</usage>
+        <pos>0100</pos>
+        <max_use>1</max_use>
+        <element xid="GS01">
+          <data_ele>479</data_ele>
+          <name>Functional Identifier Code</name>
+          <usage>R</usage>
+          <seq>01</seq>
+          <valid_codes>
+            <code>FA</code>
+          </valid_codes>
+        </element>
+        <element xid="GS02">
+          <data_ele>142</data_ele>
+          <name>Application Sender's Code</name>
+          <usage>R</usage>
+          <seq>02</seq>
+        </element>
+        <element xid="GS03">
+          <data_ele>124</data_ele>
+          <name>Application Receiver's Code</name>
+          <usage>R</usage>
+          <seq>03</seq>
+        </element>
+        <element xid="GS04">
+          <data_ele>373</data_ele>
+          <name>Date</name>
+          <usage>R</usage>
+          <seq>04</seq>
+        </element>
+        <element xid="GS05">
+          <data_ele>337</data_ele>
+          <name>Time</name>
+          <usage>R</usage>
+          <seq>05</seq>
+        </element>
+        <element xid="GS06">
+          <data_ele>28</data_ele>
+          <name>Group Control Number</name>
+          <usage>R</usage>
+          <seq>06</seq>
+        </element>
+        <element xid="GS07">
+          <data_ele>455</data_ele>
+          <name>Responsible Agency Code</name>
+          <usage>R</usage>
+          <seq>07</seq>
+          <valid_codes>
+            <code>X</code>
+          </valid_codes>
+        </element>
+        <element xid="GS08">
+          <data_ele>480</data_ele>
+          <name>Version / Release / Industry Identifier Code</name>
+          <usage>R</usage>
+          <seq>08</seq>
+          <valid_codes>
+            <code>005010X231A1</code>
+          </valid_codes>
+        </element>
+      </segment>
+      <!--End of GS segment-->
+      <loop xid="ST_LOOP" type="explicit">
+        <name>Transaction Set Header</name>
+        <usage>R</usage>
+        <pos>0200</pos>
+        <repeat>&gt;1</repeat>
+        <segment xid="ST">
+          <name>Transaction Set Header</name>
+          <usage>R</usage>
+          <pos>0050</pos>
+          <max_use>1</max_use>
+          <element xid="ST01">
+            <data_ele>143</data_ele>
+            <name>Transaction Set Identifier Code</name>
+            <usage>R</usage>
+            <seq>01</seq>
+            <valid_codes>
+              <code>999</code>
+            </valid_codes>
+          </element>
+          <element xid="ST02">
+            <data_ele>329</data_ele>
+            <name>Transaction Set Control Number</name>
+            <usage>R</usage>
+            <seq>02</seq>
+          </element>
+          <element xid="ST03">
+            <data_ele>1705</data_ele>
+            <name>Implementation Convention Reference</name>
+            <usage>R</usage>
+            <seq>03</seq>
+            <valid_codes>
+              <code>005010X231A1</code>
+            </valid_codes>
+          </element>
+        </segment>
+        <!--End of ST segment-->
+        <loop xid="HEADER" type="wrapper">
+          <name>Table 1 - Header</name>
+          <usage>R</usage>
+          <pos>0100</pos>
+          <repeat>1</repeat>
+          <segment xid="AK1">
+            <name>Functional Group Response Header</name>
+            <usage>R</usage>
+            <pos>0200</pos>
+            <max_use>1</max_use>
+            <element xid="AK101">
+              <data_ele>479</data_ele>
+              <name>Functional Identifier Code</name>
+              <usage>R</usage>
+              <seq>01</seq>
+              <valid_codes>
+                <code>BE</code>
+                <code>HB</code>
+                <code>HC</code>
+                <code>HI</code>
+                <code>HN</code>
+                <code>HP</code>
+                <code>HR</code>
+                <code>HS</code>
+                <code>RA</code>
+              </valid_codes>
+            </element>
+            <element xid="AK102">
+              <data_ele>28</data_ele>
+              <name>Group Control Number</name>
+              <usage>R</usage>
+              <seq>02</seq>
+            </element>
+            <element xid="AK103">
+              <data_ele>480</data_ele>
+              <name>Version / Release / Industry Identifier Code</name>
+              <usage>R</usage>
+              <seq>03</seq>
+            </element>
+          </segment>
+          <!--End of AK1 segment-->
+          <loop xid="2000">
+            <name>Transaction Set Response Header</name>
+            <usage>S</usage>
+            <pos>0300</pos>
+            <repeat>&gt;1</repeat>
+            <segment xid="AK2">
+              <name>Transaction Set Response Header</name>
+              <usage>R</usage>
+              <pos>0300</pos>
+              <max_use>1</max_use>
+              <element xid="AK201">
+                <data_ele>143</data_ele>
+                <name>Transaction Set Identifier Code</name>
+                <usage>R</usage>
+                <seq>01</seq>
+                <valid_codes>
+                  <code>270</code>
+                  <code>271</code>
+                  <code>276</code>
+                  <code>277</code>
+                  <code>278</code>
+                  <code>820</code>
+                  <code>834</code>
+                  <code>835</code>
+                  <code>837</code>
+                </valid_codes>
+              </element>
+              <element xid="AK202">
+                <data_ele>329</data_ele>
+                <name>Transaction Set Control Number</name>
+                <usage>R</usage>
+                <seq>02</seq>
+              </element>
+              <element xid="AK203">
+                <data_ele>1705</data_ele>
+                <name>Implementation Convention Reference</name>
+                <usage>S</usage>
+                <seq>03</seq>
+              </element>
+            </segment>
+            <!--End of AK2 segment-->
+            <loop xid="2100">
+              <name>AK2/IK3 Error Identification</name>
+              <usage>S</usage>
+              <pos>0400</pos>
+              <repeat>&gt;1</repeat>
+              <segment xid="IK3">
+                <name>Error Identification</name>
+                <usage>R</usage>
+                <pos>0400</pos>
+                <max_use>1</max_use>
+                <element xid="IK301">
+                  <data_ele>721</data_ele>
+                  <name>Segment ID Code</name>
+                  <usage>R</usage>
+                  <seq>01</seq>
+                </element>
+                <element xid="IK302">
+                  <data_ele>719</data_ele>
+                  <name>Segment Position in Transaction Set</name>
+                  <usage>R</usage>
+                  <seq>02</seq>
+                </element>
+                <element xid="IK303">
+                  <data_ele>447</data_ele>
+                  <name>Loop Identifier Code</name>
+                  <usage>S</usage>
+                  <seq>03</seq>
+                </element>
+                <element xid="IK304">
+                  <data_ele>620</data_ele>
+                  <name>Segment Syntax Error Code</name>
+                  <usage>S</usage>
+                  <seq>04</seq>
+                  <valid_codes>
+                    <code>1</code>
+                    <code>2</code>
+                    <code>3</code>
+                    <code>4</code>
+                    <code>5</code>
+                    <code>6</code>
+                    <code>7</code>
+                    <code>8</code>
+                    <code>I4</code>
+                    <code>I6</code>
+                    <code>I7</code>
+                    <code>I8</code>
+                    <code>I9</code>
+                  </valid_codes>
+                </element>
+              </segment>
+              <!--End of IK3 segment-->
+              <segment xid="CTX">
+                <name>Segment Context</name>
+                <usage>S</usage>
+                <pos>0500</pos>
+                <max_use>9</max_use>
+                <composite>
+                  <data_ele>C998</data_ele>
+                  <name>Context Identification</name>
+                  <usage>R</usage>
+                  <seq>01</seq>
+                  <repeat>10</repeat>
+                  <element xid="CTX01-01">
+                    <data_ele>9999</data_ele>
+                    <name>Context Name</name>
+                    <usage>R</usage>
+                    <seq>01</seq>
+                    <valid_codes>
+                      <code>SITUATIONAL TRIGGER</code>
+                    </valid_codes>
+                  </element>
+                  <element xid="CTX01-02">
+                    <data_ele>9998</data_ele>
+                    <name>Context Reference</name>
+                    <usage>N</usage>
+                    <seq>02</seq>
+                  </element>
+                </composite>
+                <element xid="CTX02">
+                  <data_ele>721</data_ele>
+                  <name>Segment ID Code</name>
+                  <usage>R</usage>
+                  <seq>02</seq>
+                </element>
+                <element xid="CTX03">
+                  <data_ele>719</data_ele>
+                  <name>Segment Position in Transaction Set</name>
+                  <usage>R</usage>
+                  <seq>03</seq>
+                </element>
+                <element xid="CTX04">
+                  <data_ele>447</data_ele>
+                  <name>Loop Identifier Code</name>
+                  <usage>S</usage>
+                  <seq>04</seq>
+                </element>
+                <composite>
+                  <data_ele>C030</data_ele>
+                  <name>Position in Segment</name>
+                  <usage>S</usage>
+                  <seq>05</seq>
+                  <element xid="CTX05-01">
+                    <data_ele>722</data_ele>
+                    <name>Element Position in Segment</name>
+                    <usage>R</usage>
+                    <seq>01</seq>
+                  </element>
+                  <element xid="CTX05-02">
+                    <data_ele>1528</data_ele>
+                    <name>Component Data Element Position in Composite</name>
+                    <usage>S</usage>
+                    <seq>02</seq>
+                  </element>
+                  <element xid="CTX05-03">
+                    <data_ele>1686</data_ele>
+                    <name>Repeating Data Element Position</name>
+                    <usage>S</usage>
+                    <seq>03</seq>
+                  </element>
+                </composite>
+                <composite>
+                  <data_ele>C999</data_ele>
+                  <name>Reference in Segment</name>
+                  <usage>S</usage>
+                  <seq>06</seq>
+                  <element xid="CTX06-01">
+                    <data_ele>725</data_ele>
+                    <name>Data Element Reference Number</name>
+                    <usage>R</usage>
+                    <seq>01</seq>
+                  </element>
+                  <element xid="CTX06-02">
+                    <data_ele>725</data_ele>
+                    <name>Data Element Reference Number</name>
+                    <usage>N</usage>
+                    <seq>02</seq>
+                  </element>
+                </composite>
+              </segment>
+              <!--End of CTX segment-->
+              <segment xid="CTX">
+                <name>Business Unit Identifier</name>
+                <usage>S</usage>
+                <pos>0500</pos>
+                <max_use>1</max_use>
+                <composite>
+                  <data_ele>C998</data_ele>
+                  <name>Context Identification</name>
+                  <usage>R</usage>
+                  <seq>01</seq>
+                  <repeat>10</repeat>
+                  <element xid="CTX01-01">
+                    <data_ele>9999</data_ele>
+                    <name>Context Name</name>
+                    <usage>R</usage>
+                    <seq>01</seq>
+                    <valid_codes>
+                      <code>TRN02</code>
+                      <code>NM109</code>
+                      <code>PATIENT NAME NM109</code>
+                      <code>SUBSCRIBER NAME NM109</code>
+                      <code>ENT01</code>
+                      <code>SUBSCRIBER NUMBER REF02</code>
+                      <code>CLM01</code>
+                    </valid_codes>
+                  </element>
+                  <element xid="CTX01-02">
+                    <data_ele>9998</data_ele>
+                    <name>Context Reference</name>
+                    <usage>R</usage>
+                    <seq>02</seq>
+                  </element>
+                </composite>
+                <element xid="CTX02">
+                  <data_ele>721</data_ele>
+                  <name>Segment ID Code</name>
+                  <usage>N</usage>
+                  <seq>02</seq>
+                </element>
+                <element xid="CTX03">
+                  <data_ele>719</data_ele>
+                  <name>Segment Position in Transaction Set</name>
+                  <usage>N</usage>
+                  <seq>03</seq>
+                </element>
+                <element xid="CTX04">
+                  <data_ele>447</data_ele>
+                  <name>Loop Identifier Code</name>
+                  <usage>N</usage>
+                  <seq>04</seq>
+                </element>
+                <composite>
+                  <data_ele>C030</data_ele>
+                  <name>Position in Segment</name>
+                  <usage>S</usage>
+                  <seq>05</seq>
+                  <element xid="CTX05-01">
+                    <data_ele>722</data_ele>
+                    <name>Element Position in Segment</name>
+                    <usage>R</usage>
+                    <seq>01</seq>
+                  </element>
+                  <element xid="CTX05-02">
+                    <data_ele>1528</data_ele>
+                    <name>Component Data Element Position in Composite</name>
+                    <usage>S</usage>
+                    <seq>02</seq>
+                  </element>
+                  <element xid="CTX05-03">
+                    <data_ele>1686</data_ele>
+                    <name>Repeating Data Element Position</name>
+                    <usage>S</usage>
+                    <seq>03</seq>
+                  </element>
+                </composite>
+                <composite>
+                  <data_ele>C999</data_ele>
+                  <name>Reference in Segment</name>
+                  <usage>N</usage>
+                  <seq>06</seq>
+                  <element xid="CTX06-01">
+                    <data_ele>725</data_ele>
+                    <name>Data Element Reference Number</name>
+                    <usage>R</usage>
+                    <seq>01</seq>
+                  </element>
+                  <element xid="CTX06-02">
+                    <data_ele>725</data_ele>
+                    <name>Data Element Reference Number</name>
+                    <usage>N</usage>
+                    <seq>02</seq>
+                  </element>
+                </composite>
+              </segment>
+              <!--End of CTX segment-->
+              <loop xid="2110">
+                <name>AK2/IK3/IK4 Implementation Data Element Note</name>
+                <usage>S</usage>
+                <pos>0600</pos>
+                <repeat>&gt;1</repeat>
+                <segment xid="IK4">
+                  <name>Implementation Data Element Note</name>
+                  <usage>S</usage>
+                  <pos>0600</pos>
+                  <max_use>1</max_use>
+                  <composite>
+                    <data_ele>C030</data_ele>
+                    <name>Position in Segment</name>
+                    <usage>R</usage>
+                    <seq>01</seq>
+                    <element xid="IK401-01">
+                      <data_ele>722</data_ele>
+                      <name>Element Position in Segment</name>
+                      <usage>R</usage>
+                      <seq>01</seq>
+                    </element>
+                    <element xid="IK401-02">
+                      <data_ele>1528</data_ele>
+                      <name>Component Data Element Position in Composite</name>
+                      <usage>S</usage>
+                      <seq>02</seq>
+                    </element>
+                    <element xid="IK401-03">
+                      <data_ele>1686</data_ele>
+                      <name>Repeating Data Element Position</name>
+                      <usage>S</usage>
+                      <seq>03</seq>
+                    </element>
+                  </composite>
+                  <element xid="IK402">
+                    <data_ele>725</data_ele>
+                    <name>Data Element Reference Number</name>
+                    <usage>S</usage>
+                    <seq>02</seq>
+                  </element>
+                  <element xid="IK403">
+                    <data_ele>621</data_ele>
+                    <name>Implementation Data Element Syntax Error Code</name>
+                    <usage>R</usage>
+                    <seq>03</seq>
+                    <valid_codes>
+                      <code>1</code>
+                      <code>2</code>
+                      <code>3</code>
+                      <code>4</code>
+                      <code>5</code>
+                      <code>6</code>
+                      <code>7</code>
+                      <code>8</code>
+                      <code>9</code>
+                      <code>10</code>
+                      <code>11</code>
+                      <code>12</code>
+                      <code>13</code>
+                      <code>I10</code>
+                      <code>I11</code>
+                      <code>I12</code>
+                      <code>I13</code>
+                      <code>I6</code>
+                      <code>I9</code>
+                    </valid_codes>
+                  </element>
+                  <element xid="IK404">
+                    <data_ele>724</data_ele>
+                    <name>Copy of Bad Data Element</name>
+                    <usage>S</usage>
+                    <seq>04</seq>
+                  </element>
+                </segment>
+                <!--End of IK4 segment-->
+                <segment xid="CTX">
+                  <name>Element Context</name>
+                  <usage>S</usage>
+                  <pos>0700</pos>
+                  <max_use>10</max_use>
+                  <composite>
+                    <data_ele>C998</data_ele>
+                    <name>Context Identification</name>
+                    <usage>R</usage>
+                    <seq>01</seq>
+                    <repeat>10</repeat>
+                    <element xid="CTX01-01">
+                      <data_ele>9999</data_ele>
+                      <name>Context Name</name>
+                      <usage>R</usage>
+                      <seq>01</seq>
+                        <valid_codes>
+                          <code>SITUATIONAL TRIGGER</code>
+                        </valid_codes>
+                    </element>
+                    <element xid="CTX01-02">
+                      <data_ele>9998</data_ele>
+                      <name>Context Reference</name>
+                      <usage>N</usage>
+                      <seq>02</seq>
+                    </element>
+                  </composite>
+                  <element xid="CTX02">
+                    <data_ele>721</data_ele>
+                    <name>Segment ID Code</name>
+                    <usage>R</usage>
+                    <seq>02</seq>
+                  </element>
+                  <element xid="CTX03">
+                    <data_ele>719</data_ele>
+                    <name>Segment Position in Transaction Set</name>
+                    <usage>R</usage>
+                    <seq>03</seq>
+                  </element>
+                  <element xid="CTX04">
+                    <data_ele>447</data_ele>
+                    <name>Loop Identifier Code</name>
+                    <usage>S</usage>
+                    <seq>04</seq>
+                  </element>
+                  <composite>
+                    <data_ele>C030</data_ele>
+                    <name>Position in Segment</name>
+                    <usage>S</usage>
+                    <seq>05</seq>
+                    <element xid="CTX05-01">
+                      <data_ele>722</data_ele>
+                      <name>Element Position in Segment</name>
+                      <usage>R</usage>
+                      <seq>01</seq>
+                    </element>
+                    <element xid="CTX05-02">
+                      <data_ele>1528</data_ele>
+                      <name>Component Data Element Position in Composite</name>
+                      <usage>S</usage>
+                      <seq>02</seq>
+                    </element>
+                    <element xid="CTX05-03">
+                      <data_ele>1686</data_ele>
+                      <name>Repeating Data Element Position</name>
+                      <usage>S</usage>
+                      <seq>03</seq>
+                    </element>
+                  </composite>
+                  <composite>
+                    <data_ele>C999</data_ele>
+                    <name>Reference in Segment</name>
+                    <usage>S</usage>
+                    <seq>06</seq>
+                    <element xid="CTX06-01">
+                      <data_ele>725</data_ele>
+                      <name>Data Element Reference Number</name>
+                      <usage>R</usage>
+                      <seq>01</seq>
+                    </element>
+                    <element xid="CTX06-02">
+                      <data_ele>725</data_ele>
+                      <name>Data Element Reference Number</name>
+                      <usage>N</usage>
+                      <seq>02</seq>
+                    </element>
+                  </composite>
+                </segment>
+                <!--End of CTX segment-->
+              </loop>
+              <!--End of 2110 loop-->
+            </loop>
+            <!--End of 2100 loop-->
+            <segment xid="IK5">
+              <name>Transaction Set Response Trailer</name>
+              <usage>R</usage>
+              <pos>0800</pos>
+              <max_use>1</max_use>
+              <element xid="IK501">
+                <data_ele>717</data_ele>
+                <name>Transaction Set Acknowledgment Code</name>
+                <usage>R</usage>
+                <seq>01</seq>
+                <valid_codes>
+                  <code>A</code>
+                  <code>E</code>
+                  <code>M</code>
+                  <code>R</code>
+                  <code>W</code>
+                  <code>X</code>
+                </valid_codes>
+              </element>
+              <element xid="IK502">
+                <data_ele>618</data_ele>
+                <name>Implementation Transaction Set Syntax Error Code</name>
+                <usage>S</usage>
+                <seq>02</seq>
+                <valid_codes>
+                  <code>1</code>
+                  <code>2</code>
+                  <code>3</code>
+                  <code>4</code>
+                  <code>5</code>
+                  <code>6</code>
+                  <code>7</code>
+                  <code>8</code>
+                  <code>9</code>
+                  <code>10</code>
+                  <code>11</code>
+                  <code>12</code>
+                  <code>13</code>
+                  <code>15</code>
+                  <code>16</code>
+                  <code>17</code>
+                  <code>18</code>
+                  <code>19</code>
+                  <code>23</code>
+                  <code>24</code>
+                  <code>25</code>
+                  <code>26</code>
+                  <code>27</code>
+                  <code>I5</code>
+                  <code>I6</code>
+                </valid_codes>
+              </element>
+              <element xid="IK503">
+                <data_ele>618</data_ele>
+                <name>Implementation Transaction Set Syntax Error Code</name>
+                <usage>S</usage>
+                <seq>03</seq>
+                <valid_codes>
+                  <code>1</code>
+                  <code>2</code>
+                  <code>3</code>
+                  <code>4</code>
+                  <code>5</code>
+                  <code>6</code>
+                  <code>7</code>
+                  <code>8</code>
+                  <code>9</code>
+                  <code>10</code>
+                  <code>11</code>
+                  <code>12</code>
+                  <code>13</code>
+                  <code>15</code>
+                  <code>16</code>
+                  <code>17</code>
+                  <code>18</code>
+                  <code>19</code>
+                  <code>23</code>
+                  <code>24</code>
+                  <code>25</code>
+                  <code>26</code>
+                  <code>27</code>
+                  <code>I5</code>
+                  <code>I6</code>
+                </valid_codes>
+              </element>
+              <element xid="IK504">
+                <data_ele>618</data_ele>
+                <name>Implementation Transaction Set Syntax Error Code</name>
+                <usage>S</usage>
+                <seq>04</seq>
+                <valid_codes>
+                  <code>1</code>
+                  <code>2</code>
+                  <code>3</code>
+                  <code>4</code>
+                  <code>5</code>
+                  <code>6</code>
+                  <code>7</code>
+                  <code>8</code>
+                  <code>9</code>
+                  <code>10</code>
+                  <code>11</code>
+                  <code>12</code>
+                  <code>13</code>
+                  <code>15</code>
+                  <code>16</code>
+                  <code>17</code>
+                  <code>18</code>
+                  <code>19</code>
+                  <code>23</code>
+                  <code>24</code>
+                  <code>25</code>
+                  <code>26</code>
+                  <code>27</code>
+                  <code>I5</code>
+                  <code>I6</code>
+                </valid_codes>
+              </element>
+              <element xid="IK505">
+                <data_ele>618</data_ele>
+                <name>Implementation Transaction Set Syntax Error Code</name>
+                <usage>S</usage>
+                <seq>05</seq>
+                <valid_codes>
+                  <code>1</code>
+                  <code>2</code>
+                  <code>3</code>
+                  <code>4</code>
+                  <code>5</code>
+                  <code>6</code>
+                  <code>7</code>
+                  <code>8</code>
+                  <code>9</code>
+                  <code>10</code>
+                  <code>11</code>
+                  <code>12</code>
+                  <code>13</code>
+                  <code>15</code>
+                  <code>16</code>
+                  <code>17</code>
+                  <code>18</code>
+                  <code>19</code>
+                  <code>23</code>
+                  <code>24</code>
+                  <code>25</code>
+                  <code>26</code>
+                  <code>27</code>
+                  <code>I5</code>
+                  <code>I6</code>
+                </valid_codes>
+              </element>
+              <element xid="IK506">
+                <data_ele>618</data_ele>
+                <name>Implementation Transaction Set Syntax Error Code</name>
+                <usage>S</usage>
+                <seq>06</seq>
+                <valid_codes>
+                  <code>1</code>
+                  <code>2</code>
+                  <code>3</code>
+                  <code>4</code>
+                  <code>5</code>
+                  <code>6</code>
+                  <code>7</code>
+                  <code>8</code>
+                  <code>9</code>
+                  <code>10</code>
+                  <code>11</code>
+                  <code>12</code>
+                  <code>13</code>
+                  <code>15</code>
+                  <code>16</code>
+                  <code>17</code>
+                  <code>18</code>
+                  <code>19</code>
+                  <code>23</code>
+                  <code>24</code>
+                  <code>25</code>
+                  <code>26</code>
+                  <code>27</code>
+                  <code>I5</code>
+                  <code>I6</code>
+                </valid_codes>
+              </element>
+            </segment>
+            <!--End of IK5 segment-->
+          </loop>
+          <!--End of 2000 loop-->
+          <segment xid="AK9">
+            <name>Functional Group Response Trailer</name>
+            <usage>R</usage>
+            <pos>0900</pos>
+            <max_use>1</max_use>
+            <element xid="AK901">
+              <data_ele>715</data_ele>
+              <name>Functional Group Acknowledge Code</name>
+              <usage>R</usage>
+              <seq>01</seq>
+              <valid_codes>
+                <code>A</code>
+                <code>E</code>
+                <code>M</code>
+                <code>P</code>
+                <code>R</code>
+                <code>W</code>
+                <code>X</code>
+              </valid_codes>
+            </element>
+            <element xid="AK902">
+              <data_ele>97</data_ele>
+              <name>Number of Transaction Sets Included</name>
+              <usage>R</usage>
+              <seq>02</seq>
+            </element>
+            <element xid="AK903">
+              <data_ele>123</data_ele>
+              <name>Number of Received Transaction Sets</name>
+              <usage>R</usage>
+              <seq>03</seq>
+            </element>
+            <element xid="AK904">
+              <data_ele>2</data_ele>
+              <name>Number of Accepted Transaction Sets</name>
+              <usage>R</usage>
+              <seq>04</seq>
+            </element>
+            <element xid="AK905">
+              <data_ele>716</data_ele>
+              <name>Functional Group Syntax Error Code</name>
+              <usage>S</usage>
+              <seq>05</seq>
+              <valid_codes>
+                <code>1</code>
+                <code>2</code>
+                <code>3</code>
+                <code>4</code>
+                <code>5</code>
+                <code>6</code>
+                <code>10</code>
+                <code>11</code>
+                <code>12</code>
+                <code>13</code>
+                <code>14</code>
+                <code>15</code>
+                <code>16</code>
+                <code>17</code>
+                <code>18</code>
+                <code>19</code>
+                <code>23</code>
+                <code>24</code>
+                <code>25</code>
+                <code>26</code>
+              </valid_codes>
+            </element>
+            <element xid="AK906">
+              <data_ele>716</data_ele>
+              <name>Functional Group Syntax Error Code</name>
+              <usage>S</usage>
+              <seq>06</seq>
+              <valid_codes>
+                <code>1</code>
+                <code>2</code>
+                <code>3</code>
+                <code>4</code>
+                <code>5</code>
+                <code>6</code>
+                <code>10</code>
+                <code>11</code>
+                <code>12</code>
+                <code>13</code>
+                <code>14</code>
+                <code>15</code>
+                <code>16</code>
+                <code>17</code>
+                <code>18</code>
+                <code>19</code>
+                <code>23</code>
+                <code>24</code>
+                <code>25</code>
+                <code>26</code>
+              </valid_codes>
+            </element>
+            <element xid="AK907">
+              <data_ele>716</data_ele>
+              <name>Functional Group Syntax Error Code</name>
+              <usage>S</usage>
+              <seq>07</seq>
+              <valid_codes>
+                <code>1</code>
+                <code>2</code>
+                <code>3</code>
+                <code>4</code>
+                <code>5</code>
+                <code>6</code>
+                <code>10</code>
+                <code>11</code>
+                <code>12</code>
+                <code>13</code>
+                <code>14</code>
+                <code>15</code>
+                <code>16</code>
+                <code>17</code>
+                <code>18</code>
+                <code>19</code>
+                <code>23</code>
+                <code>24</code>
+                <code>25</code>
+                <code>26</code>
+              </valid_codes>
+            </element>
+            <element xid="AK908">
+              <data_ele>716</data_ele>
+              <name>Functional Group Syntax Error Code</name>
+              <usage>S</usage>
+              <seq>08</seq>
+              <valid_codes>
+                <code>1</code>
+                <code>2</code>
+                <code>3</code>
+                <code>4</code>
+                <code>5</code>
+                <code>6</code>
+                <code>10</code>
+                <code>11</code>
+                <code>12</code>
+                <code>13</code>
+                <code>14</code>
+                <code>15</code>
+                <code>16</code>
+                <code>17</code>
+                <code>18</code>
+                <code>19</code>
+                <code>23</code>
+                <code>24</code>
+                <code>25</code>
+                <code>26</code>
+              </valid_codes>
+            </element>
+            <element xid="AK909">
+              <data_ele>716</data_ele>
+              <name>Functional Group Syntax Error Code</name>
+              <usage>S</usage>
+              <seq>09</seq>
+              <valid_codes>
+                <code>1</code>
+                <code>2</code>
+                <code>3</code>
+                <code>4</code>
+                <code>5</code>
+                <code>6</code>
+                <code>10</code>
+                <code>11</code>
+                <code>12</code>
+                <code>13</code>
+                <code>14</code>
+                <code>15</code>
+                <code>16</code>
+                <code>17</code>
+                <code>18</code>
+                <code>19</code>
+                <code>23</code>
+                <code>24</code>
+                <code>25</code>
+                <code>26</code>
+              </valid_codes>
+            </element>
+          </segment>
+          <!--End of AK9 segment-->
+        </loop>
+        <!--End of HEADER loop-->
+        <loop xid="DETAIL" type="wrapper">
+          <name>Table 2 - Detail</name>
+          <usage>N</usage>
+          <pos>0200</pos>
+          <repeat>&gt;1</repeat>
+        </loop>
+        <!--End of DETAIL loop-->
+        <loop xid="FOOTER" type="wrapper">
+          <name>Table 3 - Footer</name>
+          <usage>N</usage>
+          <pos>0300</pos>
+          <repeat>1</repeat>
+        </loop>
+        <!--End of FOOTER loop-->
+        <segment xid="SE">
+          <name>Transaction Set Trailer</name>
+          <usage>R</usage>
+          <pos>0800</pos>
+          <max_use>1</max_use>
+          <element xid="SE01">
+            <data_ele>96</data_ele>
+            <name>Number of Included Segments</name>
+            <usage>R</usage>
+            <seq>01</seq>
+          </element>
+          <element xid="SE02">
+            <data_ele>329</data_ele>
+            <name>Transaction Set Control Number</name>
+            <usage>R</usage>
+            <seq>02</seq>
+          </element>
+        </segment>
+        <!--End of SE segment-->
+      </loop>
+      <!--End of ST loop-->
+      <segment xid="GE">
+        <name>Functional Group Trailer</name>
+        <usage>R</usage>
+        <pos>0300</pos>
+        <max_use>1</max_use>
+        <element xid="GE01">
+          <data_ele>97</data_ele>
+          <name>Number of Transaction Sets Included</name>
+          <usage>R</usage>
+          <seq>01</seq>
+        </element>
+        <element xid="GE02">
+          <data_ele>28</data_ele>
+          <name>Group Control Number</name>
+          <usage>R</usage>
+          <seq>02</seq>
+        </element>
+      </segment>
+      <!--End of GE segment-->
+    </loop>
+    <!--End of GS loop-->
+    <segment xid="TA1">
+      <name>Interchange Acknowledgement</name>
+      <usage>S</usage>
+      <pos>0200</pos>
+      <max_use>1</max_use>
+      <element xid="TA101">
+        <data_ele>I12</data_ele>
+        <name>Interchange Control Number</name>
+        <usage>R</usage>
+        <seq>01</seq>
+      </element>
+      <element xid="TA102">
+        <data_ele>I08</data_ele>
+        <name>Interchange Date</name>
+        <usage>R</usage>
+        <seq>02</seq>
+      </element>
+      <element xid="TA103">
+        <data_ele>I09</data_ele>
+        <name>Interchange Time</name>
+        <usage>R</usage>
+        <seq>03</seq>
+      </element>
+      <element xid="TA104">
+        <data_ele>I17</data_ele>
+        <name>Interchange Acknowledgement Code</name>
+        <usage>R</usage>
+        <seq>04</seq>
+        <valid_codes>
+          <code>A</code>
+          <code>E</code>
+          <code>R</code>
+        </valid_codes>
+      </element>
+      <element xid="TA105">
+        <data_ele>I18</data_ele>
+        <name>Interchange Note Code</name>
+        <usage>R</usage>
+        <seq>05</seq>
+        <valid_codes>
+          <code>000</code>
+          <code>001</code>
+          <code>002</code>
+          <code>003</code>
+          <code>004</code>
+          <code>005</code>
+          <code>006</code>
+          <code>007</code>
+          <code>008</code>
+          <code>009</code>
+          <code>010</code>
+          <code>011</code>
+          <code>012</code>
+          <code>013</code>
+          <code>014</code>
+          <code>015</code>
+          <code>016</code>
+          <code>017</code>
+          <code>018</code>
+          <code>019</code>
+          <code>020</code>
+          <code>021</code>
+          <code>022</code>
+          <code>023</code>
+          <code>024</code>
+          <code>025</code>
+          <code>026</code>
+          <code>027</code>
+          <code>028</code>
+          <code>029</code>
+          <code>030</code>
+          <code>031</code>
+        </valid_codes>
+      </element>
+    </segment>
+    <!--End of TA1 segment-->
+    <segment xid="IEA">
+      <name>Interchange Control Trailer</name>
+      <usage>R</usage>
+      <pos>0300</pos>
+      <max_use>1</max_use>
+      <element xid="IEA01">
+        <data_ele>I16</data_ele>
+        <name>Number of Included Functional Groups</name>
+        <usage>R</usage>
+        <seq>01</seq>
+      </element>
+      <element xid="IEA02">
+        <data_ele>I12</data_ele>
+        <name>Interchange Control Number</name>
+        <usage>R</usage>
+        <seq>02</seq>
+      </element>
+    </segment>
+    <!--End of IEA segment-->
+  </loop>
+  <!--End of ISA loop-->
+</transaction>

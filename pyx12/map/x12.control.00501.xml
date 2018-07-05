@@ -59,7 +59,7 @@
       </element>
       <element xid="ISA05">
         <data_ele>I05</data_ele>
-        <name>Interchange ID Qualifier</name>
+        <name>Interchange Sender ID Qualifier</name>
         <usage>R</usage>
         <seq>05</seq>
         <valid_codes>
@@ -82,7 +82,7 @@
       </element>
       <element xid="ISA07">
         <data_ele>I05</data_ele>
-        <name>Interchange ID Qualifier</name>
+        <name>Interchange Receiver ID Qualifier</name>
         <usage>R</usage>
         <seq>07</seq>
         <valid_codes>
@@ -207,13 +207,13 @@
         </element>
         <element xid="GS04">
           <data_ele>373</data_ele>
-          <name>Date</name>
+          <name>Functional Group Date</name>
           <usage>R</usage>
           <seq>04</seq>
         </element>
         <element xid="GS05">
           <data_ele>337</data_ele>
-          <name>Time</name>
+          <name>Functional Group Time</name>
           <usage>R</usage>
           <seq>05</seq>
         </element>
@@ -239,6 +239,7 @@
           <seq>08</seq>
           <valid_codes>
             <code>005010</code>
+            <code>005010X214</code>
             <code>005010X218</code>
             <code>005010X279</code>
             <code>005010X220A1</code>

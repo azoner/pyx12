@@ -10,7 +10,7 @@ document or can translate to and from an XML representation of the data file."""
 
 setup(
     name="pyx12",
-    version="2.2.1",
+    version="2.3.3",
     long_description=long_description,
     license='BSD',
     description="HIPAA X12 validator, parser and converter",
@@ -43,6 +43,11 @@ setup(
         'Intended Audience :: Developers',
         'License :: OSI Approved :: BSD License',
         'Programming Language :: Python',
+        'Programming Language :: Python :: 2',
+        'Programming Language :: Python :: 2.7',
+        'Programming Language :: Python :: 3',
+        'Programming Language :: Python :: 3.4',
+        'Programming Language :: Python :: 3.5',
         'Topic :: Office/Business',
         'Topic :: Software Development :: Libraries :: Python Modules',
     ]

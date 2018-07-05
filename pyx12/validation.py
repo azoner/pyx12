@@ -1,5 +1,5 @@
 ######################################################################
-# Copyright 
+# Copyright
 #   John Holland <john@zoner.org>
 # All rights reserved.
 #
@@ -14,8 +14,14 @@ X12 data element validation
 import re
 
 # Intrapackage imports
-from errors import IsValidError, EngineError
+from .errors import IsValidError, EngineError
 
+try:
+    # Python 3.x
+    REGEX_MODE = re.S | re.ASCII
+except AttributeError:
+    # Python 2.x
+    REGEX_MODE = re.S
 
 def IsValidDataType(str_val, data_type, charset='B', icvn='00401'):
     """
@@ -65,15 +71,15 @@ def IsValidDataType(str_val, data_type, charset='B', icvn='00401'):
         return False
     return True
 
-rec_N = re.compile("^-?[0-9]+", re.S)
-rec_R = re.compile("^-?[0-9]*(\.[0-9]+)?", re.S)
+rec_N = re.compile("^-?[0-9]+", REGEX_MODE)
+rec_R = re.compile("^-?[0-9]*(\.[0-9]+)?", REGEX_MODE)
 rec_ID_E = re.compile(
-    "[^A-Z0-9!\"&'()*+,\-\./:;?=\sa-z%~@\[\]_{}\\\|<>#$\s]", re.S)
+    "[^A-Z0-9!\"&'()*+,\-\./:;?=\sa-z%~@\[\]_{}\\\|<>#$\s]", REGEX_MODE)
 rec_ID_E5 = re.compile(
-    "[^A-Z0-9!\"&'()*+,\-\./:;?=\sa-z%~@\[\]_{}\\\|<>^`#$\s]", re.S)
-rec_ID_B = re.compile("[^A-Z0-9!\"&'()*+,\-\./:;?=\s]", re.S)
-rec_DT = re.compile("[^0-9]+", re.S)
-rec_TM = re.compile("[^0-9]+", re.S)
+    "[^A-Z0-9!\"&'()*+,\-\./:;?=\sa-z%~@\[\]_{}\\\|<>^`#$\s]", REGEX_MODE)
+rec_ID_B = re.compile("[^A-Z0-9!\"&'()*+,\-\./:;?=\s]", REGEX_MODE)
+rec_DT = re.compile("[^0-9]+", REGEX_MODE)
+rec_TM = re.compile("[^0-9]+", REGEX_MODE)
 
 
 def match_re(short_data_type, val):
@@ -149,7 +155,8 @@ def is_valid_date(data_type, val):
         if len(val) in (6, 8, 12):  # valid lengths for date
             try:
                 if 6 == len(val):  # if 2 digit year, add CC
-                    val = '20' + val if val[0:2] < 50 else '19' + val
+                    val = '20' + val if int(val[0:2]) < 50 else '19' + val
+                # print("IXVALID:", data_type, val, int(val[0:4]), int(val[4:6]))
                 year = int(val[0:4])  # get year
                 month = int(val[4:6])
                 day = int(val[6:8])
@@ -190,7 +197,9 @@ def is_valid_time(val):
     @type val: string
     """
     try:
-        not_match_re('TM', val)
+        if not_match_re('TM', val):
+            raise IsValidError
+
         if val[0:2] > '23' or val[2:4] > '59':  # check hour, minute segment
             raise IsValidError
         elif len(val) > 4:  # time contains seconds
@@ -202,7 +211,7 @@ def is_valid_time(val):
             elif len(val) > 8:
                 # print 'unhandled decimal seconds encountered'
                 raise IsValidError
-    except IsValidError:
+    except (IsValidError, ValueError):
         return False
     return True
 
