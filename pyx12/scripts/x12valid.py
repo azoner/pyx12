@@ -41,7 +41,7 @@ __date__ = pyx12.__date__
 
 def check_map_path_arg(map_path):
     if not isdir(map_path):
-        raise argparse.ArgumentError(None, "The MAP_PATH '{}' is not a valid directory".format(map_path))
+        raise argparse.ArgumentError(None, "The MAP_PATH '{}' is not a valid directory.  Current directory is {}".format(map_path, os.getcwd()))
     index_file = 'maps.xml'
     if not isfile(os.path.join(map_path, index_file)):
         raise argparse.ArgumentError(None,

@@ -4811,7 +4811,7 @@
               <loop xid="2700">
                 <name>Member Reporting Categories</name>
                 <usage>S</usage>
-                <pos>6801</pos>
+                <pos>6881</pos>
                 <repeat>&gt;1</repeat>
                 <segment xid="LX">
                   <name>Member Reporting Categories</name>
@@ -4829,7 +4829,7 @@
                 <loop xid="2750">
                   <name>Reporting Category</name>
                   <usage>S</usage>
-                  <pos>6802</pos>
+                  <pos>6882</pos>
                   <repeat>1</repeat>
                   <segment xid="N1">
                     <name>Reporting Category</name>
@@ -4973,10 +4973,10 @@
                     <name>Loop Identifier Code</name>
                     <usage>R</usage>
                     <seq>01</seq>
-                 <valid_codes>
+                      <valid_codes>
                         <code>2700</code>
                       </valid_codes>
-                     </element>
+                   </element>
                 </segment>
                 <!--End of LE segment-->                
               </loop>
