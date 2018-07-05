@@ -2050,17 +2050,21 @@
           <!--End of 2320 loop-->
         </loop>
         <!--End of 2300 loop-->
-        <loop xid="2700" pos="6800" usage="R" repeat="&gt;1" name="Additional Reporting Categories">
+        <loop xid="2700_LS" pos="6879" usage="S" repeat="1" name="Additional Reporting Categories">
           <segment xid="LS" usage="R" pos="6880" max_use="1" name="Additional Reporting Categories">
-            <element xid="LS01" data_ele="447" usage="R" seq="01" name="Loop Identifier Code" />
-          </segment>
+            <element xid="LS01" data_ele="447" usage="R" seq="01" name="Loop Identifier Code" >
+          <valid_codes>
+                    <code>2700</code>
+                  </valid_codes>
+                </element>
+                </segment>
           <!--End of segment LS-->
-          <loop xid="2710" pos="6801" usage="R" repeat="&gt;1" name="Member Reporting Categories">
+          <loop xid="2700" pos="6881" usage="R" repeat="&gt;1" name="Member Reporting Categories">
             <segment xid="LX" usage="R" pos="6881" max_use="1" name="Member Reporting Categories">
               <element xid="LX01" data_ele="554" usage="R" seq="01" name="Assigned Number" />
             </segment>
             <!--End of segment LX-->
-            <loop xid="2750" pos="6802" usage="R" repeat="1" name="Reporting Category">
+            <loop xid="2750" pos="6882" usage="R" repeat="1" name="Reporting Category">
               <segment xid="N1" usage="R" pos="6882" max_use="1" name="Reporting Category">
                 <syntax>R0203</syntax>
                 <syntax>P0304</syntax>
@@ -2125,9 +2129,9 @@
             </segment>
             <!--End of segment LE-->
           </loop>
-          <!--End of 2710 loop-->
+          <!--End of 2700 loop-->
         </loop>
-        <!--End of 2700 loop-->
+        <!--End of 2700_LS loop-->
       </loop>
       <!--End of 2000 loop-->
     </loop>
