@@ -29,6 +29,7 @@
     <Content Include="pyx12\map\277.5010.X214.xml" />
     <Content Include="pyx12\map\999.5010X231.A1.xml" />
     <Content Include="pyx12\map\loop_only.xsl" />
+    <Content Include="pyx12\tests\834_ls_le_ls.txt" />
     <Content Include="pyx12\test\files\834_eol_in_element.txt" />
     <Content Include="pyx12\test\files\834_lui_id.txt" />
     <Content Include="pyx12\test\files\834_lui_id_5010.txt" />
