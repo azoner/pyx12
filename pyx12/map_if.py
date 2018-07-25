@@ -10,6 +10,7 @@
 """
 Interface to a X12N IG Map
 """
+from __future__ import unicode_literals
 import logging
 import os.path
 import sys

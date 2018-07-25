@@ -12,6 +12,7 @@
 Interface to normalized Data Elements
 """
 
+from __future__ import unicode_literals
 import os.path
 import logging
 import xml.etree.cElementTree as et

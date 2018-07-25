@@ -12,6 +12,7 @@
 """
 
 
+from __future__ import unicode_literals
 class XML_Reader_Error(Exception):
     """Class for XML Reader errors."""
 

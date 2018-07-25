@@ -26,6 +26,7 @@ SEG[434]02-1
 
 """
 
+from __future__ import unicode_literals
 import re
 
 from pyx12.errors import X12PathError

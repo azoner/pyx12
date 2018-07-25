@@ -16,6 +16,7 @@ Locate the correct xml map file given:
     - Transaction Set Purpose Code (BHT02) (For 278 only)
 """
 
+from __future__ import unicode_literals
 import os.path
 import logging
 from pkg_resources import resource_stream

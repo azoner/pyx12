@@ -11,6 +11,7 @@
 """
 X12 data element validation
 """
+from __future__ import unicode_literals
 import re
 
 # Intrapackage imports

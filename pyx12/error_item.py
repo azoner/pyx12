@@ -11,6 +11,7 @@
 """
 """
 
+from __future__ import unicode_literals
 from .errors import EngineError
 
 isa_errors = ('000', '001', '002', '003', '004', '005', '006', '007', '008',

@@ -12,6 +12,7 @@
 Interface to X12 Errors
 """
 
+from __future__ import unicode_literals
 import logging
 
 # Intrapackage imports

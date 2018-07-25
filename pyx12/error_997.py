@@ -14,6 +14,7 @@ Visitor - Visits an error_handler composite
 """
 
 #from types import *
+from __future__ import unicode_literals
 import time
 import logging
 

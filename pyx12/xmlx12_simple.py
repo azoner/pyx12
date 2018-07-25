@@ -12,6 +12,7 @@
 Create an X12 document from a XML data file in the simple form
 """
 
+from __future__ import unicode_literals
 import xml.etree.cElementTree as et
 import logging
 

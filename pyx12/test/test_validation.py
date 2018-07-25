@@ -1,3 +1,4 @@
+from __future__ import unicode_literals
 import unittest
 
 from pyx12.validation import IsValidDataType

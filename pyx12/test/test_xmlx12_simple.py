@@ -1,3 +1,4 @@
+from __future__ import unicode_literals
 import unittest
 try:
     from StringIO import StringIO

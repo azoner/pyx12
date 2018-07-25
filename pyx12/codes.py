@@ -12,6 +12,7 @@
 External Codes interface
 """
 
+from __future__ import unicode_literals
 import os.path
 import logging
 from pkg_resources import resource_stream

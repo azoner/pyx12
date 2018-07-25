@@ -15,6 +15,7 @@ X12 syntax validation functions
 """
 
 
+from __future__ import unicode_literals
 def is_syntax_valid(seg_data, syn):
     """
     Verifies the segment against the syntax

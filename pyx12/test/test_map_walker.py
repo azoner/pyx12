@@ -1,4 +1,5 @@
 #from os.path import dirname, abspath, join, isdir, isfile
+from __future__ import unicode_literals
 import unittest
 
 import pyx12.error_handler
