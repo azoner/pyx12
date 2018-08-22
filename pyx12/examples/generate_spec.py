@@ -27,7 +27,7 @@ def check_map_path_arg(map_path):
 
 def save_csv(rows, csv_file):
     import csv
-    fields = ['Ordinal', 'Id', 'NodeType', 'Name', 'FormattedName', 'Count', 'Section', 'RelativePath', 'FullPath', 'ParentPath', 'ParentName', 'LoopMaxUse', 
+    fields = ['Ordinal', 'Id', 'NodeType', 'Name', 'FormattedName', 'Count', 'Section', 'RelativePath', 'FullPath', 'ParentPath', 'ParentName', 'LoopMaxUse',
               'Usage', 'DataType', 'MinLength', 'MaxLength']
     with open(csv_file, 'wb') as outfile:
         writer = csv.DictWriter(outfile, fieldnames=fields, delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL)
@@ -39,22 +39,22 @@ def save_csv(rows, csv_file):
 def save_mapping(rows, json_file):
     sections = sorted(list(set([x['Section'] for x in rows])))
     maps = {}
-    with file(json_file, 'w') as fd:
+    with open(json_file, 'w') as fd:
         fd.write('{')
         for s in sections:
             fd.write('"{section}": ['.format(section=s))
             s = [
                 {
-                    'Id': x['Id'],  
+                    'Id': x['Id'],
                     'Ordinal': x['Ordinal'],
-                    'Type': x['DataType'] if 'DataType' in x else None, 
-                    'FieldName': x['FormattedName'],  
-                    'X12Path': x['RelativePath'], 
-                    'FullPath': x['FullPath'],  
-                    'ParentPath': x['ParentPath'],  
-                    'ParentName': x['ParentName'],  
-                    'Usage': x['Usage'],  
-                    'MaxLength': x['MaxLength'],  
+                    'Type': x['DataType'] if 'DataType' in x else None,
+                    'FieldName': x['FormattedName'],
+                    'X12Path': x['RelativePath'],
+                    'FullPath': x['FullPath'],
+                    'ParentPath': x['ParentPath'],
+                    'ParentName': x['ParentName'],
+                    'Usage': x['Usage'],
+                    'MaxLength': x['MaxLength'],
             } for x in rows if x['Section'] == s and x['NodeType'] == 'element']
             s.sort(key=lambda item: item['Ordinal'])
             for item in s:
@@ -120,7 +120,7 @@ def main():
     parser.add_argument(
         '--log-file', '-l', action='store', dest="logfile", default=None)
     parser.add_argument('--map-path', '-m', action='store', dest="map_path", default=None, type=check_map_path_arg)
-    parser.add_argument('--verbose', '-v', action='count')
+    parser.add_argument('--verbose', '-v', action='count', default=0)
     parser.add_argument('--debug', '-d', action='store_true')
     parser.add_argument('--quiet', '-q', action='store_true')
     parser.add_argument('--html', '-H', action='store_true')
@@ -155,7 +155,7 @@ def main():
 
     src_filename = args.input_files[0]
     json_file = os.path.join(os.path.dirname(os.path.abspath(src_filename)), 'node_list.json')
-    with file(json_file, 'r') as fd:
+    with open(json_file, 'r') as fd:
         res = json.load(fd)
     rows = make_dict(res)
 
