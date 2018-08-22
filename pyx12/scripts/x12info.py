@@ -32,7 +32,7 @@ def check_map_path_arg(map_path):
 def main():
     import argparse
     parser = argparse.ArgumentParser(description='X12 File Metatdata')
-    parser.add_argument('--verbose', '-v', action='count')
+    parser.add_argument('--verbose', '-v', action='count', default=0)
     parser.add_argument('--quiet', '-q', action='store_true')
     parser.add_argument('--debug', '-d', action='store_true')
     parser.add_argument('--eol', '-e', action='store_true', help="Add eol to each segment line")
@@ -82,7 +82,7 @@ def main():
                 json_file = os.path.join(args.outputdirectory , json_filename)
             else:
                 json_file = os.path.join(os.path.dirname(os.path.abspath(src_filename)), json_filename)
-            with file(json_file, 'w') as fd:
+            with open(json_file, 'w') as fd:
                 json.dump(res, fd, indent=4)
 
         except IOError:
