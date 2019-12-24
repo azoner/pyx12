@@ -18,6 +18,7 @@ treated as a composite element with one sub-element.
 All indexing is zero based.
 """
 from __future__ import absolute_import
+from __future__ import unicode_literals
 import re
 
 import pyx12.path

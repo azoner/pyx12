@@ -7,6 +7,7 @@
 # *  use PEP 8 style
 
 from __future__ import absolute_import
+from __future__ import unicode_literals
 import sys
 #import codecs
 

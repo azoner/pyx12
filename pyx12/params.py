@@ -17,6 +17,7 @@ Order of precedence:
  3. self.params - Defaults
 """
 from __future__ import absolute_import
+from __future__ import unicode_literals
 from os.path import dirname, abspath, join, isdir, isfile, expanduser
 import sys
 import xml.etree.cElementTree as et

@@ -13,6 +13,7 @@
 """
 X12 syntax validation functions
 """
+from __future__ import unicode_literals
 from __future__ import absolute_import
 from six.moves import range
 

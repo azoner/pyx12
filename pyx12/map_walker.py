@@ -16,6 +16,7 @@ If seg indicates a segment has been entered, returns the segment node.
 """
 
 from __future__ import absolute_import
+from __future__ import unicode_literals
 import logging
 
 # Intrapackage imports
