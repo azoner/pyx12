@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+from __future__ import absolute_import
 import sys
 import os
 import os.path
@@ -39,7 +40,7 @@ def save_csv(rows, csv_file):
 def save_mapping(rows, json_file):
     sections = sorted(list(set([x['Section'] for x in rows])))
     maps = {}
-    with file(json_file, 'w') as fd:
+    with open(json_file, 'w') as fd:
         fd.write('{')
         for s in sections:
             fd.write('"{section}": ['.format(section=s))
@@ -155,7 +156,7 @@ def main():
 
     src_filename = args.input_files[0]
     json_file = os.path.join(os.path.dirname(os.path.abspath(src_filename)), 'node_list.json')
-    with file(json_file, 'r') as fd:
+    with open(json_file, 'r') as fd:
         res = json.load(fd)
     rows = make_dict(res)
 

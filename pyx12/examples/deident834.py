@@ -1,4 +1,6 @@
 #! /usr/bin/env python
+from __future__ import absolute_import
+from __future__ import print_function
 import sys
 import getopt
 import os.path
@@ -90,7 +92,7 @@ def deidentify_file(fd_in):
                 scrub2000(datatree, deident)
             for seg1 in datatree.iterate_segments():
                 #wr.Write(seg1['segment'].format())
-                print(seg1['segment'].format())
+                print((seg1['segment'].format()))
 
 
 def scrub2000(loop_sub, deident):

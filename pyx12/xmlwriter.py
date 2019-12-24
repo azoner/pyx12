@@ -6,6 +6,7 @@
 # *  switch from deprecated string module to string methods
 # *  use PEP 8 style
 
+from __future__ import absolute_import
 import sys
 #import codecs
 

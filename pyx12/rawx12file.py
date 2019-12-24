@@ -14,6 +14,7 @@ Used by X12Reader.
 """
 
 # Intrapackage imports
+from __future__ import absolute_import
 import pyx12.errors
 import pyx12.segment
 

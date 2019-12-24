@@ -12,8 +12,10 @@
 Generates HTML error output
 """
 
+from __future__ import absolute_import
 import time
 import logging
+from six.moves import range
 
 # Intrapackage imports
 

@@ -18,6 +18,7 @@ Interface to an X12 data stream.
    837 HL tree
 """
 
+from __future__ import absolute_import
 import codecs
 import sys
 import logging

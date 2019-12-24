@@ -17,10 +17,12 @@ treated as a composite element with one sub-element.
 
 All indexing is zero based.
 """
+from __future__ import absolute_import
 import re
 
 import pyx12.path
 from pyx12.errors import EngineError
+from six.moves import range
 
 rec_seg_id = re.compile('^[A-Z][A-Z0-9]{1,2}$', re.S)
 

@@ -12,6 +12,7 @@
 Create a XML rendering of the X12 document
 """
 
+from __future__ import absolute_import
 from os.path import commonprefix
 import logging
 
@@ -19,6 +20,7 @@ import logging
 from .errors import EngineError
 from .x12xml import x12xml
 from .map_walker import pop_to_parent_loop
+from six.moves import range
 
 logger = logging.getLogger('pyx12.x12xml.simple')
 

@@ -12,6 +12,7 @@
 Capture X12 Errors
 """
 
+from __future__ import absolute_import
 import logging
 import tempfile
 import os

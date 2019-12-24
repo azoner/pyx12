@@ -1,4 +1,6 @@
 #!/usr/bin/env python
+from __future__ import absolute_import
+from __future__ import print_function
 import sys
 import os
 import os.path
@@ -56,7 +58,7 @@ def x12n_iterator(param, src_file, map_path=None):
             print('--------------------------------------------')
             # reset to control map for ISA and GS loops
             print('------- counters before --------')
-            print(walker.counter._dict)
+            print((walker.counter._dict))
         if seg.get_seg_id() == 'ISA':
             node = control_map.getnodebypath('/ISA_LOOP/ISA')
             walker.forceWalkCounterToLoopStart('/ISA_LOOP', '/ISA_LOOP/ISA')
@@ -74,7 +76,7 @@ def x12n_iterator(param, src_file, map_path=None):
 
         if False:
             print('------- counters after --------')
-            print(walker.counter._dict)
+            print((walker.counter._dict))
         if node is None:
             node = orig_node
         else:
@@ -246,7 +248,7 @@ def main():
                 continue
             res = x12n_iterator(param=param, src_file=src_filename, map_path=args.map_path)
             json_file = os.path.join(os.path.dirname(os.path.abspath(src_filename)), 'node_list.json')
-            with file(json_file, 'w') as fd:
+            with open(json_file, 'w') as fd:
                 json.dump(res, fd, indent=4)
 
         except IOError:

@@ -13,6 +13,7 @@ Generates a 999 Response
 Visitor - Visits an error_handler composite
 """
 
+from __future__ import absolute_import
 import time
 import logging
 import random

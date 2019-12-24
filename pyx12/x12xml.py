@@ -12,12 +12,14 @@
 Create an XML rendering of the X12 document
 """
 
+from __future__ import absolute_import
 import os.path
 
 # Intrapackage imports
 from .errors import EngineError
 from .xmlwriter import XMLWriter
 from .map_walker import pop_to_parent_loop
+from six.moves import range
 
 
 class x12xml(object):

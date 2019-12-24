@@ -1,4 +1,6 @@
 #! /usr/bin/env python
+from __future__ import absolute_import
+from __future__ import print_function
 import sys
 from itertools import groupby
 import tempfile
@@ -72,7 +74,7 @@ def save_many(src_filename, targetformat=None):
         with open(newname, 'w') as fd_out:
             fd_temp.seek(0)
             fd_out.write(fd_temp.read())
-            print(newname, isa_id, gs_id, st_id)
+            print((newname, isa_id, gs_id, st_id))
 
 
 def update_isa_id(seg_data, isa_id):

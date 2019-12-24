@@ -10,6 +10,7 @@
 """
 Interface to a X12N IG Map
 """
+from __future__ import absolute_import
 import logging
 import os.path
 import sys
@@ -24,6 +25,7 @@ from . import dataele
 from . import path
 from . import validation
 from .syntax import is_syntax_valid
+from six.moves import range
 
 MAXINT = 2147483647
 

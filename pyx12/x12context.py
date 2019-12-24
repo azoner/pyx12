@@ -23,6 +23,7 @@ Interface to read and alter segments
 #import os.path
 
 # Intrapackage imports
+from __future__ import absolute_import
 import pyx12
 from . import error_handler
 from . import errors
@@ -31,6 +32,7 @@ from . import map_if
 from . import x12file
 from . import path
 from .map_walker import walk_tree, pop_to_parent_loop  # get_pop_loops, get_push_loops
+from six.moves import range
 
 
 class X12DataNode(object):

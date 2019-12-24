@@ -11,6 +11,7 @@
 """
 X12 data element validation
 """
+from __future__ import absolute_import
 import re
 
 # Intrapackage imports
@@ -209,7 +210,7 @@ def is_valid_time(val):
                 raise IsValidError
             # check decimal seconds here in the future
             elif len(val) > 8:
-                # print 'unhandled decimal seconds encountered'
+                # print('unhandled decimal seconds encountered')
                 raise IsValidError
     except (IsValidError, ValueError):
         return False

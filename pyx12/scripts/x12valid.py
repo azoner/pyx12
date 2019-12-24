@@ -15,6 +15,8 @@ Parse a ANSI X12N data file.
 Validate against a map and codeset values.
 """
 
+from __future__ import absolute_import
+from __future__ import print_function
 import os
 import os.path
 from os.path import abspath, join, dirname, isdir, isfile

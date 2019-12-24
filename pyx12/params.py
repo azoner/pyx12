@@ -16,6 +16,7 @@ Order of precedence:
  2. Config files as constructor parameters
  3. self.params - Defaults
 """
+from __future__ import absolute_import
 from os.path import dirname, abspath, join, isdir, isfile, expanduser
 import sys
 import xml.etree.cElementTree as et

@@ -14,6 +14,8 @@
 Create an X12 document from a XML data file
 """
 
+from __future__ import absolute_import
+from __future__ import print_function
 import os
 import os.path
 import sys

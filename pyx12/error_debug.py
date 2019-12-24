@@ -14,6 +14,7 @@ Visitor - Visits an error_handler composite
 """
 
 # Intrapackage imports
+from __future__ import print_function
 from .error_visitor import error_visitor
 
 

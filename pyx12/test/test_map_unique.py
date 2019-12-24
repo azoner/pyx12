@@ -1,5 +1,6 @@
 #    $Id: map_walker.py 1484 2011-10-22 02:06:12Z johnholland $
 
+from __future__ import absolute_import
 import unittest
 
 import pyx12.error_handler

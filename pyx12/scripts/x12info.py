@@ -1,4 +1,6 @@
 #!/usr/bin/env python
+from __future__ import absolute_import
+from __future__ import print_function
 import sys
 import os
 import os.path
@@ -82,7 +84,7 @@ def main():
                 json_file = os.path.join(args.outputdirectory , json_filename)
             else:
                 json_file = os.path.join(os.path.dirname(os.path.abspath(src_filename)), json_filename)
-            with file(json_file, 'w') as fd:
+            with open(json_file, 'w') as fd:
                 json.dump(res, fd, indent=4)
 
         except IOError:
