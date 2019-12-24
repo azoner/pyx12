@@ -146,7 +146,7 @@ def x12n_iterator(param, src_file, map_path=None):
                 'prefix_nodes': [last_x12_segment_path]
             }
             res_ordinal += 1
-            
+
         for (refdes, ele_ord, comp_ord, val) in seg.values_iterator():
             elepath = node.parent.get_path() + '/' + refdes
             if elepath in res:
@@ -205,7 +205,7 @@ def main():
     parser.add_argument(
         '--log-file', '-l', action='store', dest="logfile", default=None)
     parser.add_argument('--map-path', '-m', action='store', dest="map_path", default=None, type=check_map_path_arg)
-    parser.add_argument('--verbose', '-v', action='count')
+    parser.add_argument('--verbose', '-v', action='count', default=0)
     parser.add_argument('--debug', '-d', action='store_true')
     parser.add_argument('--quiet', '-q', action='store_true')
     parser.add_argument('--html', '-H', action='store_true')

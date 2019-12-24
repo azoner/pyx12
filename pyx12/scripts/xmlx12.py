@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 ######################################################################
-# Copyright 
+# Copyright
 #   John Holland <john@zoner.org>
 # All rights reserved.
 #
@@ -41,7 +41,7 @@ def main():
     import argparse
     parser = argparse.ArgumentParser(description='XML to X12 conversion')
     parser.add_argument('--log-file', '-l', action='store', dest="logfile", default=None)
-    parser.add_argument('--verbose', '-v', action='count')
+    parser.add_argument('--verbose', '-v', action='count', default=0)
     parser.add_argument('--debug', '-d', action='store_true')
     parser.add_argument('--quiet', '-q', action='store_true')
     parser.add_argument('--outputfile', '-o', action='store', help="X12 target filename")
