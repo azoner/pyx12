@@ -1,5 +1,5 @@
 ######################################################################
-# Copyright (c) 2001-2011
+# Copyright (c) 2001-2019
 #   John Holland <john@zoner.org>
 # All rights reserved.
 #

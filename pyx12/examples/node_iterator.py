@@ -6,7 +6,6 @@ import os
 import os.path
 import logging
 import argparse
-import pprint
 import json
 
 libpath = os.path.abspath(os.path.join(os.path.dirname(__file__), '../..'))

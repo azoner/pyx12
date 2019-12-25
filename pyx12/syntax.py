@@ -29,8 +29,7 @@ def is_syntax_valid(seg_data, syn):
     """
     # handle intra-segment dependancies
     if len(syn) < 3:
-        err_str = 'Syntax string must have at least two comparators (%s)' \
-            % (syntax_str(syn))
+        err_str = 'Syntax string must have at least two comparators {}'.format(syntax_str(syn))
         return (False, err_str)
 
     syn_code = syn[0]
@@ -39,29 +38,32 @@ def is_syntax_valid(seg_data, syn):
     if syn_code == 'P':
         count = 0
         for s in syn_idx:
-            if len(seg_data) >= s and seg_data.get_value('%02i' % (s)) != '':
+            _val = seg_data.get_value('{:02d}'.format(s))
+            if len(seg_data) >= s and _val != '':
                 count += 1
         if count != 0 and count != len(syn_idx):
-            err_str = 'Syntax Error (%s): If any of %s is present, then all are required'\
-                % (syntax_str(syn), syntax_ele_id_str(seg_data.get_seg_id(), syn_idx))
+            err_str = 'Syntax Error ({}): If any of {} is present, then all are required'.format( \
+                syntax_str(syn), syntax_ele_id_str(seg_data.get_seg_id(), syn_idx))
             return (False, err_str)
         else:
             return (True, None)
     elif syn_code == 'R':
         count = 0
         for s in syn_idx:
-            if len(seg_data) >= s and seg_data.get_value('%02i' % (s)) != '':
+            _val = seg_data.get_value('{:02d}'.format(s))
+            if len(seg_data) >= s and _val != '':
                 count += 1
         if count == 0:
-            err_str = 'Syntax Error (%s): At least one element is required' % \
-                (syntax_str(syn))
+            err_str = 'Syntax Error ({}): At least one element is required'.format( \
+                syntax_str(syn))
             return (False, err_str)
         else:
             return (True, None)
     elif syn_code == 'E':
         count = 0
         for s in syn_idx:
-            if len(seg_data) >= s and seg_data.get_value('%02i' % (s)) != '':
+            _val = seg_data.get_value('{:02d}'.format(s))
+            if len(seg_data) >= s and _val != '':
                 count += 1
         if count > 1:
             err_str = 'Syntax Error (%s): At most one of %s may be present'\
@@ -74,7 +76,8 @@ def is_syntax_valid(seg_data, syn):
         if len(seg_data) >= syn_idx[0] and seg_data.get_value('%02i' % (syn_idx[0])) != '':
             count = 0
             for s in syn_idx[1:]:
-                if len(seg_data) >= s and seg_data.get_value('%02i' % (s)) != '':
+                _val = seg_data.get_value('{:02d}'.format(s))
+                if len(seg_data) >= s and _val != '':
                     count += 1
             if count != len(syn_idx) - 1:
                 if len(syn_idx[1:]) > 1: verb = 'are'
@@ -92,7 +95,8 @@ def is_syntax_valid(seg_data, syn):
         if len(seg_data) > syn_idx[0] - 1 and seg_data.get_value('%02i' % (syn_idx[0])) != '':
             count = 0
             for s in syn_idx[1:]:
-                if len(seg_data) >= s and seg_data.get_value('%02i' % (s)) != '':
+                _val = seg_data.get_value('{:02d}'.format(s))
+                if len(seg_data) >= s and _val != '':
                     count += 1
             if count == 0:
                 err_str = 'Syntax Error (%s): If %s%02i is present, then at least one of '\
@@ -115,7 +119,7 @@ def syntax_str(syntax):
     """
     output = syntax[0]
     for i in syntax[1:]:
-        output += '%02i' % (i)
+        output += '{:02d}'.format(i)
     return output
 
 
@@ -123,11 +127,11 @@ def syntax_ele_id_str(seg_id, ele_pos_list):
     """
     @rtype: string
     """
-    output = ''
-    output += '%s%02i' % (seg_id, ele_pos_list[0])
+    output = '' 
+    output += '{seg_id}{ele_pos:02d}'.format(seg_id=seg_id, ele_pos=ele_pos_list[0])
     for i in range(len(ele_pos_list) - 1):
         if i == len(ele_pos_list) - 2:
-            output += ' or %s%02i' % (seg_id, ele_pos_list[i + 1])
+            output += ' or {seg_id}{ele_pos:02d}'.format(seg_id=seg_id, ele_pos=ele_pos_list[i + 1])
         else:
-            output += ', %s%02i' % (seg_id, ele_pos_list[i + 1])
+            output += ', {seg_id}{ele_pos:02d}'.format(seg_id=seg_id, ele_pos=ele_pos_list[i + 1])
     return output

@@ -18,6 +18,7 @@ import sys
 import re
 import xml.etree.cElementTree as et
 from pkg_resources import resource_stream
+from six.moves import range
 
 # Intrapackage imports
 from .errors import EngineError
@@ -26,7 +27,6 @@ from . import dataele
 from . import path
 from . import validation
 from .syntax import is_syntax_valid
-from six.moves import range
 
 MAXINT = 2147483647
 
@@ -104,13 +104,13 @@ class x12_node(object):
         else:
             return self.children[idx]
 
-    def get_child_node_by_ordinal(self, ord):
+    def get_child_node_by_ordinal(self, ordinal):
         """
         Get a child element or composite by the X12 ordinal
         @param ord: one based element/composite index.  Corresponds to the map <seq> element
         @type ord: int
         """
-        return self.get_child_node_by_idx(ord - 1)
+        return self.get_child_node_by_idx(ordinal - 1)
 
     def get_path(self):
         """

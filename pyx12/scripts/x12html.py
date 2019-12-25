@@ -23,7 +23,6 @@ import os
 import os.path
 import sys
 import logging
-#from types import *
 
 # Intrapackage imports
 libpath = os.path.abspath(os.path.join(os.path.dirname(__file__), '../..'))

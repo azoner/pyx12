@@ -17,8 +17,8 @@ from __future__ import print_function
 from __future__ import unicode_literals
 import os.path
 import logging
-from pkg_resources import resource_stream
 import xml.etree.cElementTree as et
+from pkg_resources import resource_stream
 
 # Intrapackage imports
 from pyx12.errors import EngineError

@@ -34,10 +34,11 @@ from . import x12file
 from . import path
 from .map_walker import walk_tree, pop_to_parent_loop  # get_pop_loops, get_push_loops
 from six.moves import range
+import six
 
 
 try:  # Python 2.x
-    string_types = (str, unicode)
+    string_types = (str, six.text_type)
 except NameError:
     # Python 3.x
     string_types = (str, )
