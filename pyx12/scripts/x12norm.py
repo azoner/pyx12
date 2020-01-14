@@ -52,7 +52,7 @@ def main():
         if not os.path.isfile(file_in):
             logger.error('Could not open file "%s"' % (file_in))
 
-        fd_out = tempfile.TemporaryFile()
+        fd_out = tempfile.TemporaryFile(mode='w')
         src = pyx12.x12file.X12Reader(file_in)
         for seg_data in src:
             if args.fixcounting:
