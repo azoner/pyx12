@@ -22,10 +22,10 @@ class TestWriter(unittest.TestCase):
     def test_write1(self):
         try:
             fd = StringIO(encoding='ascii')
-            print('CASE 1:')
+            #print('CASE 1:')
         except:
             fd = StringIO()
-            print('CASE 2:')
+            #print('CASE 2:')
         writer = XMLWriter(fd)
         writer.push("x12err")
 

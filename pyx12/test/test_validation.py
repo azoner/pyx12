@@ -257,3 +257,23 @@ class Extended5010String(unittest.TestCase):
     def testInvalid(self):
         self.assertFalse(
             IsValidDataType('%s' % (chr(0x1D)), 'AN', 'E', '00501'))
+
+class BadWhitespace(unittest.TestCase):
+    def testValid(self):
+        self.assertTrue(IsValidDataType(' ', 'AN', 'E', '00501'))
+        self.assertTrue(IsValidDataType('  ', 'AN', 'E', '00501'))
+        self.assertTrue(IsValidDataType(' ', 'AN', 'B', '00501'))
+        self.assertTrue(IsValidDataType('  ', 'AN', 'B', '00501'))
+        self.assertTrue(IsValidDataType(' ', 'AN', 'B'))
+        self.assertTrue(IsValidDataType('  ', 'AN', 'B'))
+        self.assertTrue(IsValidDataType('%s' % (chr(0x68)), 'AN', 'E', '00501'))
+
+    def testInvalid(self):
+        self.assertFalse(IsValidDataType(chr(0x09), 'AN', 'E', '00501'))
+        self.assertFalse(IsValidDataType(chr(0x11), 'AN', 'E', '00501'))
+        self.assertFalse(IsValidDataType('\t', 'AN', 'E', '00501'))
+        self.assertFalse(IsValidDataType('\n', 'AN', 'E', '00501'))
+        self.assertFalse(IsValidDataType('\r', 'AN', 'E', '00501'))
+        self.assertFalse(IsValidDataType('\b', 'AN', 'E', '00501'))
+        self.assertFalse(IsValidDataType(chr(0x0A), 'AN', 'E', '00501'))
+        self.assertFalse(IsValidDataType(chr(0x0D), 'AN', 'E', '00501'))
