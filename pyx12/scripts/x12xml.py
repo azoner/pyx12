@@ -82,8 +82,9 @@ def main():
     if args.debug:
         logger.setLevel(logging.DEBUG)
         param.set('debug', True)
-    if args.verbose > 0:
-        logger.setLevel(logging.DEBUG)
+    if args.verbose is not None and type(args.verbose).__name__ == 'int':
+        if args.verbose > 0:
+            logger.setLevel(logging.DEBUG)
     if args.quiet:
         logger.setLevel(logging.ERROR)
 
