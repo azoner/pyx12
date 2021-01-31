@@ -26,6 +26,7 @@ import pyx12.map_if
 import pyx12.x12file
 from pyx12.map_walker import walk_tree
 import pyx12.x12xml_simple
+import pyx12.x12json_simple
 
 
 def _reset_counter_to_isa_counts(walker):
@@ -47,7 +48,7 @@ def _reset_counter_to_gs_counts(walker):
 
 
 def x12n_document(param, src_file, fd_997, fd_html,
-                  fd_xmldoc=None, xslt_files=None, map_path=None,
+                  fd_xmldoc=None, fd_jsondoc=None, xslt_files=None, map_path=None,
                   callback=None):
     """
     Primary X12 validation function
@@ -89,12 +90,15 @@ def x12n_document(param, src_file, fd_997, fd_html,
         err_iter = pyx12.error_handler.err_iter(errh)
     if fd_xmldoc:
         xmldoc = pyx12.x12xml_simple.x12xml_simple(fd_xmldoc, param.get('simple_dtd'))
+    if fd_jsondoc:
+        fd_jsondoc = pyx12.x12json_simple.X12JsonSimple(fd_jsondoc)
 
     #basedir = os.path.dirname(src_file)
     #erx = errh_xml.err_handler(basedir=basedir)
 
     valid = True
     for seg in src:
+        # import pdb;pdb.set_trace()
         #find node
         orig_node = node
 
@@ -216,11 +220,15 @@ def x12n_document(param, src_file, fd_997, fd_html,
 
         if fd_xmldoc:
             xmldoc.seg(node, seg)
+        
+        if fd_jsondoc:
+            # if seg == src[-1]
+            fd_jsondoc.seg(node, seg)
 
         if False:
             print('\n\n')
         #erx.Write(src.cur_line)
-
+    
     #erx.handleErrors(src.pop_errors())
     src.cleanup()  # Catch any skipped loop trailers
     errh.handle_errors(src.pop_errors())
@@ -232,7 +240,12 @@ def x12n_document(param, src_file, fd_997, fd_html,
         del html
 
     if fd_xmldoc:
+        # fd_xmldoc.writer._write("tlyer")
         del xmldoc
+    
+    if fd_jsondoc:
+        # fd_jsondoc.writer._write("tlyer")
+        del fd_jsondoc
 
     #visit_debug = pyx12.error_debug.error_debug_visitor(sys.stdout)
     #errh.accept(visit_debug)
