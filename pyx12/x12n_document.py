@@ -61,6 +61,8 @@ def x12n_document(param, src_file, fd_997, fd_html,
     @type fd_html: file descriptor
     @param fd_xmldoc: XML output document
     @type fd_xmldoc: file descriptor
+    @param fd_jsondoc: JSON output document (outputs to single line)
+    @type fd_jsondoc: file descriptor
     @rtype: boolean
     """
     logger = logging.getLogger('pyx12')
@@ -222,7 +224,6 @@ def x12n_document(param, src_file, fd_997, fd_html,
             xmldoc.seg(node, seg)
         
         if fd_jsondoc:
-            # if seg == src[-1]
             fd_jsondoc.seg(node, seg)
 
         if False:
@@ -240,11 +241,9 @@ def x12n_document(param, src_file, fd_997, fd_html,
         del html
 
     if fd_xmldoc:
-        # fd_xmldoc.writer._write("tlyer")
         del xmldoc
     
     if fd_jsondoc:
-        # fd_jsondoc.writer._write("tlyer")
         del fd_jsondoc
 
     #visit_debug = pyx12.error_debug.error_debug_visitor(sys.stdout)
