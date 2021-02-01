@@ -23,16 +23,18 @@ class JSONriter(object):
         >>>writer.elem(u"last-release", u"20030401")
     """
 
-    def __init__(self, out=sys.stdout, encoding="utf-8", indent="\t"):
+    def __init__(self, out=sys.stdout, encoding="utf-8", indent="\t", words_mode=True):
         """
         out      - a stream for the output
         encoding - an encoding used to wrap the output for unicode
         indent   - white space used for indentation
+        words_mode - boolean for using string fields rather than codes in output
         """
         self.encoding = encoding
         self.out = out
         self.stack = []
         self.indent = indent
+        self.words_mode = words_mode
 
     def push(self, elem, attrs={}, first=False):
         """
@@ -40,8 +42,6 @@ class JSONriter(object):
         """
         if elem == "comp":
             return
-        # elif elem == "subele":
-        #     import pdb;pdb.set_trace()
         self._indent()
 
         if first:
@@ -107,11 +107,13 @@ class JSONriter(object):
             .replace("<", "&lt;").replace(">", "&gt;")
 
     def _escape_attr(self, text):
+        if self.words_mode:
+            return text
         if text is None:
             return None
         return text.replace("&", "&amp;") \
             .replace("'", "&apos;").replace("<", "&lt;")\
-            .replace(">", "&gt;").replace('\n', '')
+            .replace(">", "&gt;")
 
     def _write(self, strval):
         self.out.write(strval)

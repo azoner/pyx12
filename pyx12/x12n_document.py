@@ -100,7 +100,6 @@ def x12n_document(param, src_file, fd_997, fd_html,
 
     valid = True
     for seg in src:
-        # import pdb;pdb.set_trace()
         #find node
         orig_node = node
 
