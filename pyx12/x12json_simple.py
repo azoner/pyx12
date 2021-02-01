@@ -12,11 +12,11 @@ class X12JsonSimple(x12xml_simple):
     def __init__(self, fd):
         self.writer = JSONriter(fd)
         self.last_path = []
+        self.visited = []
 
     def __del__(self):
         while len(self.writer) > 0:
             self.writer.pop()
-        # self.writer._write('}')
 
     def seg(self, seg_node, seg_data, last_seg=False):
         """
@@ -36,8 +36,6 @@ class X12JsonSimple(x12xml_simple):
             # loop repeat
             self.writer.pop()
             (xname, attrib) = self._get_loop_info(cur_path[-1])
-            # if attrib['id'] == '2110':
-            #     import pdb;pdb.set_trace()
             self.writer.push(xname, attrib, first=False)
         else:
             last_path = self.last_path
@@ -54,16 +52,15 @@ class X12JsonSimple(x12xml_simple):
             for i in range(match_idx, len(cur_path)):
                 (xname, attrib) = self._get_loop_info(cur_path[i])
                 # Write a Loop
-                # if attrib['id'] == '2110':
-                #     import pdb;pdb.set_trace()
-                if attrib['id'] == 'ISA_LOOP':
+                parent_loop = cur_path[i-1]
+                if parent_loop not in self.visited:
+                    self.visited.append(parent_loop)
                     self.writer.push(xname, attrib, first=True)
                 else:
                     self.writer.push(xname, attrib, first=False)
         seg_node_id = self._get_node_id(seg_node, parent, seg_data)
         (xname, attrib) = self._get_seg_info(seg_node_id)
         if seg_node.is_first_seg_in_loop():
-            # import pdb;pdb.set_trace()
             self.writer.push(xname, attrib, first=True)
         else:
             self.writer.push(xname, attrib, first=False)
@@ -72,7 +69,17 @@ class X12JsonSimple(x12xml_simple):
             if i == loop_struct[-1]:
                 last = True
             else:
-                last = False
+                # Check to see if any of the next children exist. 
+                # If no, then we are on last node
+                try:
+                    next_children = [seg_node.get_child_node_by_idx(index) for index in loop_struct[i+1:]]
+                except IndexError:
+                    next_children = []
+                next_node_exists = [not(child_node.usage == 'N' or seg_data.get('%02i' % (i + 1)).is_empty()) for child_node in next_children]
+                if any(next_node_exists):
+                    last = False
+                else:
+                    last = True
             child_node = seg_node.get_child_node_by_idx(i)
             if child_node.usage == 'N' or seg_data.get('%02i' % (i + 1)).is_empty():
                 pass  # Do not try to ouput for invalid or empty elements
@@ -84,7 +91,6 @@ class X12JsonSimple(x12xml_simple):
                     self.writer.push(xname, attrib, first=False)
                 comp_data = seg_data.get('%02i' % (i + 1))
                 for j in range(len(comp_data)):
-                    # import pdb;pdb.set_trace()
                     subele_node = child_node.get_child_node_by_idx(j)
                     (xname, attrib) = self._get_subele_info(subele_node.id)
                     self.writer.elem(xname, comp_data[j].get_value(), attrib, last)
@@ -99,4 +105,5 @@ class X12JsonSimple(x12xml_simple):
             else:
                 raise EngineError('Node must be a either an element or a composite')
         self.writer.pop()  # end segment
+        self.visited.append(parent.id)
         self.last_path = cur_path

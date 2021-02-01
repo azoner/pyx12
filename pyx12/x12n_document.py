@@ -222,7 +222,6 @@ def x12n_document(param, src_file, fd_997, fd_html,
             xmldoc.seg(node, seg)
         
         if fd_jsondoc:
-            # if seg == src[-1]
             fd_jsondoc.seg(node, seg)
 
         if False:
