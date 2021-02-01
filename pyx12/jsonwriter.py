@@ -68,7 +68,7 @@ class JSONriter(object):
         self.indent = indent
         # self._write("{")
 
-    def push(self, elem, attrs={}):
+    def push(self, elem, attrs={}, first=False):
         """
         Create an element which will have child elements
         """
@@ -78,13 +78,19 @@ class JSONriter(object):
         elif elem == "subele":
             import pdb;pdb.set_trace()
         self._indent()
-        for (_, v) in list(attrs.items()):
-            if elem == "loop":
-                self._write("""{"%s": [\n""" % self._escape_attr(v))
-            elif elem == "seg":
-                self._write("""{"%s": {\n""" % self._escape_attr(v))
-            else:
-                import pdb;pdb.set_trace()
+
+        if first:
+            for (_, v) in list(attrs.items()):
+                if elem == "loop":
+                    self._write("""{"%s": [\n""" % self._escape_attr(v))
+                elif elem == "seg":
+                    self._write("""{"%s": {\n""" % self._escape_attr(v))
+        else:
+            for (_, v) in list(attrs.items()):
+                if elem == "loop":
+                    self._write(""",{"%s": [\n""" % self._escape_attr(v))
+                elif elem == "seg":
+                    self._write(""",{"%s": {\n""" % self._escape_attr(v))
         self.stack.append(elem)
 
     def elem(self, elem, content, attrs={}, last=False):
@@ -98,7 +104,7 @@ class JSONriter(object):
             else:
                 self._write(""""%s": "%s",\n""" % (self._escape_attr(v), self._escape_cont(content))) # Fix Commas
     
-    def pop(self, last=False):
+    def pop(self, last=True):
         """
         Close an element started with the push() method
         """
