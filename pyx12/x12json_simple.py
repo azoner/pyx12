@@ -20,7 +20,7 @@ class X12JsonSimple(x12xml_simple):
 
     def seg(self, seg_node, seg_data, last_seg=False):
         """
-        Generate XML for the segment data and matching map node
+        Generate JSON for the segment data and matching map node
 
         @param seg_node: Map Node
         @type seg_node: L{node<map_if.x12_node>}
@@ -105,5 +105,6 @@ class X12JsonSimple(x12xml_simple):
             else:
                 raise EngineError('Node must be a either an element or a composite')
         self.writer.pop()  # end segment
-        self.visited.append(parent.id)
+        if parent.id not in self.visited:
+            self.visited.append(parent.id)
         self.last_path = cur_path
