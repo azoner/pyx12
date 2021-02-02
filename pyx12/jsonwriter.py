@@ -35,6 +35,7 @@ class JSONriter(object):
         self.stack = []
         self.indent = indent
         self.words_mode = words_mode
+        self.element_count = 0
 
     def push(self, elem, attrs={}, first=False):
         """
@@ -64,6 +65,7 @@ class JSONriter(object):
         """
         self._indent()
         for (_, v) in list(attrs.items()):
+            self.element_count += 1
             if last:
                 self._write('''"%s": "%s"''' % (self._escape_attr(v), self._escape_cont(content))) #Newline
             else:
@@ -104,11 +106,11 @@ class JSONriter(object):
         if text is None:
             return None
         return text.replace("&", "&amp;")\
-            .replace("<", "&lt;").replace(">", "&gt;")
+            .replace("<", "&lt;").replace(">", "&gt;").replace("\t", "")
 
     def _escape_attr(self, text):
         if self.words_mode:
-            return text
+            return text.replace(' ', '_').replace(',', '')
         if text is None:
             return None
         return text.replace("&", "&amp;") \

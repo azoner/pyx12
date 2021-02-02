@@ -50,7 +50,6 @@ class X12JsonSimple(x12xml_simple):
         Generate JSON for the segment data and matching map node.
         Essentially the same as "seg", however this will write
         String field names, rather than codes.
-
         @param seg_node: Map Node
         @type seg_node: L{node<map_if.x12_node>}
         @param seg_data: Segment object
