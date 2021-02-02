@@ -14,6 +14,7 @@ Create XML, HTML, and 997/999 documents based on the data file.
 """
 
 import logging
+import sys
 
 # Intrapackage imports
 import pyx12.error_handler
@@ -49,7 +50,7 @@ def _reset_counter_to_gs_counts(walker):
 
 def x12n_document(param, src_file, fd_997, fd_html,
                   fd_xmldoc=None, fd_jsondoc=None, xslt_files=None, map_path=None,
-                  callback=None):
+                  callback=None, errhandler=sys.stderr):
     """
     Primary X12 validation function
     @param param: pyx12.param instance
@@ -64,9 +65,11 @@ def x12n_document(param, src_file, fd_997, fd_html,
     @param fd_jsondoc: JSON output document (outputs to single line)
     @type fd_jsondoc: file descriptor
     @rtype: boolean
+    @param errhandler: Error Output Document
+    @type errhandler: file descriptor
     """
     logger = logging.getLogger('pyx12')
-    errh = pyx12.error_handler.err_handler()
+    errh = pyx12.error_handler.err_handler(errhandler=errhandler)
 
     # Get X12 DATA file
     try:
@@ -243,6 +246,8 @@ def x12n_document(param, src_file, fd_997, fd_html,
         del xmldoc
     
     if fd_jsondoc:
+        element_cnt = fd_jsondoc.writer.element_count
+        errh.add_summary(element_cnt)
         del fd_jsondoc
 
     #visit_debug = pyx12.error_debug.error_debug_visitor(sys.stdout)
