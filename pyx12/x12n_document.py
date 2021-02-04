@@ -49,7 +49,7 @@ def _reset_counter_to_gs_counts(walker):
 
 
 def x12n_document(param, src_file, fd_997, fd_html,
-                  fd_xmldoc=None, fd_jsondoc=None, return_jsonstring=False, dump_json_to_words=True,xslt_files=None, map_path=None,
+                  fd_xmldoc=None, fd_jsondoc=None, dump_json_to_words=True,xslt_files=None, map_path=None,
                   callback=None, errhandler=sys.stderr):
     """
     Primary X12 validation function
@@ -286,8 +286,6 @@ def x12n_document(param, src_file, fd_997, fd_html,
 
     if fd_jsondoc:
         fd_jsondoc.finalize()
-        if return_jsonstring:
-            return fd_jsondoc.writer.out.content, success
 
-    return "", success
+    return success
     
