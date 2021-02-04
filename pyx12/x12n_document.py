@@ -49,7 +49,7 @@ def _reset_counter_to_gs_counts(walker):
 
 
 def x12n_document(param, src_file, fd_997, fd_html,
-                  fd_xmldoc=None, fd_jsondoc=None, xslt_files=None, map_path=None,
+                  fd_xmldoc=None, fd_jsondoc=None, return_jsonstring=False, dump_json_to_words=True,xslt_files=None, map_path=None,
                   callback=None, errhandler=sys.stderr):
     """
     Primary X12 validation function
@@ -96,7 +96,7 @@ def x12n_document(param, src_file, fd_997, fd_html,
     if fd_xmldoc:
         xmldoc = pyx12.x12xml_simple.x12xml_simple(fd_xmldoc, param.get('simple_dtd'))
     if fd_jsondoc:
-        fd_jsondoc = pyx12.x12json_simple.X12JsonSimple(fd_jsondoc)
+        fd_jsondoc = pyx12.x12json_simple.X12JsonSimple(fd_jsondoc, words_mode=dump_json_to_words)
 
     #basedir = os.path.dirname(src_file)
     #erx = errh_xml.err_handler(basedir=basedir)
@@ -248,7 +248,6 @@ def x12n_document(param, src_file, fd_997, fd_html,
     if fd_jsondoc:
         element_cnt = fd_jsondoc.writer.element_count
         errh.add_summary(element_cnt)
-        del fd_jsondoc
 
     #visit_debug = pyx12.error_debug.error_debug_visitor(sys.stdout)
     #errh.accept(visit_debug)
@@ -278,9 +277,17 @@ def x12n_document(param, src_file, fd_997, fd_html,
         pass
     try:
         if not valid or errh.get_error_count() > 0:
-            return False
+            success = False
         else:
-            return True
+            success = True
     except Exception:
-        print(errh)
-        return False
+        print(errh) #todo: change to logging
+        success = False
+
+    if fd_jsondoc:
+        fd_jsondoc.finalize()
+        if return_jsonstring:
+            return fd_jsondoc.writer.out.content, success
+
+    return "", success
+    
