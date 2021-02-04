@@ -41,9 +41,6 @@ class JSONriter(object):
         """
         Create an element which will have child elements
         """
-        if elem == "comp":
-            # import pdb;pdb.set_trace()
-            pass # To-Do: Ensure composites are being written correctly!
         self._indent()
 
         if first:
