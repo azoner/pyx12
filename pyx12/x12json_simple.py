@@ -20,6 +20,9 @@ class X12JsonSimple(x12xml_simple):
         self.words_mode = words_mode
 
     def __del__(self):
+        self.finalize()
+    
+    def finalize(self):
         while len(self.writer) > 0:
             self.writer.pop()
 
@@ -124,10 +127,15 @@ class X12JsonSimple(x12xml_simple):
                     self.writer.push(xname, attrib, first=False)
                 comp_data = seg_data.get('%02i' % (i + 1))
                 for j in range(len(comp_data)):
+                    if j == range(len(comp_data))[-1]:
+                        elem_last = True
+                    else:
+                        elem_last = False
                     subele_node = child_node.get_child_node_by_idx(j)
                     (xname, attrib) = self._get_subele_info(subele_node.id)
                     attrib['id'] = subele_node.name
-                    self.writer.elem(xname, comp_data[j].get_value(), attrib, last)
+                    self.writer.elem(xname, comp_data[j].get_value(), attrib, elem_last)
+                self.writer.pop(last=last)  # end composite
             elif child_node.is_element():
                 if seg_data.get_value('%02i' % (i + 1)) == '':
                     pass
@@ -218,10 +226,14 @@ class X12JsonSimple(x12xml_simple):
                     self.writer.push(xname, attrib, first=False)
                 comp_data = seg_data.get('%02i' % (i + 1))
                 for j in range(len(comp_data)):
+                    if j == range(len(comp_data))[-1]:
+                        elem_last = True
+                    else:
+                        elem_last = False
                     subele_node = child_node.get_child_node_by_idx(j)
                     (xname, attrib) = self._get_subele_info(subele_node.id)
-                    self.writer.elem(xname, comp_data[j].get_value(), attrib, last)
-                # self.writer.pop()  # end composite
+                    self.writer.elem(xname, comp_data[j].get_value(), attrib, elem_last)
+                self.writer.pop(last=last)  # end composite
             elif child_node.is_element():
                 if seg_data.get_value('%02i' % (i + 1)) == '':
                     pass

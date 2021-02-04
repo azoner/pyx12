@@ -42,7 +42,8 @@ class JSONriter(object):
         Create an element which will have child elements
         """
         if elem == "comp":
-            return
+            # import pdb;pdb.set_trace()
+            pass # To-Do: Ensure composites are being written correctly!
         self._indent()
 
         if first:
@@ -51,12 +52,16 @@ class JSONriter(object):
                     self._write("""{"%s": [""" % self._escape_attr(v)) #newline
                 elif elem == "seg":
                     self._write("""{"%s": {""" % self._escape_attr(v)) #newline
+                elif elem == "comp":
+                    self._write(""""%s": {""" % self._escape_attr(v)) #newline
         else:
             for (_, v) in list(attrs.items()):
                 if elem == "loop":
                     self._write(""",{"%s": [""" % self._escape_attr(v)) #newline
                 elif elem == "seg":
                     self._write(""",{"%s": {""" % self._escape_attr(v)) #newline
+                elif elem == "comp":
+                    self._write(""","%s": {""" % self._escape_attr(v)) #newline
         self.stack.append(elem)
 
     def elem(self, elem, content, attrs={}, last=False):
@@ -85,6 +90,9 @@ class JSONriter(object):
                 elif elem == "loop":
                     self._indent()
                     self._write("]}") #newline
+                elif elem == "comp":
+                    self._indent()
+                    self._write("}")
             else:
                 if elem == "seg":
                     self._indent()
@@ -92,6 +100,9 @@ class JSONriter(object):
                 elif elem == "loop":
                     self._indent()
                     self._write("]},") #newline
+                elif elem == "comp":
+                    self._indent()
+                    self._write("},")
 
     def __len__(self):
         return len(self.stack)
@@ -110,7 +121,7 @@ class JSONriter(object):
 
     def _escape_attr(self, text):
         if self.words_mode:
-            return text.replace(' ', '_').replace(',', '')
+            return text.replace(' ', '_').replace(',', '').replace('(', '[').replace(')', ']')
         if text is None:
             return None
         return text.replace("&", "&amp;") \
