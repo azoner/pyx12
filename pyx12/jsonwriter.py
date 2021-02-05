@@ -46,19 +46,19 @@ class JSONriter(object):
         if first:
             for (_, v) in list(attrs.items()):
                 if elem == "loop":
-                    self._write("""{"%s": [""" % self._escape_attr(v)) #newline
+                    self._write("""{"%s": [""" % self._escape_attr(v))
                 elif elem == "seg":
-                    self._write("""{"%s": {""" % self._escape_attr(v)) #newline
+                    self._write("""{"%s": {""" % self._escape_attr(v))
                 elif elem == "comp":
-                    self._write(""""%s": {""" % self._escape_attr(v)) #newline
+                    self._write(""""%s": {""" % self._escape_attr(v))
         else:
             for (_, v) in list(attrs.items()):
                 if elem == "loop":
-                    self._write(""",{"%s": [""" % self._escape_attr(v)) #newline
+                    self._write(""",{"%s": [""" % self._escape_attr(v))
                 elif elem == "seg":
-                    self._write(""",{"%s": {""" % self._escape_attr(v)) #newline
+                    self._write(""",{"%s": {""" % self._escape_attr(v))
                 elif elem == "comp":
-                    self._write(""","%s": {""" % self._escape_attr(v)) #newline
+                    self._write(""""%s": {""" % self._escape_attr(v)) #component is essentially an element
         self.stack.append(elem)
 
     def elem(self, elem, content, attrs={}, last=False):
