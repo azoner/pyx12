@@ -220,6 +220,7 @@ class X12JsonSimple(x12xml_simple):
                 pass  # Do not try to ouput for invalid or empty elements
             elif child_node.is_composite():
                 (xname, attrib) = self._get_comp_info(child_node.id) # formerly seg_node_id
+                if i == loop_struct[0]:
                     self.writer.push(xname, attrib, first=True)
                 else:
                     self.writer.push(xname, attrib, first=False)
