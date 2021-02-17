@@ -119,7 +119,7 @@ class X12JsonSimple(x12xml_simple):
             if child_node.usage == 'N' or seg_data.get('%02i' % (i + 1)).is_empty():
                 pass  # Do not try to ouput for invalid or empty elements
             elif child_node.is_composite():
-                (xname, attrib) = self._get_comp_info(seg_node_id)
+                (xname, attrib) = self._get_comp_info(child_node.id)
                 attrib['id'] = child_node.name
                 if i == loop_struct[0]:
                     self.writer.push(xname, attrib, first=True)
@@ -219,7 +219,7 @@ class X12JsonSimple(x12xml_simple):
             if child_node.usage == 'N' or seg_data.get('%02i' % (i + 1)).is_empty():
                 pass  # Do not try to ouput for invalid or empty elements
             elif child_node.is_composite():
-                (xname, attrib) = self._get_comp_info(seg_node_id) #consider child_node.id for child node as key, not parent!
+                (xname, attrib) = self._get_comp_info(child_node.id) # formerly seg_node_id
                 if i == loop_struct[0]:
                     self.writer.push(xname, attrib, first=True)
                 else:
