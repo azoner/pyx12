@@ -20,9 +20,7 @@ setup(
     author_email="john.holland@swmbh.org",
     url="http://github.com/azoner/pyx12",
     platforms='All',
-    install_requires=[
-        'six',
-    ],
+    # install_requires=[],
     packages=['pyx12', 'pyx12.scripts'],
     package_data={
         '': ['*.xml', '*.md'],
