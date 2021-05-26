@@ -17,16 +17,9 @@ import re
 
 # Intrapackage imports
 from .errors import IsValidError, EngineError
-import six
 
-try:
-    # Python 3.x
-    REGEX_MODE = re.S | re.ASCII
-    string_types = (str, )
-except AttributeError:
-    # Python 2.x
-    REGEX_MODE = re.S
-    string_types = (str, six.text_type)
+REGEX_MODE = re.S | re.ASCII
+string_types = (str, )
 
 def IsValidDataType(str_val, data_type, charset='B', icvn='00401'):
     """

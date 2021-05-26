@@ -3,8 +3,6 @@ from __future__ import print_function
 from __future__ import unicode_literals
 import functools
 import collections
-import six
-#from six.moves import zip
 
 # See https://wiki.python.org/moin/PythonDecoratorLibrary
 
@@ -27,7 +25,7 @@ def memoize(obj):
     @functools.wraps(obj)
     def memoizer(*args, **kwargs):
         if kwargs:  # frozenset is used to ensure hashability
-            key = args, frozenset(six.iteritems(kwargs))
+            key = args, frozenset(kwargs.items())
         else:
             key = args
         if key not in cache:
