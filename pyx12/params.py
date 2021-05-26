@@ -85,7 +85,8 @@ class ParamsBase(object):
                               (filename))
         try:
             self.logger.debug('parsing config file %s' % (filename))
-            t = et.parse(filename)
+            parser = et.XMLParser(encoding="utf-8")
+            t = et.parse(filename, parser=parser)
             for c in t.iter('param'):
                 option = c.get('name')
                 value = c.findtext('value')

@@ -1541,7 +1541,9 @@ def load_map_file(map_file, param, map_path=None):
     imap = None
     try:
         logger.debug('Create map from %s' % (map_file))
-        etree = et.parse(map_fd)
+        #etree = et.parse(map_fd)
+        parser = et.XMLParser(encoding="utf-8")
+        etree = et.parse(map_fd, parser=parser)
         imap = map_if(etree.getroot(), param, map_path)
     except AssertionError:
         logger.error('Load of map file failed: %s' % (map_file))

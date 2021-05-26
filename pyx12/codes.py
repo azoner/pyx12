@@ -56,8 +56,8 @@ class ExternalCodes(object):
             code_fd = resource_stream(__name__, os.path.join('map', codes_file))
 
         self.exclude_list = exclude.split(',') if exclude is not None else []
-
-        for cElem in et.parse(code_fd).iter('codeset'):
+        parser = et.XMLParser(encoding="utf-8")
+        for cElem in et.parse(code_fd, parser=parser).iter('codeset'):
             codeset_id = cElem.findtext('id')
             name = cElem.findtext('name')
             data_ele = cElem.findtext('data_ele')

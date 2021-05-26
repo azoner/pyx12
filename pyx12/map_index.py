@@ -50,7 +50,8 @@ class map_index(object):
         else:
             logger.debug("Looking for map index file '{}' in pkg_resources".format(maps_index_file))
             fd = resource_stream(__name__, os.path.join('map', maps_index_file))
-        _t = et.parse(fd)
+        parser = et.XMLParser(encoding="utf-8")
+        _t = et.parse(fd, parser=parser)
         for _v in _t.iter('version'):
             icvn = _v.get('icvn')
             for _m in _v.iterfind('map'):

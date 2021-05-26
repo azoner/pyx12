@@ -32,7 +32,8 @@ def convert(filename, fd_out):
     """
     logger = logging.getLogger('pyx12')
     wr = pyx12.x12file.X12Writer(fd_out, '~', '*', ':', '\n', '^')
-    doc = et.parse(filename)
+    parser = et.XMLParser(encoding="utf-8")
+    doc = et.parse(filename, parser=parser)
     for node in doc.iter():
         if node.tag == 'seg':
             wr.Write(get_segment(node))

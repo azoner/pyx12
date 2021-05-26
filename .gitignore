@@ -17,3 +17,4 @@ Backup/
 *.htm
 *.pyperf
 .tox
+.vscode/

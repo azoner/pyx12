@@ -63,17 +63,9 @@ class XmlTransformTestCase(unittest.TestCase):
             self.param.set('xmlout', 'simple')
             result = pyx12.x12n_document.x12n_document(param=self.param, src_file=fd_source,
                 fd_997=None, fd_html=None, fd_xmldoc=fd_xml, xslt_files=None)
-
             self.assertTrue(result)
             fd_xml.seek(0)
             fd_result.seek(0)
-            #print fd_xml.read()
-            #fd_xml.seek(0)
-            # assert is valid xml
-
-            #import xml.etree.cElementTree as et
-            #doc = et.parse(fd_xml)
-            #et.dump(doc)
             result = pyx12.xmlx12_simple.convert(fd_xml, fd_result)
             fd_source.seek(0)
             fd_result.seek(0)
