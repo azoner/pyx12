@@ -20,7 +20,6 @@ import os.path
 from .errors import EngineError
 from .xmlwriter import XMLWriter
 from .map_walker import pop_to_parent_loop
-from six.moves import range
 
 
 class x12xml(object):

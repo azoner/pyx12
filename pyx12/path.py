@@ -31,7 +31,6 @@ from __future__ import unicode_literals
 import re
 
 from pyx12.errors import X12PathError
-from six.moves import range
 
 
 class X12Path(object):

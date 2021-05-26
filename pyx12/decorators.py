@@ -4,7 +4,7 @@ from __future__ import unicode_literals
 import functools
 import collections
 import six
-from six.moves import zip
+#from six.moves import zip
 
 # See https://wiki.python.org/moin/PythonDecoratorLibrary
 

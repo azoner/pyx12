@@ -21,7 +21,6 @@ import logging
 from .errors import EngineError
 from .x12xml import x12xml
 from .map_walker import pop_to_parent_loop
-from six.moves import range
 
 logger = logging.getLogger('pyx12.x12xml.simple')
 

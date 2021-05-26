@@ -22,7 +22,6 @@ import logging
 from .errors import EngineError
 from . import error_visitor
 import pyx12.segment
-from six.moves import range
 
 logger = logging.getLogger('pyx12.error_997')
 logger.setLevel(logging.DEBUG)

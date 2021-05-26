@@ -18,7 +18,6 @@ import sys
 import re
 import xml.etree.cElementTree as et
 from pkg_resources import resource_stream
-from six.moves import range
 
 # Intrapackage imports
 from .errors import EngineError
