@@ -8,7 +8,9 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@py3-port
+    - uses: actions/checkout@master
+      with: 
+        ref: py3-port
     - name: Set up Python 3.9
       uses: actions/setup-python@v1
       with:
