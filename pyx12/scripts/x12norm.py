@@ -7,6 +7,7 @@ If no ouput filename is given with -o,  write to stdout.
 """
 
 from __future__ import absolute_import
+import glob
 import sys
 import os.path
 import tempfile
@@ -48,39 +49,40 @@ def main():
     logger.setLevel(logging.INFO)
 
     eol = '\n' if args.eol else ''
-    for file_in in args.input_files:
-        if not os.path.isfile(file_in):
-            logger.error('Could not open file "%s"' % (file_in))
+    for fn in args.input_files:
+        for file_in in glob.iglob(fn):
+            if not os.path.isfile(file_in):
+                logger.error('Could not open file "%s"' % (file_in))
 
-        fd_out = tempfile.TemporaryFile(mode='w+', encoding='ascii')
-        src = pyx12.x12file.X12Reader(file_in)
-        for seg_data in src:
-            if args.fixcounting:
-                err_codes = [(x[1]) for x in src.pop_errors()]
-                if seg_data.get_seg_id() == 'IEA' and '021' in err_codes:
-                    seg_data.set('IEA01', '%i' % (src.gs_count))
-                elif seg_data.get_seg_id() == 'GE' and '5' in err_codes:
-                    seg_data.set('GE01', '%i' % (src.st_count))
-                elif seg_data.get_seg_id() == 'SE' and '4' in err_codes:
-                    seg_data.set('SE01', '%i' % (src.seg_count + 1))
-                elif seg_data.get_seg_id() == 'HL' and 'HL1' in err_codes:
-                    seg_data.set('HL01', '%i' % (src.hl_count))
-            #if args.fixwhitespace:
-            #    err_codes = [(x[1]) for x in src.pop_errors()]
-            #    if 'SEG1' in err_codes:
-            fd_out.write(seg_data.format() + eol)
-        if eol == '':
-            fd_out.write('\n')
+            fd_out = tempfile.TemporaryFile(mode='w+', encoding='ascii')
+            src = pyx12.x12file.X12Reader(file_in)
+            for seg_data in src:
+                if args.fixcounting:
+                    err_codes = [(x[1]) for x in src.pop_errors()]
+                    if seg_data.get_seg_id() == 'IEA' and '021' in err_codes:
+                        seg_data.set('IEA01', '%i' % (src.gs_count))
+                    elif seg_data.get_seg_id() == 'GE' and '5' in err_codes:
+                        seg_data.set('GE01', '%i' % (src.st_count))
+                    elif seg_data.get_seg_id() == 'SE' and '4' in err_codes:
+                        seg_data.set('SE01', '%i' % (src.seg_count + 1))
+                    elif seg_data.get_seg_id() == 'HL' and 'HL1' in err_codes:
+                        seg_data.set('HL01', '%i' % (src.hl_count))
+                #if args.fixwhitespace:
+                #    err_codes = [(x[1]) for x in src.pop_errors()]
+                #    if 'SEG1' in err_codes:
+                fd_out.write(seg_data.format() + eol)
+            if eol == '':
+                fd_out.write('\n')
 
-        fd_out.seek(0)
-        if args.outputfile:
-            fd_out = open(args.outputfile, mode='w', encoding='ascii')
-        else:
-            if args.inplace:
-                with open(file_in, mode='w', encoding='ascii') as fd_orig:
-                    fd_orig.write(fd_out.read())
+            fd_out.seek(0)
+            if args.outputfile:
+                fd_out = open(args.outputfile, mode='w', encoding='ascii')
             else:
-                sys.stdout.write(fd_out.read())
+                if args.inplace:
+                    with open(file_in, mode='w', encoding='ascii') as fd_orig:
+                        fd_orig.write(fd_out.read())
+                else:
+                    sys.stdout.write(fd_out.read())
     return True
 
 if __name__ == '__main__':

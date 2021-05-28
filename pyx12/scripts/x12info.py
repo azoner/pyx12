@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 from __future__ import absolute_import
 from __future__ import print_function
+import glob
 import sys
 import os
 import os.path
@@ -66,34 +67,35 @@ def main():
     if args.map_path:
         param.set('map_path', args.map_path)
 
-    for src_filename in args.input_files:
-        try:
-            logger.debug('Before get_x12file_metadata_headers')
-            (result, headers, node_summary) = get_x12file_metadata(param, src_filename, args.map_path)
-            #(result, headers) = get_x12file_metadata_headers(param, src_filename, args.map_path)
-            logger.debug('After get_x12file_metadata_headers')
-            if not result:
-                raise pyx12.errors.EngineError()
-            res = {
-                'headers': headers,
-                'nodes': node_summary,
-                }
-            (basename, ext) = os.path.splitext(src_filename)
-            json_filename = '{}.node_list.json'.format(basename)
-            if args.outputdirectory:
-                json_file = os.path.join(args.outputdirectory , json_filename)
-            else:
-                json_file = os.path.join(os.path.dirname(os.path.abspath(src_filename)), json_filename)
-            with open(json_file, 'w') as fd:
-                json.dump(res, fd, indent=4)
+    for fn in args.input_files:
+        for src_filename in glob.iglob(fn):
+            try:
+                logger.debug('Before get_x12file_metadata_headers')
+                (result, headers, node_summary) = get_x12file_metadata(param, src_filename, args.map_path)
+                #(result, headers) = get_x12file_metadata_headers(param, src_filename, args.map_path)
+                logger.debug('After get_x12file_metadata_headers')
+                if not result:
+                    raise pyx12.errors.EngineError()
+                res = {
+                    'headers': headers,
+                    'nodes': node_summary,
+                    }
+                (basename, ext) = os.path.splitext(src_filename)
+                json_filename = '{}.node_list.json'.format(basename)
+                if args.outputdirectory:
+                    json_file = os.path.join(args.outputdirectory , json_filename)
+                else:
+                    json_file = os.path.join(os.path.dirname(os.path.abspath(src_filename)), json_filename)
+                with open(json_file, 'w') as fd:
+                    json.dump(res, fd, indent=4)
 
-        except IOError:
-            logger.exception('Could not open files')
-            return False
-        except KeyboardInterrupt:
-            print("\n[interrupt]")
-        except Exception as e:
-            raise e
+            except IOError:
+                logger.exception('Could not open files')
+                return False
+            except KeyboardInterrupt:
+                print("\n[interrupt]")
+            except Exception as e:
+                raise e
 
 
 if __name__ == '__main__':

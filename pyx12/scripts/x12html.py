@@ -19,6 +19,7 @@ Write to the standard output stream
 
 from __future__ import absolute_import
 from __future__ import print_function
+import glob
 import os
 import os.path
 import sys
@@ -103,29 +104,30 @@ def main():
         except IOError:
             logger.exception('Could not open log file: %s' % (args.logfile))
 
-    for src_filename in args.input_files:
-        try:
-            if not os.path.isfile(src_filename):
-                logger.error('Could not open file "%s"' % (src_filename))
-                continue
-            fd_html = None
-            if args.html:
-                if os.path.splitext(src_filename)[1] == '.txt':
-                    target_html = os.path.splitext(src_filename)[0] + '.html'
+    for fn in args.input_files:
+        for src_filename in glob.iglob(fn):
+            try:
+                if not os.path.isfile(src_filename):
+                    logger.error('Could not open file "%s"' % (src_filename))
+                    continue
+                fd_html = None
+                if args.html:
+                    if os.path.splitext(src_filename)[1] == '.txt':
+                        target_html = os.path.splitext(src_filename)[0] + '.html'
+                    else:
+                        target_html = src_filename + '.html'
+                    fd_html = open(target_html, 'w')
                 else:
-                    target_html = src_filename + '.html'
-                fd_html = open(target_html, 'w')
-            else:
-                fd_html = sys.stdout
+                    fd_html = sys.stdout
 
-            pyx12.x12n_document.x12n_document(param=param, src_file=src_filename,
-                fd_997=None, fd_html=fd_html, fd_xmldoc=None, map_path=args.map_path)
+                pyx12.x12n_document.x12n_document(param=param, src_file=src_filename,
+                    fd_997=None, fd_html=fd_html, fd_xmldoc=None, map_path=args.map_path)
 
-        except IOError:
-            logger.error('Could not open files')
-            return False
-        except KeyboardInterrupt:
-            print("\n[interrupt]")
+            except IOError:
+                logger.error('Could not open files')
+                return False
+            except KeyboardInterrupt:
+                print("\n[interrupt]")
     return True
 
 if __name__ == '__main__':
