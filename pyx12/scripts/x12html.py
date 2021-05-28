@@ -68,10 +68,6 @@ def main():
                         default=[], help='External Code Names to ignore')
     parser.add_argument('--charset', '-s', choices=(
         'b', 'e'), help='Specify X12 character set: b=basic, e=extended')
-    #parser.add_argument('--background', '-b', action='store_true')
-    #parser.add_argument('--test', '-t', action='store_true')
-    parser.add_argument('--profile', action='store_true',
-                        help='Profile the code with plop')
     parser.add_argument('--version', action='version', version='{prog} {version}'.format(prog=parser.prog, version=__version__))
     parser.add_argument('input_files', nargs='*')
     args = parser.parse_args()

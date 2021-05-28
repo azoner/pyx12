@@ -208,7 +208,6 @@ def main():
     parser.add_argument('--debug', '-d', action='store_true')
     parser.add_argument('--quiet', '-q', action='store_true')
     parser.add_argument('--html', '-H', action='store_true')
-    parser.add_argument('--profile', action='store_true', help='Profile the code with plop')
     parser.add_argument('--version', action='version', version='{prog} {version}'.format(prog=parser.prog, version=__version__))
     parser.add_argument('input_files', nargs='*')
     args = parser.parse_args()

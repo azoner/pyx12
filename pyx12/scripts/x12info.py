@@ -80,7 +80,7 @@ def main():
                     'headers': headers,
                     'nodes': node_summary,
                     }
-                (basename, ext) = os.path.splitext(src_filename)
+                (basename, ext) = os.path.splitext(os.path.basename(src_filename))
                 json_filename = '{}.node_list.json'.format(basename)
                 if args.outputdirectory:
                     json_file = os.path.join(args.outputdirectory , json_filename)

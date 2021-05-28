@@ -70,7 +70,6 @@ def main():
         'b', 'e'), help='Specify X12 character set: b=basic, e=extended')
     #parser.add_argument('--background', '-b', action='store_true')
     #parser.add_argument('--test', '-t', action='store_true')
-    parser.add_argument('--profile', action='store_true', help='Profile the code with plop')
     parser.add_argument('--version', action='version',
                         version='{prog} {version}'.format(prog=parser.prog, version=__version__))
     parser.add_argument('input_files', nargs='*')
@@ -106,7 +105,7 @@ def main():
             logger.addHandler(hdlr)
         except IOError:
             logger.exception('Could not open log file: %s' % (args.logfile))
-# %%
+
     for fn in args.input_files:
         for src_filename in glob.iglob(fn):
             try:
@@ -123,42 +122,13 @@ def main():
                         target_html = src_filename + '.html'
                     fd_html = open(target_html, 'w')
 
-                if args.profile:
-                    from plop.collector import Collector
-                    p = Collector()
-                    p.start()
-                    
-                    if pyx12.x12n_document.x12n_document(param=param, src_file=src_filename,
-                            fd_997=fd_997, fd_html=fd_html, fd_xmldoc=None, map_path=args.map_path):
-                        sys.stderr.write('%s: OK\n' % (src_filename))
-                    else:
-                        sys.stderr.write('%s: Failure\n' % (src_filename))
-                    #import profile
-                    #prof_str = 'pyx12.x12n_document.x12n_document(param, src_filename, ' \
-                    #        + 'fd_997, fd_html, None, None)'
-                    #print prof_str
-                    #print param
-                    #profile.run(prof_str, 'pyx12.prof')
-                    p.stop()
-                    try:
-                        pfile = os.path.splitext(os.path.basename(
-                            src_filename))[0] + '.plop.out'
-                        pfull = os.path.join(os.path.expanduser(
-                            '~/.plop.profiles'), pfile)
-                        print(pfull)
-                        with open(pfull, 'w') as fdp:
-                            fdp.write(repr(dict(p.stack_counts)))
-                    except Exception:
-                        logger.exception('Failed to write profile data')
-                        sys.stderr.write('%s: bad profile save\n' % (src_filename))
+                logger.debug('Before x12n_document for {}'.format(src_filename))
+                if pyx12.x12n_document.x12n_document(param=param, src_file=src_filename,
+                        fd_997=fd_997, fd_html=fd_html, fd_xmldoc=None, map_path=args.map_path):
+                    sys.stderr.write('%s: OK\n' % (src_filename))
                 else:
-                    logger.debug('Before x12n_document for {}'.format(src_filename))
-                    if pyx12.x12n_document.x12n_document(param=param, src_file=src_filename,
-                            fd_997=fd_997, fd_html=fd_html, fd_xmldoc=None, map_path=args.map_path):
-                        sys.stderr.write('%s: OK\n' % (src_filename))
-                    else:
-                        sys.stderr.write('%s: Failure\n' % (src_filename))
-                    logger.debug('after x12n_document for {}'.format(src_filename))
+                    sys.stderr.write('%s: Failure\n' % (src_filename))
+                logger.debug('after x12n_document for {}'.format(src_filename))
                 if flag_997 and fd_997.tell() != 0:
                     fd_997.seek(0)
                     if os.path.splitext(src_filename)[1] == '.txt':
