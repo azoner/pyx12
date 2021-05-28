@@ -12,10 +12,6 @@ Low level interface to an X12 data input stream.
 Iterates over segment line strings.
 Used by X12Reader.
 """
-from __future__ import unicode_literals
-
-# Intrapackage imports
-from __future__ import absolute_import
 import pyx12.errors
 import pyx12.segment
 

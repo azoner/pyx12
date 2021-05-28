@@ -7,14 +7,9 @@
 # you should have received as part of this distribution.
 #
 ######################################################################
-
-#    $Id: map_if.py 1472 2011-10-13 19:20:13Z johnholland $
-
 """
 X12 syntax validation functions
 """
-from __future__ import unicode_literals
-from __future__ import absolute_import
 
 
 def is_syntax_valid(seg_data, syn):

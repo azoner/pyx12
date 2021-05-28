@@ -4,7 +4,6 @@
 check ordinal ordering
 """
 
-from __future__ import absolute_import
 import os.path
 import sys
 

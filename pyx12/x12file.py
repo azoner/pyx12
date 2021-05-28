@@ -17,9 +17,6 @@ Interface to an X12 data stream.
    837 2400/LX
    837 HL tree
 """
-
-from __future__ import absolute_import
-from __future__ import unicode_literals
 import sys
 
 # Intrapackage imports

@@ -9,8 +9,6 @@
 # you should have received as part of this distribution.
 #
 ######################################################################
-
-#    $Id: codes.xsd 664 2004-12-12 20:58:08Z johnholland $
 -->
 
 <xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema">

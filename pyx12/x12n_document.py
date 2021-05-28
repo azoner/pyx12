@@ -13,9 +13,6 @@ Parse a ANSI X12N data file.  Validate against a map and codeset values.
 Create XML, HTML, and 997/999 documents based on the data file.
 """
 
-from __future__ import absolute_import
-from __future__ import print_function
-from __future__ import unicode_literals
 import logging
 
 # Intrapackage imports

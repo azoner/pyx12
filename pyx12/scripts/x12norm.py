@@ -6,7 +6,6 @@ If no source file is given, read from stdin.
 If no ouput filename is given with -o,  write to stdout.
 """
 
-from __future__ import absolute_import
 import glob
 import sys
 import os.path

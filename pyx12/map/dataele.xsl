@@ -9,8 +9,6 @@
 # you should have received as part of this distribution.
 #
 ######################################################################
-
-#    $Id: codes.xsl 853 2005-08-13 03:54:09Z johnholland $
 -->
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 

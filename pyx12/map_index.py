@@ -7,7 +7,6 @@
 # you should have received as part of this distribution.
 #
 ######################################################################
-
 """
 Locate the correct xml map file given:
     - Interchange Control Version Number (ISA12)
@@ -16,9 +15,6 @@ Locate the correct xml map file given:
     - Transaction Set Purpose Code (BHT02) (For 278 only)
 """
 
-from __future__ import absolute_import
-from __future__ import print_function
-from __future__ import unicode_literals
 import os.path
 import logging
 import xml.etree.cElementTree as et
