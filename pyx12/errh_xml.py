@@ -41,8 +41,7 @@ class err_handler(object):
                 (fdesc, self.filename) = tempfile.mkstemp('.xml', 'pyx12_')
                 self.fd = os.fdopen(fdesc, 'w+b')
             except:
-                (fdesc, self.filename) = tempfile.mkstemp(suffix='.xml',
-                                                          prefix='pyx12_', dir=basedir)
+                (fdesc, self.filename) = tempfile.mkstemp(suffix='.xml', prefix='pyx12_', dir=basedir)
                 self.fd = os.fdopen(fdesc, 'w+b')
         self.cur_line = None
         self.errors = []

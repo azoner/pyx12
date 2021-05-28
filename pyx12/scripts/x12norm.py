@@ -9,7 +9,6 @@ If no ouput filename is given with -o,  write to stdout.
 from __future__ import absolute_import
 import sys
 import os.path
-import codecs
 import tempfile
 import logging
 
@@ -53,7 +52,7 @@ def main():
         if not os.path.isfile(file_in):
             logger.error('Could not open file "%s"' % (file_in))
 
-        fd_out = tempfile.TemporaryFile(mode="w+")
+        fd_out = tempfile.TemporaryFile(mode='w+', encoding='ascii')
         src = pyx12.x12file.X12Reader(file_in)
         for seg_data in src:
             if args.fixcounting:
@@ -75,10 +74,10 @@ def main():
 
         fd_out.seek(0)
         if args.outputfile:
-            fd_out = codecs.open(args.outputfile, mode='w', encoding='ascii')
+            fd_out = open(args.outputfile, mode='w', encoding='ascii')
         else:
             if args.inplace:
-                with codecs.open(file_in, mode='w', encoding='ascii') as fd_orig:
+                with open(file_in, mode='w', encoding='ascii') as fd_orig:
                     fd_orig.write(fd_out.read())
             else:
                 sys.stdout.write(fd_out.read())

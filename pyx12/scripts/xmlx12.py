@@ -20,7 +20,6 @@ import os
 import os.path
 import sys
 import logging
-import codecs
 
 # Intrapackage imports
 libpath = os.path.abspath(os.path.join(os.path.dirname(__file__), '../..'))
@@ -82,7 +81,7 @@ def main():
 
     if args.outputfile:
         try:
-            fd_x12 = codecs.open(args.outputfile, mode='w', encoding='ascii')
+            fd_x12 = open(args.outputfile, mode='w', encoding='ascii')
         except:
             logger.error('Could not open file %s' % (args.outputfile))
             return False

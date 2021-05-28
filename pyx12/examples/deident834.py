@@ -85,7 +85,7 @@ def deidentify_file(fd_in):
     #deident = FakeDeidentify()
     deident = RandomDeidentify()
 
-    with open('newfile.txt', 'w') as fd_out:
+    with open('newfile.txt', 'w', encoding='ascii') as fd_out:
         wr = pyx12.x12file.X12Writer(fd_out)
         for datatree in src.iter_segments('2000'):
             if datatree.id == '2000':
@@ -148,7 +148,7 @@ def main():
             usage()
             return False
         #file_name = os.path.basename(file_in)
-        fd_in = open(file_in, 'r')
+        fd_in = open(file_in, 'r', encoding='ascii')
         deidentify_file(fd_in)
     return True
 

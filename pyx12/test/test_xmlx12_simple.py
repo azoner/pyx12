@@ -58,7 +58,7 @@ class XmlTransformTestCase(unittest.TestCase):
 
         (fdesc, filename) = tempfile.mkstemp('.xml', 'pyx12_')
         with open(filename, 'r+') as fd_xml:
-            # fd_xml = tempfile.TemporaryFile()
+            # fd_xml = tempfile.TemporaryFile(mode='w+', encoding='ascii')
             fd_result = StringIO()
             self.param.set('xmlout', 'simple')
             result = pyx12.x12n_document.x12n_document(param=self.param, src_file=fd_source,

@@ -20,9 +20,7 @@ Interface to an X12 data stream.
 
 from __future__ import absolute_import
 from __future__ import unicode_literals
-import codecs
 import sys
-import logging
 
 # Intrapackage imports
 import pyx12.errors
@@ -310,7 +308,7 @@ class X12Reader(X12Base):
             if src_file_obj == '-':
                 self.fd_in = sys.stdin
             else:
-                self.fd_in = open(src_file_obj, 'U')
+                self.fd_in = open(src_file_obj, 'U', encoding='ascii')
                 self.need_to_close = True
         X12Base.__init__(self)
         try:
@@ -453,8 +451,7 @@ class X12Writer(X12Base):
             if src_file_obj == '-':
                 self.fd_out = sys.stdout
             else:
-                self.fd_out = codecs.open(
-                    src_file_obj, mode='w', encoding='ascii')
+                self.fd_out = open(src_file_obj, mode='w', encoding='ascii')
         #assert self.fd_out.encoding in ('ascii', 'US-ASCII'), 'Outfile file must have ASCII encoding, is %s' % (self.fd_out.encoding)
         X12Base.__init__(self)
         #terms = set([seg_term, ele_term, subele_term, repetition_term])

@@ -23,7 +23,6 @@ from os.path import abspath, join, dirname, isdir, isfile
 import sys
 import logging
 import tempfile
-import codecs
 import argparse
 import glob
 
@@ -107,7 +106,7 @@ def main():
             logger.addHandler(hdlr)
         except IOError:
             logger.exception('Could not open log file: %s' % (args.logfile))
-
+# %%
     for fn in args.input_files:
         for src_filename in glob.iglob(fn):
             try:
@@ -116,7 +115,7 @@ def main():
                     continue
                 #fd_src = open(src_filename, 'U')
                 if flag_997:
-                    fd_997 = tempfile.TemporaryFile()
+                    fd_997 = tempfile.TemporaryFile(mode='w+', encoding='ascii')
                 if args.html:
                     if os.path.splitext(src_filename)[1] == '.txt':
                         target_html = os.path.splitext(src_filename)[0] + '.html'
@@ -128,6 +127,7 @@ def main():
                     from plop.collector import Collector
                     p = Collector()
                     p.start()
+                    
                     if pyx12.x12n_document.x12n_document(param=param, src_file=src_filename,
                             fd_997=fd_997, fd_html=fd_html, fd_xmldoc=None, map_path=args.map_path):
                         sys.stderr.write('%s: OK\n' % (src_filename))
@@ -165,8 +165,7 @@ def main():
                         target_997 = os.path.splitext(src_filename)[0] + '.997'
                     else:
                         target_997 = src_filename + '.997'
-                    codecs.open(target_997, mode='w',
-                                encoding='ascii').write(fd_997.read())
+                    open(target_997, mode='w', encoding='ascii').write(fd_997.read())
 
                 if fd_997:
                     fd_997.close()
