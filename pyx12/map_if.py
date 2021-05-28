@@ -10,6 +10,8 @@
 """
 Interface to a X12N IG Map
 """
+from __future__ import absolute_import
+from __future__ import unicode_literals
 import logging
 import os.path
 import sys
@@ -84,7 +86,7 @@ class x12_node(object):
                     return child
                 else:
                     if child.is_loop():
-                        return child.getnodebypath(str.join('/', pathl[1:]))
+                        return child.getnodebypath('/'.join(pathl[1:]))
                     else:
                         break
         raise EngineError('getnodebypath failed. Path "%s" not found' % path)
@@ -101,13 +103,13 @@ class x12_node(object):
         else:
             return self.children[idx]
 
-    def get_child_node_by_ordinal(self, ord):
+    def get_child_node_by_ordinal(self, ordinal):
         """
         Get a child element or composite by the X12 ordinal
         @param ord: one based element/composite index.  Corresponds to the map <seq> element
         @type ord: int
         """
-        return self.get_child_node_by_idx(ord - 1)
+        return self.get_child_node_by_idx(ordinal - 1)
 
     def get_path(self):
         """
@@ -314,7 +316,7 @@ class map_if(x12_node):
                     if len(pathl) == 1:
                         return child
                     else:
-                        return child.getnodebypath(str.join('/', pathl[1:]))
+                        return child.getnodebypath('/'.join(pathl[1:]))
         raise EngineError('getnodebypath failed. Path "%s" not found' % spath)
 
     def getnodebypath2(self, path_str):
@@ -512,7 +514,7 @@ class loop_if(x12_node):
                         if len(pathl) == 1:
                             return child
                         else:
-                            return child.getnodebypath(str.join('/', pathl[1:]))
+                            return child.getnodebypath('/'.join(pathl[1:]))
                 elif child.is_segment() and len(pathl) == 1:
                     if pathl[0].find('[') == -1:  # No id to match
                         if pathl[0] == child.id:
@@ -1233,8 +1235,7 @@ class element_if(x12_node):
 # Validate based on data_elem_num
 # Then, validate on more specific criteria
         if (not data_type is None) and (data_type == 'R' or data_type[0] == 'N'):
-            elem_strip = str.replace(
-                str.replace(elem_val, '-', ''), '.', '')
+            elem_strip = elem_val.replace('-', '').replace('.', '')
             elem_len = len(elem_strip)
             if len(elem_strip) < min_len:
                 err_str = 'Data element "%s" (%s) is too short: len("%s") = %i < %i (min_len)' % \
@@ -1540,7 +1541,9 @@ def load_map_file(map_file, param, map_path=None):
     imap = None
     try:
         logger.debug('Create map from %s' % (map_file))
-        etree = et.parse(map_fd)
+        #etree = et.parse(map_fd)
+        parser = et.XMLParser(encoding="utf-8")
+        etree = et.parse(map_fd, parser=parser)
         imap = map_if(etree.getroot(), param, map_path)
     except AssertionError:
         logger.error('Load of map file failed: %s' % (map_file))

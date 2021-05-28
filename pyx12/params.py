@@ -16,6 +16,8 @@ Order of precedence:
  2. Config files as constructor parameters
  3. self.params - Defaults
 """
+from __future__ import absolute_import
+from __future__ import unicode_literals
 from os.path import dirname, abspath, join, isdir, isfile, expanduser
 import sys
 import xml.etree.cElementTree as et
@@ -83,7 +85,8 @@ class ParamsBase(object):
                               (filename))
         try:
             self.logger.debug('parsing config file %s' % (filename))
-            t = et.parse(filename)
+            parser = et.XMLParser(encoding="utf-8")
+            t = et.parse(filename, parser=parser)
             for c in t.iter('param'):
                 option = c.get('name')
                 value = c.findtext('value')

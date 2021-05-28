@@ -23,6 +23,8 @@ Interface to read and alter segments
 #import os.path
 
 # Intrapackage imports
+from __future__ import absolute_import
+from __future__ import unicode_literals
 import pyx12
 from . import error_handler
 from . import errors
@@ -31,6 +33,8 @@ from . import map_if
 from . import x12file
 from . import path
 from .map_walker import walk_tree, pop_to_parent_loop  # get_pop_loops, get_push_loops
+
+string_types = (str, )
 
 
 class X12DataNode(object):
@@ -515,7 +519,7 @@ class X12LoopDataNode(X12DataNode):
         """
         if isinstance(seg_obj, pyx12.segment.Segment):
             return seg_obj
-        elif isinstance(seg_obj, str):
+        elif isinstance(seg_obj, string_types):
             (seg_term, ele_term, subele_term) = self._get_terminators()
             assert seg_term is not None, 'seg_term is none, node contains no X12SegmentDataNode children?'
             assert ele_term is not None, 'seg_term is none, node contains no X12SegmentDataNode children?'

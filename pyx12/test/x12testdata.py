@@ -1,3 +1,5 @@
+from __future__ import absolute_import
+from __future__ import unicode_literals
 datafiles = {
     '834_lui_id': {
         'source': """ISA*00*          *00*          *ZZ*D00XXX         *ZZ*00AA           *070305*1832*U*00401*000701336*0*P*:~

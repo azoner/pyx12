@@ -16,6 +16,8 @@ Validate against a map and codeset values.
 Create a XML document based on the data file.
 """
 
+from __future__ import absolute_import
+from __future__ import print_function
 import os
 import os.path
 from os.path import isdir, isfile
@@ -55,7 +57,7 @@ def main():
                         dest="configfile", default=None)
     parser.add_argument('--log-file', '-l', action='store', dest="logfile", default=None)
     parser.add_argument('--map-path', '-m', action='store', dest="map_path", default=None, type=check_map_path_arg)
-    parser.add_argument('--verbose', '-v', action='count')
+    parser.add_argument('--verbose', '-v', action='count', default=0)
     parser.add_argument('--debug', '-d', action='store_true')
     parser.add_argument('--quiet', '-q', action='store_true')
     parser.add_argument('--html', '-H', action='store_true')

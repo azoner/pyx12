@@ -12,6 +12,8 @@
 Create a XML rendering of the X12 document
 """
 
+from __future__ import absolute_import
+from __future__ import unicode_literals
 from os.path import commonprefix
 import logging
 

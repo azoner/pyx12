@@ -1,5 +1,7 @@
 #! /usr/bin/env python
 
+from __future__ import absolute_import
+from __future__ import print_function
 import os.path
 import sys
 
@@ -10,7 +12,7 @@ import pyx12.segment
 
 
 def donode(node):
-    print(node.get_path())
+    print((node.get_path()))
     for child in node.children:
         if child.is_loop() or child.is_segment():
             donode(child)

@@ -11,17 +11,15 @@
 """
 X12 data element validation
 """
+from __future__ import absolute_import
+from __future__ import unicode_literals
 import re
 
 # Intrapackage imports
 from .errors import IsValidError, EngineError
 
-try:
-    # Python 3.x
-    REGEX_MODE = re.S | re.ASCII
-except AttributeError:
-    # Python 2.x
-    REGEX_MODE = re.S
+REGEX_MODE = re.S | re.ASCII
+string_types = (str, )
 
 def IsValidDataType(str_val, data_type, charset='B', icvn='00401'):
     """
@@ -38,7 +36,7 @@ def IsValidDataType(str_val, data_type, charset='B', icvn='00401'):
     """
     if not data_type:
         return True
-    if not isinstance(str_val, str):
+    if not isinstance(str_val, string_types):
         return False
 
     try:
@@ -209,7 +207,7 @@ def is_valid_time(val):
                 raise IsValidError
             # check decimal seconds here in the future
             elif len(val) > 8:
-                # print 'unhandled decimal seconds encountered'
+                # print('unhandled decimal seconds encountered')
                 raise IsValidError
     except (IsValidError, ValueError):
         return False

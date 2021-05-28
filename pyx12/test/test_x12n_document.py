@@ -1,8 +1,8 @@
+from __future__ import absolute_import
+from __future__ import unicode_literals
+import tempfile
 import unittest
-try:
-    from StringIO import StringIO
-except:
-    from io import StringIO
+from io import StringIO
 
 import pyx12.error_handler
 import pyx12.x12n_document
@@ -155,3 +155,20 @@ class Test5010(X12DocumentTestCase):
 
     def test_834_eol_in_element(self):
         self._test_999('834_eol_in_element')
+
+class TestTemp(X12DocumentTestCase):
+
+    def test_999_temp(self):
+        datakey = '834_lui_id'
+        fd_source = self._makeFd(datafiles[datakey]['source'])
+        fd_997 = tempfile.TemporaryFile(mode='w+', encoding='ascii')
+        fd_html = None
+        import logging
+        logger = logging.getLogger('pyx12')
+        formatter = logging.Formatter('%(asctime)s %(levelname)s %(message)s')
+        hdlr = logging.NullHandler()
+        logger.addHandler(hdlr)
+        param = pyx12.params.params()
+        pyx12.x12n_document.x12n_document(param, fd_source, fd_997, fd_html, None)
+        fd_997.seek(0)
+        #self._isX12Diff(fd_997_base, fd_997)

@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 ######################################################################
-# Copyright 
+# Copyright
 #   John Holland <john@zoner.org>
 # All rights reserved.
 #
@@ -14,11 +14,12 @@
 Create an X12 document from a XML data file
 """
 
+from __future__ import absolute_import
+from __future__ import print_function
 import os
 import os.path
 import sys
 import logging
-import codecs
 
 # Intrapackage imports
 libpath = os.path.abspath(os.path.join(os.path.dirname(__file__), '../..'))
@@ -39,7 +40,7 @@ def main():
     import argparse
     parser = argparse.ArgumentParser(description='XML to X12 conversion')
     parser.add_argument('--log-file', '-l', action='store', dest="logfile", default=None)
-    parser.add_argument('--verbose', '-v', action='count')
+    parser.add_argument('--verbose', '-v', action='count', default=0)
     parser.add_argument('--debug', '-d', action='store_true')
     parser.add_argument('--quiet', '-q', action='store_true')
     parser.add_argument('--outputfile', '-o', action='store', help="X12 target filename")
@@ -80,7 +81,7 @@ def main():
 
     if args.outputfile:
         try:
-            fd_x12 = codecs.open(args.outputfile, mode='w', encoding='ascii')
+            fd_x12 = open(args.outputfile, mode='w', encoding='ascii')
         except:
             logger.error('Could not open file %s' % (args.outputfile))
             return False

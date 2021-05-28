@@ -13,6 +13,9 @@ Parse a ANSI X12N data file.  Validate against a map and codeset values.
 Create XML, HTML, and 997/999 documents based on the data file.
 """
 
+from __future__ import absolute_import
+from __future__ import print_function
+from __future__ import unicode_literals
 import logging
 
 # Intrapackage imports
@@ -104,7 +107,7 @@ def x12n_document(param, src_file, fd_997, fd_html,
             print('--------------------------------------------')
             # reset to control map for ISA and GS loops
             print('------- counters before --------')
-            print(walker.counter._dict)
+            print((walker.counter._dict))
         if seg.get_seg_id() == 'ISA':
             node = control_map.getnodebypath('/ISA_LOOP/ISA')
             walker.forceWalkCounterToLoopStart('/ISA_LOOP', '/ISA_LOOP/ISA')
@@ -123,7 +126,7 @@ def x12n_document(param, src_file, fd_997, fd_html,
 
         if False:
             print('------- counters after --------')
-            print(walker.counter._dict)
+            print((walker.counter._dict))
         if node is None:
             node = orig_node
         else:

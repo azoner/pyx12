@@ -12,6 +12,8 @@
 Capture X12 Errors
 """
 
+from __future__ import absolute_import
+from __future__ import unicode_literals
 import logging
 import tempfile
 import os
@@ -19,8 +21,6 @@ import os
 # Intrapackage imports
 from .errors import EngineError
 from .xmlwriter import XMLWriter
-
-logger = logging.getLogger('pyx12.errh_xml')
 
 
 class err_handler(object):
@@ -32,6 +32,7 @@ class err_handler(object):
         @param xml_out: Output filename, if None, will dump to tempfile
         @param basedir: working directory, where file will be created
         """
+        self.logger = logging.getLogger('pyx12.errh_xml')
         if xml_out:
             self.filename = xml_out
             self.fd = open(xml_out, 'w')
@@ -40,8 +41,7 @@ class err_handler(object):
                 (fdesc, self.filename) = tempfile.mkstemp('.xml', 'pyx12_')
                 self.fd = os.fdopen(fdesc, 'w+b')
             except:
-                (fdesc, self.filename) = tempfile.mkstemp(suffix='.xml',
-                                                          prefix='pyx12_', dir=basedir)
+                (fdesc, self.filename) = tempfile.mkstemp(suffix='.xml', prefix='pyx12_', dir=basedir)
                 self.fd = os.fdopen(fdesc, 'w+b')
         self.cur_line = None
         self.errors = []
@@ -114,6 +114,7 @@ class errh_list(object):
     Stores the current error in simple variables.
     """
     def __init__(self):
+        self.logger = logging.getLogger('pyx12.errh_xml')
         #self.id = 'ROOT'
         self.errors = []
         #self.cur_node = self
@@ -183,7 +184,7 @@ class errh_list(object):
         sout = ''
         sout += 'Line:%i ' % (self.cur_line)
         sout += 'ISA:%s - %s' % (err_cde, err_str)
-        logger.error(sout)
+        self.logger.error(sout)
 
     def gs_error(self, err_cde, err_str):
         """
@@ -196,7 +197,7 @@ class errh_list(object):
         sout = ''
         sout += 'Line:%i ' % (self.cur_line)
         sout += 'GS:%s - %s' % (err_cde, err_str)
-        logger.error(sout)
+        self.logger.error(sout)
 
     def st_error(self, err_cde, err_str):
         """
@@ -209,7 +210,7 @@ class errh_list(object):
         sout = ''
         sout += 'Line:%i ' % (self.cur_line)
         sout += 'ST:%s - %s' % (err_cde, err_str)
-        logger.error(sout)
+        self.logger.error(sout)
 
     def seg_error(self, err_cde, err_str, err_value=None, src_line=None):
         """
@@ -224,7 +225,7 @@ class errh_list(object):
         sout += 'SEG:%s - %s' % (err_cde, err_str)
         if err_value:
             sout += ' (%s)' % err_value
-        logger.error(sout)
+        self.logger.error(sout)
 
     def ele_error(self, err_cde, err_str, bad_value):
         """
@@ -239,7 +240,7 @@ class errh_list(object):
         sout += 'ELE:%s - %s' % (err_cde, err_str)
         if bad_value:
             sout += ' (%s)' % (bad_value)
-        logger.error(sout)
+        self.logger.error(sout)
 
     def close_isa_loop(self, node, seg, src):
         """

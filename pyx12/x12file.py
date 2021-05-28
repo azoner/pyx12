@@ -18,16 +18,14 @@ Interface to an X12 data stream.
    837 HL tree
 """
 
-import codecs
+from __future__ import absolute_import
+from __future__ import unicode_literals
 import sys
-import logging
 
 # Intrapackage imports
 import pyx12.errors
 import pyx12.segment
 from pyx12.rawx12file import RawX12File
-
-logger = logging.getLogger('pyx12.x12file')
 
 
 class X12Base(object):
@@ -73,20 +71,20 @@ class X12Base(object):
         @type seg_data: L{segment<segment.Segment>}
         """
         if seg_data.is_empty():
-            err_str = 'Segment "%s" is empty' % (seg_data)
+            err_str = 'Segment "{}" is empty'.format(seg_data)
             self._seg_error('8', err_str, None, src_line=self.cur_line + 1)
         if not seg_data.is_seg_id_valid():
-            err_str = 'Segment identifier "%s" is invalid' % (
-                seg_data.get_seg_id())
+            err_str = 'Segment identifier "{}" is invalid'.format(seg_data.get_seg_id())
             self._seg_error('1', err_str, None, src_line=self.cur_line + 1)
         seg_id = seg_data.get_seg_id()
         if seg_id == 'ISA':
             if len(seg_data) != 16:
-                raise pyx12.errors.X12Error('The ISA segment must have 16 elements (%s)' % (seg_data))
+                err_str = 'The ISA segment must have 16 elements ({})'.format(seg_data)
+                raise pyx12.errors.X12Error(err_str)
             interchange_control_number = seg_data.get_value('ISA13')
             if interchange_control_number in self.isa_ids:
                 err_str = 'ISA Interchange Control Number '
-                err_str += '%s not unique within file' % (interchange_control_number)
+                err_str += '{} not unique within file'.format(interchange_control_number)
                 self._isa_error('025', err_str)
             self.loops.append(('ISA', interchange_control_number))
             self.isa_ids.append(interchange_control_number)
@@ -97,7 +95,7 @@ class X12Base(object):
             group_control_number = seg_data.get_value('GS06')
             if group_control_number in self.gs_ids:
                 err_str = 'GS Interchange Control Number '
-                err_str += '%s not unique within file' % (group_control_number)
+                err_str += '{} not unique within file'.format(group_control_number)
                 self._gs_error('6', err_str)
             self.gs_count += 1
             self.gs_ids.append(group_control_number)
@@ -110,7 +108,7 @@ class X12Base(object):
             transaction_control_number = seg_data.get_value('ST02')
             if transaction_control_number in self.st_ids:
                 err_str = 'ST Interchange Control Number '
-                err_str += '%s not unique within file' % (transaction_control_number)
+                err_str += '{} not unique within file'.format(transaction_control_number)
                 self._st_error('23', err_str)
             self.st_count += 1
             self.st_ids.append(transaction_control_number)
@@ -130,12 +128,12 @@ class X12Base(object):
                 #raise pyx12.errors.X12Error, \
                 #   'My HL count %i does not match your HL count %s' \
                 #    % (self.hl_count, seg[1])
-                err_str = 'My HL count %i does not match your HL count %s' % (self.hl_count, hl_count)
+                err_str = 'My HL count {:d} does not match your HL count {}'.format(self.hl_count, hl_count)
                 self._seg_error('HL1', err_str)
             if seg_data.get_value('HL02') != '':
                 hl_parent = self._int(seg_data.get_value('HL02'))
                 if hl_parent not in self.hl_stack:
-                    err_str = 'HL parent (%i) is not a valid parent' % (hl_parent)
+                    err_str = 'HL parent ({:d}) is not a valid parent'.format(hl_parent)
                     self._seg_error('HL2', err_str)
                 while self.hl_stack and hl_parent != self.hl_stack[-1]:
                     del self.hl_stack[-1]
@@ -149,9 +147,9 @@ class X12Base(object):
             self.lx_count = 0
         elif self.check_837_lx and seg_id == 'LX':
             self.lx_count += 1
-            if seg_data.get_value('LX01') != '%i' % (self.lx_count):
-                err_str = 'Your 2400/LX01 Service Line Number %s does not match my count of %i' % \
-                    (seg_data.get_value('LX01'), self.lx_count)
+            if seg_data.get_value('LX01') != '{:d}'.format(self.lx_count):
+                err_str = 'Your 2400/LX01 Service Line Number {} does not match my count of {:d}'.format(\
+                    seg_data.get_value('LX01'), self.lx_count)
                 self._seg_error('LX', err_str)
         # count all regular segments
         if seg_id not in ('ISA', 'IEA', 'GS', 'GE', 'ST', 'SE'):
@@ -310,7 +308,7 @@ class X12Reader(X12Base):
             if src_file_obj == '-':
                 self.fd_in = sys.stdin
             else:
-                self.fd_in = open(src_file_obj, 'U')
+                self.fd_in = open(src_file_obj, 'U', encoding='ascii')
                 self.need_to_close = True
         X12Base.__init__(self)
         try:
@@ -343,44 +341,46 @@ class X12Reader(X12Base):
         if seg_id == 'IEA':
             if self.loops[-1][0] != 'ISA':
                 # Unterminated GS loop
-                err_str = 'Unterminated Loop %s' % (self.loops[-1][0])
+                err_str = 'Unterminated Loop {}'.format(self.loops[-1][0])
                 self._isa_error('024', err_str)
                 del self.loops[-1]
             if self.loops[-1][1] != seg_data.get_value('IEA02'):
-                err_str = 'IEA id=%s does not match ISA id=%s' % \
-                    (seg_data.get_value('IEA02'), self.loops[-1][1])
+                err_str = 'IEA id={} does not match ISA id={}'.format(\
+                    seg_data.get_value('IEA02'), self.loops[-1][1])
                 self._isa_error('001', err_str)
             if self._int(seg_data.get_value('IEA01')) != self.gs_count:
-                err_str = 'IEA count for IEA02=%s is wrong' % \
-                    (seg_data.get_value('IEA02'))
+                err_str = 'IEA count for IEA02={} is wrong'.format(\
+                    seg_data.get_value('IEA02'))
                 self._isa_error('021', err_str)
             del self.loops[-1]
         elif seg_id == 'GE':
             if self.loops[-1][0] != 'GS':
-                err_str = 'Unterminated segment %s' % (self.loops[-1][1])
+                err_str = 'Unterminated segment {}'.format(self.loops[-1][1])
                 self._gs_error('3', err_str)
                 del self.loops[-1]
             if self.loops[-1][1] != seg_data.get_value('GE02'):
-                err_str = 'GE id=%s does not match GS id=%s' % \
-                    (seg_data.get_value('GE02'), self.loops[-1][1])
+                err_str = 'GE id={} does not match GS id={}'.format(\
+                    seg_data.get_value('GE02'), self.loops[-1][1])
                 self._gs_error('4', err_str)
             if self._int(seg_data.get_value('GE01')) != self.st_count:
-                err_str = 'GE count of %s for GE02=%s is wrong. I count %i'\
-                    % (seg_data.get_value('GE01'),
-                       seg_data.get_value('GE02'), self.st_count)
+                err_str = 'GE count of {} for GE02={} is wrong. I count {}'.format(\
+                    seg_data.get_value('GE01'),
+                    seg_data.get_value('GE02'), 
+                    self.st_count)
                 self._gs_error('5', err_str)
             del self.loops[-1]
         elif seg_id == 'SE':
             se_trn_control_num = seg_data.get_value('SE02')
             if self.loops[-1][0] != 'ST' or \
                     self.loops[-1][1] != se_trn_control_num:
-                err_str = 'SE id=%s does not match ST id=%s' % \
-                    (se_trn_control_num, self.loops[-1][1])
+                err_str = 'SE id={} does not match ST id={}'.format(\
+                    se_trn_control_num, self.loops[-1][1])
                 self._st_error('3', err_str)
             if self._int(seg_data.get_value('SE01')) != self.seg_count + 1:
-                err_str = 'SE count of %s for SE02=%s is wrong. I count %i'\
-                    % (seg_data.get_value('SE01'),
-                        se_trn_control_num, self.seg_count + 1)
+                err_str = 'SE count of {} for SE02={} is wrong. I count {}'.format(\
+                    seg_data.get_value('SE01'),
+                    se_trn_control_num, 
+                    self.seg_count + 1)
                 self._st_error('4', err_str)
             del self.loops[-1]
 
@@ -411,15 +411,15 @@ class X12Reader(X12Base):
             for (seg, id1) in self.loops:
                 if seg == 'ST':
                     err_str = 'Mandatory segment "Transaction Set Trailer" '
-                    err_str += '(SE=%s) missing' % (id1)
+                    err_str += '(SE={}) missing'.format(id1)
                     self._st_error('2', err_str)
                 elif seg == 'GS':
                     err_str = 'Mandatory segment "Functional Group Trailer" '
-                    err_str += '(GE=%s) missing' % (id1)
+                    err_str += '(GE={}) missing'.format(id1)
                     self._gs_error('3', err_str)
                 elif seg == 'ISA':
                     err_str = 'Mandatory segment "Interchange Control Trailer" '
-                    err_str += '(IEA=%s) missing' % (id1)
+                    err_str += '(IEA={}) missing'.format(id1)
                     self._isa_error('023', err_str)
                 #elif self.loops[-1][0] == 'LS':
                 #    err_str = 'LS id=%s was not closed with a LE' % \
@@ -451,8 +451,7 @@ class X12Writer(X12Base):
             if src_file_obj == '-':
                 self.fd_out = sys.stdout
             else:
-                self.fd_out = codecs.open(
-                    src_file_obj, mode='w', encoding='ascii')
+                self.fd_out = open(src_file_obj, mode='w', encoding='ascii')
         #assert self.fd_out.encoding in ('ascii', 'US-ASCII'), 'Outfile file must have ASCII encoding, is %s' % (self.fd_out.encoding)
         X12Base.__init__(self)
         #terms = set([seg_term, ele_term, subele_term, repetition_term])
@@ -488,7 +487,7 @@ class X12Writer(X12Base):
             self._popToLoop('ST')
         elif self.check_837_lx and seg_id == 'LX':
             # Write our own LX counter
-            seg_data.set('01', '%i' % (self.lx_count))
+            seg_data.set('01', '{:d}'.format(self.lx_count))
             self._write_segment(seg_data)
         elif seg_id == 'ISA':
             # Replace terminators
@@ -567,7 +566,7 @@ class X12Writer(X12Base):
         Write the ISA segment, using the current delimiters and end of line
 
         ISA*03*SENDER    *01*          *ZZ*SENDER         *ZZ*RECEIVER       *040608*1333*U*00401*000000288*0*P*:~
-        ISA*03*SENDER    *01*          *ZZ*SENDER         *ZZ*RECEIVER       *040611*1333*^*00501*000000125*0*P*\~
+        ISA*03*SENDER    *01*          *ZZ*SENDER         *ZZ*RECEIVER       *040611*1333*^*00501*000000125*0*P*\\~
 
         @param seg_data: ISA segment to write
         @type seg_data: L{segment<segment.Segment>}
@@ -593,6 +592,7 @@ class X12Writer(X12Base):
         @type id: string
         """
         ele_term = self.ele_term
-        seg_str = '%s%s%i%s%s' % (seg_id, ele_term, count, ele_term, id)
+        seg_str = '{seg_id}{ele_term}{count:d}{ele_term}{id}'.format(\
+            seg_id=seg_id, ele_term=ele_term, count=count, id=id)
         return pyx12.segment.Segment(seg_str, self.seg_term, self.ele_term,
                                      self.subele_term)

@@ -1,10 +1,11 @@
 #!/usr/bin/env python
+from __future__ import absolute_import
+from __future__ import print_function
 import sys
 import os
 import os.path
 import logging
 import argparse
-import pprint
 import json
 
 libpath = os.path.abspath(os.path.join(os.path.dirname(__file__), '../..'))
@@ -56,7 +57,7 @@ def x12n_iterator(param, src_file, map_path=None):
             print('--------------------------------------------')
             # reset to control map for ISA and GS loops
             print('------- counters before --------')
-            print(walker.counter._dict)
+            print((walker.counter._dict))
         if seg.get_seg_id() == 'ISA':
             node = control_map.getnodebypath('/ISA_LOOP/ISA')
             walker.forceWalkCounterToLoopStart('/ISA_LOOP', '/ISA_LOOP/ISA')
@@ -74,7 +75,7 @@ def x12n_iterator(param, src_file, map_path=None):
 
         if False:
             print('------- counters after --------')
-            print(walker.counter._dict)
+            print((walker.counter._dict))
         if node is None:
             node = orig_node
         else:
@@ -144,7 +145,7 @@ def x12n_iterator(param, src_file, map_path=None):
                 'prefix_nodes': [last_x12_segment_path]
             }
             res_ordinal += 1
-            
+
         for (refdes, ele_ord, comp_ord, val) in seg.values_iterator():
             elepath = node.parent.get_path() + '/' + refdes
             if elepath in res:
@@ -203,7 +204,7 @@ def main():
     parser.add_argument(
         '--log-file', '-l', action='store', dest="logfile", default=None)
     parser.add_argument('--map-path', '-m', action='store', dest="map_path", default=None, type=check_map_path_arg)
-    parser.add_argument('--verbose', '-v', action='count')
+    parser.add_argument('--verbose', '-v', action='count', default=0)
     parser.add_argument('--debug', '-d', action='store_true')
     parser.add_argument('--quiet', '-q', action='store_true')
     parser.add_argument('--html', '-H', action='store_true')
@@ -246,7 +247,7 @@ def main():
                 continue
             res = x12n_iterator(param=param, src_file=src_filename, map_path=args.map_path)
             json_file = os.path.join(os.path.dirname(os.path.abspath(src_filename)), 'node_list.json')
-            with file(json_file, 'w') as fd:
+            with open(json_file, 'w') as fd:
                 json.dump(res, fd, indent=4)
 
         except IOError:

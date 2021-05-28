@@ -12,6 +12,8 @@
 Create an XML rendering of the X12 document
 """
 
+from __future__ import absolute_import
+from __future__ import unicode_literals
 import os.path
 
 # Intrapackage imports
@@ -24,9 +26,10 @@ class x12xml(object):
     def __init__(self, fd, type, dtd_urn):
         self.writer = XMLWriter(fd)
         if dtd_urn:
-            self.writer.doctype(
-                type, "-//J Holland//DTD XML X12 Document Conversion1.0//EN//XML",
-                "%s" % (dtd_urn))
+            self.writer.doctype( \
+                type, \
+                "-//J Holland//DTD XML X12 Document Conversion1.0//EN//XML", \
+                dtd_urn)
         self.writer.push(type)
         self.last_path = None
 
@@ -64,25 +67,27 @@ class x12xml(object):
         self.writer.push(xname, attrib)
         for i in range(len(seg_data)):
             child_node = seg_node.get_child_node_by_idx(i)
-            if child_node.usage == 'N' or seg_data.get('%02i' % (i + 1)).is_empty():
+            _ele = seg_data.get('{idx:02d}'.format(idx=i + 1))
+            if child_node.usage == 'N' or _ele.is_empty():
                 pass  # Do not try to ouput for invalid or empty elements
             elif child_node.is_composite():
                 (xname, attrib) = self._get_comp_info(seg_node_id)
                 self.writer.push(xname, attrib)
-                comp_data = seg_data.get('%02i' % (i + 1))
+                comp_data = seg_data.get('{idx:02d}'.format(idx=i + 1))
                 for j in range(len(comp_data)):
                     subele_node = child_node.get_child_node_by_idx(j)
                     (xname, attrib) = self._get_subele_info(subele_node.id)
                     self.writer.elem(xname, comp_data[j].get_value(), attrib)
                 self.writer.pop()  # end composite
             elif child_node.is_element():
-                if seg_data.get_value('%02i' % (i + 1)) == '':
+                _ele = seg_data.get('{idx:02d}'.format(idx=i + 1))
+                if _ele == '':
                     pass
                     #self.writer.empty(u"ele", attrs={u'id': child_node.id})
                 else:
                     (xname, attrib) = self._get_ele_info(child_node.id)
-                    self.writer.elem(xname, seg_data.get_value(
-                        '%02i' % (i + 1)), attrib)
+                    _ele = seg_data.get('{idx:02d}'.format(idx=i + 1))
+                    self.writer.elem(xname, _ele, attrib)
             else:
                 raise EngineError('Node must be a either an element or a composite')
         self.writer.pop()  # end segment
@@ -108,25 +113,27 @@ class x12xml(object):
         self.writer.push(xname, attrib)
         for i in range(len(seg_data)):
             child_node = seg_node.get_child_node_by_idx(i)
-            if child_node.usage == 'N' or seg_data.get('%02i' % (i + 1)).is_empty():
+            _ele = seg_data.get('{idx:02d}'.format(idx=i + 1))
+            if child_node.usage == 'N' or _ele.is_empty():
                 pass  # Do not try to ouput for invalid or empty elements
             elif child_node.is_composite():
                 (xname, attrib) = self._get_comp_info(seg_node.id)
                 self.writer.push(xname, attrib)
-                comp_data = seg_data.get('%02i' % (i + 1))
+                comp_data = seg_data.get('{idx:02d}'.format(idx=i + 1))
                 for j in range(len(comp_data)):
                     subele_node = child_node.get_child_node_by_idx(j)
                     (xname, attrib) = self._get_subele_info(subele_node.id)
                     self.writer.elem(xname, comp_data[j].get_value(), attrib)
                 self.writer.pop()  # end composite
             elif child_node.is_element():
-                if seg_data.get_value('%02i' % (i + 1)) == '':
+                _ele = seg_data.get('{idx:02d}'.format(idx=i + 1))
+                if _ele == '':
                     pass
                     #self.writer.empty(u"ele", attrs={u'id': child_node.id})
                 else:
                     (xname, attrib) = self._get_ele_info(child_node.id)
-                    self.writer.elem(xname, seg_data.get_value(
-                        '%02i' % (i + 1)), attrib)
+                    _ele = seg_data.get('{idx:02d}'.format(idx=i + 1))
+                    self.writer.elem(xname, _ele, attrib)
             else:
                 raise EngineError('Node must be a either an element or a composite')
         self.writer.pop()  # end segment

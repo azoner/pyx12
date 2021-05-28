@@ -1,4 +1,6 @@
 #! /usr/bin/env python
+from __future__ import absolute_import
+from __future__ import print_function
 import sys
 from itertools import groupby
 import tempfile
@@ -14,7 +16,7 @@ def st_generator():
     """
     testfile = 'multiple_st_loops.txt'
     #wr = edifile.WriteFile(conn)
-    with open(testfile) as fd_in:
+    with open(testfile, encoding='ascii') as fd_in:
         isa_seg = None
         gs_seg = None
         isa_id = 11
@@ -51,7 +53,7 @@ def x12_split_on_st(source_filename, isa_id=11, gs_id=21):
     for k, g in groupby(get_headers_stream(src), lambda x: x[0]):
         idx += 1
         st_id = int(k['st_seg'].get_value('ST02'))
-        fd_temp = tempfile.TemporaryFile()
+        fd_temp = tempfile.TemporaryFile(mode='w+', encoding='ascii')
         wr = pyx12.x12file.X12Writer(fd_temp, '~', '*', ':', '\n', '^')
         wr.Write(update_isa_id(k['isa_seg'], isa_id + idx))
         wr.Write(update_gs_id(k['gs_seg'], gs_id + idx))
@@ -69,10 +71,10 @@ def save_many(src_filename, targetformat=None):
             newname = targetformat.format(isa_id=isa_id, gs_id=gs_id, st_id=st_id)
         else:
             newname = "newfile_{isa_id}.txt".format(isa_id=isa_id)
-        with open(newname, 'w') as fd_out:
+        with open(newname, 'w', encoding='ascii') as fd_out:
             fd_temp.seek(0)
             fd_out.write(fd_temp.read())
-            print(newname, isa_id, gs_id, st_id)
+            print((newname, isa_id, gs_id, st_id))
 
 
 def update_isa_id(seg_data, isa_id):

@@ -12,10 +12,13 @@
 External Codes interface
 """
 
+from __future__ import absolute_import
+from __future__ import print_function
+from __future__ import unicode_literals
 import os.path
 import logging
-from pkg_resources import resource_stream
 import xml.etree.cElementTree as et
+from pkg_resources import resource_stream
 
 # Intrapackage imports
 from pyx12.errors import EngineError
@@ -53,8 +56,8 @@ class ExternalCodes(object):
             code_fd = resource_stream(__name__, os.path.join('map', codes_file))
 
         self.exclude_list = exclude.split(',') if exclude is not None else []
-
-        for cElem in et.parse(code_fd).iter('codeset'):
+        parser = et.XMLParser(encoding="utf-8")
+        for cElem in et.parse(code_fd, parser=parser).iter('codeset'):
             codeset_id = cElem.findtext('id')
             name = cElem.findtext('name')
             data_ele = cElem.findtext('data_ele')

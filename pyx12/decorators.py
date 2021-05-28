@@ -1,3 +1,6 @@
+from __future__ import absolute_import
+from __future__ import print_function
+from __future__ import unicode_literals
 import functools
 import collections
 
@@ -22,7 +25,7 @@ def memoize(obj):
     @functools.wraps(obj)
     def memoizer(*args, **kwargs):
         if kwargs:  # frozenset is used to ensure hashability
-            key = args, frozenset(kwargs.iteritems())
+            key = args, frozenset(kwargs.items())
         else:
             key = args
         if key not in cache:
