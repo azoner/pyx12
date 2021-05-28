@@ -1,6 +1,10 @@
 name: Publish to PyPI
 
-on: push
+on: 
+  push:
+    # Sequence of patterns matched against refs/tags
+    tags:
+      - 'x*' # Push events to matching v*, i.e. v1.0, v20.15.10
 
 jobs:
   build:
@@ -10,8 +14,6 @@ jobs:
     steps:
     - name: checkout the repo
       uses: actions/checkout@master
-      with: 
-        ref: py3-portx
 
     - name: Set up Python
       uses: actions/setup-python@v1
