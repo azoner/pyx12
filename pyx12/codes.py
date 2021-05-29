@@ -94,5 +94,4 @@ class ExternalCodes(object):
         """
         Debug print first <count> codes
         """
-        for key in list(self.codes.keys()):
-            print((self.codes[key][:count]))
+        print([v for k,v in self.codes.items()[:count]])

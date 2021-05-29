@@ -81,7 +81,7 @@ class XMLWriter(object):
         """
         self._indent()
         self._write("<" + elem)
-        for (a, v) in list(attrs.items()):
+        for (a, v) in attrs.items():
             self._write(" {}='{}'".format(a, self._escape_attr(v)))
         self._write(">\n")
         self.stack.append(elem)
@@ -92,7 +92,7 @@ class XMLWriter(object):
         """
         self._indent()
         self._write("<" + elem)
-        for (a, v) in list(attrs.items()):
+        for (a, v) in attrs.items():
             self._write(" {}='{}'".format(a, self._escape_attr(v)))
         self._write(">{}</{}>\n".format(self._escape_cont(content), elem))
 
@@ -102,7 +102,7 @@ class XMLWriter(object):
         """
         self._indent()
         self._write("<" + elem)
-        for k, v in list(attrs.items()):
+        for k, v in attrs.items():
             self._write(" {attr_name}='{attr_val}'".format(attr_name=k, attr_val=v))
         self.out.write("/>\n")
 

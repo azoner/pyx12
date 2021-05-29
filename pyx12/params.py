@@ -49,7 +49,7 @@ class ParamsBase(object):
         @param option: Option name
         @type option: string
         """
-        if option in list(self.params.keys()):
+        if option in self.params.keys():
             return self.params[option]
         else:
             return None

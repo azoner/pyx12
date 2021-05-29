@@ -35,7 +35,7 @@ class NodeCounter(object):
         Keep count of xpath node
         """
         parent = NodeCounter.makeX12Path(xpath)
-        child_keys = list([x for x in self._dict.keys() if parent.is_child_path(x.format())])
+        child_keys = [x for x in self._dict.keys() if parent.is_child_path(x.format())]
         for k in child_keys:
             del self._dict[k]
 

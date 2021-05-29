@@ -75,8 +75,7 @@ class DataElements(object):
         return self.dataele[ele_num]
 
     def __repr__(self):
-        for ele_num in list(self.dataele.keys()):
-            print((self.dataele[ele_num]))
+        print([v for k,v in self.dataele.items()])
 
     def debug_print(self):
         """

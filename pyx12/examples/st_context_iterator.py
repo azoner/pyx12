@@ -125,12 +125,13 @@ def iterate_2000(fd_in):
     st_id = None
     for datatree in src.iter_segments('2000'):
         if datatree.id == 'ISA':
-# get_first_segment(xpath)
-            isa_seg = list(datatree.iterate_segments())[0]['segment']
-            #isa_id = datatree.get_value('ISA13')
+            for dt in datatree.iterate_segments():
+                isa_seg = dt['segment']
+                break
         elif datatree.id == 'GS':
-            gs_seg = list(datatree.iterate_segments())[0]['segment']
-            #gs_id = datatree.get_value('GS06')
+            for dt in datatree.iterate_segments():
+                gs_seg = dt['segment']
+                break
         elif datatree.id in ('IEA', 'GE'):
             pass
         else:
