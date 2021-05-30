@@ -23,7 +23,6 @@ logger = logging.getLogger('pyx12.error_handler')
 class err_iter(object):
     """
     Iterate over the error tree
-
     Implements an odd iterator???
     """
 
@@ -78,7 +77,7 @@ class err_handler(object):
     """
     The interface to the error handling structures.
     """
-    def __init__(self):
+    def __init__(self, errhandler):
         """
         """
 
@@ -93,6 +92,16 @@ class err_handler(object):
         self.seg_node_added = False
         self.cur_ele_node = None
         self.cur_line = 0
+        self.errhandler = errhandler
+        self.err_cnt = 0
+    
+    def add_summary(self, element_count):
+        """
+        Params:     element_count - reference to how many elements written in json output
+        """
+        sout = "Data Elements Written: {}".format(element_count)
+        sout += "Number of Errors Found: {}".format(self.err_cnt)
+        self.errhandler.write(sout)
 
     def accept(self, visitor):
         """
@@ -228,6 +237,8 @@ class err_handler(object):
         sout = ''
         sout += 'Line:%i ' % (self.cur_isa_node.get_cur_line())
         sout += 'ISA:%s - %s' % (err_cde, err_str)
+        self.errhandler.write(sout)
+        self.err_cnt += 1
         logger.error(sout)
         self.cur_isa_node.add_error(err_cde, err_str)
 
@@ -241,6 +252,8 @@ class err_handler(object):
         sout = ''
         sout += 'Line:%i ' % (self.cur_gs_node.get_cur_line())
         sout += 'GS:%s - %s' % (err_cde, err_str)
+        self.errhandler.write(sout)
+        self.err_cnt += 1
         logger.error(sout)
         self.cur_gs_node.add_error(err_cde, err_str)
 
@@ -254,6 +267,8 @@ class err_handler(object):
         sout = ''
         sout += 'Line:%i ' % (self.cur_st_node.get_cur_line())
         sout += 'ST:%s - %s' % (err_cde, err_str)
+        self.errhandler.write(sout)
+        self.err_cnt += 1
         logger.error(sout)
         self.cur_st_node.add_error(err_cde, err_str)
 
@@ -278,6 +293,9 @@ class err_handler(object):
         sout += 'SEG:%s - %s' % (err_cde, err_str)
         if err_value:
             sout += ' (%s)' % err_value
+        sout += ''
+        self.errhandler.write(sout)
+        self.err_cnt += 1
         logger.error(sout)
 
     def ele_error(self, err_cde, err_str, bad_value, refdes=None):
@@ -295,6 +313,9 @@ class err_handler(object):
         sout += 'ELE:%s - %s' % (err_cde, err_str)
         if bad_value:
             sout += ' (%s)' % (bad_value)
+        sout += ''
+        self.errhandler.write(sout)
+        self.err_cnt += 1
         logger.error(sout)
         #print(self.cur_ele_node.errors)
 
@@ -587,7 +608,6 @@ class err_gs(err_node):
         @type seg_data: L{segment<segment.Segment>}
         @param src: X12file source
         @type src: L{X12file<x12file.X12Reader>}
-
         """
         self.seg_data = seg_data
         self.isa_id = src.get_isa_id()
@@ -720,7 +740,6 @@ class err_gs(err_node):
 class err_st(err_node):
     """
     ST loops
-
     Needs:
         1. Transaction set id code (837, 834)
         2. Transaction set control number
@@ -771,7 +790,6 @@ class err_st(err_node):
     def close(self, node, seg_data, src):
         """
         Close ST loop
-
         @param node: SE node
         @type node: L{node<map_if.x12_node>}
         @param seg_data: Segment object
@@ -935,7 +953,6 @@ class err_ele(err_node):
     """
     Element Errors - Holds and generates output for element and
     composite/sub-element errors
-
     Each element with an error creates a new err_ele instance.
     """
     def __init__(self, parent, map_node):
