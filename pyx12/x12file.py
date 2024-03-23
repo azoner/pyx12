@@ -305,7 +305,7 @@ class X12Reader(X12Base):
             if src_file_obj == '-':
                 self.fd_in = sys.stdin
             else:
-                self.fd_in = open(src_file_obj, 'U', encoding='ascii')
+                self.fd_in = open(src_file_obj)
                 self.need_to_close = True
         X12Base.__init__(self)
         try:
