@@ -76,6 +76,12 @@ def x12n_document(param, src_file, fd_997, fd_html,
     map_file = 'x12.control.00501.xml' if src.icvn == '00501' else 'x12.control.00401.xml'
     logger.debug('X12 control file: %s' % (map_file))
     control_map = pyx12.map_if.load_map_file(map_file, param, map_path)
+    print("DEBUG")
+    print("map_file:  " + map_file)
+    print("param:  " + str(param))
+    print("map_path:  " + map_path)
+    print("control_map:  " + str(control_map))
+    print("DONE DEBUG")
     map_index_if = pyx12.map_index.map_index(map_path)
     node = control_map.getnodebypath('/ISA_LOOP/ISA')
     walker = walk_tree()
@@ -97,14 +103,13 @@ def x12n_document(param, src_file, fd_997, fd_html,
     for seg in src:
         #find node
         orig_node = node
-
         if False:
             print('--------------------------------------------')
             print(seg)
             print('--------------------------------------------')
             # reset to control map for ISA and GS loops
             print('------- counters before --------')
-            print((walker.counter._dict))
+            print(walker.counter._dict)
         if seg.get_seg_id() == 'ISA':
             node = control_map.getnodebypath('/ISA_LOOP/ISA')
             walker.forceWalkCounterToLoopStart('/ISA_LOOP', '/ISA_LOOP/ISA')
@@ -123,7 +128,7 @@ def x12n_document(param, src_file, fd_997, fd_html,
 
         if False:
             print('------- counters after --------')
-            print((walker.counter._dict))
+            print(walker.counter._dict)
         if node is None:
             node = orig_node
         else:
@@ -139,7 +144,13 @@ def x12n_document(param, src_file, fd_997, fd_html,
             elif seg.get_seg_id() == 'GS':
                 fic = seg.get_value('GS01')
                 vriic = seg.get_value('GS08')
+                print("DEBUG")
+                print(icvn)
+                print(fic)
+                print(vriic)
                 map_file_new = map_index_if.get_filename(icvn, vriic, fic)
+                print("DEBUG")
+                print(map_file_new)
                 if map_file != map_file_new:
                     map_file = map_file_new
                     if map_file is None:
