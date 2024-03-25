@@ -984,7 +984,8 @@ class segment_if(x12_node):
                 ref_des = '%02i' % (i + 1)
                 comp_data = seg_data.get(ref_des)
                 subele_count = child_node.get_child_count()
-                if seg_data.ele_len(ref_des) > subele_count and child_node.usage != 'N':
+
+                if seg_data.ele_len(ref_des) > subele_count and child_node.usage != 'R' and child_node.usage != 'S':
                     subele_node = child_node.get_child_node_by_idx(
                         subele_count + 1)
                     err_str = 'Too many sub-elements in composite "%s" (%s)' % \
@@ -1494,7 +1495,7 @@ class composite_if(x12_node):
             errh.ele_error('5', err_str, None, self.refdes)
             return False
 
-        if len(comp_data) > self.get_child_count():
+        if len(comp_data) > self.get_child_count() and self.refdes != 'HI02':
             err_str = 'Too many sub-elements in composite "%s" (%s)' % (
                 self.name, self.refdes)
             errh.ele_error('3', err_str, None, self.refdes)
