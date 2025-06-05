@@ -1,5 +1,3 @@
-from __future__ import absolute_import
-from __future__ import unicode_literals
 import os
 import os.path
 import unittest
@@ -29,7 +27,7 @@ class IsValidSyntaxP(unittest.TestCase):
     def test_P_ok(self):
         seg1 = ['NM1', '41', '1', 'Smith', 'Sam', '', '', '', '46', 'AAAA']
         seg = pyx12.segment.Segment('*'.join(seg1), '~', '*', ':')
-        syntax = ['P', 8, 9]
+        syntax = ['P', 8, 9]    
         #pdb.set_trace()
         (result, err_str) = pyx12.map_if.is_syntax_valid(seg, syntax)
         self.assertTrue(result, err_str)

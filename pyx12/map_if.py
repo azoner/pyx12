@@ -10,13 +10,11 @@
 """
 Interface to a X12N IG Map
 """
-from __future__ import absolute_import
-from __future__ import unicode_literals
 import logging
 import os.path
 import sys
 import re
-import xml.etree.cElementTree as et
+import xml.etree.ElementTree as et
 from pkg_resources import resource_stream
 
 # Intrapackage imports

@@ -1,15 +1,13 @@
-from __future__ import absolute_import
-from __future__ import unicode_literals
-import sys
-import os
+"""
+X12 metadata handling
+"""
+
 import os.path
 import logging
-
-libpath = os.path.abspath(os.path.join(os.path.dirname(__file__), '../..'))
-if os.path.isdir(libpath):
-    sys.path.insert(0, libpath)
+import xml.etree.ElementTree as et
 
 # Intrapackage imports
+from .errors import EngineError
 import pyx12.error_handler
 import pyx12.errors
 import pyx12.map_index

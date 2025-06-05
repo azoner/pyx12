@@ -15,9 +15,11 @@ If seg indicates a loop has been entered, returns the first child segment node.
 If seg indicates a segment has been entered, returns the segment node.
 """
 
-from __future__ import absolute_import
-from __future__ import unicode_literals
 import logging
+import os.path
+import sys
+import re
+from collections import OrderedDict
 
 # Intrapackage imports
 from .errors import EngineError

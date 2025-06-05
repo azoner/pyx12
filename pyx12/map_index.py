@@ -16,12 +16,9 @@ Locate the correct xml map file given:
     - Transaction Set Purpose Code (BHT02) (For 278 only)
 """
 
-from __future__ import absolute_import
-from __future__ import print_function
-from __future__ import unicode_literals
 import os.path
 import logging
-import xml.etree.cElementTree as et
+import xml.etree.ElementTree as et
 from pkg_resources import resource_stream
 
 
