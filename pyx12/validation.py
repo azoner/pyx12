@@ -11,15 +11,12 @@
 """
 X12 data element validation
 """
-from __future__ import absolute_import
-from __future__ import unicode_literals
 import re
 
 # Intrapackage imports
 from .errors import IsValidError, EngineError
 
 REGEX_MODE = re.S | re.ASCII
-string_types = (str, )
 
 def IsValidDataType(str_val, data_type, charset='B', icvn='00401'):
     """
@@ -36,7 +33,7 @@ def IsValidDataType(str_val, data_type, charset='B', icvn='00401'):
     """
     if not data_type:
         return True
-    if not isinstance(str_val, string_types):
+    if not isinstance(str_val, str):
         return False
 
     try:

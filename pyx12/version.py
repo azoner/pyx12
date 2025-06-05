@@ -1,2 +1,7 @@
-from __future__ import unicode_literals
-__version__ = "2.3.3"
+"""
+Version information
+"""
+
+__version__ = '2.0.0'
+__date__ = '2019-12-23'
+__revision__ = ''

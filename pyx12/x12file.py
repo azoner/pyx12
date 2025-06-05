@@ -9,18 +9,21 @@
 ######################################################################
 
 """
-Interface to an X12 data stream.
- - Efficiently handles large files.
- - Tracks end of explicit loops.
- - Tracks segment/line/loop counts.
- - Tracks some transaction specific counters:
-   837 2400/LX
-   837 HL tree
+Parse a ANSI X12 data file.
+
+Maintain context state
+Start saving context and segments
+Interface to read and alter segments
+
+@todo: Attach errors to returned dicts
 """
 
-from __future__ import absolute_import
-from __future__ import unicode_literals
+import logging
+import re
+import os.path
 import sys
+import tempfile
+from io import StringIO
 
 # Intrapackage imports
 import pyx12.errors

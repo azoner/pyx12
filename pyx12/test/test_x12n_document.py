@@ -1,5 +1,3 @@
-from __future__ import absolute_import
-from __future__ import unicode_literals
 import tempfile
 import unittest
 from io import StringIO
@@ -20,11 +18,11 @@ class X12DocumentTestCase(unittest.TestCase):
                 fd = StringIO(x12str)
             else:
                 fd = StringIO()
-        except:
+        except Exception as e:
             if x12str:
-                fd = StringIO(x12str, encoding='ascii')
+                fd = StringIO(x12str, encoding='utf-8')
             else:
-                fd = StringIO(encoding='ascii')
+                fd = StringIO(encoding='utf-8')
         fd.seek(0)
         return fd
 

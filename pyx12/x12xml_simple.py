@@ -12,10 +12,8 @@
 Create a XML rendering of the X12 document
 """
 
-from __future__ import absolute_import
-from __future__ import unicode_literals
-from os.path import commonprefix
 import logging
+from os.path import commonprefix
 
 # Intrapackage imports
 from .errors import EngineError
@@ -27,7 +25,7 @@ logger = logging.getLogger('pyx12.x12xml.simple')
 
 class x12xml_simple(x12xml):
     def __init__(self, fd, dtd_urn=None):
-        x12xml.__init__(self, fd, "x12simple", dtd_urn)
+        super().__init__(fd, "x12simple", dtd_urn)
         self.last_path = []
 
     def __del__(self):

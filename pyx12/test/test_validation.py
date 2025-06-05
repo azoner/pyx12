@@ -1,6 +1,6 @@
-from __future__ import absolute_import
-from __future__ import unicode_literals
 import unittest
+
+import pyx12.validation
 
 from pyx12.validation import IsValidDataType
 

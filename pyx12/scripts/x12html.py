@@ -17,13 +17,11 @@ Create a html document based on the data file
 Write to the standard output stream
 """
 
-from __future__ import absolute_import
-from __future__ import print_function
-import glob
+import sys
 import os
 import os.path
-import sys
 import logging
+import argparse
 
 # Intrapackage imports
 libpath = os.path.abspath(os.path.join(os.path.dirname(__file__), '../..'))
@@ -53,7 +51,6 @@ def main():
     """
     Set up environment for processing
     """
-    import argparse
     parser = argparse.ArgumentParser(description='Format an X12 file as HTML')
     parser.add_argument('--config-file', '-c', action='store',
                         dest="configfile", default=None)
