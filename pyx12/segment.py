@@ -291,19 +291,32 @@ class Segment(object):
         self.elements: List[Composite] = []
         if seg_str is None or seg_str == '':
             return
-        if seg_str[-1] == seg_term:
-            elems = seg_str[:-1].split(self.ele_term)
-        else:
-            elems = seg_str.split(self.ele_term)
-        if elems:
-            self.seg_id = elems[0]
-        for ele in elems[1:]:
+            
+        self.seg_id, elems = self._split_elements(seg_str)
+        for ele in elems:
             if self.seg_id == 'ISA':
                 #Special handling for ISA segment
                 #guarantee subele_term will not be matched
                 self.elements.append(Composite(ele, ele_term))
             else:
                 self.elements.append(Composite(ele, subele_term))
+
+    def _split_elements(self, seg_str: str) -> Tuple[Optional[str], List[str]]:
+        """
+        Split a segment string into its segment ID and elements.
+
+        @param seg_str: Segment string to split
+        @type seg_str: string
+        @return: Tuple of (segment ID, list of element strings)
+        @rtype: Tuple[Optional[str], List[str]]
+        """
+        if seg_str[-1] == self.seg_term:
+            elems = seg_str[:-1].split(self.ele_term)
+        else:
+            elems = seg_str.split(self.ele_term)
+            
+        seg_id = elems[0] if elems else None
+        return seg_id, elems[1:] if elems else []
 
     def __eq__(self, other):
         if isinstance(other, Segment):
