@@ -9,19 +9,17 @@
 ######################################################################
 
 """
-Interface to normalized Data Elements
+Data element handling
 """
 
-from __future__ import absolute_import
-from __future__ import print_function
-from __future__ import unicode_literals
+import sys
 import os.path
 import logging
 import xml.etree.cElementTree as et
 from pkg_resources import resource_stream
 
 # Intrapackage imports
-from pyx12.errors import EngineError
+from .errors import EngineError
 
 
 class DataElementsError(Exception):

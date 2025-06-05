@@ -19,8 +19,6 @@ import logging
 from .errors import EngineError
 
 # Intrapackage imports
-from __future__ import print_function
-from __future__ import unicode_literals
 from .error_visitor import error_visitor
 
 

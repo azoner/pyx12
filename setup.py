@@ -1,4 +1,11 @@
-from __future__ import absolute_import
+#!/usr/bin/env python
+"""
+Setup script for pyx12
+"""
+
+import sys
+import os.path
+import logging
 from setuptools import setup
 
 # from pyx12.version import __version__

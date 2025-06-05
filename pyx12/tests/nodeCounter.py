@@ -1,4 +1,10 @@
-from __future__ import absolute_import
+"""
+Node counter test
+"""
+
+import sys
+import os.path
+import logging
 import unittest
 
 from pyx12.nodeCounter import NodeCounter
