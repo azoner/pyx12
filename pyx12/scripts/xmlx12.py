@@ -14,12 +14,11 @@
 Create an X12 document from a XML data file
 """
 
-from __future__ import absolute_import
-from __future__ import print_function
+import sys
 import os
 import os.path
-import sys
 import logging
+import argparse
 
 # Intrapackage imports
 libpath = os.path.abspath(os.path.join(os.path.dirname(__file__), '../..'))
@@ -27,6 +26,7 @@ if os.path.isdir(libpath):
     sys.path.insert(0, libpath)
 import pyx12.segment
 import pyx12.xmlx12_simple
+import pyx12.params
 
 #Global Variables
 __author__ = pyx12.__author__
@@ -37,7 +37,6 @@ __date__ = pyx12.__date__
 
 def main():
     """Script main program."""
-    import argparse
     parser = argparse.ArgumentParser(description='XML to X12 conversion')
     parser.add_argument('--log-file', '-l', action='store', dest="logfile", default=None)
     parser.add_argument('--verbose', '-v', action='count', default=0)

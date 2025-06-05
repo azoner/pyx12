@@ -9,14 +9,13 @@
 ######################################################################
 
 """
-Interface to X12 Errors
+Error handler
 """
 
-from __future__ import absolute_import
-from __future__ import unicode_literals
+import sys
+import os.path
 import logging
 
-# Intrapackage imports
 from .errors import IterOutOfBounds  # , IterDone
 
 logger = logging.getLogger('pyx12.error_handler')

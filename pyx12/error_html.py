@@ -9,15 +9,16 @@
 ######################################################################
 
 """
-Generates HTML error output
+Error HTML handling
 """
 
-from __future__ import absolute_import
-from __future__ import unicode_literals
-import time
+import sys
+import os.path
 import logging
+import time
 
 # Intrapackage imports
+from .errors import EngineError
 
 logger = logging.getLogger('pyx12.error_html')
 logger.setLevel(logging.DEBUG)

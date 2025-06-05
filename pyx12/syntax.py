@@ -11,11 +11,13 @@
 #    $Id: map_if.py 1472 2011-10-13 19:20:13Z johnholland $
 
 """
-X12 syntax validation functions
+X12 syntax validation
 """
-from __future__ import unicode_literals
-from __future__ import absolute_import
 
+import re
+
+# Intrapackage imports
+from .errors import IsValidError, EngineError
 
 def is_syntax_valid(seg_data, syn):
     """

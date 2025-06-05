@@ -1,12 +1,14 @@
 #!/usr/bin/env python
-from __future__ import absolute_import
-from __future__ import print_function
-import glob
+"""
+Display information about an X12 file
+"""
+
 import sys
 import os
 import os.path
-import argparse
 import logging
+import argparse
+import glob
 import json
 
 libpath = os.path.abspath(os.path.join(os.path.dirname(__file__), '../..'))
@@ -16,7 +18,9 @@ if os.path.isdir(libpath):
 import pyx12
 from pyx12.x12metadata import get_x12file_metadata, get_x12file_metadata_headers
 #import pyx12.x12file
-#import pyx12.error_handler
+import pyx12.error_handler
+import pyx12.x12n_document
+import pyx12.params
 
 __author__ = pyx12.__author__
 __status__ = pyx12.__status__

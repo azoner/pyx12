@@ -15,24 +15,22 @@ Parse a ANSI X12N data file.
 Validate against a map and codeset values.
 """
 
-from __future__ import absolute_import
-from __future__ import print_function
+import sys
 import os
 import os.path
-from os.path import abspath, join, dirname, isdir, isfile
-import sys
 import logging
-import tempfile
 import argparse
 import glob
+import tempfile
 
 # Intrapackage imports
-libpath = abspath(join(dirname(__file__), '../..'))
-if isdir(libpath):
+libpath = os.path.abspath(os.path.join(os.path.dirname(__file__), '../..'))
+if os.path.isdir(libpath):
     sys.path.insert(0, libpath)
 import pyx12
 import pyx12.x12n_document
 import pyx12.params
+import pyx12.error_handler
 
 __author__ = pyx12.__author__
 __status__ = pyx12.__status__
@@ -41,10 +39,10 @@ __date__ = pyx12.__date__
 
 
 def check_map_path_arg(map_path):
-    if not isdir(map_path):
+    if not os.path.isdir(map_path):
         raise argparse.ArgumentError(None, "The MAP_PATH '{}' is not a valid directory.  Current directory is {}".format(map_path, os.getcwd()))
     index_file = 'maps.xml'
-    if not isfile(os.path.join(map_path, index_file)):
+    if not os.path.isfile(os.path.join(map_path, index_file)):
         raise argparse.ArgumentError(None,
                     "The MAP_PATH '{}' does not contain the map index file '{}'".format(map_path, index_file))
     return map_path

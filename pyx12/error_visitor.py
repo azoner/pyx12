@@ -9,11 +9,20 @@
 ######################################################################
 
 """
+Error visitor handling
+"""
+
+import sys
+import os.path
+import logging
+
+from .errors import EngineError
+
+"""
 Visitor - Visits an error_handler composite
 """
 
 
-from __future__ import unicode_literals
 class error_visitor(object):
     """
     """

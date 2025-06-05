@@ -15,8 +15,12 @@ Overrides defined in a xml document.
 NOT IMPLEMENTED
 """
 
+import sys
+import os.path
+import logging
 
-from __future__ import unicode_literals
+from .errors import EngineError
+
 class map_override(object):
     """
     Apply local overrides to the current map. Overrides defined in a xml document.

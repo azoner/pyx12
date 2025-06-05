@@ -1,10 +1,14 @@
-#! /usr/bin/env python
-from __future__ import absolute_import
-from __future__ import print_function
+#!/usr/bin/env python
+"""
+Deidentify 834 file
+"""
+
 import sys
-import getopt
+import os
 import os.path
 import logging
+import argparse
+import getopt
 import random
 
 # Intrapackage imports
@@ -17,6 +21,7 @@ import pyx12.x12file
 import pyx12.x12context
 import pyx12.params
 import pyx12.segment
+import pyx12.error_handler
 
 from collections import namedtuple
 
@@ -24,13 +29,6 @@ from collections import namedtuple
 __author__ = 'John Holland'
 __version__ = '1.0'
 __date__ = '2015-02-12'
-
-"""
-De-indentify 834 Enrollment file
-
-Not production ready
-
-"""
 
 VERBOSE = 0
 

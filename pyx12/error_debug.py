@@ -9,9 +9,14 @@
 ######################################################################
 
 """
-Generates error debug output
-Visitor - Visits an error_handler composite
+Error debug handling
 """
+
+import sys
+import os.path
+import logging
+
+from .errors import EngineError
 
 # Intrapackage imports
 from __future__ import print_function

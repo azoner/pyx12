@@ -9,10 +9,12 @@
 ######################################################################
 
 """
-Loop and segment counter
+Count nodes in an X12 document
 """
-from __future__ import absolute_import
-from __future__ import unicode_literals
+
+import sys
+import os.path
+import logging
 from collections import OrderedDict
 import pyx12.path
 from .decorators import dump_args

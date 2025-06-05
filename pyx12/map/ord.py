@@ -1,10 +1,8 @@
-#! /usr/bin/env python
-
 """
-check ordinal ordering
+Ordered dictionary implementation
 """
 
-from __future__ import absolute_import
+import collections
 import os.path
 import sys
 

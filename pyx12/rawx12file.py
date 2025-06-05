@@ -12,12 +12,15 @@ Low level interface to an X12 data input stream.
 Iterates over segment line strings.
 Used by X12Reader.
 """
-from __future__ import unicode_literals
+
+import logging
+import os.path
+import sys
+import re
 
 # Intrapackage imports
-from __future__ import absolute_import
-import pyx12.errors
-import pyx12.segment
+from .errors import EngineError, X12Error
+from .segment import Segment
 
 DEFAULT_BUFSIZE = 8 * 1024
 ISA_LEN = 106
@@ -40,14 +43,14 @@ class RawX12File(object):
         line = self.fd.read(ISA_LEN)
         if line[:3] != 'ISA':
             err_str = "First line does not begin with 'ISA': %s" % line[:3]
-            raise pyx12.errors.X12Error(err_str)
+            raise X12Error(err_str)
         if len(line) != ISA_LEN:
             err_str = 'ISA line is only %i characters' % len(line)
-            raise pyx12.errors.X12Error(err_str)
+            raise X12Error(err_str)
         self.icvn = line[84:89]
         if self.icvn not in ('00401', '00501'):
             err_str = 'ISA Interchange Control Version Number is unknown: %s for %s' % (self.icvn, line)
-            raise pyx12.errors.X12Error(err_str)
+            raise X12Error(err_str)
         self.seg_term = line[-1]
         self.ele_term = line[3]
         self.subele_term = line[-2]

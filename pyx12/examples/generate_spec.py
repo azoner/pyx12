@@ -1,5 +1,8 @@
 #!/usr/bin/env python
-from __future__ import absolute_import
+"""
+Generate X12 specification
+"""
+
 import sys
 import os
 import os.path

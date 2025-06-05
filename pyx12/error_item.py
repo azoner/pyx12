@@ -9,9 +9,13 @@
 ######################################################################
 
 """
+Error item handling
 """
 
-from __future__ import unicode_literals
+import sys
+import os.path
+import logging
+
 from .errors import EngineError
 
 isa_errors = ('000', '001', '002', '003', '004', '005', '006', '007', '008',

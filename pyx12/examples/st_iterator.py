@@ -1,7 +1,19 @@
-#! /usr/bin/env python
-from __future__ import absolute_import
-from __future__ import print_function
+#!/usr/bin/env python
+"""
+Example of iterating over segments in a transaction
+"""
+
 import sys
+import os
+import os.path
+import logging
+
+libpath = os.path.abspath(os.path.join(os.path.dirname(__file__), '../..'))
+if os.path.isdir(libpath):
+    sys.path.insert(0, libpath)
+
+import pyx12.error_handler
+import pyx12.x12file
 from itertools import groupby
 import tempfile
 import random

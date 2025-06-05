@@ -16,14 +16,14 @@ Order of precedence:
  2. Config files as constructor parameters
  3. self.params - Defaults
 """
-from __future__ import absolute_import
-from __future__ import unicode_literals
-from os.path import dirname, abspath, join, isdir, isfile, expanduser
-import sys
-import xml.etree.cElementTree as et
-import logging
 
-from pyx12.errors import EngineError
+import os.path
+import sys
+import logging
+import configparser
+import xml.etree.cElementTree as et
+
+from .errors import EngineError
 
 
 class ParamsBase(object):
@@ -34,11 +34,11 @@ class ParamsBase(object):
         self.logger = logging.getLogger('pyx12.params')
         self.params = {}
         #First, try relative path
-        base_dir = dirname(dirname(abspath(sys.argv[0])))
-        map_path = join(base_dir, 'map')
+        base_dir = os.path.dirname(os.path.dirname(os.path.abspath(sys.argv[0])))
+        map_path = os.path.join(base_dir, 'map')
         #Then look in standard installation location
-        if not isdir(map_path):
-            map_path = join(sys.prefix, 'share', 'pyx12', 'map')
+        if not os.path.isdir(map_path):
+            map_path = os.path.join(sys.prefix, 'share', 'pyx12', 'map')
         self.params['map_path'] = map_path
         self.params['exclude_external_codes'] = None
         self.params['charset'] = 'E'
@@ -78,7 +78,7 @@ class ParamsBase(object):
         @raise EngineError: If the config file is not found or is unreadable
         @return: None
         """
-        if not isfile(filename):
+        if not os.path.isfile(filename):
             self.logger.debug('Configuration file "%s" does not exist' %
                               filename)
             raise EngineError('Configuration file "%s" does not exist' %
@@ -136,10 +136,10 @@ class ParamsUnix(ParamsBase):
     """
     def __init__(self, config_file=None):
         ParamsBase.__init__(self)
-        config_files = [join(sys.prefix, 'etc/pyx12.conf.xml'),
-                        expanduser('~/.pyx12.conf.xml')]
+        config_files = [os.path.join(sys.prefix, 'etc/pyx12.conf.xml'),
+                        os.path.expanduser('~/.pyx12.conf.xml')]
         for filename in config_files:
-            if isfile(filename):
+            if os.path.isfile(filename):
                 self.logger.debug('Read param file: %s' % (filename))
                 self._read_config_file(filename)
         if config_file:
@@ -155,9 +155,9 @@ class ParamsWindows(ParamsBase):
     """
     def __init__(self, config_file=None):
         ParamsBase.__init__(self)
-        config_files = [join(sys.prefix, 'etc/pyx12.conf.xml')]
+        config_files = [os.path.join(sys.prefix, 'etc/pyx12.conf.xml')]
         for filename in config_files:
-            if isfile(filename):
+            if os.path.isfile(filename):
                 self.logger.debug('Read param file: %s' % (filename))
                 self._read_config_file(filename)
         if config_file:

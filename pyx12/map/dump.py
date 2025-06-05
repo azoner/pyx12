@@ -1,9 +1,12 @@
-#! /usr/bin/env python
+#!/usr/bin/env python
+"""
+Dump map file
+"""
 
-from __future__ import absolute_import
-from __future__ import print_function
-import os.path
 import sys
+import os.path
+import logging
+import argparse
 
 import pyx12.error_handler
 import pyx12.map_if

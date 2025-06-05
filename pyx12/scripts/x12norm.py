@@ -6,12 +6,12 @@ If no source file is given, read from stdin.
 If no ouput filename is given with -o,  write to stdout.
 """
 
-from __future__ import absolute_import
-import glob
 import sys
+import os
 import os.path
 import tempfile
 import logging
+import argparse
 
 # Intrapackage imports
 libpath = os.path.abspath(os.path.join(os.path.dirname(__file__), '../..'))
@@ -19,6 +19,9 @@ if os.path.isdir(libpath):
     sys.path.insert(0, libpath)
 import pyx12
 import pyx12.x12file
+import pyx12.error_handler
+import pyx12.x12n_document
+import pyx12.params
 
 __author__ = pyx12.__author__
 __status__ = pyx12.__status__
@@ -27,7 +30,6 @@ __date__ = pyx12.__date__
 
 
 def main():
-    import argparse
     parser = argparse.ArgumentParser(description='X12 Validation')
     parser.add_argument('--verbose', '-v', action='count', default=0)
     parser.add_argument('--quiet', '-q', action='store_true')
