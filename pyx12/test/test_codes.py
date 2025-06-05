@@ -1,6 +1,6 @@
-from __future__ import absolute_import
-from __future__ import unicode_literals
 import unittest
+import os.path
+import sys
 
 import pyx12.codes
 import pyx12.error_handler
@@ -40,9 +40,8 @@ class TestExternalMapPath(unittest.TestCase):
     Load Codes interface
     """
     def setUp(self):
-        import os.path
-        self.param = pyx12.params.params()
         map_path = os.path.join(os.path.dirname(pyx12.codes.__file__), 'map')
+        self.param = pyx12.params.params()
         self.ext_codes = pyx12.codes.ExternalCodes(map_path, self.param.get('exclude_external_codes'))
 
     def test_valid_state1(self):

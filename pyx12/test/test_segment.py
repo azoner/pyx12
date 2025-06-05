@@ -1,9 +1,7 @@
-from __future__ import absolute_import
-from __future__ import unicode_literals
 import unittest
 
 import pyx12.segment
-from pyx12.errors import *
+from pyx12.errors import EngineError
 
 
 class ArbitraryDelimiters(unittest.TestCase):

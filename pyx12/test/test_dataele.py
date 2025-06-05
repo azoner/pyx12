@@ -1,9 +1,10 @@
-from __future__ import absolute_import
-from __future__ import unicode_literals
 import unittest
+import os.path
+import sys
 
 import pyx12.dataele
 from pyx12.errors import EngineError
+import pyx12.params
 
 
 class BadDataElem(unittest.TestCase):
@@ -47,7 +48,6 @@ class LookupDataElem(unittest.TestCase):
 class LookupDataElemMapPath(unittest.TestCase):
 
     def setUp(self):
-        import os.path
         map_path = os.path.join(os.path.dirname(pyx12.dataele.__file__), 'map')
         self.de = pyx12.dataele.DataElements(map_path)
 
