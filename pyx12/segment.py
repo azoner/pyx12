@@ -18,18 +18,22 @@ treated as a composite element with one sub-element.
 All indexing is zero based.
 """
 import re
+from typing import List, Optional, Tuple, Union, Dict, Any, Iterator
+import logging
 
 import pyx12.path
 from pyx12.errors import EngineError
 
 rec_seg_id = re.compile('^[A-Z][A-Z0-9]{1,2}$', re.S)
 
+logger = logging.getLogger('pyx12')
+
 class Element(object):
     """
     Holds a simple element, which is just a simple string.
     """
 
-    def __init__(self, ele_str):
+    def __init__(self, ele_str: Optional[str]) -> None:
         """
         @param ele_str: 1::2
         @type ele_str: string
@@ -120,7 +124,7 @@ class Composite(object):
     # Attributes:
 
     # Operations
-    def __init__(self, ele_str, subele_term=None):
+    def __init__(self, ele_str: str, subele_term: Optional[str] = None) -> None:
         """
         @type ele_str: string
         @raise EngineError: If a terminator is None and no default
@@ -132,7 +136,7 @@ class Composite(object):
         if ele_str is None:
             raise EngineError('Element string is None')
         members = ele_str.split(self.subele_term)
-        self.elements = []
+        self.elements: List[Element] = []
         for elem in members:
             self.elements.append(Element(elem))
 
@@ -260,18 +264,31 @@ class Segment(object):
     # Attributes:
 
     # Operations
-    def __init__(self, seg_str, seg_term, ele_term, subele_term, repetition_term='^'):
+    def __init__(self, seg_str: str, seg_term: str = '~', ele_term: str = '*', 
+                 subele_term: str = ':', repetition_term: Optional[str] = None) -> None:
         """
+        Initialize the segment
+
+        @param seg_str: Segment string
+        @type seg_str: string
+        @param seg_term: Segment terminator
+        @type seg_term: string
+        @param ele_term: Element terminator
+        @type ele_term: string
+        @param subele_term: Sub-element terminator
+        @type subele_term: string
+        @param repetition_term: Repetition terminator
+        @type repetition_term: string
         """
-        self.seg_term = seg_term
-        self.seg_term_orig = seg_term
-        self.ele_term = ele_term
-        self.ele_term_orig = ele_term
-        self.subele_term = subele_term
-        self.subele_term_orig = subele_term
+        self.seg_term: str = seg_term
+        self.seg_term_orig: str = seg_term
+        self.ele_term: str = ele_term
+        self.ele_term_orig: str = ele_term
+        self.subele_term: str = subele_term
+        self.subele_term_orig: str = subele_term
         self.repetition_term = repetition_term
-        self.seg_id = None
-        self.elements = []
+        self.seg_id: Optional[str] = None
+        self.elements: List[Composite] = []
         if seg_str is None or seg_str == '':
             return
         if seg_str[-1] == seg_term:
@@ -336,8 +353,11 @@ class Segment(object):
         """
         return len(self.elements)
 
-    def get_seg_id(self):
+    def get_seg_id(self) -> str:
         """
+        Get the segment ID
+
+        @return: Segment ID
         @rtype: string
         """
         return self.seg_id
@@ -385,9 +405,11 @@ class Segment(object):
                 return None
             return self.elements[ele_idx][comp_idx]
 
-    def get_value(self, ref_des):
+    def get_value(self, ref_des: str) -> str:
         """
-        @param ref_des: X12 Reference Designator
+        Get the value of an element or sub-element
+
+        @param ref_des: Reference designator (e.g. 'NM101' or 'NM01-1')
         @type ref_des: string
         """
         comp1 = self.get(ref_des)
@@ -404,15 +426,15 @@ class Segment(object):
         """
         raise DeprecationWarning('Use Segment.get_value')
 
-    def set(self, ref_des, val):
+    def set(self, ref_des: str, value: str) -> None:
         """
         Set the value of an element or subelement identified by the
         Reference Designator
 
-        @param ref_des: X12 Reference Designator
+        @param ref_des: X12 Reference designator (e.g. 'NM101' or 'NM01-1')
         @type ref_des: string
-        @param val: New value
-        @type val: string
+        @param value: New value
+        @type value: string
         """
         (ele_idx, comp_idx) = self._parse_refdes(ref_des)
         while len(self.elements) <= ele_idx:
@@ -421,15 +443,15 @@ class Segment(object):
         if self.seg_id == 'ISA' and ele_idx == 15:
             #Special handling for ISA segment
             #guarantee subele_term will not be matched
-            self.elements[ele_idx] = Composite(val, self.ele_term)
+            self.elements[ele_idx] = Composite(value, self.ele_term)
             return
         if comp_idx is None:
-            self.elements[ele_idx] = Composite(val, self.subele_term)
+            self.elements[ele_idx] = Composite(value, self.subele_term)
         else:
             while len(self.elements[ele_idx]) <= comp_idx:
                 # insert blank values before our value if needed
                 self.elements[ele_idx].elements.append(Element(''))
-            self.elements[ele_idx][comp_idx] = Element(val)
+            self.elements[ele_idx][comp_idx] = Element(value)
 
     def is_element(self, ref_des):
         """
@@ -478,8 +500,17 @@ class Segment(object):
         """
         self.subele_term = subele_term
 
-    def format(self, seg_term=None, ele_term=None, subele_term=None):
+    def format(self, seg_term: str = '~', ele_term: str = '*', subele_term: str = ':') -> str:
         """
+        Format the segment as a string
+
+        @param seg_term: Segment terminator
+        @type seg_term: string
+        @param ele_term: Element terminator
+        @type ele_term: string
+        @param subele_term: Sub-element terminator
+        @type subele_term: string
+        @return: Formatted segment string
         @rtype: string
         @raise EngineError: If a terminator is None and no default
         """
