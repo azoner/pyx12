@@ -12,6 +12,7 @@ import os.path
 import tempfile
 import logging
 import argparse
+import glob
 
 # Intrapackage imports
 libpath = os.path.abspath(os.path.join(os.path.dirname(__file__), '../..'))

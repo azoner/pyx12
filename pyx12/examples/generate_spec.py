@@ -9,6 +9,7 @@ import os.path
 import logging
 import argparse
 import json
+from pyx12 import param
 
 libpath = os.path.abspath(os.path.join(os.path.dirname(__file__), '../..'))
 if os.path.isdir(libpath):

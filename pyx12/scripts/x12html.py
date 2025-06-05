@@ -20,8 +20,10 @@ Write to the standard output stream
 import sys
 import os
 import os.path
+from os.path import isdir, isfile
 import logging
 import argparse
+import glob
 
 # Intrapackage imports
 libpath = os.path.abspath(os.path.join(os.path.dirname(__file__), '../..'))
