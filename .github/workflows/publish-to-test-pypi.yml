@@ -39,6 +39,7 @@ jobs:
       if: |
         contains(github.ref, 'dev') || 
         contains(github.ref, 'develop') || 
+        contains(github.ref, 'port') || 
         contains(github.ref, 'feature') || 
         contains(github.ref, 'release') ||
         contains(github.ref, 'rc')
