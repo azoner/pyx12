@@ -19,7 +19,10 @@ All indexing is zero based.
 """
 from __future__ import absolute_import
 from __future__ import unicode_literals
+from __future__ import annotations
+from typing import List, Optional, Tuple, Union
 import re
+import logging
 
 import pyx12.path
 from pyx12.errors import EngineError
