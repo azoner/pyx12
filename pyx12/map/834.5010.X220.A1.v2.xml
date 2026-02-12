@@ -2050,11 +2050,11 @@
           <!--End of 2320 loop-->
         </loop>
         <!--End of 2300 loop-->
-        <loop xid="2700_LS" pos="6800" usage="S" repeat="1" name="Additional Reporting Categories">
+        <loop xid="2700_LS" pos="6880" usage="S" repeat="&gt;1" name="Additional Reporting Categories">
           <segment xid="LS" usage="R" pos="6880" max_use="1" name="Additional Reporting Categories">
-            <element xid="LS01" data_ele="447" usage="R" seq="01" name="Loop Identifier Code" >
+            <element xid="LS01" data_ele="447" usage="R" seq="01" name="Loop Identifier Code">
               <valid_codes>
-                 <code>2700</code>
+                <code>2700</code>
               </valid_codes>
             </element>
           </segment>

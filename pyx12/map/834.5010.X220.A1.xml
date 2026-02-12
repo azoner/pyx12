@@ -4790,8 +4790,8 @@
             <loop xid="2700_LS">
               <name>Additional Reporting Categories</name>
               <usage>S</usage>
-              <pos>6800</pos>
-              <repeat>1</repeat>
+              <pos>6880</pos>
+              <repeat>&gt;1</repeat>
               <segment xid="LS">
                 <name>Additional Reporting Categories</name>
                 <usage>R</usage>
@@ -4803,8 +4803,8 @@
                   <usage>R</usage>
                   <seq>01</seq>
                   <valid_codes>
-                        <code>2700</code>
-                      </valid_codes>
+                    <code>2700</code>
+                  </valid_codes>
                 </element>
               </segment>
               <!--End of LS segment-->
@@ -4973,12 +4973,12 @@
                     <name>Loop Identifier Code</name>
                     <usage>R</usage>
                     <seq>01</seq>
-                      <valid_codes>
-                        <code>2700</code>
-                      </valid_codes>
-                   </element>
+                    <valid_codes>
+                      <code>2700</code>
+                    </valid_codes>
+                  </element>
                 </segment>
-                <!--End of LE segment-->                
+                <!--End of LE segment-->
               </loop>
               <!--End of 2700 loop-->
             </loop>
