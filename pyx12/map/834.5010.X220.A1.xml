@@ -4787,14 +4787,14 @@
               <!--End of 2320 loop-->
             </loop>
             <!--End of 2300 loop-->
-            <loop xid="2700_LS">
+            <loop xid="LS_LOOP">
               <name>Additional Reporting Categories</name>
               <usage>S</usage>
-              <pos>6800</pos>
+              <pos>6880</pos>
               <repeat>1</repeat>
               <segment xid="LS">
                 <name>Additional Reporting Categories</name>
-                <usage>R</usage>
+                <usage>S</usage>
                 <pos>6880</pos>
                 <max_use>1</max_use>
                 <element xid="LS01">
@@ -4803,8 +4803,8 @@
                   <usage>R</usage>
                   <seq>01</seq>
                   <valid_codes>
-                        <code>2700</code>
-                      </valid_codes>
+                    <code>2700</code>
+                  </valid_codes>
                 </element>
               </segment>
               <!--End of LS segment-->
@@ -4963,26 +4963,26 @@
                   <!--End of DTP segment-->
                 </loop>
                 <!--End of 2750 loop-->
-                <segment xid="LE">
-                  <name>Additional Reporting Categories Loop Termination</name>
-                  <usage>S</usage>
-                  <pos>6885</pos>
-                  <max_use>1</max_use>
-                  <element xid="LE01">
-                    <data_ele>447</data_ele>
-                    <name>Loop Identifier Code</name>
-                    <usage>R</usage>
-                    <seq>01</seq>
-                      <valid_codes>
-                        <code>2700</code>
-                      </valid_codes>
-                   </element>
-                </segment>
-                <!--End of LE segment-->                
               </loop>
               <!--End of 2700 loop-->
+              <segment xid="LE">
+                <name>Additional Reporting Categories Loop Termination</name>
+                <usage>S</usage>
+                <pos>6885</pos>
+                <max_use>1</max_use>
+                <element xid="LE01">
+                  <data_ele>447</data_ele>
+                  <name>Loop Identifier Code</name>
+                  <usage>R</usage>
+                  <seq>01</seq>
+                  <valid_codes>
+                    <code>2700</code>
+                  </valid_codes>
+                </element>
+              </segment>
+              <!--End of LE segment-->
             </loop>
-            <!--End of 2700_LS loop-->
+            <!--End of LS_LOOP loop-->
           </loop>
           <!--End of 2000 loop-->
         </loop>

@@ -1,5 +1,5 @@
 ######################################################################
-# Copyright (c) 
+# Copyright (c)
 #   John Holland <john@zoner.org>
 # All rights reserved.
 #
@@ -36,11 +36,11 @@ class X12Path(object):
     Interface to an x12 path
     """
 
-    re_seg_id = '(?P<seg_id>[A-Z][A-Z0-9]{1,2})?'
-    re_id_val = '(\[(?P<id_val>[A-Z0-9]+)\])?'
-    re_ele_idx = '(?P<ele_idx>[0-9]{2})?'
-    re_subele_idx = '(-(?P<subele_idx>[0-9]+))?'
-    re_str = '^%s%s%s%s$' % (re_seg_id, re_id_val, re_ele_idx, re_subele_idx)
+    re_seg_id = r'(?P<seg_id>[A-Z][A-Z0-9]{1,2})?'
+    re_id_val = r'(\[(?P<id_val>[A-Z0-9]+)\])?'
+    re_ele_idx = r'(?P<ele_idx>[0-9]{2})?'
+    re_subele_idx = r'(-(?P<subele_idx>[0-9]+))?'
+    re_str = r'^%s%s%s%s$' % (re_seg_id, re_id_val, re_ele_idx, re_subele_idx)
     rec_path = re.compile(re_str, re.S)
 
     def __init__(self, path_str):
@@ -65,7 +65,7 @@ class X12Path(object):
             #self.loop_list = [x for x in path_str[1:].split('/') if x != '']
         else:
             self.relative = True
-            self.loop_list = path_str.split('/') 
+            self.loop_list = path_str.split('/')
             #self.loop_list = [x for x in path_str.split('/') if x != '']
         if len(self.loop_list) == 0:
             return

@@ -14,7 +14,7 @@ External Codes interface
 
 import os.path
 import logging
-from pkg_resources import resource_stream
+from importlib.resources import files
 import xml.etree.cElementTree as et
 
 # Intrapackage imports
@@ -50,7 +50,7 @@ class ExternalCodes(object):
             code_fd = open(os.path.join(base_path, codes_file))
         else:
             logger.debug("Looking for codes file '{}' in pkg_resources".format(codes_file))
-            code_fd = resource_stream(__name__, os.path.join('map', codes_file))
+            code_fd = files(__name__).joinpath('map', codes_file).open('rb')
 
         self.exclude_list = exclude.split(',') if exclude is not None else []
 

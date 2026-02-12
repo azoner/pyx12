@@ -144,7 +144,7 @@ def x12n_iterator(param, src_file, map_path=None):
                 'prefix_nodes': [last_x12_segment_path]
             }
             res_ordinal += 1
-            
+
         for (refdes, ele_ord, comp_ord, val) in seg.values_iterator():
             elepath = node.parent.get_path() + '/' + refdes
             if elepath in res:
