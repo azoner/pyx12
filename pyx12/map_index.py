@@ -22,7 +22,7 @@ from __future__ import unicode_literals
 import os.path
 import logging
 import xml.etree.cElementTree as et
-from pkg_resources import resource_stream
+from importlib.resources import files as _res_files
 
 
 class map_index(object):
@@ -49,7 +49,7 @@ class map_index(object):
             fd = open(os.path.join(base_path, maps_index_file))
         else:
             logger.debug("Looking for map index file '{}' in pkg_resources".format(maps_index_file))
-            fd = resource_stream(__name__, os.path.join('map', maps_index_file))
+            fd = _res_files('pyx12').joinpath('map', maps_index_file).open('rb')
         parser = et.XMLParser(encoding="utf-8")
         _t = et.parse(fd, parser=parser)
         for _v in _t.iter('version'):

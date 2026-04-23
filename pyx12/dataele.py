@@ -18,7 +18,7 @@ from __future__ import unicode_literals
 import os.path
 import logging
 import xml.etree.cElementTree as et
-from pkg_resources import resource_stream
+from importlib.resources import files as _res_files
 
 # Intrapackage imports
 from pyx12.errors import EngineError
@@ -51,7 +51,7 @@ class DataElements(object):
             fd = open(os.path.join(base_path, dataele_file))
         else:
             logger.debug("Looking for data element definition file '{}' in pkg_resources".format(dataele_file))
-            fd = resource_stream(__name__, os.path.join('map', dataele_file))
+            fd = _res_files('pyx12').joinpath('map', dataele_file).open('rb')
         parser = et.XMLParser(encoding="utf-8")
         for eElem in et.parse(fd, parser=parser).iter('data_ele'):
             ele_num = eElem.get('ele_num')

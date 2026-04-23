@@ -18,7 +18,7 @@ from __future__ import unicode_literals
 import os.path
 import logging
 import xml.etree.cElementTree as et
-from pkg_resources import resource_stream
+from importlib.resources import files as _res_files
 
 # Intrapackage imports
 from pyx12.errors import EngineError
@@ -53,7 +53,7 @@ class ExternalCodes(object):
             code_fd = open(os.path.join(base_path, codes_file))
         else:
             logger.debug("Looking for codes file '{}' in pkg_resources".format(codes_file))
-            code_fd = resource_stream(__name__, os.path.join('map', codes_file))
+            code_fd = _res_files('pyx12').joinpath('map', codes_file).open('rb')
 
         self.exclude_list = exclude.split(',') if exclude is not None else []
         parser = et.XMLParser(encoding="utf-8")

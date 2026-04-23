@@ -24,6 +24,14 @@ classifiers = [
     "Intended Audience :: Developers",
     "Topic :: Software Development :: Libraries :: Python Modules",
 ]
+dependencies = []
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=7.0",
+    "pytest-cov",
+    "coverage",
+]
 
 [project.urls]
 Homepage = "https://github.com/azoner/pyx12"

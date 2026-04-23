@@ -17,7 +17,7 @@ import os.path
 import sys
 import re
 import xml.etree.cElementTree as et
-from pkg_resources import resource_stream
+from importlib.resources import files as _res_files
 
 # Intrapackage imports
 from .errors import EngineError
@@ -1536,7 +1536,7 @@ def load_map_file(map_file, param, map_path=None):
         map_fd = open(os.path.join(map_path, map_file))
     else:
         logger.debug("Looking for map file '{}' in pkg_resources".format(map_file))
-        map_fd = resource_stream(__name__, os.path.join('map', map_file))
+        map_fd = _res_files('pyx12').joinpath('map', map_file).open('rb')
     imap = None
     try:
         logger.debug('Create map from %s' % (map_file))
