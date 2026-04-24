@@ -15,8 +15,6 @@ Parse a ANSI X12N data file.
 Validate against a map and codeset values.
 """
 
-from __future__ import absolute_import
-from __future__ import print_function
 import os
 import os.path
 from os.path import abspath, join, dirname, isdir, isfile
@@ -104,7 +102,7 @@ def main():
             hdlr = logging.FileHandler(args.logfile)
             hdlr.setFormatter(formatter)
             logger.addHandler(hdlr)
-        except IOError:
+        except OSError:
             logger.exception('Could not open log file: %s' % (args.logfile))
 # %%
     for fn in args.input_files:
@@ -113,7 +111,6 @@ def main():
                 if not os.path.isfile(src_filename):
                     logger.error('Could not open file "%s"' % (src_filename))
                     continue
-                #fd_src = open(src_filename, 'U')
                 if flag_997:
                     fd_997 = tempfile.TemporaryFile(mode='w+', encoding='ascii')
                 if args.html:
@@ -121,7 +118,7 @@ def main():
                         target_html = os.path.splitext(src_filename)[0] + '.html'
                     else:
                         target_html = src_filename + '.html'
-                    fd_html = open(target_html, 'w')
+                    fd_html = open(target_html, 'w', encoding='utf-8')
 
                 if args.profile:
                     from plop.collector import Collector
@@ -165,13 +162,14 @@ def main():
                         target_997 = os.path.splitext(src_filename)[0] + '.997'
                     else:
                         target_997 = src_filename + '.997'
-                    open(target_997, mode='w', encoding='ascii').write(fd_997.read())
+                    with open(target_997, mode='w', encoding='ascii') as f997:
+                        f997.write(fd_997.read())
 
                 if fd_997:
                     fd_997.close()
                 if fd_html:
                     fd_html.close()
-            except IOError:
+            except OSError:
                 logger.exception('Could not open files')
                 return False
             except KeyboardInterrupt:
