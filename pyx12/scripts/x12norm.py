@@ -26,7 +26,6 @@ __status__ = pyx12.__status__
 __version__ = pyx12.__version__
 __date__ = pyx12.__date__
 
-
 def main():
     parser = argparse.ArgumentParser(description='Format an X12 document')
     parser.add_argument('--verbose', '-v', action='count', default=0)
@@ -88,7 +87,6 @@ def main():
             else:
                 sys.stdout.write(content)
     return True
-
 
 if __name__ == '__main__':
     sys.exit(not main())

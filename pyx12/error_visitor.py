@@ -12,9 +12,7 @@
 Visitor - Visits an error_handler composite
 """
 
-
-from __future__ import unicode_literals
-class error_visitor(object):
+class error_visitor:
     """
     """
 

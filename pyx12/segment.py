@@ -17,8 +17,6 @@ treated as a composite element with one sub-element.
 
 All indexing is zero based.
 """
-from __future__ import absolute_import
-from __future__ import unicode_literals
 from __future__ import annotations
 from typing import List, Optional, Tuple, Union
 import re
@@ -29,7 +27,7 @@ from pyx12.errors import EngineError
 
 rec_seg_id = re.compile('^[A-Z][A-Z0-9]{1,2}$', re.S)
 
-class Element(object):
+class Element:
     """
     Holds a simple element, which is just a simple string.
     """
@@ -117,7 +115,7 @@ class Element(object):
     # return ''.join([`num` for num in xrange(loop_count)])
     # def has_invalid_character(self, 
 
-class Composite(object):
+class Composite:
     """
     Can be a simple element or a composite.
     A simple element is treated as a composite element with one sub-element.
@@ -257,8 +255,7 @@ class Composite(object):
                 subele_ord = '{comp}'.format(comp=j+1)
                 yield (subele_ord, self.elements[j].get_value())
 
-
-class Segment(object):
+class Segment:
     """
     Encapsulates a X12 segment.  Contains composites.
     """

@@ -13,9 +13,6 @@
 """
 X12 syntax validation functions
 """
-from __future__ import unicode_literals
-from __future__ import absolute_import
-
 
 def is_syntax_valid(seg_data, syn):
     """
@@ -111,7 +108,6 @@ def is_syntax_valid(seg_data, syn):
     #raise EngineError
     return (False, 'Syntax Type %s Not Found' % (syntax_str(syn)))
 
-
 def syntax_str(syntax):
     """
     @rtype: string
@@ -120,7 +116,6 @@ def syntax_str(syntax):
     for i in syntax[1:]:
         output += '{:02d}'.format(i)
     return output
-
 
 def syntax_ele_id_str(seg_id, ele_pos_list):
     """

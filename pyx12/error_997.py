@@ -13,8 +13,6 @@ Generates a 997 Response
 Visitor - Visits an error_handler composite
 """
 
-from __future__ import absolute_import
-from __future__ import unicode_literals
 import time
 import logging
 
@@ -25,7 +23,6 @@ import pyx12.segment
 
 logger = logging.getLogger('pyx12.error_997')
 logger.setLevel(logging.DEBUG)
-
 
 class error_997_visitor(error_visitor.error_visitor):
     """

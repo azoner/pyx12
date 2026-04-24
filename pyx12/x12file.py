@@ -18,8 +18,6 @@ Interface to an X12 data stream.
    837 HL tree
 """
 
-from __future__ import absolute_import
-from __future__ import unicode_literals
 import sys
 
 # Intrapackage imports
@@ -27,8 +25,7 @@ import pyx12.errors
 import pyx12.segment
 from pyx12.rawx12file import RawX12File
 
-
-class X12Base(object):
+class X12Base:
     """
     Base class of X12 Reader and X12 Writer
     Common X12 validation
@@ -282,7 +279,6 @@ class X12Base(object):
         """
         return (self.seg_term, self.ele_term, self.subele_term, '\n', self.repetition_term)
 
-
 class X12Reader(X12Base):
     """
     Read an X12 data file
@@ -427,7 +423,6 @@ class X12Reader(X12Base):
 
 # Backward compatible name
 X12file = X12Reader
-
 
 class X12Writer(X12Base):
     """

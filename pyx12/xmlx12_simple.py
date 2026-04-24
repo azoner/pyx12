@@ -12,15 +12,12 @@
 Create an X12 document from a XML data file in the simple form
 """
 
-from __future__ import absolute_import
-from __future__ import unicode_literals
-import xml.etree.cElementTree as et
+import xml.etree.ElementTree as et
 import logging
 
 # Intrapackage imports
 import pyx12.segment
 import pyx12.x12file
-
 
 def convert(filename, fd_out):
     """
@@ -38,7 +35,6 @@ def convert(filename, fd_out):
         if node.tag == 'seg':
             wr.Write(get_segment(node))
     return True
-
 
 def get_segment(cSegment):
     """

@@ -37,7 +37,6 @@ __status__ = pyx12.__status__
 __version__ = pyx12.__version__
 __date__ = pyx12.__date__
 
-
 def check_map_path_arg(map_path):
     if not isdir(map_path):
         raise argparse.ArgumentError(None, "The MAP_PATH '{}' is not a valid directory.  Current directory is {}".format(map_path, os.getcwd()))
@@ -46,7 +45,6 @@ def check_map_path_arg(map_path):
         raise argparse.ArgumentError(None,
                     "The MAP_PATH '{}' does not contain the map index file '{}'".format(map_path, index_file))
     return map_path
-
 
 def main():
     """

@@ -1,8 +1,5 @@
-from __future__ import absolute_import
-from __future__ import print_function
-from __future__ import unicode_literals
+import collections.abc
 import functools
-import collections
 
 # See https://wiki.python.org/moin/PythonDecoratorLibrary
 
@@ -18,7 +15,6 @@ def dump_args(func):
 
     return echo_func
 
-
 def memoize(obj):
     cache = obj.cache = {}
 
@@ -33,8 +29,7 @@ def memoize(obj):
         return cache[key]
     return memoizer
 
-
-class memoized(object):
+class memoized:
     '''Decorator. Caches a function's return value each time it is called.
     If called later with the same arguments, the cached value is returned
     (not reevaluated).
@@ -43,7 +38,7 @@ class memoized(object):
         self.func = func
         self.cache = {}
     def __call__(self, *args):
-        if not isinstance(args, collections.Hashable):
+        if not isinstance(args, collections.abc.Hashable):
             # uncacheable. a list, for instance.
             # better to not cache than blow up.
             return self.func(*args)

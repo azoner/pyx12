@@ -11,15 +11,12 @@
 """
 X12 data element validation
 """
-from __future__ import absolute_import
-from __future__ import unicode_literals
 import re
 
 # Intrapackage imports
 from .errors import IsValidError, EngineError
 
 REGEX_MODE = re.S | re.ASCII
-string_types = (str, )
 
 def IsValidDataType(str_val, data_type, charset='B', icvn='00401'):
     """
@@ -36,7 +33,7 @@ def IsValidDataType(str_val, data_type, charset='B', icvn='00401'):
     """
     if not data_type:
         return True
-    if not isinstance(str_val, string_types):
+    if not isinstance(str_val, str):
         return False
 
     try:
@@ -70,15 +67,14 @@ def IsValidDataType(str_val, data_type, charset='B', icvn='00401'):
     return True
 
 rec_N = re.compile("^-?[0-9]+", REGEX_MODE)
-rec_R = re.compile("^-?[0-9]*(\.[0-9]+)?", REGEX_MODE)
+rec_R = re.compile(r"^-?[0-9]*(\.[0-9]+)?", REGEX_MODE)
 rec_ID_E = re.compile(
-    "[^A-Z0-9!\"&'()*+,\-\./:;?=\sa-z%~@\[\]_{}\\\|<>#$\s]", REGEX_MODE)
+    r"""[^A-Z0-9!"&'()*+,\-\./:;?=\sa-z%~@\[\]_{}\\|<>#$\s]""", REGEX_MODE)
 rec_ID_E5 = re.compile(
-    "[^A-Z0-9!\"&'()*+,\-\./:;?=\sa-z%~@\[\]_{}\\\|<>^`#$\s]", REGEX_MODE)
-rec_ID_B = re.compile("[^A-Z0-9!\"&'()*+,\-\./:;?=\s]", REGEX_MODE)
-rec_DT = re.compile("[^0-9]+", REGEX_MODE)
-rec_TM = re.compile("[^0-9]+", REGEX_MODE)
-
+    r"""[^A-Z0-9!"&'()*+,\-\./:;?=\sa-z%~@\[\]_{}\\|<>^`#$\s]""", REGEX_MODE)
+rec_ID_B = re.compile(r"""[^A-Z0-9!"&'()*+,\-\./:;?=\s]""", REGEX_MODE)
+rec_DT = re.compile(r"[^0-9]+", REGEX_MODE)
+rec_TM = re.compile(r"[^0-9]+", REGEX_MODE)
 
 def match_re(short_data_type, val):
     """
@@ -101,7 +97,6 @@ def match_re(short_data_type, val):
     if m.group(0) != val:  # matched substring != original, bad
         return False  # nothing matched
     return True
-
 
 def not_match_re(short_data_type, val, charset='B', icvn='00401'):
     """
@@ -132,7 +127,6 @@ def not_match_re(short_data_type, val, charset='B', icvn='00401'):
     if m and m.group(0):
         return True  # Invalid char matched
     return False
-
 
 def is_valid_date(data_type, val):
     """
@@ -188,7 +182,6 @@ def is_valid_date(data_type, val):
         return False
     return True
 
-
 def is_valid_time(val):
     """
     @param val: time value to be verified
@@ -212,7 +205,6 @@ def is_valid_time(val):
     except (IsValidError, ValueError):
         return False
     return True
-
 
 def contains_control_character(str_val, charset='B', icvn='00401'):
     if '\n' in str_val:

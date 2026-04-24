@@ -1,6 +1,4 @@
 #! /usr/bin/env python
-from __future__ import absolute_import
-from __future__ import print_function
 import sys
 import getopt
 import os.path
@@ -20,7 +18,6 @@ import pyx12.segment
 
 from collections import namedtuple
 
-
 __author__ = 'John Holland'
 __version__ = '1.0'
 __date__ = '2015-02-12'
@@ -37,12 +34,10 @@ VERBOSE = 0
 logger = logging.getLogger()
 sub_idx = 0
 
-
 Demographic = namedtuple('Demographic', 'primaryId, ssn, \
         medicaidId, dob, dod, firstname, lastname, middlename, street, street2, county')
 
-
-class FakeDeidentify(object):
+class FakeDeidentify:
     def __init__(self):
         pass
 
@@ -51,8 +46,7 @@ class FakeDeidentify(object):
                 '', 'Joe', 'Smith', '', '123 Elm', '', '99')
         return demo
 
-
-class RandomDeidentify(object):
+class RandomDeidentify:
     def __init__(self):
         self.identities = {}
 
@@ -75,7 +69,6 @@ class RandomDeidentify(object):
         self.identities[primaryId] = demo
         return demo
 
-
 def deidentify_file(fd_in):
     """
     """
@@ -94,7 +87,6 @@ def deidentify_file(fd_in):
                 #wr.Write(seg1['segment'].format())
                 print((seg1['segment'].format()))
 
-
 def scrub2000(loop_sub, deident):
     primaryId = loop_sub.get_value('2100A/NM109')
     demo = deident.getDeidentified(primaryId, loop_sub)
@@ -109,7 +101,6 @@ def scrub2000(loop_sub, deident):
     loop_sub.set_value('2100A/N406', demo.county)
     loop_sub.set_value('2100A/DMG02', demo.dob)
 
-
 def usage():
     pgm_nme = os.path.basename(sys.argv[0])
     sys.stdout.write('%s %s (%s)\n' % (pgm_nme, __version__, __date__))
@@ -118,7 +109,6 @@ def usage():
     sys.stdout.write('  -h         Help\n')
     sys.stdout.write('  -d         Debug mode\n')
     sys.stdout.write('  -o output_directory \n')
-
 
 def main():
     try:

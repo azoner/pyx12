@@ -1,7 +1,5 @@
 #! /usr/bin/env python
 
-from __future__ import absolute_import
-from __future__ import print_function
 import os.path
 import sys
 
@@ -9,7 +7,6 @@ import pyx12.error_handler
 import pyx12.map_if
 from pyx12.params import params
 import pyx12.segment
-
 
 def donode(node):
     print((node.get_path()))

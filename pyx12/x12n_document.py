@@ -13,9 +13,6 @@ Parse a ANSI X12N data file.  Validate against a map and codeset values.
 Create XML, HTML, and 997/999 documents based on the data file.
 """
 
-from __future__ import absolute_import
-from __future__ import print_function
-from __future__ import unicode_literals
 import logging
 
 # Intrapackage imports
@@ -30,7 +27,6 @@ import pyx12.x12file
 from pyx12.map_walker import walk_tree
 import pyx12.x12xml_simple
 
-
 def _reset_counter_to_isa_counts(walker):
     """
     Reset ISA instance counts
@@ -39,7 +35,6 @@ def _reset_counter_to_isa_counts(walker):
     walker.counter.increment('/ISA_LOOP')
     walker.counter.increment('/ISA_LOOP/ISA')
 
-
 def _reset_counter_to_gs_counts(walker):
     """
     Reset GS instance counts
@@ -47,7 +42,6 @@ def _reset_counter_to_gs_counts(walker):
     walker.counter.reset_to_node('/ISA_LOOP/GS_LOOP')
     walker.counter.increment('/ISA_LOOP/GS_LOOP')
     walker.counter.increment('/ISA_LOOP/GS_LOOP/GS')
-
 
 def x12n_document(param, src_file, fd_997, fd_html,
                   fd_xmldoc=None, xslt_files=None, map_path=None,
@@ -201,9 +195,8 @@ def x12n_document(param, src_file, fd_997, fd_html,
         if callback:
             try:
                 callback(seg, src, node, valid)
-            except:
+            except Exception:
                 logger.error('callback failed')
-                pass
         if fd_html:
             if node is not None and node.is_first_seg_in_loop():
                 html.loop(node.get_parent())

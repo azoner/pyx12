@@ -23,8 +23,6 @@ Interface to read and alter segments
 #import os.path
 
 # Intrapackage imports
-from __future__ import absolute_import
-from __future__ import unicode_literals
 import pyx12
 from . import error_handler
 from . import errors
@@ -34,10 +32,7 @@ from . import x12file
 from . import path
 from .map_walker import walk_tree, pop_to_parent_loop  # get_pop_loops, get_push_loops
 
-string_types = (str, )
-
-
-class X12DataNode(object):
+class X12DataNode:
     """
     Capture the segment data and X12 definition for a loop subtree
     Alter relational data
@@ -267,7 +262,6 @@ class X12DataNode(object):
         if self.x12_map_node is None:
             raise errors.EngineError('This node has been deleted')
         return self.x12_map_node.get_path()
-
 
 class X12LoopDataNode(X12DataNode):
     """
@@ -519,7 +513,7 @@ class X12LoopDataNode(X12DataNode):
         """
         if isinstance(seg_obj, pyx12.segment.Segment):
             return seg_obj
-        elif isinstance(seg_obj, string_types):
+        elif isinstance(seg_obj, str):
             (seg_term, ele_term, subele_term) = self._get_terminators()
             assert seg_term is not None, 'seg_term is none, node contains no X12SegmentDataNode children?'
             assert ele_term is not None, 'seg_term is none, node contains no X12SegmentDataNode children?'
@@ -559,7 +553,6 @@ class X12LoopDataNode(X12DataNode):
     def cur_line_number(self):
         for child in [x for x in self.children if x.type == 'seg']:
             return child.cur_line_number
-
 
 class X12SegmentDataNode(X12DataNode):
     """
@@ -746,8 +739,7 @@ class X12SegmentDataNode(X12DataNode):
         """
         return len(self.err_isa) + len(self.err_gs) + len(self.err_st) + len(self.err_seg) + len(self.err_ele)
 
-
-class X12ContextReader(object):
+class X12ContextReader:
     """
     Read an X12 input stream
     Keep context when needed

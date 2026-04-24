@@ -10,13 +10,11 @@
 """
 Interface to a X12N IG Map
 """
-from __future__ import absolute_import
-from __future__ import unicode_literals
 import logging
 import os.path
 import sys
 import re
-import xml.etree.cElementTree as et
+import xml.etree.ElementTree as et
 from importlib.resources import files as _res_files
 
 # Intrapackage imports
@@ -29,8 +27,7 @@ from .syntax import is_syntax_valid
 
 MAXINT = 2147483647
 
-
-class x12_node(object):
+class x12_node:
     """
     X12 Node Superclass
     """
@@ -174,7 +171,6 @@ class x12_node(object):
         @rtype: boolean
         """
         return False
-
 
 ############################################################
 # Map file interface
@@ -370,7 +366,6 @@ class map_if(x12_node):
                 if child.is_loop() or child.is_segment():
                     for c in child.loop_segment_iterator():
                         yield c
-
 
 ############################################################
 # Loop Interface
@@ -680,7 +675,6 @@ class loop_if(x12_node):
                 if child.is_loop() or child.is_segment():
                     for c in child.loop_segment_iterator():
                         yield c
-
 
 class segment_if(x12_node):
     """
@@ -1079,7 +1073,6 @@ class segment_if(x12_node):
     def loop_segment_iterator(self):
         yield self
 
-
 ############################################################
 # Element Interface
 ############################################################
@@ -1392,7 +1385,6 @@ class element_if(x12_node):
             p = p.parent
         return p
 
-
 ############################################################
 # Composite Interface
 ############################################################
@@ -1514,7 +1506,6 @@ class composite_if(x12_node):
         @rtype: boolean
         """
         return True
-
 
 def load_map_file(map_file, param, map_path=None):
     """

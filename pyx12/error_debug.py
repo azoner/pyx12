@@ -14,10 +14,7 @@ Visitor - Visits an error_handler composite
 """
 
 # Intrapackage imports
-from __future__ import print_function
-from __future__ import unicode_literals
 from .error_visitor import error_visitor
-
 
 class error_debug_visitor(error_visitor):
     """

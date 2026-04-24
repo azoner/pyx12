@@ -15,8 +15,6 @@ If seg indicates a loop has been entered, returns the first child segment node.
 If seg indicates a segment has been entered, returns the segment node.
 """
 
-from __future__ import absolute_import
-from __future__ import unicode_literals
 import logging
 
 # Intrapackage imports
@@ -27,7 +25,6 @@ from .nodeCounter import NodeCounter
 logger = logging.getLogger('pyx12.walk_tree')
 #logger.setLevel(logging.DEBUG)
 #logger.setLevel(logging.ERROR)
-
 
 def pop_to_parent_loop(node):
     """
@@ -47,7 +44,6 @@ def pop_to_parent_loop(node):
         raise EngineError("Called pop_to_parent_loop, can't find parent loop")
     return map_node
 
-
 def is_first_seg_match2(child, seg_data):
     """
     Find the first segment in loop, verify it matches segment
@@ -66,7 +62,6 @@ def is_first_seg_match2(child, seg_data):
             return False
     return False
 
-
 def get_id_list(node_list):
     # get_id_list(pop)
     ret = []
@@ -74,7 +69,6 @@ def get_id_list(node_list):
         if node is not None:
             ret.append(node.id)
     return ret
-
 
 def traverse_path(start_node, pop_loops, push_loops):
     """
@@ -89,8 +83,7 @@ def traverse_path(start_node, pop_loops, push_loops):
         p1.append(loop_id)
     return '/' + '/'.join(p1)
 
-
-class walk_tree(object):
+class walk_tree:
     """
     Walks a map_if tree.  Tracks loop/segment counting, missing loop/segment.
     """

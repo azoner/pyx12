@@ -11,14 +11,11 @@
 """
 Loop and segment counter
 """
-from __future__ import absolute_import
-from __future__ import unicode_literals
 from collections import OrderedDict
 import pyx12.path
 from .decorators import dump_args
 
-
-class NodeCounter(object):
+class NodeCounter:
     """
     X12 Loop and Segment Node Counter
     """

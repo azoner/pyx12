@@ -11,7 +11,6 @@
 """
 """
 
-from __future__ import unicode_literals
 from .errors import EngineError
 
 isa_errors = ('000', '001', '002', '003', '004', '005', '006', '007', '008',
@@ -21,8 +20,7 @@ isa_errors = ('000', '001', '002', '003', '004', '005', '006', '007', '008',
 seg_errors = ('1', '2', '3', '4', '5', '6', '7', '8')
 ele_errors = ('1', '2', '3', '4', '5', '6', '7', '8', '9', '10')
 
-
-class ErrorItem(object):
+class ErrorItem:
     """
     Wrap an X12 validation error
     """
@@ -44,14 +42,12 @@ class ErrorItem(object):
     def getErrStr(self):
         return self.err_str
 
-
 class ISAError(ErrorItem):
     def __init__(self, err_cde, err_str):
         ErrorItem.__init__(self, 'isa', err_cde, err_str)
         if self.err_cde not in isa_errors:
             raise EngineError('Invalid ISA level error code "%s"' %
                               (self.err_cde))
-
 
 class SegError(ErrorItem):
     def __init__(self, err_cde, err_str, err_val=None):
@@ -63,7 +59,6 @@ class SegError(ErrorItem):
 
     def getErrVal(self):
         return self.err_val
-
 
 class EleError(ErrorItem):
     def __init__(self, err_cde, err_str, ele_idx, subele_idx=None,

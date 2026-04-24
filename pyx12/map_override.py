@@ -15,9 +15,7 @@ Overrides defined in a xml document.
 NOT IMPLEMENTED
 """
 
-
-from __future__ import unicode_literals
-class map_override(object):
+class map_override:
     """
     Apply local overrides to the current map. Overrides defined in a xml document.
     """

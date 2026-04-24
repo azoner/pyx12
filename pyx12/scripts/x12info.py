@@ -21,7 +21,6 @@ __status__ = pyx12.__status__
 __version__ = pyx12.__version__
 __date__ = pyx12.__date__
 
-
 def check_map_path_arg(map_path):
     if not os.path.isdir(map_path):
         raise argparse.ArgumentTypeError(f"MAP_PATH '{map_path}' is not a valid directory")
@@ -31,7 +30,6 @@ def check_map_path_arg(map_path):
             f"MAP_PATH '{map_path}' does not contain the map index file '{index_file}'"
         )
     return map_path
-
 
 def main():
     parser = argparse.ArgumentParser(description='X12 File Metadata')
@@ -86,7 +84,6 @@ def main():
             except KeyboardInterrupt:
                 print('\n[interrupt]')
     return True
-
 
 if __name__ == '__main__':
     sys.exit(not main())

@@ -16,16 +16,12 @@ Locate the correct xml map file given:
     - Transaction Set Purpose Code (BHT02) (For 278 only)
 """
 
-from __future__ import absolute_import
-from __future__ import print_function
-from __future__ import unicode_literals
 import os.path
 import logging
-import xml.etree.cElementTree as et
+import xml.etree.ElementTree as et
 from importlib.resources import files as _res_files
 
-
-class map_index(object):
+class map_index:
     """
     Interface to the maps.xml file
     """
@@ -39,25 +35,20 @@ class map_index(object):
         self.maps = []
         maps_index_file = 'maps.xml'
         if base_path is not None:
-            logger.debug(\
-                "Looking for map index file '{}' in map_path '{}'".format( \
-                maps_index_file, base_path))
+            logger.debug(f"Looking for map index file '{maps_index_file}' in map_path '{base_path}'")
             if not os.path.isdir(base_path):
                 raise OSError(2, "Map path does not exist", base_path)
-            if not os.path.isdir(base_path):
-                raise OSError(2, "Pyx12 Map file '{}' does not exist in map path".format(maps_index_file), base_path)
-            fd = open(os.path.join(base_path, maps_index_file))
+            fd = open(os.path.join(base_path, maps_index_file), encoding='utf-8')
         else:
-            logger.debug("Looking for map index file '{}' in pkg_resources".format(maps_index_file))
+            logger.debug(f"Looking for map index file '{maps_index_file}' in package resources")
             fd = _res_files('pyx12').joinpath('map', maps_index_file).open('rb')
-        parser = et.XMLParser(encoding="utf-8")
-        _t = et.parse(fd, parser=parser)
-        for _v in _t.iter('version'):
-            icvn = _v.get('icvn')
-            for _m in _v.iterfind('map'):
-                self.add_map(icvn, _m.get('vriic'), _m.get('fic'),
-                             _m.get('tspc'), _m.text, _m.get('abbr'))
-        fd.close()
+        with fd:
+            parser = et.XMLParser(encoding='utf-8')
+            for _v in et.parse(fd, parser=parser).iter('version'):
+                icvn = _v.get('icvn')
+                for _m in _v.iterfind('map'):
+                    self.add_map(icvn, _m.get('vriic'), _m.get('fic'),
+                                 _m.get('tspc'), _m.text, _m.get('abbr'))
 
     def add_map(self, icvn, vriic, fic, tspc, map_file, abbr):
         self.maps.append({'icvn': icvn, 'vriic': vriic, 'fic': fic,

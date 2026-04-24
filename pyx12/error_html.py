@@ -12,8 +12,6 @@
 Generates HTML error output
 """
 
-from __future__ import absolute_import
-from __future__ import unicode_literals
 import time
 import logging
 
@@ -23,8 +21,7 @@ logger = logging.getLogger('pyx12.error_html')
 logger.setLevel(logging.DEBUG)
 #logger.setLevel(logging.ERROR)
 
-
-class error_html(object):
+class error_html:
     """
     """
     def __init__(self, errh, fd, term=('~', '*', '~', '\n')):
@@ -171,7 +168,6 @@ class error_html(object):
         """
         return '<span class="ele_err">%s</span>' % (str1)
 
-
 def seg_str(seg, seg_term, ele_term, subele_term, eol=''):
     """
     Join a list of elements
@@ -197,7 +193,6 @@ def seg_str(seg, seg_term, ele_term, subele_term, eol=''):
         else:
             tmp.append(a)
     return '%s%s%s' % (ele_term.join(tmp), seg_term, eol)
-
 
 def escape_html_chars(str_val):
     """

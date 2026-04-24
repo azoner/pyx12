@@ -12,8 +12,6 @@
 Capture X12 Errors
 """
 
-from __future__ import absolute_import
-from __future__ import unicode_literals
 import logging
 import tempfile
 import os
@@ -22,8 +20,7 @@ import os
 from .errors import EngineError
 from .xmlwriter import XMLWriter
 
-
-class err_handler(object):
+class err_handler:
     """
     The interface to the error handling structures.
     """
@@ -35,12 +32,12 @@ class err_handler(object):
         self.logger = logging.getLogger('pyx12.errh_xml')
         if xml_out:
             self.filename = xml_out
-            self.fd = open(xml_out, 'w')
+            self.fd = open(xml_out, 'w', encoding='utf-8')
         else:
             try:
                 (fdesc, self.filename) = tempfile.mkstemp('.xml', 'pyx12_')
                 self.fd = os.fdopen(fdesc, 'w+b')
-            except:
+            except OSError:
                 (fdesc, self.filename) = tempfile.mkstemp(suffix='.xml', prefix='pyx12_', dir=basedir)
                 self.fd = os.fdopen(fdesc, 'w+b')
         self.cur_line = None
@@ -103,12 +100,10 @@ class err_handler(object):
             self.writer.pop()  # end segment
             self.errors = []
 
-
 class ErrorErrhNull(Exception):
     """Class for errh_null errors."""
 
-
-class errh_list(object):
+class errh_list:
     """
     A null error object - used for testing.
     Stores the current error in simple variables.

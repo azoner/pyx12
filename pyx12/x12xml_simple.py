@@ -12,8 +12,6 @@
 Create a XML rendering of the X12 document
 """
 
-from __future__ import absolute_import
-from __future__ import unicode_literals
 from os.path import commonprefix
 import logging
 
@@ -23,7 +21,6 @@ from .x12xml import x12xml
 from .map_walker import pop_to_parent_loop
 
 logger = logging.getLogger('pyx12.x12xml.simple')
-
 
 class x12xml_simple(x12xml):
     def __init__(self, fd, dtd_urn=None):

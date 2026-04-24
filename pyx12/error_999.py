@@ -13,8 +13,6 @@ Generates a 999 Response
 Visitor - Visits an error_handler composite
 """
 
-from __future__ import absolute_import
-from __future__ import unicode_literals
 import time
 import logging
 import random
@@ -27,7 +25,6 @@ import pyx12.x12file
 
 logger = logging.getLogger('pyx12.error_999')
 logger.setLevel(logging.DEBUG)
-
 
 class error_999_visitor(pyx12.error_visitor.error_visitor):
     """
@@ -51,7 +48,6 @@ class error_999_visitor(pyx12.error_visitor.error_visitor):
         self.gs_control_num = None
         self.st_control_num = 0
         self.vriic = '005010X231'
-
 
     def visit_root_pre(self, errh):
         """

@@ -12,8 +12,6 @@
 Interface to X12 Errors
 """
 
-from __future__ import absolute_import
-from __future__ import unicode_literals
 import logging
 
 # Intrapackage imports
@@ -21,8 +19,7 @@ from .errors import IterOutOfBounds  # , IterDone
 
 logger = logging.getLogger('pyx12.error_handler')
 
-
-class err_iter(object):
+class err_iter:
     """
     Iterate over the error tree
 
@@ -75,8 +72,7 @@ class err_iter(object):
     def get_cur_node(self):
         return self.cur_node
 
-
-class err_handler(object):
+class err_handler:
     """
     The interface to the error handling structures.
     """
@@ -270,7 +266,7 @@ class err_handler(object):
         try:
             self._add_cur_seg()
             self.cur_seg_node.add_error(err_cde, err_str, err_value)
-        except:
+        except Exception:
             sout += 'No current segment in error_handler. '
         if src_line:
             sout += 'Line:%i ' % (src_line)
@@ -388,8 +384,7 @@ class err_handler(object):
         """
         return '%i: %s' % (-1, self.id)
 
-
-class err_node(object):
+class err_node:
     def __init__(self, parent):
         """
         """
@@ -471,7 +466,6 @@ class err_node(object):
         @rtype: boolean
         """
         return True
-
 
 class err_isa(err_node):
     """
@@ -576,7 +570,6 @@ class err_isa(err_node):
 
     def __repr__(self):
         return '%i: %s' % (self.get_cur_line(), self.id)
-
 
 class err_gs(err_node):
     """
@@ -718,7 +711,6 @@ class err_gs(err_node):
     def __repr__(self):
         return '%i: %s' % (self.get_cur_line(), self.id)
 
-
 class err_st(err_node):
     """
     ST loops
@@ -849,7 +841,6 @@ class err_st(err_node):
     def __repr__(self):
         return '%i: %s' % (self.get_cur_line(), self.id)
 
-
 class err_seg(err_node):
     """
     Segment Errors
@@ -932,7 +923,6 @@ class err_seg(err_node):
         return None
         #raise IterOutOfBounds
 
-
 class err_ele(err_node):
     """
     Element Errors - Holds and generates output for element and
@@ -983,12 +973,10 @@ class err_ele(err_node):
     def get_error_count(self):
         return len(self.errors)
 
-
 class ErrorErrhNull(Exception):
     """Class for errh_null errors."""
 
-
-class errh_null(object):
+class errh_null:
     """
     A null error object - used for testing.
     Stores the current error in simple variables.
@@ -1163,8 +1151,7 @@ class errh_null(object):
         """
         return '%i: %s' % (-1, self.id)
 
-
-class errh_list(object):
+class errh_list:
     """
     Capture validation errors in a list
     Used to refactor away from error_handler

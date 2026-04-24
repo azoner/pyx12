@@ -12,8 +12,6 @@
 Create an XML rendering of the X12 document
 """
 
-from __future__ import absolute_import
-from __future__ import unicode_literals
 import os.path
 
 # Intrapackage imports
@@ -21,8 +19,7 @@ from .errors import EngineError
 from .xmlwriter import XMLWriter
 from .map_walker import pop_to_parent_loop
 
-
-class x12xml(object):
+class x12xml:
     def __init__(self, fd, type, dtd_urn):
         self.writer = XMLWriter(fd)
         if dtd_urn:

@@ -19,10 +19,8 @@ from importlib.resources import files as _res_files
 
 from pyx12.errors import EngineError
 
-
 class CodesError(Exception):
     """Class for code modules errors."""
-
 
 class ExternalCodes:
     """
