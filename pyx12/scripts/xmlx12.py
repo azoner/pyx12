@@ -69,9 +69,9 @@ def main():
 
     if args.input_file:
         try:
-            fd_source = open(args.input_file)
-        except:
-            logger.error('Could not open file %s' % (args.input_file))
+            fd_source = open(args.input_file, encoding='utf-8')
+        except OSError:
+            logger.exception('Could not open file %s' % (args.input_file))
             return False
     else:
         fd_source = sys.stdin
@@ -79,8 +79,8 @@ def main():
     if args.outputfile:
         try:
             fd_x12 = open(args.outputfile, mode='w', encoding='ascii')
-        except:
-            logger.error('Could not open file %s' % (args.outputfile))
+        except OSError:
+            logger.exception('Could not open file %s' % (args.outputfile))
             return False
     else:
         fd_x12 = sys.stdout

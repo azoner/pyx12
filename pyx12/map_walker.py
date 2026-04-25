@@ -324,8 +324,9 @@ class walk_tree:
         @return: The matching segment node and a list of the push loop nodes
         @rtype: (L{node<map_if.segment_if>}, [L{node<map_if.loop_if>}])
         """
-        assert loop_node.is_loop(), "_goto_seg_match failed, node %s is not a loop. seg %s" \
-            % (loop_node.id, seg_data.get_seg_id())
+        if not loop_node.is_loop():
+            raise EngineError("_goto_seg_match failed, node %s is not a loop. seg %s"
+                              % (loop_node.id, seg_data.get_seg_id()))
         first_child_node = loop_node.get_first_seg()
         if first_child_node is not None and is_first_seg_match2(first_child_node, seg_data):
             self._check_loop_usage(loop_node, seg_data,
@@ -365,9 +366,11 @@ class walk_tree:
         @type errh: L{error_handler.err_handler}
         @raise EngineError: On invalid usage code
         """
-        assert loop_node.is_loop(), "Node %s is not a loop. seg %s" % (
-            loop_node.id, seg_data.get_seg_id())
-        assert loop_node.usage in ('N', 'R', 'S'), 'Loop usage must be R, S, or N'
+        if not loop_node.is_loop():
+            raise EngineError("Node %s is not a loop. seg %s"
+                              % (loop_node.id, seg_data.get_seg_id()))
+        if loop_node.usage not in ('N', 'R', 'S'):
+            raise EngineError('Loop usage must be R, S, or N (got %r)' % (loop_node.usage,))
         if loop_node.usage == 'N':
             err_str = "Loop %s found but marked as not used" % (loop_node.id)
             errh.seg_error('2', err_str, None)

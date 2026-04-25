@@ -98,18 +98,14 @@ def main():
             logger.exception('Could not open log file: %s' % (args.logfile))
 
     if args.input_file:
-        try:
-            fd_src = args.input_file
-        except:
-            logger.error('Could not open file %s' % (args.input_file))
-            return False
+        fd_src = args.input_file
     else:
         fd_src = sys.stdin
     if args.outputfile:
         try:
-            fd_xml = open(args.outputfile, 'w')
-        except:
-            logger.error('Could not open file %s' % (args.outputfile))
+            fd_xml = open(args.outputfile, 'w', encoding='utf-8')
+        except OSError:
+            logger.exception('Could not open file %s' % (args.outputfile))
             return False
     else:
         fd_xml = sys.stdout
