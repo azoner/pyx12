@@ -19,4 +19,4 @@ Backup/
 .tox
 .vscode/
 uv.lock
-.claude/
+.claude/settings.local.json
