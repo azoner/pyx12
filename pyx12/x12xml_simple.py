@@ -31,10 +31,10 @@ class x12xml_simple(x12xml):
         """
         Generate XML for the segment data and matching map node
 
-        @param seg_node: Map Node
-        @type seg_node: L{node<map_if.x12_node>}
-        @param seg_data: Segment object
-        @type seg_data: L{segment<segment.Segment>}
+        :param seg_node: Map Node
+        :type seg_node: L{node<map_if.x12_node>}
+        :param seg_data: Segment object
+        :type seg_data: L{segment<segment.Segment>}
         """
         if not seg_node.is_segment():
             raise EngineError('Node must be a segment')

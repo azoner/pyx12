@@ -48,10 +48,10 @@ class x12xml:
         """
         Generate XML for the segment data and matching map node
 
-        @param seg_node: Map Node
-        @type seg_node: L{node<map_if.x12_node>}
-        @param seg_data: Segment object
-        @type seg_data: L{segment<segment.Segment>}
+        :param seg_node: Map Node
+        :type seg_node: L{node<map_if.x12_node>}
+        :param seg_data: Segment object
+        :type seg_data: L{segment<segment.Segment>}
         """
         if not seg_node.is_segment():
             raise EngineError('Node must be a segment')
@@ -105,10 +105,10 @@ class x12xml:
         """
         Generate XML for the segment data and matching map node
 
-        @param seg_node: Map Node
-        @type seg_node: L{node<map_if.x12_node>}
-        @param seg_data: Segment object
-        @type seg_data: L{segment<segment.Segment>}
+        :param seg_node: Map Node
+        :type seg_node: L{node<map_if.x12_node>}
+        :param seg_data: Segment object
+        :type seg_data: L{segment<segment.Segment>}
         """
         if not seg_node.is_segment():
             raise EngineError('Node must be a segment')
@@ -150,7 +150,7 @@ class x12xml:
     def _path_list(self, path_str):
         """
         Get list of path nodes from path string
-        @rtype: list
+        :rtype: list
         """
         return [x for x in path_str.split('/') if x != '']
 

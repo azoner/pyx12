@@ -32,10 +32,10 @@ class error_999_visitor(pyx12.error_visitor.error_visitor):
     """
     def __init__(self, fd, term=('~', '*', ':', '\n', '^')):
         """
-        @param fd: target file
-        @type fd: file descriptor
-        @param term: tuple of x12 terminators used
-        @type term: tuple(string, string, string, string)
+        :param fd: target file
+        :type fd: file descriptor
+        :param term: tuple of x12 terminators used
+        :type term: tuple(string, string, string, string)
         """
         self.fd = fd
         self.wr = pyx12.x12file.X12Writer(fd, '~', '*', ':', '\n', '^')
@@ -51,8 +51,8 @@ class error_999_visitor(pyx12.error_visitor.error_visitor):
 
     def visit_root_pre(self, errh):
         """
-        @param errh: Error handler
-        @type errh: L{error_handler.err_handler}
+        :param errh: Error handler
+        :type errh: L{error_handler.err_handler}
 
         Uses:
         isa_node seg_data
@@ -116,8 +116,8 @@ class error_999_visitor(pyx12.error_visitor.error_visitor):
 
     def visit_root_post(self, errh):
         """
-        @param errh: Error handler
-        @type errh: L{error_handler.err_handler}
+        :param errh: Error handler
+        :type errh: L{error_handler.err_handler}
         """
         ge = pyx12.segment.Segment('GE', '~', '*', ':')
         ge.set('02', self.gs_control_num)
@@ -145,21 +145,21 @@ class error_999_visitor(pyx12.error_visitor.error_visitor):
 
     def visit_isa_pre(self, err_isa):
         """
-        @param err_isa: ISA Loop error handler
-        @type err_isa: L{error_handler.err_isa}
+        :param err_isa: ISA Loop error handler
+        :type err_isa: L{error_handler.err_isa}
         """
 
     def visit_isa_post(self, err_isa):
         """
-        @param err_isa: ISA Loop error handler
-        @type err_isa: L{error_handler.err_isa}
+        :param err_isa: ISA Loop error handler
+        :type err_isa: L{error_handler.err_isa}
         """
         pass
 
     def visit_gs_pre(self, err_gs):
         """
-        @param err_gs: GS Loop error handler
-        @type err_gs: L{error_handler.err_gs}
+        :param err_gs: GS Loop error handler
+        :type err_gs: L{error_handler.err_gs}
         """
         #ST
         self.st_control_num += 1
@@ -200,8 +200,8 @@ class error_999_visitor(pyx12.error_visitor.error_visitor):
 
     def visit_gs_post(self, err_gs):
         """
-        @param err_gs: GS Loop error handler
-        @type err_gs: L{error_handler.err_gs}
+        :param err_gs: GS Loop error handler
+        :type err_gs: L{error_handler.err_gs}
         """
         if not (err_gs.ack_code and err_gs.st_count_orig and
                 err_gs.st_count_recv):
@@ -231,8 +231,8 @@ class error_999_visitor(pyx12.error_visitor.error_visitor):
 
     def visit_st_pre(self, err_st):
         """
-        @param err_st: ST Loop error handler
-        @type err_st: L{error_handler.err_st}
+        :param err_st: ST Loop error handler
+        :type err_st: L{error_handler.err_st}
         """
         if err_st is None:
             raise EngineError('Cannot create AK2 : err_st is None')
@@ -271,8 +271,8 @@ class error_999_visitor(pyx12.error_visitor.error_visitor):
 
     def visit_st_post(self, err_st):
         """
-        @param err_st: ST Loop error handler
-        @type err_st: L{error_handler.err_st}
+        :param err_st: ST Loop error handler
+        :type err_st: L{error_handler.err_st}
         """
         if err_st.ack_code is None:
             raise EngineError('err_st.ack_cde variable not set')
@@ -285,8 +285,8 @@ class error_999_visitor(pyx12.error_visitor.error_visitor):
 
     def visit_seg(self, err_seg):
         """
-        @param err_seg: Segment error handler
-        @type err_seg: L{error_handler.err_seg}
+        :param err_seg: Segment error handler
+        :type err_seg: L{error_handler.err_seg}
         """
         valid_IK3_codes = ('1', '2', '3', '4', '5', '6', '7', '8', 'I4', 'I6', 'I7', 'I8', 'I9')
         seg_base = pyx12.segment.Segment('IK3', '~', '*', ':')
@@ -316,8 +316,8 @@ class error_999_visitor(pyx12.error_visitor.error_visitor):
 
     def visit_ele(self, err_ele):
         """
-        @param err_ele: Segment error handler
-        @type err_ele: L{error_handler.err_ele}
+        :param err_ele: Segment error handler
+        :type err_ele: L{error_handler.err_ele}
         """
         valid_IK4_codes = ('1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '12', '13',
                            'I10', 'I11', 'I12', 'I13', 'I6', 'I9')

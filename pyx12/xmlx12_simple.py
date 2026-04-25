@@ -21,10 +21,10 @@ import pyx12.x12file
 def convert(filename, fd_out):
     """
     Convert a XML file in simple X12 form to an X12 file
-    @param filename:  libxml2 requires a file name.  '-' gives stdin
-    @type filename: string
-    @param fd_out: Output file
-    @type fd_out: file descripter
+    :param filename:  libxml2 requires a file name.  '-' gives stdin
+    :type filename: string
+    :param fd_out: Output file
+    :type fd_out: file descripter
     """
     logger = logging.getLogger('pyx12')
     wr = pyx12.x12file.X12Writer(fd_out, '~', '*', ':', '\n', '^')

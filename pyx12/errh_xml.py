@@ -26,8 +26,8 @@ class err_handler:
     """
     def __init__(self, xml_out=None, basedir=None):
         """
-        @param xml_out: Output filename, if None, will dump to tempfile
-        @param basedir: working directory, where file will be created
+        :param xml_out: Output filename, if None, will dump to tempfile
+        :param basedir: working directory, where file will be created
         """
         self.logger = logging.getLogger('pyx12.errh_xml')
         if xml_out:
@@ -69,7 +69,7 @@ class err_handler:
 
     def handleErrors(self, err_list):
         """
-        @param err_list: list of errors to apply
+        :param err_list: list of errors to apply
         """
         self.errors.extend(err_list)
         #for (err_type, err_cde, err_str, err_val, src_line) in err_list:
@@ -84,8 +84,8 @@ class err_handler:
 
     def getCurLine(self):
         """
-        @return: Current file line number
-        @rtype: int
+        :return: Current file line number
+        :rtype: int
         """
         return self.cur_line
 
@@ -136,8 +136,8 @@ class errh_list:
 
     def get_cur_line(self):
         """
-        @return: Current file line number
-        @rtype: int
+        :return: Current file line number
+        :rtype: int
         """
         return self.cur_line
 
@@ -148,8 +148,8 @@ class errh_list:
 
 #    def get_id(self):
 #        """
-#        @return: Error node type
-#        @rtype: string
+#        :return: Error node type
+#        :rtype: string
 #        """
 #        return self.id
 
@@ -181,10 +181,10 @@ class errh_list:
 
     def isa_error(self, err_cde, err_str):
         """
-        @param err_cde: ISA level error code
-        @type err_cde: string
-        @param err_str: Description of the error
-        @type err_str: string
+        :param err_cde: ISA level error code
+        :type err_cde: string
+        :param err_str: Description of the error
+        :type err_str: string
         """
         self.errors.append(('isa', err_cde, err_str, None, None))
         sout = ''
@@ -194,10 +194,10 @@ class errh_list:
 
     def gs_error(self, err_cde, err_str):
         """
-        @param err_cde: GS level error code
-        @type err_cde: string
-        @param err_str: Description of the error
-        @type err_str: string
+        :param err_cde: GS level error code
+        :type err_cde: string
+        :param err_str: Description of the error
+        :type err_str: string
         """
         self.errors.append(('gs', err_cde, err_str, None, None))
         sout = ''
@@ -207,10 +207,10 @@ class errh_list:
 
     def st_error(self, err_cde, err_str):
         """
-        @param err_cde: Segment level error code
-        @type err_cde: string
-        @param err_str: Description of the error
-        @type err_str: string
+        :param err_cde: Segment level error code
+        :type err_cde: string
+        :param err_str: Description of the error
+        :type err_str: string
         """
         self.errors.append(('st', err_cde, err_str, None, None))
         sout = ''
@@ -220,10 +220,10 @@ class errh_list:
 
     def seg_error(self, err_cde, err_str, err_value=None, src_line=None):
         """
-        @param err_cde: Segment level error code
-        @type err_cde: string
-        @param err_str: Description of the error
-        @type err_str: string
+        :param err_cde: Segment level error code
+        :type err_cde: string
+        :param err_str: Description of the error
+        :type err_str: string
         """
         self.errors.append(('seg', err_cde, err_str, err_value, src_line))
         sout = ''
@@ -235,10 +235,10 @@ class errh_list:
 
     def ele_error(self, err_cde, err_str, bad_value):
         """
-        @param err_cde: Element level error code
-        @type err_cde: string
-        @param err_str: Description of the error
-        @type err_str: string
+        :param err_cde: Element level error code
+        :type err_cde: string
+        :param err_str: Description of the error
+        :type err_str: string
         """
         self.errors.append(('ele', err_cde, err_str, bad_value, None))
         sout = ''
@@ -292,6 +292,6 @@ class errh_list:
 
     def is_closed(self):
         """
-        @rtype: boolean
+        :rtype: boolean
         """
         return True

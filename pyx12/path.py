@@ -44,8 +44,8 @@ class X12Path:
 
     def __init__(self, path_str):
         """
-        @param path_str:
-        @type path_str: string
+        :param path_str:
+        :type path_str: string
 
         """
         #self.loop_list =
@@ -94,18 +94,18 @@ class X12Path:
     def empty(self):
         """
         Is the path empty?
-        @return: True if contains no path data
-        @rtype: boolean
+        :return: True if contains no path data
+        :rtype: boolean
         """
         return self.relative is True and len(self.loop_list) == 0 and self.seg_id is None and self.ele_idx is None
 
     def _is_child_path(self, root_path, child_path):
         """
         Is the child path really a child of the root path?
-        @type root_path: string
-        @type child_path: string
-        @return: True if a child
-        @rtype: boolean
+        :type root_path: string
+        :type child_path: string
+        :return: True if a child
+        :rtype: boolean
         """
         root = root_path.split('/')
         child = child_path.split('/')
@@ -139,14 +139,14 @@ class X12Path:
 
 #    def __len__(self):
 #        """
-#        @rtype: int
+#        :rtype: int
 #        """
 #        return 1
 
     def __repr__(self):
         """
-        @return: Formatted path
-        @rtype: string
+        :return: Formatted path
+        :rtype: string
         """
         ret = ''
         if not self.relative:
@@ -162,7 +162,7 @@ class X12Path:
 
     def format(self):
         """
-        @rtype: string
+        :rtype: string
         """
         return self.__repr__()
 
@@ -181,9 +181,9 @@ class X12Path:
     def is_child_path(self, child_path):
         """
         Is the child path a child of this path?
-        @type child_path: string
-        @return: True if a child
-        @rtype: boolean
+        :type child_path: string
+        :return: True if a child
+        :rtype: boolean
         """
         root = self.format().split('/')
         child = child_path.split('/')

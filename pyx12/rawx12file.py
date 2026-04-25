@@ -29,8 +29,8 @@ class RawX12File:
         """
         Initialize the file X12 file reader
 
-        @param fin: an open, readable file object
-        @type fin: open file object
+        :param fin: an open, readable file object
+        :type fin: open file object
         """
         self.fd = fin
         self.buffer = None
@@ -76,6 +76,6 @@ class RawX12File:
         """
         Get the original terminators
 
-        @rtype: tuple(string, string, string, string)
+        :rtype: tuple(string, string, string, string)
         """
         return (self.seg_term, self.ele_term, self.subele_term, '\n', self.repetition_term)

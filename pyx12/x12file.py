@@ -64,8 +64,8 @@ class X12Base:
         """
         Catch segment issues common to both readers and writers
 
-        @param seg_data: Segment data instance
-        @type seg_data: L{segment<segment.Segment>}
+        :param seg_data: Segment data instance
+        :type seg_data: L{segment<segment.Segment>}
         """
         if seg_data.is_empty():
             err_str = 'Segment "{}" is empty'.format(seg_data)
@@ -156,7 +156,7 @@ class X12Base:
     def pop_errors(self):
         """
         Pop error list
-        @return: List of errors
+        :return: List of errors
         """
         tmp = self.err_list
         self.err_list = []
@@ -164,46 +164,46 @@ class X12Base:
 
     def _isa_error(self, err_cde, err_str):
         """
-        @param err_cde: ISA level error code
-        @type err_cde: string
-        @param err_str: Description of the error
-        @type err_str: string
+        :param err_cde: ISA level error code
+        :type err_cde: string
+        :param err_str: Description of the error
+        :type err_str: string
         """
         self.err_list.append(('isa', err_cde, err_str, None, None))
 
     def _gs_error(self, err_cde, err_str):
         """
-        @param err_cde: GS level error code
-        @type err_cde: string
-        @param err_str: Description of the error
-        @type err_str: string
+        :param err_cde: GS level error code
+        :type err_cde: string
+        :param err_str: Description of the error
+        :type err_str: string
         """
         self.err_list.append(('gs', err_cde, err_str, None, None))
 
     def _st_error(self, err_cde, err_str):
         """
-        @param err_cde: Segment level error code
-        @type err_cde: string
-        @param err_str: Description of the error
-        @type err_str: string
+        :param err_cde: Segment level error code
+        :type err_cde: string
+        :param err_str: Description of the error
+        :type err_str: string
         """
         self.err_list.append(('st', err_cde, err_str, None, None))
 
     def _seg_error(self, err_cde, err_str, err_value=None, src_line=None):
         """
-        @param err_cde: Segment level error code
-        @type err_cde: string
-        @param err_str: Description of the error
-        @type err_str: string
+        :param err_cde: Segment level error code
+        :type err_cde: string
+        :param err_str: Description of the error
+        :type err_str: string
         """
         self.err_list.append(('seg', err_cde, err_str, err_value, src_line))
 
     def _int(self, str_val):
         """
         Converts a string to an integer
-        @type str_val: string
-        @return: Int value if successful, None if not
-        @rtype: int
+        :type str_val: string
+        :return: Int value if successful, None if not
+        :rtype: int
         """
         try:
             return int(str_val)
@@ -215,7 +215,7 @@ class X12Base:
         """
         Get the current ISA identifier
 
-        @rtype: string
+        :rtype: string
         """
         for loop in self.loops:
             if loop[0] == 'ISA':
@@ -226,7 +226,7 @@ class X12Base:
         """
         Get the current GS identifier
 
-        @rtype: string
+        :rtype: string
         """
         for loop in self.loops:
             if loop[0] == 'GS':
@@ -237,7 +237,7 @@ class X12Base:
         """
         Get the current ST identifier
 
-        @rtype: string
+        :rtype: string
         """
         for loop in self.loops:
             if loop[0] == 'ST':
@@ -248,7 +248,7 @@ class X12Base:
         """
         Get the current LS identifier
 
-        @rtype: string
+        :rtype: string
         """
         for loop in self.loops:
             if loop[0] == 'LS':
@@ -259,7 +259,7 @@ class X12Base:
         """
         Get the current segment count
 
-        @rtype: int
+        :rtype: int
         """
         return self.seg_count
 
@@ -267,7 +267,7 @@ class X12Base:
         """
         Get the current line
 
-        @rtype: int
+        :rtype: int
         """
         return self.cur_line
 
@@ -275,7 +275,7 @@ class X12Base:
         """
         Get the original terminators
 
-        @rtype: tuple(string, string, string, string)
+        :rtype: tuple(string, string, string, string)
         """
         return (self.seg_term, self.ele_term, self.subele_term, '\n', self.repetition_term)
 
@@ -291,9 +291,9 @@ class X12Reader(X12Base):
         """
         Initialize the file X12 file reader
 
-        @param src_file_obj: absolute path of source file or an open,
+        :param src_file_obj: absolute path of source file or an open,
             readable file object
-        @type src_file_obj: string or open file object
+        :type src_file_obj: string or open file object
         """
         self.fd_in = None
         self.need_to_close = False
@@ -338,8 +338,8 @@ class X12Reader(X12Base):
         """
         Catch segment issues
 
-        @param seg_data: Segment data instance
-        @type seg_data: L{segment<segment.Segment>}
+        :param seg_data: Segment data instance
+        :type seg_data: L{segment<segment.Segment>}
         """
         X12Base._parse_segment(self, seg_data)
         seg_id = seg_data.get_seg_id()
@@ -442,9 +442,9 @@ class X12Writer(X12Base):
         """
         Initialize the file X12 file writer
 
-        @param src_file_obj: absolute path of source file or an open,
+        :param src_file_obj: absolute path of source file or an open,
             readable file object
-        @type src_file_obj: string or open file object
+        :type src_file_obj: string or open file object
         """
         self.fd_out = None
         self.need_to_close = False
@@ -491,8 +491,8 @@ class X12Writer(X12Base):
         """
         Write the segment to the stream given current separators
 
-        @param seg_data: Segment data instance
-        @type seg_data: L{segment<segment.Segment>}
+        :param seg_data: Segment data instance
+        :type seg_data: L{segment<segment.Segment>}
         """
         self._parse_segment(seg_data)
         # If we have hit a loop closing segment, generate any missing, containing, closing segments
@@ -526,8 +526,8 @@ class X12Writer(X12Base):
         """
         Move up the loop open loops, up to and including the given loop
 
-        @param loop_type: The current ending loop
-        @type loop_type: string
+        :param loop_type: The current ending loop
+        :type loop_type: string
         """
         while len(self.loops) > 0 and self.loops[-1][0] != loop_type:
             loop = self.loops.pop()
@@ -540,8 +540,8 @@ class X12Writer(X12Base):
         """
         Close a ISA/IEA loop, reset GS counter
 
-        @param id: ISA loop ID
-        @type id: string
+        :param id: ISA loop ID
+        :type id: string
         """
         seg_temp = self._get_trailer_segment('IEA', self.gs_count, id)
         self._write_segment(seg_temp)
@@ -551,8 +551,8 @@ class X12Writer(X12Base):
         """
         Close a GS/GE loop, reset ST counter
 
-        @param id: GS loop ID
-        @type id: string
+        :param id: GS loop ID
+        :type id: string
         """
         seg_temp = self._get_trailer_segment('GE', self.st_count, id)
         self._write_segment(seg_temp)
@@ -562,8 +562,8 @@ class X12Writer(X12Base):
         """
         Close a ST/SE loop, reset segment counter
 
-        @param id: ST loop ID
-        @type id: string
+        :param id: ST loop ID
+        :type id: string
         """
         seg_temp = self._get_trailer_segment('SE', self.seg_count + 1, id)
         self._write_segment(seg_temp)
@@ -573,8 +573,8 @@ class X12Writer(X12Base):
         """
         Write the given segment, using the current delimiters and end of line
 
-        @param seg_data: segment to write
-        @type seg_data: L{segment<segment.Segment>}
+        :param seg_data: segment to write
+        :type seg_data: L{segment<segment.Segment>}
         """
         out = seg_data.format(self.seg_term, self.ele_term, self.subele_term) + self.eol
         # self.fd_out.write(out.decode('ascii'))
@@ -587,8 +587,8 @@ class X12Writer(X12Base):
         ISA*03*SENDER    *01*          *ZZ*SENDER         *ZZ*RECEIVER       *040608*1333*U*00401*000000288*0*P*:~
         ISA*03*SENDER    *01*          *ZZ*SENDER         *ZZ*RECEIVER       *040611*1333*^*00501*000000125*0*P*\\~
 
-        @param seg_data: ISA segment to write
-        @type seg_data: L{segment<segment.Segment>}
+        :param seg_data: ISA segment to write
+        :type seg_data: L{segment<segment.Segment>}
         """
         icvn = seg_data.get_value('ISA12')
         if icvn == '00501':
@@ -603,12 +603,12 @@ class X12Writer(X12Base):
         """
         Create a loop trailer segment, using the matching loop start and current count
 
-        @param seg_id: end loop segment id
-        @type seg_id: string
-        @param count: count of loop members
-        @type count: non-negative int
-        @param id: loop id, should come from loop header
-        @type id: string
+        :param seg_id: end loop segment id
+        :type seg_id: string
+        :param count: count of loop members
+        :type count: non-negative int
+        :param id: loop id, should come from loop header
+        :type id: string
         """
         ele_term = self.ele_term
         seg_str = '{seg_id}{ele_term}{count:d}{ele_term}{id}'.format(\

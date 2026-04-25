@@ -48,16 +48,16 @@ def x12n_document(param, src_file, fd_997, fd_html,
                   callback=None):
     """
     Primary X12 validation function
-    @param param: pyx12.param instance
-    @param src_file: Source document
-    @type src_file: string
-    @param fd_997: 997/999 output document
-    @type fd_997: file descriptor
-    @param fd_html: HTML output document
-    @type fd_html: file descriptor
-    @param fd_xmldoc: XML output document
-    @type fd_xmldoc: file descriptor
-    @rtype: boolean
+    :param param: pyx12.param instance
+    :param src_file: Source document
+    :type src_file: string
+    :param fd_997: 997/999 output document
+    :type fd_997: file descriptor
+    :param fd_html: HTML output document
+    :type fd_html: file descriptor
+    :param fd_xmldoc: XML output document
+    :type fd_xmldoc: file descriptor
+    :rtype: boolean
     """
     logger = logging.getLogger('pyx12')
     errh = pyx12.error_handler.err_handler()

@@ -31,11 +31,11 @@ class DataElements:
     def __init__(self, base_path=None):
         """
         Initialize the list of data elements
-        @param base_path: Override directory containing dataele.xml.  If None,
+        :param base_path: Override directory containing dataele.xml.  If None,
             uses package resource folder
-        @type base_path: string
+        :type base_path: string
 
-        @note: self.dataele - map to the data element
+        Note: self.dataele - map to the data element
         {ele_num: {data_type, min_len, max_len, name}}
         """
         logger = logging.getLogger('pyx12')
@@ -61,10 +61,10 @@ class DataElements:
     def get_by_elem_num(self, ele_num):
         """
         Get the element characteristics for the indexed element code
-        @param ele_num: the data element code
-        @type ele_num: string
-        @return: {data_type, min_len, max_len, name}
-        @rtype: dict
+        :param ele_num: the data element code
+        :type ele_num: string
+        :return: {data_type, min_len, max_len, name}
+        :rtype: dict
         """
         if not ele_num:
             raise EngineError(f'Bad data element {ele_num!r}')

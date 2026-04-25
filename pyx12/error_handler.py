@@ -28,8 +28,8 @@ class err_iter:
 
     def __init__(self, errh):
         """
-        @param errh: Error_handler instance
-        @type errh: L{error_handler.err_handler}
+        :param errh: Error_handler instance
+        :type errh: L{error_handler.err_handler}
         """
         self.errh = errh
         self.cur_node = errh
@@ -103,7 +103,7 @@ class err_handler:
 
     def handle_errors(self, err_list):
         """
-        @param err_list: list of errors to apply
+        :param err_list: list of errors to apply
         """
         for (err_type, err_cde, err_str, err_val, src_line) in err_list:
             if err_type == 'isa':
@@ -117,8 +117,8 @@ class err_handler:
 
     def get_cur_line(self):
         """
-        @return: Current file line number
-        @rtype: int
+        :return: Current file line number
+        :rtype: int
         """
         return self.cur_line
 
@@ -129,8 +129,8 @@ class err_handler:
 
     def add_isa_loop(self, seg_data, src):
         """
-        @param seg_data: Segment object
-        @type seg_data: L{segment<segment.Segment>}
+        :param seg_data: Segment object
+        :type seg_data: L{segment<segment.Segment>}
         """
         #logger.debug('add_isa loop')
         self.children.append(err_isa(self, seg_data, src))
@@ -140,8 +140,8 @@ class err_handler:
 
     def add_gs_loop(self, seg_data, src):
         """
-        @param seg_data: Segment object
-        @type seg_data: L{segment<segment.Segment>}
+        :param seg_data: Segment object
+        :type seg_data: L{segment<segment.Segment>}
         """
         #logger.debug('add_gs loop')
         parent = self.cur_isa_node
@@ -152,8 +152,8 @@ class err_handler:
 
     def add_st_loop(self, seg_data, src):
         """
-        @param seg_data: Segment object
-        @type seg_data: L{segment<segment.Segment>}
+        :param seg_data: Segment object
+        :type seg_data: L{segment<segment.Segment>}
         """
         #logger.debug('add_st loop')
         parent = self.cur_gs_node
@@ -164,16 +164,16 @@ class err_handler:
 
     def add_seg(self, map_node, seg_data, seg_count, cur_line, ls_id):
         """
-        @param map_node: current segment node
-        @type map_node: L{node<map_if.segment_if>}
-        @param seg_data: Segment object
-        @type seg_data: L{segment<segment.Segment>}
-        @param seg_count: Count of current segment in the ST Loop
-        @type seg_count: int
-        @param cur_line: Current line number in the file
-        @type cur_line: int
-        @param ls_id: The current LS loop identifier
-        @type ls_id: string
+        :param map_node: current segment node
+        :type map_node: L{node<map_if.segment_if>}
+        :param seg_data: Segment object
+        :type seg_data: L{segment<segment.Segment>}
+        :param seg_count: Count of current segment in the ST Loop
+        :type seg_count: int
+        :param cur_line: Current line number in the file
+        :type cur_line: int
+        :param ls_id: The current LS loop identifier
+        :type ls_id: string
         """
         parent = self.cur_st_node
         self.cur_seg_node = err_seg(
@@ -218,10 +218,10 @@ class err_handler:
 
     def isa_error(self, err_cde, err_str):
         """
-        @param err_cde: ISA level error code
-        @type err_cde: string
-        @param err_str: Description of the error
-        @type err_str: string
+        :param err_cde: ISA level error code
+        :type err_cde: string
+        :param err_str: Description of the error
+        :type err_str: string
         """
         sout = ''
         sout += 'Line:%i ' % (self.cur_isa_node.get_cur_line())
@@ -231,10 +231,10 @@ class err_handler:
 
     def gs_error(self, err_cde, err_str):
         """
-        @param err_cde: GS level error code
-        @type err_cde: string
-        @param err_str: Description of the error
-        @type err_str: string
+        :param err_cde: GS level error code
+        :type err_cde: string
+        :param err_str: Description of the error
+        :type err_str: string
         """
         sout = ''
         sout += 'Line:%i ' % (self.cur_gs_node.get_cur_line())
@@ -244,10 +244,10 @@ class err_handler:
 
     def st_error(self, err_cde, err_str):
         """
-        @param err_cde: Segment level error code
-        @type err_cde: string
-        @param err_str: Description of the error
-        @type err_str: string
+        :param err_cde: Segment level error code
+        :type err_cde: string
+        :param err_str: Description of the error
+        :type err_str: string
         """
         sout = ''
         sout += 'Line:%i ' % (self.cur_st_node.get_cur_line())
@@ -257,10 +257,10 @@ class err_handler:
 
     def seg_error(self, err_cde, err_str, err_value=None, src_line=None):
         """
-        @param err_cde: Segment level error code
-        @type err_cde: string
-        @param err_str: Description of the error
-        @type err_str: string
+        :param err_cde: Segment level error code
+        :type err_cde: string
+        :param err_str: Description of the error
+        :type err_str: string
         """
         sout = ''
         try:
@@ -280,10 +280,10 @@ class err_handler:
 
     def ele_error(self, err_cde, err_str, bad_value, refdes=None):
         """
-        @param err_cde: Element level error code
-        @type err_cde: string
-        @param err_str: Description of the error
-        @type err_str: string
+        :param err_cde: Element level error code
+        :type err_cde: string
+        :param err_str: Description of the error
+        :type err_str: string
         """
         self._add_cur_ele()
         self.cur_ele_node.add_error(
@@ -375,7 +375,7 @@ class err_handler:
 
     def is_closed(self):
         """
-        @rtype: boolean
+        :rtype: boolean
         """
         return True
 
@@ -404,8 +404,8 @@ class err_node:
 
     def get_cur_line(self):
         """
-        @return: Current file line number
-        @rtype: int
+        :return: Current file line number
+        :rtype: int
         """
         return self.cur_line
 
@@ -463,7 +463,7 @@ class err_node:
 
     def is_closed(self):
         """
-        @rtype: boolean
+        :rtype: boolean
         """
         return True
 
@@ -474,10 +474,10 @@ class err_isa(err_node):
 
     def __init__(self, parent, seg_data, src):
         """
-        @param seg_data: Segment object
-        @type seg_data: L{segment<segment.Segment>}
-        @param src: X12file source
-        @type src: L{X12file<x12file.X12Reader>}
+        :param seg_data: Segment object
+        :type seg_data: L{segment<segment.Segment>}
+        :param src: X12file source
+        :type src: L{X12file<x12file.X12Reader>}
         """
         self.seg_data = seg_data
         self.isa_id = src.get_isa_id()
@@ -497,7 +497,7 @@ class err_isa(err_node):
 
     def is_closed(self):
         """
-        @rtype: boolean
+        :rtype: boolean
         """
         if self.cur_line_iea:
             return True
@@ -515,10 +515,10 @@ class err_isa(err_node):
 
     def add_error(self, err_cde, err_str):
         """
-        @param err_cde: Error code
-        @type err_cde: string
-        @param err_str: Description of the error
-        @type err_str: string
+        :param err_cde: Error code
+        :type err_cde: string
+        :param err_str: Description of the error
+        :type err_str: string
         """
         self.errors.append((err_cde, err_str))
 
@@ -527,8 +527,8 @@ class err_isa(err_node):
 
     def get_cur_line(self):
         """
-        @return: Current file line number
-        @rtype: int
+        :return: Current file line number
+        :rtype: int
         """
         if self.cur_line_iea:
             return self.cur_line_iea
@@ -578,10 +578,10 @@ class err_gs(err_node):
 
     def __init__(self, parent, seg_data, src):
         """
-        @param seg_data: Segment object
-        @type seg_data: L{segment<segment.Segment>}
-        @param src: X12file source
-        @type src: L{X12file<x12file.X12Reader>}
+        :param seg_data: Segment object
+        :type seg_data: L{segment<segment.Segment>}
+        :param src: X12file source
+        :type src: L{X12file<x12file.X12Reader>}
 
         """
         self.seg_data = seg_data
@@ -617,10 +617,10 @@ class err_gs(err_node):
 
     def add_error(self, err_cde, err_str):
         """
-        @param err_cde: Error code
-        @type err_cde: string
-        @param err_str: Description of the error
-        @type err_str: string
+        :param err_cde: Error code
+        :type err_cde: string
+        :param err_str: Description of the error
+        :type err_str: string
         """
         self.errors.append((err_cde, err_str))
 
@@ -663,8 +663,8 @@ class err_gs(err_node):
 
     def get_cur_line(self):
         """
-        @return: Current file line number
-        @rtype: int
+        :return: Current file line number
+        :rtype: int
         """
         if self.cur_line_ge:
             return self.cur_line_ge
@@ -693,7 +693,7 @@ class err_gs(err_node):
 
     def is_closed(self):
         """
-        @rtype: boolean
+        :rtype: boolean
         """
         if self.cur_line_ge:
             return True
@@ -724,10 +724,10 @@ class err_st(err_node):
 
     def __init__(self, parent, seg_data, src):
         """
-        @param seg_data: Segment object
-        @type seg_data: L{segment<segment.Segment>}
-        @param src: X12file source
-        @type src: L{X12file<x12file.X12Reader>}
+        :param seg_data: Segment object
+        :type seg_data: L{segment<segment.Segment>}
+        :param src: X12file source
+        :type src: L{X12file<x12file.X12Reader>}
         """
         self.seg_data = seg_data
         self.trn_set_control_num = src.get_st_id()
@@ -755,10 +755,10 @@ class err_st(err_node):
 
     def add_error(self, err_cde, err_str):
         """
-        @param err_cde: Error code
-        @type err_cde: string
-        @param err_str: Description of the error
-        @type err_str: string
+        :param err_cde: Error code
+        :type err_cde: string
+        :param err_str: Description of the error
+        :type err_str: string
         """
         self.errors.append((err_cde, err_str))
 
@@ -766,12 +766,12 @@ class err_st(err_node):
         """
         Close ST loop
 
-        @param node: SE node
-        @type node: L{node<map_if.x12_node>}
-        @param seg_data: Segment object
-        @type seg_data: L{segment<segment.Segment>}
-        @param src: X12file source
-        @type src: L{X12file<x12file.X12Reader>}
+        :param node: SE node
+        :type node: L{node<map_if.x12_node>}
+        :param seg_data: Segment object
+        :type seg_data: L{segment<segment.Segment>}
+        :param src: X12file source
+        :type src: L{X12file<x12file.X12Reader>}
         """
         self.cur_line_se = src.get_cur_line()
         #pdb.set_trace()
@@ -782,8 +782,8 @@ class err_st(err_node):
 
     def err_count(self):
         """
-        @return: Count of ST/SE loop errors
-        @rtype: int
+        :return: Count of ST/SE loop errors
+        :rtype: int
         """
         seg_err_ct = 0
         if self.child_err_count() > 0:
@@ -812,8 +812,8 @@ class err_st(err_node):
 
     def get_cur_line(self):
         """
-        @return: Current file line number
-        @rtype: int
+        :return: Current file line number
+        :rtype: int
         """
         if self.cur_line_se:
             return self.cur_line_se
@@ -822,7 +822,7 @@ class err_st(err_node):
 
     def is_closed(self):
         """
-        @rtype: boolean
+        :rtype: boolean
         """
         if self.cur_line_se:
             return True
@@ -880,10 +880,10 @@ class err_seg(err_node):
 
     def add_error(self, err_cde, err_str, err_value=None):
         """
-        @param err_cde: Error code
-        @type err_cde: string
-        @param err_str: Description of the error
-        @type err_str: string
+        :param err_cde: Error code
+        :type err_cde: string
+        :param err_str: Description of the error
+        :type err_str: string
         """
         self.errors.append((err_cde, err_str, err_value))
 
@@ -959,10 +959,10 @@ class err_ele(err_node):
 
     def add_error(self, err_cde, err_str, bad_value):
         """
-        @param err_cde: Error code
-        @type err_cde: string
-        @param err_str: Description of the error
-        @type err_str: string
+        :param err_cde: Error code
+        :type err_cde: string
+        :param err_str: Description of the error
+        :type err_str: string
         """
         #logger.debug('err_ele.add_error: %s %s %s' % (err_cde, err_str, bad_value))
         self.errors.append((err_cde, err_str, bad_value))
@@ -1004,15 +1004,15 @@ class errh_null:
 
     def get_cur_line(self):
         """
-        @return: Current file line number
-        @rtype: int
+        :return: Current file line number
+        :rtype: int
         """
         return self.cur_line
 
     def get_id(self):
         """
-        @return: Error node type
-        @rtype: string
+        :return: Error node type
+        :rtype: string
         """
         return self.id
 
@@ -1044,50 +1044,50 @@ class errh_null:
 
     def isa_error(self, err_cde, err_str):
         """
-        @param err_cde: ISA level error code
-        @type err_cde: string
-        @param err_str: Description of the error
-        @type err_str: string
+        :param err_cde: ISA level error code
+        :type err_cde: string
+        :param err_str: Description of the error
+        :type err_str: string
         """
         self.err_cde = err_cde
         self.err_str = err_str
 
     def gs_error(self, err_cde, err_str):
         """
-        @param err_cde: GS level error code
-        @type err_cde: string
-        @param err_str: Description of the error
-        @type err_str: string
+        :param err_cde: GS level error code
+        :type err_cde: string
+        :param err_str: Description of the error
+        :type err_str: string
         """
         self.err_cde = err_cde
         self.err_str = err_str
 
     def st_error(self, err_cde, err_str):
         """
-        @param err_cde: Segment level error code
-        @type err_cde: string
-        @param err_str: Description of the error
-        @type err_str: string
+        :param err_cde: Segment level error code
+        :type err_cde: string
+        :param err_str: Description of the error
+        :type err_str: string
         """
         self.err_cde = err_cde
         self.err_str = err_str
 
     def seg_error(self, err_cde, err_str, err_value=None, src_line=None):
         """
-        @param err_cde: Segment level error code
-        @type err_cde: string
-        @param err_str: Description of the error
-        @type err_str: string
+        :param err_cde: Segment level error code
+        :type err_cde: string
+        :param err_str: Description of the error
+        :type err_str: string
         """
         self.err_cde = err_cde
         self.err_str = err_str
 
     def ele_error(self, err_cde, err_str, bad_value, refdes=None):
         """
-        @param err_cde: Element level error code
-        @type err_cde: string
-        @param err_str: Description of the error
-        @type err_str: string
+        :param err_cde: Element level error code
+        :type err_cde: string
+        :param err_str: Description of the error
+        :type err_str: string
         """
         self.err_cde = err_cde
         self.err_str = err_str
@@ -1142,7 +1142,7 @@ class errh_null:
 
     def is_closed(self):
         """
-        @rtype: boolean
+        :rtype: boolean
         """
         return True
 
@@ -1178,15 +1178,15 @@ class errh_list:
 
     def get_cur_line(self):
         """
-        @return: Current file line number
-        @rtype: int
+        :return: Current file line number
+        :rtype: int
         """
         return self.cur_line
 
     def get_id(self):
         """
-        @return: Error node type
-        @rtype: string
+        :return: Error node type
+        :rtype: string
         """
         return self.id
 
@@ -1207,46 +1207,46 @@ class errh_list:
 
     def isa_error(self, err_cde, err_str):
         """
-        @param err_cde: ISA level error code
-        @type err_cde: string
-        @param err_str: Description of the error
-        @type err_str: string
+        :param err_cde: ISA level error code
+        :type err_cde: string
+        :param err_str: Description of the error
+        :type err_str: string
         """
         self.err_isa.append((err_cde, err_str))
 
     def gs_error(self, err_cde, err_str):
         """
-        @param err_cde: GS level error code
-        @type err_cde: string
-        @param err_str: Description of the error
-        @type err_str: string
+        :param err_cde: GS level error code
+        :type err_cde: string
+        :param err_str: Description of the error
+        :type err_str: string
         """
         self.err_gs.append((err_cde, err_str))
 
     def st_error(self, err_cde, err_str):
         """
-        @param err_cde: Segment level error code
-        @type err_cde: string
-        @param err_str: Description of the error
-        @type err_str: string
+        :param err_cde: Segment level error code
+        :type err_cde: string
+        :param err_str: Description of the error
+        :type err_str: string
         """
         self.err_st.append((err_cde, err_str))
 
     def seg_error(self, err_cde, err_str, err_value=None, src_line=None):
         """
-        @param err_cde: Segment level error code
-        @type err_cde: string
-        @param err_str: Description of the error
-        @type err_str: string
+        :param err_cde: Segment level error code
+        :type err_cde: string
+        :param err_str: Description of the error
+        :type err_str: string
         """
         self.err_seg.append((err_cde, err_str, err_value))
 
     def ele_error(self, err_cde, err_str, bad_value, refdes=None):
         """
-        @param err_cde: Element level error code
-        @type err_cde: string
-        @param err_str: Description of the error
-        @type err_str: string
+        :param err_cde: Element level error code
+        :type err_cde: string
+        :param err_str: Description of the error
+        :type err_str: string
         """
         self.err_ele.append((err_cde, err_str, bad_value, refdes))
 
@@ -1274,8 +1274,8 @@ class errh_list:
     def handle_errors(self, err_list):
         """
         Handles errors generated by X12Reader
-        @param err_list: List of errors
-        @type err_list: [(type, error code, error string)]
+        :param err_list: List of errors
+        :type err_list: [(type, error code, error string)]
         """
         for (etype, err_cde, err_str, err_value, src_line) in err_list:
             if etype == 'isa':
@@ -1289,7 +1289,7 @@ class errh_list:
 
     def is_closed(self):
         """
-        @rtype: boolean
+        :rtype: boolean
         """
         return True
 

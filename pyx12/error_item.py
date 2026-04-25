@@ -26,12 +26,12 @@ class ErrorItem:
     """
     def __init__(self, err_type, err_cde, err_str):
         """
-        @param err_type: At what level did the error occur
-        @type err_type: string
-        @param err_cde: Segment level error code
-        @type err_cde: string
-        @param err_str: Description of the error
-        @type err_str: string
+        :param err_type: At what level did the error occur
+        :type err_type: string
+        :param err_cde: Segment level error code
+        :type err_cde: string
+        :param err_str: Description of the error
+        :type err_str: string
         """
         self.err_cde = err_cde
         self.err_str = err_str

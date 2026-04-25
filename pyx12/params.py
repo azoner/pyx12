@@ -45,8 +45,8 @@ class ParamsBase:
     def get(self, option):
         """
         Get the value of the parameter specified by option
-        @param option: Option name
-        @type option: string
+        :param option: Option name
+        :type option: string
         """
         if option in self.params:
             return self.params[option]
@@ -56,10 +56,10 @@ class ParamsBase:
     def set(self, option, value):
         """
         Set the value of the parameter specified by option
-        @param option: Option name
-        @type option: string
-        @param value: Parameter value
-        @type value: string
+        :param option: Option name
+        :type option: string
+        :param value: Parameter value
+        :type value: string
         """
         if value == '':
             self.params[option] = None
@@ -70,10 +70,10 @@ class ParamsBase:
         """
         Read program configuration from an XML file
 
-        @param filename: XML file
-        @type filename: string
-        @raise EngineError: If the config file is not found or is unreadable
-        @return: None
+        :param filename: XML file
+        :type filename: string
+        :raises EngineError: If the config file is not found or is unreadable
+        :return: None
         """
         if not isfile(filename):
             self.logger.debug(f'Configuration file "{filename}" does not exist')
@@ -91,12 +91,12 @@ class ParamsBase:
     def _set_option(self, option, value, valtype):
         """
         Set the value of the parameter specified by option
-        @param option: Option name
-        @type option: string
-        @param value: Parameter value
-        @type value: string
-        @param valtype: Parameter type
-        @type valtype: string
+        :param option: Option name
+        :type option: string
+        :param value: Parameter value
+        :type value: string
+        :param valtype: Parameter type
+        :type valtype: string
         """
         if option is None or option == '':
             return

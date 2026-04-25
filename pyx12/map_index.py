@@ -26,9 +26,9 @@ class map_index:
     """
     def __init__(self, base_path=None):
         """
-        @param base_path: Override directory containing maps.xml.  If None,
+        :param base_path: Override directory containing maps.xml.  If None,
                     uses package resource folder
-        @type base_path: string
+        :type base_path: string
         """
         logger = logging.getLogger('pyx12')
         self.maps = []
@@ -57,7 +57,7 @@ class map_index:
         """
         Get the map filename associated with the given icvn, vriic, fic,
         and tspc values
-        @rtype: string
+        :rtype: string
         """
         for a in self.maps:
             if a['icvn'] == icvn and a['vriic'] == vriic and a['fic'] == fic \
@@ -69,7 +69,7 @@ class map_index:
         """
         Get the informal abbreviation associated with the given icvn, vriic,
         fic, and tspc values
-        @rtype: string
+        :rtype: string
         """
         for a in self.maps:
             if a['icvn'] == icvn and a['vriic'] == vriic and a['fic'] == fic \

@@ -14,7 +14,7 @@ Maintain context state
 Start saving context and segments
 Interface to read and alter segments
 
-@todo: Attach errors to returned dicts
+TODO: Attach errors to returned dicts
 """
 #G{classtree X12DataNode}
 
@@ -76,28 +76,28 @@ class X12DataNode:
 
     def get_value(self, x12_path):
         """
-        @return: the element value at the relative X12 path
-        @rtype: string
+        :return: the element value at the relative X12 path
+        :rtype: string
         """
         raise NotImplementedError('Override in sub-class')
 
     def set_value(self, x12_path, val):
         """
         Set the value of simple element at the first found segment at the given path
-        @param x12_path: An X12 path
-        @type x12_path: string
-        @param val: The new element value
-        @type val: string
+        :param x12_path: An X12 path
+        :type x12_path: string
+        :param val: The new element value
+        :type val: string
         """
         raise NotImplementedError('Override in sub-class')
 
     def exists(self, x12_path_str):
         """
         Does at least one child at the x12 path exist?
-        @param x12_path_str: Relative X12 path - 2400/2430
-        @type x12_path_str: string
-        @return: True if found
-        @rtype: boolean
+        :param x12_path_str: Relative X12 path - 2400/2430
+        :type x12_path_str: string
+        :return: True if found
+        :rtype: boolean
         """
         (curr, new_path) = self._get_start_node(x12_path_str)
         xpath = path.X12Path(new_path)
@@ -108,12 +108,12 @@ class X12DataNode:
     def select(self, x12_path_str):
         """
         Get a slice of sub-nodes at the relative X12 path.
-        @note: All interaction/modification with a X12DataNode tree (having a loop
+        Note: All interaction/modification with a X12DataNode tree (having a loop
         root) is done in place.
-        @param x12_path_str: Relative X12 path - 2400/2430
-        @type x12_path_str: string
-        @return: Iterator on the matching sub-nodes, relative to the instance.
-        @rtype: L{node<x12context.X12DataNode>}
+        :param x12_path_str: Relative X12 path - 2400/2430
+        :type x12_path_str: string
+        :return: Iterator on the matching sub-nodes, relative to the instance.
+        :rtype: L{node<x12context.X12DataNode>}
         """
         (curr, new_path) = self._get_start_node(x12_path_str)
         xpath = path.X12Path(new_path)
@@ -133,12 +133,12 @@ class X12DataNode:
     def first(self, x12_path_str):
         """
         Get the first sub-node matching the relative X12 path.
-        @note: All interaction/modification with a X12DataNode tree (having a loop
+        Note: All interaction/modification with a X12DataNode tree (having a loop
         root) is done in place.
-        @param x12_path_str: Relative X12 path - ie 2400/2430
-        @type x12_path_str: string
-        @return: The matching sub-node, relative to the instance.
-        @rtype: L{node<x12context.X12DataNode>}
+        :param x12_path_str: Relative X12 path - ie 2400/2430
+        :type x12_path_str: string
+        :return: The matching sub-node, relative to the instance.
+        :rtype: L{node<x12context.X12DataNode>}
         """
         if not self.exists(x12_path_str):
             return None
@@ -148,10 +148,10 @@ class X12DataNode:
     def count(self, x12_path_str):
         """
         Get a count of sub-nodes at the relative X12 path.
-        @param x12_path_str: Relative X12 path - 2400/2430
-        @type x12_path_str: string
-        @return: Count of matching sub-nodes
-        @rtype: int
+        :param x12_path_str: Relative X12 path - 2400/2430
+        :type x12_path_str: string
+        :return: Count of matching sub-nodes
+        :rtype: int
         """
         ct = 0
         (curr, new_path) = self._get_start_node(x12_path_str)
@@ -188,11 +188,11 @@ class X12DataNode:
         valid relative path or if the given segment index does not exist, the function
         returns None.
 
-        @param x12_path_str: Relative X12 Path
-        @type x12_path_str: string
-        @return: First matching data segment
-        @rtype: L{node<segment.Segment>}
-        @raise X12PathError: On blank or invalid path
+        :param x12_path_str: Relative X12 Path
+        :type x12_path_str: string
+        :return: First matching data segment
+        :rtype: L{node<segment.Segment>}
+        :raises X12PathError: On blank or invalid path
         """
         raise NotImplementedError('Override in sub-class')
 
@@ -211,8 +211,8 @@ class X12DataNode:
     def _select(self, x12path):
         """
         Get the child node at the path
-        @param x12path: x12 map path
-        @type x12path: L{path<path.X12Path>}
+        :param x12path: x12 map path
+        :type x12path: L{path<path.X12Path>}
         """
         if len(x12path.loop_list) == 0:
             # Only segment left
@@ -249,8 +249,8 @@ class X12DataNode:
     @property
     def id(self):
         """
-        @return: x12 node id
-        @rtype: string
+        :return: x12 node id
+        :rtype: string
         """
         if self.x12_map_node is None:
             raise errors.EngineError('This node has been deleted')
@@ -259,8 +259,8 @@ class X12DataNode:
     @property
     def cur_path(self):
         """
-        @return: x12 node path
-        @rtype: string
+        :return: x12 node path
+        :rtype: string
         """
         if self.x12_map_node is None:
             raise errors.EngineError('This node has been deleted')
@@ -298,11 +298,11 @@ class X12LoopDataNode(X12DataNode):
         valid relative path or if the given segment index does not exist, the function
         returns None.  If multiple values exist, this function returns the first.
 
-        @param x12_path_str: Relative X12 Path
-        @type x12_path_str: string
-        @return: the element value at the relative X12 path
-        @rtype: string
-        @raise X12PathError: On blank or invalid path
+        :param x12_path_str: Relative X12 Path
+        :type x12_path_str: string
+        :return: the element value at the relative X12 path
+        :rtype: string
+        :raises X12PathError: On blank or invalid path
         """
         (curr, new_path) = self._get_start_node(x12_path_str)
         seg_data = curr.get_first_matching_segment(new_path)
@@ -317,10 +317,10 @@ class X12LoopDataNode(X12DataNode):
     def set_value(self, x12_path_str, val):
         """
         Set the value of simple element at the first found segment at the given path
-        @param x12_path_str: Relative X12 Path
-        @type x12_path_str: string
-        @param val: The new element value
-        @type val: string
+        :param x12_path_str: Relative X12 Path
+        :type x12_path_str: string
+        :param val: The new element value
+        :type val: string
         """
         (curr, new_path) = self._get_start_node(x12_path_str)
         seg_data = curr.get_first_matching_segment(new_path)
@@ -357,12 +357,12 @@ class X12LoopDataNode(X12DataNode):
         Add the segment to this loop node
         iif the segment is the anchor for a child loop, also adds the loop
 
-        @param seg_data: Segment data
-        @type seg_data: L{node<segment.Segment>} or string
-        @return: New segment, or None if failed
-        @rtype: L{node<x12context.X12SegmentDataNode>}
-        @raise pyx12.errors.X12PathError: If invalid segment
-        @todo: Check counts?
+        :param seg_data: Segment data
+        :type seg_data: L{node<segment.Segment>} or string
+        :return: New segment, or None if failed
+        :rtype: L{node<x12context.X12SegmentDataNode>}
+        :raises pyx12.errors.X12PathError: If invalid segment
+        TODO: Check counts?
         """
         seg_data = self._get_segment(seg_data)
         x12_seg_node = self.x12_map_node.get_child_seg_node(seg_data)
@@ -377,10 +377,10 @@ class X12LoopDataNode(X12DataNode):
     def add_loop(self, seg_data):
         """
         Add a new loop in the correct location
-        @param seg_data: Segment data
-        @type seg_data: L{node<segment.Segment>} or string
-        @return: New loop_data_node, or None if failed
-        @rtype: L{node<x12context.X12LoopDataNode>}
+        :param seg_data: Segment data
+        :type seg_data: L{node<segment.Segment>} or string
+        :return: New loop_data_node, or None if failed
+        :rtype: L{node<x12context.X12LoopDataNode>}
         """
         seg_data = self._get_segment(seg_data)
         x12_loop_node = self.x12_map_node.get_child_loop_node(seg_data)
@@ -400,9 +400,9 @@ class X12LoopDataNode(X12DataNode):
         Add a X12DataNode instance
         The x12_map_node of the given data_node must be a direct child of this
         object's x12_map_node
-        @param data_node: The child loop node to add
-        @type data_node : L{node<x12context.X12DataNode>}
-        @raise errors.X12PathError: On blank or invalid path
+        :param data_node: The child loop node to add
+        :type data_node : L{node<x12context.X12DataNode>}
+        :raises errors.X12PathError: On blank or invalid path
         """
         if data_node.x12_map_node.parent != self.x12_map_node:
             raise errors.X12PathError('The loop_data_node "%s" is not a child of "%s"' %
@@ -418,11 +418,11 @@ class X12LoopDataNode(X12DataNode):
          - Does not descend into child loops
          - Only delete the first found matching segment
 
-        @param seg_data: Segment data
-        @type seg_data: L{node<segment.Segment>} or string
-        @return: True if found and deleted, else False
-        @rtype: Boolean
-        @todo: Check counts?
+        :param seg_data: Segment data
+        :type seg_data: L{node<segment.Segment>} or string
+        :return: True if found and deleted, else False
+        :rtype: Boolean
+        TODO: Check counts?
         """
         seg_data = self._get_segment(seg_data)
         x12_seg_node = self.x12_map_node.get_child_seg_node(seg_data)
@@ -444,10 +444,10 @@ class X12LoopDataNode(X12DataNode):
         valid relative path, return False If multiple values exist, this
         function deletes the first.
 
-        @return: True if found and deleted, else False
-        @rtype: Boolean
-        @raise X12PathError: On blank or invalid path
-        @todo: Check counts?
+        :return: True if found and deleted, else False
+        :rtype: Boolean
+        :raises X12PathError: On blank or invalid path
+        TODO: Check counts?
         """
         (curr, new_path) = self._get_start_node(x12_path_str)
         xpath = path.X12Path(new_path)
@@ -459,10 +459,10 @@ class X12LoopDataNode(X12DataNode):
     def _add_loop_node(self, x12_loop_node):
         """
         Add a loop data node to the current tree
-        @param x12_loop_node: X12 Loop node
-        @type x12_loop_node: L{node<map_if.loop_if>}
-        @return: New X12 Loop Data Node
-        @rtype: L{node<x12context.X12LoopDataNode>}
+        :param x12_loop_node: X12 Loop node
+        :type x12_loop_node: L{node<map_if.loop_if>}
+        :return: New X12 Loop Data Node
+        :rtype: L{node<x12context.X12LoopDataNode>}
         """
         new_node = X12LoopDataNode(x12_loop_node, parent=self)
         # Iterate over data nodes
@@ -476,11 +476,11 @@ class X12LoopDataNode(X12DataNode):
         valid relative path or if the given segment index does not exist, the function
         returns None.
 
-        @param x12_path_str: Relative X12 Path
-        @type x12_path_str: string
-        @return: First matching data segment
-        @rtype: L{node<segment.Segment>}
-        @raise X12PathError: On blank or invalid path
+        :param x12_path_str: Relative X12 Path
+        :type x12_path_str: string
+        :return: First matching data segment
+        :rtype: L{node<segment.Segment>}
+        :raises X12PathError: On blank or invalid path
         """
         if len(x12_path_str) == 0:
             raise errors.X12PathError('Blank X12 Path')
@@ -585,7 +585,7 @@ class X12SegmentDataNode(X12DataNode):
         """
         Attach validation errors to segment node
 
-        @todo: move errors to parent loops if necessary
+        TODO: move errors to parent loops if necessary
         """
         self.err_isa.extend(errh.err_isa)
         self.err_gs.extend(errh.err_gs)
@@ -604,10 +604,10 @@ class X12SegmentDataNode(X12DataNode):
     def get_value(self, x12_path_str):
         """
         Get the value of the first found element at the given path
-        @param x12_path_str: Relative X12 Path
-        @type x12_path_str: string
-        @return: the element value at the relative X12 path
-        @rtype: string
+        :param x12_path_str: Relative X12 Path
+        :type x12_path_str: string
+        :return: the element value at the relative X12 path
+        :rtype: string
         """
         seg_data = self.get_first_matching_segment(x12_path_str)
         if seg_data is None:
@@ -617,10 +617,10 @@ class X12SegmentDataNode(X12DataNode):
     def set_value(self, x12_path_str, val):
         """
         Set the value of simple element at the first found segment at the given path
-        @param x12_path_str: Relative X12 Path
-        @type x12_path_str: string
-        @param val: The new element value
-        @type val: string
+        :param x12_path_str: Relative X12 Path
+        :type x12_path_str: string
+        :param val: The new element value
+        :type val: string
         """
         seg_data = self.get_first_matching_segment(x12_path_str)
         if seg_data is None:
@@ -635,11 +635,11 @@ class X12SegmentDataNode(X12DataNode):
         valid relative path or if the given segment index does not exist, the function
         returns None.
 
-        @param x12_path_str: Relative X12 Path
-        @type x12_path_str: string
-        @return: First matching data segment
-        @rtype: L{node<segment.Segment>}
-        @raise X12PathError: On blank or invalid path
+        :param x12_path_str: Relative X12 Path
+        :type x12_path_str: string
+        :return: First matching data segment
+        :rtype: L{node<segment.Segment>}
+        :raises X12PathError: On blank or invalid path
         """
         (curr, new_path_str) = self._get_start_node(x12_path_str)
         xpath = path.X12Path(new_path_str)
@@ -664,9 +664,9 @@ class X12SegmentDataNode(X12DataNode):
 #    def get_seg_id_parts(x12_path):
 #        """
 #        Split a X12 segment reference designation into component parts
-#        @return: (segment ID, qualifier part, index)
-#        @rtype: (string, string, string)
-#        @raise X12PathError: On blank or invalid path
+#        :return: (segment ID, qualifier part, index)
+#        :rtype: (string, string, string)
+#        :raises X12PathError: On blank or invalid path
 #        """
 #        if x12_path.find('/') != -1:
 #            x12_path = x12_path[x12_path.rfind('/')+1:]
@@ -718,18 +718,18 @@ class X12SegmentDataNode(X12DataNode):
     def select(self, x12_path_str):
         """
         Segment nodes have no sub-nodes so return None
-        @param x12_path_str: Relative X12 path - 2400/2430
-        @type x12_path_str: string
-        @return: Iterator on the matching sub-nodes, relative to the instance.
-        @rtype: L{node<x12context.X12DataNode>}
+        :param x12_path_str: Relative X12 path - 2400/2430
+        :type x12_path_str: string
+        :return: Iterator on the matching sub-nodes, relative to the instance.
+        :rtype: L{node<x12context.X12DataNode>}
         """
         return []
 
     def _select(self, x12path):
         """
         Empty iter for segment nodes
-        @param x12path: x12 map path
-        @type x12path: L{path<path.X12Path>}
+        :param x12path: x12 map path
+        :type x12path: L{path<path.X12Path>}
         """
         return []
 
@@ -737,8 +737,8 @@ class X12SegmentDataNode(X12DataNode):
     @property
     def err_ct(self):
         """
-        @return: Count of errors for this segment
-        @rtype: int
+        :return: Count of errors for this segment
+        :rtype: int
         """
         return len(self.err_isa) + len(self.err_gs) + len(self.err_st) + len(self.err_seg) + len(self.err_ele)
 
@@ -750,11 +750,11 @@ class X12ContextReader:
 
     def __init__(self, param, errh, src_file_obj, xslt_files=None, map_path=None):
         """
-        @param param: pyx12.param instance
-        @param errh: Error Handler object
-        @param src_file_obj: Source document
-        @type src_file_obj: string
-        @rtype: boolean
+        :param param: pyx12.param instance
+        :param errh: Error Handler object
+        :param src_file_obj: Source document
+        :type src_file_obj: string
+        :rtype: boolean
         """
         self.param = param
         self.map_path = map_path
@@ -789,8 +789,8 @@ class X12ContextReader:
     def iter_segments(self, loop_id=None):
         """
         Simple segment or tree iterator
-        @return: X12 Data Node - simple segment or tree
-        @rtype: L{node<x12context.X12DataNode>}
+        :return: X12 Data Node - simple segment or tree
+        :rtype: L{node<x12context.X12DataNode>}
         """
         cur_tree = None
         cur_data_node = None
@@ -924,24 +924,24 @@ class X12ContextReader:
     @property
     def seg_term(self):
         """
-        @return: Current X12 segment terminator
-        @rtype: string
+        :return: Current X12 segment terminator
+        :rtype: string
         """
         return self.src.seg_term
 
     @property
     def ele_term(self):
         """
-        @return: Current X12 element terminator
-        @rtype: string
+        :return: Current X12 element terminator
+        :rtype: string
         """
         return self.src.ele_term
 
     @property
     def subele_term(self):
         """
-        @return: Current X12 sub-element terminator
-        @rtype: string
+        :return: Current X12 sub-element terminator
+        :rtype: string
         """
         return self.src.subele_term
 
@@ -961,12 +961,12 @@ class X12ContextReader:
 
         G{callgraph}
 
-        @param cur_data_node: Current X12 Data Node
-        @type cur_data_node: L{node<x12context.X12DataNode>}
-        @param segment_x12_node: Segment Map Node
-        @type segment_x12_node: L{node<map_if.x12_node>}
-        @return: New X12 Data Node
-        @rtype: L{node<x12context.X12DataNode>}
+        :param cur_data_node: Current X12 Data Node
+        :type cur_data_node: L{node<x12context.X12DataNode>}
+        :param segment_x12_node: Segment Map Node
+        :type segment_x12_node: L{node<map_if.x12_node>}
+        :return: New X12 Data Node
+        :rtype: L{node<x12context.X12DataNode>}
         """
         if not segment_x12_node.is_segment():
             raise errors.EngineError('Node must be a segment')
