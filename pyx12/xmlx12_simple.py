@@ -11,7 +11,7 @@
 Create an X12 document from a XML data file in the simple form
 """
 
-import xml.etree.ElementTree as et
+import defusedxml.ElementTree as et
 import logging
 
 # Intrapackage imports

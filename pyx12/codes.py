@@ -14,7 +14,7 @@ External Codes interface
 
 import logging
 import os.path
-import xml.etree.ElementTree as et
+import defusedxml.ElementTree as et
 from importlib.resources import files as _res_files
 
 from pyx12.errors import EngineError

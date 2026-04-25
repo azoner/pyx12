@@ -13,7 +13,7 @@ import logging
 import os.path
 import sys
 import re
-import xml.etree.ElementTree as et
+import defusedxml.ElementTree as et
 from importlib.resources import files as _res_files
 
 # Intrapackage imports
@@ -1510,7 +1510,7 @@ class composite_if(x12_node):
 def load_map_file(map_file, param, map_path=None):
     """
     Create the map object from a file
-    @param map_file: absolute path for file
+    @param map_file: filename (basename) of the map xml file to load
     @type map_file: string
     @rtype: pyx12.map_if
     @param map_path: Override directory containing map xml files.  If None,
@@ -1518,28 +1518,22 @@ def load_map_file(map_file, param, map_path=None):
     @type map_path: string
     """
     logger = logging.getLogger('pyx12')
+    # Reject any path component in map_file to prevent traversal out of map_path
+    if map_file != os.path.basename(map_file) or os.path.isabs(map_file):
+        raise EngineError('Invalid map file name: {}'.format(map_file))
     if map_path is not None:
         logger.debug("Looking for map file '{}' in map_path '{}'".format(map_file, map_path))
         if not os.path.isdir(map_path):
             raise OSError(2, "Map path does not exist", map_path)
-        if not os.path.isdir(map_path):
+        full_path = os.path.join(map_path, map_file)
+        if not os.path.isfile(full_path):
             raise OSError(2, "Pyx12 map file '{}' does not exist in map path".format(map_file), map_path)
-        map_fd = open(os.path.join(map_path, map_file))
+        map_fd = open(full_path, encoding='utf-8')
     else:
         logger.debug("Looking for map file '{}' in pkg_resources".format(map_file))
         map_fd = _res_files('pyx12').joinpath('map', map_file).open('rb')
-    imap = None
-    try:
+    with map_fd:
         logger.debug('Create map from %s' % (map_file))
-        #etree = et.parse(map_fd)
         parser = et.XMLParser(encoding="utf-8")
         etree = et.parse(map_fd, parser=parser)
-        imap = map_if(etree.getroot(), param, map_path)
-    except AssertionError:
-        logger.error('Load of map file failed: %s' % (map_file))
-        raise
-    except Exception:
-        raise
-        #raise EngineError('Load of map file failed: %s' % (map_file))
-    map_fd.close()
-    return imap
+        return map_if(etree.getroot(), param, map_path)

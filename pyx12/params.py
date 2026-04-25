@@ -18,7 +18,7 @@ Order of precedence:
 """
 from os.path import dirname, abspath, join, isdir, isfile, expanduser
 import sys
-import xml.etree.ElementTree as et
+import defusedxml.ElementTree as et
 import logging
 
 from pyx12.errors import EngineError

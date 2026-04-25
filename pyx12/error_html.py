@@ -12,6 +12,7 @@
 Generates HTML error output
 """
 
+import html
 import time
 import logging
 
@@ -196,16 +197,10 @@ def seg_str(seg, seg_term, ele_term, subele_term, eol=''):
 
 def escape_html_chars(str_val):
     """
-    Escape special HTML characters (& <>)
-    @type str_val: string
-    @return: formatted string
-    @rtype: string
+    Escape special HTML characters, including quotes, so the result is safe in
+    both element text and attribute contexts. Spaces are replaced with &nbsp;
+    after escaping to preserve column alignment in the rendered report.
     """
     if str_val is None:
         return None
-    output = str_val
-    output = output.replace('&', '&amp;')
-    output = output.replace(' ', '&nbsp;')
-    output = output.replace('>', '&gt;')
-    output = output.replace('<', '&lt;')
-    return output
+    return html.escape(str_val, quote=True).replace(' ', '&nbsp;')

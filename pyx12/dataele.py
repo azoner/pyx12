@@ -14,7 +14,7 @@ Interface to normalized Data Elements
 
 import os.path
 import logging
-import xml.etree.ElementTree as et
+import defusedxml.ElementTree as et
 from importlib.resources import files as _res_files
 
 # Intrapackage imports
