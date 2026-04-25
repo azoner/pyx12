@@ -40,6 +40,17 @@ Run the unit test suite using the local virtual environment. Accepts an optional
 - Do not modify tests to make them pass without understanding the intent.
 
 ## Notes
-- If `.venv` is missing or `pytest` is not installed: `pip install -e ".[dev]"` inside the venv, or `.venv/Scripts/pip install pytest pytest-cov`.
+- If `.venv` is missing or `pytest` is not installed: `uv pip install -e ".[dev]"`, or `uv pip install pytest pytest-cov`.
 - Tests use `unittest.TestCase` style but are discovered and run by pytest.
 - Always run the full suite before reporting a task complete.
+
+## Authoring conventions
+
+These apply whenever new tests are added or existing tests are modified.
+
+- Use `unittest.TestCase` subclasses with descriptive class and method names. Class name should describe the unit under test; method name should describe the behavior (`testValidISA`, `testRejectsInvalidSegmentId`).
+- Test real behavior — do not mock internal pyx12 logic. Build real `Segment`, `X12Reader`, etc. instances against the bundled test data in `pyx12/test/files/`.
+- Mocks are acceptable only at true system boundaries (filesystem, network, external services) — pyx12 currently has none of those.
+- New test modules go in `pyx12/test/` and start with `test_*.py` so pytest discovers them automatically.
+- Each test should fail for one reason. Prefer multiple small `test*` methods over one giant `testEverything`.
+- When fixing a bug, add a regression test first that reproduces the bug, then make the fix.
