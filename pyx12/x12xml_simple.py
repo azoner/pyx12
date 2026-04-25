@@ -27,10 +27,6 @@ class x12xml_simple(x12xml):
         x12xml.__init__(self, fd, "x12simple", dtd_urn)
         self.last_path = []
 
-    def __del__(self):
-        while len(self.writer) > 0:
-            self.writer.pop()
-
     def seg(self, seg_node, seg_data):
         """
         Generate XML for the segment data and matching map node

@@ -61,19 +61,19 @@ def main():
                 continue
 
             buf = io.StringIO()
-            src = pyx12.x12file.X12Reader(file_in)
-            for seg_data in src:
-                if args.fixcounting:
-                    err_codes = [x[1] for x in src.pop_errors()]
-                    if seg_data.get_seg_id() == 'IEA' and '021' in err_codes:
-                        seg_data.set('IEA01', str(src.gs_count))
-                    elif seg_data.get_seg_id() == 'GE' and '5' in err_codes:
-                        seg_data.set('GE01', str(src.st_count))
-                    elif seg_data.get_seg_id() == 'SE' and '4' in err_codes:
-                        seg_data.set('SE01', str(src.seg_count + 1))
-                    elif seg_data.get_seg_id() == 'HL' and 'HL1' in err_codes:
-                        seg_data.set('HL01', str(src.hl_count))
-                buf.write(seg_data.format() + eol)
+            with pyx12.x12file.X12Reader(file_in) as src:
+                for seg_data in src:
+                    if args.fixcounting:
+                        err_codes = [x[1] for x in src.pop_errors()]
+                        if seg_data.get_seg_id() == 'IEA' and '021' in err_codes:
+                            seg_data.set('IEA01', str(src.gs_count))
+                        elif seg_data.get_seg_id() == 'GE' and '5' in err_codes:
+                            seg_data.set('GE01', str(src.st_count))
+                        elif seg_data.get_seg_id() == 'SE' and '4' in err_codes:
+                            seg_data.set('SE01', str(src.seg_count + 1))
+                        elif seg_data.get_seg_id() == 'HL' and 'HL1' in err_codes:
+                            seg_data.set('HL01', str(src.hl_count))
+                    buf.write(seg_data.format() + eol)
             if not eol:
                 buf.write('\n')
 

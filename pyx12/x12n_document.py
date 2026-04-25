@@ -225,10 +225,9 @@ def x12n_document(param, src_file, fd_997, fd_html,
 
     if fd_html:
         html.footer()
-        del html
 
     if fd_xmldoc:
-        del xmldoc
+        xmldoc.close()
 
     #visit_debug = pyx12.error_debug.error_debug_visitor(sys.stdout)
     #errh.accept(visit_debug)
@@ -249,13 +248,7 @@ def x12n_document(param, src_file, fd_997, fd_html,
                 del visit_999
             except Exception:
                 logger.exception('Failed to create 999 response')
-    del node
-    del src
-    del control_map
-    try:
-        del cur_map
-    except UnboundLocalError:
-        pass
+    src.close()
     try:
         if not valid or errh.get_error_count() > 0:
             return False

@@ -119,11 +119,15 @@ class X12DataNode:
         xpath = path.X12Path(new_path)
         for n in curr._select(xpath):
             if xpath.seg_id is not None:
-                assert n.id == xpath.seg_id
+                if n.id != xpath.seg_id:
+                    raise errors.EngineError('Selected node id "%s" does not match xpath seg_id "%s"' % (n.id, xpath.seg_id))
             else:
-                assert len(xpath.loop_list) > 0
-                assert n.id == xpath.loop_list[-1]
-            assert n.parent is not None, 'Node "%s" has no parent' % (n.id)
+                if len(xpath.loop_list) == 0:
+                    raise errors.EngineError('xpath has no seg_id and an empty loop list')
+                if n.id != xpath.loop_list[-1]:
+                    raise errors.EngineError('Selected node id "%s" does not match xpath final loop "%s"' % (n.id, xpath.loop_list[-1]))
+            if n.parent is None:
+                raise errors.EngineError('Node "%s" has no parent' % (n.id))
             yield n
 
     def first(self, x12_path_str):
@@ -514,9 +518,9 @@ class X12LoopDataNode(X12DataNode):
             return seg_obj
         elif isinstance(seg_obj, str):
             (seg_term, ele_term, subele_term) = self._get_terminators()
-            assert seg_term is not None, 'seg_term is none, node contains no X12SegmentDataNode children?'
-            assert ele_term is not None, 'seg_term is none, node contains no X12SegmentDataNode children?'
-            assert subele_term is not None, 'seg_term is none, node contains no X12SegmentDataNode children?'
+            if seg_term is None or ele_term is None or subele_term is None:
+                raise errors.EngineError(
+                    'Cannot build Segment: terminators unknown (node has no X12SegmentDataNode children)')
             return pyx12.segment.Segment(seg_obj, seg_term, ele_term, subele_term)
         else:
             raise errors.EngineError('Unknown type %s for seg_obj %i.  Expecting a pyx12.segment.Segment or a str'
@@ -770,6 +774,17 @@ class X12ContextReader:
         self.x12_map_node = self.control_map.getnodebypath('/ISA_LOOP/ISA')
         self.walker = walk_tree()
 
+    def close(self):
+        """Close the underlying X12Reader. Idempotent."""
+        self.src.close()
+
+    def __enter__(self):
+        return self
+
+    def __exit__(self, exc_type, exc, tb):
+        self.close()
+        return False
+
     #{ Public Methods
     def iter_segments(self, loop_id=None):
         """
@@ -879,8 +894,10 @@ class X12ContextReader:
                     #pop_loops = get_pop_loops(cur_data_node.x12_map_node, self.x12_map_node)
                     if loop_id:
                         pop_loops = [x12_node for x12_node in pop_loops if x12_node.get_path().find(loop_id) == -1]
-                    assert loop_id not in [x12.id for x12 in push_loops], 'Loop ID %s should not be in push loops' % (loop_id)
-                    assert loop_id not in [x12.id for x12 in pop_loops], 'Loop ID %s should not be in pop loops' % (loop_id)
+                    if loop_id in [x12.id for x12 in push_loops]:
+                        raise errors.EngineError('Loop ID %s should not be in push loops' % (loop_id))
+                    if loop_id in [x12.id for x12 in pop_loops]:
+                        raise errors.EngineError('Loop ID %s should not be in pop loops' % (loop_id))
                     cur_data_node = X12SegmentDataNode(self.x12_map_node, seg, push_loops, pop_loops)
                     cur_data_node.seg_count = self.src.get_seg_count()
                     cur_data_node.cur_line_number = self.src.get_cur_line()
@@ -893,7 +910,8 @@ class X12ContextReader:
                 # Handle errors captured in errh_list
                 cur_data_node.handle_errh_errors(errh)
                 if cur_data_node.id != 'ISA' and cur_data_node is not None:
-                    assert cur_data_node.parent is not None, 'Node "%s" has no parent' % (cur_data_node.id)
+                    if cur_data_node.parent is None:
+                        raise errors.EngineError('Node "%s" has no parent' % (cur_data_node.id))
                 yield cur_data_node
 
     def register_error_callback(self, callback, err_type):

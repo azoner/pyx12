@@ -77,7 +77,8 @@ def traverse_path(start_node, pop_loops, push_loops):
     start_path = pop_to_parent_loop(start_node).get_path()
     p1 = [p for p in start_path.split('/') if p != '']
     for loop_id in get_id_list(pop_loops):
-        assert loop_id == p1[-1], 'Path %s does not contain %s' % (start_path, loop_id)
+        if loop_id != p1[-1]:
+            raise EngineError('Path %s does not contain %s' % (start_path, loop_id))
         p1 = p1[:-1]
     for loop_id in get_id_list(push_loops):
         p1.append(loop_id)
@@ -211,7 +212,8 @@ class walk_tree:
         @type errh: L{error_handler.err_handler}
         @raise EngineError: On invalid usage code
         """
-        assert seg_node.usage in ('N', 'R', 'S'), 'Segment usage must be R, S, or N'
+        if seg_node.usage not in ('N', 'R', 'S'):
+            raise EngineError('Segment usage must be R, S, or N (got %r)' % (seg_node.usage,))
         if seg_node.usage == 'N':
             err_str = "Segment %s found but marked as not used" % (seg_node.id)
             errh.seg_error('2', err_str, None)
@@ -273,8 +275,9 @@ class walk_tree:
         @return: Does the segment match the first segment node in the loop?
         @rtype: boolean
         """
-        assert loop_node.is_loop(), "Call to first_seg_match failed, node %s is not a loop. seg %s" \
-            % (loop_node.id, seg_data.get_seg_id())
+        if not loop_node.is_loop():
+            raise EngineError("Call to first_seg_match failed, node %s is not a loop. seg %s"
+                              % (loop_node.id, seg_data.get_seg_id()))
         #if loop_node.id not in ('ISA_LOOP', 'GS_LOOP'):
         #    assert loop_node.get_cur_count() == self.counter.get_count(loop_node.x12path), \
         #        'loop_node counts not equal: old is %s=%i : new is %s=%i' % (
@@ -283,7 +286,8 @@ class walk_tree:
         if len(loop_node) <= 0:  # Has no children
             return False
         first_child_node = loop_node.get_first_node()
-        assert first_child_node is not None, 'get_first_node failed from loop %s' % (loop_node.id)
+        if first_child_node is None:
+            raise EngineError('get_first_node failed from loop %s' % (loop_node.id))
         if first_child_node.is_loop():
             #If any loop node matches
             for child_node in loop_node.childIterator():

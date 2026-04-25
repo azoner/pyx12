@@ -318,12 +318,21 @@ class X12Reader(X12Base):
         self.repetition_term = repetition_term
         self.icvn = self.raw.icvn
 
-    def __del__(self):
-        try:
-            if self.need_to_close:
-                self.fd_in.close()
-        except Exception:
-            pass
+    def close(self):
+        """
+        Close the underlying file if X12Reader opened it itself.
+        Idempotent.
+        """
+        if self.need_to_close and self.fd_in is not None:
+            self.fd_in.close()
+            self.need_to_close = False
+
+    def __enter__(self):
+        return self
+
+    def __exit__(self, exc_type, exc, tb):
+        self.close()
+        return False
 
     def _parse_segment(self, seg_data):
         """
@@ -438,6 +447,7 @@ class X12Writer(X12Base):
         @type src_file_obj: string or open file object
         """
         self.fd_out = None
+        self.need_to_close = False
         try:
             res = src_file_obj.write
             # isinstance(f, file)
@@ -447,21 +457,35 @@ class X12Writer(X12Base):
                 self.fd_out = sys.stdout
             else:
                 self.fd_out = open(src_file_obj, mode='w', encoding='ascii')
-        #assert self.fd_out.encoding in ('ascii', 'US-ASCII'), 'Outfile file must have ASCII encoding, is %s' % (self.fd_out.encoding)
+                self.need_to_close = True
         X12Base.__init__(self)
-        #terms = set([seg_term, ele_term, subele_term, repetition_term])
         self.seg_term = seg_term
         self.ele_term = ele_term
         self.subele_term = subele_term
         self.repetition_term = repetition_term
         self.eol = eol
 
-    def Close(self):
+    def close(self):
         """
-        End any open loops.  Should be called at the end of writing.
+        Flush trailing loops and close the underlying file if X12Writer
+        opened it itself. Idempotent.
         """
         self._popToLoop('ISA')
         X12Base.Close(self)
+        if self.need_to_close and self.fd_out is not None:
+            self.fd_out.close()
+            self.need_to_close = False
+
+    def Close(self):
+        """Backwards-compatible alias for close()."""
+        self.close()
+
+    def __enter__(self):
+        return self
+
+    def __exit__(self, exc_type, exc, tb):
+        self.close()
+        return False
 
     def Write(self, seg_data):
         """

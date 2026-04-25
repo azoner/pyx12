@@ -30,8 +30,19 @@ class x12xml:
         self.writer.push(type)
         self.last_path = None
 
-    def __del__(self):
-        pass
+    def close(self):
+        """
+        Pop any XML elements still on the writer's stack. Idempotent.
+        """
+        while len(self.writer) > 0:
+            self.writer.pop()
+
+    def __enter__(self):
+        return self
+
+    def __exit__(self, exc_type, exc, tb):
+        self.close()
+        return False
 
     def seg(self, seg_node, seg_data):
         """
@@ -99,7 +110,8 @@ class x12xml:
         @param seg_data: Segment object
         @type seg_data: L{segment<segment.Segment>}
         """
-        assert seg_node.is_segment(), 'Node must be a segment'
+        if not seg_node.is_segment():
+            raise EngineError('Node must be a segment')
         parent = pop_to_parent_loop(seg_node)  # Get enclosing loop
         for loop in pop_loops:
             self.writer.pop()

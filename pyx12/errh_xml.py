@@ -47,11 +47,22 @@ class err_handler:
         self.writer = XMLWriter(self.fd)
         self.writer.push("x12err")
 
-    def __del__(self):
+    def close(self):
+        """
+        Flush remaining XML closing tags and close the underlying file.
+        Idempotent.
+        """
         while len(self.writer) > 0:
             self.writer.pop()
-        if not self.fd.closed:
+        if self.fd is not None and not self.fd.closed:
             self.fd.close()
+
+    def __enter__(self):
+        return self
+
+    def __exit__(self, exc_type, exc, tb):
+        self.close()
+        return False
 
     def getFilename(self):
         return self.filename
