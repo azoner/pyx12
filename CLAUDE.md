@@ -3,7 +3,7 @@
 HIPAA X12 EDI document validator and converter. Parses ANSI X12N data files and validates against HIPAA Implementation Guidelines. Generates 997 (4010) / 999 (5010) acknowledgements.
 
 ## Project
-- Python 3.8+, GPL-3.0
+- Python 3.11+, BSD
 - Active branch: `dev/py3-modernize` — modernizing Python 2→3 patterns
 - Tests live in `pyx12/test/`, use `unittest.TestCase` style
 - Run tests: `pytest pyx12/test/`
