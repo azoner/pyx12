@@ -15,10 +15,11 @@ HIPAA X12 EDI document validator and converter. Parses ANSI X12N data files and 
 - No error handling for scenarios that can't happen; validate only at system boundaries
 - No backwards-compatibility shims for removed code
 - No docstrings beyond a single short line when truly needed
+- Prefer functional programming patterns over object oriented patterns
 
 ## Response style
-- Terse — no trailing summaries, no recap of what was just done
-- No emojis unless explicitly asked
+- Trailing summaries and recaps of what was done are welcome
+- Some emojis
 - Reference code locations as `file:line` (or markdown links in VSCode)
 - Short updates at key moments; silent is not acceptable
 
