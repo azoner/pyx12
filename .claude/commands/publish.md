@@ -54,5 +54,5 @@ Tell the user the tag has been pushed and show the PyPI URL:
 
 ### Notes
 - Never hardcode tokens; let twine read them from `~/.pypirc` or prompt interactively.
-- If `twine` is not installed, run `.venv/Scripts/pip install twine build` first.
+- If `build` / `twine` are not installed, run `uv pip install -e ".[dev]"` (they are part of the `dev` extra in `pyproject.toml`).
 - For TestPyPI, the install command to verify is: `pip install --index-url https://test.pypi.org/simple/ pyx12=={version}`

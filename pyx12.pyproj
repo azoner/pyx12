@@ -53,12 +53,10 @@
     <Content Include="pyx12\test\files\simple_837p.txt" />
     <Content Include="pyx12\test\files\trailer_errors.txt" />
     <Content Include="pyx12\test\files\trailing_terms.txt" />
-    <Content Include="requirements.dev.txt" />
     <Compile Include="pyx12\examples\generate_spec.py" />
     <Compile Include="pyx12\examples\node_iterator.py" />
     <Compile Include="pyx12\test\test_map_if_load.py" />
     <Compile Include="pyx12\x12metadata.py" />
-    <Compile Include="setup.py" />
     <Compile Include="pyx12\codes.py" />
     <Compile Include="pyx12\dataele.py" />
     <Compile Include="pyx12\decorators.py" />
