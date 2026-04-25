@@ -67,14 +67,14 @@ def IsValidDataType(str_val, data_type, charset='B', icvn='00401'):
     return True
 
 rec_N = re.compile("^-?[0-9]+", REGEX_MODE)
-rec_R = re.compile(r"^-?[0-9]*(\.[0-9]+)?", REGEX_MODE)
+rec_R = re.compile("^-?[0-9]*(\.[0-9]+)?", REGEX_MODE)
 rec_ID_E = re.compile(
-    r"""[^A-Z0-9!"&'()*+,\-\./:;?=\sa-z%~@\[\]_{}\\|<>#$\s]""", REGEX_MODE)
+    "[^A-Z0-9!\"&'()*+,\-\./:;?= a-z%~@\[\]_{}\\\|<>#$]", REGEX_MODE)
 rec_ID_E5 = re.compile(
-    r"""[^A-Z0-9!"&'()*+,\-\./:;?=\sa-z%~@\[\]_{}\\|<>^`#$\s]""", REGEX_MODE)
-rec_ID_B = re.compile(r"""[^A-Z0-9!"&'()*+,\-\./:;?=\s]""", REGEX_MODE)
-rec_DT = re.compile(r"[^0-9]+", REGEX_MODE)
-rec_TM = re.compile(r"[^0-9]+", REGEX_MODE)
+    "[^A-Z0-9!\"&'()*+,\-\./:;?= a-z%~@\[\]_{}\\\|<>^`#$]", REGEX_MODE)
+rec_ID_B = re.compile("[^A-Z0-9!\"&'()*+,\-\./:;?= ]", REGEX_MODE)
+rec_DT = re.compile("[^0-9]+", REGEX_MODE)
+rec_TM = re.compile("[^0-9]+", REGEX_MODE)
 
 def match_re(short_data_type, val):
     """
