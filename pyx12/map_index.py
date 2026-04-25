@@ -7,7 +7,6 @@
 # you should have received as part of this distribution.
 #
 ######################################################################
-
 """
 Locate the correct xml map file given:
     - Interchange Control Version Number (ISA12)

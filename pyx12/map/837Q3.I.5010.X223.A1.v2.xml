@@ -3889,32 +3889,26 @@
                   </valid_codes>
                 </element>
                 <element xid="CAS02" data_ele="1034" usage="R" seq="02" name="Adjustment Reason Code">
-                  <valid_codes external="adjustment_reason"/>
                 </element>
                 <element xid="CAS03" data_ele="782" usage="R" seq="03" name="Adjustment Amount"/>
                 <element xid="CAS04" data_ele="380" usage="S" seq="04" name="Adjustment Quantity"/>
                 <element xid="CAS05" data_ele="1034" usage="S" seq="05" name="Adjustment Reason Code">
-                  <valid_codes external="adjustment_reason"/>
                 </element>
                 <element xid="CAS06" data_ele="782" usage="S" seq="06" name="Adjustment Amount"/>
                 <element xid="CAS07" data_ele="380" usage="S" seq="07" name="Adjustment Quantity"/>
                 <element xid="CAS08" data_ele="1034" usage="S" seq="08" name="Adjustment Reason Code">
-                  <valid_codes external="adjustment_reason"/>
                 </element>
                 <element xid="CAS09" data_ele="782" usage="S" seq="09" name="Adjustment Amount"/>
                 <element xid="CAS10" data_ele="380" usage="S" seq="10" name="Adjustment Quantity"/>
                 <element xid="CAS11" data_ele="1034" usage="S" seq="11" name="Adjustment Reason Code">
-                  <valid_codes external="adjustment_reason"/>
                 </element>
                 <element xid="CAS12" data_ele="782" usage="S" seq="12" name="Adjustment Amount"/>
                 <element xid="CAS13" data_ele="380" usage="S" seq="13" name="Adjustment Quantity"/>
                 <element xid="CAS14" data_ele="1034" usage="S" seq="14" name="Adjustment Reason Code">
-                  <valid_codes external="adjustment_reason"/>
                 </element>
                 <element xid="CAS15" data_ele="782" usage="S" seq="15" name="Adjustment Amount"/>
                 <element xid="CAS16" data_ele="380" usage="S" seq="16" name="Adjustment Quantity"/>
                 <element xid="CAS17" data_ele="1034" usage="S" seq="17" name="Adjustment Reason Code">
-                  <valid_codes external="adjustment_reason"/>
                 </element>
                 <element xid="CAS18" data_ele="782" usage="S" seq="18" name="Adjustment Amount"/>
                 <element xid="CAS19" data_ele="380" usage="S" seq="19" name="Adjustment Quantity"/>
@@ -5234,32 +5228,26 @@
                     </valid_codes>
                   </element>
                   <element xid="CAS02" data_ele="1034" usage="R" seq="02" name="Adjustment Reason Code">
-                    <valid_codes external="adjustment_reason"/>
                   </element>
                   <element xid="CAS03" data_ele="782" usage="R" seq="03" name="Adjustment Amount"/>
                   <element xid="CAS04" data_ele="380" usage="S" seq="04" name="Adjustment Quantity"/>
                   <element xid="CAS05" data_ele="1034" usage="S" seq="05" name="Adjustment Reason Code">
-                    <valid_codes external="adjustment_reason"/>
                   </element>
                   <element xid="CAS06" data_ele="782" usage="S" seq="06" name="Adjustment Amount"/>
                   <element xid="CAS07" data_ele="380" usage="S" seq="07" name="Adjustment Quantity"/>
                   <element xid="CAS08" data_ele="1034" usage="S" seq="08" name="Adjustment Reason Code">
-                    <valid_codes external="adjustment_reason"/>
                   </element>
                   <element xid="CAS09" data_ele="782" usage="S" seq="09" name="Adjustment Amount"/>
                   <element xid="CAS10" data_ele="380" usage="S" seq="10" name="Adjustment Quantity"/>
                   <element xid="CAS11" data_ele="1034" usage="S" seq="11" name="Adjustment Reason Code">
-                    <valid_codes external="adjustment_reason"/>
                   </element>
                   <element xid="CAS12" data_ele="782" usage="S" seq="12" name="Adjustment Amount"/>
                   <element xid="CAS13" data_ele="380" usage="S" seq="13" name="Adjustment Quantity"/>
                   <element xid="CAS14" data_ele="1034" usage="S" seq="14" name="Adjustment Reason Code">
-                    <valid_codes external="adjustment_reason"/>
                   </element>
                   <element xid="CAS15" data_ele="782" usage="S" seq="15" name="Adjustment Amount"/>
                   <element xid="CAS16" data_ele="380" usage="S" seq="16" name="Adjustment Quantity"/>
                   <element xid="CAS17" data_ele="1034" usage="S" seq="17" name="Adjustment Reason Code">
-                    <valid_codes external="adjustment_reason"/>
                   </element>
                   <element xid="CAS18" data_ele="782" usage="S" seq="18" name="Adjustment Amount"/>
                   <element xid="CAS19" data_ele="380" usage="S" seq="19" name="Adjustment Quantity"/>
@@ -8588,32 +8576,26 @@
                     </valid_codes>
                   </element>
                   <element xid="CAS02" data_ele="1034" usage="R" seq="02" name="Adjustment Reason Code">
-                    <valid_codes external="adjustment_reason"/>
                   </element>
                   <element xid="CAS03" data_ele="782" usage="R" seq="03" name="Adjustment Amount"/>
                   <element xid="CAS04" data_ele="380" usage="S" seq="04" name="Adjustment Quantity"/>
                   <element xid="CAS05" data_ele="1034" usage="S" seq="05" name="Adjustment Reason Code">
-                    <valid_codes external="adjustment_reason"/>
                   </element>
                   <element xid="CAS06" data_ele="782" usage="S" seq="06" name="Adjustment Amount"/>
                   <element xid="CAS07" data_ele="380" usage="S" seq="07" name="Adjustment Quantity"/>
                   <element xid="CAS08" data_ele="1034" usage="S" seq="08" name="Adjustment Reason Code">
-                    <valid_codes external="adjustment_reason"/>
                   </element>
                   <element xid="CAS09" data_ele="782" usage="S" seq="09" name="Adjustment Amount"/>
                   <element xid="CAS10" data_ele="380" usage="S" seq="10" name="Adjustment Quantity"/>
                   <element xid="CAS11" data_ele="1034" usage="S" seq="11" name="Adjustment Reason Code">
-                    <valid_codes external="adjustment_reason"/>
                   </element>
                   <element xid="CAS12" data_ele="782" usage="S" seq="12" name="Adjustment Amount"/>
                   <element xid="CAS13" data_ele="380" usage="S" seq="13" name="Adjustment Quantity"/>
                   <element xid="CAS14" data_ele="1034" usage="S" seq="14" name="Adjustment Reason Code">
-                    <valid_codes external="adjustment_reason"/>
                   </element>
                   <element xid="CAS15" data_ele="782" usage="S" seq="15" name="Adjustment Amount"/>
                   <element xid="CAS16" data_ele="380" usage="S" seq="16" name="Adjustment Quantity"/>
                   <element xid="CAS17" data_ele="1034" usage="S" seq="17" name="Adjustment Reason Code">
-                    <valid_codes external="adjustment_reason"/>
                   </element>
                   <element xid="CAS18" data_ele="782" usage="S" seq="18" name="Adjustment Amount"/>
                   <element xid="CAS19" data_ele="380" usage="S" seq="19" name="Adjustment Quantity"/>
@@ -9933,32 +9915,26 @@
                       </valid_codes>
                     </element>
                     <element xid="CAS02" data_ele="1034" usage="R" seq="02" name="Adjustment Reason Code">
-                      <valid_codes external="adjustment_reason"/>
                     </element>
                     <element xid="CAS03" data_ele="782" usage="R" seq="03" name="Adjustment Amount"/>
                     <element xid="CAS04" data_ele="380" usage="S" seq="04" name="Adjustment Quantity"/>
                     <element xid="CAS05" data_ele="1034" usage="S" seq="05" name="Adjustment Reason Code">
-                      <valid_codes external="adjustment_reason"/>
                     </element>
                     <element xid="CAS06" data_ele="782" usage="S" seq="06" name="Adjustment Amount"/>
                     <element xid="CAS07" data_ele="380" usage="S" seq="07" name="Adjustment Quantity"/>
                     <element xid="CAS08" data_ele="1034" usage="S" seq="08" name="Adjustment Reason Code">
-                      <valid_codes external="adjustment_reason"/>
                     </element>
                     <element xid="CAS09" data_ele="782" usage="S" seq="09" name="Adjustment Amount"/>
                     <element xid="CAS10" data_ele="380" usage="S" seq="10" name="Adjustment Quantity"/>
                     <element xid="CAS11" data_ele="1034" usage="S" seq="11" name="Adjustment Reason Code">
-                      <valid_codes external="adjustment_reason"/>
                     </element>
                     <element xid="CAS12" data_ele="782" usage="S" seq="12" name="Adjustment Amount"/>
                     <element xid="CAS13" data_ele="380" usage="S" seq="13" name="Adjustment Quantity"/>
                     <element xid="CAS14" data_ele="1034" usage="S" seq="14" name="Adjustment Reason Code">
-                      <valid_codes external="adjustment_reason"/>
                     </element>
                     <element xid="CAS15" data_ele="782" usage="S" seq="15" name="Adjustment Amount"/>
                     <element xid="CAS16" data_ele="380" usage="S" seq="16" name="Adjustment Quantity"/>
                     <element xid="CAS17" data_ele="1034" usage="S" seq="17" name="Adjustment Reason Code">
-                      <valid_codes external="adjustment_reason"/>
                     </element>
                     <element xid="CAS18" data_ele="782" usage="S" seq="18" name="Adjustment Amount"/>
                     <element xid="CAS19" data_ele="380" usage="S" seq="19" name="Adjustment Quantity"/>

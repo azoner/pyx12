@@ -561,7 +561,6 @@
               <!--End of PER segment-->
             </loop>
             <!--End of 2100A loop-->
-
           <loop xid="2000B">
             <name>Information Receiver Level</name>
             <usage>R</usage>

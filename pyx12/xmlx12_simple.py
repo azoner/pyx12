@@ -7,7 +7,6 @@
 # you should have received as part of this distribution.
 #
 ######################################################################
-
 """
 Create an X12 document from a XML data file in the simple form
 """

@@ -1,4 +1,3 @@
-from __future__ import absolute_import
 from setuptools import setup
 
 # from pyx12.version import __version__
@@ -11,7 +10,8 @@ document or can translate to and from an XML representation of the data file."""
 
 setup(
     name="pyx12",
-    version="3.0.0b4",
+    python_requires='>=3.6',
+    version="3.0.0rc3",
     long_description=LONG_DESCRIPTION,
     license='BSD',
     description="HIPAA X12 validator, parser and converter",

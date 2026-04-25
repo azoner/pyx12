@@ -6,7 +6,6 @@
 # you should have received as part of this distribution.
 #
 ######################################################################
-
 """
 Interface to a X12N IG Map
 """
@@ -1258,7 +1257,8 @@ class element_if(x12_node):
             err_str = 'Data element "%s" (%s), contains an invalid control character(%s)' % \
                 (self.name, self.refdes, bad_string)
             self._error(errh, err_str, '6', bad_string)
-            valid = False
+            return False  # skip following checks, control character errors trump all
+            
         if data_type in ['AN', 'ID'] and elem_val[-1] == ' ':
             if len(elem_val.rstrip()) >= min_len:
                 err_str = 'Data element "%s" (%s) has unnecessary trailing spaces. (%s)' % \

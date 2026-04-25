@@ -1432,7 +1432,6 @@
                     </composite>
                   </segment>
                   <!--End of REF segment-->
-
                   <segment xid="QTY">
                     <name>Total Accepted Quantity</name>
                     <usage>S</usage>

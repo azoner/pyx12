@@ -9,8 +9,6 @@
 # you should have received as part of this distribution.
 #
 ######################################################################
-
-#    $Id: 830.4010.xml 1055 2007-04-25 20:00:25Z johnholland $
 -->
 <transaction xid="830">
   <name>Forecast with Release capability - 830</name>

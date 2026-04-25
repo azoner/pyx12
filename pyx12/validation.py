@@ -207,8 +207,37 @@ def is_valid_time(val):
     return True
 
 def contains_control_character(str_val, charset='B', icvn='00401'):
-    if '\n' in str_val:
-        return (True, '<LF>')
-    if '\r' in str_val:
-        return (True, '<CR>')
+    control_base = {
+        chr(0x07): 'BEL',
+        chr(0x09): 'HT',
+        chr(0x0A): 'LF',
+        chr(0x0B): 'VT',
+        chr(0x0C): 'FF',
+        chr(0x0D): 'CR',
+        chr(0x1C): 'FS',
+        chr(0x1D): 'GS',
+        chr(0x1E): 'RS',
+        chr(0x1F): 'US',
+    }
+    extended_base = {
+        chr(0x01): 'SOH',
+        chr(0x02): 'STX',
+        chr(0x03): 'ETX',
+        chr(0x04): 'EOT',
+        chr(0x05): 'ENQ',
+        chr(0x06): 'ACK',
+        chr(0x11): 'DC1',
+        chr(0x12): 'DC2',
+        chr(0x13): 'DC3',
+        chr(0x14): 'DC4',
+        chr(0x15): 'NAK',
+        chr(0x16): 'SYN',
+        chr(0x17): 'ETB',
+    }
+    for (k, v) in control_base.items():
+        if k in str_val:
+            return (True, "<{}>".format(v))
+    for (k, v) in extended_base.items():
+        if k in str_val:
+            return (True, "<{}>".format(v))
     return (False, None)

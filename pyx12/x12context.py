@@ -7,7 +7,6 @@
 # you should have received as part of this distribution.
 #
 ######################################################################
-
 """
 Parse a ANSI X12 data file.
 
