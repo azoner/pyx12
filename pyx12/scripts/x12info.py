@@ -7,10 +7,6 @@ import os.path
 import argparse
 import sys
 
-libpath = os.path.abspath(os.path.join(os.path.dirname(__file__), '../..'))
-if os.path.isdir(libpath):
-    sys.path.insert(0, libpath)
-
 import pyx12
 import pyx12.errors
 import pyx12.params

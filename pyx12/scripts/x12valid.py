@@ -17,17 +17,13 @@ Validate against a map and codeset values.
 
 import os
 import os.path
-from os.path import abspath, join, dirname, isdir, isfile
+from os.path import isdir, isfile
 import sys
 import logging
 import tempfile
 import argparse
 import glob
 
-# Intrapackage imports
-libpath = abspath(join(dirname(__file__), '../..'))
-if isdir(libpath):
-    sys.path.insert(0, libpath)
 import pyx12
 import pyx12.x12n_document
 import pyx12.params
