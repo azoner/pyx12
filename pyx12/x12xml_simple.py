@@ -11,6 +11,7 @@
 """
 Create a XML rendering of the X12 document
 """
+
 from os.path import commonprefix
 import logging
 
@@ -21,24 +22,19 @@ from .map_walker import pop_to_parent_loop
 
 logger = logging.getLogger('pyx12.x12xml.simple')
 
-
 class x12xml_simple(x12xml):
     def __init__(self, fd, dtd_urn=None):
         x12xml.__init__(self, fd, "x12simple", dtd_urn)
         self.last_path = []
 
-    def __del__(self):
-        while len(self.writer) > 0:
-            self.writer.pop()
-
     def seg(self, seg_node, seg_data):
         """
         Generate XML for the segment data and matching map node
 
-        @param seg_node: Map Node
-        @type seg_node: L{node<map_if.x12_node>}
-        @param seg_data: Segment object
-        @type seg_data: L{segment<segment.Segment>}
+        :param seg_node: Map Node
+        :type seg_node: L{node<map_if.x12_node>}
+        :param seg_data: Segment object
+        :type seg_data: L{segment<segment.Segment>}
         """
         if not seg_node.is_segment():
             raise EngineError('Node must be a segment')

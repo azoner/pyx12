@@ -15,8 +15,7 @@ from collections import OrderedDict
 import pyx12.path
 from .decorators import dump_args
 
-
-class NodeCounter(object):
+class NodeCounter:
     """
     X12 Loop and Segment Node Counter
     """

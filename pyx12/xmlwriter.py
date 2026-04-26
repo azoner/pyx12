@@ -8,8 +8,7 @@
 
 import sys
 
-
-class XMLWriter(object):
+class XMLWriter:
     """
     Doctest:
 
@@ -96,15 +95,17 @@ class XMLWriter(object):
             self._write(" {}='{}'".format(a, self._escape_attr(v)))
         self._write(">{}</{}>\n".format(self._escape_cont(content), elem))
 
-    def empty(self, elem, attrs={}):
+    def empty(self, elem, attrs=None):
         """
         Create an empty element
         """
+        if attrs is None:
+            attrs = {}
         self._indent()
         self._write("<" + elem)
-        for k, v in attrs.items():
-            self._write(" {attr_name}='{attr_val}'".format(attr_name=k, attr_val=v))
-        self.out.write("/>\n")
+        for (a, v) in attrs.items():
+            self._write(" {}='{}'".format(a, self._escape_attr(v)))
+        self._write("/>\n")
 
     def pop(self):
         """

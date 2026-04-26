@@ -1,0 +1,74 @@
+[build-system]
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "pyx12"
+version = "3.1.0rc1"
+description = "HIPAA X12 validator, parser and converter"
+readme = "README.md"
+requires-python = ">=3.11"
+license = {text = "BSD"}
+keywords = ["x12", "hipaa", "healthcare", "edi"]
+authors = [
+    {name = "John Holland", email = "john.holland@swmbh.org"},
+]
+classifiers = [
+    "Development Status :: 5 - Production/Stable",
+    "Environment :: Console",
+    "Intended Audience :: Healthcare Industry",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: BSD License",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: 3.14",
+    "Topic :: Office/Business",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+]
+dependencies = [
+    "defusedxml>=0.7",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=7.0",
+    "pytest-cov>=4.0",
+    "coverage",
+    "black>=23.0",
+    "isort>=5.12",
+    "build>=1.0",
+    "twine>=4.0",
+]
+
+[project.urls]
+Homepage = "http://github.com/azoner/pyx12"
+Repository = "https://github.com/azoner/pyx12.git"
+Documentation = "https://pyx12.readthedocs.io/"
+
+[project.scripts]
+x12html = "pyx12.scripts.x12html:main"
+x12valid = "pyx12.scripts.x12valid:main"
+x12info = "pyx12.scripts.x12info:main"
+x12norm = "pyx12.scripts.x12norm:main"
+x12xml = "pyx12.scripts.x12xml:main"
+xmlx12 = "pyx12.scripts.xmlx12:main"
+
+[tool.setuptools]
+packages = ["pyx12", "pyx12.scripts"]
+
+[tool.setuptools.package-data]
+"*" = ["*.xml", "*.md"]
+pyx12 = ["map/*.xml", "map/*.xsd"]
+
+[tool.black]
+line-length = 100
+target-version = ['py311', 'py312', 'py313', 'py314']
+
+[tool.isort]
+profile = "black"
+line_length = 100
+multi_line_output = 3

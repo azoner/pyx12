@@ -13,8 +13,8 @@ import logging
 import os.path
 import sys
 import re
-import xml.etree.cElementTree as et
-from pkg_resources import resource_stream
+import defusedxml.ElementTree as et
+from importlib.resources import files as _res_files
 
 # Intrapackage imports
 from .errors import EngineError
@@ -26,8 +26,7 @@ from .syntax import is_syntax_valid
 
 MAXINT = 2147483647
 
-
-class x12_node(object):
+class x12_node:
     """
     X12 Node Superclass
     """
@@ -67,7 +66,7 @@ class x12_node(object):
 
     def __repr__(self):
         """
-        @rtype: string
+        :rtype: string
         """
         return self.name
 
@@ -93,7 +92,7 @@ class x12_node(object):
 
     def get_child_node_by_idx(self, idx):
         """
-        @param idx: zero based
+        :param idx: zero based
         """
         if idx >= len(self.children):
             return None
@@ -103,15 +102,15 @@ class x12_node(object):
     def get_child_node_by_ordinal(self, ordinal):
         """
         Get a child element or composite by the X12 ordinal
-        @param ord: one based element/composite index.  Corresponds to the map <seq> element
-        @type ord: int
+        :param ord: one based element/composite index.  Corresponds to the map <seq> element
+        :type ord: int
         """
         return self.get_child_node_by_idx(ordinal - 1)
 
     def get_path(self):
         """
-        @return: path - XPath style
-        @rtype: string
+        :return: path - XPath style
+        :rtype: string
         """
         if self._fullpath:
             return self._fullpath
@@ -125,8 +124,8 @@ class x12_node(object):
 
     def _get_x12_path(self):
         """
-        @return: X12 node path
-        @rtype: L{path<path.X12Path>}
+        :return: X12 node path
+        :rtype: L{path<path.X12Path>}
         """
         if self._x12path:
             return self._x12path
@@ -138,40 +137,39 @@ class x12_node(object):
 
     def is_first_seg_in_loop(self):
         """
-        @rtype: boolean
+        :rtype: boolean
         """
         return False
 
     def is_map_root(self):
         """
-        @rtype: boolean
+        :rtype: boolean
         """
         return False
 
     def is_loop(self):
         """
-        @rtype: boolean
+        :rtype: boolean
         """
         return False
 
     def is_segment(self):
         """
-        @rtype: boolean
+        :rtype: boolean
         """
         return False
 
     def is_element(self):
         """
-        @rtype: boolean
+        :rtype: boolean
         """
         return False
 
     def is_composite(self):
         """
-        @rtype: boolean
+        :rtype: boolean
         """
         return False
-
 
 ############################################################
 # Map file interface
@@ -182,8 +180,8 @@ class map_if(x12_node):
     """
     def __init__(self, eroot, param, base_path=None):
         """
-        @param eroot: ElementTree root
-        @param param: map of parameters
+        :param eroot: ElementTree root
+        :param param: map of parameters
         """
         x12_node.__init__(self)
         self.children = None
@@ -276,32 +274,32 @@ class map_if(x12_node):
 
     def __repr__(self):
         """
-        @rtype: string
+        :rtype: string
         """
         return '%s\n' % (self.id)
 
     def _path_parent(self):
         """
-        @rtype: string
+        :rtype: string
         """
         return os.path.basename(os.path.dirname(self.cur_path))
 
     def get_path(self):
         """
-        @rtype: string
+        :rtype: string
         """
         return self.path
 
     def get_child_node_by_idx(self, idx):
         """
-        @param idx: zero based
+        :param idx: zero based
         """
         raise EngineError('map_if.get_child_node_by_idx is not a valid call')
 
     def getnodebypath(self, spath):
         """
-        @param spath: Path string; /1000/2000/2000A/NM102-3
-        @type spath: string
+        :param spath: Path string; /1000/2000/2000A/NM102-3
+        :type spath: string
         """
         pathl = spath.split('/')[1:]
         if len(pathl) == 0:
@@ -318,8 +316,8 @@ class map_if(x12_node):
 
     def getnodebypath2(self, path_str):
         """
-        @param path: Path string; /1000/2000/2000A/NM102-3
-        @type path: string
+        :param path: Path string; /1000/2000/2000A/NM102-3
+        :type path: string
         """
         x12path = path.X12Path(path_str)
         if x12path.empty():
@@ -337,7 +335,7 @@ class map_if(x12_node):
 
     def is_map_root(self):
         """
-        @rtype: boolean
+        :rtype: boolean
         """
         return True
 
@@ -367,7 +365,6 @@ class map_if(x12_node):
                 if child.is_loop() or child.is_segment():
                     for c in child.loop_segment_iterator():
                         yield c
-
 
 ############################################################
 # Loop Interface
@@ -450,7 +447,7 @@ class loop_if(x12_node):
 
     def __repr__(self):
         """
-        @rtype: string
+        :rtype: string
         """
         out = ''
         if self.id:
@@ -497,9 +494,9 @@ class loop_if(x12_node):
 
     def getnodebypath(self, spath):
         """
-        @param spath: remaining path to match
-        @type spath: string
-        @return: matching node, or None is no match
+        :param spath: remaining path to match
+        :type spath: string
+        :return: matching node, or None is no match
         """
         pathl = spath.split('/')
         if len(pathl) == 0:
@@ -530,9 +527,9 @@ class loop_if(x12_node):
         """
         Try x12 path
 
-        @param path_str: remaining path to match
-        @type path_str: string
-        @return: matching node, or None is no match
+        :param path_str: remaining path to match
+        :type path_str: string
+        :return: matching node, or None is no match
         """
         x12path = path.X12Path(path_str)
         if x12path.empty():
@@ -565,14 +562,14 @@ class loop_if(x12_node):
 
     def get_child_node_by_idx(self, idx):
         """
-        @param idx: zero based
+        :param idx: zero based
         """
         raise EngineError('loop_if.get_child_node_by_idx is not a valid call for a loop_if')
 
     def get_seg_count(self):
         """
-        @return: Number of child segments
-        @rtype: integer
+        :return: Number of child segments
+        :rtype: integer
         """
         i = 0
         for ord1 in sorted(self.pos_map):
@@ -583,15 +580,15 @@ class loop_if(x12_node):
 
     def is_loop(self):
         """
-        @rtype: boolean
+        :rtype: boolean
         """
         return True
 
     def is_match(self, seg_data):
         """
-        @type seg_data: L{segment<segment.Segment>}
-        @return: Is the segment a match to this loop?
-        @rtype: boolean
+        :type seg_data: L{segment<segment.Segment>}
+        :return: Is the segment a match to this loop?
+        :rtype: boolean
         """
         pos_keys = sorted(self.pos_map)
         child = self.pos_map[pos_keys[0]][0]
@@ -625,8 +622,8 @@ class loop_if(x12_node):
 
     def get_cur_count(self):
         """
-        @return: current count
-        @rtype: int
+        :return: current count
+        :rtype: int
         """
         raise DeprecationWarning('Moved to nodeCounter')
         return self._cur_count
@@ -660,8 +657,8 @@ class loop_if(x12_node):
         """
         Build a list of (path, ct) of the current node and parents
         Gets the node counts to apply to another map
-        @param ct_list: List to append to
-        @type ct_list: list[(string, int)]
+        :param ct_list: List to append to
+        :type ct_list: list[(string, int)]
         """
         raise DeprecationWarning('Moved to nodeCounter')
         my_ct = (self.get_path(), self._cur_count)
@@ -678,14 +675,13 @@ class loop_if(x12_node):
                     for c in child.loop_segment_iterator():
                         yield c
 
-
 class segment_if(x12_node):
     """
     Segment Interface
     """
     def __init__(self, root, parent, elem):
         """
-        @param parent: parent node
+        :param parent: parent node
         """
 
         x12_node.__init__(self)
@@ -746,7 +742,7 @@ class segment_if(x12_node):
 
     def __repr__(self):
         """
-        @rtype: string
+        :rtype: string
         """
         out = '%s "%s"' % (self.id, self.name)
         if self.usage:
@@ -760,7 +756,7 @@ class segment_if(x12_node):
 
     def get_child_node_by_idx(self, idx):
         """
-        @param idx: zero based
+        :param idx: zero based
         """
         if idx >= len(self.children):
             return None
@@ -774,8 +770,8 @@ class segment_if(x12_node):
     def get_child_node_by_ordinal(self, ord):
         """
         Get a child element or composite by the X12 ordinal
-        @param ord: one based element/composite index.  Corresponds to the map <seq> element
-        @type ord: int
+        :param ord: one based element/composite index.  Corresponds to the map <seq> element
+        :type ord: int
         """
         return self.get_child_node_by_idx(ord - 1)
 
@@ -783,9 +779,9 @@ class segment_if(x12_node):
         """
         Try x12 path
 
-        @param path_str: remaining path to match
-        @type path_str: string
-        @return: matching node, or None is no match
+        :param path_str: remaining path to match
+        :type path_str: string
+        :return: matching node, or None is no match
         """
         x12path = path.X12Path(path_str)
         if x12path.empty():
@@ -805,14 +801,14 @@ class segment_if(x12_node):
 
     def get_parent(self):
         """
-        @return: ref to parent class instance
-        @rtype: pyx12.x12_node
+        :return: ref to parent class instance
+        :rtype: pyx12.x12_node
         """
         return self.parent
 
     def is_first_seg_in_loop(self):
         """
-        @rtype: boolean
+        :rtype: boolean
         """
         if self is self.get_parent().get_first_seg():
             return True
@@ -822,9 +818,9 @@ class segment_if(x12_node):
     def is_match(self, seg):
         """
         Is data segment given a match to this segment node?
-        @param seg: data segment instance
-        @return: boolean
-        @rtype: boolean
+        :param seg: data segment instance
+        :return: boolean
+        :rtype: boolean
         """
         if seg.get_seg_id() == self.id:
             if self.children[0].is_element() \
@@ -867,12 +863,12 @@ class segment_if(x12_node):
     def is_match_qual(self, seg_data, seg_id, qual_code):
         """
         Is segment id and qualifier a match to this segment node and to this particular segment data?
-        @param seg_data: data segment instance
-        @type seg_data: L{segment<segment.Segment>}
-        @param seg_id: data segment ID
-        @param qual_code: an ID qualifier code
-        @return: (True if a match, qual_code, element_index, subelement_index)
-        @rtype: tuple(boolean, string, int, int)
+        :param seg_data: data segment instance
+        :type seg_data: L{segment<segment.Segment>}
+        :param seg_id: data segment ID
+        :param qual_code: an ID qualifier code
+        :return: (True if a match, qual_code, element_index, subelement_index)
+        :rtype: tuple(boolean, string, int, int)
         """
         if seg_id == self.id:
             if qual_code is None:
@@ -950,16 +946,16 @@ class segment_if(x12_node):
 
     def is_segment(self):
         """
-        @rtype: boolean
+        :rtype: boolean
         """
         return True
 
     def is_valid(self, seg_data, errh):
         """
-        @param seg_data: data segment instance
-        @type seg_data: L{segment<segment.Segment>}
-        @param errh: instance of error_handler
-        @rtype: boolean
+        :param seg_data: data segment instance
+        :type seg_data: L{segment<segment.Segment>}
+        :param errh: instance of error_handler
+        :rtype: boolean
         """
         valid = True
         child_count = self.get_child_count()
@@ -1038,8 +1034,8 @@ class segment_if(x12_node):
 
     def get_cur_count(self):
         """
-        @return: current count
-        @rtype: int
+        :return: current count
+        :rtype: int
         """
         raise DeprecationWarning('Moved to nodeCounter')
         return self._cur_count
@@ -1063,8 +1059,8 @@ class segment_if(x12_node):
         """
         Build a list of (path, ct) of the current node and parents
         Gets the node counts to apply to another map
-        @param ct_list: List to append to
-        @type ct_list: list[(string, int)]
+        :param ct_list: List to append to
+        :type ct_list: list[(string, int)]
         """
         raise DeprecationWarning('Moved to nodeCounter')
         my_ct = (self.get_path(), self._cur_count)
@@ -1076,7 +1072,6 @@ class segment_if(x12_node):
     def loop_segment_iterator(self):
         yield self
 
-
 ############################################################
 # Element Interface
 ############################################################
@@ -1087,7 +1082,7 @@ class element_if(x12_node):
 
     def __init__(self, root, parent, elem):
         """
-        @param parent: parent node
+        :param parent: parent node
         """
         x12_node.__init__(self)
         self.children = []
@@ -1132,7 +1127,7 @@ class element_if(x12_node):
 
     def __repr__(self):
         """
-        @rtype: string
+        :rtype: string
         """
         data_ele = self.root.data_elements.get_by_elem_num(self.data_ele)
         out = '%s "%s"' % (self.refdes, self.name)
@@ -1162,8 +1157,8 @@ class element_if(x12_node):
     def _valid_code(self, code):
         """
         Verify the x12 element value is in the given list of valid codes
-        @return: True if found, else False
-        @rtype: boolean
+        :return: True if found, else False
+        :rtype: boolean
         """
         #if not self.valid_codes:
         #    return True
@@ -1173,14 +1168,14 @@ class element_if(x12_node):
 
     def get_parent(self):
         """
-        @return: ref to parent class instance
+        :return: ref to parent class instance
         """
         return self.parent
 
     def is_match(self):
         """
-        @return:
-        @rtype: boolean
+        :return:
+        :rtype: boolean
         """
         # match also by ID
         raise NotImplementedError('Override in sub-class')
@@ -1190,14 +1185,14 @@ class element_if(x12_node):
         """
         Is this a valid element?
 
-        @param elem: element instance
-        @type elem: L{element<segment.Element>}
-        @param errh: instance of error_handler
-        @param check_dte: date string to check against (YYYYMMDD)
-        @param type_list: Optional data/time type list
-        @type type_list: list[string]
-        @return: True if valid
-        @rtype: boolean
+        :param elem: element instance
+        :type elem: L{element<segment.Element>}
+        :param errh: instance of error_handler
+        :param check_dte: date string to check against (YYYYMMDD)
+        :param type_list: Optional data/time type list
+        :type type_list: list[string]
+        :return: True if valid
+        :rtype: boolean
         """
         errh.add_ele(self)
 
@@ -1316,7 +1311,7 @@ class element_if(x12_node):
 
     def _is_valid_code(self, elem_val, errh):
         """
-        @rtype: boolean
+        :rtype: boolean
         """
         bValidCode = False
         if len(self.valid_codes) == 0 and self.external_codes is None:
@@ -1366,14 +1361,14 @@ class element_if(x12_node):
 
     def is_element(self):
         """
-        @rtype: boolean
+        :rtype: boolean
         """
         return True
 
     def get_path(self):
         """
-        @return: path - XPath style
-        @rtype: string
+        :return: path - XPath style
+        :rtype: string
         """
         if self._fullpath:
             return self._fullpath
@@ -1390,7 +1385,6 @@ class element_if(x12_node):
             p = p.parent
         return p
 
-
 ############################################################
 # Composite Interface
 ############################################################
@@ -1401,7 +1395,7 @@ class composite_if(x12_node):
     def __init__(self, root, parent, elem):
         """
         Get the values for this composite
-        @param parent: parent node
+        :param parent: parent node
         """
         x12_node.__init__(self)
 
@@ -1444,7 +1438,7 @@ class composite_if(x12_node):
 
     def __repr__(self):
         """
-        @rtype: string
+        :rtype: string
         """
         out = '%s "%s"' % (self.id, self.name)
         if self.usage:
@@ -1468,9 +1462,9 @@ class composite_if(x12_node):
     def is_valid(self, comp_data, errh):
         """
         Validates the composite
-        @param comp_data: data composite instance, has multiple values
-        @param errh: instance of error_handler
-        @rtype: boolean
+        :param comp_data: data composite instance, has multiple values
+        :param errh: instance of error_handler
+        :rtype: boolean
         """
         valid = True
         if (comp_data is None or comp_data.is_empty()) and self.usage in ('N', 'S'):
@@ -1509,44 +1503,37 @@ class composite_if(x12_node):
 
     def is_composite(self):
         """
-        @rtype: boolean
+        :rtype: boolean
         """
         return True
-
 
 def load_map_file(map_file, param, map_path=None):
     """
     Create the map object from a file
-    @param map_file: absolute path for file
-    @type map_file: string
-    @rtype: pyx12.map_if
-    @param map_path: Override directory containing map xml files.  If None,
+    :param map_file: filename (basename) of the map xml file to load
+    :type map_file: string
+    :rtype: pyx12.map_if
+    :param map_path: Override directory containing map xml files.  If None,
         uses package resource folder
-    @type map_path: string
+    :type map_path: string
     """
     logger = logging.getLogger('pyx12')
+    # Reject any path component in map_file to prevent traversal out of map_path
+    if map_file != os.path.basename(map_file) or os.path.isabs(map_file):
+        raise EngineError('Invalid map file name: {}'.format(map_file))
     if map_path is not None:
         logger.debug("Looking for map file '{}' in map_path '{}'".format(map_file, map_path))
         if not os.path.isdir(map_path):
             raise OSError(2, "Map path does not exist", map_path)
-        if not os.path.isdir(map_path):
+        full_path = os.path.join(map_path, map_file)
+        if not os.path.isfile(full_path):
             raise OSError(2, "Pyx12 map file '{}' does not exist in map path".format(map_file), map_path)
-        map_fd = open(os.path.join(map_path, map_file))
+        map_fd = open(full_path, encoding='utf-8')
     else:
         logger.debug("Looking for map file '{}' in pkg_resources".format(map_file))
-        map_fd = resource_stream(__name__, os.path.join('map', map_file))
-    imap = None
-    try:
+        map_fd = _res_files('pyx12').joinpath('map', map_file).open('rb')
+    with map_fd:
         logger.debug('Create map from %s' % (map_file))
-        #etree = et.parse(map_fd)
         parser = et.XMLParser(encoding="utf-8")
         etree = et.parse(map_fd, parser=parser)
-        imap = map_if(etree.getroot(), param, map_path)
-    except AssertionError:
-        logger.error('Load of map file failed: %s' % (map_file))
-        raise
-    except Exception:
-        raise
-        #raise EngineError('Load of map file failed: %s' % (map_file))
-    map_fd.close()
-    return imap
+        return map_if(etree.getroot(), param, map_path)

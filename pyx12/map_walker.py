@@ -26,13 +26,12 @@ logger = logging.getLogger('pyx12.walk_tree')
 #logger.setLevel(logging.DEBUG)
 #logger.setLevel(logging.ERROR)
 
-
 def pop_to_parent_loop(node):
     """
-    @param node: Loop Node
-    @type node: L{node<map_if.x12_node>}
-    @return: Closest parent loop node
-    @rtype: L{node<map_if.x12_node>}
+    :param node: Loop Node
+    :type node: L{node<map_if.x12_node>}
+    :return: Closest parent loop node
+    :rtype: L{node<map_if.x12_node>}
     """
     if node.is_map_root():
         return node
@@ -45,16 +44,15 @@ def pop_to_parent_loop(node):
         raise EngineError("Called pop_to_parent_loop, can't find parent loop")
     return map_node
 
-
 def is_first_seg_match2(child, seg_data):
     """
     Find the first segment in loop, verify it matches segment
 
-    @param child: child node
-    @type child: L{node<map_if.x12_node>}
-    @param seg_data: Segment object
-    @type seg_data: L{segment<segment.Segment>}
-    @rtype: boolean
+    :param child: child node
+    :type child: L{node<map_if.x12_node>}
+    :param seg_data: Segment object
+    :type seg_data: L{segment<segment.Segment>}
+    :rtype: boolean
     """
     if child.is_segment():
         if child.is_match(seg_data):
@@ -64,7 +62,6 @@ def is_first_seg_match2(child, seg_data):
             return False
     return False
 
-
 def get_id_list(node_list):
     # get_id_list(pop)
     ret = []
@@ -73,7 +70,6 @@ def get_id_list(node_list):
             ret.append(node.id)
     return ret
 
-
 def traverse_path(start_node, pop_loops, push_loops):
     """
     Debug function - From the start path, pop up then push down to get a path string
@@ -81,14 +77,14 @@ def traverse_path(start_node, pop_loops, push_loops):
     start_path = pop_to_parent_loop(start_node).get_path()
     p1 = [p for p in start_path.split('/') if p != '']
     for loop_id in get_id_list(pop_loops):
-        assert loop_id == p1[-1], 'Path %s does not contain %s' % (start_path, loop_id)
+        if loop_id != p1[-1]:
+            raise EngineError('Path %s does not contain %s' % (start_path, loop_id))
         p1 = p1[:-1]
     for loop_id in get_id_list(push_loops):
         p1.append(loop_id)
     return '/' + '/'.join(p1)
 
-
-class walk_tree(object):
+class walk_tree:
     """
     Walks a map_if tree.  Tracks loop/segment counting, missing loop/segment.
     """
@@ -107,21 +103,21 @@ class walk_tree(object):
         Handle required segment/loop missed (not found in seg)
         Handle found segment = Not used
 
-        @param node: Starting node
-        @type node: L{node<map_if.x12_node>}
-        @param seg_data: Segment object
-        @type seg_data: L{segment<segment.Segment>}
-        @param seg_count: Count of current segment in the ST Loop
-        @type seg_count: int
-        @param cur_line: Current line number in the file
-        @type cur_line: int
-        @param ls_id: The current LS loop identifier
-        @type ls_id: string
-        @return: The matching x12 segment node, a list of x12 popped loops, and a list
+        :param node: Starting node
+        :type node: L{node<map_if.x12_node>}
+        :param seg_data: Segment object
+        :type seg_data: L{segment<segment.Segment>}
+        :param seg_count: Count of current segment in the ST Loop
+        :type seg_count: int
+        :param cur_line: Current line number in the file
+        :type cur_line: int
+        :param ls_id: The current LS loop identifier
+        :type ls_id: string
+        :return: The matching x12 segment node, a list of x12 popped loops, and a list
             of x12 pushed loops from the start segment to the found segment
-        @rtype: (L{node<map_if.segment_if>}, [L{node<map_if.loop_if>}], [L{node<map_if.loop_if>}])
+        :rtype: (L{node<map_if.segment_if>}, [L{node<map_if.loop_if>}], [L{node<map_if.loop_if>}])
 
-        @todo: check single segment loop repeat
+        TODO: check single segment loop repeat
         """
         pop_node_list = []
         push_node_list = []
@@ -202,21 +198,22 @@ class walk_tree(object):
         """
         Check segment usage requirement and count
 
-        @param seg_node: Segment X12 node to verify
-        @type seg_node: L{node<map_if.segment_if>}
-        @param seg_data: Segment object
-        @type seg_data: L{segment<segment.Segment>}
-        @param seg_count: Count of current segment in the ST Loop
-        @type seg_count: int
-        @param cur_line: Current line number in the file
-        @type cur_line: int
-        @param ls_id: The current LS loop identifier
-        @type ls_id: string
-        @param errh: Error handler
-        @type errh: L{error_handler.err_handler}
-        @raise EngineError: On invalid usage code
+        :param seg_node: Segment X12 node to verify
+        :type seg_node: L{node<map_if.segment_if>}
+        :param seg_data: Segment object
+        :type seg_data: L{segment<segment.Segment>}
+        :param seg_count: Count of current segment in the ST Loop
+        :type seg_count: int
+        :param cur_line: Current line number in the file
+        :type cur_line: int
+        :param ls_id: The current LS loop identifier
+        :type ls_id: string
+        :param errh: Error handler
+        :type errh: L{error_handler.err_handler}
+        :raises EngineError: On invalid usage code
         """
-        assert seg_node.usage in ('N', 'R', 'S'), 'Segment usage must be R, S, or N'
+        if seg_node.usage not in ('N', 'R', 'S'):
+            raise EngineError('Segment usage must be R, S, or N (got %r)' % (seg_node.usage,))
         if seg_node.usage == 'N':
             err_str = "Segment %s found but marked as not used" % (seg_node.id)
             errh.seg_error('2', err_str, None)
@@ -233,12 +230,12 @@ class walk_tree(object):
         """
         Create error for not found segments
 
-        @param orig_node: Original starting node
-        @type orig_node: L{node<map_if.x12_node>}
-        @param seg_data: Segment object
-        @type seg_data: L{segment<segment.Segment>}
-        @param errh: Error handler
-        @type errh: L{error_handler.err_handler}
+        :param orig_node: Original starting node
+        :type orig_node: L{node<map_if.x12_node>}
+        :param seg_data: Segment object
+        :type seg_data: L{segment<segment.Segment>}
+        :param errh: Error handler
+        :type errh: L{error_handler.err_handler}
         """
         if seg_data.get_seg_id() == 'HL':
             seg_str = seg_data.format('', '*', ':')
@@ -252,8 +249,8 @@ class walk_tree(object):
         """
         Handle error reporting for any outstanding missing mandatory segments
 
-        @param errh: Error handler
-        @type errh: L{error_handler.err_handler}
+        :param errh: Error handler
+        :type errh: L{error_handler.err_handler}
         """
         for (seg_node, seg_data, err_cde, err_str, seg_count, cur_line, ls_id) in self.mandatory_segs_missing:
             # Create errors if not also at current position
@@ -268,18 +265,19 @@ class walk_tree(object):
         Handle loop and segment counting.
         Check for used/missing
 
-        @param loop_node: Loop Node
-        @type loop_node: L{node<map_if.loop_if>}
-        @param seg_data: Segment object
-        @type seg_data: L{segment<segment.Segment>}
-        @param errh: Error handler
-        @type errh: L{error_handler.err_handler}
+        :param loop_node: Loop Node
+        :type loop_node: L{node<map_if.loop_if>}
+        :param seg_data: Segment object
+        :type seg_data: L{segment<segment.Segment>}
+        :param errh: Error handler
+        :type errh: L{error_handler.err_handler}
 
-        @return: Does the segment match the first segment node in the loop?
-        @rtype: boolean
+        :return: Does the segment match the first segment node in the loop?
+        :rtype: boolean
         """
-        assert loop_node.is_loop(), "Call to first_seg_match failed, node %s is not a loop. seg %s" \
-            % (loop_node.id, seg_data.get_seg_id())
+        if not loop_node.is_loop():
+            raise EngineError("Call to first_seg_match failed, node %s is not a loop. seg %s"
+                              % (loop_node.id, seg_data.get_seg_id()))
         #if loop_node.id not in ('ISA_LOOP', 'GS_LOOP'):
         #    assert loop_node.get_cur_count() == self.counter.get_count(loop_node.x12path), \
         #        'loop_node counts not equal: old is %s=%i : new is %s=%i' % (
@@ -288,7 +286,8 @@ class walk_tree(object):
         if len(loop_node) <= 0:  # Has no children
             return False
         first_child_node = loop_node.get_first_node()
-        assert first_child_node is not None, 'get_first_node failed from loop %s' % (loop_node.id)
+        if first_child_node is None:
+            raise EngineError('get_first_node failed from loop %s' % (loop_node.id))
         if first_child_node.is_loop():
             #If any loop node matches
             for child_node in loop_node.childIterator():
@@ -310,23 +309,24 @@ class walk_tree(object):
         A child loop has matched the segment.  Return that segment node.
         Handle loop counting and requirement errors.
 
-        @param loop_node: The starting loop node.
-        @type loop_node: L{node<map_if.loop_if>}
-        @param seg_data: Segment object
-        @type seg_data: L{segment<segment.Segment>}
-        @param errh: Error handler
-        @type errh: L{error_handler.err_handler}
-        @param seg_count: Current segment count for ST loop
-        @type seg_count: int
-        @param cur_line: File line counter
-        @type cur_line: int
-        @type ls_id: string
+        :param loop_node: The starting loop node.
+        :type loop_node: L{node<map_if.loop_if>}
+        :param seg_data: Segment object
+        :type seg_data: L{segment<segment.Segment>}
+        :param errh: Error handler
+        :type errh: L{error_handler.err_handler}
+        :param seg_count: Current segment count for ST loop
+        :type seg_count: int
+        :param cur_line: File line counter
+        :type cur_line: int
+        :type ls_id: string
 
-        @return: The matching segment node and a list of the push loop nodes
-        @rtype: (L{node<map_if.segment_if>}, [L{node<map_if.loop_if>}])
+        :return: The matching segment node and a list of the push loop nodes
+        :rtype: (L{node<map_if.segment_if>}, [L{node<map_if.loop_if>}])
         """
-        assert loop_node.is_loop(), "_goto_seg_match failed, node %s is not a loop. seg %s" \
-            % (loop_node.id, seg_data.get_seg_id())
+        if not loop_node.is_loop():
+            raise EngineError("_goto_seg_match failed, node %s is not a loop. seg %s"
+                              % (loop_node.id, seg_data.get_seg_id()))
         first_child_node = loop_node.get_first_seg()
         if first_child_node is not None and is_first_seg_match2(first_child_node, seg_data):
             self._check_loop_usage(loop_node, seg_data,
@@ -352,23 +352,25 @@ class walk_tree(object):
         """
         Check loop usage requirement and count
 
-        @param loop_node: Loop X12 node to verify
-        @type loop_node: L{node<map_if.loop_if>}
-        @param seg_data: Segment object
-        @type seg_data: L{segment<segment.Segment>}
-        @param seg_count: Count of current segment in the ST Loop
-        @type seg_count: int
-        @param cur_line: Current line number in the file
-        @type cur_line: int
-        @param ls_id: The current LS loop identifier
-        @type ls_id: string
-        @param errh: Error handler
-        @type errh: L{error_handler.err_handler}
-        @raise EngineError: On invalid usage code
+        :param loop_node: Loop X12 node to verify
+        :type loop_node: L{node<map_if.loop_if>}
+        :param seg_data: Segment object
+        :type seg_data: L{segment<segment.Segment>}
+        :param seg_count: Count of current segment in the ST Loop
+        :type seg_count: int
+        :param cur_line: Current line number in the file
+        :type cur_line: int
+        :param ls_id: The current LS loop identifier
+        :type ls_id: string
+        :param errh: Error handler
+        :type errh: L{error_handler.err_handler}
+        :raises EngineError: On invalid usage code
         """
-        assert loop_node.is_loop(), "Node %s is not a loop. seg %s" % (
-            loop_node.id, seg_data.get_seg_id())
-        assert loop_node.usage in ('N', 'R', 'S'), 'Loop usage must be R, S, or N'
+        if not loop_node.is_loop():
+            raise EngineError("Node %s is not a loop. seg %s"
+                              % (loop_node.id, seg_data.get_seg_id()))
+        if loop_node.usage not in ('N', 'R', 'S'):
+            raise EngineError('Loop usage must be R, S, or N (got %r)' % (loop_node.usage,))
         if loop_node.usage == 'N':
             err_str = "Loop %s found but marked as not used" % (loop_node.id)
             errh.seg_error('2', err_str, None)

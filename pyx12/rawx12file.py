@@ -12,14 +12,15 @@ Low level interface to an X12 data input stream.
 Iterates over segment line strings.
 Used by X12Reader.
 """
+
+# Intrapackage imports
 import pyx12.errors
 import pyx12.segment
 
 DEFAULT_BUFSIZE = 8 * 1024
 ISA_LEN = 106
 
-
-class RawX12File(object):
+class RawX12File:
     """
     Interface to an X12 data file
     """
@@ -28,8 +29,8 @@ class RawX12File(object):
         """
         Initialize the file X12 file reader
 
-        @param fin: an open, readable file object
-        @type fin: open file object
+        :param fin: an open, readable file object
+        :type fin: open file object
         """
         self.fd = fin
         self.buffer = None
@@ -75,6 +76,6 @@ class RawX12File(object):
         """
         Get the original terminators
 
-        @rtype: tuple(string, string, string, string)
+        :rtype: tuple(string, string, string, string)
         """
         return (self.seg_term, self.ele_term, self.subele_term, '\n', self.repetition_term)

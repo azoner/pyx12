@@ -11,15 +11,14 @@
 X12 syntax validation functions
 """
 
-
 def is_syntax_valid(seg_data, syn):
     """
     Verifies the segment against the syntax
-    @param seg_data: data segment instance
-    @type seg_data: L{segment<segment.Segment>}
-    @param syn: list containing the syntax type, and the indices of elements
-    @type syn: list[string]
-    @rtype: tuple(boolean, error string)
+    :param seg_data: data segment instance
+    :type seg_data: L{segment<segment.Segment>}
+    :param syn: list containing the syntax type, and the indices of elements
+    :type syn: list[string]
+    :rtype: tuple(boolean, error string)
     """
     # handle intra-segment dependancies
     if len(syn) < 3:
@@ -106,20 +105,18 @@ def is_syntax_valid(seg_data, syn):
     #raise EngineError
     return (False, 'Syntax Type %s Not Found' % (syntax_str(syn)))
 
-
 def syntax_str(syntax):
     """
-    @rtype: string
+    :rtype: string
     """
     output = syntax[0]
     for i in syntax[1:]:
         output += '{:02d}'.format(i)
     return output
 
-
 def syntax_ele_id_str(seg_id, ele_pos_list):
     """
-    @rtype: string
+    :rtype: string
     """
     output = '' 
     output += '{seg_id}{ele_pos:02d}'.format(seg_id=seg_id, ele_pos=ele_pos_list[0])

@@ -8,7 +8,6 @@ import pyx12.map_if
 from pyx12.params import params
 import pyx12.segment
 
-
 def donode(node):
     print((node.get_path()))
     for child in node.children:

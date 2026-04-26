@@ -3,7 +3,6 @@ import unittest
 from pyx12.nodeCounter import NodeCounter
 #from pyx12.path import X12Path
 
-
 class Default(unittest.TestCase):
     def test_loop_repeat(self):
         initialCounts = {}

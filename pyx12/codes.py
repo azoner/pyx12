@@ -12,20 +12,17 @@
 External Codes interface
 """
 
-import os.path
 import logging
-import xml.etree.cElementTree as et
-from pkg_resources import resource_stream
+import os.path
+import defusedxml.ElementTree as et
+from importlib.resources import files as _res_files
 
-# Intrapackage imports
 from pyx12.errors import EngineError
-
 
 class CodesError(Exception):
     """Class for code modules errors."""
 
-
-class ExternalCodes(object):
+class ExternalCodes:
     """
     Validates an ID against an external list of codes
     """
@@ -33,65 +30,47 @@ class ExternalCodes(object):
     def __init__(self, base_path=None, exclude=None):
         """
         Initialize the external list of codes
-        @param base_path: Override directory containing codes.xml.  If None,
-            uses package resource folder
-        @type base_path: string
-        @param exclude: comma separated string of external codes to ignore
-        @type exclude: string
 
-        @note: self.codes - map of a tuple of two dates and a list of codes
-        {codeset_id: (eff_dte, exp_dte, [code_values])}
+        base_path: Override directory containing codes.xml.  If None,
+            uses package resource folder.
+        exclude: comma-separated string of external code names to ignore.
+
+        self.codes maps codeset_id to {'name', 'dataele', 'codes'}.
         """
         logger = logging.getLogger('pyx12')
         self.codes = {}
         codes_file = 'codes.xml'
         if base_path is not None:
-            logger.debug("Looking for codes file '{}' in map_path '{}'".format(codes_file, base_path))
-            code_fd = open(os.path.join(base_path, codes_file))
+            logger.debug(f"Looking for codes file '{codes_file}' in map_path '{base_path}'")
+            code_fd = open(os.path.join(base_path, codes_file), encoding='utf-8')
         else:
-            logger.debug("Looking for codes file '{}' in pkg_resources".format(codes_file))
-            code_fd = resource_stream(__name__, os.path.join('map', codes_file))
+            logger.debug(f"Looking for codes file '{codes_file}' in package resources")
+            code_fd = _res_files('pyx12').joinpath('map', codes_file).open('rb')
 
         self.exclude_list = exclude.split(',') if exclude is not None else []
-        parser = et.XMLParser(encoding="utf-8")
-        for cElem in et.parse(code_fd, parser=parser).iter('codeset'):
-            codeset_id = cElem.findtext('id')
-            name = cElem.findtext('name')
-            data_ele = cElem.findtext('data_ele')
-            codes = []
-            for code in cElem.iterfind('version/code'):
-                codes.append(code.text)
-            self.codes[codeset_id] = {'name': name, 'dataele':
-                                      data_ele, 'codes': codes}
-        code_fd.close()
+        with code_fd:
+            parser = et.XMLParser(encoding='utf-8')
+            for cElem in et.parse(code_fd, parser=parser).iter('codeset'):
+                codeset_id = cElem.findtext('id')
+                self.codes[codeset_id] = {
+                    'name': cElem.findtext('name'),
+                    'dataele': cElem.findtext('data_ele'),
+                    'codes': [c.text for c in cElem.iterfind('version/code')],
+                }
 
     def isValid(self, key, code, check_dte=None):
         """
-        Is the code in the list identified by key
-        @param key: the external codeset identifier
-        @type key: string
-        @param code: code to be verified
-        @type code: string
-        @param check_dte: deprecated
-        @type check_dte: string
-        @return: True if code is valid, False if not
-        @rtype: boolean
+        Return True if code is in the codeset identified by key.
         """
-        # if not given a key, do not flag an error
         if not key:
-            raise EngineError('bad key %s' % (key))
-        # check the code against the list indexed by key
-        else:
-            if key in self.exclude_list:
-                return True
-            if key not in self.codes:
-                raise EngineError('External Code "%s" is not defined' % (key))
-            if code in self.codes[key]['codes']:
-                return True
-        return False
+            raise EngineError(f'bad key {key!r}')
+        if key in self.exclude_list:
+            return True
+        if key not in self.codes:
+            raise EngineError(f'External Code "{key}" is not defined')
+        return code in self.codes[key]['codes']
 
     def debug_print(self, count=10):
-        """
-        Debug print first <count> codes
-        """
-        print([v for k,v in self.codes.items()[:count]])
+        """Debug print first <count> codes for each codeset."""
+        for key in self.codes:
+            print(self.codes[key]['codes'][:count])

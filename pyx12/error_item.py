@@ -20,19 +20,18 @@ isa_errors = ('000', '001', '002', '003', '004', '005', '006', '007', '008',
 seg_errors = ('1', '2', '3', '4', '5', '6', '7', '8')
 ele_errors = ('1', '2', '3', '4', '5', '6', '7', '8', '9', '10')
 
-
-class ErrorItem(object):
+class ErrorItem:
     """
     Wrap an X12 validation error
     """
     def __init__(self, err_type, err_cde, err_str):
         """
-        @param err_type: At what level did the error occur
-        @type err_type: string
-        @param err_cde: Segment level error code
-        @type err_cde: string
-        @param err_str: Description of the error
-        @type err_str: string
+        :param err_type: At what level did the error occur
+        :type err_type: string
+        :param err_cde: Segment level error code
+        :type err_cde: string
+        :param err_str: Description of the error
+        :type err_str: string
         """
         self.err_cde = err_cde
         self.err_str = err_str
@@ -43,14 +42,12 @@ class ErrorItem(object):
     def getErrStr(self):
         return self.err_str
 
-
 class ISAError(ErrorItem):
     def __init__(self, err_cde, err_str):
         ErrorItem.__init__(self, 'isa', err_cde, err_str)
         if self.err_cde not in isa_errors:
             raise EngineError('Invalid ISA level error code "%s"' %
                               (self.err_cde))
-
 
 class SegError(ErrorItem):
     def __init__(self, err_cde, err_str, err_val=None):
@@ -62,7 +59,6 @@ class SegError(ErrorItem):
 
     def getErrVal(self):
         return self.err_val
-
 
 class EleError(ErrorItem):
     def __init__(self, err_cde, err_str, ele_idx, subele_idx=None,

@@ -12,7 +12,7 @@
 Visitor - Visits an error_handler composite
 """
 
-class error_visitor(object):
+class error_visitor:
     """
     """
 
@@ -24,15 +24,15 @@ class error_visitor(object):
 
     def visit_root_pre(self, errh):
         """
-        @param errh: Error handler
-        @type errh: L{error_handler.err_handler}
+        :param errh: Error handler
+        :type errh: L{error_handler.err_handler}
         """
         pass
 
     def visit_root_post(self, errh):
         """
-        @param errh: Error handler
-        @type errh: L{error_handler.err_handler}
+        :param errh: Error handler
+        :type errh: L{error_handler.err_handler}
         """
         pass
 

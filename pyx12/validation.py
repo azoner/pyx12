@@ -17,24 +17,23 @@ import re
 from .errors import IsValidError, EngineError
 
 REGEX_MODE = re.S | re.ASCII
-string_types = (str, )
 
 def IsValidDataType(str_val, data_type, charset='B', icvn='00401'):
     """
     Is str_val a valid X12 data value
 
-    @param str_val: data value to validate
-    @type str_val: string
-    @param data_type: X12 data element identifier
-    @type data_type: string
-    @param charset: [optional] - 'B' for Basic X12 character set, 'E' for extended
-    @type charset: string
-    @rtype: boolean
-    @todo: need to generalize control character validation
+    :param str_val: data value to validate
+    :type str_val: string
+    :param data_type: X12 data element identifier
+    :type data_type: string
+    :param charset: [optional] - 'B' for Basic X12 character set, 'E' for extended
+    :type charset: string
+    :rtype: boolean
+    TODO: need to generalize control character validation
     """
     if not data_type:
         return True
-    if not isinstance(str_val, string_types):
+    if not isinstance(str_val, str):
         return False
 
     try:
@@ -77,15 +76,14 @@ rec_ID_B = re.compile("[^A-Z0-9!\"&'()*+,\-\./:;?= ]", REGEX_MODE)
 rec_DT = re.compile("[^0-9]+", REGEX_MODE)
 rec_TM = re.compile("[^0-9]+", REGEX_MODE)
 
-
 def match_re(short_data_type, val):
     """
-    @param short_data_type: simplified data type
-    @type short_data_type: string
-    @param val: data value to be verified
-    @type val: string
-    @return: True if matched, False if not
-    @rtype: boolean
+    :param short_data_type: simplified data type
+    :type short_data_type: string
+    :param val: data value to be verified
+    :type val: string
+    :return: True if matched, False if not
+    :rtype: boolean
     """
     if short_data_type == 'N':
         rec = rec_N
@@ -100,17 +98,16 @@ def match_re(short_data_type, val):
         return False  # nothing matched
     return True
 
-
 def not_match_re(short_data_type, val, charset='B', icvn='00401'):
     """
-    @param short_data_type: simplified data type
-    @type short_data_type: string
-    @param val: data value to be verified
-    @type val: string
-    @param charset: [optional] - 'B' for Basic X12 character set, 'E' for extended, E5 for 5010 Extended
-    @type charset: string
-    @return: True if found invalid characters, False if none
-    @rtype: boolean
+    :param short_data_type: simplified data type
+    :type short_data_type: string
+    :param val: data value to be verified
+    :type val: string
+    :param charset: [optional] - 'B' for Basic X12 character set, 'E' for extended, E5 for 5010 Extended
+    :type charset: string
+    :return: True if found invalid characters, False if none
+    :rtype: boolean
     """
     if short_data_type in ('ID', 'AN'):
         if charset == 'E':  # extended charset
@@ -131,15 +128,14 @@ def not_match_re(short_data_type, val, charset='B', icvn='00401'):
         return True  # Invalid char matched
     return False
 
-
 def is_valid_date(data_type, val):
     """
-    @param data_type: Date type
-    @type data_type: string
-    @param val: data value to be verified
-    @type val: string
-    @return: True if valid, False if not
-    @rtype: boolean
+    :param data_type: Date type
+    :type data_type: string
+    :param val: data value to be verified
+    :type val: string
+    :return: True if valid, False if not
+    :rtype: boolean
     """
     try:
         if data_type == 'D8' and len(val) != 8:
@@ -186,11 +182,10 @@ def is_valid_date(data_type, val):
         return False
     return True
 
-
 def is_valid_time(val):
     """
-    @param val: time value to be verified
-    @type val: string
+    :param val: time value to be verified
+    :type val: string
     """
     try:
         if not_match_re('TM', val):
@@ -210,7 +205,6 @@ def is_valid_time(val):
     except (IsValidError, ValueError):
         return False
     return True
-
 
 def contains_control_character(str_val, charset='B', icvn='00401'):
     control_base = {

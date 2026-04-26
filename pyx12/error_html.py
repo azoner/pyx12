@@ -12,6 +12,7 @@
 Generates HTML error output
 """
 
+import html
 import time
 import logging
 
@@ -21,18 +22,17 @@ logger = logging.getLogger('pyx12.error_html')
 logger.setLevel(logging.DEBUG)
 #logger.setLevel(logging.ERROR)
 
-
-class error_html(object):
+class error_html:
     """
     """
     def __init__(self, errh, fd, term=('~', '*', '~', '\n')):
         """
-        @param fd: target file
-        @type fd: file descriptor
-        @param term: tuple of x12 terminators used
-        @type term: tuple(string, string, string, string)
+        :param fd: target file
+        :type fd: file descriptor
+        :param term: tuple of x12 terminators used
+        :type term: tuple(string, string, string, string)
 
-        @bug: GS errors are re-printing at the GE level
+        Bug: GS errors are re-printing at the GE level
         """
         self.errh = errh
         self.fd = fd
@@ -97,7 +97,7 @@ class error_html(object):
         Find error seg for this segment.
         Find any skipped error values.
         ID pos of bad value.
-        @param seg_data: data segment instance
+        :param seg_data: data segment instance
         """
         cur_line = src.cur_line
 
@@ -156,8 +156,8 @@ class error_html(object):
 
     def _seg_str(self, seg_id, ele_list):
         """
-        @param ele_list: list of formatted elements
-        @rtype: string
+        :param ele_list: list of formatted elements
+        :rtype: string
         """
         return seg_id + self.ele_term + seg_str(
             ele_list, self.seg_term, self.ele_term,
@@ -165,26 +165,25 @@ class error_html(object):
 
     def _wrap_ele_error(self, str1):
         """
-        @rtype: string
+        :rtype: string
         """
         return '<span class="ele_err">%s</span>' % (str1)
-
 
 def seg_str(seg, seg_term, ele_term, subele_term, eol=''):
     """
     Join a list of elements
-    @param seg: List of elements
-    @type seg: list[string|list[string]]
-    @param seg_term: Segment terminator character
-    @type seg_term: string
-    @param ele_term: Element terminator character
-    @type ele_term: string
-    @param subele_term: Sub-element terminator character
-    @type subele_term: string
-    @param eol: End of line character
-    @type eol: string
-    @return: formatted segment
-    @rtype: string
+    :param seg: List of elements
+    :type seg: list[string|list[string]]
+    :param seg_term: Segment terminator character
+    :type seg_term: string
+    :param ele_term: Element terminator character
+    :type ele_term: string
+    :param subele_term: Sub-element terminator character
+    :type subele_term: string
+    :param eol: End of line character
+    :type eol: string
+    :return: formatted segment
+    :rtype: string
     """
     #if None in seg:
     #    logger.debug(seg)
@@ -196,19 +195,12 @@ def seg_str(seg, seg_term, ele_term, subele_term, eol=''):
             tmp.append(a)
     return '%s%s%s' % (ele_term.join(tmp), seg_term, eol)
 
-
 def escape_html_chars(str_val):
     """
-    Escape special HTML characters (& <>)
-    @type str_val: string
-    @return: formatted string
-    @rtype: string
+    Escape special HTML characters, including quotes, so the result is safe in
+    both element text and attribute contexts. Spaces are replaced with &nbsp;
+    after escaping to preserve column alignment in the rendered report.
     """
     if str_val is None:
         return None
-    output = str_val
-    output = output.replace('&', '&amp;')
-    output = output.replace(' ', '&nbsp;')
-    output = output.replace('>', '&gt;')
-    output = output.replace('<', '&lt;')
-    return output
+    return html.escape(str_val, quote=True).replace(' ', '&nbsp;')

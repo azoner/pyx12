@@ -18,13 +18,12 @@ Order of precedence:
 """
 from os.path import dirname, abspath, join, isdir, isfile, expanduser
 import sys
-import xml.etree.cElementTree as et
+import defusedxml.ElementTree as et
 import logging
 
 from pyx12.errors import EngineError
 
-
-class ParamsBase(object):
+class ParamsBase:
     """
     Base class for parameters
     """
@@ -46,10 +45,10 @@ class ParamsBase(object):
     def get(self, option):
         """
         Get the value of the parameter specified by option
-        @param option: Option name
-        @type option: string
+        :param option: Option name
+        :type option: string
         """
-        if option in self.params.keys():
+        if option in self.params:
             return self.params[option]
         else:
             return None
@@ -57,10 +56,10 @@ class ParamsBase(object):
     def set(self, option, value):
         """
         Set the value of the parameter specified by option
-        @param option: Option name
-        @type option: string
-        @param value: Parameter value
-        @type value: string
+        :param option: Option name
+        :type option: string
+        :param value: Parameter value
+        :type value: string
         """
         if value == '':
             self.params[option] = None
@@ -71,39 +70,33 @@ class ParamsBase(object):
         """
         Read program configuration from an XML file
 
-        @param filename: XML file
-        @type filename: string
-        @raise EngineError: If the config file is not found or is unreadable
-        @return: None
+        :param filename: XML file
+        :type filename: string
+        :raises EngineError: If the config file is not found or is unreadable
+        :return: None
         """
         if not isfile(filename):
-            self.logger.debug('Configuration file "%s" does not exist' %
-                              filename)
-            raise EngineError('Configuration file "%s" does not exist' %
-                              (filename))
+            self.logger.debug(f'Configuration file "{filename}" does not exist')
+            raise EngineError(f'Configuration file "{filename}" does not exist')
         try:
-            self.logger.debug('parsing config file %s' % (filename))
-            parser = et.XMLParser(encoding="utf-8")
+            self.logger.debug(f'parsing config file {filename}')
+            parser = et.XMLParser(encoding='utf-8')
             t = et.parse(filename, parser=parser)
             for c in t.iter('param'):
-                option = c.get('name')
-                value = c.findtext('value')
-                valtype = c.findtext('type')
-                self._set_option(option, value, valtype)
+                self._set_option(c.get('name'), c.findtext('value'), c.findtext('type'))
         except Exception:
-            self.logger.error('Read of configuration file "%s" failed' %
-                              (filename))
+            self.logger.error(f'Read of configuration file "{filename}" failed')
             raise
 
     def _set_option(self, option, value, valtype):
         """
         Set the value of the parameter specified by option
-        @param option: Option name
-        @type option: string
-        @param value: Parameter value
-        @type value: string
-        @param valtype: Parameter type
-        @type valtype: string
+        :param option: Option name
+        :type option: string
+        :param value: Parameter value
+        :type value: string
+        :param valtype: Parameter type
+        :type valtype: string
         """
         if option is None or option == '':
             return
@@ -115,51 +108,39 @@ class ParamsBase(object):
             else:
                 self.params[option] = True
         else:
-            try:
-                if self.params[option] != value:
-                    self.params[option] = value
-                    #self.logger.debug('Params: option "%s": "%s"' % \
-                    #    (option, self.params[option]))
-            except Exception:
-                self.params[option] = value
-                #self.logger.debug('Params: option "%s": "%s"' % \
-                #   (option, self.params[option]))
-        #self.logger.debug('Params: option "%s": "%s"' % \
-        #    (option, self.params[option]))
-
+            self.params[option] = value
 
 class ParamsUnix(ParamsBase):
     """
     Read options from XML configuration files
     """
     def __init__(self, config_file=None):
-        ParamsBase.__init__(self)
+        super().__init__()
         config_files = [join(sys.prefix, 'etc/pyx12.conf.xml'),
                         expanduser('~/.pyx12.conf.xml')]
         for filename in config_files:
             if isfile(filename):
-                self.logger.debug('Read param file: %s' % (filename))
+                self.logger.debug(f'Read param file: {filename}')
                 self._read_config_file(filename)
         if config_file:
-            self.logger.debug('Read param file: %s' % (filename))
+            self.logger.debug(f'Read param file: {config_file}')
             self._read_config_file(config_file)
         else:
             self.logger.debug('No config file passed to the constructor')
-
 
 class ParamsWindows(ParamsBase):
     """
     Read options from XML configuration files
     """
     def __init__(self, config_file=None):
-        ParamsBase.__init__(self)
+        super().__init__()
         config_files = [join(sys.prefix, 'etc/pyx12.conf.xml')]
         for filename in config_files:
             if isfile(filename):
-                self.logger.debug('Read param file: %s' % (filename))
+                self.logger.debug(f'Read param file: {filename}')
                 self._read_config_file(filename)
         if config_file:
-            self.logger.debug('Read param file: %s' % (filename))
+            self.logger.debug(f'Read param file: {config_file}')
             self._read_config_file(config_file)
 
 if sys.platform == 'win32':

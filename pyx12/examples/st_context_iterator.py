@@ -8,7 +8,6 @@ import pyx12
 import pyx12.x12context
 import pyx12.params
 
-
 def st_generator():
     """
     """
@@ -30,7 +29,6 @@ def st_generator():
         #for d in iterate_2000(fd_in):
         #    yield d
 
-
 def simple_reader():
     testfile = 'multiple_st_loops.txt'
     src = pyx12.x12file.X12Reader(testfile)
@@ -43,7 +41,6 @@ def simple_reader():
             #yield d
             print(d)
         print('-----------------------------------------------------------')
-
 
 def x12_split_on_st(source_filename, isa_id=11, gs_id=21):
     src = pyx12.x12file.X12Reader(source_filename)
@@ -60,7 +57,6 @@ def x12_split_on_st(source_filename, isa_id=11, gs_id=21):
         wr.Close()
         yield (isa_id + idx, gs_id + idx, st_id, fd_temp)
 
-
 def save_many(src_filename, targetformat=None):
     base_isa_id = random.randint(1000, 999999999)
     base_gs_id = random.randint(100, 999999999)
@@ -74,16 +70,13 @@ def save_many(src_filename, targetformat=None):
             fd_out.write(fd_temp.read())
             print((newname, isa_id, gs_id, st_id))
 
-
 def update_isa_id(seg_data, isa_id):
     seg_data.set('ISA13', "{0:0>9}".format(int(isa_id)))
     return seg_data
 
-
 def update_gs_id(seg_data, gs_id):
     seg_data.set('GS06', "{0}".format(int(gs_id)))
     return seg_data
-
 
 def get_headers_stream(segments):
     """
@@ -112,7 +105,6 @@ def get_headers_stream(segments):
             }
             v = seg_data
             yield (k, v)
-
 
 def iterate_2000(fd_in):
     param = pyx12.params.params()
@@ -147,13 +139,11 @@ def iterate_2000(fd_in):
                 v = seg_node['segment']
                 yield (k, v)
 
-
 def _get_unique_isa_id():
     """
     Generate a random, 4 to 9 character ISA ID
     """
     return "{0:0>9}".format(random.randint(1000, 999999999))
-
 
 def _get_unique_gs_id():
     """
@@ -161,14 +151,12 @@ def _get_unique_gs_id():
     """
     return "{0}".format(random.randint(100, 999999999))
 
-
 def _get_unique_st_id():
     """
     Generate a random, 4 to 9 character ST ID
     """
     #return '%04i' % (random.randint(10, 999999999))
     return "{0:0>4}".format(random.randint(100, 999999999))
-
 
 def main():
     #for s in st_generator():

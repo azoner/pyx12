@@ -17,22 +17,25 @@ treated as a composite element with one sub-element.
 
 All indexing is zero based.
 """
+from __future__ import annotations
+from typing import List, Optional, Tuple, Union
 import re
+import logging
 
 import pyx12.path
 from pyx12.errors import EngineError
 
 rec_seg_id = re.compile('^[A-Z][A-Z0-9]{1,2}$', re.S)
 
-class Element(object):
+class Element:
     """
     Holds a simple element, which is just a simple string.
     """
 
     def __init__(self, ele_str):
         """
-        @param ele_str: 1::2
-        @type ele_str: string
+        :param ele_str: 1::2
+        :type ele_str: string
 
         """
         self.value = ele_str if ele_str is not None else ''
@@ -59,50 +62,50 @@ class Element(object):
 
     def __len__(self):
         """
-        @rtype: int
+        :rtype: int
         """
         return 1
 
     def __repr__(self):
         """
-        @rtype: string
+        :rtype: string
         """
         return self.value
 
     def format(self):
         """
-        @rtype: string
+        :rtype: string
         """
         return self.value
 
     def get_value(self):
         """
-        @rtype: string
+        :rtype: string
         """
         return self.value
 
     def set_value(self, elem_str):
         """
-        @param elem_str: Element string value
-        @type elem_str: string
+        :param elem_str: Element string value
+        :type elem_str: string
         """
         self.value = elem_str if elem_str is not None else ''
 
     def is_composite(self):
         """
-        @rtype: boolean
+        :rtype: boolean
         """
         return False
 
     def is_element(self):
         """
-        @rtype: boolean
+        :rtype: boolean
         """
         return True
 
     def is_empty(self):
         """
-        @rtype: boolean
+        :rtype: boolean
         """
         if self.value is not None and self.value != '':
             return False
@@ -112,7 +115,7 @@ class Element(object):
     # return ''.join([`num` for num in xrange(loop_count)])
     # def has_invalid_character(self, 
 
-class Composite(object):
+class Composite:
     """
     Can be a simple element or a composite.
     A simple element is treated as a composite element with one sub-element.
@@ -122,8 +125,8 @@ class Composite(object):
     # Operations
     def __init__(self, ele_str, subele_term=None):
         """
-        @type ele_str: string
-        @raise EngineError: If a terminator is None and no default
+        :type ele_str: string
+        :raises EngineError: If a terminator is None and no default
         """
         if subele_term is None or len(subele_term) != 1:
             raise EngineError('The sub-element terminator must be a single character, is %s' % (subele_term))
@@ -177,13 +180,13 @@ class Composite(object):
 
     def __len__(self):
         """
-        @rtype: int
+        :rtype: int
         """
         return len(self.elements)
 
     def __repr__(self):
         """
-        @rtype: string
+        :rtype: string
         """
         return self.format(self.subele_term)
 
@@ -191,8 +194,8 @@ class Composite(object):
         """
         Format a composite
 
-        @return: string
-        @raise EngineError: If terminator is None and no default
+        :return: string
+        :raises EngineError: If terminator is None and no default
         """
         if subele_term is None:
             subele_term = self.subele_term
@@ -214,14 +217,14 @@ class Composite(object):
 
     def set_subele_term(self, subele_term):
         """
-        @param subele_term: Sub-element terminator value
-        @type subele_term: string
+        :param subele_term: Sub-element terminator value
+        :type subele_term: string
         """
         self.subele_term = subele_term
 
     def is_composite(self):
         """
-        @rtype: boolean
+        :rtype: boolean
         """
         if len(self.elements) > 1:
             return True
@@ -230,7 +233,7 @@ class Composite(object):
 
     def is_element(self):
         """
-        @rtype: boolean
+        :rtype: boolean
         """
         if len(self.elements) == 1:
             return True
@@ -239,7 +242,7 @@ class Composite(object):
 
     def is_empty(self):
         """
-        @rtype: boolean
+        :rtype: boolean
         """
         for ele in self.elements:
             if not ele.is_empty():
@@ -252,8 +255,7 @@ class Composite(object):
                 subele_ord = '{comp}'.format(comp=j+1)
                 yield (subele_ord, self.elements[j].get_value())
 
-
-class Segment(object):
+class Segment:
     """
     Encapsulates a X12 segment.  Contains composites.
     """
@@ -317,7 +319,7 @@ class Segment(object):
 
     def __repr__(self):
         """
-        @rtype: string
+        :rtype: string
         """
         return self.format(self.seg_term, self.ele_term, self.subele_term)
 
@@ -325,20 +327,20 @@ class Segment(object):
         """
         Append a composite to the segment
 
-        @param val: String value of composite
-        @type val: string
+        :param val: String value of composite
+        :type val: string
         """
         self.elements.append(Composite(val, self.subele_term))
 
     def __len__(self):
         """
-        @rtype: int
+        :rtype: int
         """
         return len(self.elements)
 
     def get_seg_id(self):
         """
-        @rtype: string
+        :rtype: string
         """
         return self.seg_id
 
@@ -350,10 +352,10 @@ class Segment(object):
             - a sub-element: TST03-2
             - or any of the above with the segment ID omitted (02, 03, 03-1)
 
-        @param ref_des: X12 Reference Designator
-        @type ref_des: string
-        @rtype: tuple(ele_idx, subele_idx)
-        @raise EngineError: If the given ref_des does not match the segment ID
+        :param ref_des: X12 Reference Designator
+        :type ref_des: string
+        :rtype: tuple(ele_idx, subele_idx)
+        :raises EngineError: If the given ref_des does not match the segment ID
             or if the indexes are not valid integers
         """
         xp = pyx12.path.X12Path(ref_des)
@@ -367,11 +369,11 @@ class Segment(object):
 
     def get(self, ref_des):
         """
-        @param ref_des: X12 Reference Designator
-        @type ref_des: string
-        @return: Element or Composite
-        @rtype: L{segment.Composite}
-        @raise IndexError: If ref_des does not contain a valid element index
+        :param ref_des: X12 Reference Designator
+        :type ref_des: string
+        :return: Element or Composite
+        :rtype: L{segment.Composite}
+        :raises IndexError: If ref_des does not contain a valid element index
         """
         (ele_idx, comp_idx) = self._parse_refdes(ref_des)
         if ele_idx is None:
@@ -387,8 +389,8 @@ class Segment(object):
 
     def get_value(self, ref_des):
         """
-        @param ref_des: X12 Reference Designator
-        @type ref_des: string
+        :param ref_des: X12 Reference Designator
+        :type ref_des: string
         """
         comp1 = self.get(ref_des)
         if comp1 is None:
@@ -398,9 +400,9 @@ class Segment(object):
 
     def get_value_by_ref_des(self, ref_des):
         """
-        @param ref_des: X12 Reference Designator
-        @type ref_des: string
-        @attention: Deprecated - use get_value
+        :param ref_des: X12 Reference Designator
+        :type ref_des: string
+        Attention: Deprecated - use get_value
         """
         raise DeprecationWarning('Use Segment.get_value')
 
@@ -409,10 +411,10 @@ class Segment(object):
         Set the value of an element or subelement identified by the
         Reference Designator
 
-        @param ref_des: X12 Reference Designator
-        @type ref_des: string
-        @param val: New value
-        @type val: string
+        :param ref_des: X12 Reference Designator
+        :type ref_des: string
+        :param val: New value
+        :type val: string
         """
         (ele_idx, comp_idx) = self._parse_refdes(ref_des)
         while len(self.elements) <= ele_idx:
@@ -433,55 +435,55 @@ class Segment(object):
 
     def is_element(self, ref_des):
         """
-        @param ref_des: X12 Reference Designator
-        @type ref_des: string
+        :param ref_des: X12 Reference Designator
+        :type ref_des: string
         """
         ele_idx = self._parse_refdes(ref_des)[0]
         return self.elements[ele_idx].is_element()
 
     def is_composite(self, ref_des):
         """
-        @param ref_des: X12 Reference Designator
-        @type ref_des: string
+        :param ref_des: X12 Reference Designator
+        :type ref_des: string
         """
         ele_idx = self._parse_refdes(ref_des)[0]
         return self.elements[ele_idx].is_composite()
 
     def ele_len(self, ref_des):
         """
-        @param ref_des: X12 Reference Designator
-        @type ref_des: string
-        @return: number of sub-elements in an element or composite
-        @rtype: int
+        :param ref_des: X12 Reference Designator
+        :type ref_des: string
+        :return: number of sub-elements in an element or composite
+        :rtype: int
         """
         ele_idx = self._parse_refdes(ref_des)[0]
         return len(self.elements[ele_idx])
 
     def set_seg_term(self, seg_term):
         """
-        @param seg_term: Segment terminator
-        @type seg_term: string
+        :param seg_term: Segment terminator
+        :type seg_term: string
         """
         self.seg_term = seg_term
 
     def set_ele_term(self, ele_term):
         """
-        @param ele_term: Element terminator
-        @type ele_term: string
+        :param ele_term: Element terminator
+        :type ele_term: string
         """
         self.ele_term = ele_term
 
     def set_subele_term(self, subele_term):
         """
-        @param subele_term: Sub-element terminator
-        @type subele_term: string
+        :param subele_term: Sub-element terminator
+        :type subele_term: string
         """
         self.subele_term = subele_term
 
     def format(self, seg_term=None, ele_term=None, subele_term=None):
         """
-        @rtype: string
-        @raise EngineError: If a terminator is None and no default
+        :rtype: string
+        :raises EngineError: If a terminator is None and no default
         """
         if seg_term is None:
             seg_term = self.seg_term
@@ -521,7 +523,7 @@ class Segment(object):
 
     def is_empty(self):
         """
-        @rtype: boolean
+        :rtype: boolean
         """
         if len(self.elements) == 0:
             return True
@@ -535,7 +537,7 @@ class Segment(object):
         Is the Segment identifier valid?
         EBNF: 
         <seg_id> ::= <letter_or_digit> <letter_or_digit> [<letter_or_digit>]
-        @rtype: boolean
+        :rtype: boolean
         """
         if not self.seg_id or len(self.seg_id) < 2 or len(self.seg_id) > 3:
             return False

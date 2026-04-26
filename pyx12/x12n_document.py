@@ -27,7 +27,6 @@ import pyx12.x12file
 from pyx12.map_walker import walk_tree
 import pyx12.x12xml_simple
 
-
 def _reset_counter_to_isa_counts(walker):
     """
     Reset ISA instance counts
@@ -35,7 +34,6 @@ def _reset_counter_to_isa_counts(walker):
     walker.counter.reset_to_node('/ISA_LOOP')
     walker.counter.increment('/ISA_LOOP')
     walker.counter.increment('/ISA_LOOP/ISA')
-
 
 def _reset_counter_to_gs_counts(walker):
     """
@@ -45,22 +43,21 @@ def _reset_counter_to_gs_counts(walker):
     walker.counter.increment('/ISA_LOOP/GS_LOOP')
     walker.counter.increment('/ISA_LOOP/GS_LOOP/GS')
 
-
 def x12n_document(param, src_file, fd_997, fd_html,
                   fd_xmldoc=None, xslt_files=None, map_path=None,
                   callback=None):
     """
     Primary X12 validation function
-    @param param: pyx12.param instance
-    @param src_file: Source document
-    @type src_file: string
-    @param fd_997: 997/999 output document
-    @type fd_997: file descriptor
-    @param fd_html: HTML output document
-    @type fd_html: file descriptor
-    @param fd_xmldoc: XML output document
-    @type fd_xmldoc: file descriptor
-    @rtype: boolean
+    :param param: pyx12.param instance
+    :param src_file: Source document
+    :type src_file: string
+    :param fd_997: 997/999 output document
+    :type fd_997: file descriptor
+    :param fd_html: HTML output document
+    :type fd_html: file descriptor
+    :param fd_xmldoc: XML output document
+    :type fd_xmldoc: file descriptor
+    :rtype: boolean
     """
     logger = logging.getLogger('pyx12')
     errh = pyx12.error_handler.err_handler()
@@ -198,9 +195,8 @@ def x12n_document(param, src_file, fd_997, fd_html,
         if callback:
             try:
                 callback(seg, src, node, valid)
-            except:
+            except Exception:
                 logger.error('callback failed')
-                pass
         if fd_html:
             if node is not None and node.is_first_seg_in_loop():
                 html.loop(node.get_parent())
@@ -229,10 +225,9 @@ def x12n_document(param, src_file, fd_997, fd_html,
 
     if fd_html:
         html.footer()
-        del html
 
     if fd_xmldoc:
-        del xmldoc
+        xmldoc.close()
 
     #visit_debug = pyx12.error_debug.error_debug_visitor(sys.stdout)
     #errh.accept(visit_debug)
@@ -253,13 +248,7 @@ def x12n_document(param, src_file, fd_997, fd_html,
                 del visit_999
             except Exception:
                 logger.exception('Failed to create 999 response')
-    del node
-    del src
-    del control_map
-    try:
-        del cur_map
-    except UnboundLocalError:
-        pass
+    src.close()
     try:
         if not valid or errh.get_error_count() > 0:
             return False

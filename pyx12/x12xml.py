@@ -11,6 +11,7 @@
 """
 Create an XML rendering of the X12 document
 """
+
 import os.path
 
 # Intrapackage imports
@@ -18,8 +19,7 @@ from .errors import EngineError
 from .xmlwriter import XMLWriter
 from .map_walker import pop_to_parent_loop
 
-
-class x12xml(object):
+class x12xml:
     def __init__(self, fd, type, dtd_urn):
         self.writer = XMLWriter(fd)
         if dtd_urn:
@@ -30,17 +30,28 @@ class x12xml(object):
         self.writer.push(type)
         self.last_path = None
 
-    def __del__(self):
-        pass
+    def close(self):
+        """
+        Pop any XML elements still on the writer's stack. Idempotent.
+        """
+        while len(self.writer) > 0:
+            self.writer.pop()
+
+    def __enter__(self):
+        return self
+
+    def __exit__(self, exc_type, exc, tb):
+        self.close()
+        return False
 
     def seg(self, seg_node, seg_data):
         """
         Generate XML for the segment data and matching map node
 
-        @param seg_node: Map Node
-        @type seg_node: L{node<map_if.x12_node>}
-        @param seg_data: Segment object
-        @type seg_data: L{segment<segment.Segment>}
+        :param seg_node: Map Node
+        :type seg_node: L{node<map_if.x12_node>}
+        :param seg_data: Segment object
+        :type seg_data: L{segment<segment.Segment>}
         """
         if not seg_node.is_segment():
             raise EngineError('Node must be a segment')
@@ -94,12 +105,13 @@ class x12xml(object):
         """
         Generate XML for the segment data and matching map node
 
-        @param seg_node: Map Node
-        @type seg_node: L{node<map_if.x12_node>}
-        @param seg_data: Segment object
-        @type seg_data: L{segment<segment.Segment>}
+        :param seg_node: Map Node
+        :type seg_node: L{node<map_if.x12_node>}
+        :param seg_data: Segment object
+        :type seg_data: L{segment<segment.Segment>}
         """
-        assert seg_node.is_segment(), 'Node must be a segment'
+        if not seg_node.is_segment():
+            raise EngineError('Node must be a segment')
         parent = pop_to_parent_loop(seg_node)  # Get enclosing loop
         for loop in pop_loops:
             self.writer.pop()
@@ -138,7 +150,7 @@ class x12xml(object):
     def _path_list(self, path_str):
         """
         Get list of path nodes from path string
-        @rtype: list
+        :rtype: list
         """
         return [x for x in path_str.split('/') if x != '']
 

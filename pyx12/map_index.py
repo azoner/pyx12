@@ -17,43 +17,37 @@ Locate the correct xml map file given:
 
 import os.path
 import logging
-import xml.etree.cElementTree as et
-from pkg_resources import resource_stream
+import defusedxml.ElementTree as et
+from importlib.resources import files as _res_files
 
-
-class map_index(object):
+class map_index:
     """
     Interface to the maps.xml file
     """
     def __init__(self, base_path=None):
         """
-        @param base_path: Override directory containing maps.xml.  If None,
+        :param base_path: Override directory containing maps.xml.  If None,
                     uses package resource folder
-        @type base_path: string
+        :type base_path: string
         """
         logger = logging.getLogger('pyx12')
         self.maps = []
         maps_index_file = 'maps.xml'
         if base_path is not None:
-            logger.debug(\
-                "Looking for map index file '{}' in map_path '{}'".format( \
-                maps_index_file, base_path))
+            logger.debug(f"Looking for map index file '{maps_index_file}' in map_path '{base_path}'")
             if not os.path.isdir(base_path):
                 raise OSError(2, "Map path does not exist", base_path)
-            if not os.path.isdir(base_path):
-                raise OSError(2, "Pyx12 Map file '{}' does not exist in map path".format(maps_index_file), base_path)
-            fd = open(os.path.join(base_path, maps_index_file))
+            fd = open(os.path.join(base_path, maps_index_file), encoding='utf-8')
         else:
-            logger.debug("Looking for map index file '{}' in pkg_resources".format(maps_index_file))
-            fd = resource_stream(__name__, os.path.join('map', maps_index_file))
-        parser = et.XMLParser(encoding="utf-8")
-        _t = et.parse(fd, parser=parser)
-        for _v in _t.iter('version'):
-            icvn = _v.get('icvn')
-            for _m in _v.iterfind('map'):
-                self.add_map(icvn, _m.get('vriic'), _m.get('fic'),
-                             _m.get('tspc'), _m.text, _m.get('abbr'))
-        fd.close()
+            logger.debug(f"Looking for map index file '{maps_index_file}' in package resources")
+            fd = _res_files('pyx12').joinpath('map', maps_index_file).open('rb')
+        with fd:
+            parser = et.XMLParser(encoding='utf-8')
+            for _v in et.parse(fd, parser=parser).iter('version'):
+                icvn = _v.get('icvn')
+                for _m in _v.iterfind('map'):
+                    self.add_map(icvn, _m.get('vriic'), _m.get('fic'),
+                                 _m.get('tspc'), _m.text, _m.get('abbr'))
 
     def add_map(self, icvn, vriic, fic, tspc, map_file, abbr):
         self.maps.append({'icvn': icvn, 'vriic': vriic, 'fic': fic,
@@ -63,7 +57,7 @@ class map_index(object):
         """
         Get the map filename associated with the given icvn, vriic, fic,
         and tspc values
-        @rtype: string
+        :rtype: string
         """
         for a in self.maps:
             if a['icvn'] == icvn and a['vriic'] == vriic and a['fic'] == fic \
@@ -75,7 +69,7 @@ class map_index(object):
         """
         Get the informal abbreviation associated with the given icvn, vriic,
         fic, and tspc values
-        @rtype: string
+        :rtype: string
         """
         for a in self.maps:
             if a['icvn'] == icvn and a['vriic'] == vriic and a['fic'] == fic \

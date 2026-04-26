@@ -14,15 +14,9 @@
 Create an X12 document from a XML data file
 """
 
-import os
-import os.path
 import sys
 import logging
 
-# Intrapackage imports
-libpath = os.path.abspath(os.path.join(os.path.dirname(__file__), '../..'))
-if os.path.isdir(libpath):
-    sys.path.insert(0, libpath)
 import pyx12.segment
 import pyx12.xmlx12_simple
 
@@ -31,7 +25,6 @@ __author__ = pyx12.__author__
 __status__ = pyx12.__status__
 __version__ = pyx12.__version__
 __date__ = pyx12.__date__
-
 
 def main():
     """Script main program."""
@@ -70,9 +63,9 @@ def main():
 
     if args.input_file:
         try:
-            fd_source = open(args.input_file)
-        except:
-            logger.error('Could not open file %s' % (args.input_file))
+            fd_source = open(args.input_file, encoding='utf-8')
+        except OSError:
+            logger.exception('Could not open file %s' % (args.input_file))
             return False
     else:
         fd_source = sys.stdin
@@ -80,8 +73,8 @@ def main():
     if args.outputfile:
         try:
             fd_x12 = open(args.outputfile, mode='w', encoding='ascii')
-        except:
-            logger.error('Could not open file %s' % (args.outputfile))
+        except OSError:
+            logger.exception('Could not open file %s' % (args.outputfile))
             return False
     else:
         fd_x12 = sys.stdout

@@ -196,6 +196,7 @@ def get_x12file_metadata(param, src_file, map_path=None, do_node_summary=False):
                     }
                     node_ordinal += 1
             last_x12_segment_path = x12path
+    src.close()
     return (True, isa_data, node_summary)
 
 def get_x12file_metadata_headers(param, src_file, map_path=None):
@@ -260,4 +261,5 @@ def get_x12file_metadata_headers(param, src_file, map_path=None):
             st_data['TransactionSetCreationTime'] = seg.get_value('BHT05')
             st_data['ClaimorEncounterIdentifier'] = seg.get_value('BHT06')
 
+    src.close()
     return (True, isa_data)
