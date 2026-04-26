@@ -82,6 +82,9 @@ class Test834(X12DocumentTestCase):
     def test_834_lui_id(self):
         self._test_997('834_lui_id')
 
+    def test_834_ls_le_ls(self):
+        self._test_999('834_ls_le_ls')
+
 
 class Test835(X12DocumentTestCase):
     def test_835id(self):

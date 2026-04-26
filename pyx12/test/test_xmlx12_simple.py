@@ -72,6 +72,9 @@ class Test834(XmlTransformTestCase):
     def test_834_lui_id(self):
         self._test_x12xml_simple('834_lui_id')
 
+    def test_834_ls_le_ls(self):
+        self._test_x12xml_simple('834_ls_le_ls')
+
 
 class Test835(XmlTransformTestCase):
     def test_835id(self):
