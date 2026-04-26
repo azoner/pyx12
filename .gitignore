@@ -20,3 +20,4 @@ Backup/
 .vscode/
 uv.lock
 .claude/settings.local.json
+docs/_build/
