@@ -43,6 +43,10 @@ dev = [
     "build>=1.0",
     "twine>=4.0",
 ]
+docs = [
+    "sphinx>=7.0",
+    "furo>=2024.1",
+]
 
 [project.urls]
 Homepage = "http://github.com/azoner/pyx12"
