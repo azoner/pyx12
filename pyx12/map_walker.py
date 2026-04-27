@@ -1,5 +1,5 @@
 ######################################################################
-# Copyright (c) 2001-2013 
+# Copyright (c) 2001-2013
 #   John Holland <john@zoner.org>
 # All rights reserved.
 #
@@ -14,11 +14,14 @@ Walk a tree of x12_map nodes.  Find the correct node.
 If seg indicates a loop has been entered, returns the first child segment node.
 If seg indicates a segment has been entered, returns the segment node.
 """
+from __future__ import annotations
+from typing import Any, Mapping
 
 import logging
 
 # Intrapackage imports
 from .errors import EngineError
+import pyx12.path
 import pyx12.segment
 from .nodeCounter import NodeCounter
 
@@ -26,7 +29,8 @@ logger = logging.getLogger('pyx12.walk_tree')
 #logger.setLevel(logging.DEBUG)
 #logger.setLevel(logging.ERROR)
 
-def pop_to_parent_loop(node):
+
+def pop_to_parent_loop(node: Any) -> Any:
     """
     :param node: Loop Node
     :type node: L{node<map_if.x12_node>}
@@ -44,7 +48,8 @@ def pop_to_parent_loop(node):
         raise EngineError("Called pop_to_parent_loop, can't find parent loop")
     return map_node
 
-def is_first_seg_match2(child, seg_data):
+
+def is_first_seg_match2(child: Any, seg_data: pyx12.segment.Segment) -> bool:
     """
     Find the first segment in loop, verify it matches segment
 
@@ -62,15 +67,17 @@ def is_first_seg_match2(child, seg_data):
             return False
     return False
 
-def get_id_list(node_list):
+
+def get_id_list(node_list: list[Any]) -> list[str]:
     # get_id_list(pop)
-    ret = []
+    ret: list[str] = []
     for node in node_list:
         if node is not None:
             ret.append(node.id)
     return ret
 
-def traverse_path(start_node, pop_loops, push_loops):
+
+def traverse_path(start_node: Any, pop_loops: list[Any], push_loops: list[Any]) -> str:
     """
     Debug function - From the start path, pop up then push down to get a path string
     """
@@ -84,18 +91,34 @@ def traverse_path(start_node, pop_loops, push_loops):
         p1.append(loop_id)
     return '/' + '/'.join(p1)
 
+
 class walk_tree:
     """
     Walks a map_if tree.  Tracks loop/segment counting, missing loop/segment.
     """
-    def __init__(self, initialCounts=None):
+
+    mandatory_segs_missing: list[tuple[Any, pyx12.segment.Segment, str, str, int, int, str | None]]
+    counter: NodeCounter
+
+    def __init__(
+        self,
+        initialCounts: Mapping[str | pyx12.path.X12Path, int] | None = None,
+    ) -> None:
         # Store errors until we know we have an error
         self.mandatory_segs_missing = []
         if initialCounts is None:
             initialCounts = {}
         self.counter = NodeCounter(initialCounts)
 
-    def walk(self, node, seg_data, errh, seg_count, cur_line, ls_id):
+    def walk(
+        self,
+        node: Any,
+        seg_data: pyx12.segment.Segment,
+        errh: Any,
+        seg_count: int,
+        cur_line: int,
+        ls_id: str | None,
+    ) -> tuple[Any, list[Any], list[Any]]:
         """
         Walk the node tree from the starting node to the node matching
         seg_data. Catch any counting or requirement errors along the way.
@@ -119,8 +142,8 @@ class walk_tree:
 
         TODO: check single segment loop repeat
         """
-        pop_node_list = []
-        push_node_list = []
+        pop_node_list: list[Any] = []
+        push_node_list: list[Any] = []
         orig_node = node
         #logger.info('%s seg_count=%i / cur_line=%i' % (node.id, seg_count, cur_line))
         self.mandatory_segs_missing = []
@@ -182,19 +205,29 @@ class walk_tree:
         walk_tree._seg_not_found_error(orig_node, seg_data, errh, seg_count, cur_line, ls_id)
         return (None, [], [])
 
-    def getCountState(self):
+    def getCountState(self) -> Any:
         return self.counter.getState()
 
-    def setCountState(self, initialCounts={}):
+    def setCountState(self, initialCounts: Mapping[str | pyx12.path.X12Path, int] | None = None) -> None:
+        if initialCounts is None:
+            initialCounts = {}
         self.counter = NodeCounter(initialCounts)
 
-    def forceWalkCounterToLoopStart(self, x12_path, child_path):
+    def forceWalkCounterToLoopStart(self, x12_path: str, child_path: str) -> None:
         # delete child counts under the x12_path, no longer needed
         self.counter.reset_to_node(x12_path)
         self.counter.increment(x12_path)  # add a count for this path
         self.counter.increment(child_path) # count the loop start segment
 
-    def _check_seg_usage(self, seg_node, seg_data, seg_count, cur_line, ls_id, errh):
+    def _check_seg_usage(
+        self,
+        seg_node: Any,
+        seg_data: pyx12.segment.Segment,
+        seg_count: int,
+        cur_line: int,
+        ls_id: str | None,
+        errh: Any,
+    ) -> None:
         """
         Check segment usage requirement and count
 
@@ -226,7 +259,14 @@ class walk_tree:
                 errh.seg_error('5', err_str, None)
 
     @staticmethod
-    def _seg_not_found_error(orig_node, seg_data, errh, seg_count, cur_line, ls_id):
+    def _seg_not_found_error(
+        orig_node: Any,
+        seg_data: pyx12.segment.Segment,
+        errh: Any,
+        seg_count: int,
+        cur_line: int,
+        ls_id: str | None,
+    ) -> None:
         """
         Create error for not found segments
 
@@ -245,7 +285,7 @@ class walk_tree:
         errh.add_seg(orig_node, seg_data, seg_count, cur_line, ls_id)
         errh.seg_error('1', err_str, None)
 
-    def _flush_mandatory_segs(self, errh, cur_pos=None):
+    def _flush_mandatory_segs(self, errh: Any, cur_pos: int | None = None) -> None:
         """
         Handle error reporting for any outstanding missing mandatory segments
 
@@ -259,7 +299,15 @@ class walk_tree:
                 errh.seg_error(err_cde, err_str, None)
         self.mandatory_segs_missing = [x for x in self.mandatory_segs_missing if x[0].pos == cur_pos]
 
-    def _is_loop_match(self, loop_node, seg_data, errh, seg_count, cur_line, ls_id):
+    def _is_loop_match(
+        self,
+        loop_node: Any,
+        seg_data: pyx12.segment.Segment,
+        errh: Any,
+        seg_count: int,
+        cur_line: int,
+        ls_id: str | None,
+    ) -> bool:
         """
         Try to match the current loop to the segment
         Handle loop and segment counting.
@@ -304,7 +352,15 @@ class walk_tree:
                                                 '3', err_str, seg_count, cur_line, ls_id))
         return False
 
-    def _goto_seg_match(self, loop_node, seg_data, errh, seg_count, cur_line, ls_id):
+    def _goto_seg_match(
+        self,
+        loop_node: Any,
+        seg_data: pyx12.segment.Segment,
+        errh: Any,
+        seg_count: int,
+        cur_line: int,
+        ls_id: str | None,
+    ) -> tuple[Any, list[Any]]:
         """
         A child loop has matched the segment.  Return that segment node.
         Handle loop counting and requirement errors.
@@ -348,7 +404,15 @@ class walk_tree:
                         return (node1, push_node_list)
         return (None, [])
 
-    def _check_loop_usage(self, loop_node, seg_data, seg_count, cur_line, ls_id, errh):
+    def _check_loop_usage(
+        self,
+        loop_node: Any,
+        seg_data: pyx12.segment.Segment,
+        seg_count: int,
+        cur_line: int,
+        ls_id: str | None,
+        errh: Any,
+    ) -> None:
         """
         Check loop usage requirement and count
 
