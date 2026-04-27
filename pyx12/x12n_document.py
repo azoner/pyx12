@@ -12,6 +12,9 @@
 Parse a ANSI X12N data file.  Validate against a map and codeset values.
 Create XML, HTML, and 997/999 documents based on the data file.
 """
+from __future__ import annotations
+from collections.abc import Callable
+from typing import Any, TextIO
 
 import logging
 
@@ -23,11 +26,13 @@ import pyx12.error_html
 import pyx12.errors
 import pyx12.map_index
 import pyx12.map_if
+import pyx12.params
 import pyx12.x12file
 from pyx12.map_walker import walk_tree
 import pyx12.x12xml_simple
 
-def _reset_counter_to_isa_counts(walker):
+
+def _reset_counter_to_isa_counts(walker: walk_tree) -> None:
     """
     Reset ISA instance counts
     """
@@ -35,7 +40,8 @@ def _reset_counter_to_isa_counts(walker):
     walker.counter.increment('/ISA_LOOP')
     walker.counter.increment('/ISA_LOOP/ISA')
 
-def _reset_counter_to_gs_counts(walker):
+
+def _reset_counter_to_gs_counts(walker: walk_tree) -> None:
     """
     Reset GS instance counts
     """
@@ -43,9 +49,17 @@ def _reset_counter_to_gs_counts(walker):
     walker.counter.increment('/ISA_LOOP/GS_LOOP')
     walker.counter.increment('/ISA_LOOP/GS_LOOP/GS')
 
-def x12n_document(param, src_file, fd_997, fd_html,
-                  fd_xmldoc=None, xslt_files=None, map_path=None,
-                  callback=None):
+
+def x12n_document(
+    param: pyx12.params.ParamsBase,
+    src_file: str | TextIO,
+    fd_997: TextIO | None,
+    fd_html: TextIO | None,
+    fd_xmldoc: TextIO | None = None,
+    xslt_files: Any = None,
+    map_path: str | None = None,
+    callback: Callable[..., Any] | None = None,
+) -> bool:
     """
     Primary X12 validation function
     :param param: pyx12.param instance
@@ -76,8 +90,11 @@ def x12n_document(param, src_file, fd_997, fd_html,
     map_index_if = pyx12.map_index.map_index(map_path)
     node = control_map.getnodebypath('/ISA_LOOP/ISA')
     walker = walk_tree()
-    icvn = fic = vriic = tspc = None
-    cur_map = None  # we do not initially know the X12 transaction type
+    icvn: str | None = None
+    fic: str | None = None
+    vriic: str | None = None
+    tspc: str | None = None
+    cur_map: Any = None  # we do not initially know the X12 transaction type
     #XXX Generate TA1 if needed.
 
     if fd_html:
@@ -200,7 +217,7 @@ def x12n_document(param, src_file, fd_997, fd_html,
         if fd_html:
             if node is not None and node.is_first_seg_in_loop():
                 html.loop(node.get_parent())
-            err_node_list = []
+            err_node_list: list[Any] = []
             while True:
                 try:
                     next(err_iter)

@@ -1,11 +1,7 @@
-import sys
-import os
-import os.path
-import logging
+from __future__ import annotations
+from typing import Any, TextIO
 
-libpath = os.path.abspath(os.path.join(os.path.dirname(__file__), '../..'))
-if os.path.isdir(libpath):
-    sys.path.insert(0, libpath)
+import logging
 
 # Intrapackage imports
 import pyx12.error_handler
@@ -16,7 +12,13 @@ import pyx12.params
 import pyx12.x12file
 from pyx12.map_walker import walk_tree
 
-def get_x12file_metadata(param, src_file, map_path=None, do_node_summary=False):
+
+def get_x12file_metadata(
+    param: pyx12.params.ParamsBase,
+    src_file: str | TextIO,
+    map_path: str | None = None,
+    do_node_summary: bool = False,
+) -> tuple[bool, dict[str, Any] | None, dict[str, Any] | None]:
     logger = logging.getLogger('pyx12')
     errh = pyx12.error_handler.errh_null()
 
@@ -34,14 +36,18 @@ def get_x12file_metadata(param, src_file, map_path=None, do_node_summary=False):
     map_index_if = pyx12.map_index.map_index(map_path)
     node = control_map.getnodebypath('/ISA_LOOP/ISA')
     walker = walk_tree()
-    icvn = fic = vriic = tspc = None
-    cur_map = None  # we do not initially know the X12 transaction type
+    icvn: str | None = None
+    fic: str | None = None
+    vriic: str | None = None
+    tspc: str | None = None
+    cur_map: Any = None  # we do not initially know the X12 transaction type
 
-    isa_data = {}
+    isa_data: dict[str, Any] = {}
+    node_summary: dict[str, Any] | None
+    node_ordinal = 0
+    last_x12_segment_path: str | None = None
     if do_node_summary:
         node_summary = {}
-        node_ordinal = 0
-        last_x12_segment_path = None
     else:
         node_summary = None
     for seg in src:
@@ -62,8 +68,7 @@ def get_x12file_metadata(param, src_file, map_path=None, do_node_summary=False):
                 raise
         if node is None:
             raise pyx12.errors.EngineError("Node not found")
-            node = orig_node
-        
+
         if seg.get_seg_id() == 'ISA':
             icvn = seg.get_value('ISA12')
         elif seg.get_seg_id() == 'IEA':
@@ -81,7 +86,6 @@ def get_x12file_metadata(param, src_file, map_path=None, do_node_summary=False):
                 src.check_837_lx = True if cur_map.id == '837' else False
                 logger.debug('Map file: %s' % (map_file))
             node = cur_map.getnodebypath('/ISA_LOOP/GS_LOOP/GS')
-            pass
         elif seg.get_seg_id() == 'BHT':
             # special case for 4010 837P
             if vriic in ('004010X094', '004010X094A1'):
@@ -153,7 +157,7 @@ def get_x12file_metadata(param, src_file, map_path=None, do_node_summary=False):
 
         x12path = node.get_path()
         #parent
-        if do_node_summary:
+        if do_node_summary and node_summary is not None:
             if x12path in node_summary:
                 node_summary[x12path]['Count'] += 1
                 if last_x12_segment_path not in node_summary[x12path]['prefix_nodes']:
@@ -171,7 +175,7 @@ def get_x12file_metadata(param, src_file, map_path=None, do_node_summary=False):
                     'prefix_nodes': [last_x12_segment_path]
                 }
                 node_ordinal += 1
-            
+
             for (refdes, ele_ord, comp_ord, val) in seg.values_iterator():
                 ele_node = node.getnodebypath2(refdes)
                 if ele_node.is_composite():
@@ -199,7 +203,12 @@ def get_x12file_metadata(param, src_file, map_path=None, do_node_summary=False):
     src.close()
     return (True, isa_data, node_summary)
 
-def get_x12file_metadata_headers(param, src_file, map_path=None):
+
+def get_x12file_metadata_headers(
+    param: pyx12.params.ParamsBase,
+    src_file: str | TextIO,
+    map_path: str | None = None,
+) -> tuple[bool, dict[str, Any] | None]:
     logger = logging.getLogger('pyx12')
     errh = pyx12.error_handler.errh_null()
 
@@ -209,7 +218,7 @@ def get_x12file_metadata_headers(param, src_file, map_path=None):
     except pyx12.errors.X12Error:
         logger.error('"%s" does not look like an X12 data file' % (src_file))
         return (False, None)
-    isa_data = None
+    isa_data: dict[str, Any] | None = None
     for seg in src:
         if seg.get_seg_id() == 'ISA':
             isa_data = {
@@ -227,7 +236,7 @@ def get_x12file_metadata_headers(param, src_file, map_path=None):
                 'GSLoops': []
                 }
             icvn = isa_data['InterchangeControlVersionNumber']
-        elif seg.get_seg_id() == 'IEA':
+        elif seg.get_seg_id() == 'IEA' and isa_data is not None:
             isa_data['NumberofIncludedFunctionalGroups'] = seg.get_value('IEA01')
         elif seg.get_seg_id() == 'GS':
             gs_data = {
@@ -241,7 +250,7 @@ def get_x12file_metadata_headers(param, src_file, map_path=None):
                 'VersionReleaseIndustryIdentifierCode': seg.get_value('GS08'),
                 'STLoops': []
                 }
-        elif seg.get_seg_id() == 'GE':
+        elif seg.get_seg_id() == 'GE' and isa_data is not None:
             gs_data['NumberofTransactionSetsIncluded'] = seg.get_value('GE01')
             isa_data['GSLoops'].append(gs_data)
         elif seg.get_seg_id() == 'ST':
