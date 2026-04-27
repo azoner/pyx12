@@ -1,5 +1,5 @@
 ######################################################################
-# Copyright 
+# Copyright
 #   John Holland <john@zoner.org>
 # All rights reserved.
 #
@@ -10,6 +10,9 @@
 """
 Create an X12 document from a XML data file in the simple form
 """
+from __future__ import annotations
+from typing import TextIO
+from xml.etree.ElementTree import Element
 
 import defusedxml.ElementTree as et
 import logging
@@ -18,7 +21,8 @@ import logging
 import pyx12.segment
 import pyx12.x12file
 
-def convert(filename, fd_out):
+
+def convert(filename: str | TextIO, fd_out: TextIO) -> bool:
     """
     Convert a XML file in simple X12 form to an X12 file
     :param filename:  libxml2 requires a file name.  '-' gives stdin
@@ -35,7 +39,8 @@ def convert(filename, fd_out):
             wr.Write(get_segment(node))
     return True
 
-def get_segment(cSegment):
+
+def get_segment(cSegment: Element) -> pyx12.segment.Segment:
     """
     Build an X12 segment from a XML node
     """
@@ -46,10 +51,10 @@ def get_segment(cSegment):
         if node.tag == 'ele':
             ele_id = node.get('id')
             if node.text != '':
-                seg_data.set(ele_id, node.text)
+                seg_data.set(ele_id, node.text)  # type: ignore[arg-type]
         elif node.tag == 'comp':
             for subele in node.findall('subele'):
                 subele_id = subele.get('id')
                 if subele.text is not None and subele.text != '':
-                    seg_data.set(subele_id, subele.text)
+                    seg_data.set(subele_id, subele.text)  # type: ignore[arg-type]
     return seg_data
