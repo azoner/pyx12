@@ -9,6 +9,11 @@
 """
 Interface to a X12N IG Map
 """
+from __future__ import annotations
+from collections.abc import Iterator
+from typing import IO, Any
+from xml.etree.ElementTree import Element
+
 import logging
 import os.path
 import sys
@@ -17,20 +22,32 @@ import defusedxml.ElementTree as et
 from importlib.resources import files as _res_files
 
 # Intrapackage imports
+import pyx12.segment
 from .errors import EngineError
 from . import codes
 from . import dataele
-from . import path
+from . import path as _path
+from .path import X12Path
 from . import validation
 from .syntax import is_syntax_valid
 
 MAXINT = 2147483647
 
+
 class x12_node:
     """
     X12 Node Superclass
     """
-    def __init__(self):
+
+    id: str | None
+    name: str | None
+    parent: Any
+    children: list[Any]
+    path: str
+    _x12path: X12Path | None
+    _fullpath: str | None
+
+    def __init__(self) -> None:
         self.id = None
         self.name = None
         self.parent = None
@@ -39,18 +56,18 @@ class x12_node:
         self._x12path = None
         self._fullpath = None
 
-    def __eq__(self, other):
+    def __eq__(self, other: object) -> bool:
         if isinstance(other, x12_node):
             return self.id == other.id and self.parent.id == other.parent.id
         return NotImplemented
 
-    def __ne__(self, other):
+    def __ne__(self, other: object) -> bool:
         res = type(self).__eq__(self, other)
         if res is NotImplemented:
-            return res
-        return not res
+            return res  # type: ignore[no-any-return]
+        return not bool(res)
 
-    def __lt__(self, other):
+    def __lt__(self, other: object) -> bool:
         return NotImplemented
 
     __le__ = __lt__
@@ -58,19 +75,19 @@ class x12_node:
     __gt__ = __lt__
     __ge__ = __lt__
 
-    def __hash__(self):
-        return (self.id + self.parent.id).__hash__()
+    def __hash__(self) -> int:
+        return ((self.id or '') + (self.parent.id or '')).__hash__()
 
-    def __len__(self):
+    def __len__(self) -> int:
         return len(self.children)
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         """
         :rtype: string
         """
-        return self.name
+        return self.name or ''
 
-    def getnodebypath(self, path):
+    def getnodebypath(self, path: str) -> Any:
         """
         """
         pathl = path.split('/')
@@ -87,10 +104,10 @@ class x12_node:
                         break
         raise EngineError('getnodebypath failed. Path "%s" not found' % path)
 
-    def get_child_count(self):
+    def get_child_count(self) -> int:
         return len(self.children)
 
-    def get_child_node_by_idx(self, idx):
+    def get_child_node_by_idx(self, idx: int) -> Any:
         """
         :param idx: zero based
         """
@@ -99,7 +116,7 @@ class x12_node:
         else:
             return self.children[idx]
 
-    def get_child_node_by_ordinal(self, ordinal):
+    def get_child_node_by_ordinal(self, ordinal: int) -> Any:
         """
         Get a child element or composite by the X12 ordinal
         :param ord: one based element/composite index.  Corresponds to the map <seq> element
@@ -107,7 +124,7 @@ class x12_node:
         """
         return self.get_child_node_by_idx(ordinal - 1)
 
-    def get_path(self):
+    def get_path(self) -> str:
         """
         :return: path - XPath style
         :rtype: string
@@ -122,54 +139,55 @@ class x12_node:
             self._fullpath = parent_path + '/' + self.path
             return self._fullpath
 
-    def _get_x12_path(self):
+    def _get_x12_path(self) -> X12Path:
         """
         :return: X12 node path
-        :rtype: L{path<path.X12Path>}
+        :rtype: L{path<X12Path>}
         """
         if self._x12path:
             return self._x12path
-        p = path.X12Path(self.get_path())
+        p = X12Path(self.get_path())
         self._x12path = p
         return p
 
     x12path = property(_get_x12_path, None, None)
 
-    def is_first_seg_in_loop(self):
+    def is_first_seg_in_loop(self) -> bool:
         """
         :rtype: boolean
         """
         return False
 
-    def is_map_root(self):
+    def is_map_root(self) -> bool:
         """
         :rtype: boolean
         """
         return False
 
-    def is_loop(self):
+    def is_loop(self) -> bool:
         """
         :rtype: boolean
         """
         return False
 
-    def is_segment(self):
+    def is_segment(self) -> bool:
         """
         :rtype: boolean
         """
         return False
 
-    def is_element(self):
+    def is_element(self) -> bool:
         """
         :rtype: boolean
         """
         return False
 
-    def is_composite(self):
+    def is_composite(self) -> bool:
         """
         :rtype: boolean
         """
         return False
+
 
 ############################################################
 # Map file interface
@@ -178,13 +196,22 @@ class map_if(x12_node):
     """
     Map file interface
     """
-    def __init__(self, eroot, param, base_path=None):
+
+    pos_map: dict[int, list[Any]]
+    cur_path: str
+    param: Any
+    ext_codes: codes.ExternalCodes
+    data_elements: dataele.DataElements
+    base_name: str
+    icvn: str | None
+
+    def __init__(self, eroot: Element, param: Any, base_path: str | None = None) -> None:
         """
         :param eroot: ElementTree root
         :param param: map of parameters
         """
         x12_node.__init__(self)
-        self.children = None
+        self.children = None  # type: ignore[assignment]
         self.pos_map = {}
         self.cur_path = '/transaction'
         self.path = '/'
@@ -201,29 +228,19 @@ class map_if(x12_node):
         self.base_name = 'transaction'
         for e in eroot.findall('loop'):
             loop_node = loop_if(self, self, e)
-            #if loop_node.pos in self.pos_map:
-            #    if self.pos_map[loop_node.pos][0].id != loop_node.id:
-            #        raise EngineError('Invalid pos {} for path {}'.format(loop_node.pos, loop_node.x12path))
-            #if len(self.pos_map) > 0 and loop_node.pos < max(self.pos_map.keys()):
-            #    raise EngineError('Loop position should only increment.  Is not for path {}'.format(loop_node.x12path))
             try:
                 self.pos_map[loop_node.pos].append(loop_node)
             except KeyError:
                 self.pos_map[loop_node.pos] = [loop_node]
         for e in eroot.findall('segment'):
             seg_node = segment_if(self, self, e)
-            #if seg_node.pos in self.pos_map:
-            #    if self.pos_map[seg_node.pos][0].id != seg_node.id:
-            #        raise EngineError('Invalid pos {} for path {}'.format(seg_node.pos, seg_node.x12path))
-            #if len(self.pos_map) > 0 and seg_node.pos < max(self.pos_map.keys()):
-            #    raise EngineError('Segment position should only increment.  Is not for path {}'.format(seg_node.x12path))
             try:
                 self.pos_map[seg_node.pos].append(seg_node)
             except KeyError:
                 self.pos_map[seg_node.pos] = [seg_node]
         self.icvn = self._get_icvn()
 
-    def _get_icvn(self):
+    def _get_icvn(self) -> str | None:
         """
         Get the Interchange version of this map
         Map must have a first ISA segment
@@ -233,70 +250,72 @@ class map_if(x12_node):
         try:
             node = self.getnodebypath(ipath).children[11]
             icvn = node.valid_codes[0]
-            return icvn
+            return icvn  # type: ignore[no-any-return]
         except Exception:
             return None
 
-    def debug_print(self):
+    def debug_print(self) -> None:
         sys.stdout.write(self.__repr__())
         for ord1 in sorted(self.pos_map):
             for node in self.pos_map[ord1]:
                 node.debug_print()
 
-    def __eq__(self, other):
+    def __eq__(self, other: object) -> bool:
+        if not isinstance(other, map_if):
+            return NotImplemented
         return self.id == other.id
 
-    def __hash__(self):
-        return (self.id).__hash__()
+    def __hash__(self) -> int:
+        return ((self.id or '')).__hash__()
 
-    def __len__(self):
+    def __len__(self) -> int:
         i = 0
         for ord1 in sorted(self.pos_map):
             i += len(self.pos_map[ord1])
         return i
 
-    def get_child_count(self):
+    def get_child_count(self) -> int:
         return self.__len__()
 
-    def get_first_node(self):
+    def get_first_node(self) -> Any:
         pos_keys = sorted(self.pos_map)
         if len(pos_keys) > 0:
             return self.pos_map[pos_keys[0]][0]
         else:
             return None
 
-    def get_first_seg(self):
+    def get_first_seg(self) -> Any:
         first = self.get_first_node()
         if first.is_segment():
             return first
         else:
             return None
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         """
         :rtype: string
         """
         return '%s\n' % (self.id)
 
-    def _path_parent(self):
+    def _path_parent(self) -> str:
         """
         :rtype: string
         """
         return os.path.basename(os.path.dirname(self.cur_path))
 
-    def get_path(self):
+    def get_path(self) -> str:
         """
         :rtype: string
         """
         return self.path
 
-    def get_child_node_by_idx(self, idx):
+    def get_child_node_by_idx(self, idx: int) -> Any:
         """
         :param idx: zero based
         """
         raise EngineError('map_if.get_child_node_by_idx is not a valid call')
 
-    def getnodebypath(self, spath):
+    def getnodebypath(self, spath: str) -> Any:
         """
         :param spath: Path string; /1000/2000/2000A/NM102-3
         :type spath: string
@@ -314,12 +333,12 @@ class map_if(x12_node):
                         return child.getnodebypath('/'.join(pathl[1:]))
         raise EngineError('getnodebypath failed. Path "%s" not found' % spath)
 
-    def getnodebypath2(self, path_str):
+    def getnodebypath2(self, path_str: str) -> Any:
         """
         :param path: Path string; /1000/2000/2000A/NM102-3
         :type path: string
         """
-        x12path = path.X12Path(path_str)
+        x12path = X12Path(path_str)
         if x12path.empty():
             return None
         for ord1 in sorted(self.pos_map):
@@ -333,38 +352,35 @@ class map_if(x12_node):
         raise EngineError(
             'getnodebypath2 failed. Path "%s" not found' % path_str)
 
-    def is_map_root(self):
+    def is_map_root(self) -> bool:
         """
         :rtype: boolean
         """
         return True
 
-    def reset_child_count(self):
+    def reset_child_count(self) -> None:
         """
         Set cur_count of child nodes to zero
         """
         raise DeprecationWarning('Moved to nodeCounter')
-        for ord1 in sorted(self.pos_map):
-            for child in self.pos_map[ord1]:
-                child.reset_cur_count()
 
-    def reset_cur_count(self):
+    def reset_cur_count(self) -> None:
         """
         Set cur_count of child nodes to zero
         """
         raise DeprecationWarning('Moved to nodeCounter')
-        self.reset_child_count()
 
-    def __iter__(self):
+    def __iter__(self) -> map_if:
         return self
 
-    def loop_segment_iterator(self):
+    def loop_segment_iterator(self) -> Iterator[Any]:
         yield self
         for ord1 in sorted(self.pos_map):
             for child in self.pos_map[ord1]:
                 if child.is_loop() or child.is_segment():
                     for c in child.loop_segment_iterator():
                         yield c
+
 
 ############################################################
 # Loop Interface
@@ -373,20 +389,28 @@ class loop_if(x12_node):
     """
     Loop Interface
     """
-    def __init__(self, root, parent, elem):
+
+    root: Any
+    pos_map: dict[int, list[Any]]
+    base_name: str
+    _cur_count: int
+    type: str | None
+    usage: str | None
+    pos: int
+    repeat: str | None
+
+    def __init__(self, root: Any, parent: Any, elem: Element) -> None:
         """
         """
         x12_node.__init__(self)
         self.root = root
         self.parent = parent
         self.pos_map = {}
-        #self.path = ''
         self.base_name = 'loop'
-        #self.type = 'implicit'
         self._cur_count = 0
 
         self.id = elem.get('xid')
-        self.path = self.id
+        self.path = self.id or ''
         self.type = elem.get('type')
 
         self.name = elem.get(
@@ -394,32 +418,18 @@ class loop_if(x12_node):
         self.usage = elem.get(
             'usage') if elem.get('usage') else elem.findtext('usage')
         self.pos = int(elem.get(
-            'pos')) if elem.get('pos') else int(elem.findtext('pos'))
+            'pos')) if elem.get('pos') else int(elem.findtext('pos'))  # type: ignore[arg-type]
         self.repeat = elem.get('repeat') if elem.get(
             'repeat') else elem.findtext('repeat')
 
         for e in elem.findall('loop'):
             loop_node = loop_if(self.root, self, e)
-            #if loop_node.pos in self.pos_map:
-            #    if self.pos_map[loop_node.pos][0].id != loop_node.id:
-            #        raise EngineError('Invalid pos {} for path {}'.format(loop_node.pos, loop_node.x12path))
-            #if len(self.pos_map) > 0 and loop_node.pos < max(self.pos_map.keys()):
-            #    raise EngineError('Loop position should only increment.  Is not for path {}'.format(loop_node.pos, loop_node.x12path))
-            #if self.pos_map:
-            #    assert loop_node.pos >= max(self.pos_map.keys()), 'Bad ordinal %s' % (loop_node)
             try:
                 self.pos_map[loop_node.pos].append(loop_node)
             except KeyError:
                 self.pos_map[loop_node.pos] = [loop_node]
         for e in elem.findall('segment'):
             seg_node = segment_if(self.root, self, e)
-            #if seg_node.pos in self.pos_map:
-            #    if self.pos_map[seg_node.pos][0].id != seg_node.id:
-            #        raise EngineError('Invalid pos {} for path {}'.format(seg_node.pos, seg_node.x12path))
-            #if len(self.pos_map) > 0 and seg_node.pos < max(self.pos_map.keys()):
-            #    raise EngineError('Loop position should only increment.  Is not for path {}'.format(seg_node.pos, seg_node.x12path))
-            #if self.pos_map:
-            #    assert seg_node.pos >= max(self.pos_map.keys()), 'Bad ordinal %s' % (seg_node)
             try:
                 self.pos_map[seg_node.pos].append(seg_node)
             except KeyError:
@@ -433,19 +443,19 @@ class loop_if(x12_node):
                     if id_elem is not None:
                         seg_node.path = seg_node.path + '[' + id_elem.valid_codes[0] + ']'
 
-    def debug_print(self):
+    def debug_print(self) -> None:
         sys.stdout.write(self.__repr__())
         for ord1 in sorted(self.pos_map):
             for node in self.pos_map[ord1]:
                 node.debug_print()
 
-    def __len__(self):
+    def __len__(self) -> int:
         i = 0
         for ord1 in sorted(self.pos_map):
             i += len(self.pos_map[ord1])
         return i
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         """
         :rtype: string
         """
@@ -463,36 +473,36 @@ class loop_if(x12_node):
         out += '\n'
         return out
 
-    def get_max_repeat(self):
+    def get_max_repeat(self) -> int:
         if self.repeat is None:
             return MAXINT
         if self.repeat == '&gt;1' or self.repeat == '>1':
             return MAXINT
         return int(self.repeat)
 
-    def get_parent(self):
+    def get_parent(self) -> Any:
         return self.parent
 
-    def get_first_node(self):
+    def get_first_node(self) -> Any:
         pos_keys = sorted(self.pos_map)
         if len(pos_keys) > 0:
             return self.pos_map[pos_keys[0]][0]
         else:
             return None
 
-    def get_first_seg(self):
+    def get_first_seg(self) -> Any:
         first = self.get_first_node()
         if first.is_segment():
             return first
         else:
             return None
 
-    def childIterator(self):
+    def childIterator(self) -> Iterator[Any]:
         for ord1 in sorted(self.pos_map):
             for child in self.pos_map[ord1]:
                 yield child
 
-    def getnodebypath(self, spath):
+    def getnodebypath(self, spath: str) -> Any:
         """
         :param spath: remaining path to match
         :type spath: string
@@ -523,7 +533,7 @@ class loop_if(x12_node):
                                 return child
         raise EngineError('getnodebypath failed. Path "%s" not found' % spath)
 
-    def getnodebypath2(self, path_str):
+    def getnodebypath2(self, path_str: str) -> Any:
         """
         Try x12 path
 
@@ -531,7 +541,7 @@ class loop_if(x12_node):
         :type path_str: string
         :return: matching node, or None is no match
         """
-        x12path = path.X12Path(path_str)
+        x12path = X12Path(path_str)
         if x12path.empty():
             return None
         for ord1 in sorted(self.pos_map):
@@ -557,16 +567,16 @@ class loop_if(x12_node):
         raise EngineError(
             'getnodebypath2 failed. Path "%s" not found' % path_str)
 
-    def get_child_count(self):
+    def get_child_count(self) -> int:
         return self.__len__()
 
-    def get_child_node_by_idx(self, idx):
+    def get_child_node_by_idx(self, idx: int) -> Any:
         """
         :param idx: zero based
         """
         raise EngineError('loop_if.get_child_node_by_idx is not a valid call for a loop_if')
 
-    def get_seg_count(self):
+    def get_seg_count(self) -> int:
         """
         :return: Number of child segments
         :rtype: integer
@@ -578,13 +588,13 @@ class loop_if(x12_node):
                     i += 1
         return i
 
-    def is_loop(self):
+    def is_loop(self) -> bool:
         """
         :rtype: boolean
         """
         return True
 
-    def is_match(self, seg_data):
+    def is_match(self, seg_data: pyx12.segment.Segment) -> bool:
         """
         :type seg_data: L{segment<segment.Segment>}
         :return: Is the segment a match to this loop?
@@ -593,7 +603,7 @@ class loop_if(x12_node):
         pos_keys = sorted(self.pos_map)
         child = self.pos_map[pos_keys[0]][0]
         if child.is_loop():
-            return child.is_match(seg_data)
+            return bool(child.is_match(seg_data))
         elif child.is_segment():
             if child.is_match(seg_data):
                 return True
@@ -602,7 +612,7 @@ class loop_if(x12_node):
         else:
             return False
 
-    def get_child_seg_node(self, seg_data):
+    def get_child_seg_node(self, seg_data: pyx12.segment.Segment) -> Any:
         """
         Return the child segment matching the segment data
         """
@@ -611,7 +621,7 @@ class loop_if(x12_node):
                 return child
         return None
 
-    def get_child_loop_node(self, seg_data):
+    def get_child_loop_node(self, seg_data: pyx12.segment.Segment) -> Any:
         """
         Return the child segment matching the segment data
         """
@@ -620,40 +630,32 @@ class loop_if(x12_node):
                 return child
         return None
 
-    def get_cur_count(self):
+    def get_cur_count(self) -> int:
         """
         :return: current count
         :rtype: int
         """
         raise DeprecationWarning('Moved to nodeCounter')
-        return self._cur_count
 
-    def incr_cur_count(self):
+    def incr_cur_count(self) -> None:
         raise DeprecationWarning('Moved to nodeCounter')
-        self._cur_count += 1
 
-    def reset_child_count(self):
+    def reset_child_count(self) -> None:
         """
         Set cur_count of child nodes to zero
         """
         raise DeprecationWarning('Moved to nodeCounter')
-        for ord1 in sorted(self.pos_map):
-            for child in self.pos_map[ord1]:
-                child.reset_cur_count()
 
-    def reset_cur_count(self):
+    def reset_cur_count(self) -> None:
         """
         Set cur_count of node and child nodes to zero
         """
         raise DeprecationWarning('Moved to nodeCounter')
-        self._cur_count = 0
-        self.reset_child_count()
 
-    def set_cur_count(self, ct):
+    def set_cur_count(self, ct: int) -> None:
         raise DeprecationWarning('Moved to nodeCounter')
-        self._cur_count = ct
 
-    def get_counts_list(self, ct_list):
+    def get_counts_list(self, ct_list: list[tuple[str, int]]) -> bool:
         """
         Build a list of (path, ct) of the current node and parents
         Gets the node counts to apply to another map
@@ -661,13 +663,8 @@ class loop_if(x12_node):
         :type ct_list: list[(string, int)]
         """
         raise DeprecationWarning('Moved to nodeCounter')
-        my_ct = (self.get_path(), self._cur_count)
-        ct_list.append(my_ct)
-        if not self.parent.is_map_root():
-            self.parent.get_counts_list(ct_list)
-        return True
 
-    def loop_segment_iterator(self):
+    def loop_segment_iterator(self) -> Iterator[Any]:
         yield self
         for ord1 in sorted(self.pos_map):
             for child in self.pos_map[ord1]:
@@ -675,11 +672,24 @@ class loop_if(x12_node):
                     for c in child.loop_segment_iterator():
                         yield c
 
+
 class segment_if(x12_node):
     """
     Segment Interface
     """
-    def __init__(self, root, parent, elem):
+
+    root: Any
+    base_name: str
+    _cur_count: int
+    syntax: list[list[Any]]
+    type: str | None
+    usage: str | None
+    pos: int
+    max_use: str | None
+    repeat: str | None
+    end_tag: str | None
+
+    def __init__(self, root: Any, parent: Any, elem: Element) -> None:
         """
         :param parent: parent node
         """
@@ -688,13 +698,12 @@ class segment_if(x12_node):
         self.root = root
         self.parent = parent
         self.children = []
-        #self.path = ''
         self.base_name = 'segment'
         self._cur_count = 0
         self.syntax = []
 
         self.id = elem.get('xid')
-        self.path = self.id
+        self.path = self.id or ''
         self.type = elem.get('type')
 
         self.name = elem.get(
@@ -702,7 +711,7 @@ class segment_if(x12_node):
         self.usage = elem.get(
             'usage') if elem.get('usage') else elem.findtext('usage')
         self.pos = int(elem.get(
-            'pos')) if elem.get('pos') else int(elem.findtext('pos'))
+            'pos')) if elem.get('pos') else int(elem.findtext('pos'))  # type: ignore[arg-type]
         self.max_use = elem.get('max_use') if elem.get(
             'max_use') else elem.findtext('max_use')
         self.repeat = elem.get('repeat') if elem.get(
@@ -716,16 +725,14 @@ class segment_if(x12_node):
             if syn_list is not None:
                 self.syntax.append(syn_list)
 
-        children_map = {}
+        children_map: dict[int, Element] = {}
         for e in elem.findall('element'):
-            seq = int(e.get('seq')) if e.get('seq') else int(e.findtext('seq'))
+            seq = int(e.get('seq')) if e.get('seq') else int(e.findtext('seq'))  # type: ignore[arg-type]
             children_map[seq] = e
-            #self.children.append(element_if(self.root, self, e))
 
         for e in elem.findall('composite'):
-            seq = int(e.get('seq')) if e.get('seq') else int(e.findtext('seq'))
+            seq = int(e.get('seq')) if e.get('seq') else int(e.findtext('seq'))  # type: ignore[arg-type]
             children_map[seq] = e
-            #self.children.append(composite_if(self.root, self, e))
 
         for seq in sorted(children_map.keys()):
             if children_map[seq].tag == 'element':
@@ -735,12 +742,12 @@ class segment_if(x12_node):
                 self.children.append(composite_if(
                     self.root, self, children_map[seq]))
 
-    def debug_print(self):
+    def debug_print(self) -> None:
         sys.stdout.write(self.__repr__())
         for node in self.children:
             node.debug_print()
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         """
         :rtype: string
         """
@@ -754,7 +761,7 @@ class segment_if(x12_node):
         out += '\n'
         return out
 
-    def get_child_node_by_idx(self, idx):
+    def get_child_node_by_idx(self, idx: int) -> Any:
         """
         :param idx: zero based
         """
@@ -767,7 +774,7 @@ class segment_if(x12_node):
             else:
                 raise EngineError('idx %i not found in %s' % (idx, self.id))
 
-    def get_child_node_by_ordinal(self, ord):
+    def get_child_node_by_ordinal(self, ord: int) -> Any:
         """
         Get a child element or composite by the X12 ordinal
         :param ord: one based element/composite index.  Corresponds to the map <seq> element
@@ -775,7 +782,7 @@ class segment_if(x12_node):
         """
         return self.get_child_node_by_idx(ord - 1)
 
-    def getnodebypath2(self, path_str):
+    def getnodebypath2(self, path_str: str) -> Any:
         """
         Try x12 path
 
@@ -783,7 +790,7 @@ class segment_if(x12_node):
         :type path_str: string
         :return: matching node, or None is no match
         """
-        x12path = path.X12Path(path_str)
+        x12path = X12Path(path_str)
         if x12path.empty():
             return None
         if x12path.ele_idx is None:
@@ -792,21 +799,20 @@ class segment_if(x12_node):
         if x12path.subele_idx is None:
             return ele
         return ele.get_child_node_by_ordinal(x12path.subele_idx)
-        raise EngineError('getnodebypath2 failed. Path "%s" not found' % path_str)
 
-    def get_max_repeat(self):
+    def get_max_repeat(self) -> int:
         if self.max_use is None or self.max_use == '>1':
             return MAXINT
         return int(self.max_use)
 
-    def get_parent(self):
+    def get_parent(self) -> Any:
         """
         :return: ref to parent class instance
         :rtype: pyx12.x12_node
         """
         return self.parent
 
-    def is_first_seg_in_loop(self):
+    def is_first_seg_in_loop(self) -> bool:
         """
         :rtype: boolean
         """
@@ -815,7 +821,7 @@ class segment_if(x12_node):
         else:
             return False
 
-    def is_match(self, seg):
+    def is_match(self, seg: pyx12.segment.Segment) -> bool:
         """
         Is data segment given a match to this segment node?
         :param seg: data segment instance
@@ -828,7 +834,6 @@ class segment_if(x12_node):
                     and self.children[0].usage == 'R' \
                     and len(self.children[0].valid_codes) > 0 \
                     and seg.get_value('01') not in self.children[0].valid_codes:
-                #logger.debug('is_match: %s %s' % (seg.get_seg_id(), seg[1]), self.children[0].valid_codes)
                 return False
             # Special Case for 820
             elif seg.get_seg_id() == 'ENT' \
@@ -836,10 +841,8 @@ class segment_if(x12_node):
                     and self.children[1].get_data_type() == 'ID' \
                     and len(self.children[1].valid_codes) > 0 \
                     and seg.get_value('02') not in self.children[1].valid_codes:
-                #logger.debug('is_match: %s %s' % (seg.get_seg_id(), seg[1]), self.children[0].valid_codes)
                 return False
             # Special Case for 999 CTX
-            # IG defines the dataelement 2100/CT01-1 as an AN, but acts like an ID
             elif seg.get_seg_id() == 'CTX' \
                     and self.children[0].is_composite() \
                     and self.children[0].children[0].get_data_type() == 'AN' \
@@ -860,7 +863,12 @@ class segment_if(x12_node):
         else:
             return False
 
-    def is_match_qual(self, seg_data, seg_id, qual_code):
+    def is_match_qual(
+        self,
+        seg_data: pyx12.segment.Segment,
+        seg_id: str | None,
+        qual_code: str | None,
+    ) -> tuple[bool, str | None, int | None, int | None]:
         """
         Is segment id and qualifier a match to this segment node and to this particular segment data?
         :param seg_data: data segment instance
@@ -908,7 +916,7 @@ class segment_if(x12_node):
         else:
             return (False, None, None, None)
 
-    def guess_unique_key_id_element(self):
+    def guess_unique_key_id_element(self) -> Any:
         """
         Some segments, like REF, DTP, and DTP are duplicated.  They are matched using the value of an ID element.
         Which element to use varies.  This function tries to find a good candidate.
@@ -924,7 +932,7 @@ class segment_if(x12_node):
             return self.children[2]
         return None
 
-    def get_unique_key_id_element(self, id_val):
+    def get_unique_key_id_element(self, id_val: str) -> Any:
         """
         Some segments, like REF, DTP, and DTP are duplicated.  They are matched using the value of an ID element.
         Which element to use varies.  This function tries to find a good candidate, using a key value
@@ -944,13 +952,13 @@ class segment_if(x12_node):
             return self.children[2]
         return None
 
-    def is_segment(self):
+    def is_segment(self) -> bool:
         """
         :rtype: boolean
         """
         return True
 
-    def is_valid(self, seg_data, errh):
+    def is_valid(self, seg_data: pyx12.segment.Segment, errh: Any) -> bool:
         """
         :param seg_data: data segment instance
         :type seg_data: L{segment<segment.Segment>}
@@ -960,20 +968,16 @@ class segment_if(x12_node):
         valid = True
         child_count = self.get_child_count()
         if len(seg_data) > child_count:
-            #child_node = self.get_child_node_by_idx(child_count+1)
             err_str = 'Too many elements in segment "%s" (%s). Has %i, should have %i' % \
                 (self.name, seg_data.get_seg_id(), len(seg_data), child_count)
-            #self.logger.error(err_str)
             ref_des = '%02i' % (child_count + 1)
             err_value = seg_data.get_value(ref_des)
             errh.ele_error('3', err_str, err_value, ref_des)
             valid = False
 
-        dtype = []
-        type_list = []
+        dtype: list[str | None] = []
+        type_list: list[str | None] = []
         for i in range(min(len(seg_data), child_count)):
-            #self.logger.debug('i=%i, len(seg_data)=%i / child_count=%i' % \
-            #   (i, len(seg_data), self.get_child_count()))
             child_node = self.get_child_node_by_idx(i)
             if child_node.is_composite():
                 # Validate composite
@@ -1009,53 +1013,48 @@ class segment_if(x12_node):
             valid &= child_node.is_valid(None, errh)
 
         for syn in self.syntax:
-            (bResult, err_str) = is_syntax_valid(seg_data, syn)
+            (bResult, syn_err) = is_syntax_valid(seg_data, syn)
             if not bResult:
                 syn_type = syn[0]
                 if syn_type == 'E':
-                    errh.ele_error('10', err_str, None, syn[1])
+                    errh.ele_error('10', syn_err, None, syn[1])
                 else:
-                    errh.ele_error('2', err_str, None, syn[1])
+                    errh.ele_error('2', syn_err, None, syn[1])
                 valid &= False
 
         return valid
 
-    def _split_syntax(self, syntax):
+    def _split_syntax(self, syntax: str | None) -> list[Any] | None:
         """
         Split a Syntax string into a list
         """
-        if syntax[0] not in ['P', 'R', 'C', 'L', 'E']:
-            #self.logger.error('Syntax %s is not valid' % (syntax))
+        if syntax is None or syntax[0] not in ['P', 'R', 'C', 'L', 'E']:
             return None
-        syn = [syntax[0]]
+        syn: list[Any] = [syntax[0]]
         for i in range(len(syntax[1:]) // 2):
             syn.append(int(syntax[i * 2 + 1:i * 2 + 3]))
         return syn
 
-    def get_cur_count(self):
+    def get_cur_count(self) -> int:
         """
         :return: current count
         :rtype: int
         """
         raise DeprecationWarning('Moved to nodeCounter')
-        return self._cur_count
 
-    def incr_cur_count(self):
+    def incr_cur_count(self) -> None:
         raise DeprecationWarning('Moved to nodeCounter')
-        self._cur_count += 1
 
-    def reset_cur_count(self):
+    def reset_cur_count(self) -> None:
         """
         Set cur_count of node to zero
         """
         raise DeprecationWarning('Moved to nodeCounter')
-        self._cur_count = 0
 
-    def set_cur_count(self, ct):
+    def set_cur_count(self, ct: int) -> None:
         raise DeprecationWarning('Moved to nodeCounter')
-        self._cur_count = ct
 
-    def get_counts_list(self, ct_list):
+    def get_counts_list(self, ct_list: list[tuple[str, int]]) -> bool:
         """
         Build a list of (path, ct) of the current node and parents
         Gets the node counts to apply to another map
@@ -1063,14 +1062,10 @@ class segment_if(x12_node):
         :type ct_list: list[(string, int)]
         """
         raise DeprecationWarning('Moved to nodeCounter')
-        my_ct = (self.get_path(), self._cur_count)
-        ct_list.append(my_ct)
-        if not self.parent.is_map_root():
-            self.parent.get_counts_list(ct_list)
-        return True
 
-    def loop_segment_iterator(self):
+    def loop_segment_iterator(self) -> Iterator[Any]:
         yield self
+
 
 ############################################################
 # Element Interface
@@ -1080,7 +1075,19 @@ class element_if(x12_node):
     Element Interface
     """
 
-    def __init__(self, root, parent, elem):
+    root: Any
+    base_name: str
+    valid_codes: list[str | None]
+    external_codes: str | None
+    rec: re.Pattern[str] | None
+    refdes: str | None
+    data_ele: str | None
+    usage: str | None
+    seq: int
+    max_use: str | None
+    res: str | None
+
+    def __init__(self, root: Any, parent: Any, elem: Element) -> None:
         """
         :param parent: parent node
         """
@@ -1102,9 +1109,9 @@ class element_if(x12_node):
         self.name = elem.get(
             'name') if elem.get('name') else elem.findtext('name')
         self.seq = int(elem.get(
-            'seq')) if elem.get('seq') else int(elem.findtext('seq'))
+            'seq')) if elem.get('seq') else int(elem.findtext('seq'))  # type: ignore[arg-type]
         self.path = elem.get(
-            'seq') if elem.get('seq') else elem.findtext('seq')
+            'seq') if elem.get('seq') else (elem.findtext('seq') or '')  # type: ignore[assignment]
         self.max_use = elem.get('max_use') if elem.get(
             'max_use') else elem.findtext('max_use')
         self.res = elem.findtext('regex')
@@ -1120,12 +1127,12 @@ class element_if(x12_node):
             for c in v.findall('code'):
                 self.valid_codes.append(c.text)
 
-    def debug_print(self):
+    def debug_print(self) -> None:
         sys.stdout.write(self.__repr__())
         for node in self.children:
             node.debug_print()
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         """
         :rtype: string
         """
@@ -1144,44 +1151,37 @@ class element_if(x12_node):
         out += '\n'
         return out
 
-#    def __del__(self):
-#        pass
-
-    def _error(self, errh, err_str, err_cde, elem_val):
+    def _error(self, errh: Any, err_str: str, err_cde: str, elem_val: str | None) -> None:
         """
         Forward the error to an error_handler
         """
         errh.ele_error(err_cde, err_str, elem_val, self.refdes)
-            # pos=self.seq, data_ele=self.data_ele)
 
-    def _valid_code(self, code):
+    def _valid_code(self, code: str | None) -> bool:
         """
         Verify the x12 element value is in the given list of valid codes
         :return: True if found, else False
         :rtype: boolean
         """
-        #if not self.valid_codes:
-        #    return True
         if code in self.valid_codes:
             return True
         return False
 
-    def get_parent(self):
+    def get_parent(self) -> Any:
         """
         :return: ref to parent class instance
         """
         return self.parent
 
-    def is_match(self):
+    def is_match(self) -> bool:
         """
         :return:
         :rtype: boolean
         """
         # match also by ID
         raise NotImplementedError('Override in sub-class')
-        #return False
 
-    def is_valid(self, elem, errh, type_list=[]):
+    def is_valid(self, elem: Any, errh: Any, type_list: list[str | None] | None = None) -> bool:
         """
         Is this a valid element?
 
@@ -1194,6 +1194,8 @@ class element_if(x12_node):
         :return: True if valid
         :rtype: boolean
         """
+        if type_list is None:
+            type_list = []
         errh.add_ele(self)
 
         if elem and elem.is_composite():
@@ -1258,7 +1260,7 @@ class element_if(x12_node):
                 (self.name, self.refdes, bad_string)
             self._error(errh, err_str, '6', bad_string)
             return False  # skip following checks, control character errors trump all
-            
+
         if data_type in ['AN', 'ID'] and elem_val[-1] == ' ':
             if len(elem_val.rstrip()) >= min_len:
                 err_str = 'Data element "%s" (%s) has unnecessary trailing spaces. (%s)' % \
@@ -1287,7 +1289,8 @@ class element_if(x12_node):
         if len(type_list) > 0:
             valid_type = False
             for dtype in type_list:
-                valid_type |= validation.IsValidDataType(elem_val, dtype, self.root.param.get('charset'))
+                if dtype is not None:
+                    valid_type |= validation.IsValidDataType(elem_val, dtype, self.root.param.get('charset'))
             if not valid_type:
                 if 'TM' in type_list:
                     err_str = 'Data element "%s" (%s) contains an invalid time (%s)' % \
@@ -1309,7 +1312,7 @@ class element_if(x12_node):
                 valid = False
         return valid
 
-    def _is_valid_code(self, elem_val, errh):
+    def _is_valid_code(self, elem_val: str, errh: Any) -> bool:
         """
         :rtype: boolean
         """
@@ -1328,44 +1331,49 @@ class element_if(x12_node):
             return False
         return True
 
-    def get_data_type(self):
+    def get_data_type(self) -> str | None:
         """
         """
         data_ele = self.root.data_elements.get_by_elem_num(self.data_ele)
-        return data_ele['data_type']
+        result: str | None = data_ele['data_type']
+        return result
 
     @property
-    def data_type(self):
+    def data_type(self) -> str | None:
         data_ele = self.root.data_elements.get_by_elem_num(self.data_ele)
-        return data_ele['data_type']
+        result: str | None = data_ele['data_type']
+        return result
 
     @property
-    def min_len(self):
+    def min_len(self) -> int:
         data_ele = self.root.data_elements.get_by_elem_num(self.data_ele)
-        return data_ele['min_len']
+        result: int = data_ele['min_len']
+        return result
 
     @property
-    def max_len(self):
+    def max_len(self) -> int:
         data_ele = self.root.data_elements.get_by_elem_num(self.data_ele)
-        return data_ele['max_len']
+        result: int = data_ele['max_len']
+        return result
 
     @property
-    def data_element_name(self):
+    def data_element_name(self) -> str | None:
         data_ele = self.root.data_elements.get_by_elem_num(self.data_ele)
-        return data_ele['name']
+        result: str | None = data_ele['name']
+        return result
 
-    def get_seg_count(self):
+    def get_seg_count(self) -> None:
         """
         """
         pass
 
-    def is_element(self):
+    def is_element(self) -> bool:
         """
         :rtype: boolean
         """
         return True
 
-    def get_path(self):
+    def get_path(self) -> str:
         """
         :return: path - XPath style
         :rtype: string
@@ -1375,15 +1383,16 @@ class element_if(x12_node):
         #get enclosing loop
         parent_path = self.get_parent_segment().parent.get_path()
         # add the segment, element, and sub-element path
-        self._fullpath = parent_path + '/' + self.id
+        self._fullpath = parent_path + '/' + (self.id or '')
         return self._fullpath
 
-    def get_parent_segment(self):
+    def get_parent_segment(self) -> Any:
         # pop to enclosing loop
         p = self.parent
         while not p.is_segment():
             p = p.parent
         return p
+
 
 ############################################################
 # Composite Interface
@@ -1392,7 +1401,16 @@ class composite_if(x12_node):
     """
     Composite Node Interface
     """
-    def __init__(self, root, parent, elem):
+
+    root: Any
+    base_name: str
+    refdes: str | None
+    data_ele: str | None
+    usage: str | None
+    seq: int
+    repeat: int
+
+    def __init__(self, root: Any, parent: Any, elem: Element) -> None:
         """
         Get the values for this composite
         :param parent: parent node
@@ -1413,30 +1431,29 @@ class composite_if(x12_node):
         self.usage = elem.get(
             'usage') if elem.get('usage') else elem.findtext('usage')
         self.seq = int(elem.get(
-            'seq')) if elem.get('seq') else int(elem.findtext('seq'))
-        self.repeat = int(elem.get('repeat')) if elem.get('repeat') else int(
-            elem.findtext('repeat')) if elem.findtext('repeat') else 1
+            'seq')) if elem.get('seq') else int(elem.findtext('seq'))  # type: ignore[arg-type]
+        self.repeat = int(elem.get('repeat')) if elem.get('repeat') else (  # type: ignore[arg-type]
+            int(elem.findtext('repeat')) if elem.findtext('repeat') else 1)  # type: ignore[arg-type]
         self.name = elem.get(
             'name') if elem.get('name') else elem.findtext('name')
 
         for e in elem.findall('element'):
             self.children.append(element_if(self.root, self, e))
 
-    def _error(self, errh, err_str, err_cde, elem_val):
+    def _error(self, errh: Any, err_str: str, err_cde: str, elem_val: str) -> None:
         """
         Forward the error to an error_handler
         """
         err_str2 = err_str.replace('\n', '').replace('\r', '')
         elem_val2 = elem_val.replace('\n', '').replace('\r', '')
         errh.ele_error(err_cde, err_str2, elem_val2, self.refdes)
-            #, pos=self.seq, data_ele=self.data_ele)
 
-    def debug_print(self):
+    def debug_print(self) -> None:
         sys.stdout.write(self.__repr__())
         for node in self.children:
             node.debug_print()
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         """
         :rtype: string
         """
@@ -1450,7 +1467,7 @@ class composite_if(x12_node):
         out += '\n'
         return out
 
-    def xml(self):
+    def xml(self) -> None:
         """
         Sends an xml representation of the composite to stdout
         """
@@ -1459,7 +1476,7 @@ class composite_if(x12_node):
             sub_elem.xml()
         sys.stdout.write('</composite>\n')
 
-    def is_valid(self, comp_data, errh):
+    def is_valid(self, comp_data: Any, errh: Any) -> bool:
         """
         Validates the composite
         :param comp_data: data composite instance, has multiple values
@@ -1501,13 +1518,14 @@ class composite_if(x12_node):
                 valid &= self.get_child_node_by_idx(i).is_valid(None, errh)
         return valid
 
-    def is_composite(self):
+    def is_composite(self) -> bool:
         """
         :rtype: boolean
         """
         return True
 
-def load_map_file(map_file, param, map_path=None):
+
+def load_map_file(map_file: str, param: Any, map_path: str | None = None) -> map_if:
     """
     Create the map object from a file
     :param map_file: filename (basename) of the map xml file to load
@@ -1521,6 +1539,7 @@ def load_map_file(map_file, param, map_path=None):
     # Reject any path component in map_file to prevent traversal out of map_path
     if map_file != os.path.basename(map_file) or os.path.isabs(map_file):
         raise EngineError('Invalid map file name: {}'.format(map_file))
+    map_fd: IO[Any]
     if map_path is not None:
         logger.debug("Looking for map file '{}' in map_path '{}'".format(map_file, map_path))
         if not os.path.isdir(map_path):
