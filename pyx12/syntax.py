@@ -1,5 +1,5 @@
 ######################################################################
-# Copyright (c) 2001-2011 
+# Copyright (c) 2001-2011
 #   John Holland <john@zoner.org>
 # All rights reserved.
 #
@@ -10,8 +10,16 @@
 """
 X12 syntax validation functions
 """
+from __future__ import annotations
+from typing import Any
 
-def is_syntax_valid(seg_data, syn):
+import pyx12.segment
+
+
+def is_syntax_valid(
+    seg_data: pyx12.segment.Segment,
+    syn: list[Any],
+) -> tuple[bool, str | None]:
     """
     Verifies the segment against the syntax
     :param seg_data: data segment instance
@@ -105,20 +113,22 @@ def is_syntax_valid(seg_data, syn):
     #raise EngineError
     return (False, 'Syntax Type %s Not Found' % (syntax_str(syn)))
 
-def syntax_str(syntax):
+
+def syntax_str(syntax: list[Any]) -> str:
     """
     :rtype: string
     """
     output = syntax[0]
     for i in syntax[1:]:
-        output += '{:02d}'.format(i)
+        output += '{:02d}'.format(int(i))
     return output
 
-def syntax_ele_id_str(seg_id, ele_pos_list):
+
+def syntax_ele_id_str(seg_id: str | None, ele_pos_list: list[int]) -> str:
     """
     :rtype: string
     """
-    output = '' 
+    output = ''
     output += '{seg_id}{ele_pos:02d}'.format(seg_id=seg_id, ele_pos=ele_pos_list[0])
     for i in range(len(ele_pos_list) - 1):
         if i == len(ele_pos_list) - 2:

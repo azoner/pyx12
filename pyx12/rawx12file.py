@@ -12,6 +12,9 @@ Low level interface to an X12 data input stream.
 Iterates over segment line strings.
 Used by X12Reader.
 """
+from __future__ import annotations
+from collections.abc import Iterator
+from typing import TextIO
 
 # Intrapackage imports
 import pyx12.errors
@@ -20,12 +23,21 @@ import pyx12.segment
 DEFAULT_BUFSIZE = 8 * 1024
 ISA_LEN = 106
 
+
 class RawX12File:
     """
     Interface to an X12 data file
     """
 
-    def __init__(self, fin):
+    fd: TextIO
+    buffer: str
+    icvn: str
+    seg_term: str
+    ele_term: str
+    subele_term: str
+    repetition_term: str | None
+
+    def __init__(self, fin: TextIO) -> None:
         """
         Initialize the file X12 file reader
 
@@ -33,7 +45,7 @@ class RawX12File:
         :type fin: open file object
         """
         self.fd = fin
-        self.buffer = None
+        self.buffer = ''
         line = self.fd.read(ISA_LEN)
         if line[:3] != 'ISA':
             err_str = "First line does not begin with 'ISA': %s" % line[:3]
@@ -52,7 +64,7 @@ class RawX12File:
         self.buffer = line
         self.buffer += self.fd.read(DEFAULT_BUFSIZE)
 
-    def __iter__(self):
+    def __iter__(self) -> Iterator[str]:
         """
         Iterate over input lines
         Often, X12 files have a CR-LF after the segment delimiter.
@@ -70,9 +82,9 @@ class RawX12File:
             line = line.lstrip('\n\r')
             if line == '':
                 break
-            yield(line)
+            yield line
 
-    def get_term(self):
+    def get_term(self) -> tuple[str, str, str, str, str | None]:
         """
         Get the original terminators
 

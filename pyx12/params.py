@@ -16,6 +16,8 @@ Order of precedence:
  2. Config files as constructor parameters
  3. self.params - Defaults
 """
+from __future__ import annotations
+from typing import Any
 from os.path import dirname, abspath, join, isdir, isfile, expanduser
 import sys
 import defusedxml.ElementTree as et
@@ -23,11 +25,16 @@ import logging
 
 from pyx12.errors import EngineError
 
+
 class ParamsBase:
     """
     Base class for parameters
     """
-    def __init__(self):
+
+    logger: logging.Logger
+    params: dict[str, Any]
+
+    def __init__(self) -> None:
         self.logger = logging.getLogger('pyx12.params')
         self.params = {}
         #First, try relative path
@@ -42,7 +49,7 @@ class ParamsBase:
         self.params['simple_dtd'] = ''
         self.params['xmlout'] = 'simple'
 
-    def get(self, option):
+    def get(self, option: str) -> Any:
         """
         Get the value of the parameter specified by option
         :param option: Option name
@@ -53,7 +60,7 @@ class ParamsBase:
         else:
             return None
 
-    def set(self, option, value):
+    def set(self, option: str, value: Any) -> None:
         """
         Set the value of the parameter specified by option
         :param option: Option name
@@ -66,7 +73,7 @@ class ParamsBase:
         else:
             self.params[option] = value
 
-    def _read_config_file(self, filename):
+    def _read_config_file(self, filename: str) -> None:
         """
         Read program configuration from an XML file
 
@@ -88,7 +95,7 @@ class ParamsBase:
             self.logger.error(f'Read of configuration file "{filename}" failed')
             raise
 
-    def _set_option(self, option, value, valtype):
+    def _set_option(self, option: str | None, value: str | None, valtype: str | None) -> None:
         """
         Set the value of the parameter specified by option
         :param option: Option name
@@ -110,11 +117,12 @@ class ParamsBase:
         else:
             self.params[option] = value
 
+
 class ParamsUnix(ParamsBase):
     """
     Read options from XML configuration files
     """
-    def __init__(self, config_file=None):
+    def __init__(self, config_file: str | None = None) -> None:
         super().__init__()
         config_files = [join(sys.prefix, 'etc/pyx12.conf.xml'),
                         expanduser('~/.pyx12.conf.xml')]
@@ -128,11 +136,12 @@ class ParamsUnix(ParamsBase):
         else:
             self.logger.debug('No config file passed to the constructor')
 
+
 class ParamsWindows(ParamsBase):
     """
     Read options from XML configuration files
     """
-    def __init__(self, config_file=None):
+    def __init__(self, config_file: str | None = None) -> None:
         super().__init__()
         config_files = [join(sys.prefix, 'etc/pyx12.conf.xml')]
         for filename in config_files:
@@ -143,6 +152,8 @@ class ParamsWindows(ParamsBase):
             self.logger.debug(f'Read param file: {config_file}')
             self._read_config_file(config_file)
 
+
+params: type[ParamsBase]
 if sys.platform == 'win32':
     params = ParamsWindows
 else:
