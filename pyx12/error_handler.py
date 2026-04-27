@@ -11,13 +11,17 @@
 """
 Interface to X12 Errors
 """
+from __future__ import annotations
+from typing import Any
 
 import logging
 
 # Intrapackage imports
+import pyx12.segment
 from .errors import IterOutOfBounds  # , IterDone
 
 logger = logging.getLogger('pyx12.error_handler')
+
 
 class err_iter:
     """
@@ -26,7 +30,11 @@ class err_iter:
     Implements an odd iterator???
     """
 
-    def __init__(self, errh):
+    errh: Any
+    cur_node: Any
+    visit_stack: list[Any]
+
+    def __init__(self, errh: Any) -> None:
         """
         :param errh: Error_handler instance
         :type errh: L{error_handler.err_handler}
@@ -35,13 +43,13 @@ class err_iter:
         self.cur_node = errh
         self.visit_stack = []
 
-    def first(self):
+    def first(self) -> None:
         self.cur_node = self.errh
 
-    def next(self):
+    def next(self) -> None:
         self.__next__()
 
-    def __next__(self):
+    def __next__(self) -> None:
         #If at previosly visited branch, do not do children
         if self.cur_node in self.visit_stack:
             node = None
@@ -69,19 +77,32 @@ class err_iter:
                     raise IterOutOfBounds
                 #    raise IterDone
 
-    def get_cur_node(self):
+    def get_cur_node(self) -> Any:
         return self.cur_node
+
 
 class err_handler:
     """
     The interface to the error handling structures.
     """
-    def __init__(self):
+
+    id: str
+    children: list[Any]
+    cur_node: Any
+    cur_isa_node: Any
+    cur_gs_node: Any
+    cur_st_node: Any
+    cur_seg_node: Any
+    seg_node_added: bool
+    cur_ele_node: Any
+    ele_node_added: bool
+    cur_line: int
+
+    def __init__(self) -> None:
         """
         """
 
         self.id = 'ROOT'
-        #self.isa_loop_count = 0
         self.children = []
         self.cur_node = self
         self.cur_isa_node = None
@@ -92,7 +113,7 @@ class err_handler:
         self.cur_ele_node = None
         self.cur_line = 0
 
-    def accept(self, visitor):
+    def accept(self, visitor: Any) -> None:
         """
         Params:     visitor - ref to visitor class
         """
@@ -101,7 +122,7 @@ class err_handler:
             child.accept(visitor)
         visitor.visit_root_post(self)
 
-    def handle_errors(self, err_list):
+    def handle_errors(self, err_list: list[tuple[str, str, str, Any, int | None]]) -> None:
         """
         :param err_list: list of errors to apply
         """
@@ -115,54 +136,58 @@ class err_handler:
             elif err_type == 'seg':
                 self.seg_error(err_cde, err_str, err_val, src_line)
 
-    def get_cur_line(self):
+    def get_cur_line(self) -> int:
         """
         :return: Current file line number
         :rtype: int
         """
         return self.cur_line
 
-    def get_id(self):
+    def get_id(self) -> str:
         """
         """
         return self.id
 
-    def add_isa_loop(self, seg_data, src):
+    def add_isa_loop(self, seg_data: pyx12.segment.Segment, src: Any) -> None:
         """
         :param seg_data: Segment object
         :type seg_data: L{segment<segment.Segment>}
         """
-        #logger.debug('add_isa loop')
         self.children.append(err_isa(self, seg_data, src))
         self.cur_isa_node = self.children[-1]
         self.cur_seg_node = self.cur_isa_node
         self.seg_node_added = True
 
-    def add_gs_loop(self, seg_data, src):
+    def add_gs_loop(self, seg_data: pyx12.segment.Segment, src: Any) -> None:
         """
         :param seg_data: Segment object
         :type seg_data: L{segment<segment.Segment>}
         """
-        #logger.debug('add_gs loop')
         parent = self.cur_isa_node
         parent.children.append(err_gs(parent, seg_data, src))
         self.cur_gs_node = parent.children[-1]
         self.cur_seg_node = self.cur_gs_node
         self.seg_node_added = True
 
-    def add_st_loop(self, seg_data, src):
+    def add_st_loop(self, seg_data: pyx12.segment.Segment, src: Any) -> None:
         """
         :param seg_data: Segment object
         :type seg_data: L{segment<segment.Segment>}
         """
-        #logger.debug('add_st loop')
         parent = self.cur_gs_node
         parent.children.append(err_st(parent, seg_data, src))
         self.cur_st_node = parent.children[-1]
         self.cur_seg_node = self.cur_st_node
         self.seg_node_added = True
 
-    def add_seg(self, map_node, seg_data, seg_count, cur_line, ls_id):
+    def add_seg(
+        self,
+        map_node: Any,
+        seg_data: pyx12.segment.Segment,
+        seg_count: int,
+        cur_line: int,
+        ls_id: str | None,
+    ) -> None:
         """
         :param map_node: current segment node
         :type map_node: L{node<map_if.segment_if>}
@@ -179,22 +204,15 @@ class err_handler:
         self.cur_seg_node = err_seg(
             parent, map_node, seg_data, seg_count, cur_line, ls_id)
         self.seg_node_added = False
-        #logger.debug('add_seg: %s' % map_node.name)
-        #if len(parent.children) > 0:
-        #    if parent.children[-1].err_count() == 0:
-        #        del parent.children[-1]
-        #        logger.debug('del seg_data: %s' % map_node.name)
-        #parent.children.append(err_seg(parent, map_node, seg_data, src))
 
-    def _add_cur_seg(self):
+    def _add_cur_seg(self) -> None:
         """
         """
-        #pdb.set_trace()
         if not self.seg_node_added:
             self.cur_st_node.children.append(self.cur_seg_node)
             self.seg_node_added = True
 
-    def add_ele(self, map_node):
+    def add_ele(self, map_node: Any) -> None:
         """
         """
         if self.cur_seg_node.id == 'ISA':
@@ -207,16 +225,15 @@ class err_handler:
             self.cur_ele_node = err_ele(self.cur_seg_node, map_node)
         self.ele_node_added = False
 
-    def _add_cur_ele(self):
+    def _add_cur_ele(self) -> None:
         """
         """
         self._add_cur_seg()
         if not self.ele_node_added and self.cur_seg_node is not None:
             self.cur_seg_node.elements.append(self.cur_ele_node)
             self.ele_node_added = True
-        #logger.debug('----  add_ele: %s' % self.cur_seg_node.elements[-1].name)
 
-    def isa_error(self, err_cde, err_str):
+    def isa_error(self, err_cde: str, err_str: str) -> None:
         """
         :param err_cde: ISA level error code
         :type err_cde: string
@@ -229,7 +246,7 @@ class err_handler:
         logger.error(sout)
         self.cur_isa_node.add_error(err_cde, err_str)
 
-    def gs_error(self, err_cde, err_str):
+    def gs_error(self, err_cde: str, err_str: str) -> None:
         """
         :param err_cde: GS level error code
         :type err_cde: string
@@ -242,7 +259,7 @@ class err_handler:
         logger.error(sout)
         self.cur_gs_node.add_error(err_cde, err_str)
 
-    def st_error(self, err_cde, err_str):
+    def st_error(self, err_cde: str, err_str: str) -> None:
         """
         :param err_cde: Segment level error code
         :type err_cde: string
@@ -255,7 +272,13 @@ class err_handler:
         logger.error(sout)
         self.cur_st_node.add_error(err_cde, err_str)
 
-    def seg_error(self, err_cde, err_str, err_value=None, src_line=None):
+    def seg_error(
+        self,
+        err_cde: str,
+        err_str: str,
+        err_value: str | None = None,
+        src_line: int | None = None,
+    ) -> None:
         """
         :param err_cde: Segment level error code
         :type err_cde: string
@@ -278,7 +301,13 @@ class err_handler:
             sout += ' (%s)' % err_value
         logger.error(sout)
 
-    def ele_error(self, err_cde, err_str, bad_value, refdes=None):
+    def ele_error(
+        self,
+        err_cde: str,
+        err_str: str,
+        bad_value: str | None,
+        refdes: str | None = None,
+    ) -> None:
         """
         :param err_cde: Element level error code
         :type err_cde: string
@@ -287,37 +316,36 @@ class err_handler:
         """
         self._add_cur_ele()
         self.cur_ele_node.add_error(
-            err_cde, err_str, bad_value)  # , pos, data_ele)
+            err_cde, err_str, bad_value)
         sout = ''
         sout += 'Line:%i ' % (self.cur_seg_node.get_cur_line())
         sout += 'ELE:%s - %s' % (err_cde, err_str)
         if bad_value:
             sout += ' (%s)' % (bad_value)
         logger.error(sout)
-        #print(self.cur_ele_node.errors)
 
-    def close_isa_loop(self, node, seg, src):
+    def close_isa_loop(self, node: Any, seg: Any, src: Any) -> None:
         """
         """
         self.cur_isa_node.close(node, seg, src)
         self.cur_seg_node = self.cur_isa_node
         self.seg_node_added = True
 
-    def close_gs_loop(self, node, seg, src):
+    def close_gs_loop(self, node: Any, seg: Any, src: Any) -> None:
         """
         """
         self.cur_gs_node.close(node, seg, src)
         self.cur_seg_node = self.cur_gs_node
         self.seg_node_added = True
 
-    def close_st_loop(self, node, seg, src):
+    def close_st_loop(self, node: Any, seg: Any, src: Any) -> None:
         """
         """
         self.cur_st_node.close(node, seg, src)
         self.cur_seg_node = self.cur_st_node
         self.seg_node_added = True
 
-    def find_node(self, type):
+    def find_node(self, type: str) -> None:
         """
         Find the last node of a type
         """
@@ -326,14 +354,8 @@ class err_handler:
                       5, 'ELE': 6}
         while node_order[type] > new_node[new_node.get_id()]:
             new_node = new_node.get_parent()
-        #walk error tree to find place to append
-        #if type == 'ISA':
-        #return node
 
-#    def update_node(self, obj):
-#        self.children[-1].update_node(obj)
-
-    def _get_last_child(self):
+    def _get_last_child(self) -> Any:
         """
         """
         if len(self.children) != 0:
@@ -341,10 +363,10 @@ class err_handler:
         else:
             return None
 
-    def get_parent(self):
+    def get_parent(self) -> None:
         return None
 
-    def get_error_count(self):
+    def get_error_count(self) -> int:
         """
         """
         count = 0
@@ -352,7 +374,7 @@ class err_handler:
             count += child.get_error_count()
         return count
 
-    def get_first_child(self):
+    def get_first_child(self) -> Any:
         """
         """
         if len(self.children) > 0:
@@ -360,32 +382,39 @@ class err_handler:
         else:
             return None
 
-    def get_next_sibling(self):
+    def get_next_sibling(self) -> None:
         """
         """
         return None
-        #raise IterDone
 
-    def __next__(self):
+    def __next__(self) -> Any:
         """
         Return the next error node
         """
         for child in self.children:
             yield child
 
-    def is_closed(self):
+    def is_closed(self) -> bool:
         """
         :rtype: boolean
         """
         return True
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         """
         """
         return '%i: %s' % (-1, self.id)
 
+
 class err_node:
-    def __init__(self, parent):
+
+    parent: Any
+    id: str | None
+    children: list[Any]
+    cur_line: int
+    errors: list[Any]
+
+    def __init__(self, parent: Any) -> None:
         """
         """
         self.parent = parent
@@ -394,32 +423,29 @@ class err_node:
         self.cur_line = -1
         self.errors = []
 
-    def accept(self, visitor):
+    def accept(self, visitor: Any) -> None:
         """
         """
         pass
 
-#    def update_node(self, obj):
-#        pass
-
-    def get_cur_line(self):
+    def get_cur_line(self) -> int:
         """
         :return: Current file line number
         :rtype: int
         """
         return self.cur_line
 
-    def get_id(self):
+    def get_id(self) -> str | None:
         """
         """
         return self.id
 
-    def get_parent(self):
+    def get_parent(self) -> Any:
         """
         """
         return self.parent
 
-    def _get_last_child(self):
+    def _get_last_child(self) -> Any:
         """
         """
         if len(self.children) != 0:
@@ -427,10 +453,9 @@ class err_node:
         else:
             return None
 
-    def get_next_sibling(self):
+    def get_next_sibling(self) -> Any:
         """
         """
-        #if self.id == 'ROOT': raise EngineError
         bFound = False
         for sibling in self.parent.children:
             if bFound:
@@ -438,9 +463,8 @@ class err_node:
             if sibling is self:
                 bFound = True
         return None
-        #raise IterOutOfBounds
 
-    def get_first_child(self):
+    def get_first_child(self) -> Any:
         """
         """
         if len(self.children) > 0:
@@ -448,7 +472,7 @@ class err_node:
         else:
             return None
 
-    def get_error_count(self):
+    def get_error_count(self) -> int:
         """
         """
         count = 0
@@ -456,23 +480,34 @@ class err_node:
             count += child.get_error_count()
         return count
 
-    def get_error_list(self, seg_id, pre=False):
+    def get_error_list(self, seg_id: str | None, pre: bool = False) -> list[Any]:
         """
         """
         return self.errors
 
-    def is_closed(self):
+    def is_closed(self) -> bool:
         """
         :rtype: boolean
         """
         return True
+
 
 class err_isa(err_node):
     """
     Holds source ISA loop errors
     """
 
-    def __init__(self, parent, seg_data, src):
+    seg_data: pyx12.segment.Segment
+    isa_id: str | None
+    cur_line_isa: int
+    cur_line_iea: int | None
+    isa_trn_set_id: str | None
+    ta1_req: str | None
+    orig_date: str | None
+    orig_time: str | None
+    elements: list[Any]
+
+    def __init__(self, parent: Any, seg_data: pyx12.segment.Segment, src: Any) -> None:
         """
         :param seg_data: Segment object
         :type seg_data: L{segment<segment.Segment>}
@@ -495,7 +530,7 @@ class err_isa(err_node):
         self.errors = []
         self.elements = []
 
-    def is_closed(self):
+    def is_closed(self) -> bool:
         """
         :rtype: boolean
         """
@@ -504,7 +539,7 @@ class err_isa(err_node):
         else:
             return False
 
-    def accept(self, visitor):
+    def accept(self, visitor: Any) -> None:
         """
         Params:     visitor - ref to visitor class
         """
@@ -513,7 +548,7 @@ class err_isa(err_node):
             child.accept(visitor)
         visitor.visit_isa_post(self)
 
-    def add_error(self, err_cde, err_str):
+    def add_error(self, err_cde: str, err_str: str) -> None:
         """
         :param err_cde: Error code
         :type err_cde: string
@@ -522,10 +557,10 @@ class err_isa(err_node):
         """
         self.errors.append((err_cde, err_str))
 
-    def close(self, node, seg, src):
+    def close(self, node: Any, seg: Any, src: Any) -> None:
         self.cur_line_iea = src.get_cur_line()
 
-    def get_cur_line(self):
+    def get_cur_line(self) -> int:
         """
         :return: Current file line number
         :rtype: int
@@ -535,7 +570,7 @@ class err_isa(err_node):
         else:
             return self.cur_line_isa
 
-    def get_error_count(self):
+    def get_error_count(self) -> int:
         """
         """
         count = 0
@@ -545,7 +580,7 @@ class err_isa(err_node):
             count += child.get_error_count()
         return count + len(self.errors)
 
-    def get_error_list(self, seg_id, pre=False):
+    def get_error_list(self, seg_id: str | None, pre: bool = False) -> list[Any]:
         """
         """
         if seg_id == 'ISA':
@@ -554,13 +589,8 @@ class err_isa(err_node):
             return [err for err in self.errors if 'IEA' in err[0]]
         else:
             return []
-        #err_list = []
-        #for err in self.errors:
-        #    if seg_id in err[0]:
-        #        err_list.append(err)
-        #return err_list
 
-    def __next__(self):
+    def __next__(self) -> Any:
         """
         Return the next error node
         """
@@ -568,15 +598,29 @@ class err_isa(err_node):
             yield child
         next(self.parent)
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return '%i: %s' % (self.get_cur_line(), self.id)
+
 
 class err_gs(err_node):
     """
     Holds source GS loop information
     """
 
-    def __init__(self, parent, seg_data, src):
+    seg_data: pyx12.segment.Segment
+    isa_id: str | None
+    cur_line_gs: int
+    cur_line_ge: int | None
+    gs_control_num: str | None
+    fic: str | None
+    vriic: str | None
+    st_loops: list[Any]
+    ack_code: str | None
+    st_count_orig: int
+    st_count_recv: int
+    elements: list[Any]
+
+    def __init__(self, parent: Any, seg_data: pyx12.segment.Segment, src: Any) -> None:
         """
         :param seg_data: Segment object
         :type seg_data: L{segment<segment.Segment>}
@@ -599,14 +643,13 @@ class err_gs(err_node):
         self.ack_code = None  # AK901
         self.st_count_orig = 0  # AK902
         self.st_count_recv = 0  # AK903
-        #self.st_count_accept = None # AK904
 
         self.parent = parent
         self.children = []
         self.errors = []
         self.elements = []
 
-    def accept(self, visitor):
+    def accept(self, visitor: Any) -> None:
         """
         Params:     visitor - ref to visitor class
         """
@@ -615,7 +658,7 @@ class err_gs(err_node):
             child.accept(visitor)
         visitor.visit_gs_post(self)
 
-    def add_error(self, err_cde, err_str):
+    def add_error(self, err_cde: str, err_str: str) -> None:
         """
         :param err_cde: Error code
         :type err_cde: string
@@ -624,10 +667,9 @@ class err_gs(err_node):
         """
         self.errors.append((err_cde, err_str))
 
-    def close(self, node, seg_data, src):
+    def close(self, node: Any, seg_data: pyx12.segment.Segment | None, src: Any) -> None:
         """
         """
-        # From GE loop
         self.cur_line_ge = src.get_cur_line()
 
         self.ack_code = self._get_ack_code()
@@ -635,33 +677,25 @@ class err_gs(err_node):
         if seg_data is None:
             self.st_count_orig = 0
         else:
-            self.st_count_orig = int(seg_data.get_value('GE01'))  # AK902
+            self.st_count_orig = int(seg_data.get_value('GE01'))  # type: ignore[arg-type]
         self.st_count_recv = src.st_count  # AK903
-        #self.st_count_accept = self.st_count_recv - len(self.children) # AK904
 
-    def _get_ack_code(self):
+    def _get_ack_code(self) -> str:
         for child in self.children:
             if child.get_error_count() > 0:
                 return 'R'
-        #err_codes = map(lambda x:x[0], self.errors)
-        #if '1' in err_codes: return 'R'
-        #elif '2' in err_codes: return 'R'
-        #elif '3' in err_codes: return 'R'
-        #elif '4' in err_codes: return 'R'
-        #elif '5' in err_codes: return 'E'
-        #elif '6' in err_codes: return 'E'
         if len(self.errors) > 0:
             return 'R'
         return 'A'
 
-    def count_failed_st(self):
+    def count_failed_st(self) -> int:
         ct = 0
         for child in self.children:
             if child.ack_code not in ['A', 'E']:
                 ct += 1
         return ct
 
-    def get_cur_line(self):
+    def get_cur_line(self) -> int:
         """
         :return: Current file line number
         :rtype: int
@@ -671,7 +705,7 @@ class err_gs(err_node):
         else:
             return self.cur_line_gs
 
-    def get_error_count(self):
+    def get_error_count(self) -> int:
         """
         """
         count = 0
@@ -681,7 +715,7 @@ class err_gs(err_node):
             count += child.get_error_count()
         return count + len(self.errors)
 
-    def get_error_list(self, seg_id, pre=False):
+    def get_error_list(self, seg_id: str | None, pre: bool = False) -> list[Any]:
         """
         """
         if seg_id == 'GS':
@@ -691,7 +725,7 @@ class err_gs(err_node):
         else:
             return []
 
-    def is_closed(self):
+    def is_closed(self) -> bool:
         """
         :rtype: boolean
         """
@@ -700,7 +734,7 @@ class err_gs(err_node):
         else:
             return False
 
-    def __next__(self):
+    def __next__(self) -> Any:
         """
         Return the next error node
         """
@@ -708,8 +742,9 @@ class err_gs(err_node):
             yield child
         next(self.parent)
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return '%i: %s' % (self.get_cur_line(), self.id)
+
 
 class err_st(err_node):
     """
@@ -722,7 +757,16 @@ class err_st(err_node):
         4. At SE, Determine final ack code
     """
 
-    def __init__(self, parent, seg_data, src):
+    seg_data: pyx12.segment.Segment
+    trn_set_control_num: str | None
+    cur_line_st: int
+    cur_line_se: int | None
+    trn_set_id: str | None
+    vriic: str | None
+    ack_code: str
+    elements: list[Any]
+
+    def __init__(self, parent: Any, seg_data: pyx12.segment.Segment, src: Any) -> None:
         """
         :param seg_data: Segment object
         :type seg_data: L{segment<segment.Segment>}
@@ -742,9 +786,8 @@ class err_st(err_node):
         self.children = []
         self.errors = []
         self.elements = []
-        #self.rejected = None
 
-    def accept(self, visitor):
+    def accept(self, visitor: Any) -> None:
         """
         Params:     visitor - ref to visitor class
         """
@@ -753,7 +796,7 @@ class err_st(err_node):
             child.accept(visitor)
         visitor.visit_st_post(self)
 
-    def add_error(self, err_cde, err_str):
+    def add_error(self, err_cde: str, err_str: str) -> None:
         """
         :param err_cde: Error code
         :type err_cde: string
@@ -762,7 +805,7 @@ class err_st(err_node):
         """
         self.errors.append((err_cde, err_str))
 
-    def close(self, node, seg_data, src):
+    def close(self, node: Any, seg_data: pyx12.segment.Segment | None, src: Any) -> None:
         """
         Close ST loop
 
@@ -774,13 +817,12 @@ class err_st(err_node):
         :type src: L{X12file<x12file.X12Reader>}
         """
         self.cur_line_se = src.get_cur_line()
-        #pdb.set_trace()
         if self.err_count() > 0:
             self.ack_code = 'R'
         else:
             self.ack_code = 'A'
 
-    def err_count(self):
+    def err_count(self) -> int:
         """
         :return: Count of ST/SE loop errors
         :rtype: int
@@ -790,10 +832,10 @@ class err_st(err_node):
             seg_err_ct = 1
         return len(self.errors) + seg_err_ct
 
-    def get_error_count(self):
+    def get_error_count(self) -> int:
         return self.err_count()
 
-    def get_error_list(self, seg_id, pre=False):
+    def get_error_list(self, seg_id: str | None, pre: bool = False) -> list[Any]:
         """
         """
         if seg_id == 'ST':
@@ -803,14 +845,14 @@ class err_st(err_node):
         else:
             return []
 
-    def child_err_count(self):
+    def child_err_count(self) -> int:
         ct = 0
         for child in self.children:
             if child.err_count() > 0:
                 ct += 1
         return ct
 
-    def get_cur_line(self):
+    def get_cur_line(self) -> int:
         """
         :return: Current file line number
         :rtype: int
@@ -820,7 +862,7 @@ class err_st(err_node):
         else:
             return self.cur_line_st
 
-    def is_closed(self):
+    def is_closed(self) -> bool:
         """
         :rtype: boolean
         """
@@ -829,23 +871,39 @@ class err_st(err_node):
         else:
             return False
 
-    def __next__(self):
+    def __next__(self) -> Any:
         """
         Return the next error node
         """
         for child in self.children:
             yield child
         return
-        #self.parent.next()
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return '%i: %s' % (self.get_cur_line(), self.id)
+
 
 class err_seg(err_node):
     """
     Segment Errors
     """
-    def __init__(self, parent, map_node, seg_data, seg_count, cur_line, ls_id):
+
+    name: str
+    pos: int
+    seg_id: str | None
+    seg_count: int
+    ls_id: str | None
+    elements: list[Any]
+
+    def __init__(
+        self,
+        parent: Any,
+        map_node: Any,
+        seg_data: pyx12.segment.Segment,
+        seg_count: int,
+        cur_line: int,
+        ls_id: str | None,
+    ) -> None:
         """
         Needs:
             1. seg_id_code
@@ -870,7 +928,7 @@ class err_seg(err_node):
         self.elements = []
         self.errors = []
 
-    def accept(self, visitor):
+    def accept(self, visitor: Any) -> None:
         """
         Params:     visitor - ref to visitor class
         """
@@ -878,7 +936,7 @@ class err_seg(err_node):
         for elem in self.elements:
             elem.accept(visitor)
 
-    def add_error(self, err_cde, err_str, err_value=None):
+    def add_error(self, err_cde: str, err_str: str, err_value: str | None = None) -> None:
         """
         :param err_cde: Error code
         :type err_cde: string
@@ -887,7 +945,7 @@ class err_seg(err_node):
         """
         self.errors.append((err_cde, err_str, err_value))
 
-    def err_count(self):
+    def err_count(self) -> int:
         """
         Returns:    count of errors
         """
@@ -896,32 +954,28 @@ class err_seg(err_node):
             ele_err_ct = 1
         return len(self.errors) + ele_err_ct
 
-    def get_error_count(self):
+    def get_error_count(self) -> int:
         return self.err_count()
 
-    def child_err_count(self):
+    def child_err_count(self) -> int:
         ct = 0
         for ele in self.elements:
             if ele.err_count() > 0:
                 ct += 1
         return ct
 
-    def __next__(self):
+    def __next__(self) -> Any:
         """
         Desc:       Return the next error node
         """
-        #for child in self.children:
-        #    yield child
-        #pdb.set_trace()
         return self
-        #self.parent.next()
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return '%i: %s %s' % (self.get_cur_line(), self.id, self.seg_id)
 
-    def get_first_child(self):
+    def get_first_child(self) -> None:
         return None
-        #raise IterOutOfBounds
+
 
 class err_ele(err_node):
     """
@@ -930,10 +984,16 @@ class err_ele(err_node):
 
     Each element with an error creates a new err_ele instance.
     """
-    def __init__(self, parent, map_node):
+
+    ele_ref_num: str | None
+    name: str | None
+    ele_pos: int
+    subele_pos: int | None
+    repeat_pos: int | None
+
+    def __init__(self, parent: Any, map_node: Any) -> None:
         """
         """
-        #, self.id, self.name, self.seq, self.data_ele)
         self.ele_ref_num = map_node.data_ele
         self.name = map_node.name
         if map_node.parent.is_composite():
@@ -944,105 +1004,110 @@ class err_ele(err_node):
             self.subele_pos = None
         self.repeat_pos = None
 
-        #self.bad_val = bad_val
         self.id = 'ELE'
 
         self.parent = parent
-        #self.children = []
         self.errors = []
 
-    def accept(self, visitor):
+    def accept(self, visitor: Any) -> None:
         """
         Params:     visitor - ref to visitor class
         """
         visitor.visit_ele(self)
 
-    def add_error(self, err_cde, err_str, bad_value):
+    def add_error(self, err_cde: str, err_str: str, bad_value: str | None) -> None:
         """
         :param err_cde: Error code
         :type err_cde: string
         :param err_str: Description of the error
         :type err_str: string
         """
-        #logger.debug('err_ele.add_error: %s %s %s' % (err_cde, err_str, bad_value))
         self.errors.append((err_cde, err_str, bad_value))
 
-    def err_count(self):
+    def err_count(self) -> int:
         return len(self.errors)
 
-    def get_error_count(self):
+    def get_error_count(self) -> int:
         return len(self.errors)
+
 
 class ErrorErrhNull(Exception):
     """Class for errh_null errors."""
+
 
 class errh_null:
     """
     A null error object - used for testing.
     Stores the current error in simple variables.
     """
-    def __init__(self):
+
+    id: str
+    cur_node: Any
+    cur_line: int
+    err_cde: str | None
+    err_str: str | None
+
+    def __init__(self) -> None:
         self.id = 'ROOT'
-        #self.children = []
         self.cur_node = self
-        #self.cur_isa_node = None
-        #self.cur_gs_node = None
-        #self.cur_st_node = None
-        #self.cur_seg_node = None
-        #self.seg_node_added = False
-        #self.cur_ele_node = None
         self.cur_line = 0
         self.err_cde = None
         self.err_str = None
 
-    def reset(self):
+    def reset(self) -> None:
         """
         Clear any errors
         """
         self.err_cde = None
         self.err_str = None
 
-    def get_cur_line(self):
+    def get_cur_line(self) -> int:
         """
         :return: Current file line number
         :rtype: int
         """
         return self.cur_line
 
-    def get_id(self):
+    def get_id(self) -> str:
         """
         :return: Error node type
         :rtype: string
         """
         return self.id
 
-    def add_isa_loop(self, seg, src):
-        """
-        """
-        pass
-        #raise ErrorErrhNull, 'add_isa loop'
-
-    def add_gs_loop(self, seg, src):
+    def add_isa_loop(self, seg: Any, src: Any) -> None:
         """
         """
         pass
 
-    def add_st_loop(self, seg, src):
+    def add_gs_loop(self, seg: Any, src: Any) -> None:
         """
         """
         pass
 
-    def add_seg(self, map_node, seg, seg_count, cur_line, ls_id):
+    def add_st_loop(self, seg: Any, src: Any) -> None:
         """
         """
         pass
 
-    def add_ele(self, map_node):
+    def add_seg(
+        self,
+        map_node: Any,
+        seg: Any,
+        seg_count: int,
+        cur_line: int,
+        ls_id: str | None,
+    ) -> None:
         """
         """
         pass
 
-    def isa_error(self, err_cde, err_str):
+    def add_ele(self, map_node: Any) -> None:
+        """
+        """
+        pass
+
+    def isa_error(self, err_cde: str, err_str: str) -> None:
         """
         :param err_cde: ISA level error code
         :type err_cde: string
@@ -1052,7 +1117,7 @@ class errh_null:
         self.err_cde = err_cde
         self.err_str = err_str
 
-    def gs_error(self, err_cde, err_str):
+    def gs_error(self, err_cde: str, err_str: str) -> None:
         """
         :param err_cde: GS level error code
         :type err_cde: string
@@ -1062,7 +1127,7 @@ class errh_null:
         self.err_cde = err_cde
         self.err_str = err_str
 
-    def st_error(self, err_cde, err_str):
+    def st_error(self, err_cde: str, err_str: str) -> None:
         """
         :param err_cde: Segment level error code
         :type err_cde: string
@@ -1072,7 +1137,13 @@ class errh_null:
         self.err_cde = err_cde
         self.err_str = err_str
 
-    def seg_error(self, err_cde, err_str, err_value=None, src_line=None):
+    def seg_error(
+        self,
+        err_cde: str,
+        err_str: str,
+        err_value: str | None = None,
+        src_line: int | None = None,
+    ) -> None:
         """
         :param err_cde: Segment level error code
         :type err_cde: string
@@ -1082,7 +1153,13 @@ class errh_null:
         self.err_cde = err_cde
         self.err_str = err_str
 
-    def ele_error(self, err_cde, err_str, bad_value, refdes=None):
+    def ele_error(
+        self,
+        err_cde: str,
+        err_str: str,
+        bad_value: str | None,
+        refdes: str | None = None,
+    ) -> None:
         """
         :param err_cde: Element level error code
         :type err_cde: string
@@ -1092,44 +1169,36 @@ class errh_null:
         self.err_cde = err_cde
         self.err_str = err_str
 
-    def close_isa_loop(self, node, seg, src):
+    def close_isa_loop(self, node: Any, seg: Any, src: Any) -> None:
         """
         """
         pass
 
-    def close_gs_loop(self, node, seg, src):
+    def close_gs_loop(self, node: Any, seg: Any, src: Any) -> None:
         """
         """
         pass
 
-    def close_st_loop(self, node, seg, src):
+    def close_st_loop(self, node: Any, seg: Any, src: Any) -> None:
         """
         """
         pass
 
-    def find_node(self, type):
+    def find_node(self, type: str) -> None:
         """
         Find the last node of a type
         """
         pass
 
-    def get_parent(self):
+    def get_parent(self) -> None:
         return None
 
-#    def get_first_child(self):
-#        """
-#        """
-#        if len(self.children) > 0:
-#            return self.children[0]
-#        else:
-#            return None
-
-    def get_next_sibling(self):
+    def get_next_sibling(self) -> None:
         """
         """
         return None
 
-    def get_error_count(self):
+    def get_error_count(self) -> int:
         """
         """
         if self.err_cde is not None:
@@ -1137,26 +1206,37 @@ class errh_null:
         else:
             return 0
 
-    def handle_errors(self, err_list):
+    def handle_errors(self, err_list: list[Any]) -> None:
         pass
 
-    def is_closed(self):
+    def is_closed(self) -> bool:
         """
         :rtype: boolean
         """
         return True
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         """
         """
         return '%i: %s' % (-1, self.id)
+
 
 class errh_list:
     """
     Capture validation errors in a list
     Used to refactor away from error_handler
     """
-    def __init__(self):
+
+    id: str
+    cur_node: Any
+    cur_line: int
+    err_isa: list[tuple[str, str]]
+    err_gs: list[tuple[str, str]]
+    err_st: list[tuple[str, str]]
+    err_seg: list[tuple[str, str, str | None]]
+    err_ele: list[tuple[str, str, str | None, str | None]]
+
+    def __init__(self) -> None:
         self.id = 'ROOT'
         self.cur_node = self
         self.cur_line = 0
@@ -1166,7 +1246,7 @@ class errh_list:
         self.err_seg = []
         self.err_ele = []
 
-    def reset(self):
+    def reset(self) -> None:
         """
         Clear any errors
         """
@@ -1176,36 +1256,43 @@ class errh_list:
         self.err_seg = []
         self.err_ele = []
 
-    def get_cur_line(self):
+    def get_cur_line(self) -> int:
         """
         :return: Current file line number
         :rtype: int
         """
         return self.cur_line
 
-    def get_id(self):
+    def get_id(self) -> str:
         """
         :return: Error node type
         :rtype: string
         """
         return self.id
 
-    def add_isa_loop(self, seg, src):
+    def add_isa_loop(self, seg: Any, src: Any) -> None:
         pass
 
-    def add_gs_loop(self, seg, src):
+    def add_gs_loop(self, seg: Any, src: Any) -> None:
         pass
 
-    def add_st_loop(self, seg, src):
+    def add_st_loop(self, seg: Any, src: Any) -> None:
         pass
 
-    def add_seg(self, map_node, seg, seg_count, cur_line, ls_id):
+    def add_seg(
+        self,
+        map_node: Any,
+        seg: Any,
+        seg_count: int,
+        cur_line: int,
+        ls_id: str | None,
+    ) -> None:
         pass
 
-    def add_ele(self, map_node):
+    def add_ele(self, map_node: Any) -> None:
         pass
 
-    def isa_error(self, err_cde, err_str):
+    def isa_error(self, err_cde: str, err_str: str) -> None:
         """
         :param err_cde: ISA level error code
         :type err_cde: string
@@ -1214,7 +1301,7 @@ class errh_list:
         """
         self.err_isa.append((err_cde, err_str))
 
-    def gs_error(self, err_cde, err_str):
+    def gs_error(self, err_cde: str, err_str: str) -> None:
         """
         :param err_cde: GS level error code
         :type err_cde: string
@@ -1223,7 +1310,7 @@ class errh_list:
         """
         self.err_gs.append((err_cde, err_str))
 
-    def st_error(self, err_cde, err_str):
+    def st_error(self, err_cde: str, err_str: str) -> None:
         """
         :param err_cde: Segment level error code
         :type err_cde: string
@@ -1232,7 +1319,13 @@ class errh_list:
         """
         self.err_st.append((err_cde, err_str))
 
-    def seg_error(self, err_cde, err_str, err_value=None, src_line=None):
+    def seg_error(
+        self,
+        err_cde: str,
+        err_str: str,
+        err_value: str | None = None,
+        src_line: int | None = None,
+    ) -> None:
         """
         :param err_cde: Segment level error code
         :type err_cde: string
@@ -1241,7 +1334,13 @@ class errh_list:
         """
         self.err_seg.append((err_cde, err_str, err_value))
 
-    def ele_error(self, err_cde, err_str, bad_value, refdes=None):
+    def ele_error(
+        self,
+        err_cde: str,
+        err_str: str,
+        bad_value: str | None,
+        refdes: str | None = None,
+    ) -> None:
         """
         :param err_cde: Element level error code
         :type err_cde: string
@@ -1250,28 +1349,28 @@ class errh_list:
         """
         self.err_ele.append((err_cde, err_str, bad_value, refdes))
 
-    def close_isa_loop(self, node, seg, src):
+    def close_isa_loop(self, node: Any, seg: Any, src: Any) -> None:
         pass
 
-    def close_gs_loop(self, node, seg, src):
+    def close_gs_loop(self, node: Any, seg: Any, src: Any) -> None:
         pass
 
-    def close_st_loop(self, node, seg, src):
+    def close_st_loop(self, node: Any, seg: Any, src: Any) -> None:
         pass
 
-    def find_node(self, type):
+    def find_node(self, type: str) -> None:
         pass
 
-    def get_parent(self):
+    def get_parent(self) -> None:
         return None
 
-    def get_next_sibling(self):
+    def get_next_sibling(self) -> None:
         return None
 
-    def get_error_count(self):
+    def get_error_count(self) -> int:
         return len(self.err_isa) + len(self.err_gs) + len(self.err_st) + len(self.err_seg) + len(self.err_ele)
 
-    def handle_errors(self, err_list):
+    def handle_errors(self, err_list: list[tuple[str, str, str, Any, int | None]]) -> None:
         """
         Handles errors generated by X12Reader
         :param err_list: List of errors
@@ -1287,13 +1386,13 @@ class errh_list:
             elif etype == 'seg':
                 self.seg_error(err_cde, err_str, err_value, src_line)
 
-    def is_closed(self):
+    def is_closed(self) -> bool:
         """
         :rtype: boolean
         """
         return True
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         """
         """
         return '%i: %s' % (-1, self.id)
