@@ -11,7 +11,7 @@ As a command line X12 validator
 
     x12valid.exe <filename>
 
-To fix common X12 structural errors
+Fixes common X12 structural errors.  Can add or remove line breaks.  Can fix loop and segment counting.
 
     x12norm.exe --fix --eol <filename>
 
