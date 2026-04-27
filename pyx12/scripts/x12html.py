@@ -52,13 +52,13 @@ def main():
     parser.add_argument('--log-file', '-l', action='store', dest="logfile", default=None)
     parser.add_argument('--map-path', '-m', action='store', dest="map_path", default=None, type=check_map_path_arg)
     parser.add_argument('--verbose', '-v', action='count', default=0)
-    parser.add_argument('--debug', '-d', action='store_true')
-    parser.add_argument('--quiet', '-q', action='store_true')
-    parser.add_argument('--html', '-H', action='store_true',
+    parser.add_argument('--debug', '-d', action='store_true', default=False)
+    parser.add_argument('--quiet', '-q', action='store_true', default=False)
+    parser.add_argument('--html', '-H', action='store_true', default=False,
                         help='Write HTML to a file instead of stdout')
     parser.add_argument('--exclude-external-codes', '-x', action='append', dest="exclude_external",
                         default=[], help='External Code Names to ignore')
-    parser.add_argument('--charset', '-s', choices=('b', 'e'),
+    parser.add_argument('--charset', '-s', choices=('b', 'e'), default='e',
                         help='Specify X12 character set: b=basic, e=extended')
     parser.add_argument('--version', action='version',
                         version=f'{parser.prog} {__version__}')
