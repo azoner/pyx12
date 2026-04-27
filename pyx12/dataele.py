@@ -11,7 +11,8 @@
 """
 Interface to normalized Data Elements
 """
-
+from __future__ import annotations
+from typing import IO, Any, TypedDict
 import os.path
 import logging
 import defusedxml.ElementTree as et
@@ -20,15 +21,26 @@ from importlib.resources import files as _res_files
 # Intrapackage imports
 from pyx12.errors import EngineError
 
+
 class DataElementsError(Exception):
     """Class for data elements module errors."""
+
+
+class _DataEle(TypedDict):
+    data_type: str | None
+    min_len: int
+    max_len: int
+    name: str | None
+
 
 class DataElements:
     """
     Interface to normalized Data Elements
     """
 
-    def __init__(self, base_path=None):
+    dataele: dict[str | None, _DataEle]
+
+    def __init__(self, base_path: str | None = None) -> None:
         """
         Initialize the list of data elements
         :param base_path: Override directory containing dataele.xml.  If None,
@@ -41,6 +53,9 @@ class DataElements:
         logger = logging.getLogger('pyx12')
         self.dataele = {}
         dataele_file = 'dataele.xml'
+        # ElementTree.parse accepts either text- or binary-mode streams; the
+        # file source differs between override path and bundled package resource.
+        fd: IO[Any]
         if base_path is not None:
             logger.debug(f"Looking for data element definition file '{dataele_file}' in map_path '{base_path}'")
             fd = open(os.path.join(base_path, dataele_file), encoding='utf-8')
@@ -53,12 +68,12 @@ class DataElements:
                 ele_num = eElem.get('ele_num')
                 self.dataele[ele_num] = {
                     'data_type': eElem.get('data_type'),
-                    'min_len': int(eElem.get('min_len')),
-                    'max_len': int(eElem.get('max_len')),
+                    'min_len': int(eElem.get('min_len')),  # type: ignore[arg-type]
+                    'max_len': int(eElem.get('max_len')),  # type: ignore[arg-type]
                     'name': eElem.get('name'),
                 }
 
-    def get_by_elem_num(self, ele_num):
+    def get_by_elem_num(self, ele_num: str | None) -> _DataEle:
         """
         Get the element characteristics for the indexed element code
         :param ele_num: the data element code
@@ -72,12 +87,9 @@ class DataElements:
             raise EngineError(f'Data Element "{ele_num}" is not defined')
         return self.dataele[ele_num]
 
-    def __repr__(self):
-        for ele_num in self.dataele:
-            print((self.dataele[ele_num]))
-
-    def debug_print(self):
+    def debug_print(self) -> None:
         """
         Debug print data elements
         """
-        self.__repr__()
+        for ele_num in self.dataele:
+            print(self.dataele[ele_num])
