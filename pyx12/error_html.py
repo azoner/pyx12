@@ -43,7 +43,7 @@ class error_html:
         self,
         errh: Any,
         fd: TextIO,
-        term: tuple[str, str, str, str] | tuple[str, str, str, str, str | None] = ('~', '*', '~', '\n'),
+        term: tuple[Any, ...] = ('~', '*', '~', '\n'),
     ) -> None:
         """
         :param fd: target file

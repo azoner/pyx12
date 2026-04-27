@@ -49,7 +49,7 @@ class error_999_visitor(pyx12.error_visitor.error_visitor):
     def __init__(
         self,
         fd: TextIO,
-        term: tuple[str, str, str, str, str] = ('~', '*', ':', '\n', '^'),
+        term: tuple[Any, ...] = ('~', '*', ':', '\n', '^'),
     ) -> None:
         """
         :param fd: target file
@@ -140,7 +140,8 @@ class error_999_visitor(pyx12.error_visitor.error_visitor):
         :type errh: L{error_handler.err_handler}
         """
         ge = pyx12.segment.Segment('GE', '~', '*', ':')
-        ge.set('02', self.gs_control_num)
+        if self.gs_control_num is not None:
+            ge.set('02', self.gs_control_num)
         self.wr.Write(ge)
 
         #TA1 segment

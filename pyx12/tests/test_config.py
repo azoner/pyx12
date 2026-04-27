@@ -20,5 +20,5 @@ class TestCase(unittest.TestCase):
         self.logger.debug("Tearing down test case")
         super().tearDown()
         
-    def assertIsInstance(self, obj: Any, cls: type | tuple[type, ...], msg: str | None = None) -> None:
-        super().assertIsInstance(obj, cls, msg) 
+    def assertIsInstance(self, obj: Any, cls: Any, msg: Any = None) -> None:
+        super().assertIsInstance(obj, cls, msg)

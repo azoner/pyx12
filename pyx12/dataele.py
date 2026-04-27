@@ -68,8 +68,8 @@ class DataElements:
                 ele_num = eElem.get('ele_num')
                 self.dataele[ele_num] = {
                     'data_type': eElem.get('data_type'),
-                    'min_len': int(eElem.get('min_len')),  # type: ignore[arg-type]
-                    'max_len': int(eElem.get('max_len')),  # type: ignore[arg-type]
+                    'min_len': int(eElem.get('min_len')),
+                    'max_len': int(eElem.get('max_len')),
                     'name': eElem.get('name'),
                 }
 

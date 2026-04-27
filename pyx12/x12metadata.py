@@ -78,10 +78,10 @@ def get_x12file_metadata(
             vriic = seg.get_value('GS08')
             map_file_new = map_index_if.get_filename(icvn, vriic, fic)
             if map_file != map_file_new:
-                map_file = map_file_new
-                if map_file is None:
+                if map_file_new is None:
                     err_str = "Map not found.  icvn={}, fic={}, vriic={}".format(icvn, fic, vriic)
                     raise pyx12.errors.EngineError(err_str)
+                map_file = map_file_new
                 cur_map = pyx12.map_if.load_map_file(map_file, param, map_path)
                 src.check_837_lx = True if cur_map.id == '837' else False
                 logger.debug('Map file: %s' % (map_file))
@@ -95,11 +95,11 @@ def get_x12file_metadata(
                 map_file_new = map_index_if.get_filename(icvn, vriic, fic, tspc)
                 logger.debug('New map file: %s' % (map_file_new))
                 if map_file != map_file_new:
-                    map_file = map_file_new
-                    if map_file is None:
+                    if map_file_new is None:
                         err_str = "Map not found.  icvn={}, fic={}, vriic={}, tspc={}".format(
                                     icvn, fic, vriic, tspc)
                         raise pyx12.errors.EngineError(err_str)
+                    map_file = map_file_new
                     cur_map = pyx12.map_if.load_map_file(map_file, param, map_path)
                     src.check_837_lx = True if cur_map.id == '837' else False
                     logger.debug('Map file: %s' % (map_file))
@@ -124,7 +124,7 @@ def get_x12file_metadata(
         elif seg.get_seg_id() == 'IEA':
             isa_data['NumberofIncludedFunctionalGroups'] = seg.get_value('IEA01')
         elif seg.get_seg_id() == 'GS':
-            gs_data = {
+            gs_data: dict[str, Any] = {
                 'FunctionalGroupHeader': seg.get_value('GS01'),
                 'ApplicationSendersCode': seg.get_value('GS02'),
                 'ApplicationReceiversCode': seg.get_value('GS03'),
@@ -235,11 +235,11 @@ def get_x12file_metadata_headers(
                 'UsageIndicator': seg.get_value('ISA15'),
                 'GSLoops': []
                 }
-            icvn = isa_data['InterchangeControlVersionNumber']
+            icvn = isa_data['InterchangeControlVersionNumber'] if isa_data is not None else None
         elif seg.get_seg_id() == 'IEA' and isa_data is not None:
             isa_data['NumberofIncludedFunctionalGroups'] = seg.get_value('IEA01')
         elif seg.get_seg_id() == 'GS':
-            gs_data = {
+            gs_data: dict[str, Any] = {
                 'FunctionalGroupHeader': seg.get_value('GS01'),
                 'ApplicationSendersCode': seg.get_value('GS02'),
                 'ApplicationReceiversCode': seg.get_value('GS03'),

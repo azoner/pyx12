@@ -20,6 +20,20 @@ jobs:
       - name: Test with pytest
         run: uv run pytest
 
+  mypy:
+    name: Type check (mypy strict)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - name: Install uv
+        uses: astral-sh/setup-uv@v8.1.0
+        with:
+          python-version: '3.12'
+      - name: Install dev dependencies
+        run: uv sync --extra dev
+      - name: Run mypy
+        run: uv run mypy
+
   docs:
     name: Build documentation
     runs-on: ubuntu-latest
