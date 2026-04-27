@@ -155,10 +155,10 @@ def x12n_document(
                 vriic = seg.get_value('GS08')
                 map_file_new = map_index_if.get_filename(icvn, vriic, fic)
                 if map_file != map_file_new:
-                    map_file = map_file_new
-                    if map_file is None:
+                    if map_file_new is None:
                         err_str = "Map not found.  icvn={}, fic={}, vriic={}".format(icvn, fic, vriic)
                         raise pyx12.errors.EngineError(err_str)
+                    map_file = map_file_new
                     cur_map = pyx12.map_if.load_map_file(map_file, param, map_path)
                     src.check_837_lx = True if cur_map.id == '837' else False
                     logger.debug('Map file: %s' % (map_file))
@@ -179,11 +179,11 @@ def x12n_document(
                     map_file_new = map_index_if.get_filename(icvn, vriic, fic, tspc)
                     logger.debug('New map file: %s' % (map_file_new))
                     if map_file != map_file_new:
-                        map_file = map_file_new
-                        if map_file is None:
+                        if map_file_new is None:
                             err_str = "Map not found.  icvn={}, fic={}, vriic={}, tspc={}".format(
                                         icvn, fic, vriic, tspc)
                             raise pyx12.errors.EngineError(err_str)
+                        map_file = map_file_new
                         cur_map = pyx12.map_if.load_map_file(map_file, param, map_path)
                         src.check_837_lx = True if cur_map.id == '837' else False
                         logger.debug('Map file: %s' % (map_file))

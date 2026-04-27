@@ -59,7 +59,7 @@ class err_handler:
         self.errors = []
         if not self.fd:
             raise EngineError('Could not open temp error xml file')
-        self.writer = XMLWriter(self.fd)
+        self.writer = XMLWriter(self.fd)  # type: ignore[arg-type]
         self.writer.push("x12err")
 
     def close(self) -> None:

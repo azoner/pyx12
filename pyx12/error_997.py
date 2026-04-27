@@ -46,7 +46,7 @@ class error_997_visitor(error_visitor.error_visitor):
     st_control_num: int
     st_loop_count: int
 
-    def __init__(self, fd: TextIO, term: tuple[str, str, str, str] = ('~', '*', '~', '\n')) -> None:
+    def __init__(self, fd: TextIO, term: tuple[Any, ...] = ('~', '*', '~', '\n')) -> None:
         """
         :param fd: target file
         :type fd: file descriptor

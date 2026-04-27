@@ -118,7 +118,7 @@ def syntax_str(syntax: list[Any]) -> str:
     """
     :rtype: string
     """
-    output = syntax[0]
+    output: str = str(syntax[0])
     for i in syntax[1:]:
         output += '{:02d}'.format(int(i))
     return output
