@@ -17,7 +17,10 @@ Interface to an X12 data stream.
    837 2400/LX
    837 HL tree
 """
-
+from __future__ import annotations
+from collections.abc import Iterator
+from types import TracebackType
+from typing import Literal, TextIO
 import sys
 
 # Intrapackage imports
@@ -25,13 +28,38 @@ import pyx12.errors
 import pyx12.segment
 from pyx12.rawx12file import RawX12File
 
+# (kind, code, message, value, src_line)
+_ErrTuple = tuple[str, str, str, str | None, int | None]
+# (loop_type, control_number)
+_LoopTuple = tuple[str, str | None]
+
+
 class X12Base:
     """
     Base class of X12 Reader and X12 Writer
     Common X12 validation
     """
 
-    def __init__(self):
+    err_list: list[_ErrTuple]
+    loops: list[_LoopTuple]
+    hl_stack: list[int]
+    gs_count: int
+    st_count: int
+    hl_count: int
+    seg_count: int
+    cur_line: int
+    isa_ids: list[str | None]
+    gs_ids: list[str | None]
+    st_ids: list[str | None]
+    lx_count: int
+    check_837_lx: bool
+    isa_usage: str | None
+    seg_term: str | None
+    ele_term: str | None
+    subele_term: str | None
+    repetition_term: str | None
+
+    def __init__(self) -> None:
         """
         Initialize the X12 file
         """
@@ -54,13 +82,13 @@ class X12Base:
         self.subele_term = None
         self.repetition_term = None
 
-    def Close(self):
+    def Close(self) -> None:
         """
         Complete any outstanding tasks
         """
         pass
 
-    def _parse_segment(self, seg_data):
+    def _parse_segment(self, seg_data: pyx12.segment.Segment) -> None:
         """
         Catch segment issues common to both readers and writers
 
@@ -130,7 +158,7 @@ class X12Base:
             if seg_data.get_value('HL02') != '':
                 hl_parent = self._int(seg_data.get_value('HL02'))
                 if hl_parent not in self.hl_stack:
-                    err_str = 'HL parent ({:d}) is not a valid parent'.format(hl_parent)
+                    err_str = 'HL parent ({}) is not a valid parent'.format(hl_parent)
                     self._seg_error('HL2', err_str)
                 while self.hl_stack and hl_parent != self.hl_stack[-1]:
                     del self.hl_stack[-1]
@@ -153,7 +181,7 @@ class X12Base:
             self.seg_count += 1
         self.cur_line += 1
 
-    def pop_errors(self):
+    def pop_errors(self) -> list[_ErrTuple]:
         """
         Pop error list
         :return: List of errors
@@ -162,7 +190,7 @@ class X12Base:
         self.err_list = []
         return tmp
 
-    def _isa_error(self, err_cde, err_str):
+    def _isa_error(self, err_cde: str, err_str: str) -> None:
         """
         :param err_cde: ISA level error code
         :type err_cde: string
@@ -171,7 +199,7 @@ class X12Base:
         """
         self.err_list.append(('isa', err_cde, err_str, None, None))
 
-    def _gs_error(self, err_cde, err_str):
+    def _gs_error(self, err_cde: str, err_str: str) -> None:
         """
         :param err_cde: GS level error code
         :type err_cde: string
@@ -180,7 +208,7 @@ class X12Base:
         """
         self.err_list.append(('gs', err_cde, err_str, None, None))
 
-    def _st_error(self, err_cde, err_str):
+    def _st_error(self, err_cde: str, err_str: str) -> None:
         """
         :param err_cde: Segment level error code
         :type err_cde: string
@@ -189,7 +217,13 @@ class X12Base:
         """
         self.err_list.append(('st', err_cde, err_str, None, None))
 
-    def _seg_error(self, err_cde, err_str, err_value=None, src_line=None):
+    def _seg_error(
+        self,
+        err_cde: str,
+        err_str: str,
+        err_value: str | None = None,
+        src_line: int | None = None,
+    ) -> None:
         """
         :param err_cde: Segment level error code
         :type err_cde: string
@@ -198,7 +232,7 @@ class X12Base:
         """
         self.err_list.append(('seg', err_cde, err_str, err_value, src_line))
 
-    def _int(self, str_val):
+    def _int(self, str_val: str | None) -> int | None:
         """
         Converts a string to an integer
         :type str_val: string
@@ -206,12 +240,11 @@ class X12Base:
         :rtype: int
         """
         try:
-            return int(str_val)
-        except ValueError:
+            return int(str_val)  # type: ignore[arg-type]
+        except (ValueError, TypeError):
             return None
-        return None
 
-    def get_isa_id(self):
+    def get_isa_id(self) -> str | None:
         """
         Get the current ISA identifier
 
@@ -222,7 +255,7 @@ class X12Base:
                 return loop[1]
         return None
 
-    def get_gs_id(self):
+    def get_gs_id(self) -> str | None:
         """
         Get the current GS identifier
 
@@ -233,7 +266,7 @@ class X12Base:
                 return loop[1]
         return None
 
-    def get_st_id(self):
+    def get_st_id(self) -> str | None:
         """
         Get the current ST identifier
 
@@ -244,7 +277,7 @@ class X12Base:
                 return loop[1]
         return None
 
-    def get_ls_id(self):
+    def get_ls_id(self) -> str | None:
         """
         Get the current LS identifier
 
@@ -255,7 +288,7 @@ class X12Base:
                 return loop[1]
         return None
 
-    def get_seg_count(self):
+    def get_seg_count(self) -> int:
         """
         Get the current segment count
 
@@ -263,7 +296,7 @@ class X12Base:
         """
         return self.seg_count
 
-    def get_cur_line(self):
+    def get_cur_line(self) -> int:
         """
         Get the current line
 
@@ -271,13 +304,14 @@ class X12Base:
         """
         return self.cur_line
 
-    def get_term(self):
+    def get_term(self) -> tuple[str | None, str | None, str | None, str, str | None]:
         """
         Get the original terminators
 
         :rtype: tuple(string, string, string, string)
         """
         return (self.seg_term, self.ele_term, self.subele_term, '\n', self.repetition_term)
+
 
 class X12Reader(X12Base):
     """
@@ -287,7 +321,12 @@ class X12Reader(X12Base):
     errors can be retrieved using the pop_errors function
     """
 
-    def __init__(self, src_file_obj):
+    fd_in: TextIO
+    need_to_close: bool
+    raw: RawX12File
+    icvn: str
+
+    def __init__(self, src_file_obj: str | TextIO) -> None:
         """
         Initialize the file X12 file reader
 
@@ -295,16 +334,15 @@ class X12Reader(X12Base):
             readable file object
         :type src_file_obj: string or open file object
         """
-        self.fd_in = None
         self.need_to_close = False
         try:
-            res = src_file_obj.closed
-            self.fd_in = src_file_obj
+            res = src_file_obj.closed  # type: ignore[union-attr]
+            self.fd_in = src_file_obj  # type: ignore[assignment]
         except AttributeError:
             if src_file_obj == '-':
                 self.fd_in = sys.stdin
             else:
-                self.fd_in = open(src_file_obj, 'r', encoding='ascii')
+                self.fd_in = open(src_file_obj, 'r', encoding='ascii')  # type: ignore[arg-type, assignment]
                 self.need_to_close = True
         X12Base.__init__(self)
         try:
@@ -318,7 +356,7 @@ class X12Reader(X12Base):
         self.repetition_term = repetition_term
         self.icvn = self.raw.icvn
 
-    def close(self):
+    def close(self) -> None:
         """
         Close the underlying file if X12Reader opened it itself.
         Idempotent.
@@ -327,14 +365,19 @@ class X12Reader(X12Base):
             self.fd_in.close()
             self.need_to_close = False
 
-    def __enter__(self):
+    def __enter__(self) -> X12Reader:
         return self
 
-    def __exit__(self, exc_type, exc, tb):
+    def __exit__(
+        self,
+        exc_type: type[BaseException] | None,
+        exc: BaseException | None,
+        tb: TracebackType | None,
+    ) -> Literal[False]:
         self.close()
         return False
 
-    def _parse_segment(self, seg_data):
+    def _parse_segment(self, seg_data: pyx12.segment.Segment) -> None:
         """
         Catch segment issues
 
@@ -370,7 +413,7 @@ class X12Reader(X12Base):
             if self._int(seg_data.get_value('GE01')) != self.st_count:
                 err_str = 'GE count of {} for GE02={} is wrong. I count {}'.format(\
                     seg_data.get_value('GE01'),
-                    seg_data.get_value('GE02'), 
+                    seg_data.get_value('GE02'),
                     self.st_count)
                 self._gs_error('5', err_str)
             del self.loops[-1]
@@ -384,12 +427,12 @@ class X12Reader(X12Base):
             if self._int(seg_data.get_value('SE01')) != self.seg_count + 1:
                 err_str = 'SE count of {} for SE02={} is wrong. I count {}'.format(\
                     seg_data.get_value('SE01'),
-                    se_trn_control_num, 
+                    se_trn_control_num,
                     self.seg_count + 1)
                 self._st_error('4', err_str)
             del self.loops[-1]
 
-    def __iter__(self):
+    def __iter__(self) -> Iterator[pyx12.segment.Segment]:
         """
         Iterate over input segments
         """
@@ -403,12 +446,12 @@ class X12Reader(X12Base):
             if line[-1] == self.ele_term:
                 err_str = 'Segment contains trailing element terminators'
                 self._seg_error('SEG1', err_str, None, src_line=self.cur_line + 1)
-            seg_data = pyx12.segment.Segment(line, self.seg_term, self.ele_term, self.subele_term)
+            seg_data = pyx12.segment.Segment(line, self.seg_term, self.ele_term, self.subele_term)  # type: ignore[arg-type]
             self._parse_segment(seg_data)
-            yield(seg_data)
+            yield seg_data
         #yield(None)
 
-    def cleanup(self):
+    def cleanup(self) -> None:
         """
         At EOF, check for missing loop trailers
         """
@@ -430,15 +473,29 @@ class X12Reader(X12Base):
                 #    err_str = 'LS id=%s was not closed with a LE' % \
                 #    (id1, self.loops[-1][1])
 
+
 # Backward compatible name
 X12file = X12Reader
+
 
 class X12Writer(X12Base):
     """
     X12 file and stream writer
     """
 
-    def __init__(self, src_file_obj, seg_term='~', ele_term='*', subele_term='\\', eol='\n', repetition_term='^'):
+    fd_out: TextIO
+    need_to_close: bool
+    eol: str
+
+    def __init__(
+        self,
+        src_file_obj: str | TextIO,
+        seg_term: str = '~',
+        ele_term: str = '*',
+        subele_term: str = '\\',
+        eol: str = '\n',
+        repetition_term: str = '^',
+    ) -> None:
         """
         Initialize the file X12 file writer
 
@@ -446,17 +503,16 @@ class X12Writer(X12Base):
             readable file object
         :type src_file_obj: string or open file object
         """
-        self.fd_out = None
         self.need_to_close = False
         try:
-            res = src_file_obj.write
+            res = src_file_obj.write  # type: ignore[union-attr]
             # isinstance(f, file)
-            self.fd_out = src_file_obj
+            self.fd_out = src_file_obj  # type: ignore[assignment]
         except AttributeError:
             if src_file_obj == '-':
                 self.fd_out = sys.stdout
             else:
-                self.fd_out = open(src_file_obj, mode='w', encoding='ascii')
+                self.fd_out = open(src_file_obj, mode='w', encoding='ascii')  # type: ignore[arg-type, assignment]
                 self.need_to_close = True
         X12Base.__init__(self)
         self.seg_term = seg_term
@@ -465,7 +521,7 @@ class X12Writer(X12Base):
         self.repetition_term = repetition_term
         self.eol = eol
 
-    def close(self):
+    def close(self) -> None:
         """
         Flush trailing loops and close the underlying file if X12Writer
         opened it itself. Idempotent.
@@ -476,18 +532,23 @@ class X12Writer(X12Base):
             self.fd_out.close()
             self.need_to_close = False
 
-    def Close(self):
+    def Close(self) -> None:
         """Backwards-compatible alias for close()."""
         self.close()
 
-    def __enter__(self):
+    def __enter__(self) -> X12Writer:
         return self
 
-    def __exit__(self, exc_type, exc, tb):
+    def __exit__(
+        self,
+        exc_type: type[BaseException] | None,
+        exc: BaseException | None,
+        tb: TracebackType | None,
+    ) -> Literal[False]:
         self.close()
         return False
 
-    def Write(self, seg_data):
+    def Write(self, seg_data: pyx12.segment.Segment) -> None:
         """
         Write the segment to the stream given current separators
 
@@ -514,7 +575,7 @@ class X12Writer(X12Base):
         else:
             self._write_segment(seg_data)
 
-    def _close_loop(self, loop_type, loop_id):
+    def _close_loop(self, loop_type: str, loop_id: str | None) -> None:
         if loop_type == 'ISA':
             self._close_iea(loop_id)
         elif loop_type == 'GS':
@@ -522,7 +583,7 @@ class X12Writer(X12Base):
         elif loop_type == 'ST':
             self._close_se(loop_id)
 
-    def _popToLoop(self, loop_type):
+    def _popToLoop(self, loop_type: str) -> None:
         """
         Move up the loop open loops, up to and including the given loop
 
@@ -536,7 +597,7 @@ class X12Writer(X12Base):
             loop = self.loops.pop()
             self._close_loop(loop[0], loop[1])
 
-    def _close_iea(self, id):
+    def _close_iea(self, id: str | None) -> None:
         """
         Close a ISA/IEA loop, reset GS counter
 
@@ -547,7 +608,7 @@ class X12Writer(X12Base):
         self._write_segment(seg_temp)
         self.gs_count = 0
 
-    def _close_ge(self, id):
+    def _close_ge(self, id: str | None) -> None:
         """
         Close a GS/GE loop, reset ST counter
 
@@ -558,7 +619,7 @@ class X12Writer(X12Base):
         self._write_segment(seg_temp)
         self.st_count = 0
 
-    def _close_se(self, id):
+    def _close_se(self, id: str | None) -> None:
         """
         Close a ST/SE loop, reset segment counter
 
@@ -569,7 +630,7 @@ class X12Writer(X12Base):
         self._write_segment(seg_temp)
         self.seg_count = 0
 
-    def _write_segment(self, seg_data):
+    def _write_segment(self, seg_data: pyx12.segment.Segment) -> None:
         """
         Write the given segment, using the current delimiters and end of line
 
@@ -580,7 +641,7 @@ class X12Writer(X12Base):
         # self.fd_out.write(out.decode('ascii'))
         self.fd_out.write(out)
 
-    def _write_isa_segment(self, seg_data):
+    def _write_isa_segment(self, seg_data: pyx12.segment.Segment) -> None:
         """
         Write the ISA segment, using the current delimiters and end of line
 
@@ -592,14 +653,19 @@ class X12Writer(X12Base):
         """
         icvn = seg_data.get_value('ISA12')
         if icvn == '00501':
-            seg_data.set('ISA11', self.repetition_term)
-        seg_data.set('ISA16', self.subele_term)
+            seg_data.set('ISA11', self.repetition_term)  # type: ignore[arg-type]
+        seg_data.set('ISA16', self.subele_term)  # type: ignore[arg-type]
         out = seg_data.format(
             self.seg_term, self.ele_term, self.subele_term) + self.eol
         # self.fd_out.write(out.decode('ascii'))
         self.fd_out.write(out)
 
-    def _get_trailer_segment(self, seg_id, count, id):
+    def _get_trailer_segment(
+        self,
+        seg_id: str,
+        count: int,
+        id: str | None,
+    ) -> pyx12.segment.Segment:
         """
         Create a loop trailer segment, using the matching loop start and current count
 
@@ -613,5 +679,6 @@ class X12Writer(X12Base):
         ele_term = self.ele_term
         seg_str = '{seg_id}{ele_term}{count:d}{ele_term}{id}'.format(\
             seg_id=seg_id, ele_term=ele_term, count=count, id=id)
-        return pyx12.segment.Segment(seg_str, self.seg_term, self.ele_term,
-                                     self.subele_term)
+        return pyx12.segment.Segment(
+            seg_str, self.seg_term, self.ele_term, self.subele_term,  # type: ignore[arg-type]
+        )
