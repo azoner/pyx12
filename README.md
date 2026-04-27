@@ -7,13 +7,13 @@ Pyx12 is a HIPAA X12 document validator and converter.  It parses an ANSI X12N d
 
 # Usage
 
-As a command line tool
+As a command line X12 validator
 
-    x12valid <filename>
+    x12valid.exe <filename>
 
 To fix common X12 structural errors
 
-    x12norm --fix --eol <filename>
+    x12norm.exe --fix --eol <filename>
 
 # Code Examples
 
@@ -35,25 +35,10 @@ To fix common X12 structural errors
             print(seg_node.format())
 ```
 
-# Prerequisites
-
-Pyx12 uses some runtime features of setuptools / distribute.  If you use pip to install, all is good.  If not, install setuptools first.
-
-Get setuptools <http://pypi.python.org/pypi/setuptools/>
-
-Get pip <http://www.pip-installer.org/en/latest/installing.html>
-
 # Install
 
-Install system-wide
-
-    pip install pyx12
-
-Or install in a virtual environment
-
-    virtualenv my_env
-    pip -E my_env install pyx12
+    uv pip install pyx12
 
 # Licensing
 
-Pyx12 has a BSD license. The full license text is included with the source code for the package. 
+Pyx12 uses a BSD license. The full license text is included with the source code for the package. 
