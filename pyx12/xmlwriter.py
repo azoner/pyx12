@@ -5,8 +5,10 @@
 #    for correct character output
 # *  switch from deprecated string module to string methods
 # *  use PEP 8 style
-
+from __future__ import annotations
+from typing import TextIO
 import sys
+
 
 class XMLWriter:
     """
@@ -49,7 +51,12 @@ class XMLWriter:
     flush
     """
 
-    def __init__(self, out=sys.stdout, encoding="utf-8", indent=" "):
+    encoding: str
+    out: TextIO
+    stack: list[str]
+    indent: str
+
+    def __init__(self, out: TextIO = sys.stdout, encoding: str = "utf-8", indent: str = " ") -> None:
         """
         out      - a stream for the output
         encoding - an encoding used to wrap the output for unicode
@@ -63,7 +70,7 @@ class XMLWriter:
         self.indent = indent
         self._write('<?xml version="1.0" encoding="{}"?>\n'.format(encoding))
 
-    def doctype(self, root, pubid, sysid):
+    def doctype(self, root: str, pubid: str | None, sysid: str) -> None:
         """
         Create a document type declaration (no internal subset)
         """
@@ -72,12 +79,14 @@ class XMLWriter:
                 "<!DOCTYPE {} SYSTEM '{}'>\n".format(root, sysid))
         else:
             self._write(
-                "<!DOCTYPE {} PUBLIC '{}' '{}'>\n".format(root, pubid, sysid)) 
+                "<!DOCTYPE {} PUBLIC '{}' '{}'>\n".format(root, pubid, sysid))
 
-    def push(self, elem, attrs={}):
+    def push(self, elem: str, attrs: dict[str, str] | None = None) -> None:
         """
         Create an element which will have child elements
         """
+        if attrs is None:
+            attrs = {}
         self._indent()
         self._write("<" + elem)
         for (a, v) in attrs.items():
@@ -85,17 +94,19 @@ class XMLWriter:
         self._write(">\n")
         self.stack.append(elem)
 
-    def elem(self, elem, content, attrs={}):
+    def elem(self, elem: str, content: str | None, attrs: dict[str, str] | None = None) -> None:
         """
         Create an element with text content only
         """
+        if attrs is None:
+            attrs = {}
         self._indent()
         self._write("<" + elem)
         for (a, v) in attrs.items():
             self._write(" {}='{}'".format(a, self._escape_attr(v)))
         self._write(">{}</{}>\n".format(self._escape_cont(content), elem))
 
-    def empty(self, elem, attrs=None):
+    def empty(self, elem: str, attrs: dict[str, str] | None = None) -> None:
         """
         Create an empty element
         """
@@ -107,7 +118,7 @@ class XMLWriter:
             self._write(" {}='{}'".format(a, self._escape_attr(v)))
         self._write("/>\n")
 
-    def pop(self):
+    def pop(self) -> None:
         """
         Close an element started with the push() method
         """
@@ -117,25 +128,25 @@ class XMLWriter:
             self._indent()
             self._write("</{elem}>\n".format(elem=elem))
 
-    def __len__(self):
+    def __len__(self) -> int:
         return len(self.stack)
 
-    def _indent(self):
+    def _indent(self) -> None:
         self._write(self.indent * (len(self.stack) * 2))
 
-    def _escape_cont(self, text):
+    def _escape_cont(self, text: str | None) -> str | None:
         if text is None:
             return None
         return text.replace("&", "&amp;")\
             .replace("<", "&lt;").replace(">", "&gt;")
 
-    def _escape_attr(self, text):
+    def _escape_attr(self, text: str | None) -> str | None:
         if text is None:
             return None
         return text.replace("&", "&amp;") \
             .replace("'", "&apos;").replace("<", "&lt;")\
             .replace(">", "&gt;")
 
-    def _write(self, strval):
+    def _write(self, strval: str) -> None:
         # self.out.write(strval.encode(self.encoding))
         self.out.write(strval)
