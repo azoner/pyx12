@@ -11,7 +11,8 @@
 """
 External Codes interface
 """
-
+from __future__ import annotations
+from typing import IO, Any, TypedDict
 import logging
 import os.path
 import defusedxml.ElementTree as et
@@ -19,15 +20,26 @@ from importlib.resources import files as _res_files
 
 from pyx12.errors import EngineError
 
+
 class CodesError(Exception):
     """Class for code modules errors."""
+
+
+class _CodeSet(TypedDict):
+    name: str | None
+    dataele: str | None
+    codes: list[str | None]
+
 
 class ExternalCodes:
     """
     Validates an ID against an external list of codes
     """
 
-    def __init__(self, base_path=None, exclude=None):
+    codes: dict[str | None, _CodeSet]
+    exclude_list: list[str]
+
+    def __init__(self, base_path: str | None = None, exclude: str | None = None) -> None:
         """
         Initialize the external list of codes
 
@@ -40,6 +52,9 @@ class ExternalCodes:
         logger = logging.getLogger('pyx12')
         self.codes = {}
         codes_file = 'codes.xml'
+        # ElementTree.parse accepts either text- or binary-mode streams; the
+        # file source differs between override path and bundled package resource.
+        code_fd: IO[Any]
         if base_path is not None:
             logger.debug(f"Looking for codes file '{codes_file}' in map_path '{base_path}'")
             code_fd = open(os.path.join(base_path, codes_file), encoding='utf-8')
@@ -58,7 +73,7 @@ class ExternalCodes:
                     'codes': [c.text for c in cElem.iterfind('version/code')],
                 }
 
-    def isValid(self, key, code, check_dte=None):
+    def isValid(self, key: str | None, code: str | None, check_dte: str | None = None) -> bool:
         """
         Return True if code is in the codeset identified by key.
         """
@@ -70,7 +85,7 @@ class ExternalCodes:
             raise EngineError(f'External Code "{key}" is not defined')
         return code in self.codes[key]['codes']
 
-    def debug_print(self, count=10):
+    def debug_print(self, count: int = 10) -> None:
         """Debug print first <count> codes for each codeset."""
         for key in self.codes:
             print(self.codes[key]['codes'][:count])
