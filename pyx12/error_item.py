@@ -1,5 +1,5 @@
 ######################################################################
-# Copyright 
+# Copyright
 #   John Holland <john@zoner.org>
 # All rights reserved.
 #
@@ -10,6 +10,7 @@
 
 """
 """
+from __future__ import annotations
 
 from .errors import EngineError
 
@@ -20,11 +21,16 @@ isa_errors = ('000', '001', '002', '003', '004', '005', '006', '007', '008',
 seg_errors = ('1', '2', '3', '4', '5', '6', '7', '8')
 ele_errors = ('1', '2', '3', '4', '5', '6', '7', '8', '9', '10')
 
+
 class ErrorItem:
     """
     Wrap an X12 validation error
     """
-    def __init__(self, err_type, err_cde, err_str):
+
+    err_cde: str
+    err_str: str
+
+    def __init__(self, err_type: str, err_cde: str, err_str: str) -> None:
         """
         :param err_type: At what level did the error occur
         :type err_type: string
@@ -36,33 +42,50 @@ class ErrorItem:
         self.err_cde = err_cde
         self.err_str = err_str
 
-    def getErrCde(self):
+    def getErrCde(self) -> str:
         return self.err_cde
 
-    def getErrStr(self):
+    def getErrStr(self) -> str:
         return self.err_str
 
+
 class ISAError(ErrorItem):
-    def __init__(self, err_cde, err_str):
+    def __init__(self, err_cde: str, err_str: str) -> None:
         ErrorItem.__init__(self, 'isa', err_cde, err_str)
         if self.err_cde not in isa_errors:
             raise EngineError('Invalid ISA level error code "%s"' %
                               (self.err_cde))
 
+
 class SegError(ErrorItem):
-    def __init__(self, err_cde, err_str, err_val=None):
+
+    err_val: str | None
+
+    def __init__(self, err_cde: str, err_str: str, err_val: str | None = None) -> None:
         ErrorItem.__init__(self, 'seg', err_cde, err_str)
         self.err_val = err_val
         if self.err_cde not in seg_errors:
             raise EngineError('Invalid segment level error code "%s"' %
                               (self.err_cde))
 
-    def getErrVal(self):
+    def getErrVal(self) -> str | None:
         return self.err_val
 
+
 class EleError(ErrorItem):
-    def __init__(self, err_cde, err_str, ele_idx, subele_idx=None,
-                 err_val=None):
+
+    err_val: str | None
+    ele_idx: int | None
+    subele_idx: int | None
+
+    def __init__(
+        self,
+        err_cde: str,
+        err_str: str,
+        ele_idx: int | None,
+        subele_idx: int | None = None,
+        err_val: str | None = None,
+    ) -> None:
         ErrorItem.__init__(self, 'ele', err_cde, err_str)
         self.err_val = err_val
         self.ele_idx = ele_idx
@@ -71,11 +94,11 @@ class EleError(ErrorItem):
             raise EngineError('Invalid element level error code "%s"' %
                               (self.err_cde))
 
-    def getErrVal(self):
+    def getErrVal(self) -> str | None:
         return self.err_val
 
-    def getEleIdx(self):
+    def getEleIdx(self) -> int | None:
         return self.ele_idx
 
-    def getSubeleIdx(self):
+    def getSubeleIdx(self) -> int | None:
         return self.subele_idx

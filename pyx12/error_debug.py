@@ -1,5 +1,5 @@
 ######################################################################
-# Copyright (c) 
+# Copyright (c)
 #   John Holland <john@zoner.org>
 # All rights reserved.
 #
@@ -12,15 +12,23 @@
 Generates error debug output
 Visitor - Visits an error_handler composite
 """
+from __future__ import annotations
+from typing import Any, TextIO
 
 # Intrapackage imports
 from .error_visitor import error_visitor
+
 
 class error_debug_visitor(error_visitor):
     """
 
     """
-    def __init__(self, fd):
+
+    fd: TextIO
+    seg_count: int
+    st_control_num: int
+
+    def __init__(self, fd: TextIO) -> None:
         """
         :param fd: target file
         :type fd: file descriptor
@@ -29,21 +37,21 @@ class error_debug_visitor(error_visitor):
         self.seg_count = 0
         self.st_control_num = 0
 
-    def visit_root_pre(self, errh):
+    def visit_root_pre(self, errh: Any) -> None:
         """
         :param errh: Error_handler instance
         :type errh: L{error_handler.err_handler}
         """
         self.fd.write('%s\n' % errh.id)
 
-    def visit_root_post(self, errh):
+    def visit_root_post(self, errh: Any) -> None:
         """
         :param errh: Error_handler instance
         :type errh: L{error_handler.err_handler}
         """
         pass
 
-    def visit_isa_pre(self, err_isa):
+    def visit_isa_pre(self, err_isa: Any) -> None:
         """
         :param err_isa: ISA Loop error handler
         :type err_isa: L{error_handler.err_isa}
@@ -58,14 +66,14 @@ class error_debug_visitor(error_visitor):
             for err in ele.errors:
                 self.fd.write('    ERR %s %s (%s)\n' % err)
 
-    def visit_isa_post(self, err_isa):
+    def visit_isa_post(self, err_isa: Any) -> None:
         """
         :param err_isa: ISA Loop error handler
         :type err_isa: L{error_handler.err_isa}
         """
         pass
 
-    def visit_gs_pre(self, err_gs):
+    def visit_gs_pre(self, err_gs: Any) -> None:
         """
         :param err_gs: GS Loop error handler
         :type err_gs: L{error_handler.err_gs}
@@ -79,7 +87,7 @@ class error_debug_visitor(error_visitor):
             for err in ele.errors:
                 self.fd.write('    ERR %s %s (%s)\n' % err)
 
-    def visit_gs_post(self, err_gs):
+    def visit_gs_post(self, err_gs: Any) -> None:
         """
         :param err_gs: GS Loop error handler
         :type err_gs: L{error_handler.err_gs}
@@ -95,7 +103,7 @@ class error_debug_visitor(error_visitor):
         self.fd.write(' GS st_count_accept%i\n' % (
             err_gs.st_count_recv - err_gs.count_failed_st()))
 
-    def visit_st_pre(self, err_st):
+    def visit_st_pre(self, err_st: Any) -> None:
         """
         :param err_st: ST Loop error handler
         :type err_st: L{error_handler.err_st}
@@ -109,14 +117,14 @@ class error_debug_visitor(error_visitor):
             for err in ele.errors:
                 self.fd.write('    ERR %s %s (%s)\n' % err)
 
-    def visit_st_post(self, err_st):
+    def visit_st_post(self, err_st: Any) -> None:
         """
         :param err_st: ST Loop error handler
         :type err_st: L{error_handler.err_st}
         """
         pass
 
-    def visit_seg(self, err_seg):
+    def visit_seg(self, err_seg: Any) -> None:
         """
         :param err_seg: Segment error handler
         :type err_seg: L{error_handler.err_seg}
@@ -130,7 +138,7 @@ class error_debug_visitor(error_visitor):
         #for ele in err_seg.elements:
         #    self.fd.write('  %s %s\n' % (ele.id, ele.name))
 
-    def visit_ele(self, err_ele):
+    def visit_ele(self, err_ele: Any) -> None:
         """
         Params:     err_ele - error_ele instance
         :param err_ele: Element error handler
