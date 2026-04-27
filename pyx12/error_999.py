@@ -1,5 +1,5 @@
 ######################################################################
-# Copyright 
+# Copyright
 #   John Holland <john@zoner.org>
 # All rights reserved.
 #
@@ -12,6 +12,8 @@
 Generates a 999 Response
 Visitor - Visits an error_handler composite
 """
+from __future__ import annotations
+from typing import Any, TextIO
 
 import time
 import logging
@@ -26,11 +28,29 @@ import pyx12.x12file
 logger = logging.getLogger('pyx12.error_999')
 logger.setLevel(logging.DEBUG)
 
+
 class error_999_visitor(pyx12.error_visitor.error_visitor):
     """
     Visit an error_handler composite.  Generate a 999.
     """
-    def __init__(self, fd, term=('~', '*', ':', '\n', '^')):
+
+    fd: TextIO
+    wr: pyx12.x12file.X12Writer
+    seg_term: str
+    ele_term: str
+    subele_term: str
+    repetition_term: str
+    eol: str
+    isa_control_num: str | None
+    gs_control_num: str | None
+    st_control_num: int
+    vriic: str
+
+    def __init__(
+        self,
+        fd: TextIO,
+        term: tuple[str, str, str, str, str] = ('~', '*', ':', '\n', '^'),
+    ) -> None:
         """
         :param fd: target file
         :type fd: file descriptor
@@ -49,7 +69,7 @@ class error_999_visitor(pyx12.error_visitor.error_visitor):
         self.st_control_num = 0
         self.vriic = '005010X231'
 
-    def visit_root_pre(self, errh):
+    def visit_root_pre(self, errh: Any) -> None:
         """
         :param errh: Error handler
         :type errh: L{error_handler.err_handler}
@@ -93,7 +113,7 @@ class error_999_visitor(pyx12.error_visitor.error_visitor):
         gs_seg.set('08', self.vriic)
         self.wr.Write(gs_seg)
 
-    def __get_isa_errors(self, err_isa):
+    def __get_isa_errors(self, err_isa: Any) -> list[str]:
         """
         Build list of TA1 level errors
         Only the first error is used
@@ -114,7 +134,7 @@ class error_999_visitor(pyx12.error_visitor.error_visitor):
         # return unique codes
         return list(set(err_codes))
 
-    def visit_root_post(self, errh):
+    def visit_root_post(self, errh: Any) -> None:
         """
         :param errh: Error handler
         :type errh: L{error_handler.err_handler}
@@ -143,20 +163,20 @@ class error_999_visitor(pyx12.error_visitor.error_visitor):
             self.wr.Write(ta1_seg)
         self.wr.Write(pyx12.segment.Segment('IEA', '~', '*', ':'))
 
-    def visit_isa_pre(self, err_isa):
+    def visit_isa_pre(self, err_isa: Any) -> None:
         """
         :param err_isa: ISA Loop error handler
         :type err_isa: L{error_handler.err_isa}
         """
 
-    def visit_isa_post(self, err_isa):
+    def visit_isa_post(self, err_isa: Any) -> None:
         """
         :param err_isa: ISA Loop error handler
         :type err_isa: L{error_handler.err_isa}
         """
         pass
 
-    def visit_gs_pre(self, err_gs):
+    def visit_gs_pre(self, err_gs: Any) -> None:
         """
         :param err_gs: GS Loop error handler
         :type err_gs: L{error_handler.err_gs}
@@ -173,7 +193,7 @@ class error_999_visitor(pyx12.error_visitor.error_visitor):
         ak1.set('03', err_gs.vriic)
         self.wr.Write(ak1)
 
-    def __get_gs_errors(self, err_gs):
+    def __get_gs_errors(self, err_gs: Any) -> list[str]:
         """
         Build list of GS level errors
         """
@@ -198,7 +218,7 @@ class error_999_visitor(pyx12.error_visitor.error_visitor):
         ret.sort()
         return ret
 
-    def visit_gs_post(self, err_gs):
+    def visit_gs_post(self, err_gs: Any) -> None:
         """
         :param err_gs: GS Loop error handler
         :type err_gs: L{error_handler.err_gs}
@@ -229,7 +249,7 @@ class error_999_visitor(pyx12.error_visitor.error_visitor):
         seg_data.append('%04i' % self.st_control_num)
         self.wr.Write(seg_data)
 
-    def visit_st_pre(self, err_st):
+    def visit_st_pre(self, err_st: Any) -> None:
         """
         :param err_st: ST Loop error handler
         :type err_st: L{error_handler.err_st}
@@ -248,7 +268,7 @@ class error_999_visitor(pyx12.error_visitor.error_visitor):
         seg_data.set('03', err_st.vriic)
         self.wr.Write(seg_data)
 
-    def __get_st_errors(self, err_st):
+    def __get_st_errors(self, err_st: Any) -> list[str]:
         """
         Build list of ST level errors
         """
@@ -269,7 +289,7 @@ class error_999_visitor(pyx12.error_visitor.error_visitor):
         ret.sort()
         return ret
 
-    def visit_st_post(self, err_st):
+    def visit_st_post(self, err_st: Any) -> None:
         """
         :param err_st: ST Loop error handler
         :type err_st: L{error_handler.err_st}
@@ -283,7 +303,7 @@ class error_999_visitor(pyx12.error_visitor.error_visitor):
             seg_data.append(err_code)
         self.wr.Write(seg_data)
 
-    def visit_seg(self, err_seg):
+    def visit_seg(self, err_seg: Any) -> None:
         """
         :param err_seg: Segment error handler
         :type err_seg: L{error_handler.err_seg}
@@ -314,7 +334,7 @@ class error_999_visitor(pyx12.error_visitor.error_visitor):
             seg_data.set('IK304', '8')
             self.wr.Write(seg_data)
 
-    def visit_ele(self, err_ele):
+    def visit_ele(self, err_ele: Any) -> None:
         """
         :param err_ele: Segment error handler
         :type err_ele: L{error_handler.err_ele}

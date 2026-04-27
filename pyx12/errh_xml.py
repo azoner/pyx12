@@ -11,6 +11,9 @@
 """
 Capture X12 Errors
 """
+from __future__ import annotations
+from types import TracebackType
+from typing import IO, Any, Literal
 
 import logging
 import tempfile
@@ -20,11 +23,23 @@ import os
 from .errors import EngineError
 from .xmlwriter import XMLWriter
 
+# (kind, code, message, value, src_line)
+_ErrTuple = tuple[str, str, str, Any, int | None]
+
+
 class err_handler:
     """
     The interface to the error handling structures.
     """
-    def __init__(self, xml_out=None, basedir=None):
+
+    logger: logging.Logger
+    filename: str
+    fd: IO[Any]
+    cur_line: int | None
+    errors: list[_ErrTuple]
+    writer: XMLWriter
+
+    def __init__(self, xml_out: str | None = None, basedir: str | None = None) -> None:
         """
         :param xml_out: Output filename, if None, will dump to tempfile
         :param basedir: working directory, where file will be created
@@ -47,7 +62,7 @@ class err_handler:
         self.writer = XMLWriter(self.fd)
         self.writer.push("x12err")
 
-    def close(self):
+    def close(self) -> None:
         """
         Flush remaining XML closing tags and close the underlying file.
         Idempotent.
@@ -57,17 +72,22 @@ class err_handler:
         if self.fd is not None and not self.fd.closed:
             self.fd.close()
 
-    def __enter__(self):
+    def __enter__(self) -> err_handler:
         return self
 
-    def __exit__(self, exc_type, exc, tb):
+    def __exit__(
+        self,
+        exc_type: type[BaseException] | None,
+        exc: BaseException | None,
+        tb: TracebackType | None,
+    ) -> Literal[False]:
         self.close()
         return False
 
-    def getFilename(self):
+    def getFilename(self) -> str:
         return self.filename
 
-    def handleErrors(self, err_list):
+    def handleErrors(self, err_list: list[_ErrTuple]) -> None:
         """
         :param err_list: list of errors to apply
         """
@@ -82,14 +102,14 @@ class err_handler:
         #    elif err_type == 'seg':
         #        self.seg_error(err_cde, err_str, err_val, src_line)
 
-    def getCurLine(self):
+    def getCurLine(self) -> int | None:
         """
         :return: Current file line number
         :rtype: int
         """
         return self.cur_line
 
-    def Write(self, cur_line):
+    def Write(self, cur_line: int) -> None:
         """
         Generate XML for the segment data and matching map node
 
@@ -111,15 +131,22 @@ class err_handler:
             self.writer.pop()  # end segment
             self.errors = []
 
+
 class ErrorErrhNull(Exception):
     """Class for errh_null errors."""
+
 
 class errh_list:
     """
     A null error object - used for testing.
     Stores the current error in simple variables.
     """
-    def __init__(self):
+
+    logger: logging.Logger
+    errors: list[_ErrTuple]
+    cur_line: int
+
+    def __init__(self) -> None:
         self.logger = logging.getLogger('pyx12.errh_xml')
         #self.id = 'ROOT'
         self.errors = []
@@ -128,20 +155,20 @@ class errh_list:
         #self.err_cde = None
         #self.err_str = None
 
-    def get_errors(self):
+    def get_errors(self) -> list[_ErrTuple]:
         return self.errors
 
-    def reset(self):
+    def reset(self) -> None:
         self.errors = []
 
-    def get_cur_line(self):
+    def get_cur_line(self) -> int:
         """
         :return: Current file line number
         :rtype: int
         """
         return self.cur_line
 
-    def set_cur_line(self, cur_line):
+    def set_cur_line(self, cur_line: int) -> None:
         """
         """
         self.cur_line = cur_line
@@ -153,33 +180,33 @@ class errh_list:
 #        """
 #        return self.id
 
-    def add_isa_loop(self, seg, src):
+    def add_isa_loop(self, seg: Any, src: Any) -> None:
         """
         """
         #raise ErrorErrhNull, 'add_isa loop'
         pass
 
-    def add_gs_loop(self, seg, src):
+    def add_gs_loop(self, seg: Any, src: Any) -> None:
         """
         """
         pass
 
-    def add_st_loop(self, seg, src):
+    def add_st_loop(self, seg: Any, src: Any) -> None:
         """
         """
         pass
 
-    def add_seg(self, map_node, seg, seg_count, cur_line, ls_id):
+    def add_seg(self, map_node: Any, seg: Any, seg_count: int, cur_line: int, ls_id: str | None) -> None:
         """
         """
         pass
 
-    def add_ele(self, map_node):
+    def add_ele(self, map_node: Any) -> None:
         """
         """
         pass
 
-    def isa_error(self, err_cde, err_str):
+    def isa_error(self, err_cde: str, err_str: str) -> None:
         """
         :param err_cde: ISA level error code
         :type err_cde: string
@@ -192,7 +219,7 @@ class errh_list:
         sout += 'ISA:%s - %s' % (err_cde, err_str)
         self.logger.error(sout)
 
-    def gs_error(self, err_cde, err_str):
+    def gs_error(self, err_cde: str, err_str: str) -> None:
         """
         :param err_cde: GS level error code
         :type err_cde: string
@@ -205,7 +232,7 @@ class errh_list:
         sout += 'GS:%s - %s' % (err_cde, err_str)
         self.logger.error(sout)
 
-    def st_error(self, err_cde, err_str):
+    def st_error(self, err_cde: str, err_str: str) -> None:
         """
         :param err_cde: Segment level error code
         :type err_cde: string
@@ -218,7 +245,13 @@ class errh_list:
         sout += 'ST:%s - %s' % (err_cde, err_str)
         self.logger.error(sout)
 
-    def seg_error(self, err_cde, err_str, err_value=None, src_line=None):
+    def seg_error(
+        self,
+        err_cde: str,
+        err_str: str,
+        err_value: str | None = None,
+        src_line: int | None = None,
+    ) -> None:
         """
         :param err_cde: Segment level error code
         :type err_cde: string
@@ -233,7 +266,7 @@ class errh_list:
             sout += ' (%s)' % err_value
         self.logger.error(sout)
 
-    def ele_error(self, err_cde, err_str, bad_value):
+    def ele_error(self, err_cde: str, err_str: str, bad_value: str | None) -> None:
         """
         :param err_cde: Element level error code
         :type err_cde: string
@@ -248,28 +281,28 @@ class errh_list:
             sout += ' (%s)' % (bad_value)
         self.logger.error(sout)
 
-    def close_isa_loop(self, node, seg, src):
+    def close_isa_loop(self, node: Any, seg: Any, src: Any) -> None:
         """
         """
         pass
 
-    def close_gs_loop(self, node, seg, src):
+    def close_gs_loop(self, node: Any, seg: Any, src: Any) -> None:
         """
         """
         pass
 
-    def close_st_loop(self, node, seg, src):
+    def close_st_loop(self, node: Any, seg: Any, src: Any) -> None:
         """
         """
         pass
 
-    def find_node(self, atype):
+    def find_node(self, atype: str) -> None:
         """
         Find the last node of a type
         """
         pass
 
-    def get_parent(self):
+    def get_parent(self) -> None:
         return None
 
 #    def get_first_child(self):
@@ -280,17 +313,17 @@ class errh_list:
 #        else:
 #            return None
 
-    def get_next_sibling(self):
+    def get_next_sibling(self) -> None:
         """
         """
         return None
 
-    def get_error_count(self):
+    def get_error_count(self) -> int:
         """
         """
         return len(self.errors)
 
-    def is_closed(self):
+    def is_closed(self) -> bool:
         """
         :rtype: boolean
         """
