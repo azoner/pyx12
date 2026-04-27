@@ -42,6 +42,7 @@ dev = [
     "isort>=5.12",
     "build>=1.0",
     "twine>=4.0",
+    "mypy>=1.10",
 ]
 docs = [
     "sphinx>=7.0",
@@ -76,3 +77,29 @@ target-version = ['py311', 'py312', 'py313', 'py314']
 profile = "black"
 line_length = 100
 multi_line_output = 3
+
+[tool.mypy]
+python_version = "3.11"
+strict = true
+ignore_missing_imports = true
+files = ["pyx12"]
+# Pretty output is easier to scan when running locally; CI can pass --no-pretty.
+pretty = true
+
+# Tests, examples, scripts and map-generation helpers are excluded from the
+# strict "must annotate every def/call" rules so we still surface real bugs
+# (union-attr, attr-defined, etc.) without drowning the report in cosmetic
+# missing-annotation noise.
+[[tool.mypy.overrides]]
+module = [
+    "pyx12.test.*",
+    "pyx12.tests.*",
+    "pyx12.examples.*",
+    "pyx12.scripts.*",
+    "pyx12.map.*",
+]
+disallow_untyped_defs = false
+disallow_untyped_calls = false
+disallow_incomplete_defs = false
+check_untyped_defs = false
+disallow_untyped_decorators = false
