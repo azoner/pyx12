@@ -6,7 +6,7 @@ HIPAA X12 EDI document validator and converter. Parses ANSI X12N data files and 
 - Python 3.11+, BSD
 - Active branch: `dev/py3-modernize` — modernizing Python 2→3 patterns
 - Tests live in `pyx12/test/`, use `unittest.TestCase` style
-- Run tests: `pytest pyx12/test/`
+- Run tests: `.venv/Scripts/python.exe -m pytest pyx12/test/`
 - Line length: 100 (black), imports sorted with isort (black profile)
 
 ## Tech stack
@@ -14,7 +14,7 @@ HIPAA X12 EDI document validator and converter. Parses ANSI X12N data files and 
 - **Runtime deps:** `defusedxml>=0.7` (only)
 - **Build backend:** setuptools (>=61) via `pyproject.toml`; no `setup.py`
 - **Package manager:** `uv` — install Python packages with `uv pip install ...`, not pip
-- **Local environment:** `.venv/` at project root; invoke tools via `.venv/Scripts/python.exe -m <tool>`
+- **Local environment:** `.venv/` at project root. Always invoke tools via `.venv/Scripts/python.exe -m <tool>` — never `source .venv/Scripts/activate`, since shell state does not persist across Bash tool calls
 - **Test runner:** pytest (+ pytest-cov for coverage); tests written in `unittest.TestCase` style
 - **Format / lint:** black (line length 100), isort (black profile)
 - **CI:** GitHub Actions — `.github/workflows/main.yml` runs the matrix; `release.yml` and `publish-to-test-pypi.yml` handle PyPI
