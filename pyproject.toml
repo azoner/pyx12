@@ -50,7 +50,7 @@ docs = [
 ]
 
 [project.urls]
-Homepage = "http://github.com/azoner/pyx12"
+Homepage = "https://github.com/azoner/pyx12"
 Repository = "https://github.com/azoner/pyx12.git"
 Documentation = "https://pyx12.readthedocs.io/"
 
