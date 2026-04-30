@@ -21,6 +21,7 @@ extensions = [
     "sphinx_autodoc_typehints",
     "sphinx_copybutton",
     "myst_parser",
+    "autoapi.extension",
 ]
 
 
@@ -93,3 +94,27 @@ always_document_param_types = True
 
 copybutton_prompt_text = r">>> |\.\.\. |\$ "
 copybutton_prompt_is_regexp = True
+
+# sphinx-autoapi: parse the package source to generate the API reference.
+# Output lands in docs/api/ at build time and is gitignored; the toctree
+# entry "api" in docs/index.rst resolves to autoapi's generated index.
+autoapi_dirs = ["../pyx12"]
+autoapi_root = "api"
+autoapi_keep_files = False
+autoapi_add_toctree_entry = False
+autoapi_member_order = "bysource"
+autoapi_python_class_content = "both"
+autoapi_options = [
+    "members",
+    "undoc-members",
+    "show-inheritance",
+    "show-module-summary",
+    "imported-members",
+]
+autoapi_ignore = [
+    "*/test/*",
+    "*/tests/*",
+    "*/examples/*",
+    "*/scripts/*",
+    "*/map/*",
+]

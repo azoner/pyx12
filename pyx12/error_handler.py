@@ -906,10 +906,11 @@ class err_seg(err_node):
     ) -> None:
         """
         Needs:
-            1. seg_id_code
-            2. seg_pos - pos in ST loop
-            3, loop_id - LS loop id
-            4. seg_count - in parent
+
+        1. seg_id_code
+        2. seg_pos - pos in ST loop
+        3. loop_id - LS loop id
+        4. seg_count - in parent
         """
         self.parent = parent
         if map_node is None:

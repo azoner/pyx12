@@ -1528,12 +1528,13 @@ class composite_if(x12_node):
 def load_map_file(map_file: str, param: Any, map_path: str | None = None) -> map_if:
     """
     Create the map object from a file
+
     :param map_file: filename (basename) of the map xml file to load
     :type map_file: string
-    :rtype: pyx12.map_if
     :param map_path: Override directory containing map xml files.  If None,
         uses package resource folder
     :type map_path: string
+    :rtype: pyx12.map_if
     """
     logger = logging.getLogger('pyx12')
     # Reject any path component in map_file to prevent traversal out of map_path
