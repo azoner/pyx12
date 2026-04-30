@@ -7,8 +7,16 @@ Guidelines, generating 997 (4010) or 999 (5010) acknowledgement responses.
 
 .. toctree::
    :maxdepth: 2
-   :caption: Contents
+   :caption: Getting started
 
+   quickstart
+   readme
+
+.. toctree::
+   :maxdepth: 2
+   :caption: Reference
+
+   cli
    api
 
 Indices and tables

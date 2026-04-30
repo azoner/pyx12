@@ -17,15 +17,17 @@ treated as a composite element with one sub-element.
 
 All indexing is zero based.
 """
+
 from __future__ import annotations
-from collections.abc import Iterator
-import re
+
 import logging
+import re
+from collections.abc import Iterator
 
 import pyx12.path
 from pyx12.errors import EngineError
 
-rec_seg_id = re.compile('^[A-Z][A-Z0-9]{1,2}$', re.S)
+rec_seg_id = re.compile("^[A-Z][A-Z0-9]{1,2}$", re.S)
 
 
 class Element:
@@ -41,7 +43,7 @@ class Element:
         :type ele_str: string
 
         """
-        self.value = ele_str if ele_str is not None else ''
+        self.value = ele_str if ele_str is not None else ""
 
     def __eq__(self, other: object) -> bool:
         if isinstance(other, Element):
@@ -92,7 +94,7 @@ class Element:
         :param elem_str: Element string value
         :type elem_str: string
         """
-        self.value = elem_str if elem_str is not None else ''
+        self.value = elem_str if elem_str is not None else ""
 
     def is_composite(self) -> bool:
         """
@@ -110,7 +112,7 @@ class Element:
         """
         :rtype: boolean
         """
-        if self.value is not None and self.value != '':
+        if self.value is not None and self.value != "":
             return False
         else:
             return True
@@ -135,11 +137,13 @@ class Composite:
         :raises EngineError: If a terminator is None and no default
         """
         if subele_term is None or len(subele_term) != 1:
-            raise EngineError('The sub-element terminator must be a single character, is %s' % (subele_term))
+            raise EngineError(
+                "The sub-element terminator must be a single character, is %s" % (subele_term)
+            )
         self.subele_term = subele_term
         self.subele_term_orig = subele_term
         if ele_str is None:
-            raise EngineError('Element string is None')
+            raise EngineError("Element string is None")
         members = ele_str.split(self.subele_term)
         self.elements = []
         for elem in members:
@@ -206,11 +210,11 @@ class Composite:
         if subele_term is None:
             subele_term = self.subele_term
         if subele_term is None:
-            raise EngineError('subele_term is None')
+            raise EngineError("subele_term is None")
         for i in range(len(self.elements) - 1, -1, -1):
             if not self.elements[i].is_empty():
                 break
-        return subele_term.join([Element.__repr__(x) for x in self.elements[:i + 1]])
+        return subele_term.join([Element.__repr__(x) for x in self.elements[: i + 1]])
 
     def get_value(self) -> str:
         """
@@ -219,7 +223,7 @@ class Composite:
         if len(self.elements) == 1:
             return self.elements[0].get_value()
         else:
-            raise IndexError('value of composite is undefined')
+            raise IndexError("value of composite is undefined")
 
     def set_subele_term(self, subele_term: str) -> None:
         """
@@ -258,7 +262,7 @@ class Composite:
     def values_iterator(self) -> Iterator[tuple[str, str]]:
         for j in range(len(self.elements)):
             if not self.elements[j].is_empty():
-                subele_ord = '{comp}'.format(comp=j+1)
+                subele_ord = "{comp}".format(comp=j + 1)
                 yield (subele_ord, self.elements[j].get_value())
 
 
@@ -283,10 +287,9 @@ class Segment:
         seg_term: str,
         ele_term: str,
         subele_term: str,
-        repetition_term: str = '^',
+        repetition_term: str = "^",
     ) -> None:
-        """
-        """
+        """ """
         self.seg_term = seg_term
         self.seg_term_orig = seg_term
         self.ele_term = ele_term
@@ -296,7 +299,7 @@ class Segment:
         self.repetition_term = repetition_term
         self.seg_id = None
         self.elements = []
-        if seg_str is None or seg_str == '':
+        if seg_str is None or seg_str == "":
             return
         if seg_str[-1] == seg_term:
             elems = seg_str[:-1].split(self.ele_term)
@@ -305,9 +308,9 @@ class Segment:
         if elems:
             self.seg_id = elems[0]
         for ele in elems[1:]:
-            if self.seg_id == 'ISA':
-                #Special handling for ISA segment
-                #guarantee subele_term will not be matched
+            if self.seg_id == "ISA":
+                # Special handling for ISA segment
+                # guarantee subele_term will not be matched
                 self.elements.append(Composite(ele, ele_term))
             else:
                 self.elements.append(Composite(ele, subele_term))
@@ -382,8 +385,7 @@ class Segment:
         """
         xp = pyx12.path.X12Path(ref_des)
         if xp.seg_id is not None and xp.seg_id != self.seg_id:
-            err_str = 'Invalid Reference Designator: %s, seg_id: %s' \
-                % (ref_des, self.seg_id)
+            err_str = "Invalid Reference Designator: %s, seg_id: %s" % (ref_des, self.seg_id)
             raise EngineError(err_str)
         ele_idx = xp.ele_idx - 1 if xp.ele_idx is not None else None
         comp_idx = xp.subele_idx - 1 if xp.subele_idx is not None else None
@@ -397,9 +399,9 @@ class Segment:
         :rtype: L{segment.Composite}
         :raises IndexError: If ref_des does not contain a valid element index
         """
-        (ele_idx, comp_idx) = self._parse_refdes(ref_des)
+        ele_idx, comp_idx = self._parse_refdes(ref_des)
         if ele_idx is None:
-            raise IndexError('{} is not a valid element index'.format(ref_des))
+            raise IndexError("{} is not a valid element index".format(ref_des))
         if ele_idx >= self.__len__():
             return None
         if comp_idx is None:
@@ -424,9 +426,10 @@ class Segment:
         """
         :param ref_des: X12 Reference Designator
         :type ref_des: string
+
         Attention: Deprecated - use get_value
         """
-        raise DeprecationWarning('Use Segment.get_value')
+        raise DeprecationWarning("Use Segment.get_value")
 
     def set(self, ref_des: str, val: str) -> None:
         """
@@ -438,15 +441,15 @@ class Segment:
         :param val: New value
         :type val: string
         """
-        (ele_idx, comp_idx) = self._parse_refdes(ref_des)
+        ele_idx, comp_idx = self._parse_refdes(ref_des)
         if ele_idx is None:
-            raise IndexError('{} is not a valid element index'.format(ref_des))
+            raise IndexError("{} is not a valid element index".format(ref_des))
         while len(self.elements) <= ele_idx:
             # insert blank values before our value if needed
-            self.elements.append(Composite('', self.subele_term))
-        if self.seg_id == 'ISA' and ele_idx == 15:
-            #Special handling for ISA segment
-            #guarantee subele_term will not be matched
+            self.elements.append(Composite("", self.subele_term))
+        if self.seg_id == "ISA" and ele_idx == 15:
+            # Special handling for ISA segment
+            # guarantee subele_term will not be matched
             self.elements[ele_idx] = Composite(val, self.ele_term)
             return
         if comp_idx is None:
@@ -454,7 +457,7 @@ class Segment:
         else:
             while len(self.elements[ele_idx]) <= comp_idx:
                 # insert blank values before our value if needed
-                self.elements[ele_idx].elements.append(Element(''))
+                self.elements[ele_idx].elements.append(Element(""))
             self.elements[ele_idx][comp_idx] = Element(val)
 
     def is_element(self, ref_des: str) -> bool:
@@ -464,7 +467,7 @@ class Segment:
         """
         ele_idx = self._parse_refdes(ref_des)[0]
         if ele_idx is None:
-            raise IndexError('{} is not a valid element index'.format(ref_des))
+            raise IndexError("{} is not a valid element index".format(ref_des))
         return self.elements[ele_idx].is_element()
 
     def is_composite(self, ref_des: str) -> bool:
@@ -474,7 +477,7 @@ class Segment:
         """
         ele_idx = self._parse_refdes(ref_des)[0]
         if ele_idx is None:
-            raise IndexError('{} is not a valid element index'.format(ref_des))
+            raise IndexError("{} is not a valid element index".format(ref_des))
         return self.elements[ele_idx].is_composite()
 
     def ele_len(self, ref_des: str) -> int:
@@ -486,7 +489,7 @@ class Segment:
         """
         ele_idx = self._parse_refdes(ref_des)[0]
         if ele_idx is None:
-            raise IndexError('{} is not a valid element index'.format(ref_des))
+            raise IndexError("{} is not a valid element index".format(ref_des))
         return len(self.elements[ele_idx])
 
     def set_seg_term(self, seg_term: str) -> None:
@@ -527,20 +530,20 @@ class Segment:
         if subele_term is None:
             subele_term = self.subele_term
         if seg_term is None:
-            raise EngineError('seg_term is None')
+            raise EngineError("seg_term is None")
         if ele_term is None:
-            raise EngineError('ele_term is None')
+            raise EngineError("ele_term is None")
         if subele_term is None:
-            raise EngineError('subele_term is None')
+            raise EngineError("subele_term is None")
         str_elems: list[str] = []
         # get index of last non-empty element
         i = 0
         for i in range(len(self.elements) - 1, -1, -1):
             if not self.elements[i].is_empty():
                 break
-        for ele in self.elements[:i + 1]:
+        for ele in self.elements[: i + 1]:
             str_elems.append(ele.format(subele_term))
-        return '%s%s%s%s' % (self.seg_id, ele_term, ele_term.join(str_elems), seg_term)
+        return "%s%s%s%s" % (self.seg_id, ele_term, ele_term.join(str_elems), seg_term)
 
     def format_ele_list(self, str_elems: list[str], subele_term: str | None = None) -> None:
         """
@@ -553,7 +556,7 @@ class Segment:
         for i in range(len(self.elements) - 1, -1, -1):
             if not self.elements[i].is_empty():
                 break
-        for ele in self.elements[:i + 1]:
+        for ele in self.elements[: i + 1]:
             str_elems.append(ele.format(subele_term))
 
     def is_empty(self) -> bool:
@@ -579,7 +582,7 @@ class Segment:
         else:
             m = rec_seg_id.search(self.seg_id)
             if not m:
-                return False # Invalid char matched
+                return False  # Invalid char matched
         return True
 
     def copy(self) -> Segment:
@@ -594,12 +597,14 @@ class Segment:
         """
         for i in range(len(self.elements)):
             if self.elements[i].is_composite():
-                for (comp_ord, val) in self.elements[i].values_iterator():
-                    ele_ord = '{idx:0>2}'.format(idx=i+1)
-                    refdes = '{segid}{ele_ord}-{comp_ord}'.format(segid=self.seg_id, ele_ord=ele_ord, comp_ord=comp_ord)
+                for comp_ord, val in self.elements[i].values_iterator():
+                    ele_ord = "{idx:0>2}".format(idx=i + 1)
+                    refdes = "{segid}{ele_ord}-{comp_ord}".format(
+                        segid=self.seg_id, ele_ord=ele_ord, comp_ord=comp_ord
+                    )
                     yield (refdes, ele_ord, comp_ord, val)
             else:
                 if not self.elements[i].is_empty():
-                    ele_ord = '{idx:0>2}'.format(idx=i+1)
-                    refdes = '{segid}{ele_ord}'.format(segid=self.seg_id, ele_ord=ele_ord)
+                    ele_ord = "{idx:0>2}".format(idx=i + 1)
+                    refdes = "{segid}{ele_ord}".format(segid=self.seg_id, ele_ord=ele_ord)
                     yield (refdes, ele_ord, None, self.elements[i].get_value())

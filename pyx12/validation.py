@@ -11,11 +11,13 @@
 """
 X12 data element validation
 """
+
 from __future__ import annotations
+
 import re
 
 # Intrapackage imports
-from .errors import IsValidError, EngineError
+from .errors import EngineError, IsValidError
 
 REGEX_MODE = re.S | re.ASCII
 
@@ -23,8 +25,8 @@ REGEX_MODE = re.S | re.ASCII
 def IsValidDataType(
     str_val: str,
     data_type: str,
-    charset: str = 'B',
-    icvn: str = '00401',
+    charset: str = "B",
+    icvn: str = "00401",
 ) -> bool:
     """
     Is str_val a valid X12 data value
@@ -36,6 +38,7 @@ def IsValidDataType(
     :param charset: [optional] - 'B' for Basic X12 character set, 'E' for extended
     :type charset: string
     :rtype: boolean
+
     TODO: need to generalize control character validation
     """
     if not data_type:
@@ -44,31 +47,31 @@ def IsValidDataType(
         return False
 
     try:
-        if data_type[0] == 'N':
-            if not match_re('N', str_val):
+        if data_type[0] == "N":
+            if not match_re("N", str_val):
                 raise IsValidError  # not a number
-        elif data_type == 'R':
-            if not match_re('R', str_val):
+        elif data_type == "R":
+            if not match_re("R", str_val):
                 raise IsValidError  # not a number
-        elif data_type in ('ID', 'AN'):
-            if not_match_re('ID', str_val, charset, icvn):
+        elif data_type in ("ID", "AN"):
+            if not_match_re("ID", str_val, charset, icvn):
                 raise IsValidError
-        elif data_type == 'RD8':
-            if '-' in str_val:
-                (start, end) = str_val.split('-')
-                return IsValidDataType(start, 'D8', charset) and IsValidDataType(end, 'D8', charset)
+        elif data_type == "RD8":
+            if "-" in str_val:
+                start, end = str_val.split("-")
+                return IsValidDataType(start, "D8", charset) and IsValidDataType(end, "D8", charset)
             else:
                 return False
-        elif data_type in ('DT', 'D8', 'D6'):
+        elif data_type in ("DT", "D8", "D6"):
             if not is_valid_date(data_type, str_val):
                 raise IsValidError
-        elif data_type == 'TM':
+        elif data_type == "TM":
             if not is_valid_time(str_val):
                 raise IsValidError
-        elif data_type == 'B':
+        elif data_type == "B":
             pass
         else:
-            raise IsValidError('Unknown data type %s' % data_type)
+            raise IsValidError("Unknown data type %s" % data_type)
     except IsValidError:
         return False
     return True
@@ -77,9 +80,11 @@ def IsValidDataType(
 rec_N: re.Pattern[str] = re.compile(r"^-?[0-9]+", REGEX_MODE)
 rec_R: re.Pattern[str] = re.compile(r"^-?[0-9]*(\.[0-9]+)?", REGEX_MODE)
 rec_ID_E: re.Pattern[str] = re.compile(
-    r"""[^A-Z0-9!"&'()*+,\-\./:;?= a-z%~@\[\]_{}\\|<>#$]""", REGEX_MODE)
+    r"""[^A-Z0-9!"&'()*+,\-\./:;?= a-z%~@\[\]_{}\\|<>#$]""", REGEX_MODE
+)
 rec_ID_E5: re.Pattern[str] = re.compile(
-    r"""[^A-Z0-9!"&'()*+,\-\./:;?= a-z%~@\[\]_{}\\|<>^`#$]""", REGEX_MODE)
+    r"""[^A-Z0-9!"&'()*+,\-\./:;?= a-z%~@\[\]_{}\\|<>^`#$]""", REGEX_MODE
+)
 rec_ID_B: re.Pattern[str] = re.compile(r"""[^A-Z0-9!"&'()*+,\-\./:;?= ]""", REGEX_MODE)
 rec_DT: re.Pattern[str] = re.compile(r"[^0-9]+", REGEX_MODE)
 rec_TM: re.Pattern[str] = re.compile(r"[^0-9]+", REGEX_MODE)
@@ -95,12 +100,12 @@ def match_re(short_data_type: str, val: str) -> bool:
     :rtype: boolean
     :raises EngineError: If short_data_type is not 'N' or 'R'
     """
-    if short_data_type == 'N':
+    if short_data_type == "N":
         rec = rec_N
-    elif short_data_type == 'R':
+    elif short_data_type == "R":
         rec = rec_R
     else:
-        raise EngineError('Unknown data type %s' % (short_data_type))
+        raise EngineError("Unknown data type %s" % (short_data_type))
     m = rec.search(val)
     if not m:
         return False
@@ -112,8 +117,8 @@ def match_re(short_data_type: str, val: str) -> bool:
 def not_match_re(
     short_data_type: str,
     val: str,
-    charset: str = 'B',
-    icvn: str = '00401',
+    charset: str = "B",
+    icvn: str = "00401",
 ) -> bool:
     """
     :param short_data_type: simplified data type
@@ -126,22 +131,22 @@ def not_match_re(
     :rtype: boolean
     :raises EngineError: If short_data_type or charset is unrecognized
     """
-    if short_data_type in ('ID', 'AN'):
-        if charset == 'E':  # extended charset
-            if icvn == '00501':
+    if short_data_type in ("ID", "AN"):
+        if charset == "E":  # extended charset
+            if icvn == "00501":
                 rec = rec_ID_E5
             else:
                 rec = rec_ID_E
-        elif charset == 'B':  # basic charset:
+        elif charset == "B":  # basic charset:
             rec = rec_ID_B
         else:
-            raise EngineError('Unknown charset %r for data type %s' % (charset, short_data_type))
-    elif short_data_type == 'DT':
+            raise EngineError("Unknown charset %r for data type %s" % (charset, short_data_type))
+    elif short_data_type == "DT":
         rec = rec_DT
-    elif short_data_type == 'TM':
+    elif short_data_type == "TM":
         rec = rec_TM
     else:
-        raise EngineError('Unknown data type %s' % (short_data_type))
+        raise EngineError("Unknown data type %s" % (short_data_type))
     m = rec.search(val)
     if m and m.group(0):
         return True  # Invalid char matched
@@ -158,16 +163,16 @@ def is_valid_date(data_type: str, val: str) -> bool:
     :rtype: boolean
     """
     try:
-        if data_type == 'D8' and len(val) != 8:
+        if data_type == "D8" and len(val) != 8:
             raise IsValidError
-        if data_type == 'D6' and len(val) != 6:
+        if data_type == "D6" and len(val) != 6:
             raise IsValidError
-        if not_match_re('DT', val):
+        if not_match_re("DT", val):
             raise IsValidError
         if len(val) in (6, 8, 12):  # valid lengths for date
             try:
                 if 6 == len(val):  # if 2 digit year, add CC
-                    val = '20' + val if int(val[0:2]) < 50 else '19' + val
+                    val = "20" + val if int(val[0:2]) < 50 else "19" + val
                 # print("IXVALID:", data_type, val, int(val[0:4]), int(val[4:6]))
                 year = int(val[0:4])  # get year
                 month = int(val[4:6])
@@ -186,7 +191,7 @@ def is_valid_date(data_type: str, val: str) -> bool:
                         raise IsValidError
                 else:  # else 28 day
                     if not year % 4 and not (not year % 100 and year % 400):
-                    #if not (year % 4) and ((year % 100) or (not (year % 400)) ):  # leap year
+                        # if not (year % 4) and ((year % 100) or (not (year % 400)) ):  # leap year
                         if day < 1 or day > 29:
                             raise IsValidError
                     elif day < 1 or day > 28:
@@ -210,15 +215,15 @@ def is_valid_time(val: str) -> bool:
     :rtype: boolean
     """
     try:
-        if not_match_re('TM', val):
+        if not_match_re("TM", val):
             raise IsValidError
 
-        if val[0:2] > '23' or val[2:4] > '59':  # check hour, minute segment
+        if val[0:2] > "23" or val[2:4] > "59":  # check hour, minute segment
             raise IsValidError
         elif len(val) > 4:  # time contains seconds
             if len(val) < 6:  # length is munted
                 raise IsValidError
-            elif val[4:6] > '59':  # check seconds
+            elif val[4:6] > "59":  # check seconds
                 raise IsValidError
             # check decimal seconds here in the future
             elif len(val) > 8:
@@ -231,40 +236,40 @@ def is_valid_time(val: str) -> bool:
 
 def contains_control_character(
     str_val: str,
-    charset: str = 'B',
-    icvn: str = '00401',
+    charset: str = "B",
+    icvn: str = "00401",
 ) -> tuple[bool, str | None]:
     control_base = {
-        chr(0x07): 'BEL',
-        chr(0x09): 'HT',
-        chr(0x0A): 'LF',
-        chr(0x0B): 'VT',
-        chr(0x0C): 'FF',
-        chr(0x0D): 'CR',
-        chr(0x1C): 'FS',
-        chr(0x1D): 'GS',
-        chr(0x1E): 'RS',
-        chr(0x1F): 'US',
+        chr(0x07): "BEL",
+        chr(0x09): "HT",
+        chr(0x0A): "LF",
+        chr(0x0B): "VT",
+        chr(0x0C): "FF",
+        chr(0x0D): "CR",
+        chr(0x1C): "FS",
+        chr(0x1D): "GS",
+        chr(0x1E): "RS",
+        chr(0x1F): "US",
     }
     extended_base = {
-        chr(0x01): 'SOH',
-        chr(0x02): 'STX',
-        chr(0x03): 'ETX',
-        chr(0x04): 'EOT',
-        chr(0x05): 'ENQ',
-        chr(0x06): 'ACK',
-        chr(0x11): 'DC1',
-        chr(0x12): 'DC2',
-        chr(0x13): 'DC3',
-        chr(0x14): 'DC4',
-        chr(0x15): 'NAK',
-        chr(0x16): 'SYN',
-        chr(0x17): 'ETB',
+        chr(0x01): "SOH",
+        chr(0x02): "STX",
+        chr(0x03): "ETX",
+        chr(0x04): "EOT",
+        chr(0x05): "ENQ",
+        chr(0x06): "ACK",
+        chr(0x11): "DC1",
+        chr(0x12): "DC2",
+        chr(0x13): "DC3",
+        chr(0x14): "DC4",
+        chr(0x15): "NAK",
+        chr(0x16): "SYN",
+        chr(0x17): "ETB",
     }
-    for (k, v) in control_base.items():
+    for k, v in control_base.items():
         if k in str_val:
             return (True, "<{}>".format(v))
-    for (k, v) in extended_base.items():
+    for k, v in extended_base.items():
         if k in str_val:
             return (True, "<{}>".format(v))
     return (False, None)
