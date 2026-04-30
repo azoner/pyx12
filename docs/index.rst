@@ -17,7 +17,7 @@ Guidelines, generating 997 (4010) or 999 (5010) acknowledgement responses.
    :caption: Reference
 
    cli
-   api/pyx12/index
+   api
 
 Indices and tables
 ==================
