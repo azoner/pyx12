@@ -18,7 +18,7 @@ class XMLWriter:
         >>>writer = XMLWriter()
         >>>writer.doctype(
         ... u"xsa", u"-//LM Garshol//DTD XML Software Autoupdate 1.0//EN//XML",
-        ... u"http://www.garshol.priv.no/download/xsa/xsa.dtd")
+        ... u"https://www.garshol.priv.no/download/xsa/xsa.dtd")
         >>>#Notice: there is no error checking to ensure that the root element
         >>>#specified in the doctype matches the top-level element generated
         >>>writer.push(u"xsa")

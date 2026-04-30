@@ -47,8 +47,17 @@ jobs:
         run: uv sync --extra docs
       - name: Build HTML docs
         run: uv run sphinx-build -b html docs docs/_build/html
+      - name: Check external links
+        continue-on-error: true
+        run: uv run sphinx-build -b linkcheck --keep-going docs docs/_build/linkcheck
       - name: Upload docs artifact
         uses: actions/upload-artifact@v7
         with:
           name: docs-html
           path: docs/_build/html
+      - name: Upload linkcheck report
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: linkcheck-report
+          path: docs/_build/linkcheck
