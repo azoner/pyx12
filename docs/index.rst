@@ -17,6 +17,7 @@ Guidelines, generating 997 (4010) or 999 (5010) acknowledgement responses.
    :caption: Reference
 
    cli
+   errors
    api
 
 Indices and tables
