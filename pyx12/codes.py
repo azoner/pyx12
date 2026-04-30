@@ -43,11 +43,11 @@ class ExternalCodes:
         """
         Initialize the external list of codes
 
-        base_path: Override directory containing codes.xml.  If None,
-            uses package resource folder.
-        exclude: comma-separated string of external code names to ignore.
+        :param base_path: Override directory containing codes.xml.
+            If None, uses package resource folder.
+        :param exclude: comma-separated string of external code names to ignore.
 
-        self.codes maps codeset_id to {'name', 'dataele', 'codes'}.
+        ``self.codes`` maps codeset_id to ``{'name', 'dataele', 'codes'}``.
         """
         logger = logging.getLogger('pyx12')
         self.codes = {}

@@ -153,8 +153,4 @@ class ParamsWindows(ParamsBase):
             self._read_config_file(config_file)
 
 
-params: type[ParamsBase]
-if sys.platform == 'win32':
-    params = ParamsWindows
-else:
-    params = ParamsUnix
+params: type[ParamsBase] = ParamsWindows if sys.platform == 'win32' else ParamsUnix

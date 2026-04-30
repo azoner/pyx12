@@ -43,12 +43,13 @@ class DataElements:
     def __init__(self, base_path: str | None = None) -> None:
         """
         Initialize the list of data elements
+
         :param base_path: Override directory containing dataele.xml.  If None,
             uses package resource folder
         :type base_path: string
 
-        Note: self.dataele - map to the data element
-        {ele_num: {data_type, min_len, max_len, name}}
+        Note: ``self.dataele`` maps to the data element
+        ``{ele_num: {data_type, min_len, max_len, name}}``
         """
         logger = logging.getLogger('pyx12')
         self.dataele = {}

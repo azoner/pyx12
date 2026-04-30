@@ -86,4 +86,4 @@ What's next
 -----------
 
 * :doc:`cli` — every console script with its options.
-* :doc:`api` — full module-level API reference.
+* :doc:`api/pyx12/index` — full module-level API reference.

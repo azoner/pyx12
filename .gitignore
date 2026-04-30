@@ -22,3 +22,4 @@ uv.lock
 .claude/settings.local.json
 docs/_build/
 docs/_generated/
+docs/api/
