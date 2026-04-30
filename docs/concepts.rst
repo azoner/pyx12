@@ -37,10 +37,17 @@ the same five layers (see :doc:`errors`).
 Implementation guide maps
 -------------------------
 
-A HIPAA Implementation Guide (IG) tells you, for each version of each
+An X12 Implementation Guide (IG) tells you, for each version of each
 transaction, exactly which loops are required, which elements may be
-present, what counts are allowed, and which code lists apply. pyx12
-encodes those rules as XML files under [pyx12/map/](../pyx12/map/):
+present, what counts are allowed, and which code lists apply.
+Implementation guides are published by `X12.org <https://x12.org/products>`_.
+pyx12 encodes those rules as XML "map" files under ``pyx12/map/``.
+
+pyx12 is focused on X12N Healthcare HIPAA transactions, but the map-based
+design is flexible enough to support any X12 transaction with a known
+structure. To add a new transaction type, drop a new XML map file into
+``pyx12/map/`` following the existing conventions.
+
 
 .. code-block:: text
 
@@ -49,7 +56,7 @@ encodes those rules as XML files under [pyx12/map/](../pyx12/map/):
    835.5010.X221.A1.xml      ← 835 Remittance Advice, 5010
    270.4010.X092.A1.xml      ← Eligibility request, 4010
    …
-   codes.xml                 ← External code lists (POS, claim status, …)
+   codes.xml                 ← External code lists (Place of Service, state codes, claim status, …)
    dataele.xml               ← Data element catalog (lengths, types)
    maps.xml                  ← Index from transaction/version → map file
 
@@ -84,7 +91,7 @@ pyx12 ships three reader interfaces at increasing levels of abstraction:
 
 :class:`pyx12.rawx12file.RawX12File`
    The lowest level. Splits an X12 stream into segments by detecting
-   the segment / element / sub-element terminators from ``ISA``, but
+   the segment / element / sub-element terminators from the fixed length ``ISA`` segment, but
    does **not** validate against any map. Useful for transformations
    that don't care about HIPAA rules (e.g. switching line endings).
 
@@ -101,6 +108,7 @@ pyx12 ships three reader interfaces at increasing levels of abstraction:
    context. This is what you want when you need to *modify* segments
    (set a value, delete a child loop, insert a new sibling) — it tracks
    parent / child relationships and the map node for each piece of data.
+   Also useful for complex parsing that require loop context (e.g. "if this segment is inside an 2000A loop, then this element means X; but if it's inside a 2000B loop, the same element means Y").  
    See the iter_segments example in :doc:`quickstart`.
 
 The walker
@@ -153,7 +161,9 @@ Runtime knobs live on a :class:`pyx12.params.params` instance, passed
 through to readers, writers, and the walker. Common settings:
 
 * ``map_path`` — where to look for map XML files (defaults to bundled
-  package resources).
+  package resources). Override via the ``--map-path`` / ``-m`` CLI flag
+  on the bundled scripts, or ``params.set('map_path', '/path/to/maps')``
+  from Python, to point at a directory of custom maps.
 * ``charset`` — ``'B'`` (basic X12 character set) or ``'E'`` (extended,
   needed for some 5010 transactions).
 * ``exclude_external_codes`` — comma-separated list of external code
@@ -164,8 +174,8 @@ through to readers, writers, and the walker. Common settings:
 
 ``params`` also reads an XML config file from
 ``$PREFIX/etc/pyx12.conf.xml`` and ``~/.pyx12.conf.xml`` on Unix (no
-home-dir lookup on Windows). See [bin/pyx12.conf.xml.sample](../bin/pyx12.conf.xml.sample)
-for the schema.
+home-dir lookup on Windows). See ``bin/pyx12.conf.xml.sample`` in the
+source tree for the schema.
 
 Putting it together
 -------------------
