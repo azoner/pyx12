@@ -3,7 +3,7 @@
 [![Build Status](https://github.com/azoner/pyx12/actions/workflows/main.yml/badge.svg)](https://github.com/azoner/pyx12/actions/workflows/main.yml)
 
 
-Pyx12 is a HIPAA X12 document validator and converter.  It parses an ANSI X12N data file and validates it against a representation of the Implementation Guidelines for a HIPAA transaction.  By default, it creates a 997 response for 4010 and a 999 response for 5010. It can create an html representation of the X12 document or can translate to and from an XML representation of the data file. 
+Pyx12 is a HIPAA X12 document parser, validator and converter.  It reads an ANSI X12 data file and validates it against a representation of the X12 Implementation Guidelines.  By default, it creates a 997 response for 4010 and a 999 response for 5010. It can create an HTML representation of the X12 document and can translate to and from an XML representation of the data file. 
 
 # Usage
 
@@ -52,9 +52,14 @@ XML maps live under `pyx12/map/`, one file per (transaction, version)
 pair, named like `<transaction>.<version>.<X-number>[.A<n>].xml` —
 e.g. `834.4010.X095.A1.xml`, `837.5010.X222.A1.xml`. The index that
 pyx12 consults at runtime is `pyx12/map/maps.xml`; each entry binds a
-`(vriic, fic[, tspc])` triple to a map filename. ICVN is the ISA12
-version, VRIIC is GS08, FIC is GS01, TSPC is the type sub-code (used
-only for 278).
+`(vriic, fic[, tspc])` triple to a map filename:
+
+| Name                                             | Abbreviation | X12 Element |
+| :----------------------------------------------- | :----------- | :---------- |
+| Interchange Control Version Number               | ICVN         | ISA12       |
+| Version / Release / Industry Identifier Code     | VRIIC        | GS08        |
+| Functional Identifier Code                       | FIC          | GS01        |
+| Transaction Set Purpose Code (used only for 278) | TSPC         | BHT02       |
 
 ## Converting a 4010 map to 5010
 
