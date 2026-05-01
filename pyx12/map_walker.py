@@ -145,12 +145,10 @@ class walk_tree:
         pop_node_list: list[Any] = []
         push_node_list: list[Any] = []
         orig_node = node
-        #logger.info('%s seg_count=%i / cur_line=%i' % (node.id, seg_count, cur_line))
         self.mandatory_segs_missing = []
         node_pos = node.pos  # Get original position ordinal of starting node
         if not (node.is_loop() or node.is_map_root()):
             node = pop_to_parent_loop(node)  # Get enclosing loop
-            #node_list.append(node)
         while True:
             # Iterate through nodes with position >= current position
             for ord1 in [a for a in sorted(node.pos_map) if a >= node_pos]:
@@ -171,12 +169,7 @@ class walk_tree:
                                     pop_node_list = [node]
                                     push_node_list = [node]
                                 return (node1, pop_node_list, push_node_list)  # segment node
-                            #child.incr_cur_count()
                             self.counter.increment(child.x12path)
-                            #assert child.get_cur_count() == self.counter.get_count(child.x12path), \
-                            #    'child counts not equal: old is %s=%i : new is %s=%i' % (
-                            #    child.get_path(), child.get_cur_count(),
-                            #    child.x12path.format(), self.counter.get_count(child.x12path))
                             self._check_seg_usage(child, seg_data, seg_count, cur_line, ls_id, errh)
                             # Remove any previously missing errors for this segment
                             self.mandatory_segs_missing = [x for x in self.mandatory_segs_missing if x[0] != child]
@@ -186,9 +179,6 @@ class walk_tree:
                             fake_seg = pyx12.segment.Segment('%s' % (child.id), '~', '*', ':')
                             err_str = 'Mandatory segment "%s" (%s) missing' % (child.name, child.id)
                             self.mandatory_segs_missing.append((child, fake_seg, '3', err_str, seg_count, cur_line, ls_id))
-                        #else:
-                            #logger.debug('Segment %s is not a match for (%s*%s)' % \
-                            #   (child.id, seg_data.get_seg_id(), seg_data[0].get_value()))
                     elif child.is_loop():
                         if self._is_loop_match(child, seg_data, errh, seg_count, cur_line, ls_id):
                             (node_seg, push_node_list) = self._goto_seg_match(child, seg_data, errh, seg_count, cur_line, ls_id)
@@ -251,7 +241,6 @@ class walk_tree:
             err_str = "Segment %s found but marked as not used" % (seg_node.id)
             errh.seg_error('2', err_str, None)
         elif seg_node.usage == 'R' or seg_node.usage == 'S':
-            #assert seg_node.get_cur_count() == self.counter.get_count(seg_node.x12path), 'seg_node counts not equal'
             if self.counter.get_count(seg_node.x12path) > seg_node.get_max_repeat():  # handle seg repeat count
                 err_str = "Segment %s exceeded max count.  Found %i, should have %i" \
                     % (seg_data.get_seg_id(), self.counter.get_count(seg_node.x12path), seg_node.get_max_repeat())
@@ -326,11 +315,6 @@ class walk_tree:
         if not loop_node.is_loop():
             raise EngineError("Call to first_seg_match failed, node %s is not a loop. seg %s"
                               % (loop_node.id, seg_data.get_seg_id()))
-        #if loop_node.id not in ('ISA_LOOP', 'GS_LOOP'):
-        #    assert loop_node.get_cur_count() == self.counter.get_count(loop_node.x12path), \
-        #        'loop_node counts not equal: old is %s=%i : new is %s=%i' % (
-        #        loop_node.get_path(), loop_node.get_cur_count(),
-        #        loop_node.x12path.format(), self.counter.get_count(loop_node.x12path))
         if len(loop_node) <= 0:  # Has no children
             return False
         first_child_node = loop_node.get_first_node()
@@ -387,9 +371,7 @@ class walk_tree:
         if first_child_node is not None and is_first_seg_match2(first_child_node, seg_data):
             self._check_loop_usage(loop_node, seg_data,
                                    seg_count, cur_line, ls_id, errh)
-            #first_child_node.incr_cur_count()
             self.counter.increment(first_child_node.x12path)
-            #assert first_child_node.get_cur_count() == self.counter.get_count(first_child_node.x12path), 'first_child_node counts not equal'
             self._flush_mandatory_segs(errh)
             return (first_child_node, [loop_node])
         else:
@@ -439,22 +421,10 @@ class walk_tree:
             err_str = "Loop %s found but marked as not used" % (loop_node.id)
             errh.seg_error('2', err_str, None)
         elif loop_node.usage in ('R', 'S'):
-            #if loop_node.id == '2110':
-            #    import ipdb; ipdb.set_trace()
-            #loop_node.reset_child_count()
             self.counter.reset_to_node(loop_node.x12path)
-            #loop_node.incr_cur_count()
             self.counter.increment(loop_node.x12path)
-            #assert loop_node.get_cur_count() == self.counter.get_count(loop_node.x12path), \
-            #    'loop_node counts not equal: old is %s=%i : new is %s=%i' % (
-            #    loop_node.get_path(), loop_node.get_cur_count(),
-            #    loop_node.x12path.format(), self.counter.get_count(loop_node.x12path))
-            #logger.debug('incr loop_node %s %i' % (loop_node.id, loop_node.cur_count))
-            #logger.debug('incr first_child_node %s %i' % (first_child_node.id, first_child_node.cur_count))
             if self.counter.get_count(loop_node.x12path) > loop_node.get_max_repeat():
                 err_str = "Loop %s exceeded max count.  Found %i, should have %i" \
                     % (loop_node.id, self.counter.get_count(loop_node.x12path), loop_node.get_max_repeat())
                 errh.add_seg(loop_node, seg_data, seg_count, cur_line, ls_id)
                 errh.seg_error('4', err_str, None)
-            #logger.debug('MATCH Loop %s / Segment %s (%s*%s)' \
-            #    % (child.id, first_child_node.id, seg_data.get_seg_id(), seg[0].get_value()))
