@@ -146,9 +146,7 @@ class walk_tree:
         push_node_list: list[Any] = []
         orig_node = node
         self.mandatory_segs_missing = []
-        node_pos = node.pos  # Get original position ordinal of starting node
-        if not (node.is_loop() or node.is_map_root()):
-            node = pop_to_parent_loop(node)  # Get enclosing loop
+        node, node_pos = walk_tree._resolve_starting_loop(node)
         while True:
             # Iterate through nodes with position >= current position
             for ord1 in [a for a in sorted(node.pos_map) if a >= node_pos]:
@@ -246,6 +244,18 @@ class walk_tree:
                     % (seg_data.get_seg_id(), self.counter.get_count(seg_node.x12path), seg_node.get_max_repeat())
                 errh.add_seg(seg_node, seg_data, seg_count, cur_line, ls_id)
                 errh.seg_error('5', err_str, None)
+
+    @staticmethod
+    def _resolve_starting_loop(node: Any) -> tuple[Any, int]:
+        """
+        Return the enclosing loop (or map root) for the starting node, plus
+        the original node's position ordinal — used to filter pos_map keys
+        when scanning siblings at or after the start position.
+        """
+        node_pos = node.pos
+        if not (node.is_loop() or node.is_map_root()):
+            node = pop_to_parent_loop(node)
+        return node, node_pos
 
     @staticmethod
     def _seg_not_found_error(
