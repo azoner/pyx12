@@ -1,3 +1,10 @@
+---
+name: publish
+description: Publish pyx12 to PyPI or TestPyPI
+argument-hint: "[test | release]"
+disable-model-invocation: true
+---
+
 # Publish pyx12 to PyPI
 
 Publish the pyx12 package. Accepts an optional argument: `test` to publish to TestPyPI, or no argument (or `release`) to publish to production PyPI.
