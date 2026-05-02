@@ -1032,3 +1032,128 @@ class TryMatchSegmentChild(unittest.TestCase):
         )
         self.assertIsNotNone(result)
         self.assertEqual(self.errh.err_cde, '5', self.errh.err_str)
+
+
+class TryMatchLoopChild(unittest.TestCase):
+    """
+    Direct tests for walk_tree._try_match_loop_child.
+
+    Covers:
+    - shallow match: descend one level into the loop's first segment
+    - nested match: descend through a loop whose first child is a loop
+    - no-match with R+uncounted accumulation (recorded against the loop's
+      first child node, with code '3')
+    - no-match without accumulation when the loop is already counted
+    - max-loop-count exceeded -> err_cde '4'
+    - pop_node_list is passed through unchanged on a match
+    """
+
+    def setUp(self):
+        self.walker = walk_tree()
+        self.param = pyx12.params.params()
+        self.map = pyx12.map_if.load_map_file('837.4010.X098.A1.xml', self.param)
+        self.errh = pyx12.error_handler.errh_null()
+
+    def tearDown(self):
+        del self.errh
+        del self.map
+        del self.walker
+
+    # ---- expected matches ----
+
+    def test_match_shallow_loop(self):
+        """child is a loop; seg_data matches its first segment -> push=[loop]."""
+        self.errh.reset()
+        child = self.map.getnodebypath('/ISA_LOOP/GS_LOOP')
+        seg_data = pyx12.segment.Segment(
+            'GS*HC*A*B*20080101*1010*1*X*004010X098A1', '~', '*', ':'
+        )
+        result = self.walker._try_match_loop_child(
+            child, seg_data, self.errh, 5, 4, None, []
+        )
+        self.assertIsNotNone(result)
+        node, pop, push = result
+        self.assertEqual(node.id, 'GS')
+        self.assertEqual(get_id_list(pop), [])
+        self.assertEqual(get_id_list(push), ['GS_LOOP'])
+
+    def test_match_nested_loop(self):
+        """child is a loop whose first child is a loop -> nested descent."""
+        self.errh.reset()
+        # DETAIL's first child is 2000A (a loop). 2000A's first segment is HL.
+        child = self.map.getnodebypath('/ISA_LOOP/GS_LOOP/ST_LOOP/DETAIL')
+        seg_data = pyx12.segment.Segment('HL*1**20*1', '~', '*', ':')
+        result = self.walker._try_match_loop_child(
+            child, seg_data, self.errh, 5, 4, None, []
+        )
+        self.assertIsNotNone(result)
+        node, pop, push = result
+        self.assertEqual(node.id, 'HL')
+        self.assertEqual(get_id_list(pop), [])
+        # Push must start with the loop we descended into.
+        self.assertIn('DETAIL', get_id_list(push))
+
+    # ---- expected no-match ----
+
+    def test_no_match_required_uncounted_accumulates_missing(self):
+        """Required loop with count 0 + non-matching seg -> None, missing recorded."""
+        self.errh.reset()
+        child = self.map.getnodebypath('/ISA_LOOP/GS_LOOP')
+        first_child = child.get_first_node()  # = GS segment
+        self.assertEqual(child.usage, 'R')
+        seg_data = pyx12.segment.Segment('ZZZ*1', '~', '*', ':')
+        result = self.walker._try_match_loop_child(
+            child, seg_data, self.errh, 5, 4, None, []
+        )
+        self.assertIsNone(result)
+        self.assertEqual(len(self.walker.mandatory_segs_missing), 1)
+        # The accumulated entry references the loop's first child, not the loop itself.
+        self.assertEqual(self.walker.mandatory_segs_missing[0][0], first_child)
+        self.assertEqual(self.walker.mandatory_segs_missing[0][2], '3')
+
+    def test_no_match_required_counted_no_accumulation(self):
+        """Required loop with count >= 1 + non-matching seg -> None, no accumulation."""
+        self.errh.reset()
+        child = self.map.getnodebypath('/ISA_LOOP/GS_LOOP')
+        self.walker.setCountState({child.x12path: 1})
+        seg_data = pyx12.segment.Segment('ZZZ*1', '~', '*', ':')
+        result = self.walker._try_match_loop_child(
+            child, seg_data, self.errh, 5, 4, None, []
+        )
+        self.assertIsNone(result)
+        self.assertEqual(self.walker.mandatory_segs_missing, [])
+
+    # ---- expected errors ----
+
+    def test_match_exceeds_max_loop_count_emits_error_4(self):
+        """Match that pushes loop count past max_repeat -> err_cde '4'."""
+        self.errh.reset()
+        child = self.map.getnodebypath(
+            '/ISA_LOOP/GS_LOOP/ST_LOOP/DETAIL/2000A/2000B/2300/2400'
+        )
+        self.walker.setCountState({child.x12path: 50})
+        seg_data = pyx12.segment.Segment('LX*51', '~', '*', ':')
+        result = self.walker._try_match_loop_child(
+            child, seg_data, self.errh, 5, 4, None, []
+        )
+        self.assertIsNotNone(result)
+        self.assertEqual(self.errh.err_cde, '4', self.errh.err_str)
+
+    # ---- pop list pass-through ----
+
+    def test_pop_list_passed_through_on_match(self):
+        """The helper returns the same pop list it received (by reference)."""
+        self.errh.reset()
+        child = self.map.getnodebypath('/ISA_LOOP/GS_LOOP')
+        sentinel_loop = self.map.getnodebypath('/ISA_LOOP')
+        pop_in: list[object] = [sentinel_loop]
+        seg_data = pyx12.segment.Segment(
+            'GS*HC*A*B*20080101*1010*1*X*004010X098A1', '~', '*', ':'
+        )
+        result = self.walker._try_match_loop_child(
+            child, seg_data, self.errh, 5, 4, None, pop_in
+        )
+        self.assertIsNotNone(result)
+        assert result is not None  # narrow for type checker
+        self.assertIs(result[1], pop_in)
+        self.assertEqual(get_id_list(result[1]), ['ISA_LOOP'])

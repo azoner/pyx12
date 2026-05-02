@@ -143,7 +143,6 @@ class walk_tree:
         TODO: check single segment loop repeat
         """
         pop_node_list: list[Any] = []
-        push_node_list: list[Any] = []
         orig_node = node
         self.mandatory_segs_missing = []
         node, node_pos = walk_tree._resolve_starting_loop(node)
@@ -159,9 +158,12 @@ class walk_tree:
                         if result is not None:
                             return result
                     elif child.is_loop():
-                        if self._is_loop_match(child, seg_data, errh, seg_count, cur_line, ls_id):
-                            (node_seg, push_node_list) = self._goto_seg_match(child, seg_data, errh, seg_count, cur_line, ls_id)
-                            return (node_seg, pop_node_list, push_node_list)  # segment node
+                        result = self._try_match_loop_child(
+                            child, seg_data, errh,
+                            seg_count, cur_line, ls_id, pop_node_list,
+                        )
+                        if result is not None:
+                            return result
             # End for ord1 in pos_keys
             if node.is_map_root():  # If at root and we haven't found the segment yet.
                 walk_tree._seg_not_found_error(orig_node, seg_data,
@@ -275,6 +277,30 @@ class walk_tree:
             err_str = 'Mandatory segment "%s" (%s) missing' % (child.name, child.id)
             self.mandatory_segs_missing.append((child, fake_seg, '3', err_str, seg_count, cur_line, ls_id))
         return None
+
+    def _try_match_loop_child(
+        self,
+        child: Any,
+        seg_data: pyx12.segment.Segment,
+        errh: Any,
+        seg_count: int,
+        cur_line: int,
+        ls_id: str | None,
+        pop_node_list: list[Any],
+    ) -> tuple[Any, list[Any], list[Any]] | None:
+        """
+        Try to match a loop-typed child against seg_data by descending into
+        it via _is_loop_match / _goto_seg_match.
+
+        On match, returns (segment_node, pop_loops, push_loops) where the
+        push list is the chain of loops entered to reach the segment.
+        On no match, returns None.
+        """
+        if not self._is_loop_match(child, seg_data, errh, seg_count, cur_line, ls_id):
+            return None
+        (node_seg, push_node_list) = self._goto_seg_match(
+            child, seg_data, errh, seg_count, cur_line, ls_id)
+        return (node_seg, pop_node_list, push_node_list)
 
     @staticmethod
     def _resolve_starting_loop(node: Any) -> tuple[Any, int]:
