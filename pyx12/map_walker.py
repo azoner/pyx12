@@ -465,6 +465,27 @@ class walk_tree:
             loop_node, first_child_node, seg_count, cur_line, ls_id)
         return False
 
+    def _enter_loop_at_first_seg(
+        self,
+        loop_node: Any,
+        first_seg: Any,
+        seg_data: pyx12.segment.Segment,
+        seg_count: int,
+        cur_line: int,
+        ls_id: str | None,
+        errh: Any,
+    ) -> tuple[Any, list[Any]]:
+        """
+        Record entering loop_node via its first segment: check loop usage
+        (counts/'4' if exceeded), increment the segment counter, flush
+        any pending mandatory-missing errors. Returns the matched segment
+        and the single-element push list [loop_node].
+        """
+        self._check_loop_usage(loop_node, seg_data, seg_count, cur_line, ls_id, errh)
+        self.counter.increment(first_seg.x12path)
+        self._flush_mandatory_segs(errh)
+        return (first_seg, [loop_node])
+
     def _goto_seg_match(
         self,
         loop_node: Any,
@@ -496,23 +517,17 @@ class walk_tree:
         if not loop_node.is_loop():
             raise EngineError("_goto_seg_match failed, node %s is not a loop. seg %s"
                               % (loop_node.id, seg_data.get_seg_id()))
-        first_child_node = loop_node.get_first_seg()
-        if first_child_node is not None and is_first_seg_match2(first_child_node, seg_data):
-            self._check_loop_usage(loop_node, seg_data,
-                                   seg_count, cur_line, ls_id, errh)
-            self.counter.increment(first_child_node.x12path)
-            self._flush_mandatory_segs(errh)
-            return (first_child_node, [loop_node])
-        else:
-            for child in loop_node.childIterator():
-                if child.is_loop():
-                    (
-                        node1, push1) = self._goto_seg_match(child, seg_data, errh,
-                                                             seg_count, cur_line, ls_id)
-                    if node1:
-                        push_node_list = [loop_node]
-                        push_node_list.extend(push1)
-                        return (node1, push_node_list)
+        first_seg = loop_node.get_first_seg()
+        if first_seg is not None and is_first_seg_match2(first_seg, seg_data):
+            return self._enter_loop_at_first_seg(
+                loop_node, first_seg, seg_data, seg_count, cur_line, ls_id, errh)
+        for child in loop_node.childIterator():
+            if not child.is_loop():
+                continue
+            seg_node, push = self._goto_seg_match(
+                child, seg_data, errh, seg_count, cur_line, ls_id)
+            if seg_node is not None:
+                return (seg_node, [loop_node, *push])
         return (None, [])
 
     def _check_loop_usage(
