@@ -18,7 +18,7 @@ class TestWriter(unittest.TestCase):
         try:
             fd = StringIO(encoding="ascii")
             # print('CASE 1:')
-        except:
+        except Exception:
             fd = StringIO()
             # print('CASE 2:')
         writer = XMLWriter(fd)
@@ -43,5 +43,5 @@ class TestWriter(unittest.TestCase):
 
         try:
             os.remove(filename)
-        except:
+        except Exception:
             pass

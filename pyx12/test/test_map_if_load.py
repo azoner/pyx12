@@ -43,6 +43,6 @@ class LoadAllMapsNoErrors(unittest.TestCase):
         for map in maps:
             try:
                 map = pyx12.map_if.load_map_file(map, param)
-            except:
+            except Exception:
                 print(map)
                 raise
