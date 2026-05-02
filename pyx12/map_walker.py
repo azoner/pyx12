@@ -152,31 +152,12 @@ class walk_tree:
             for ord1 in [a for a in sorted(node.pos_map) if a >= node_pos]:
                 for child in node.pos_map[ord1]:
                     if child.is_segment():
-                        if child.is_match(seg_data):
-                            # Is the matched segment the beginning of a loop?
-                            if node.is_loop() \
-                                    and self._is_loop_match(node, seg_data, errh, seg_count, cur_line, ls_id):
-                                (
-                                    node1, push_node_list) = self._goto_seg_match(node, seg_data,
-                                                                                  errh, seg_count, cur_line, ls_id)
-                                if orig_node.is_loop() or orig_node.is_map_root():
-                                    orig_loop = orig_node
-                                else:
-                                    orig_loop = pop_to_parent_loop(orig_node)  # Get enclosing loop
-                                if node == orig_loop:
-                                    pop_node_list = [node]
-                                    push_node_list = [node]
-                                return (node1, pop_node_list, push_node_list)  # segment node
-                            self.counter.increment(child.x12path)
-                            self._check_seg_usage(child, seg_data, seg_count, cur_line, ls_id, errh)
-                            # Remove any previously missing errors for this segment
-                            self.mandatory_segs_missing = [x for x in self.mandatory_segs_missing if x[0] != child]
-                            self._flush_mandatory_segs(errh, child.pos)
-                            return (child, pop_node_list, push_node_list)  # segment node
-                        elif child.usage == 'R' and self.counter.get_count(child.x12path) < 1:
-                            fake_seg = pyx12.segment.Segment('%s' % (child.id), '~', '*', ':')
-                            err_str = 'Mandatory segment "%s" (%s) missing' % (child.name, child.id)
-                            self.mandatory_segs_missing.append((child, fake_seg, '3', err_str, seg_count, cur_line, ls_id))
+                        result = self._try_match_segment_child(
+                            node, child, seg_data, orig_node, errh,
+                            seg_count, cur_line, ls_id, pop_node_list,
+                        )
+                        if result is not None:
+                            return result
                     elif child.is_loop():
                         if self._is_loop_match(child, seg_data, errh, seg_count, cur_line, ls_id):
                             (node_seg, push_node_list) = self._goto_seg_match(child, seg_data, errh, seg_count, cur_line, ls_id)
@@ -244,6 +225,56 @@ class walk_tree:
                     % (seg_data.get_seg_id(), self.counter.get_count(seg_node.x12path), seg_node.get_max_repeat())
                 errh.add_seg(seg_node, seg_data, seg_count, cur_line, ls_id)
                 errh.seg_error('5', err_str, None)
+
+    def _try_match_segment_child(
+        self,
+        node: Any,
+        child: Any,
+        seg_data: pyx12.segment.Segment,
+        orig_node: Any,
+        errh: Any,
+        seg_count: int,
+        cur_line: int,
+        ls_id: str | None,
+        pop_node_list: list[Any],
+    ) -> tuple[Any, list[Any], list[Any]] | None:
+        """
+        Try to match a segment-typed child against seg_data.
+
+        On match, returns (segment_node, pop_loops, push_loops). When the
+        matched segment is also the first segment of an enclosing loop, the
+        loop's counters/usage are updated via _goto_seg_match and the result
+        encodes the necessary pop/push loops.
+
+        On no match, returns None. If the child is mandatory (R) and has not
+        yet been counted, also accumulates a missing-segment error for later
+        reporting.
+        """
+        if child.is_match(seg_data):
+            # Is the matched segment the beginning of a loop?
+            if node.is_loop() \
+                    and self._is_loop_match(node, seg_data, errh, seg_count, cur_line, ls_id):
+                (node1, push_node_list) = self._goto_seg_match(
+                    node, seg_data, errh, seg_count, cur_line, ls_id)
+                if orig_node.is_loop() or orig_node.is_map_root():
+                    orig_loop = orig_node
+                else:
+                    orig_loop = pop_to_parent_loop(orig_node)
+                if node == orig_loop:
+                    pop_node_list = [node]
+                    push_node_list = [node]
+                return (node1, pop_node_list, push_node_list)
+            self.counter.increment(child.x12path)
+            self._check_seg_usage(child, seg_data, seg_count, cur_line, ls_id, errh)
+            # Remove any previously missing errors for this segment
+            self.mandatory_segs_missing = [x for x in self.mandatory_segs_missing if x[0] != child]
+            self._flush_mandatory_segs(errh, child.pos)
+            return (child, pop_node_list, [])
+        if child.usage == 'R' and self.counter.get_count(child.x12path) < 1:
+            fake_seg = pyx12.segment.Segment('%s' % (child.id), '~', '*', ':')
+            err_str = 'Mandatory segment "%s" (%s) missing' % (child.name, child.id)
+            self.mandatory_segs_missing.append((child, fake_seg, '3', err_str, seg_count, cur_line, ls_id))
+        return None
 
     @staticmethod
     def _resolve_starting_loop(node: Any) -> tuple[Any, int]:
