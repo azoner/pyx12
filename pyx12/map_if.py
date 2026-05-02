@@ -1590,10 +1590,11 @@ class composite_if(x12_node):
 
         if self.usage == "R":
             good_flag = False
-            for sub_ele in comp_data:
-                if sub_ele is not None and len(sub_ele.get_value()) > 0:
-                    good_flag = True
-                    break
+            if comp_data is not None:
+                for sub_ele in comp_data:
+                    if sub_ele is not None and len(sub_ele.get_value()) > 0:
+                        good_flag = True
+                        break
             if not good_flag:
                 err_str = 'At least one component of composite "%s" (%s) is required' % (
                     self.name,
