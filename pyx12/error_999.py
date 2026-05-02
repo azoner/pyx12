@@ -343,8 +343,6 @@ class error_999_visitor(pyx12.error_visitor.error_visitor):
                 seg_data = pyx12.segment.Segment(seg_str, "~", "*", ":")
                 seg_data.set("IK304", err_cde)
                 self.wr.Write(seg_data)
-        # todo: add segment context
-        # todo: add business unit context
         if err_seg.child_err_count() > 0 and "8" not in errors:
             seg_data = pyx12.segment.Segment(seg_str, "~", "*", ":")
             seg_data.set("IK304", "8")
@@ -390,5 +388,4 @@ class error_999_visitor(pyx12.error_visitor.error_visitor):
                 seg_data.set("IK403", err_cde)
                 if bad_value:
                     seg_data.set("IK404", bad_value)
-                # todo: add element context
                 self.wr.Write(seg_data)

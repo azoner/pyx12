@@ -97,7 +97,6 @@ def x12n_document(
     vriic: str | None = None
     tspc: str | None = None
     cur_map: Any = None  # we do not initially know the X12 transaction type
-    # XXX Generate TA1 if needed.
 
     if fd_html:
         html = pyx12.error_html.error_html(errh, fd_html, src.get_term())
@@ -152,7 +151,6 @@ def x12n_document(
                 errh.handle_errors(src.pop_errors())
                 errh.close_isa_loop(node, seg, src)
                 # Generate 997
-                # XXX Generate TA1 if needed.
             elif seg.get_seg_id() == "GS":
                 fic = seg.get_value("GS01")
                 vriic = seg.get_value("GS08")
