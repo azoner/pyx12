@@ -687,7 +687,7 @@ class X12Writer(X12Base):
         )
         return pyx12.segment.Segment(
             seg_str,
-            self.seg_term,
-            self.ele_term,
+            self.seg_term,  # type: ignore[arg-type]
+            self.ele_term,  # type: ignore[arg-type]
             self.subele_term,  # type: ignore[arg-type]
         )

@@ -1530,12 +1530,12 @@ class composite_if(x12_node):
         self.data_ele = elem.get("data_ele") if elem.get("data_ele") else elem.findtext("data_ele")
         self.usage = elem.get("usage") if elem.get("usage") else elem.findtext("usage")
         self.seq = int(elem.get("seq")) if elem.get("seq") else int(elem.findtext("seq"))  # type: ignore[arg-type]
-        self.repeat = (
-            int(elem.get("repeat"))
-            if elem.get("repeat")
-            # type: ignore[arg-type]
-            else (int(elem.findtext("repeat")) if elem.findtext("repeat") else 1)
-        )  # type: ignore[arg-type]
+        if (r := elem.get("repeat")) is not None:
+            self.repeat = int(r)
+        elif (r := elem.findtext("repeat")) is not None:
+            self.repeat = int(r)
+        else:
+            self.repeat = 1
         self.name = elem.get("name") if elem.get("name") else elem.findtext("name")
 
         for e in elem.findall("element"):

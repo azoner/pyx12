@@ -1034,8 +1034,11 @@ class X12ContextReader:
                     # for `parent` relies on this list being truthy. See the
                     # test_x12context.TreeCopy tests.
                     cur_data_node = X12SegmentDataNode(
-                        self.x12_map_node, seg, push_loops, pop_loops
-                    )  # type: ignore[arg-type]
+                        self.x12_map_node,
+                        seg,
+                        push_loops,  # type: ignore[arg-type]
+                        pop_loops,
+                    )
                     cur_data_node.seg_count = self.src.get_seg_count()
                     cur_data_node.cur_line_number = self.src.get_cur_line()
                 else:
