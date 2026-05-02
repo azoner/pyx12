@@ -816,51 +816,14 @@ class segment_if(x12_node):
         :return: boolean
         :rtype: boolean
         """
-        if seg.get_seg_id() == self.id:
-            if (
-                self.children[0].is_element()
-                and self.children[0].get_data_type() == "ID"
-                and self.children[0].usage == "R"
-                and len(self.children[0].valid_codes) > 0
-                and seg.get_value("01") not in self.children[0].valid_codes
-            ):
-                return False
-            # Special Case for 820
-            elif (
-                seg.get_seg_id() == "ENT"
-                and self.children[1].is_element()
-                and self.children[1].get_data_type() == "ID"
-                and len(self.children[1].valid_codes) > 0
-                and seg.get_value("02") not in self.children[1].valid_codes
-            ):
-                return False
-            # Special Case for 999 CTX
-            elif (
-                seg.get_seg_id() == "CTX"
-                and self.children[0].is_composite()
-                and self.children[0].children[0].get_data_type() == "AN"
-                and len(self.children[0].children[0].valid_codes) > 0
-                and seg.get_value("01-1") not in self.children[0].children[0].valid_codes
-            ):
-                return False
-            elif (
-                self.children[0].is_composite()
-                and self.children[0].children[0].get_data_type() == "ID"
-                and len(self.children[0].children[0].valid_codes) > 0
-                and seg.get_value("01-1") not in self.children[0].children[0].valid_codes
-            ):
-                return False
-            elif (
-                seg.get_seg_id() == "HL"
-                and self.children[2].is_element()
-                and len(self.children[2].valid_codes) > 0
-                and seg.get_value("03") not in self.children[2].valid_codes
-            ):
-                return False
-            else:
-                return True
-        else:
+        if seg.get_seg_id() != self.id:
             return False
+        key = self._resolve_unique_key_field(seg.get_seg_id(), with_qual=False)
+        if key is None:
+            return True
+        child, ele_idx, subele_idx = key
+        path = f"{ele_idx:02d}-{subele_idx}" if subele_idx else f"{ele_idx:02d}"
+        return seg.get_value(path) in child.valid_codes
 
     def is_match_qual(
         self,
@@ -877,64 +840,74 @@ class segment_if(x12_node):
         :return: (True if a match, qual_code, element_index, subelement_index)
         :rtype: tuple(boolean, string, int, int)
         """
-        if seg_id == self.id:
-            if qual_code is None:
-                return (True, None, None, None)
-            elif (
-                self.children[0].is_element()
-                and self.children[0].get_data_type() == "ID"
-                and self.children[0].usage == "R"
-                and len(self.children[0].valid_codes) > 0
-            ):
-                if (
-                    qual_code in self.children[0].valid_codes
-                    and seg_data.get_value("01") == qual_code
-                ):
-                    return (True, qual_code, 1, None)
-                else:
-                    return (False, None, None, None)
-            # Special Case for 820
-            elif (
-                seg_id == "ENT"
-                and self.children[1].is_element()
-                and self.children[1].get_data_type() == "ID"
-                and len(self.children[1].valid_codes) > 0
-            ):
-                if (
-                    qual_code in self.children[1].valid_codes
-                    and seg_data.get_value("02") == qual_code
-                ):
-                    return (True, qual_code, 2, None)
-                else:
-                    return (False, None, None, None)
-            elif (
-                self.children[0].is_composite()
-                and self.children[0].children[0].get_data_type() == "ID"
-                and len(self.children[0].children[0].valid_codes) > 0
-            ):
-                if (
-                    qual_code in self.children[0].children[0].valid_codes
-                    and seg_data.get_value("01-1") == qual_code
-                ):
-                    return (True, qual_code, 1, 1)
-                else:
-                    return (False, None, None, None)
-            elif (
-                seg_id == "HL"
-                and self.children[2].is_element()
-                and len(self.children[2].valid_codes) > 0
-            ):
-                if (
-                    qual_code in self.children[2].valid_codes
-                    and seg_data.get_value("03") == qual_code
-                ):
-                    return (True, qual_code, 3, None)
-                else:
-                    return (False, None, None, None)
-            else:
-                return (True, None, None, None)
-        else:
+        if seg_id != self.id:
             return (False, None, None, None)
+        if qual_code is None:
+            return (True, None, None, None)
+        key = self._resolve_unique_key_field(seg_id, with_qual=True)
+        if key is None:
+            return (True, None, None, None)
+        child, ele_idx, subele_idx = key
+        path = f"{ele_idx:02d}-{subele_idx}" if subele_idx else f"{ele_idx:02d}"
+        if qual_code in child.valid_codes and seg_data.get_value(path) == qual_code:
+            return (True, qual_code, ele_idx, subele_idx)
+        return (False, None, None, None)
+
+    def _resolve_unique_key_field(
+        self, seg_id: str | None, *, with_qual: bool
+    ) -> tuple[Any, int, int | None] | None:
+        """
+        Locate the child node carrying this segment's qualifier (if any).
+
+        Returns ``(validating_child, ele_idx, subele_idx_or_None)`` describing
+        where to read the qualifier value from a data segment, or ``None`` if
+        the segment has no recognizable qualifier field.
+
+        ``with_qual=False`` (used by ``is_match``) accepts the AN-typed CTX
+        composite as a valid qualifier carrier; ``with_qual=True`` (used by
+        ``is_match_qual``) only honors ID-typed qualifier fields.
+        """
+        # Element at position 01 — the common case
+        if (
+            self.children[0].is_element()
+            and self.children[0].get_data_type() == "ID"
+            and self.children[0].usage == "R"
+            and len(self.children[0].valid_codes) > 0
+        ):
+            return (self.children[0], 1, None)
+        # ENT-segment carries its qualifier at element 02 (820 special case)
+        if (
+            seg_id == "ENT"
+            and self.children[1].is_element()
+            and self.children[1].get_data_type() == "ID"
+            and len(self.children[1].valid_codes) > 0
+        ):
+            return (self.children[1], 2, None)
+        # CTX-segment can have an AN-typed composite at 01-1 (999 special case);
+        # is_match_qual ignores this branch.
+        if (
+            not with_qual
+            and seg_id == "CTX"
+            and self.children[0].is_composite()
+            and self.children[0].children[0].get_data_type() == "AN"
+            and len(self.children[0].children[0].valid_codes) > 0
+        ):
+            return (self.children[0].children[0], 1, 1)
+        # General ID-typed composite at 01-1
+        if (
+            self.children[0].is_composite()
+            and self.children[0].children[0].get_data_type() == "ID"
+            and len(self.children[0].children[0].valid_codes) > 0
+        ):
+            return (self.children[0].children[0], 1, 1)
+        # HL-segment carries its qualifier at element 03
+        if (
+            seg_id == "HL"
+            and self.children[2].is_element()
+            and len(self.children[2].valid_codes) > 0
+        ):
+            return (self.children[2], 3, None)
+        return None
 
     def guess_unique_key_id_element(self) -> Any:
         """
