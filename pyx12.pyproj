@@ -71,6 +71,9 @@
     <Compile Include="pyx12\error_visitor.py" />
     <Compile Include="pyx12\map_if\__init__.py" />
     <Compile Include="pyx12\map_if\_base.py" />
+    <Compile Include="pyx12\map_if\_composite.py" />
+    <Compile Include="pyx12\map_if\_element.py" />
+    <Compile Include="pyx12\map_if\_loop.py" />
     <Compile Include="pyx12\map_index.py" />
     <Compile Include="pyx12\map_override.py" />
     <Compile Include="pyx12\map_walker.py" />

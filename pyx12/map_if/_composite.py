@@ -1,0 +1,151 @@
+######################################################################
+# Copyright (c)
+# All rights reserved.
+#
+# This software is licensed as described in the file LICENSE.txt, which
+# you should have received as part of this distribution.
+#
+######################################################################
+"""
+Composite interface - sub-element container.
+"""
+
+from __future__ import annotations
+
+import sys
+from typing import Any
+from xml.etree.ElementTree import Element
+
+from ._base import _required_attr, x12_node
+from ._element import element_if
+
+
+############################################################
+# Composite Interface
+############################################################
+class composite_if(x12_node):
+    """
+    Composite Node Interface
+    """
+
+    root: Any
+    base_name: str
+    refdes: str | None
+    data_ele: str | None
+    usage: str | None
+    seq: int
+    repeat: int
+
+    def __init__(self, root: Any, parent: Any, elem: Element) -> None:
+        """
+        Get the values for this composite
+        :param parent: parent node
+        """
+        x12_node.__init__(self)
+
+        self.children = []
+        self.root = root
+        self.parent = parent
+        self.path = ""
+        self.base_name = "composite"
+
+        self.id = elem.get("xid")
+        self.refdes = elem.findtext("refdes") if elem.findtext("refdes") else self.id
+        self.data_ele = elem.get("data_ele") if elem.get("data_ele") else elem.findtext("data_ele")
+        self.usage = elem.get("usage") if elem.get("usage") else elem.findtext("usage")
+        self.seq = int(_required_attr(elem, "seq"))
+        if (r := elem.get("repeat")) is not None:
+            self.repeat = int(r)
+        elif (r := elem.findtext("repeat")) is not None:
+            self.repeat = int(r)
+        else:
+            self.repeat = 1
+        self.name = elem.get("name") if elem.get("name") else elem.findtext("name")
+
+        for e in elem.findall("element"):
+            self.children.append(element_if(self.root, self, e))
+
+    def _error(self, errh: Any, err_str: str, err_cde: str, elem_val: str) -> None:
+        """
+        Forward the error to an error_handler
+        """
+        err_str2 = err_str.replace("\n", "").replace("\r", "")
+        elem_val2 = elem_val.replace("\n", "").replace("\r", "")
+        errh.ele_error(err_cde, err_str2, elem_val2, self.refdes)
+
+    def debug_print(self) -> None:
+        sys.stdout.write(self.__repr__())
+        for node in self.children:
+            node.debug_print()
+
+    def __repr__(self) -> str:
+        """
+        :rtype: string
+        """
+        out = '%s "%s"' % (self.id, self.name)
+        if self.usage:
+            out += "  usage %s" % (self.usage)
+        if self.seq:
+            out += "  seq %i" % (self.seq)
+        if self.refdes:
+            out += "  refdes %s" % (self.refdes)
+        out += "\n"
+        return out
+
+    def xml(self) -> None:
+        """
+        Sends an xml representation of the composite to stdout
+        """
+        sys.stdout.write("<composite>\n")
+        for sub_elem in self.children:
+            sub_elem.xml()
+        sys.stdout.write("</composite>\n")
+
+    def is_valid(self, comp_data: Any, errh: Any) -> bool:
+        """
+        Validates the composite
+        :param comp_data: data composite instance, has multiple values
+        :param errh: instance of error_handler
+        :rtype: boolean
+        """
+        valid = True
+        if (comp_data is None or comp_data.is_empty()) and self.usage in ("N", "S"):
+            return True
+
+        if self.usage == "R":
+            good_flag = False
+            if comp_data is not None:
+                for sub_ele in comp_data:
+                    if sub_ele is not None and len(sub_ele.get_value()) > 0:
+                        good_flag = True
+                        break
+            if not good_flag:
+                err_str = 'At least one component of composite "%s" (%s) is required' % (
+                    self.name,
+                    self.refdes,
+                )
+                errh.ele_error("2", err_str, None, self.refdes)
+                return False
+
+        if self.usage == "N" and not comp_data.is_empty():
+            err_str = 'Composite "%s" (%s) is marked as Not Used' % (self.name, self.refdes)
+            errh.ele_error("5", err_str, None, self.refdes)
+            return False
+
+        if len(comp_data) > self.get_child_count():
+            err_str = 'Too many sub-elements in composite "%s" (%s)' % (self.name, self.refdes)
+            errh.ele_error("3", err_str, None, self.refdes)
+            valid = False
+        for i in range(min(len(comp_data), self.get_child_count())):
+            valid &= self.get_child_node_by_idx(i).is_valid(comp_data[i], errh)
+        for i in range(min(len(comp_data), self.get_child_count()), self.get_child_count()):
+            if i < self.get_child_count():
+                # Check missing required elements
+                valid &= self.get_child_node_by_idx(i).is_valid(None, errh)
+        return valid
+
+    def is_composite(self) -> bool:
+        """
+        :rtype: boolean
+        """
+        return True
