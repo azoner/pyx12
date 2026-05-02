@@ -14,7 +14,7 @@ from __future__ import annotations
 
 import sys
 from collections.abc import Iterator
-from typing import TYPE_CHECKING, Any
+from typing import Any
 from xml.etree.ElementTree import Element
 
 import pyx12.segment
@@ -22,9 +22,7 @@ import pyx12.segment
 from ..errors import EngineError
 from ..path import X12Path
 from ._base import MAXINT, _required_attr, x12_node
-
-if TYPE_CHECKING:
-    from . import segment_if  # noqa: F401  -- referenced only at runtime via local import
+from ._segment import segment_if
 
 
 ############################################################
@@ -46,10 +44,6 @@ class loop_if(x12_node):
 
     def __init__(self, root: Any, parent: Any, elem: Element) -> None:
         """ """
-        # Local import to break the import cycle: segment_if is defined in
-        # the package's __init__.py, which itself imports this module.
-        from . import segment_if
-
         x12_node.__init__(self)
         self.root = root
         self.parent = parent
