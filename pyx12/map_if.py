@@ -18,7 +18,7 @@ import re
 import sys
 from collections.abc import Iterator
 from importlib.resources import files as _res_files
-from typing import IO, Any
+from typing import IO, Any, cast
 from xml.etree.ElementTree import Element
 
 import defusedxml.ElementTree as et
@@ -68,12 +68,6 @@ class x12_node:
         if isinstance(other, x12_node):
             return self.id == other.id and self.parent.id == other.parent.id
         return NotImplemented
-
-    def __ne__(self, other: object) -> bool:
-        res = type(self).__eq__(self, other)
-        if res is NotImplemented:
-            return res  # type: ignore[no-any-return]
-        return not bool(res)
 
     def __lt__(self, other: object) -> bool:
         return NotImplemented
@@ -255,8 +249,7 @@ class map_if(x12_node):
         ipath = "/ISA_LOOP/ISA"
         try:
             node = self.getnodebypath(ipath).children[11]
-            icvn = node.valid_codes[0]
-            return icvn  # type: ignore[no-any-return]
+            return cast(str, node.valid_codes[0])
         except Exception:
             return None
 
