@@ -38,8 +38,7 @@ dev = [
     "pytest>=7.0",
     "pytest-cov>=4.0",
     "coverage",
-    "black>=23.0",
-    "isort>=5.12",
+    "ruff>=0.6",
     "build>=1.0",
     "twine>=4.0",
     "mypy>=1.10",
@@ -73,14 +72,12 @@ packages = ["pyx12", "pyx12.scripts"]
 "*" = ["*.xml", "*.md"]
 pyx12 = ["map/*.xml", "map/*.xsd"]
 
-[tool.black]
+[tool.ruff]
 line-length = 100
-target-version = ['py311', 'py312', 'py313', 'py314']
+target-version = "py311"
 
-[tool.isort]
-profile = "black"
-line_length = 100
-multi_line_output = 3
+[tool.ruff.lint]
+select = ["I"]
 
 [tool.mypy]
 python_version = "3.11"
