@@ -56,8 +56,21 @@ git tag -a v{version} -m "Release v{version}"
 git push origin v{version}
 ```
 
-Tell the user the tag has been pushed and show the PyPI URL:
-`https://pypi.org/project/pyx12/{version}/`
+### 8. Create the GitHub release (release target only)
+
+For production releases (not pre-releases / RCs), always create a matching GitHub release so the tag isn't orphaned. Use auto-generated notes from the commit log, mark it `--latest`:
+
+```
+gh release create v{version} --title "v{version}" --generate-notes --latest
+```
+
+For pre-release tags (anything matching `v*rc*`, `v*beta*`, `v*alpha*`, `v*b{N}`, etc.), use `--prerelease` instead of `--latest` and skip the "latest" flag.
+
+### 9. Report
+
+Tell the user the tag has been pushed and show both URLs:
+- PyPI: `https://pypi.org/project/pyx12/{version}/`
+- GitHub release: `https://github.com/azoner/pyx12/releases/tag/v{version}`
 
 ### Notes
 - Never hardcode tokens; let twine read them from `~/.pypirc` or prompt interactively.
