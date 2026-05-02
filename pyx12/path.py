@@ -152,12 +152,6 @@ class X12Path:
             )
         return NotImplemented
 
-    def __ne__(self, other: object) -> bool:
-        res = type(self).__eq__(self, other)
-        if res is NotImplemented:
-            return res  # type: ignore[no-any-return]
-        return not bool(res)
-
     def __lt__(self, other: object) -> bool:
         return NotImplemented
 
