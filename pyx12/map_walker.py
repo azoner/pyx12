@@ -399,6 +399,27 @@ class walk_tree:
                 errh.seg_error(err_cde, err_str, None)
         self.mandatory_segs_missing = [x for x in self.mandatory_segs_missing if x[0].pos == cur_pos]
 
+    def _record_loop_missing_if_required(
+        self,
+        loop_node: Any,
+        first_child_node: Any,
+        seg_count: int,
+        cur_line: int,
+        ls_id: str | None,
+    ) -> None:
+        """
+        Accumulate a 'Mandatory loop missing' error if loop_node is required (R)
+        and has not yet been entered. The error is filed against the loop's
+        first child segment for later flushing via _flush_mandatory_segs.
+        """
+        if loop_node.usage != 'R' or self.counter.get_count(loop_node.x12path) >= 1:
+            return
+        fake_seg = pyx12.segment.Segment(first_child_node.id, '~', '*', ':')
+        err_str = 'Mandatory loop "%s" (%s) missing' % (loop_node.name, loop_node.id)
+        self.mandatory_segs_missing.append(
+            (first_child_node, fake_seg, '3', err_str, seg_count, cur_line, ls_id)
+        )
+
     def _is_loop_match(
         self,
         loop_node: Any,
@@ -432,19 +453,16 @@ class walk_tree:
         if first_child_node is None:
             raise EngineError('get_first_node failed from loop %s' % (loop_node.id))
         if first_child_node.is_loop():
-            #If any loop node matches
-            for child_node in loop_node.childIterator():
-                if child_node.is_loop() and self._is_loop_match(child_node,
-                                                                seg_data, errh, seg_count, cur_line, ls_id):
-                    return True
-        elif is_first_seg_match2(first_child_node, seg_data):
+            # Wrapper loop: match if any direct child loop matches.
+            return any(
+                child.is_loop() and self._is_loop_match(
+                    child, seg_data, errh, seg_count, cur_line, ls_id)
+                for child in loop_node.childIterator()
+            )
+        if is_first_seg_match2(first_child_node, seg_data):
             return True
-        elif loop_node.usage == 'R' and self.counter.get_count(loop_node.x12path) < 1:
-            fake_seg = pyx12.segment.Segment('%s' % (first_child_node.id), '~', '*', ':')
-            err_str = 'Mandatory loop "%s" (%s) missing' % \
-                (loop_node.name, loop_node.id)
-            self.mandatory_segs_missing.append((first_child_node, fake_seg,
-                                                '3', err_str, seg_count, cur_line, ls_id))
+        self._record_loop_missing_if_required(
+            loop_node, first_child_node, seg_count, cur_line, ls_id)
         return False
 
     def _goto_seg_match(
