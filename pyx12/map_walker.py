@@ -15,7 +15,7 @@ If seg indicates a loop has been entered, returns the first child segment node.
 If seg indicates a segment has been entered, returns the segment node.
 """
 from __future__ import annotations
-from typing import Any, Mapping
+from typing import Any, Mapping, NamedTuple
 
 import logging
 
@@ -28,6 +28,17 @@ from .nodeCounter import NodeCounter
 logger = logging.getLogger('pyx12.walk_tree')
 #logger.setLevel(logging.DEBUG)
 #logger.setLevel(logging.ERROR)
+
+
+class MissingMandatorySeg(NamedTuple):
+    """A pending 'mandatory missing' error to be flushed against errh."""
+    seg_node: Any
+    seg_data: pyx12.segment.Segment
+    err_cde: str
+    err_str: str
+    seg_count: int
+    cur_line: int
+    ls_id: str | None
 
 
 def pop_to_parent_loop(node: Any) -> Any:
@@ -97,7 +108,7 @@ class walk_tree:
     Walks a map_if tree.  Tracks loop/segment counting, missing loop/segment.
     """
 
-    mandatory_segs_missing: list[tuple[Any, pyx12.segment.Segment, str, str, int, int, str | None]]
+    mandatory_segs_missing: list[MissingMandatorySeg]
     counter: NodeCounter
 
     def __init__(
@@ -251,13 +262,17 @@ class walk_tree:
             self.counter.increment(child.x12path)
             self._check_seg_usage(child, seg_data, seg_count, cur_line, ls_id, errh)
             # Remove any previously missing errors for this segment
-            self.mandatory_segs_missing = [x for x in self.mandatory_segs_missing if x[0] != child]
+            self.mandatory_segs_missing = [
+                m for m in self.mandatory_segs_missing if m.seg_node != child
+            ]
             self._flush_mandatory_segs(errh, child.pos)
             return (child, pop_node_list, [])
         if child.usage == 'R' and self.counter.get_count(child.x12path) < 1:
             fake_seg = pyx12.segment.Segment('%s' % (child.id), '~', '*', ':')
             err_str = 'Mandatory segment "%s" (%s) missing' % (child.name, child.id)
-            self.mandatory_segs_missing.append((child, fake_seg, '3', err_str, seg_count, cur_line, ls_id))
+            self.mandatory_segs_missing.append(
+                MissingMandatorySeg(child, fake_seg, '3', err_str, seg_count, cur_line, ls_id)
+            )
         return None
 
     def _match_segment_at_loop_entry(
@@ -392,12 +407,14 @@ class walk_tree:
         :param errh: Error handler
         :type errh: L{error_handler.err_handler}
         """
-        for (seg_node, seg_data, err_cde, err_str, seg_count, cur_line, ls_id) in self.mandatory_segs_missing:
+        for m in self.mandatory_segs_missing:
             # Create errors if not also at current position
-            if seg_node.pos != cur_pos:
-                errh.add_seg(seg_node, seg_data, seg_count, cur_line, ls_id)
-                errh.seg_error(err_cde, err_str, None)
-        self.mandatory_segs_missing = [x for x in self.mandatory_segs_missing if x[0].pos == cur_pos]
+            if m.seg_node.pos != cur_pos:
+                errh.add_seg(m.seg_node, m.seg_data, m.seg_count, m.cur_line, m.ls_id)
+                errh.seg_error(m.err_cde, m.err_str, None)
+        self.mandatory_segs_missing = [
+            m for m in self.mandatory_segs_missing if m.seg_node.pos == cur_pos
+        ]
 
     def _record_loop_missing_if_required(
         self,
@@ -417,7 +434,7 @@ class walk_tree:
         fake_seg = pyx12.segment.Segment(first_child_node.id, '~', '*', ':')
         err_str = 'Mandatory loop "%s" (%s) missing' % (loop_node.name, loop_node.id)
         self.mandatory_segs_missing.append(
-            (first_child_node, fake_seg, '3', err_str, seg_count, cur_line, ls_id)
+            MissingMandatorySeg(first_child_node, fake_seg, '3', err_str, seg_count, cur_line, ls_id)
         )
 
     def _is_loop_match(

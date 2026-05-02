@@ -1,7 +1,13 @@
 import unittest
 
 import pyx12.error_handler
-from pyx12.map_walker import walk_tree, get_id_list, traverse_path, pop_to_parent_loop
+from pyx12.map_walker import (
+    MissingMandatorySeg,
+    walk_tree,
+    get_id_list,
+    traverse_path,
+    pop_to_parent_loop,
+)
 import pyx12.map_if
 import pyx12.params
 import pyx12.path
@@ -952,8 +958,10 @@ class TryMatchSegmentChild(unittest.TestCase):
         child = self.map.getnodebypath('/ISA_LOOP/IEA')
         # Seed a stale missing entry for this same child node.
         self.walker.mandatory_segs_missing.append(
-            (child, pyx12.segment.Segment('IEA*~', '~', '*', ':'),
-             '3', 'stale', 5, 4, None)
+            MissingMandatorySeg(
+                child, pyx12.segment.Segment('IEA*~', '~', '*', ':'),
+                '3', 'stale', 5, 4, None,
+            )
         )
         seg_data = pyx12.segment.Segment('IEA*1*000000123', '~', '*', ':')
         result = self.walker._try_match_segment_child(
@@ -961,7 +969,7 @@ class TryMatchSegmentChild(unittest.TestCase):
         )
         self.assertIsNotNone(result)
         self.assertEqual(
-            [x for x in self.walker.mandatory_segs_missing if x[0] == child], []
+            [m for m in self.walker.mandatory_segs_missing if m.seg_node == child], []
         )
 
     # ---- expected no-match ----
@@ -978,8 +986,8 @@ class TryMatchSegmentChild(unittest.TestCase):
         )
         self.assertIsNone(result)
         self.assertEqual(len(self.walker.mandatory_segs_missing), 1)
-        self.assertEqual(self.walker.mandatory_segs_missing[0][0], child)
-        self.assertEqual(self.walker.mandatory_segs_missing[0][2], '3')
+        self.assertEqual(self.walker.mandatory_segs_missing[0].seg_node, child)
+        self.assertEqual(self.walker.mandatory_segs_missing[0].err_cde, '3')
 
     def test_no_match_required_already_counted_no_accumulation(self):
         """Required child with count >= 1 + non-matching seg -> None, no accumulation."""
@@ -1108,8 +1116,8 @@ class TryMatchLoopChild(unittest.TestCase):
         self.assertIsNone(result)
         self.assertEqual(len(self.walker.mandatory_segs_missing), 1)
         # The accumulated entry references the loop's first child, not the loop itself.
-        self.assertEqual(self.walker.mandatory_segs_missing[0][0], first_child)
-        self.assertEqual(self.walker.mandatory_segs_missing[0][2], '3')
+        self.assertEqual(self.walker.mandatory_segs_missing[0].seg_node, first_child)
+        self.assertEqual(self.walker.mandatory_segs_missing[0].err_cde, '3')
 
     def test_no_match_required_counted_no_accumulation(self):
         """Required loop with count >= 1 + non-matching seg -> None, no accumulation."""
