@@ -147,31 +147,19 @@ class walk_tree:
         self.mandatory_segs_missing = []
         node, node_pos = walk_tree._resolve_starting_loop(node)
         while True:
-            # Iterate through nodes with position >= current position
-            for ord1 in [a for a in sorted(node.pos_map) if a >= node_pos]:
-                for child in node.pos_map[ord1]:
-                    if child.is_segment():
-                        result = self._try_match_segment_child(
-                            node, child, seg_data, orig_node, errh,
-                            seg_count, cur_line, ls_id, pop_node_list,
-                        )
-                        if result is not None:
-                            return result
-                    elif child.is_loop():
-                        result = self._try_match_loop_child(
-                            child, seg_data, errh,
-                            seg_count, cur_line, ls_id, pop_node_list,
-                        )
-                        if result is not None:
-                            return result
-            # End for ord1 in pos_keys
-            if node.is_map_root():  # If at root and we haven't found the segment yet.
-                walk_tree._seg_not_found_error(orig_node, seg_data,
-                                               errh, seg_count, cur_line, ls_id)
+            result = self._scan_loop_at_position(
+                node, node_pos, seg_data, orig_node, errh,
+                seg_count, cur_line, ls_id, pop_node_list,
+            )
+            if result is not None:
+                return result
+            if node.is_map_root():
+                walk_tree._seg_not_found_error(
+                    orig_node, seg_data, errh, seg_count, cur_line, ls_id)
                 return (None, [], [])
-            node_pos = node.pos  # Get position ordinal of current node in tree
+            node_pos = node.pos
             pop_node_list.append(node)
-            node = pop_to_parent_loop(node)  # Get enclosing parent loop
+            node = pop_to_parent_loop(node)
 
         walk_tree._seg_not_found_error(orig_node, seg_data, errh, seg_count, cur_line, ls_id)
         return (None, [], [])
@@ -321,6 +309,42 @@ class walk_tree:
         (node_seg, push_node_list) = self._goto_seg_match(
             child, seg_data, errh, seg_count, cur_line, ls_id)
         return (node_seg, pop_node_list, push_node_list)
+
+    def _scan_loop_at_position(
+        self,
+        node: Any,
+        node_pos: int,
+        seg_data: pyx12.segment.Segment,
+        orig_node: Any,
+        errh: Any,
+        seg_count: int,
+        cur_line: int,
+        ls_id: str | None,
+        pop_node_list: list[Any],
+    ) -> tuple[Any, list[Any], list[Any]] | None:
+        """
+        Scan all children of `node` whose position ordinal is >= node_pos,
+        delegating each to the segment- or loop-match helper. Returns the
+        first match's tuple, or None if no child matches (caller pops up
+        and tries again at the parent loop).
+        """
+        for ord1 in [a for a in sorted(node.pos_map) if a >= node_pos]:
+            for child in node.pos_map[ord1]:
+                if child.is_segment():
+                    result = self._try_match_segment_child(
+                        node, child, seg_data, orig_node, errh,
+                        seg_count, cur_line, ls_id, pop_node_list,
+                    )
+                    if result is not None:
+                        return result
+                elif child.is_loop():
+                    result = self._try_match_loop_child(
+                        child, seg_data, errh,
+                        seg_count, cur_line, ls_id, pop_node_list,
+                    )
+                    if result is not None:
+                        return result
+        return None
 
     @staticmethod
     def _resolve_starting_loop(node: Any) -> tuple[Any, int]:
