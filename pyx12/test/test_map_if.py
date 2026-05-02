@@ -813,3 +813,29 @@ class GetCompositeNodeByPath(unittest.TestCase):
         self.assertEqual(
             newnode.get_path(), "/ISA_LOOP/GS_LOOP/ST_LOOP/DETAIL/2000A/2000B/2200B/STC01-01"
         )
+
+
+class CompositeRequiredMissing(unittest.TestCase):
+    """Regression for issue #74.
+
+    When a required composite element is entirely absent from a segment,
+    `composite_if.is_valid` was iterating its `None` data and raising
+    `TypeError: 'NoneType' object is not iterable`. After the fix it
+    should fail validation cleanly — segment-level validation flags the
+    missing required element with err_cde "1".
+    """
+
+    def setUp(self):
+        param = pyx12.params.params()
+        self.map = pyx12.map_if.load_map_file("835.5010.X221.A1.xml", param)
+        self.node = self.map.getnodebypath("/ISA_LOOP/GS_LOOP/ST_LOOP/FOOTER/PLB")
+        self.errh = pyx12.error_handler.errh_null()
+
+    def test_plb03_composite_missing(self):
+        # PLB03 is the required Adjustment Identifier composite. Here the
+        # whole element is omitted from the segment.
+        self.errh.err_cde = None
+        seg_data = pyx12.segment.Segment("PLB*123*20211108~", "~", "*", ":")
+        result = self.node.is_valid(seg_data, self.errh)
+        self.assertFalse(result)
+        self.assertEqual(self.errh.err_cde, "1")
