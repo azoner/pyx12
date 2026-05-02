@@ -30,11 +30,13 @@ Run these in parallel (independent Grep / Bash calls) and collect counts + locat
 Grep: pattern = "type:\s*ignore", glob = "*.py", output_mode = "content", -n = true
 ```
 
-**b. TODO / FIXME / HACK / XXX** — author-flagged debt.
+**b. TODO / FIXME / HACK / XXX** — author-flagged debt. Catches both inline `# TODO` *and* `TODO:` mentions inside docstrings.
 
 ```
-Grep: pattern = "(?i)#\s*(TODO|FIXME|HACK|XXX)\b", glob = "*.py", output_mode = "content", -n = true
+Grep: pattern = "\b(TODO|FIXME|HACK)\b|#\s*XXX\b", glob = "*.py", output_mode = "content", -n = true
 ```
+
+The `XXX` arm requires `#` because `XXX` appears in test fixture data as a placeholder X12 sender id (e.g. `D00XXX`) — without the `#` constraint the report would drown in those false positives. Filter out `pyx12/test/x12testdata.py` as belt-and-suspenders.
 
 **c. Legacy typing imports** — `from typing import List, Dict, Tuple, Optional, Union, Set, FrozenSet, Type`. Project is Python 3.11+, so prefer built-in generics (`list[X]`, `dict[K, V]`, `X | None`).
 
