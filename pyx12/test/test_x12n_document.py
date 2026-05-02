@@ -18,7 +18,7 @@ class X12DocumentTestCase(unittest.TestCase):
                 fd = StringIO(x12str)
             else:
                 fd = StringIO()
-        except:
+        except Exception:
             if x12str:
                 fd = StringIO(x12str, encoding="ascii")
             else:

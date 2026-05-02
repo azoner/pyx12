@@ -18,7 +18,7 @@ class X12fileTestCase(unittest.TestCase):
                 fd = StringIO(x12str)
             else:
                 fd = StringIO()
-        except:
+        except Exception:
             if x12str:
                 fd = StringIO(x12str, encoding="ascii")
             else:
@@ -551,7 +551,7 @@ class NodeDeleteSelf(X12fileTestCase):
             a = cn1.id
         except EngineError:
             pass
-        except:
+        except Exception:
             a = cn1.id
         # self.assertRaises(EngineError, cn1.id)
 
