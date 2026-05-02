@@ -1,20 +1,28 @@
 from __future__ import annotations
-from collections.abc import Callable
-from typing import Any
+
 import collections.abc
 import functools
+from collections.abc import Callable
+from typing import Any
 
 # See https://wiki.python.org/moin/PythonDecoratorLibrary
 
 
 def dump_args(func: Callable[..., Any]) -> Callable[..., Any]:
     "This decorator dumps out the arguments passed to a function before calling it"
-    argnames = func.__code__.co_varnames[:func.__code__.co_argcount]
+    argnames = func.__code__.co_varnames[: func.__code__.co_argcount]
     fname = func.__name__
 
     def echo_func(*args: Any, **kwargs: Any) -> Any:
-        print((fname, ":", ', '.join('%s=%r' % entry
-            for entry in list(zip(argnames, args)) + list(kwargs.items()))))
+        print(
+            (
+                fname,
+                ":",
+                ", ".join(
+                    "%s=%r" % entry for entry in list(zip(argnames, args)) + list(kwargs.items())
+                ),
+            )
+        )
         return func(*args, **kwargs)
 
     return echo_func
@@ -33,14 +41,15 @@ def memoize(obj: Callable[..., Any]) -> Callable[..., Any]:
         if key not in cache:
             cache[key] = obj(*args, **kwargs)
         return cache[key]
+
     return memoizer
 
 
 class memoized:
-    '''Decorator. Caches a function's return value each time it is called.
+    """Decorator. Caches a function's return value each time it is called.
     If called later with the same arguments, the cached value is returned
     (not reevaluated).
-    '''
+    """
 
     func: Callable[..., Any]
     cache: dict[Any, Any]
@@ -62,9 +71,9 @@ class memoized:
             return value
 
     def __repr__(self) -> str:
-        '''Return the function's docstring.'''
-        return self.func.__doc__ or ''
+        """Return the function's docstring."""
+        return self.func.__doc__ or ""
 
     def __get__(self, obj: Any, objtype: Any) -> Callable[..., Any]:
-        '''Support instance methods.'''
+        """Support instance methods."""
         return functools.partial(self.__call__, obj)
