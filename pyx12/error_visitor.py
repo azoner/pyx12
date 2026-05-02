@@ -11,13 +11,14 @@
 """
 Visitor - Visits an error_handler composite
 """
+
 from __future__ import annotations
+
 from typing import Any
 
 
 class error_visitor:
-    """
-    """
+    """ """
 
     def __init__(self, fd: Any) -> None:
         """

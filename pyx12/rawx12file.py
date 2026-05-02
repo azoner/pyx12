@@ -12,7 +12,9 @@ Low level interface to an X12 data input stream.
 Iterates over segment line strings.
 Used by X12Reader.
 """
+
 from __future__ import annotations
+
 from collections.abc import Iterator
 from typing import TextIO
 
@@ -45,22 +47,25 @@ class RawX12File:
         :type fin: open file object
         """
         self.fd = fin
-        self.buffer = ''
+        self.buffer = ""
         line = self.fd.read(ISA_LEN)
-        if line[:3] != 'ISA':
+        if line[:3] != "ISA":
             err_str = "First line does not begin with 'ISA': %s" % line[:3]
             raise pyx12.errors.X12Error(err_str)
         if len(line) != ISA_LEN:
-            err_str = 'ISA line is only %i characters' % len(line)
+            err_str = "ISA line is only %i characters" % len(line)
             raise pyx12.errors.X12Error(err_str)
         self.icvn = line[84:89]
-        if self.icvn not in ('00401', '00501'):
-            err_str = 'ISA Interchange Control Version Number is unknown: %s for %s' % (self.icvn, line)
+        if self.icvn not in ("00401", "00501"):
+            err_str = "ISA Interchange Control Version Number is unknown: %s for %s" % (
+                self.icvn,
+                line,
+            )
             raise pyx12.errors.X12Error(err_str)
         self.seg_term = line[-1]
         self.ele_term = line[3]
         self.subele_term = line[-2]
-        self.repetition_term = line[82] if self.icvn == '00501' else None
+        self.repetition_term = line[82] if self.icvn == "00501" else None
         self.buffer = line
         self.buffer += self.fd.read(DEFAULT_BUFSIZE)
 
@@ -79,8 +84,8 @@ class RawX12File:
                 break
             # Get first segment in buffer
             (line, self.buffer) = self.buffer.split(self.seg_term, 1)
-            line = line.lstrip('\n\r')
-            if line == '':
+            line = line.lstrip("\n\r")
+            if line == "":
                 break
             yield line
 
@@ -90,4 +95,4 @@ class RawX12File:
 
         :rtype: tuple(string, string, string, string)
         """
-        return (self.seg_term, self.ele_term, self.subele_term, '\n', self.repetition_term)
+        return (self.seg_term, self.ele_term, self.subele_term, "\n", self.repetition_term)

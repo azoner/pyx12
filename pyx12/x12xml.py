@@ -11,30 +11,30 @@
 """
 Create an XML rendering of the X12 document
 """
+
 from __future__ import annotations
-from typing import Any, Literal, TextIO
 
 import os.path
+from typing import Any, Literal, TextIO
 
 # Intrapackage imports
 import pyx12.segment
+
 from .errors import EngineError
-from .xmlwriter import XMLWriter
 from .map_walker import pop_to_parent_loop
+from .xmlwriter import XMLWriter
 
 
 class x12xml:
-
     writer: XMLWriter
     last_path: list[str]
 
     def __init__(self, fd: TextIO, type: str, dtd_urn: str | None) -> None:
         self.writer = XMLWriter(fd)
         if dtd_urn:
-            self.writer.doctype( \
-                type, \
-                "-//J Holland//DTD XML X12 Document Conversion1.0//EN//XML", \
-                dtd_urn)
+            self.writer.doctype(
+                type, "-//J Holland//DTD XML X12 Document Conversion1.0//EN//XML", dtd_urn
+            )
         self.writer.push(type)
         self.last_path = []
 
@@ -62,15 +62,16 @@ class x12xml:
         :type seg_data: L{segment<segment.Segment>}
         """
         if not seg_node.is_segment():
-            raise EngineError('Node must be a segment')
+            raise EngineError("Node must be a segment")
         parent = pop_to_parent_loop(seg_node)  # Get enclosing loop
         # check path for new loops to be added
         cur_path = self._path_list(parent.get_path())
         if self.last_path != cur_path:
             last_path = self.last_path
             match_idx = self._get_path_match_idx(last_path, cur_path)
-            root_path = self._path_list(os.path.commonprefix(
-                ['/'.join(cur_path), '/'.join(last_path)]))
+            root_path = self._path_list(
+                os.path.commonprefix(["/".join(cur_path), "/".join(last_path)])
+            )
             if seg_node.is_first_seg_in_loop() and root_path == cur_path:
                 match_idx -= 1
             for i in range(len(last_path) - 1, match_idx - 1, -1):
@@ -83,14 +84,14 @@ class x12xml:
         self.writer.push(xname, attrib)
         for i in range(len(seg_data)):
             child_node = seg_node.get_child_node_by_idx(i)
-            _ele = seg_data.get('{idx:02d}'.format(idx=i + 1))
+            _ele = seg_data.get("{idx:02d}".format(idx=i + 1))
             assert _ele is not None  # within range(len(seg_data))
-            if child_node.usage == 'N' or _ele.is_empty():
+            if child_node.usage == "N" or _ele.is_empty():
                 pass  # Do not try to ouput for invalid or empty elements
             elif child_node.is_composite():
                 (xname, attrib) = self._get_comp_info(seg_node_id)
                 self.writer.push(xname, attrib)
-                comp_data = seg_data.get('{idx:02d}'.format(idx=i + 1))
+                comp_data = seg_data.get("{idx:02d}".format(idx=i + 1))
                 assert isinstance(comp_data, pyx12.segment.Composite)
                 for j in range(len(comp_data)):
                     subele_node = child_node.get_child_node_by_idx(j)
@@ -98,15 +99,15 @@ class x12xml:
                     self.writer.elem(xname, comp_data[j].get_value(), attrib)
                 self.writer.pop()  # end composite
             elif child_node.is_element():
-                ele_val = seg_data.get_value('{idx:02d}'.format(idx=i + 1))
-                if ele_val == '' or ele_val is None:
+                ele_val = seg_data.get_value("{idx:02d}".format(idx=i + 1))
+                if ele_val == "" or ele_val is None:
                     pass
-                    #self.writer.empty(u"ele", attrs={u'id': child_node.id})
+                    # self.writer.empty(u"ele", attrs={u'id': child_node.id})
                 else:
                     (xname, attrib) = self._get_ele_info(child_node.id)
                     self.writer.elem(xname, ele_val, attrib)
             else:
-                raise EngineError('Node must be a either an element or a composite')
+                raise EngineError("Node must be a either an element or a composite")
         self.writer.pop()  # end segment
         self.last_path = cur_path
 
@@ -126,7 +127,7 @@ class x12xml:
         :type seg_data: L{segment<segment.Segment>}
         """
         if not seg_node.is_segment():
-            raise EngineError('Node must be a segment')
+            raise EngineError("Node must be a segment")
         parent = pop_to_parent_loop(seg_node)  # Get enclosing loop
         for loop in pop_loops:
             self.writer.pop()
@@ -137,14 +138,14 @@ class x12xml:
         self.writer.push(xname, attrib)
         for i in range(len(seg_data)):
             child_node = seg_node.get_child_node_by_idx(i)
-            _ele = seg_data.get('{idx:02d}'.format(idx=i + 1))
+            _ele = seg_data.get("{idx:02d}".format(idx=i + 1))
             assert _ele is not None  # within range(len(seg_data))
-            if child_node.usage == 'N' or _ele.is_empty():
+            if child_node.usage == "N" or _ele.is_empty():
                 pass  # Do not try to ouput for invalid or empty elements
             elif child_node.is_composite():
                 (xname, attrib) = self._get_comp_info(seg_node.id)
                 self.writer.push(xname, attrib)
-                comp_data = seg_data.get('{idx:02d}'.format(idx=i + 1))
+                comp_data = seg_data.get("{idx:02d}".format(idx=i + 1))
                 assert isinstance(comp_data, pyx12.segment.Composite)
                 for j in range(len(comp_data)):
                     subele_node = child_node.get_child_node_by_idx(j)
@@ -152,15 +153,15 @@ class x12xml:
                     self.writer.elem(xname, comp_data[j].get_value(), attrib)
                 self.writer.pop()  # end composite
             elif child_node.is_element():
-                ele_val = seg_data.get_value('{idx:02d}'.format(idx=i + 1))
-                if ele_val == '' or ele_val is None:
+                ele_val = seg_data.get_value("{idx:02d}".format(idx=i + 1))
+                if ele_val == "" or ele_val is None:
                     pass
-                    #self.writer.empty(u"ele", attrs={u'id': child_node.id})
+                    # self.writer.empty(u"ele", attrs={u'id': child_node.id})
                 else:
                     (xname, attrib) = self._get_ele_info(child_node.id)
                     self.writer.elem(xname, ele_val, attrib)
             else:
-                raise EngineError('Node must be a either an element or a composite')
+                raise EngineError("Node must be a either an element or a composite")
         self.writer.pop()  # end segment
 
     def _path_list(self, path_str: str) -> list[str]:
@@ -168,7 +169,7 @@ class x12xml:
         Get list of path nodes from path string
         :rtype: list
         """
-        return [x for x in path_str.split('/') if x != '']
+        return [x for x in path_str.split("/") if x != ""]
 
     def _get_path_match_idx(self, last_path: list[str], cur_path: list[str]) -> int:
         """

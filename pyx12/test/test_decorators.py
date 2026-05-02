@@ -32,14 +32,14 @@ class TestMemoize(unittest.TestCase):
         call_count = [0]
 
         @memoize
-        def greet(name, greeting='hello'):
+        def greet(name, greeting="hello"):
             call_count[0] += 1
-            return f'{greeting} {name}'
+            return f"{greeting} {name}"
 
-        result = greet('world', greeting='hi')
-        greet('world', greeting='hi')
+        result = greet("world", greeting="hi")
+        greet("world", greeting="hi")
         self.assertEqual(call_count[0], 1)
-        self.assertEqual(result, 'hi world')
+        self.assertEqual(result, "hi world")
 
     def test_cache_attribute_exists(self):
         @memoize
@@ -94,8 +94,8 @@ class TestMemoized(unittest.TestCase):
             """my docstring"""
             pass
 
-        self.assertEqual(repr(documented), 'my docstring')
+        self.assertEqual(repr(documented), "my docstring")
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     unittest.main()

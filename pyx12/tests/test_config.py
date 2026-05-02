@@ -1,14 +1,16 @@
 from __future__ import annotations
+
+import logging
 import os
 import sys
-import logging
 import unittest
 from typing import Any
 
 # Configure logging
-logging.basicConfig(level=logging.DEBUG,
-                   format='%(asctime)s %(levelname)s %(message)s',
-                   stream=sys.stdout)
+logging.basicConfig(
+    level=logging.DEBUG, format="%(asctime)s %(levelname)s %(message)s", stream=sys.stdout
+)
+
 
 class TestCase(unittest.TestCase):
     def setUp(self) -> None:
@@ -19,6 +21,6 @@ class TestCase(unittest.TestCase):
     def tearDown(self) -> None:
         self.logger.debug("Tearing down test case")
         super().tearDown()
-        
+
     def assertIsInstance(self, obj: Any, cls: Any, msg: Any = None) -> None:
         super().assertIsInstance(obj, cls, msg)

@@ -15,60 +15,81 @@ Parse a ANSI X12N data file.
 Validate against a map and codeset values.
 """
 
-import os
-import os.path
-from os.path import isdir, isfile
-import sys
-import logging
-import tempfile
 import argparse
 import glob
+import logging
+import os
+import os.path
+import sys
+import tempfile
+from os.path import isdir, isfile
 
 import pyx12
-import pyx12.x12n_document
 import pyx12.params
+import pyx12.x12n_document
 
 __author__ = pyx12.__author__
 __status__ = pyx12.__status__
 __version__ = pyx12.__version__
 __date__ = pyx12.__date__
 
+
 def check_map_path_arg(map_path):
     if not isdir(map_path):
-        raise argparse.ArgumentError(None, "The MAP_PATH '{}' is not a valid directory.  Current directory is {}".format(map_path, os.getcwd()))
-    index_file = 'maps.xml'
+        raise argparse.ArgumentError(
+            None,
+            "The MAP_PATH '{}' is not a valid directory.  Current directory is {}".format(
+                map_path, os.getcwd()
+            ),
+        )
+    index_file = "maps.xml"
     if not isfile(os.path.join(map_path, index_file)):
-        raise argparse.ArgumentError(None,
-                    "The MAP_PATH '{}' does not contain the map index file '{}'".format(map_path, index_file))
+        raise argparse.ArgumentError(
+            None,
+            "The MAP_PATH '{}' does not contain the map index file '{}'".format(
+                map_path, index_file
+            ),
+        )
     return map_path
+
 
 def main():
     """
     Set up environment for processing
     """
-    parser = argparse.ArgumentParser(description='X12 Validation')
-    parser.add_argument('--config-file', '-c', action='store',
-                        dest="configfile", default=None)
+    parser = argparse.ArgumentParser(description="X12 Validation")
+    parser.add_argument("--config-file", "-c", action="store", dest="configfile", default=None)
+    parser.add_argument("--log-file", "-l", action="store", dest="logfile", default=None)
     parser.add_argument(
-        '--log-file', '-l', action='store', dest="logfile", default=None)
-    parser.add_argument('--map-path', '-m', action='store', dest="map_path", default=None, type=check_map_path_arg)
-    parser.add_argument('--verbose', '-v', action='count', default=0)
-    parser.add_argument('--debug', '-d', action='store_true')
-    parser.add_argument('--quiet', '-q', action='store_true')
-    parser.add_argument('--html', '-H', action='store_true')
-    parser.add_argument('--exclude-external-codes', '-x', action='append', dest="exclude_external",
-                        default=[], help='External Code Names to ignore')
-    parser.add_argument('--charset', '-s', choices=(
-        'b', 'e'), help='Specify X12 character set: b=basic, e=extended')
-    #parser.add_argument('--background', '-b', action='store_true')
-    #parser.add_argument('--test', '-t', action='store_true')
-    parser.add_argument('--version', action='version',
-                        version='{prog} {version}'.format(prog=parser.prog, version=__version__))
-    parser.add_argument('input_files', nargs='*')
+        "--map-path", "-m", action="store", dest="map_path", default=None, type=check_map_path_arg
+    )
+    parser.add_argument("--verbose", "-v", action="count", default=0)
+    parser.add_argument("--debug", "-d", action="store_true")
+    parser.add_argument("--quiet", "-q", action="store_true")
+    parser.add_argument("--html", "-H", action="store_true")
+    parser.add_argument(
+        "--exclude-external-codes",
+        "-x",
+        action="append",
+        dest="exclude_external",
+        default=[],
+        help="External Code Names to ignore",
+    )
+    parser.add_argument(
+        "--charset", "-s", choices=("b", "e"), help="Specify X12 character set: b=basic, e=extended"
+    )
+    # parser.add_argument('--background', '-b', action='store_true')
+    # parser.add_argument('--test', '-t', action='store_true')
+    parser.add_argument(
+        "--version",
+        action="version",
+        version="{prog} {version}".format(prog=parser.prog, version=__version__),
+    )
+    parser.add_argument("input_files", nargs="*")
     args = parser.parse_args()
 
-    logger = logging.getLogger('pyx12')
-    formatter = logging.Formatter('%(asctime)s %(levelname)s %(message)s')
+    logger = logging.getLogger("pyx12")
+    formatter = logging.Formatter("%(asctime)s %(levelname)s %(message)s")
 
     stdout_hdlr = logging.StreamHandler()
     stdout_hdlr.setFormatter(formatter)
@@ -78,7 +99,7 @@ def main():
     param = pyx12.params.params(args.configfile)
     if args.debug:
         logger.setLevel(logging.DEBUG)
-        param.set('debug', True)
+        param.set("debug", True)
     if args.verbose > 0:
         logger.setLevel(logging.DEBUG)
     if args.quiet:
@@ -86,9 +107,9 @@ def main():
     fd_997 = None
     fd_html = None
     flag_997 = True
-    param.set('exclude_external_codes', ','.join(args.exclude_external))
+    param.set("exclude_external_codes", ",".join(args.exclude_external))
     if args.map_path:
-        param.set('map_path', args.map_path)
+        param.set("map_path", args.map_path)
 
     if args.logfile:
         try:
@@ -96,7 +117,7 @@ def main():
             hdlr.setFormatter(formatter)
             logger.addHandler(hdlr)
         except OSError:
-            logger.exception('Could not open log file: %s' % (args.logfile))
+            logger.exception("Could not open log file: %s" % (args.logfile))
 
     for fn in args.input_files:
         for src_filename in glob.iglob(fn):
@@ -105,28 +126,34 @@ def main():
                     logger.error('Could not open file "%s"' % (src_filename))
                     continue
                 if flag_997:
-                    fd_997 = tempfile.TemporaryFile(mode='w+', encoding='ascii')
+                    fd_997 = tempfile.TemporaryFile(mode="w+", encoding="ascii")
                 if args.html:
-                    if os.path.splitext(src_filename)[1] == '.txt':
-                        target_html = os.path.splitext(src_filename)[0] + '.html'
+                    if os.path.splitext(src_filename)[1] == ".txt":
+                        target_html = os.path.splitext(src_filename)[0] + ".html"
                     else:
-                        target_html = src_filename + '.html'
-                    fd_html = open(target_html, 'w', encoding='utf-8')
+                        target_html = src_filename + ".html"
+                    fd_html = open(target_html, "w", encoding="utf-8")
 
-                logger.debug('Before x12n_document for {}'.format(src_filename))
-                if pyx12.x12n_document.x12n_document(param=param, src_file=src_filename,
-                        fd_997=fd_997, fd_html=fd_html, fd_xmldoc=None, map_path=args.map_path):
-                    sys.stderr.write('%s: OK\n' % (src_filename))
+                logger.debug("Before x12n_document for {}".format(src_filename))
+                if pyx12.x12n_document.x12n_document(
+                    param=param,
+                    src_file=src_filename,
+                    fd_997=fd_997,
+                    fd_html=fd_html,
+                    fd_xmldoc=None,
+                    map_path=args.map_path,
+                ):
+                    sys.stderr.write("%s: OK\n" % (src_filename))
                 else:
-                    sys.stderr.write('%s: Failure\n' % (src_filename))
-                logger.debug('after x12n_document for {}'.format(src_filename))
+                    sys.stderr.write("%s: Failure\n" % (src_filename))
+                logger.debug("after x12n_document for {}".format(src_filename))
                 if flag_997 and fd_997.tell() != 0:
                     fd_997.seek(0)
-                    if os.path.splitext(src_filename)[1] == '.txt':
-                        target_997 = os.path.splitext(src_filename)[0] + '.997'
+                    if os.path.splitext(src_filename)[1] == ".txt":
+                        target_997 = os.path.splitext(src_filename)[0] + ".997"
                     else:
-                        target_997 = src_filename + '.997'
-                    with open(target_997, mode='w', encoding='ascii') as f997:
+                        target_997 = src_filename + ".997"
+                    with open(target_997, mode="w", encoding="ascii") as f997:
                         f997.write(fd_997.read())
 
                 if fd_997:
@@ -134,12 +161,13 @@ def main():
                 if fd_html:
                     fd_html.close()
             except OSError:
-                logger.exception('Could not open files')
+                logger.exception("Could not open files")
                 return False
             except KeyboardInterrupt:
                 print("\n[interrupt]")
 
     return True
 
-if __name__ == '__main__':
+
+if __name__ == "__main__":
     sys.exit(not main())

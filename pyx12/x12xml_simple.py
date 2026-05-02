@@ -11,19 +11,21 @@
 """
 Create a XML rendering of the X12 document
 """
-from __future__ import annotations
-from typing import Any, TextIO
 
-from os.path import commonprefix
+from __future__ import annotations
+
 import logging
+from os.path import commonprefix
+from typing import Any, TextIO
 
 # Intrapackage imports
 import pyx12.segment
-from .errors import EngineError
-from .x12xml import x12xml
-from .map_walker import pop_to_parent_loop
 
-logger = logging.getLogger('pyx12.x12xml.simple')
+from .errors import EngineError
+from .map_walker import pop_to_parent_loop
+from .x12xml import x12xml
+
+logger = logging.getLogger("pyx12.x12xml.simple")
 
 
 class x12xml_simple(x12xml):
@@ -41,11 +43,11 @@ class x12xml_simple(x12xml):
         :type seg_data: L{segment<segment.Segment>}
         """
         if not seg_node.is_segment():
-            raise EngineError('Node must be a segment')
+            raise EngineError("Node must be a segment")
         parent = pop_to_parent_loop(seg_node)  # Get enclosing loop
         # check path for new loops to be added
         cur_path = self._path_list(parent.get_path())
-        #if seg_node.id == 'GS':
+        # if seg_node.id == 'GS':
         #    import ipdb; ipdb.set_trace()
         if self.last_path == cur_path and seg_node.is_first_seg_in_loop():
             # loop repeat
@@ -55,7 +57,7 @@ class x12xml_simple(x12xml):
         else:
             last_path = self.last_path
             match_idx = self._get_path_match_idx(last_path, cur_path)
-            root_path = self._path_list(commonprefix(['/'.join(cur_path), '/'.join(last_path)]))
+            root_path = self._path_list(commonprefix(["/".join(cur_path), "/".join(last_path)]))
             if seg_node.is_first_seg_in_loop() and root_path == cur_path:
                 match_idx -= 1
             for i in range(len(last_path) - 1, match_idx - 1, -1):
@@ -68,14 +70,14 @@ class x12xml_simple(x12xml):
         self.writer.push(xname, attrib)
         for i in range(len(seg_data)):
             child_node = seg_node.get_child_node_by_idx(i)
-            _ele = seg_data.get('%02i' % (i + 1))
+            _ele = seg_data.get("%02i" % (i + 1))
             assert _ele is not None  # within range(len(seg_data))
-            if child_node.usage == 'N' or _ele.is_empty():
+            if child_node.usage == "N" or _ele.is_empty():
                 pass  # Do not try to ouput for invalid or empty elements
             elif child_node.is_composite():
                 (xname, attrib) = self._get_comp_info(seg_node_id)
                 self.writer.push(xname, attrib)
-                comp_data = seg_data.get('%02i' % (i + 1))
+                comp_data = seg_data.get("%02i" % (i + 1))
                 assert isinstance(comp_data, pyx12.segment.Composite)
                 for j in range(len(comp_data)):
                     subele_node = child_node.get_child_node_by_idx(j)
@@ -83,15 +85,15 @@ class x12xml_simple(x12xml):
                     self.writer.elem(xname, comp_data[j].get_value(), attrib)
                 self.writer.pop()  # end composite
             elif child_node.is_element():
-                ele_val = seg_data.get_value('%02i' % (i + 1))
-                if ele_val == '' or ele_val is None:
+                ele_val = seg_data.get_value("%02i" % (i + 1))
+                if ele_val == "" or ele_val is None:
                     pass
-                    #self.writer.empty(u"ele", attrs={u'id': child_node.id})
+                    # self.writer.empty(u"ele", attrs={u'id': child_node.id})
                 else:
                     (xname, attrib) = self._get_ele_info(child_node.id)
                     self.writer.elem(xname, ele_val, attrib)
             else:
-                raise EngineError('Node must be a either an element or a composite')
+                raise EngineError("Node must be a either an element or a composite")
         self.writer.pop()  # end segment
         self.last_path = cur_path
 
@@ -99,28 +101,28 @@ class x12xml_simple(x12xml):
         """
         Override loop node value
         """
-        return ("loop", {'id': loop_id})
+        return ("loop", {"id": loop_id})
 
     def _get_seg_info(self, seg_id: str) -> tuple[str, dict[str, str]]:
         """
         Override segment node value
         """
-        return ("seg", {'id': seg_id})
+        return ("seg", {"id": seg_id})
 
     def _get_comp_info(self, comp_id: str) -> tuple[str, dict[str, str]]:
         """
         Override composite node value
         """
-        return ("comp",  {'id': comp_id})
+        return ("comp", {"id": comp_id})
 
     def _get_ele_info(self, ele_id: str) -> tuple[str, dict[str, str]]:
         """
         Override element node value
         """
-        return ("ele", {'id': ele_id})
+        return ("ele", {"id": ele_id})
 
     def _get_subele_info(self, subele_id: str) -> tuple[str, dict[str, str]]:
         """
         Override sub-element node value
         """
-        return ("subele", {'id': subele_id})
+        return ("subele", {"id": subele_id})

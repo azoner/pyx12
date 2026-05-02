@@ -16,12 +16,15 @@ Order of precedence:
  2. Config files as constructor parameters
  3. self.params - Defaults
 """
+
 from __future__ import annotations
-from typing import Any
-from os.path import dirname, abspath, join, isdir, isfile, expanduser
-import sys
-import defusedxml.ElementTree as et
+
 import logging
+import sys
+from os.path import abspath, dirname, expanduser, isdir, isfile, join
+from typing import Any
+
+import defusedxml.ElementTree as et
 
 from pyx12.errors import EngineError
 
@@ -35,19 +38,19 @@ class ParamsBase:
     params: dict[str, Any]
 
     def __init__(self) -> None:
-        self.logger = logging.getLogger('pyx12.params')
+        self.logger = logging.getLogger("pyx12.params")
         self.params = {}
-        #First, try relative path
+        # First, try relative path
         base_dir = dirname(dirname(abspath(sys.argv[0])))
-        map_path = join(base_dir, 'map')
-        #Then look in standard installation location
+        map_path = join(base_dir, "map")
+        # Then look in standard installation location
         if not isdir(map_path):
-            map_path = join(sys.prefix, 'share', 'pyx12', 'map')
-        self.params['map_path'] = map_path
-        self.params['exclude_external_codes'] = None
-        self.params['charset'] = 'E'
-        self.params['simple_dtd'] = ''
-        self.params['xmlout'] = 'simple'
+            map_path = join(sys.prefix, "share", "pyx12", "map")
+        self.params["map_path"] = map_path
+        self.params["exclude_external_codes"] = None
+        self.params["charset"] = "E"
+        self.params["simple_dtd"] = ""
+        self.params["xmlout"] = "simple"
 
     def get(self, option: str) -> Any:
         """
@@ -68,7 +71,7 @@ class ParamsBase:
         :param value: Parameter value
         :type value: string
         """
-        if value == '':
+        if value == "":
             self.params[option] = None
         else:
             self.params[option] = value
@@ -86,11 +89,11 @@ class ParamsBase:
             self.logger.debug(f'Configuration file "{filename}" does not exist')
             raise EngineError(f'Configuration file "{filename}" does not exist')
         try:
-            self.logger.debug(f'parsing config file {filename}')
-            parser = et.XMLParser(encoding='utf-8')
+            self.logger.debug(f"parsing config file {filename}")
+            parser = et.XMLParser(encoding="utf-8")
             t = et.parse(filename, parser=parser)
-            for c in t.iter('param'):
-                self._set_option(c.get('name'), c.findtext('value'), c.findtext('type'))
+            for c in t.iter("param"):
+                self._set_option(c.get("name"), c.findtext("value"), c.findtext("type"))
         except Exception:
             self.logger.error(f'Read of configuration file "{filename}" failed')
             raise
@@ -105,12 +108,12 @@ class ParamsBase:
         :param valtype: Parameter type
         :type valtype: string
         """
-        if option is None or option == '':
+        if option is None or option == "":
             return
-        if value == '':
+        if value == "":
             value = None
-        if valtype == 'boolean':
-            if value in ('False', 'F'):
+        if valtype == "boolean":
+            if value in ("False", "F"):
                 self.params[option] = False
             else:
                 self.params[option] = True
@@ -122,35 +125,36 @@ class ParamsUnix(ParamsBase):
     """
     Read options from XML configuration files
     """
+
     def __init__(self, config_file: str | None = None) -> None:
         super().__init__()
-        config_files = [join(sys.prefix, 'etc/pyx12.conf.xml'),
-                        expanduser('~/.pyx12.conf.xml')]
+        config_files = [join(sys.prefix, "etc/pyx12.conf.xml"), expanduser("~/.pyx12.conf.xml")]
         for filename in config_files:
             if isfile(filename):
-                self.logger.debug(f'Read param file: {filename}')
+                self.logger.debug(f"Read param file: {filename}")
                 self._read_config_file(filename)
         if config_file:
-            self.logger.debug(f'Read param file: {config_file}')
+            self.logger.debug(f"Read param file: {config_file}")
             self._read_config_file(config_file)
         else:
-            self.logger.debug('No config file passed to the constructor')
+            self.logger.debug("No config file passed to the constructor")
 
 
 class ParamsWindows(ParamsBase):
     """
     Read options from XML configuration files
     """
+
     def __init__(self, config_file: str | None = None) -> None:
         super().__init__()
-        config_files = [join(sys.prefix, 'etc/pyx12.conf.xml')]
+        config_files = [join(sys.prefix, "etc/pyx12.conf.xml")]
         for filename in config_files:
             if isfile(filename):
-                self.logger.debug(f'Read param file: {filename}')
+                self.logger.debug(f"Read param file: {filename}")
                 self._read_config_file(filename)
         if config_file:
-            self.logger.debug(f'Read param file: {config_file}')
+            self.logger.debug(f"Read param file: {config_file}")
             self._read_config_file(config_file)
 
 
-params: type[ParamsBase] = ParamsWindows if sys.platform == 'win32' else ParamsUnix
+params: type[ParamsBase] = ParamsWindows if sys.platform == "win32" else ParamsUnix

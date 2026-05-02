@@ -115,9 +115,9 @@ uv run pytest
 # Type check
 uv run mypy
 
-# Format
-uv run black pyx12/
-uv run isort pyx12/
+# Format & sort imports
+uv run ruff format pyx12/
+uv run ruff check --select I --fix pyx12/
 ```
 
 A green `pytest` and `mypy --strict` run is required for CI to pass.
