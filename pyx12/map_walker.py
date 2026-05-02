@@ -256,16 +256,10 @@ class walk_tree:
             # Is the matched segment the beginning of a loop?
             if node.is_loop() \
                     and self._is_loop_match(node, seg_data, errh, seg_count, cur_line, ls_id):
-                (node1, push_node_list) = self._goto_seg_match(
-                    node, seg_data, errh, seg_count, cur_line, ls_id)
-                if orig_node.is_loop() or orig_node.is_map_root():
-                    orig_loop = orig_node
-                else:
-                    orig_loop = pop_to_parent_loop(orig_node)
-                if node == orig_loop:
-                    pop_node_list = [node]
-                    push_node_list = [node]
-                return (node1, pop_node_list, push_node_list)
+                return self._match_segment_at_loop_entry(
+                    node, seg_data, orig_node, errh,
+                    seg_count, cur_line, ls_id, pop_node_list,
+                )
             self.counter.increment(child.x12path)
             self._check_seg_usage(child, seg_data, seg_count, cur_line, ls_id, errh)
             # Remove any previously missing errors for this segment
@@ -277,6 +271,32 @@ class walk_tree:
             err_str = 'Mandatory segment "%s" (%s) missing' % (child.name, child.id)
             self.mandatory_segs_missing.append((child, fake_seg, '3', err_str, seg_count, cur_line, ls_id))
         return None
+
+    def _match_segment_at_loop_entry(
+        self,
+        node: Any,
+        seg_data: pyx12.segment.Segment,
+        orig_node: Any,
+        errh: Any,
+        seg_count: int,
+        cur_line: int,
+        ls_id: str | None,
+        pop_node_list: list[Any],
+    ) -> tuple[Any, list[Any], list[Any]]:
+        """
+        Handle a matched segment that is also the first segment of `node`
+        (the enclosing loop being scanned). Descend via _goto_seg_match,
+        then adjust pop/push when `node` equals the starting node's
+        enclosing loop — in that case both lists collapse to [node],
+        signalling "we re-entered the same loop we started in".
+        """
+        (node_seg, push_node_list) = self._goto_seg_match(
+            node, seg_data, errh, seg_count, cur_line, ls_id)
+        orig_loop = orig_node if (orig_node.is_loop() or orig_node.is_map_root()) \
+            else pop_to_parent_loop(orig_node)
+        if node == orig_loop:
+            return (node_seg, [node], [node])
+        return (node_seg, pop_node_list, push_node_list)
 
     def _try_match_loop_child(
         self,
