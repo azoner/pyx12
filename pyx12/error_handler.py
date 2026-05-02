@@ -15,7 +15,7 @@ Interface to X12 Errors
 from __future__ import annotations
 
 import logging
-from typing import Any
+from typing import Any, cast
 
 # Intrapackage imports
 import pyx12.segment
@@ -650,7 +650,7 @@ class err_gs(err_node):
         if seg_data is None:
             self.st_count_orig = 0
         else:
-            self.st_count_orig = int(seg_data.get_value("GE01"))  # type: ignore[arg-type]
+            self.st_count_orig = int(cast(str, seg_data.get_value("GE01")))
         self.st_count_recv = src.st_count  # AK903
 
     def _get_ack_code(self) -> str:

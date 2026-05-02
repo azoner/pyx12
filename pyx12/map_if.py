@@ -35,6 +35,13 @@ from .syntax import is_syntax_valid
 MAXINT = 2147483647
 
 
+def _required_attr(elem: Element, name: str) -> str:
+    v = elem.get(name) or elem.findtext(name)
+    if v is None:
+        raise EngineError(f"Required attribute or child {name!r} missing on <{elem.tag}>")
+    return v
+
+
 class x12_node:
     """
     X12 Node Superclass
@@ -412,7 +419,7 @@ class loop_if(x12_node):
 
         self.name = elem.get("name") if elem.get("name") else elem.findtext("name")
         self.usage = elem.get("usage") if elem.get("usage") else elem.findtext("usage")
-        self.pos = int(elem.get("pos")) if elem.get("pos") else int(elem.findtext("pos"))  # type: ignore[arg-type]
+        self.pos = int(_required_attr(elem, "pos"))
         self.repeat = elem.get("repeat") if elem.get("repeat") else elem.findtext("repeat")
 
         for e in elem.findall("loop"):
@@ -703,7 +710,7 @@ class segment_if(x12_node):
 
         self.name = elem.get("name") if elem.get("name") else elem.findtext("name")
         self.usage = elem.get("usage") if elem.get("usage") else elem.findtext("usage")
-        self.pos = int(elem.get("pos")) if elem.get("pos") else int(elem.findtext("pos"))  # type: ignore[arg-type]
+        self.pos = int(_required_attr(elem, "pos"))
         self.max_use = elem.get("max_use") if elem.get("max_use") else elem.findtext("max_use")
         self.repeat = elem.get("repeat") if elem.get("repeat") else elem.findtext("repeat")
 
@@ -716,11 +723,11 @@ class segment_if(x12_node):
 
         children_map: dict[int, Element] = {}
         for e in elem.findall("element"):
-            seq = int(e.get("seq")) if e.get("seq") else int(e.findtext("seq"))  # type: ignore[arg-type]
+            seq = int(_required_attr(e, "seq"))
             children_map[seq] = e
 
         for e in elem.findall("composite"):
-            seq = int(e.get("seq")) if e.get("seq") else int(e.findtext("seq"))  # type: ignore[arg-type]
+            seq = int(_required_attr(e, "seq"))
             children_map[seq] = e
 
         for seq in sorted(children_map.keys()):
@@ -1167,7 +1174,7 @@ class element_if(x12_node):
         self.data_ele = elem.get("data_ele") if elem.get("data_ele") else elem.findtext("data_ele")
         self.usage = elem.get("usage") if elem.get("usage") else elem.findtext("usage")
         self.name = elem.get("name") if elem.get("name") else elem.findtext("name")
-        self.seq = int(elem.get("seq")) if elem.get("seq") else int(elem.findtext("seq"))  # type: ignore[arg-type]
+        self.seq = int(_required_attr(elem, "seq"))
         self.path = elem.get("seq") if elem.get("seq") else (elem.findtext("seq") or "")  # type: ignore[assignment]
         self.max_use = elem.get("max_use") if elem.get("max_use") else elem.findtext("max_use")
         self.res = elem.findtext("regex")
@@ -1529,7 +1536,7 @@ class composite_if(x12_node):
         self.refdes = elem.findtext("refdes") if elem.findtext("refdes") else self.id
         self.data_ele = elem.get("data_ele") if elem.get("data_ele") else elem.findtext("data_ele")
         self.usage = elem.get("usage") if elem.get("usage") else elem.findtext("usage")
-        self.seq = int(elem.get("seq")) if elem.get("seq") else int(elem.findtext("seq"))  # type: ignore[arg-type]
+        self.seq = int(_required_attr(elem, "seq"))
         if (r := elem.get("repeat")) is not None:
             self.repeat = int(r)
         elif (r := elem.findtext("repeat")) is not None:
