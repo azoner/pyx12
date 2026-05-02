@@ -1654,7 +1654,7 @@ def load_map_file(map_file: str, param: Any, map_path: str | None = None) -> map
             )
         map_fd = open(full_path, encoding="utf-8")
     else:
-        logger.debug("Looking for map file '{}' in pkg_resources".format(map_file))
+        logger.debug("Looking for map file '{}' in package resources".format(map_file))
         map_fd = _res_files("pyx12").joinpath("map", map_file).open("rb")
     with map_fd:
         logger.debug("Create map from %s" % (map_file))
