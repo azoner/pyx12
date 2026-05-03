@@ -46,11 +46,10 @@ def check_map_path_arg(map_path):
     return map_path
 
 
-def main():
-    """
-    Set up environment for processing
-    """
+def build_parser() -> argparse.ArgumentParser:
+    """Build the argparse parser. Exposed so docs/conf.py can render --help."""
     parser = argparse.ArgumentParser(
+        prog="x12html",
         description="Format an X12 file as HTML",
         epilog=external_codes_help_epilog(),
         formatter_class=argparse.RawDescriptionHelpFormatter,
@@ -87,6 +86,14 @@ def main():
     )
     parser.add_argument("--version", action="version", version=f"{parser.prog} {__version__}")
     parser.add_argument("input_files", nargs="*")
+    return parser
+
+
+def main():
+    """
+    Set up environment for processing
+    """
+    parser = build_parser()
     args = parser.parse_args()
 
     logger = logging.getLogger("pyx12")

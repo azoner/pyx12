@@ -29,8 +29,9 @@ def check_map_path_arg(map_path):
     return map_path
 
 
-def main():
-    parser = argparse.ArgumentParser(description="X12 File Metadata")
+def build_parser() -> argparse.ArgumentParser:
+    """Build the argparse parser. Exposed so docs/conf.py can render --help."""
+    parser = argparse.ArgumentParser(prog="x12info", description="X12 File Metadata")
     parser.add_argument("--verbose", "-v", action="count", default=0)
     parser.add_argument("--quiet", "-q", action="store_true")
     parser.add_argument("--debug", "-d", action="store_true")
@@ -54,6 +55,11 @@ def main():
     )
     parser.add_argument("--version", action="version", version=f"{parser.prog} {__version__}")
     parser.add_argument("input_files", nargs="*")
+    return parser
+
+
+def main():
+    parser = build_parser()
     args = parser.parse_args()
 
     logger = logging.getLogger()

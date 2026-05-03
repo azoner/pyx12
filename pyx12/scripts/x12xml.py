@@ -47,9 +47,10 @@ def check_map_path_arg(map_path):
     return map_path
 
 
-def main():
-    """Script main program."""
+def build_parser() -> argparse.ArgumentParser:
+    """Build the argparse parser. Exposed so docs/conf.py can render --help."""
     parser = argparse.ArgumentParser(
+        prog="x12xml",
         description="X12 to XML conversion",
         epilog=external_codes_help_epilog(),
         formatter_class=argparse.RawDescriptionHelpFormatter,
@@ -75,14 +76,18 @@ def main():
     parser.add_argument(
         "--charset", "-s", choices=("b", "e"), help="Specify X12 character set: b=basic, e=extended"
     )
-    # parser.add_argument('--background', '-b', action='store_true')
-    # parser.add_argument('--test', '-t', action='store_true')
     parser.add_argument(
         "--version",
         action="version",
         version=f"{parser.prog} {__version__}",
     )
     parser.add_argument("input_file")
+    return parser
+
+
+def main():
+    """Script main program."""
+    parser = build_parser()
     args = parser.parse_args()
 
     logger = logging.getLogger("pyx12")
