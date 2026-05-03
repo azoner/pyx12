@@ -122,3 +122,21 @@ disallow_untyped_calls = false
 disallow_incomplete_defs = false
 check_untyped_defs = false
 disallow_untyped_decorators = false
+
+[tool.coverage.run]
+omit = [
+    "*/python?.?/*",
+    "*/lib-python/?.?/*.py",
+    "*/lib_pypy/_*.py",
+    "*/pyx12/test/*",
+    "*/pyx12/scripts/*",
+]
+
+[tool.coverage.report]
+exclude_lines = [
+    "pragma: no cover",
+    "def __repr__",
+    "raise AssertionError",
+    "raise NotImplementedError",
+    "def debug_print",
+]
