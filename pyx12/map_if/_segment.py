@@ -399,7 +399,11 @@ class segment_if(x12_node):
                 elif child_node.data_ele == "1251" and len(type_list) > 0:
                     valid &= child_node.is_valid(ele_data, errh, type_list)
                 else:
-                    valid &= child_node.is_valid(ele_data, errh)
+                    errh.add_ele(child_node)
+                    ok, ele_errors = child_node.is_valid_errors(ele_data)
+                    for e in ele_errors:
+                        errh.ele_error(e.err_cde, e.err_str, e.err_val, e.refdes)
+                    valid &= ok
 
         for i in range(min(len(seg_data), child_count), child_count):
             # missing required elements?
