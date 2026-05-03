@@ -19,12 +19,13 @@ from xml.etree.ElementTree import Element
 
 import pyx12.segment
 
+from ..error_item import EleError
 from ..errors import EngineError
 from ..path import X12Path
 from ..syntax import is_syntax_valid
 from ._base import MAXINT, _required_attr, x12_node
 from ._composite import composite_if
-from ._element import element_if
+from ._element import apply_element_errors, element_if
 
 
 class segment_if(x12_node):
@@ -395,20 +396,19 @@ class segment_if(x12_node):
                     type_list.extend(child_node.valid_codes)
                 ele_data = seg_data.get("%02i" % (i + 1))
                 if i == 2 and seg_data.get_seg_id() == "DTP":
-                    valid &= child_node.is_valid(ele_data, errh, dtype)
+                    valid &= apply_element_errors(child_node, ele_data, errh, dtype)
                 elif child_node.data_ele == "1251" and len(type_list) > 0:
-                    valid &= child_node.is_valid(ele_data, errh, type_list)
+                    valid &= apply_element_errors(child_node, ele_data, errh, type_list)
                 else:
-                    errh.add_ele(child_node)
-                    ok, ele_errors = child_node.is_valid_errors(ele_data)
-                    for e in ele_errors:
-                        errh.ele_error(e.err_cde, e.err_str, e.err_val, e.refdes)
-                    valid &= ok
+                    valid &= apply_element_errors(child_node, ele_data, errh)
 
         for i in range(min(len(seg_data), child_count), child_count):
             # missing required elements?
             child_node = self.get_child_node_by_idx(i)
-            valid &= child_node.is_valid(None, errh)
+            if child_node.is_composite():
+                valid &= child_node.is_valid(None, errh)
+            else:
+                valid &= apply_element_errors(child_node, None, errh)
 
         for syn in self.syntax:
             (bResult, syn_err) = is_syntax_valid(seg_data, syn)
@@ -421,6 +421,93 @@ class segment_if(x12_node):
                 valid &= False
 
         return valid
+
+    def is_valid_errors(self, seg_data: pyx12.segment.Segment) -> tuple[bool, list[EleError]]:
+        """
+        Pure validator parallel to is_valid: returns (ok, errors) without
+        touching an error handler. Seg-level errors (too many elements,
+        too many sub-elements, syntax) leave map_node unset (=None);
+        per-element errors carry map_node from the element validator so
+        a cursor-tracking wrapper can replay add_ele/ele_error in the
+        original order.
+        """
+        valid = True
+        errors: list[EleError] = []
+        child_count = self.get_child_count()
+
+        if len(seg_data) > child_count:
+            err_str = 'Too many elements in segment "%s" (%s). Has %i, should have %i' % (
+                self.name,
+                seg_data.get_seg_id(),
+                len(seg_data),
+                child_count,
+            )
+            ref_des = "%02i" % (child_count + 1)
+            err_value = seg_data.get_value(ref_des)
+            errors.append(EleError(err_cde="3", err_str=err_str, err_val=err_value, refdes=ref_des))
+            valid = False
+
+        dtype: list[str | None] = []
+        type_list: list[str | None] = []
+        for i in range(min(len(seg_data), child_count)):
+            child_node = self.get_child_node_by_idx(i)
+            if child_node.is_composite():
+                ref_des = "%02i" % (i + 1)
+                comp_data = seg_data.get(ref_des)
+                subele_count = child_node.get_child_count()
+                if seg_data.ele_len(ref_des) > subele_count and child_node.usage != "N":
+                    subele_node = child_node.get_child_node_by_idx(subele_count + 1)
+                    err_str = 'Too many sub-elements in composite "%s" (%s)' % (
+                        subele_node.name,
+                        subele_node.refdes,
+                    )
+                    err_value = seg_data.get_value(ref_des)
+                    errors.append(
+                        EleError(
+                            err_cde="3",
+                            err_str=err_str,
+                            err_val=err_value,
+                            refdes=ref_des,
+                        )
+                    )
+                ok, comp_errors = child_node.is_valid_errors(comp_data)
+                valid &= ok
+                errors += comp_errors
+            elif child_node.is_element():
+                if (
+                    i == 1
+                    and seg_data.get_seg_id() == "DTP"
+                    and seg_data.get_value("02") in ("RD8", "D8", "D6", "DT", "TM")
+                ):
+                    dtype = [seg_data.get_value("02")]
+                if child_node.data_ele == "1250":
+                    type_list.extend(child_node.valid_codes)
+                ele_data = seg_data.get("%02i" % (i + 1))
+                if i == 2 and seg_data.get_seg_id() == "DTP":
+                    ok, ele_errors = child_node.is_valid_errors(ele_data, dtype)
+                elif child_node.data_ele == "1251" and len(type_list) > 0:
+                    ok, ele_errors = child_node.is_valid_errors(ele_data, type_list)
+                else:
+                    ok, ele_errors = child_node.is_valid_errors(ele_data)
+                valid &= ok
+                errors += ele_errors
+
+        for i in range(min(len(seg_data), child_count), child_count):
+            child_node = self.get_child_node_by_idx(i)
+            ok, child_errors = child_node.is_valid_errors(None)
+            valid &= ok
+            errors += child_errors
+
+        for syn in self.syntax:
+            bResult, syn_err = is_syntax_valid(seg_data, syn)
+            if not bResult:
+                # When is_syntax_valid returns False, syn_err is the message string.
+                assert syn_err is not None
+                code = "10" if syn[0] == "E" else "2"
+                errors.append(EleError(err_cde=code, err_str=syn_err, refdes=syn[1]))
+                valid = False
+
+        return valid, errors
 
     def _split_syntax(self, syntax: str | None) -> list[Any] | None:
         """

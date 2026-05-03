@@ -16,8 +16,9 @@ import sys
 from typing import Any
 from xml.etree.ElementTree import Element
 
+from ..error_item import EleError
 from ._base import _required_attr, x12_node
-from ._element import element_if
+from ._element import apply_element_errors, element_if
 
 
 ############################################################
@@ -137,12 +138,59 @@ class composite_if(x12_node):
             errh.ele_error("3", err_str, None, self.refdes)
             valid = False
         for i in range(min(len(comp_data), self.get_child_count())):
-            valid &= self.get_child_node_by_idx(i).is_valid(comp_data[i], errh)
+            valid &= apply_element_errors(self.get_child_node_by_idx(i), comp_data[i], errh)
         for i in range(min(len(comp_data), self.get_child_count()), self.get_child_count()):
             if i < self.get_child_count():
                 # Check missing required elements
-                valid &= self.get_child_node_by_idx(i).is_valid(None, errh)
+                valid &= apply_element_errors(self.get_child_node_by_idx(i), None, errh)
         return valid
+
+    def is_valid_errors(self, comp_data: Any) -> tuple[bool, list[EleError]]:
+        """
+        Pure validator parallel to is_valid: returns (ok, errors) without
+        touching an error handler. Composite-level errors leave map_node
+        unset (=None), so a wrapper iterating with cursor tracking will
+        attach them to whatever cursor was last set — matches the historical
+        behavior of the errh.ele_error calls in is_valid.
+        """
+        valid = True
+        errors: list[EleError] = []
+
+        if (comp_data is None or comp_data.is_empty()) and self.usage in ("N", "S"):
+            return True, []
+
+        if self.usage == "R":
+            good_flag = False
+            if comp_data is not None:
+                for sub_ele in comp_data:
+                    if sub_ele is not None and len(sub_ele.get_value()) > 0:
+                        good_flag = True
+                        break
+            if not good_flag:
+                err_str = 'At least one component of composite "%s" (%s) is required' % (
+                    self.name,
+                    self.refdes,
+                )
+                return False, [EleError(err_cde="2", err_str=err_str, refdes=self.refdes)]
+
+        if self.usage == "N" and not comp_data.is_empty():
+            err_str = 'Composite "%s" (%s) is marked as Not Used' % (self.name, self.refdes)
+            return False, [EleError(err_cde="5", err_str=err_str, refdes=self.refdes)]
+
+        if len(comp_data) > self.get_child_count():
+            err_str = 'Too many sub-elements in composite "%s" (%s)' % (self.name, self.refdes)
+            errors.append(EleError(err_cde="3", err_str=err_str, refdes=self.refdes))
+            valid = False
+        for i in range(min(len(comp_data), self.get_child_count())):
+            ok, sub_errors = self.get_child_node_by_idx(i).is_valid_errors(comp_data[i])
+            valid &= ok
+            errors += sub_errors
+        for i in range(min(len(comp_data), self.get_child_count()), self.get_child_count()):
+            if i < self.get_child_count():
+                ok, sub_errors = self.get_child_node_by_idx(i).is_valid_errors(None)
+                valid &= ok
+                errors += sub_errors
+        return valid, errors
 
     def is_composite(self) -> bool:
         """
