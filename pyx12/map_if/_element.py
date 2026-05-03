@@ -24,22 +24,6 @@ from ..errors import EngineError
 from ._base import _required_attr, x12_node
 
 
-def apply_element_errors(
-    child_node: element_if,
-    ele_data: Any,
-    errh: Any,
-    type_list: list[str | None] | None = None,
-) -> bool:
-    """Drive an element validation: set the cursor, run is_valid_errors,
-    forward errors. Used by composite and segment wrappers to bridge from
-    the pure validator surface back to the err_handler API."""
-    errh.add_ele(child_node)
-    ok, errors = child_node.is_valid_errors(ele_data, type_list)
-    for e in errors:
-        errh.ele_error(e.err_cde, e.err_str, e.err_val, e.refdes)
-    return ok
-
-
 ############################################################
 # Element Interface
 ############################################################

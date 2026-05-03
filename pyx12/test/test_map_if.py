@@ -13,46 +13,39 @@ class ElementIsValidDate(unittest.TestCase):
         self.map = pyx12.map_if.load_map_file("837Q3.I.5010.X223.A1.xml", param)
         self.node = self.map.getnodebypath("/ISA_LOOP/GS_LOOP/ST_LOOP/DETAIL/2000A/2000B/2300")
         # 1 096 TM, 2 434 RD8 & D8
-        self.errh = pyx12.error_handler.errh_null()
 
     def test_date_bad1(self):
-        self.errh.err_cde = None
-        seg_data = pyx12.segment.Segment("DTP*434*D8*20041340~", "~", "*", ":")
-        # node = self.node.get_child_node_by_idx(2)
+        # DTP[434]'s DTP02 only accepts "RD8" — use it so this test exercises
+        # only the bad-date case on DTP03 (a "D8" qualifier here would also
+        # trigger a separate "7" on DTP02).
+        seg_data = pyx12.segment.Segment("DTP*434*RD8*20041340~", "~", "*", ":")
         node = self.node.getnodebypath("DTP[434]")
-        result = node.is_valid(seg_data, self.errh)
+        result, errors = node.is_valid_errors(seg_data)
         self.assertFalse(result)
-        self.assertEqual(self.errh.err_cde, "8")
+        self.assertEqual([e.err_cde for e in errors], ["8"])
 
     def test_date_ok1(self):
-        self.errh.err_cde = None
         seg_data = pyx12.segment.Segment("DTP*435*D8*20040110~", "~", "*", ":")
-        # node = self.node.get_child_node_by_idx(2)
         node = self.node.getnodebypath("DTP[435]")
-        result = node.is_valid(seg_data, self.errh)
+        result, errors = node.is_valid_errors(seg_data)
         self.assertTrue(result, "%s should be valid" % (seg_data.format()))
-        self.assertEqual(self.errh.err_cde, None)
+        self.assertEqual([e.err_cde for e in errors], [])
 
     def test_time_bad1(self):
-        self.errh.err_cde = None
         seg_data = pyx12.segment.Segment("DTP*096*TM*2577~", "~", "*", ":")
-        # node = self.node.get_child_node_by_idx(1)
         node = self.node.getnodebypath("DTP[096]")
-        result = node.is_valid(seg_data, self.errh)
+        result, errors = node.is_valid_errors(seg_data)
         self.assertFalse(result)
-        self.assertEqual(self.errh.err_cde, "9")
+        self.assertEqual([e.err_cde for e in errors], ["9"])
 
     def test_time_ok1(self):
-        self.errh.err_cde = None
         seg_data = pyx12.segment.Segment("DTP*096*TM*1215~", "~", "*", ":")
-        # node = self.node.get_child_node_by_idx(1)
         node = self.node.getnodebypath("DTP[096]")
-        result = node.is_valid(seg_data, self.errh)
+        result, errors = node.is_valid_errors(seg_data)
         self.assertTrue(result)
-        self.assertEqual(self.errh.err_cde, None)
+        self.assertEqual([e.err_cde for e in errors], [])
 
     def test_date_1251_ok1(self):
-        self.errh.err_cde = None
         seg_data = pyx12.segment.Segment("DMG*D8*20040110*M~", "~", "*", ":")
         node = self.map.getnodebypath("/ISA_LOOP/GS_LOOP/ST_LOOP/DETAIL/2000A/2000B/2010BA/DMG")
         self.assertNotEqual(node, None)
@@ -60,37 +53,34 @@ class ElementIsValidDate(unittest.TestCase):
             seg_data, "DMG", None
         )
         self.assertTrue(is_match)
-        result = node.is_valid(seg_data, self.errh)
+        result, errors = node.is_valid_errors(seg_data)
         self.assertTrue(result)
-        self.assertEqual(self.errh.err_cde, None)
+        self.assertEqual([e.err_cde for e in errors], [])
 
     def test_date_1251_bad1(self):
-        self.errh.err_cde = None
         seg_data = pyx12.segment.Segment("DMG*D8*20042110*M~", "~", "*", ":")
         node = self.map.getnodebypath("/ISA_LOOP/GS_LOOP/ST_LOOP/DETAIL/2000A/2000B/2010BA/DMG")
         self.assertNotEqual(node, None)
-        result = node.is_valid(seg_data, self.errh)
+        result, errors = node.is_valid_errors(seg_data)
         self.assertFalse(result)
-        self.assertEqual(self.errh.err_cde, "8")
+        self.assertEqual([e.err_cde for e in errors], ["8"])
 
     def test_date_1251_bad2(self):
-        self.errh.err_cde = None
         seg_data = pyx12.segment.Segment("DMG*D8*20040109-20040110*M~", "~", "*", ":")
         node = self.map.getnodebypath("/ISA_LOOP/GS_LOOP/ST_LOOP/DETAIL/2000A/2000B/2010BA/DMG")
         self.assertNotEqual(node, None)
-        result = node.is_valid(seg_data, self.errh)
+        result, errors = node.is_valid_errors(seg_data)
         self.assertFalse(result)
-        self.assertEqual(self.errh.err_cde, "8")
+        self.assertEqual([e.err_cde for e in errors], ["8"])
 
     def test_date_1251_ok2(self):
-        self.errh.err_cde = None
         seg_data = pyx12.segment.Segment("DTP*434*RD8*20110101-20110220~", "~", "*", ":")
         seg_path = "/ISA_LOOP/GS_LOOP/ST_LOOP/DETAIL/2000A/2000B/2300/DTP[434]"
         node = self.map.getnodebypath(seg_path)
         self.assertNotEqual(node, None)
-        result = node.is_valid(seg_data, self.errh)
-        self.assertTrue(result, self.errh.err_str)
-        self.assertEqual(self.errh.err_cde, None, self.errh.err_str)
+        result, errors = node.is_valid_errors(seg_data)
+        self.assertTrue(result, [e.err_str for e in errors])
+        self.assertEqual([e.err_cde for e in errors], [])
 
 
 class SegmentIsValid(unittest.TestCase):
@@ -98,16 +88,13 @@ class SegmentIsValid(unittest.TestCase):
         param = pyx12.params.params()
         self.map = pyx12.map_if.load_map_file("837Q3.I.5010.X223.A1.xml", param)
         self.node = self.map.getnodebypath("/ISA_LOOP/GS_LOOP/ST_LOOP/DETAIL/2000A/2000B/2300")
-        self.errh = pyx12.error_handler.errh_null()
 
     def test_segment_length(self):
-        self.errh.err_cde = None
         seg_data = pyx12.segment.Segment("DTP*435*D8*20040101*R~", "~", "*", ":")
-        # node = self.node.get_child_node_by_idx(2)
         node = self.node.getnodebypath("DTP[435]")
-        result = node.is_valid(seg_data, self.errh)
+        result, errors = node.is_valid_errors(seg_data)
         self.assertFalse(result)
-        self.assertEqual(self.errh.err_cde, "3", self.errh.err_str)
+        self.assertEqual([e.err_cde for e in errors], ["3"])
 
 
 class ElementIsValid(unittest.TestCase):
@@ -411,19 +398,18 @@ class CompositeRequirement(unittest.TestCase):
         comp = pyx12.segment.Composite("", ":")
         result, errors = node.is_valid_errors(comp)
         self.assertFalse(result)
-        self.assertEqual([e.err_cde for e in errors], ["2"])
+        self.assertEqual([e.err_cde for e in errors], ["1"])
 
     def test_comp_not_used_fail1(self):
-        self.errh.err_cde = None
         node = self.map.getnodebypath("/ISA_LOOP/GS_LOOP/ST_LOOP/HEADER/REF")
         self.assertNotEqual(node, None)
         self.assertEqual(node.id, "REF")
         self.assertEqual(node.get_path(), "/ISA_LOOP/GS_LOOP/ST_LOOP/HEADER/REF")
         self.assertEqual(node.base_name, "segment")
         seg_data = pyx12.segment.Segment("REF*87*004010X098A1**:1~", "~", "*", ":")
-        result = node.is_valid(seg_data, self.errh)
+        result, errors = node.is_valid_errors(seg_data)
         self.assertFalse(result)
-        self.assertEqual(self.errh.err_cde, "5")
+        self.assertEqual([e.err_cde for e in errors], ["5"])
 
 
 class TrailingSpaces(unittest.TestCase):
@@ -472,16 +458,15 @@ class ElementRequirement(unittest.TestCase):
         self.errh = pyx12.error_handler.errh_null()
 
     def test_ele_not_used_fail1(self):
-        self.errh.err_cde = None
         node = self.map.getnodebypath("/ISA_LOOP/GS_LOOP/ST_LOOP/HEADER/REF")
         self.assertNotEqual(node, None)
         self.assertEqual(node.id, "REF")
         self.assertEqual(node.get_path(), "/ISA_LOOP/GS_LOOP/ST_LOOP/HEADER/REF")
         self.assertEqual(node.base_name, "segment")
         seg_data = pyx12.segment.Segment("REF*87*004010X098A1*Description*~", "~", "*", ":")
-        result = node.is_valid(seg_data, self.errh)
+        result, errors = node.is_valid_errors(seg_data)
         self.assertFalse(result)
-        self.assertEqual(self.errh.err_cde, "10")
+        self.assertEqual([e.err_cde for e in errors], ["10"])
 
     def test_ele_required_ok1(self):
         node = self.map.getnodebypath("/ISA_LOOP/GS_LOOP/ST_LOOP/DETAIL/2000A/2000B/2300/CLM")
@@ -781,13 +766,13 @@ class CompositeRequiredMissing(unittest.TestCase):
         param = pyx12.params.params()
         self.map = pyx12.map_if.load_map_file("835.5010.X221.A1.xml", param)
         self.node = self.map.getnodebypath("/ISA_LOOP/GS_LOOP/ST_LOOP/FOOTER/PLB")
-        self.errh = pyx12.error_handler.errh_null()
 
     def test_plb03_composite_missing(self):
         # PLB03 is the required Adjustment Identifier composite. Here the
-        # whole element is omitted from the segment.
-        self.errh.err_cde = None
-        seg_data = pyx12.segment.Segment("PLB*123*20211108~", "~", "*", ":")
-        result = self.node.is_valid(seg_data, self.errh)
+        # whole element is omitted from the segment, but a value is provided
+        # for PLB04 (the Provider Adjustment Amount, also required) so this
+        # test exercises only the missing-composite case.
+        seg_data = pyx12.segment.Segment("PLB*123*20211108**-100.00~", "~", "*", ":")
+        result, errors = self.node.is_valid_errors(seg_data)
         self.assertFalse(result)
-        self.assertEqual(self.errh.err_cde, "1")
+        self.assertEqual([e.err_cde for e in errors], ["1"])

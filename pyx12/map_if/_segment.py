@@ -24,8 +24,24 @@ from ..errors import EngineError
 from ..path import X12Path
 from ..syntax import is_syntax_valid
 from ._base import MAXINT, _required_attr, x12_node
-from ._composite import apply_composite_errors, composite_if
-from ._element import apply_element_errors, element_if
+from ._composite import composite_if
+from ._element import element_if
+
+
+def apply_segment_errors(node: segment_if, seg_data: pyx12.segment.Segment, errh: Any) -> bool:
+    """Drive a segment validation: run is_valid_errors and forward errors
+    with cursor maintenance. Seg-level errors (too many elements, syntax)
+    leave map_node=None so they attach to the prior cursor; per-element
+    errors carry map_node from the leaf and trigger add_ele(map_node)
+    when the cursor changes."""
+    ok, errors = node.is_valid_errors(seg_data)
+    prev_cursor = None
+    for e in errors:
+        if e.map_node is not None and e.map_node is not prev_cursor:
+            errh.add_ele(e.map_node)
+            prev_cursor = e.map_node
+        errh.ele_error(e.err_cde, e.err_str, e.err_val, e.refdes)
+    return ok
 
 
 class segment_if(x12_node):
@@ -344,83 +360,6 @@ class segment_if(x12_node):
         :rtype: boolean
         """
         return True
-
-    def is_valid(self, seg_data: pyx12.segment.Segment, errh: Any) -> bool:
-        """
-        :param seg_data: data segment instance
-        :type seg_data: L{segment<segment.Segment>}
-        :param errh: instance of error_handler
-        :rtype: boolean
-        """
-        valid = True
-        child_count = self.get_child_count()
-        if len(seg_data) > child_count:
-            err_str = 'Too many elements in segment "%s" (%s). Has %i, should have %i' % (
-                self.name,
-                seg_data.get_seg_id(),
-                len(seg_data),
-                child_count,
-            )
-            ref_des = "%02i" % (child_count + 1)
-            err_value = seg_data.get_value(ref_des)
-            errh.ele_error("3", err_str, err_value, ref_des)
-            valid = False
-
-        dtype: list[str | None] = []
-        type_list: list[str | None] = []
-        for i in range(min(len(seg_data), child_count)):
-            child_node = self.get_child_node_by_idx(i)
-            if child_node.is_composite():
-                # Validate composite
-                ref_des = "%02i" % (i + 1)
-                comp_data = seg_data.get(ref_des)
-                subele_count = child_node.get_child_count()
-                if seg_data.ele_len(ref_des) > subele_count and child_node.usage != "N":
-                    subele_node = child_node.get_child_node_by_idx(subele_count + 1)
-                    err_str = 'Too many sub-elements in composite "%s" (%s)' % (
-                        subele_node.name,
-                        subele_node.refdes,
-                    )
-                    err_value = seg_data.get_value(ref_des)
-                    errh.ele_error("3", err_str, err_value, ref_des)
-                valid &= apply_composite_errors(child_node, comp_data, errh)
-            elif child_node.is_element():
-                # Validate Element
-                if (
-                    i == 1
-                    and seg_data.get_seg_id() == "DTP"
-                    and seg_data.get_value("02") in ("RD8", "D8", "D6", "DT", "TM")
-                ):
-                    dtype = [seg_data.get_value("02")]
-                if child_node.data_ele == "1250":
-                    type_list.extend(child_node.valid_codes)
-                ele_data = seg_data.get("%02i" % (i + 1))
-                if i == 2 and seg_data.get_seg_id() == "DTP":
-                    valid &= apply_element_errors(child_node, ele_data, errh, dtype)
-                elif child_node.data_ele == "1251" and len(type_list) > 0:
-                    valid &= apply_element_errors(child_node, ele_data, errh, type_list)
-                else:
-                    valid &= apply_element_errors(child_node, ele_data, errh)
-
-        for i in range(min(len(seg_data), child_count), child_count):
-            # missing required elements?
-            child_node = self.get_child_node_by_idx(i)
-            if child_node.is_composite():
-                valid &= apply_composite_errors(child_node, None, errh)
-            else:
-                valid &= apply_element_errors(child_node, None, errh)
-
-        for syn in self.syntax:
-            (bResult, syn_err) = is_syntax_valid(seg_data, syn)
-            if not bResult:
-                syn_type = syn[0]
-                if syn_type == "E":
-                    errh.ele_error("10", syn_err, None, syn[1])
-                else:
-                    errh.ele_error("2", syn_err, None, syn[1])
-                valid &= False
-
-        return valid
 
     def is_valid_errors(self, seg_data: pyx12.segment.Segment) -> tuple[bool, list[EleError]]:
         """
