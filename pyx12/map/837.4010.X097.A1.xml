@@ -707,12 +707,12 @@
                 <usage>N</usage>
                 <seq>04</seq>
               </element>
-              <element xid="PRV05">
+              <composite>
                 <data_ele>C035</data_ele>
                 <name>Provider Specialty Information</name>
                 <usage>N</usage>
                 <seq>05</seq>
-              </element>
+              </composite>
               <element xid="PRV06">
                 <data_ele>1223</data_ele>
                 <name>Provider Organization Code</name>
