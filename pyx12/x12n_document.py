@@ -32,7 +32,7 @@ import pyx12.params
 import pyx12.x12file
 import pyx12.x12xml_simple
 from pyx12.map_if._segment import apply_segment_errors
-from pyx12.map_walker import walk_tree
+from pyx12.map_walker import apply_walk_errors, walk_tree
 
 
 def _reset_counter_to_isa_counts(walker: walk_tree) -> None:
@@ -131,9 +131,10 @@ def x12n_document(
             # from the current node, find the map node matching the segment
             # keep track of the loops traversed
             try:
-                (node, pop_loops, push_loops) = walker.walk(
-                    node, seg, errh, src.get_seg_count(), src.get_cur_line(), src.get_ls_id()
+                (node, pop_loops, push_loops, walk_errors) = walker.walk_errors(
+                    node, seg, src.get_seg_count(), src.get_cur_line(), src.get_ls_id()
                 )
+                apply_walk_errors(errh, walk_errors)
             except pyx12.errors.EngineError:
                 logger.error("Source file line %i" % (src.get_cur_line()))
                 raise

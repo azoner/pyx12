@@ -10,7 +10,7 @@ import pyx12.map_if
 import pyx12.map_index
 import pyx12.params
 import pyx12.x12file
-from pyx12.map_walker import walk_tree
+from pyx12.map_walker import apply_walk_errors, walk_tree
 
 
 def get_x12file_metadata(
@@ -61,9 +61,10 @@ def get_x12file_metadata(
             # from the current node, find the map node matching the segment
             # keep track of the loops traversed
             try:
-                (node, pop_loops, push_loops) = walker.walk(
-                    node, seg, errh, src.get_seg_count(), src.get_cur_line(), src.get_ls_id()
+                (node, pop_loops, push_loops, walk_errors) = walker.walk_errors(
+                    node, seg, src.get_seg_count(), src.get_cur_line(), src.get_ls_id()
                 )
+                apply_walk_errors(errh, walk_errors)
             except pyx12.errors.EngineError:
                 logger.error("Source file line %i" % (src.get_cur_line()))
                 raise

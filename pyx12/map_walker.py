@@ -148,41 +148,6 @@ class walk_tree:
             initialCounts = {}
         self.counter = NodeCounter(initialCounts)
 
-    def walk(
-        self,
-        node: Any,
-        seg_data: pyx12.segment.Segment,
-        errh: Any,
-        seg_count: int,
-        cur_line: int,
-        ls_id: str | None,
-    ) -> tuple[Any, list[Any], list[Any]]:
-        """
-        Backwards-compatible wrapper: drives walk_errors() and forwards the
-        produced SegErrors into the legacy err_handler API.
-
-        :param node: Starting node
-        :type node: L{node<map_if.x12_node>}
-        :param seg_data: Segment object
-        :type seg_data: L{segment<segment.Segment>}
-        :param errh: Error handler
-        :type errh: L{error_handler.err_handler}
-        :param seg_count: Count of current segment in the ST Loop
-        :type seg_count: int
-        :param cur_line: Current line number in the file
-        :type cur_line: int
-        :param ls_id: The current LS loop identifier
-        :type ls_id: string
-        :return: The matching x12 segment node, a list of x12 popped loops, and a list
-            of x12 pushed loops from the start segment to the found segment
-        :rtype: (L{node<map_if.segment_if>}, [L{node<map_if.loop_if>}], [L{node<map_if.loop_if>}])
-        """
-        result_node, pop_loops, push_loops, errors = self.walk_errors(
-            node, seg_data, seg_count, cur_line, ls_id
-        )
-        apply_walk_errors(errh, errors)
-        return result_node, pop_loops, push_loops
-
     def walk_errors(
         self,
         node: Any,
