@@ -26,6 +26,7 @@ from os.path import isdir, isfile
 import pyx12
 import pyx12.params
 import pyx12.x12n_document
+from pyx12.scripts import external_codes_help_epilog
 
 # Global Variables
 __author__ = pyx12.__author__
@@ -48,7 +49,11 @@ def check_map_path_arg(map_path):
 
 def main():
     """Script main program."""
-    parser = argparse.ArgumentParser(description="X12 to XML conversion")
+    parser = argparse.ArgumentParser(
+        description="X12 to XML conversion",
+        epilog=external_codes_help_epilog(),
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+    )
     parser.add_argument("--config-file", "-c", action="store", dest="configfile", default=None)
     parser.add_argument("--log-file", "-l", action="store", dest="logfile", default=None)
     parser.add_argument(

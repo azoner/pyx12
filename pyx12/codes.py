@@ -92,3 +92,29 @@ class ExternalCodes:
         """Debug print first <count> codes for each codeset (alphabetical)."""
         for key in self.codes:
             print(sorted(self.codes[key]["codes"], key=lambda c: c or "")[:count])
+
+
+def list_external_codesets(base_path: str | None = None) -> list[tuple[str, str]]:
+    """Return ``(id, name)`` for every codeset in ``codes.xml``.
+
+    Used by CLI scripts to populate ``--help`` with the list of names
+    accepted by the ``--exclude-external-codes`` flag. Loads the metadata
+    only — does not parse code values — so the cost is small.
+
+    :param base_path: Override directory containing codes.xml.
+        If None, uses package resource folder.
+    """
+    code_fd: IO[Any]
+    if base_path is not None:
+        code_fd = open(os.path.join(base_path, "codes.xml"), encoding="utf-8")
+    else:
+        code_fd = _res_files("pyx12").joinpath("map", "codes.xml").open("rb")
+    pairs: list[tuple[str, str]] = []
+    with code_fd:
+        parser = et.XMLParser(encoding="utf-8")
+        for cs in et.parse(code_fd, parser=parser).iter("codeset"):
+            cid = (cs.findtext("id") or "").strip()
+            name = (cs.findtext("name") or "").strip()
+            if cid:
+                pairs.append((cid, name))
+    return pairs
