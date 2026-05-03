@@ -34,6 +34,7 @@ class element_if(x12_node):
     root: Any
     base_name: str
     valid_codes: list[str | None]
+    _valid_codes_set: frozenset[str | None]
     external_codes: str | None
     rec: re.Pattern[str] | None
     refdes: str | None
@@ -85,6 +86,10 @@ class element_if(x12_node):
             self.external_codes = v.get("external")
             for c in v.findall("code"):
                 self.valid_codes.append(c.text)
+        # Parallel frozenset for O(1) membership checks. The list is kept
+        # because callers (loop_if path disambiguation, map_if._get_icvn)
+        # rely on a stable indexed order from the XML.
+        self._valid_codes_set = frozenset(self.valid_codes)
 
     def debug_print(self) -> None:
         sys.stdout.write(self.__repr__())
@@ -126,9 +131,7 @@ class element_if(x12_node):
         :return: True if found, else False
         :rtype: boolean
         """
-        if code in self.valid_codes:
-            return True
-        return False
+        return code in self._valid_codes_set
 
     def get_parent(self) -> Any:
         """
@@ -322,9 +325,9 @@ class element_if(x12_node):
         :rtype: boolean
         """
         bValidCode = False
-        if len(self.valid_codes) == 0 and self.external_codes is None:
+        if not self._valid_codes_set and self.external_codes is None:
             bValidCode = True
-        if elem_val in self.valid_codes:
+        if elem_val in self._valid_codes_set:
             bValidCode = True
         if self.external_codes is not None and self.root.ext_codes.isValid(
             self.external_codes, elem_val

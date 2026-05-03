@@ -181,7 +181,7 @@ class segment_if(x12_node):
             return True
         child, ele_idx, subele_idx = key
         path = f"{ele_idx:02d}-{subele_idx}" if subele_idx else f"{ele_idx:02d}"
-        return seg.get_value(path) in child.valid_codes
+        return seg.get_value(path) in child._valid_codes_set
 
     def is_match_qual(
         self,
@@ -207,7 +207,7 @@ class segment_if(x12_node):
             return (True, None, None, None)
         child, ele_idx, subele_idx = key
         path = f"{ele_idx:02d}-{subele_idx}" if subele_idx else f"{ele_idx:02d}"
-        if qual_code in child.valid_codes and seg_data.get_value(path) == qual_code:
+        if qual_code in child._valid_codes_set and seg_data.get_value(path) == qual_code:
             return (True, qual_code, ele_idx, subele_idx)
         return (False, None, None, None)
 
@@ -310,7 +310,7 @@ class segment_if(x12_node):
             self.children[0].is_element()
             and self.children[0].get_data_type() == "ID"
             and len(self.children[0].valid_codes) > 0
-            and id_val in self.children[0].valid_codes
+            and id_val in self.children[0]._valid_codes_set
         ):
             return self.children[0]
         # Special Case for 820
@@ -319,21 +319,21 @@ class segment_if(x12_node):
             and self.children[1].is_element()
             and self.children[1].get_data_type() == "ID"
             and len(self.children[1].valid_codes) > 0
-            and id_val in self.children[1].valid_codes
+            and id_val in self.children[1]._valid_codes_set
         ):
             return self.children[1]
         elif (
             self.children[0].is_composite()
             and self.children[0].children[0].get_data_type() == "ID"
             and len(self.children[0].children[0].valid_codes) > 0
-            and id_val in self.children[0].children[0].valid_codes
+            and id_val in self.children[0].children[0]._valid_codes_set
         ):
             return self.children[0].children[0]
         elif (
             self.id == "HL"
             and self.children[2].is_element()
             and len(self.children[2].valid_codes) > 0
-            and id_val in self.children[2].valid_codes
+            and id_val in self.children[2]._valid_codes_set
         ):
             return self.children[2]
         return None
