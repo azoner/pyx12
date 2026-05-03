@@ -25,7 +25,8 @@ An X12 EDI document has a fixed envelope hierarchy. From outermost in:
   one line (``NM1*82*1*DOE*JOHN``); a *loop* is a named group of
   segments and/or sub-loops. Loops aren't delimited in the wire format —
   the receiver figures out where each loop starts and stops by matching
-  segment IDs against the implementation guide.
+  segment IDs (and, when ambiguous, qualifier values like ``NM1``'s
+  first element) against the implementation guide.
 * **Elements and composites** — fields within a segment, separated by
   ``*``. A *composite* is a multi-part field whose sub-parts are
   separated by ``:``.
@@ -41,7 +42,11 @@ An X12 Implementation Guide (IG) tells you, for each version of each
 transaction, exactly which loops are required, which elements may be
 present, what counts are allowed, and which code lists apply.
 Implementation guides are published by `X12.org <https://x12.org/products>`_.
-pyx12 encodes those rules as XML "map" files under ``pyx12/map/``.
+
+pyx12 encodes those Implementation Guide rules as XML "map" files under
+``pyx12/map/``. These maps are the heart of the package: they drive
+validation, error reporting, and the context reader's parent / child
+traversal.
 
 pyx12 is focused on X12N Healthcare HIPAA transactions, but the map-based
 design is flexible enough to support any X12 transaction with a known
@@ -108,8 +113,9 @@ pyx12 ships three reader interfaces at increasing levels of abstraction:
    context. This is what you want when you need to *modify* segments
    (set a value, delete a child loop, insert a new sibling) — it tracks
    parent / child relationships and the map node for each piece of data.
-   Also useful for complex parsing that require loop context (e.g. "if this segment is inside an 2000A loop, then this element means X; but if it's inside a 2000B loop, the same element means Y").  
-   See the iter_segments example in :doc:`quickstart`.
+   Also useful for complex parsing that require loop context (e.g. "if this 
+   segment is inside an 2000A loop, then this element means X; but if it's 
+   inside a 2000B loop, the same element means Y"). See the iter_segments example in :doc:`quickstart`.
 
 The walker
 ----------

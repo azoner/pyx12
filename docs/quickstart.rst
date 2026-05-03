@@ -11,6 +11,17 @@ Install
 pyx12 has a single runtime dependency (``defusedxml``) and supports
 Python 3.11+.
 
+Prerequisites
+-------------
+
+Effective use of pyx12 requires familiarity with X12 — its envelope
+structure (ISA / GS / ST / loops / segments / elements), the data
+types and error codes defined by the standard, and the specific rules
+of the transaction set and version you're working with (e.g. 837
+Professional 5010 X222 A1). The X12.org implementation guides are the
+authoritative reference; pyx12 enforces the rules they describe but
+does not teach them.
+
 Validate an X12 file from the command line
 ------------------------------------------
 
