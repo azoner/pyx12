@@ -206,6 +206,7 @@ def x12n_document(
                 errh.handle_errors(src.pop_errors())
 
             # errh.set_cur_line(src.get_cur_line())
+            assert isinstance(node, pyx12.map_if.segment_if)
             valid &= apply_segment_errors(node, seg, errh)
             # erx.handleErrors(src.pop_errors())
             # erx.handleErrors(errh.get_errors())
@@ -216,7 +217,7 @@ def x12n_document(
             except Exception:
                 logger.error("callback failed")
         if fd_html:
-            if node is not None and node.is_first_seg_in_loop():
+            if isinstance(node, pyx12.map_if.segment_if) and node.is_first_seg_in_loop():
                 html.loop(node.get_parent())
             err_node_list: list[Any] = []
             while True:

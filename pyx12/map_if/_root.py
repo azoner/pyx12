@@ -15,13 +15,14 @@ from __future__ import annotations
 import os.path
 import sys
 from collections.abc import Iterator
-from typing import Any, cast
 from xml.etree.ElementTree import Element
 
 from .. import codes, dataele
 from ..errors import EngineError
+from ..params import ParamsBase
 from ..path import X12Path
 from ._base import x12_node
+from ._element import element_if
 from ._loop import loop_if
 from ._segment import segment_if
 
@@ -32,15 +33,15 @@ class map_if(x12_node):
     Map file interface
     """
 
-    pos_map: dict[int, list[Any]]
+    pos_map: dict[int, list[x12_node]]
     cur_path: str
-    param: Any
+    param: ParamsBase
     ext_codes: codes.ExternalCodes
     data_elements: dataele.DataElements
     base_name: str
     icvn: str | None
 
-    def __init__(self, eroot: Element, param: Any, base_path: str | None = None) -> None:
+    def __init__(self, eroot: Element, param: ParamsBase, base_path: str | None = None) -> None:
         """
         :param eroot: ElementTree root
         :param param: map of parameters
@@ -82,8 +83,11 @@ class map_if(x12_node):
         """
         ipath = "/ISA_LOOP/ISA"
         try:
-            node = self.getnodebypath(ipath).children[11]
-            return cast(str, node.valid_codes[0])
+            isa = self.getnodebypath(ipath)
+            assert isinstance(isa, segment_if)
+            node = isa.children[11]
+            assert isinstance(node, element_if)
+            return node.valid_codes[0]
         except Exception:
             return None
 
@@ -110,16 +114,16 @@ class map_if(x12_node):
     def get_child_count(self) -> int:
         return self.__len__()
 
-    def get_first_node(self) -> Any:
+    def get_first_node(self) -> x12_node | None:
         pos_keys = sorted(self.pos_map)
         if len(pos_keys) > 0:
             return self.pos_map[pos_keys[0]][0]
         else:
             return None
 
-    def get_first_seg(self) -> Any:
+    def get_first_seg(self) -> segment_if | None:
         first = self.get_first_node()
-        if first.is_segment():
+        if isinstance(first, segment_if):
             return first
         else:
             return None
@@ -142,13 +146,13 @@ class map_if(x12_node):
         """
         return self.path
 
-    def get_child_node_by_idx(self, idx: int) -> Any:
+    def get_child_node_by_idx(self, idx: int) -> x12_node | None:
         """
         :param idx: zero based
         """
         raise EngineError("map_if.get_child_node_by_idx is not a valid call")
 
-    def getnodebypath(self, spath: str) -> Any:
+    def getnodebypath(self, spath: str) -> x12_node | None:
         """
         :param spath: Path string; /1000/2000/2000A/NM102-3
         :type spath: string
@@ -156,9 +160,9 @@ class map_if(x12_node):
         pathl = spath.split("/")[1:]
         if len(pathl) == 0:
             return None
-        # logger.debug('%s %s %s' % (self.base_name, self.id, pathl[1]))
         for ord1 in sorted(self.pos_map):
             for child in self.pos_map[ord1]:
+                assert child.id is not None
                 if child.id.lower() == pathl[0].lower():
                     if len(pathl) == 1:
                         return child
@@ -166,7 +170,7 @@ class map_if(x12_node):
                         return child.getnodebypath("/".join(pathl[1:]))
         raise EngineError('getnodebypath failed. Path "%s" not found' % spath)
 
-    def getnodebypath2(self, path_str: str) -> Any:
+    def getnodebypath2(self, path_str: str) -> x12_node | None:
         """
         :param path: Path string; /1000/2000/2000A/NM102-3
         :type path: string
@@ -176,12 +180,15 @@ class map_if(x12_node):
             return None
         for ord1 in sorted(self.pos_map):
             for child in self.pos_map[ord1]:
+                assert child.id is not None
                 if child.id.upper() == x12path.loop_list[0]:
                     if len(x12path.loop_list) == 1:
                         return child
                     else:
                         del x12path.loop_list[0]
-                        return child.getnodebypath2(x12path.format())
+                        if isinstance(child, loop_if):
+                            return child.getnodebypath2(x12path.format())
+                        return None
         raise EngineError('getnodebypath2 failed. Path "%s" not found' % path_str)
 
     def is_map_root(self) -> bool:
@@ -205,9 +212,11 @@ class map_if(x12_node):
     def __iter__(self) -> map_if:
         return self
 
-    def loop_segment_iterator(self) -> Iterator[Any]:
+    def loop_segment_iterator(self) -> Iterator[x12_node]:
         yield self
         for ord1 in sorted(self.pos_map):
             for child in self.pos_map[ord1]:
-                if child.is_loop() or child.is_segment():
+                if isinstance(child, loop_if):
                     yield from child.loop_segment_iterator()
+                elif isinstance(child, segment_if):
+                    yield child

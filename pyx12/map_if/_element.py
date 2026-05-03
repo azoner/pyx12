@@ -14,14 +14,19 @@ from __future__ import annotations
 
 import re
 import sys
-from typing import Any, cast
+from typing import TYPE_CHECKING, cast
 from xml.etree.ElementTree import Element
+
+import pyx12.segment
 
 from .. import validation
 from ..dataele import _DataEle
 from ..error_item import EleError
 from ..errors import EngineError
 from ._base import _required_attr, x12_node
+
+if TYPE_CHECKING:
+    from ._root import map_if
 
 
 ############################################################
@@ -32,7 +37,7 @@ class element_if(x12_node):
     Element Interface
     """
 
-    root: Any
+    root: map_if
     base_name: str
     valid_codes: list[str | None]
     _valid_codes_set: frozenset[str | None]
@@ -41,12 +46,11 @@ class element_if(x12_node):
     refdes: str | None
     data_ele: str | None
     _data_ele: _DataEle | None
-    usage: str | None
     seq: int
     max_use: str | None
     res: str | None
 
-    def __init__(self, root: Any, parent: Any, elem: Element) -> None:
+    def __init__(self, root: map_if, parent: x12_node, elem: Element) -> None:
         """
         :param parent: parent node
         """
@@ -118,7 +122,7 @@ class element_if(x12_node):
     def _resolve_data_ele(self) -> _DataEle:
         if self._data_ele is not None:
             return self._data_ele
-        return cast(_DataEle, self.root.data_elements.get_by_elem_num(self.data_ele))
+        return self.root.data_elements.get_by_elem_num(self.data_ele)
 
     def _ele_error(self, err_cde: str, err_str: str, err_val: str | None) -> EleError:
         return EleError(
@@ -137,7 +141,7 @@ class element_if(x12_node):
         """
         return code in self._valid_codes_set
 
-    def get_parent(self) -> Any:
+    def get_parent(self) -> x12_node | None:
         """
         :return: ref to parent class instance
         """
@@ -152,7 +156,9 @@ class element_if(x12_node):
         raise NotImplementedError("Override in sub-class")
 
     def is_valid_errors(
-        self, elem: Any, type_list: list[str | None] | None = None
+        self,
+        elem: pyx12.segment.Element | pyx12.segment.Composite | None,
+        type_list: list[str | None] | None = None,
     ) -> tuple[bool, list[EleError]]:
         """
         Pure validator: returns (ok, errors) without touching an error handler.
@@ -191,6 +197,8 @@ class element_if(x12_node):
     def _validate_when_empty(self) -> list[EleError]:
         if self.usage in ("N", "S"):
             return []
+        # An element's parent is a composite_if or a segment_if at runtime.
+        assert self.parent is not None
         if self.usage == "R" and (
             self.seq != 1 or not self.parent.is_composite() or self.parent.usage == "R"
         ):
@@ -257,7 +265,10 @@ class element_if(x12_node):
     def _validate_data_type(self, elem_val: str) -> list[EleError]:
         data_type = self._resolve_data_ele()["data_type"]
         if validation.IsValidDataType(
-            elem_val, cast(str, data_type), self.root.param.get("charset"), self.root.icvn
+            elem_val,
+            cast(str, data_type),
+            self.root.param.get("charset"),
+            self.root.icvn or "00401",
         ):
             return []
         if data_type in ("RD8", "DT", "D8", "D6"):
@@ -363,14 +374,18 @@ class element_if(x12_node):
         if self._fullpath:
             return self._fullpath
         # get enclosing loop
-        parent_path = self.get_parent_segment().parent.get_path()
+        seg = self.get_parent_segment()
+        assert seg.parent is not None
+        parent_path = seg.parent.get_path()
         # add the segment, element, and sub-element path
         self._fullpath = parent_path + "/" + (self.id or "")
         return self._fullpath
 
-    def get_parent_segment(self) -> Any:
-        # pop to enclosing loop
+    def get_parent_segment(self) -> x12_node:
+        # An element is always nested inside a segment (directly, or via a composite).
         p = self.parent
+        assert p is not None
         while not p.is_segment():
             p = p.parent
+            assert p is not None
         return p

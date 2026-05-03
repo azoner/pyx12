@@ -20,10 +20,11 @@ from typing import IO, Any
 import defusedxml.ElementTree as et
 
 from ..errors import EngineError
+from ..params import ParamsBase
 from ._root import map_if
 
 
-def load_map_file(map_file: str, param: Any, map_path: str | None = None) -> map_if:
+def load_map_file(map_file: str, param: ParamsBase, map_path: str | None = None) -> map_if:
     """
     Create the map object from a file
 

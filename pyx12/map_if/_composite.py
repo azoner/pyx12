@@ -13,12 +13,17 @@ Composite interface - sub-element container.
 from __future__ import annotations
 
 import sys
-from typing import Any
+from typing import TYPE_CHECKING
 from xml.etree.ElementTree import Element
+
+import pyx12.segment
 
 from ..error_item import EleError
 from ._base import _required_attr, x12_node
 from ._element import element_if
+
+if TYPE_CHECKING:
+    from ._root import map_if
 
 
 ############################################################
@@ -29,15 +34,15 @@ class composite_if(x12_node):
     Composite Node Interface
     """
 
-    root: Any
+    root: map_if
+    children: list[element_if]  # type: ignore[assignment]
     base_name: str
     refdes: str | None
     data_ele: str | None
-    usage: str | None
     seq: int
     repeat: int
 
-    def __init__(self, root: Any, parent: Any, elem: Element) -> None:
+    def __init__(self, root: map_if, parent: x12_node, elem: Element) -> None:
         """
         Get the values for this composite
         :param parent: parent node
@@ -94,7 +99,9 @@ class composite_if(x12_node):
             sub_elem.xml()
         sys.stdout.write("</composite>\n")
 
-    def is_valid_errors(self, comp_data: Any) -> tuple[bool, list[EleError]]:
+    def is_valid_errors(
+        self, comp_data: pyx12.segment.Composite | None
+    ) -> tuple[bool, list[EleError]]:
         """
         Pure validator: returns (ok, errors) without touching an error
         handler. Composite-level errors leave map_node unset (=None) so a
@@ -111,7 +118,8 @@ class composite_if(x12_node):
         if self.usage == "R":
             good_flag = False
             if comp_data is not None:
-                for sub_ele in comp_data:
+                for j in range(len(comp_data)):
+                    sub_ele = comp_data[j]
                     if sub_ele is not None and len(sub_ele.get_value()) > 0:
                         good_flag = True
                         break
@@ -122,6 +130,10 @@ class composite_if(x12_node):
                 )
                 return False, [EleError(err_cde="1", err_str=err_str, refdes=self.refdes)]
 
+        # Past here, comp_data is non-None: the (None or empty)+(N/S) branch
+        # short-circuited it; the R branch returned on missing comp_data.
+        assert comp_data is not None
+
         if self.usage == "N" and not comp_data.is_empty():
             err_str = 'Composite "%s" (%s) is marked as Not Used' % (self.name, self.refdes)
             return False, [EleError(err_cde="5", err_str=err_str, refdes=self.refdes)]
@@ -131,12 +143,12 @@ class composite_if(x12_node):
             errors.append(EleError(err_cde="3", err_str=err_str, refdes=self.refdes))
             valid = False
         for i in range(min(len(comp_data), self.get_child_count())):
-            ok, sub_errors = self.get_child_node_by_idx(i).is_valid_errors(comp_data[i])
+            ok, sub_errors = self.children[i].is_valid_errors(comp_data[i])
             valid &= ok
             errors += sub_errors
         for i in range(min(len(comp_data), self.get_child_count()), self.get_child_count()):
             if i < self.get_child_count():
-                ok, sub_errors = self.get_child_node_by_idx(i).is_valid_errors(None)
+                ok, sub_errors = self.children[i].is_valid_errors(None)
                 valid &= ok
                 errors += sub_errors
         return valid, errors

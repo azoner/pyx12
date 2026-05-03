@@ -12,7 +12,6 @@ Base node and shared helpers for the X12N IG map interface.
 
 from __future__ import annotations
 
-from typing import Any
 from xml.etree.ElementTree import Element
 
 from ..errors import EngineError
@@ -35,8 +34,9 @@ class x12_node:
 
     id: str | None
     name: str | None
-    parent: Any
-    children: list[Any]
+    usage: str | None
+    parent: x12_node | None
+    children: list[x12_node]
     path: str
     _x12path: X12Path | None
     _fullpath: str | None
@@ -44,6 +44,7 @@ class x12_node:
     def __init__(self) -> None:
         self.id = None
         self.name = None
+        self.usage = None
         self.parent = None
         self.children = []
         self.path = ""
@@ -52,6 +53,7 @@ class x12_node:
 
     def __eq__(self, other: object) -> bool:
         if isinstance(other, x12_node):
+            assert self.parent is not None and other.parent is not None
             return self.id == other.id and self.parent.id == other.parent.id
         return NotImplemented
 
@@ -64,6 +66,7 @@ class x12_node:
     __ge__ = __lt__
 
     def __hash__(self) -> int:
+        assert self.parent is not None
         return ((self.id or "") + (self.parent.id or "")).__hash__()
 
     def __len__(self) -> int:
@@ -75,12 +78,13 @@ class x12_node:
         """
         return self.name or ""
 
-    def getnodebypath(self, path: str) -> Any:
+    def getnodebypath(self, path: str) -> x12_node | None:
         """ """
         pathl = path.split("/")
         if len(pathl) == 0:
             return None
         for child in self.children:
+            assert child.id is not None
             if child.id.lower() == pathl[0].lower():
                 if len(pathl) == 1:
                     return child
@@ -94,7 +98,7 @@ class x12_node:
     def get_child_count(self) -> int:
         return len(self.children)
 
-    def get_child_node_by_idx(self, idx: int) -> Any:
+    def get_child_node_by_idx(self, idx: int) -> x12_node | None:
         """
         :param idx: zero based
         """
@@ -103,7 +107,7 @@ class x12_node:
         else:
             return self.children[idx]
 
-    def get_child_node_by_ordinal(self, ordinal: int) -> Any:
+    def get_child_node_by_ordinal(self, ordinal: int) -> x12_node | None:
         """
         Get a child element or composite by the X12 ordinal
         :param ord: one based element/composite index.  Corresponds to the map <seq> element
@@ -118,6 +122,7 @@ class x12_node:
         """
         if self._fullpath:
             return self._fullpath
+        assert self.parent is not None
         parent_path = self.parent.get_path()
         if parent_path == "/":
             self._fullpath = "/" + self.path
@@ -138,6 +143,14 @@ class x12_node:
         return p
 
     x12path = property(_get_x12_path, None, None)
+
+    def debug_print(self) -> None:
+        """ """
+        pass
+
+    def xml(self) -> None:
+        """ """
+        pass
 
     def is_first_seg_in_loop(self) -> bool:
         """
@@ -174,7 +187,3 @@ class x12_node:
         :rtype: boolean
         """
         return False
-
-
-############################################################
-# Map file interface
