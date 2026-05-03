@@ -24,7 +24,7 @@ from ..errors import EngineError
 from ..path import X12Path
 from ..syntax import is_syntax_valid
 from ._base import MAXINT, _required_attr, x12_node
-from ._composite import composite_if
+from ._composite import apply_composite_errors, composite_if
 from ._element import apply_element_errors, element_if
 
 
@@ -383,7 +383,7 @@ class segment_if(x12_node):
                     )
                     err_value = seg_data.get_value(ref_des)
                     errh.ele_error("3", err_str, err_value, ref_des)
-                valid &= child_node.is_valid(comp_data, errh)
+                valid &= apply_composite_errors(child_node, comp_data, errh)
             elif child_node.is_element():
                 # Validate Element
                 if (
@@ -406,7 +406,7 @@ class segment_if(x12_node):
             # missing required elements?
             child_node = self.get_child_node_by_idx(i)
             if child_node.is_composite():
-                valid &= child_node.is_valid(None, errh)
+                valid &= apply_composite_errors(child_node, None, errh)
             else:
                 valid &= apply_element_errors(child_node, None, errh)
 
