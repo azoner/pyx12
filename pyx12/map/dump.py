@@ -10,7 +10,7 @@ from pyx12.params import params
 
 
 def donode(node):
-    print((node.get_path()))
+    print(node.get_path())
     for child in node.children:
         if child.is_loop() or child.is_segment():
             donode(child)

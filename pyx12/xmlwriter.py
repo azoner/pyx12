@@ -71,16 +71,16 @@ class XMLWriter:
         self.out = out
         self.stack = []
         self.indent = indent
-        self._write('<?xml version="1.0" encoding="{}"?>\n'.format(encoding))
+        self._write(f'<?xml version="1.0" encoding="{encoding}"?>\n')
 
     def doctype(self, root: str, pubid: str | None, sysid: str) -> None:
         """
         Create a document type declaration (no internal subset)
         """
         if pubid is None:
-            self._write("<!DOCTYPE {} SYSTEM '{}'>\n".format(root, sysid))
+            self._write(f"<!DOCTYPE {root} SYSTEM '{sysid}'>\n")
         else:
-            self._write("<!DOCTYPE {} PUBLIC '{}' '{}'>\n".format(root, pubid, sysid))
+            self._write(f"<!DOCTYPE {root} PUBLIC '{pubid}' '{sysid}'>\n")
 
     def push(self, elem: str, attrs: dict[str, str] | None = None) -> None:
         """
@@ -91,7 +91,7 @@ class XMLWriter:
         self._indent()
         self._write("<" + elem)
         for a, v in attrs.items():
-            self._write(" {}='{}'".format(a, self._escape_attr(v)))
+            self._write(f" {a}='{self._escape_attr(v)}'")
         self._write(">\n")
         self.stack.append(elem)
 
@@ -104,8 +104,8 @@ class XMLWriter:
         self._indent()
         self._write("<" + elem)
         for a, v in attrs.items():
-            self._write(" {}='{}'".format(a, self._escape_attr(v)))
-        self._write(">{}</{}>\n".format(self._escape_cont(content), elem))
+            self._write(f" {a}='{self._escape_attr(v)}'")
+        self._write(f">{self._escape_cont(content)}</{elem}>\n")
 
     def empty(self, elem: str, attrs: dict[str, str] | None = None) -> None:
         """
@@ -116,7 +116,7 @@ class XMLWriter:
         self._indent()
         self._write("<" + elem)
         for a, v in attrs.items():
-            self._write(" {}='{}'".format(a, self._escape_attr(v)))
+            self._write(f" {a}='{self._escape_attr(v)}'")
         self._write("/>\n")
 
     def pop(self) -> None:
@@ -127,7 +127,7 @@ class XMLWriter:
             elem = self.stack[-1]
             del self.stack[-1]
             self._indent()
-            self._write("</{elem}>\n".format(elem=elem))
+            self._write(f"</{elem}>\n")
 
     def __len__(self) -> int:
         return len(self.stack)

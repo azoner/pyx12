@@ -119,7 +119,7 @@ def x12n_document(
             print("--------------------------------------------")
             # reset to control map for ISA and GS loops
             print("------- counters before --------")
-            print((walker.counter._dict))
+            print(walker.counter._dict)
         if seg.get_seg_id() == "ISA":
             node = control_map.getnodebypath("/ISA_LOOP/ISA")
             walker.forceWalkCounterToLoopStart("/ISA_LOOP", "/ISA_LOOP/ISA")
@@ -139,7 +139,7 @@ def x12n_document(
 
         if False:
             print("------- counters after --------")
-            print((walker.counter._dict))
+            print(walker.counter._dict)
         if node is None:
             node = orig_node
         else:
@@ -157,9 +157,7 @@ def x12n_document(
                 map_file_new = map_index_if.get_filename(icvn, vriic, fic)
                 if map_file != map_file_new:
                     if map_file_new is None:
-                        err_str = "Map not found.  icvn={}, fic={}, vriic={}".format(
-                            icvn, fic, vriic
-                        )
+                        err_str = f"Map not found.  icvn={icvn}, fic={fic}, vriic={vriic}"
                         raise pyx12.errors.EngineError(err_str)
                     map_file = map_file_new
                     cur_map = pyx12.map_if.load_map_file(map_file, param, map_path)
@@ -182,9 +180,7 @@ def x12n_document(
                     logger.debug("New map file: %s" % (map_file_new))
                     if map_file != map_file_new:
                         if map_file_new is None:
-                            err_str = "Map not found.  icvn={}, fic={}, vriic={}, tspc={}".format(
-                                icvn, fic, vriic, tspc
-                            )
+                            err_str = f"Map not found.  icvn={icvn}, fic={fic}, vriic={vriic}, tspc={tspc}"
                             raise pyx12.errors.EngineError(err_str)
                         map_file = map_file_new
                         cur_map = pyx12.map_if.load_map_file(map_file, param, map_path)

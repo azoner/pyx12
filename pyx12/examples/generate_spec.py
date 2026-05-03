@@ -19,16 +19,12 @@ def clean_name(name):
 
 def check_map_path_arg(map_path):
     if not os.path.isdir(map_path):
-        raise argparse.ArgumentError(
-            None, "The MAP_PATH '{}' is not a valid directory".format(map_path)
-        )
+        raise argparse.ArgumentError(None, f"The MAP_PATH '{map_path}' is not a valid directory")
     index_file = "maps.xml"
     if not os.path.isfile(os.path.join(map_path, index_file)):
         raise argparse.ArgumentError(
             None,
-            "The MAP_PATH '{}' does not contain the map index file '{}'".format(
-                map_path, index_file
-            ),
+            f"The MAP_PATH '{map_path}' does not contain the map index file '{index_file}'",
         )
     return map_path
 
@@ -70,7 +66,7 @@ def save_mapping(rows, json_file):
     with open(json_file, "w") as fd:
         fd.write("{")
         for s in sections:
-            fd.write('"{section}": ['.format(section=s))
+            fd.write(f'"{s}": [')
             s = [
                 {
                     "Id": x["Id"],
@@ -90,7 +86,7 @@ def save_mapping(rows, json_file):
             s.sort(key=lambda item: item["Ordinal"])
             for item in s:
                 fitem = json.dumps(item)
-                fd.write("\n\t{item},".format(item=fitem))
+                fd.write(f"\n\t{fitem},")
             fd.write("\n],\n")
         fd.write("}")
 
@@ -166,7 +162,7 @@ def main():
     parser.add_argument(
         "--version",
         action="version",
-        version="{prog} {version}".format(prog=parser.prog, version=__version__),
+        version=f"{parser.prog} {__version__}",
     )
     parser.add_argument("input_files", nargs="*")
     args = parser.parse_args()
@@ -191,12 +187,12 @@ def main():
             hdlr = logging.FileHandler(args.logfile)
             hdlr.setFormatter(formatter)
             logger.addHandler(hdlr)
-        except IOError:
+        except OSError:
             logger.exception("Could not open log file: %s" % (args.logfile))
 
     src_filename = args.input_files[0]
     json_file = os.path.join(os.path.dirname(os.path.abspath(src_filename)), "node_list.json")
-    with open(json_file, "r") as fd:
+    with open(json_file) as fd:
         res = json.load(fd)
     rows = make_dict(res)
 

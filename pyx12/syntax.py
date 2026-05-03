@@ -32,7 +32,7 @@ def is_syntax_valid(
     """
     # handle intra-segment dependancies
     if len(syn) < 3:
-        err_str = "Syntax string must have at least two comparators {}".format(syntax_str(syn))
+        err_str = f"Syntax string must have at least two comparators {syntax_str(syn)}"
         return (False, err_str)
 
     syn_code = syn[0]
@@ -41,31 +41,29 @@ def is_syntax_valid(
     if syn_code == "P":
         count = 0
         for s in syn_idx:
-            _val = seg_data.get_value("{:02d}".format(s))
+            _val = seg_data.get_value(f"{s:02d}")
             if len(seg_data) >= s and _val != "":
                 count += 1
         if count != 0 and count != len(syn_idx):
-            err_str = "Syntax Error ({}): If any of {} is present, then all are required".format(
-                syntax_str(syn), syntax_ele_id_str(seg_data.get_seg_id(), syn_idx)
-            )
+            err_str = f"Syntax Error ({syntax_str(syn)}): If any of {syntax_ele_id_str(seg_data.get_seg_id(), syn_idx)} is present, then all are required"
             return (False, err_str)
         else:
             return (True, None)
     elif syn_code == "R":
         count = 0
         for s in syn_idx:
-            _val = seg_data.get_value("{:02d}".format(s))
+            _val = seg_data.get_value(f"{s:02d}")
             if len(seg_data) >= s and _val != "":
                 count += 1
         if count == 0:
-            err_str = "Syntax Error ({}): At least one element is required".format(syntax_str(syn))
+            err_str = f"Syntax Error ({syntax_str(syn)}): At least one element is required"
             return (False, err_str)
         else:
             return (True, None)
     elif syn_code == "E":
         count = 0
         for s in syn_idx:
-            _val = seg_data.get_value("{:02d}".format(s))
+            _val = seg_data.get_value(f"{s:02d}")
             if len(seg_data) >= s and _val != "":
                 count += 1
         if count > 1:
@@ -81,7 +79,7 @@ def is_syntax_valid(
         if len(seg_data) >= syn_idx[0] and seg_data.get_value("%02i" % (syn_idx[0])) != "":
             count = 0
             for s in syn_idx[1:]:
-                _val = seg_data.get_value("{:02d}".format(s))
+                _val = seg_data.get_value(f"{s:02d}")
                 if len(seg_data) >= s and _val != "":
                     count += 1
             if count != len(syn_idx) - 1:
@@ -105,7 +103,7 @@ def is_syntax_valid(
         if len(seg_data) > syn_idx[0] - 1 and seg_data.get_value("%02i" % (syn_idx[0])) != "":
             count = 0
             for s in syn_idx[1:]:
-                _val = seg_data.get_value("{:02d}".format(s))
+                _val = seg_data.get_value(f"{s:02d}")
                 if len(seg_data) >= s and _val != "":
                     count += 1
             if count == 0:
@@ -131,7 +129,7 @@ def syntax_str(syntax: list[Any]) -> str:
     """
     output: str = str(syntax[0])
     for i in syntax[1:]:
-        output += "{:02d}".format(int(i))
+        output += f"{int(i):02d}"
     return output
 
 
@@ -140,10 +138,10 @@ def syntax_ele_id_str(seg_id: str | None, ele_pos_list: list[int]) -> str:
     :rtype: string
     """
     output = ""
-    output += "{seg_id}{ele_pos:02d}".format(seg_id=seg_id, ele_pos=ele_pos_list[0])
+    output += f"{seg_id}{ele_pos_list[0]:02d}"
     for i in range(len(ele_pos_list) - 1):
         if i == len(ele_pos_list) - 2:
-            output += " or {seg_id}{ele_pos:02d}".format(seg_id=seg_id, ele_pos=ele_pos_list[i + 1])
+            output += f" or {seg_id}{ele_pos_list[i + 1]:02d}"
         else:
-            output += ", {seg_id}{ele_pos:02d}".format(seg_id=seg_id, ele_pos=ele_pos_list[i + 1])
+            output += f", {seg_id}{ele_pos_list[i + 1]:02d}"
     return output

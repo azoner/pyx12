@@ -268,8 +268,8 @@ def contains_control_character(
     }
     for k, v in control_base.items():
         if k in str_val:
-            return (True, "<{}>".format(v))
+            return (True, f"<{v}>")
     for k, v in extended_base.items():
         if k in str_val:
-            return (True, "<{}>".format(v))
+            return (True, f"<{v}>")
     return (False, None)

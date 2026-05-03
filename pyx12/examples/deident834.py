@@ -70,15 +70,15 @@ class RandomDeidentify:
         if primaryId in self.identities:
             return self.identities[primaryId]
         demo = Demographic(
-            primaryId="{0:0>10}".format(random.randint(1000, 99999999999)),
-            ssn="{0:0>9}".format(random.randint(10000, 999999999)),
-            medicaidId="{0:0>10}".format(random.randint(1000, 99999999999)),
+            primaryId=f"{random.randint(1000, 99999999999):0>10}",
+            ssn=f"{random.randint(10000, 999999999):0>9}",
+            medicaidId=f"{random.randint(1000, 99999999999):0>10}",
             dob="19520101",
             dod="",
             firstname="AA",
             lastname="Smith",
             middlename="",
-            street="{0} Oak".format(random.randint(10, 9999)),
+            street=f"{random.randint(10, 9999)} Oak",
             street2="",
             county="98",
         )
@@ -101,7 +101,7 @@ def deidentify_file(fd_in):
                 scrub2000(datatree, deident)
             for seg1 in datatree.iterate_segments():
                 # wr.Write(seg1['segment'].format())
-                print((seg1["segment"].format()))
+                print(seg1["segment"].format())
 
 
 def scrub2000(loop_sub, deident):
@@ -157,7 +157,7 @@ def main():
             usage()
             return False
         # file_name = os.path.basename(file_in)
-        fd_in = open(file_in, "r", encoding="ascii")
+        fd_in = open(file_in, encoding="ascii")
         deidentify_file(fd_in)
     return True
 

@@ -37,20 +37,18 @@ def load_map_file(map_file: str, param: Any, map_path: str | None = None) -> map
     logger = logging.getLogger("pyx12")
     # Reject any path component in map_file to prevent traversal out of map_path
     if map_file != os.path.basename(map_file) or os.path.isabs(map_file):
-        raise EngineError("Invalid map file name: {}".format(map_file))
+        raise EngineError(f"Invalid map file name: {map_file}")
     map_fd: IO[Any]
     if map_path is not None:
-        logger.debug("Looking for map file '{}' in map_path '{}'".format(map_file, map_path))
+        logger.debug(f"Looking for map file '{map_file}' in map_path '{map_path}'")
         if not os.path.isdir(map_path):
             raise OSError(2, "Map path does not exist", map_path)
         full_path = os.path.join(map_path, map_file)
         if not os.path.isfile(full_path):
-            raise OSError(
-                2, "Pyx12 map file '{}' does not exist in map path".format(map_file), map_path
-            )
+            raise OSError(2, f"Pyx12 map file '{map_file}' does not exist in map path", map_path)
         map_fd = open(full_path, encoding="utf-8")
     else:
-        logger.debug("Looking for map file '{}' in package resources".format(map_file))
+        logger.debug(f"Looking for map file '{map_file}' in package resources")
         map_fd = _res_files("pyx12").joinpath("map", map_file).open("rb")
     with map_fd:
         logger.debug("Create map from %s" % (map_file))

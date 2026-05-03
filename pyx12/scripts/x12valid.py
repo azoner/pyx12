@@ -38,17 +38,13 @@ def check_map_path_arg(map_path):
     if not isdir(map_path):
         raise argparse.ArgumentError(
             None,
-            "The MAP_PATH '{}' is not a valid directory.  Current directory is {}".format(
-                map_path, os.getcwd()
-            ),
+            f"The MAP_PATH '{map_path}' is not a valid directory.  Current directory is {os.getcwd()}",
         )
     index_file = "maps.xml"
     if not isfile(os.path.join(map_path, index_file)):
         raise argparse.ArgumentError(
             None,
-            "The MAP_PATH '{}' does not contain the map index file '{}'".format(
-                map_path, index_file
-            ),
+            f"The MAP_PATH '{map_path}' does not contain the map index file '{index_file}'",
         )
     return map_path
 
@@ -83,7 +79,7 @@ def main():
     parser.add_argument(
         "--version",
         action="version",
-        version="{prog} {version}".format(prog=parser.prog, version=__version__),
+        version=f"{parser.prog} {__version__}",
     )
     parser.add_argument("input_files", nargs="*")
     args = parser.parse_args()
@@ -134,7 +130,7 @@ def main():
                         target_html = src_filename + ".html"
                     fd_html = open(target_html, "w", encoding="utf-8")
 
-                logger.debug("Before x12n_document for {}".format(src_filename))
+                logger.debug(f"Before x12n_document for {src_filename}")
                 if pyx12.x12n_document.x12n_document(
                     param=param,
                     src_file=src_filename,
@@ -146,7 +142,7 @@ def main():
                     sys.stderr.write("%s: OK\n" % (src_filename))
                 else:
                     sys.stderr.write("%s: Failure\n" % (src_filename))
-                logger.debug("after x12n_document for {}".format(src_filename))
+                logger.debug(f"after x12n_document for {src_filename}")
                 if flag_997 and fd_997.tell() != 0:
                     fd_997.seek(0)
                     if os.path.splitext(src_filename)[1] == ".txt":

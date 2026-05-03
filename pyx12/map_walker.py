@@ -18,7 +18,8 @@ If seg indicates a segment has been entered, returns the segment node.
 from __future__ import annotations
 
 import logging
-from typing import Any, Mapping, NamedTuple
+from collections.abc import Mapping
+from typing import Any, NamedTuple
 
 import pyx12.path
 import pyx12.segment

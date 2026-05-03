@@ -249,7 +249,7 @@ class Composite:
     def values_iterator(self) -> Iterator[tuple[str, str]]:
         for j in range(len(self.elements)):
             if not self.elements[j].is_empty():
-                subele_ord = "{comp}".format(comp=j + 1)
+                subele_ord = f"{j + 1}"
                 yield (subele_ord, self.elements[j].get_value())
 
 
@@ -382,7 +382,7 @@ class Segment:
         """
         ele_idx, comp_idx = self._parse_refdes(ref_des)
         if ele_idx is None:
-            raise IndexError("{} is not a valid element index".format(ref_des))
+            raise IndexError(f"{ref_des} is not a valid element index")
         if ele_idx >= self.__len__():
             return None
         if comp_idx is None:
@@ -424,7 +424,7 @@ class Segment:
         """
         ele_idx, comp_idx = self._parse_refdes(ref_des)
         if ele_idx is None:
-            raise IndexError("{} is not a valid element index".format(ref_des))
+            raise IndexError(f"{ref_des} is not a valid element index")
         while len(self.elements) <= ele_idx:
             # insert blank values before our value if needed
             self.elements.append(Composite("", self.subele_term))
@@ -448,7 +448,7 @@ class Segment:
         """
         ele_idx = self._parse_refdes(ref_des)[0]
         if ele_idx is None:
-            raise IndexError("{} is not a valid element index".format(ref_des))
+            raise IndexError(f"{ref_des} is not a valid element index")
         return self.elements[ele_idx].is_element()
 
     def is_composite(self, ref_des: str) -> bool:
@@ -458,7 +458,7 @@ class Segment:
         """
         ele_idx = self._parse_refdes(ref_des)[0]
         if ele_idx is None:
-            raise IndexError("{} is not a valid element index".format(ref_des))
+            raise IndexError(f"{ref_des} is not a valid element index")
         return self.elements[ele_idx].is_composite()
 
     def ele_len(self, ref_des: str) -> int:
@@ -470,7 +470,7 @@ class Segment:
         """
         ele_idx = self._parse_refdes(ref_des)[0]
         if ele_idx is None:
-            raise IndexError("{} is not a valid element index".format(ref_des))
+            raise IndexError(f"{ref_des} is not a valid element index")
         return len(self.elements[ele_idx])
 
     def set_seg_term(self, seg_term: str) -> None:
@@ -579,13 +579,11 @@ class Segment:
         for i in range(len(self.elements)):
             if self.elements[i].is_composite():
                 for comp_ord, val in self.elements[i].values_iterator():
-                    ele_ord = "{idx:0>2}".format(idx=i + 1)
-                    refdes = "{segid}{ele_ord}-{comp_ord}".format(
-                        segid=self.seg_id, ele_ord=ele_ord, comp_ord=comp_ord
-                    )
+                    ele_ord = f"{i + 1:0>2}"
+                    refdes = f"{self.seg_id}{ele_ord}-{comp_ord}"
                     yield (refdes, ele_ord, comp_ord, val)
             else:
                 if not self.elements[i].is_empty():
-                    ele_ord = "{idx:0>2}".format(idx=i + 1)
-                    refdes = "{segid}{ele_ord}".format(segid=self.seg_id, ele_ord=ele_ord)
+                    ele_ord = f"{i + 1:0>2}"
+                    refdes = f"{self.seg_id}{ele_ord}"
                     yield (refdes, ele_ord, None, self.elements[i].get_value())

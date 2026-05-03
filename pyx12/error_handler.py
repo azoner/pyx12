@@ -378,8 +378,7 @@ class err_handler:
         """
         Return the next error node
         """
-        for child in self.children:
-            yield child
+        yield from self.children
 
     def is_closed(self) -> bool:
         """
@@ -568,8 +567,7 @@ class err_isa(err_node):
         """
         Return the next error node
         """
-        for child in self.children:
-            yield child
+        yield from self.children
         next(self.parent)
 
     def __repr__(self) -> str:
@@ -709,8 +707,7 @@ class err_gs(err_node):
         """
         Return the next error node
         """
-        for child in self.children:
-            yield child
+        yield from self.children
         next(self.parent)
 
     def __repr__(self) -> str:
@@ -845,8 +842,7 @@ class err_st(err_node):
         """
         Return the next error node
         """
-        for child in self.children:
-            yield child
+        yield from self.children
         return
 
     def __repr__(self) -> str:
