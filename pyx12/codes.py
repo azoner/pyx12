@@ -31,7 +31,7 @@ class CodesError(Exception):
 class _CodeSet(TypedDict):
     name: str | None
     dataele: str | None
-    codes: list[str | None]
+    codes: frozenset[str | None]
 
 
 class ExternalCodes:
@@ -73,7 +73,7 @@ class ExternalCodes:
                 self.codes[codeset_id] = {
                     "name": cElem.findtext("name"),
                     "dataele": cElem.findtext("data_ele"),
-                    "codes": [c.text for c in cElem.iterfind("version/code")],
+                    "codes": frozenset(c.text for c in cElem.iterfind("version/code")),
                 }
 
     def isValid(self, key: str | None, code: str | None, check_dte: str | None = None) -> bool:
@@ -89,6 +89,6 @@ class ExternalCodes:
         return code in self.codes[key]["codes"]
 
     def debug_print(self, count: int = 10) -> None:
-        """Debug print first <count> codes for each codeset."""
+        """Debug print first <count> codes for each codeset (alphabetical)."""
         for key in self.codes:
-            print(self.codes[key]["codes"][:count])
+            print(sorted(self.codes[key]["codes"], key=lambda c: c or "")[:count])
