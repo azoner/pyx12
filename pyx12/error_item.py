@@ -13,6 +13,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
+from typing import Any
 
 from .errors import EngineError
 
@@ -81,6 +82,11 @@ class SegError(ErrorItem):
 class EleError(ErrorItem):
     err_val: str | None = None
     refdes: str | None = None
+    # map_node carries the element node ref for cursor materialization in the
+    # err_handler tree. None means the wrapper should leave the cursor where
+    # it was (used for composite-/seg-level errors that historically attach
+    # to the prior cursor).
+    map_node: Any = None
 
     def __post_init__(self) -> None:
         if self.err_cde not in ele_errors:
