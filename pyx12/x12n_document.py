@@ -31,6 +31,7 @@ import pyx12.map_index
 import pyx12.params
 import pyx12.x12file
 import pyx12.x12xml_simple
+from pyx12.map_if._segment import apply_segment_errors
 from pyx12.map_walker import walk_tree
 
 
@@ -204,7 +205,7 @@ def x12n_document(
                 errh.handle_errors(src.pop_errors())
 
             # errh.set_cur_line(src.get_cur_line())
-            valid &= node.is_valid(seg, errh)
+            valid &= apply_segment_errors(node, seg, errh)
             # erx.handleErrors(src.pop_errors())
             # erx.handleErrors(errh.get_errors())
             # errh.reset()

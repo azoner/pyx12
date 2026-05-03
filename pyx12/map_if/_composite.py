@@ -21,22 +21,6 @@ from ._base import _required_attr, x12_node
 from ._element import element_if
 
 
-def apply_composite_errors(child_node: composite_if, comp_data: Any, errh: Any) -> bool:
-    """Drive a composite validation: run is_valid_errors, forward errors with
-    cursor maintenance. Composite-level errors leave the cursor untouched
-    (matches the historical behavior of attaching to the prior cursor);
-    sub-element errors switch the cursor via add_ele(map_node) before
-    forwarding."""
-    ok, errors = child_node.is_valid_errors(comp_data)
-    prev_cursor = None
-    for e in errors:
-        if e.map_node is not None and e.map_node is not prev_cursor:
-            errh.add_ele(e.map_node)
-            prev_cursor = e.map_node
-        errh.ele_error(e.err_cde, e.err_str, e.err_val, e.refdes)
-    return ok
-
-
 ############################################################
 # Composite Interface
 ############################################################
@@ -132,11 +116,11 @@ class composite_if(x12_node):
                         good_flag = True
                         break
             if not good_flag:
-                err_str = 'At least one component of composite "%s" (%s) is required' % (
+                err_str = 'Mandatory composite "%s" (%s) is missing' % (
                     self.name,
                     self.refdes,
                 )
-                return False, [EleError(err_cde="2", err_str=err_str, refdes=self.refdes)]
+                return False, [EleError(err_cde="1", err_str=err_str, refdes=self.refdes)]
 
         if self.usage == "N" and not comp_data.is_empty():
             err_str = 'Composite "%s" (%s) is marked as Not Used' % (self.name, self.refdes)
