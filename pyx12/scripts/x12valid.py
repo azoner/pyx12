@@ -27,6 +27,7 @@ from os.path import isdir, isfile
 import pyx12
 import pyx12.params
 import pyx12.x12n_document
+from pyx12.scripts import external_codes_help_epilog
 
 __author__ = pyx12.__author__
 __status__ = pyx12.__status__
@@ -53,7 +54,11 @@ def main():
     """
     Set up environment for processing
     """
-    parser = argparse.ArgumentParser(description="X12 Validation")
+    parser = argparse.ArgumentParser(
+        description="X12 Validation",
+        epilog=external_codes_help_epilog(),
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+    )
     parser.add_argument("--config-file", "-c", action="store", dest="configfile", default=None)
     parser.add_argument("--log-file", "-l", action="store", dest="logfile", default=None)
     parser.add_argument(
