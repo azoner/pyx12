@@ -51,7 +51,6 @@ def get_x12file_metadata(
     else:
         node_summary = None
     for seg in src:
-        orig_node = node
         if seg.get_seg_id() == "ISA":
             node = control_map.getnodebypath("/ISA_LOOP/ISA")
             walker.forceWalkCounterToLoopStart("/ISA_LOOP", "/ISA_LOOP/ISA")
@@ -212,7 +211,6 @@ def get_x12file_metadata_headers(
     map_path: str | None = None,
 ) -> tuple[bool, dict[str, Any] | None]:
     logger = logging.getLogger("pyx12")
-    errh = pyx12.error_handler.errh_null()
 
     # Get X12 DATA file
     try:
@@ -237,7 +235,6 @@ def get_x12file_metadata_headers(
                 "UsageIndicator": seg.get_value("ISA15"),
                 "GSLoops": [],
             }
-            icvn = isa_data["InterchangeControlVersionNumber"] if isa_data is not None else None
         elif seg.get_seg_id() == "IEA" and isa_data is not None:
             isa_data["NumberofIncludedFunctionalGroups"] = seg.get_value("IEA01")
         elif seg.get_seg_id() == "GS":

@@ -13,7 +13,6 @@ Create an X12 document from a XML data file in the simple form
 
 from __future__ import annotations
 
-import logging
 from typing import TextIO
 from xml.etree.ElementTree import Element
 
@@ -32,7 +31,6 @@ def convert(filename: str | TextIO, fd_out: TextIO) -> bool:
     :param fd_out: Output file
     :type fd_out: file descripter
     """
-    logger = logging.getLogger("pyx12")
     wr = pyx12.x12file.X12Writer(fd_out, "~", "*", ":", "\n", "^")
     parser = et.XMLParser(encoding="utf-8")
     doc = et.parse(filename, parser=parser)

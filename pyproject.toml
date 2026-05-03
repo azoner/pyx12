@@ -77,7 +77,16 @@ line-length = 100
 target-version = "py311"
 
 [tool.ruff.lint]
-select = ["I"]
+select = ["F", "I", "B904"]
+
+# Test, examples, scripts, and map-generation helpers are loose with locals
+# (assignment-only stubs, *-imports, undefined names tolerated for clarity).
+# Match the mypy strict-overrides set in [[tool.mypy.overrides]] below.
+[tool.ruff.lint.per-file-ignores]
+"pyx12/test/*" = ["F401", "F403", "F405", "F821", "F841"]
+"pyx12/tests/*" = ["F401", "F403", "F405", "F821", "F841"]
+"pyx12/examples/*" = ["F401", "F403", "F405", "F821", "F841"]
+"pyx12/scripts/*" = ["F401", "F403", "F405", "F821", "F841"]
 
 [tool.mypy]
 python_version = "3.11"

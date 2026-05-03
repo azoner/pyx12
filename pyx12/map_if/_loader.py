@@ -57,16 +57,3 @@ def load_map_file(map_file: str, param: Any, map_path: str | None = None) -> map
         parser = et.XMLParser(encoding="utf-8")
         etree = et.parse(map_fd, parser=parser)
         return map_if(etree.getroot(), param, map_path)
-
-
-__all__ = [
-    "MAXINT",
-    "_required_attr",
-    "x12_node",
-    "map_if",
-    "loop_if",
-    "segment_if",
-    "element_if",
-    "composite_if",
-    "load_map_file",
-]

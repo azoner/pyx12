@@ -78,7 +78,7 @@ class element_if(x12_node):
             if self.res is not None and self.res != "":
                 self.rec = re.compile(self.res, re.S)
         except Exception:
-            raise EngineError('Element regex "%s" failed to compile' % (self.res))
+            raise EngineError('Element regex "%s" failed to compile' % (self.res)) from None
 
         v = elem.find("valid_codes")
         if v is not None:
