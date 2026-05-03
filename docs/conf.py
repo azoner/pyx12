@@ -1,6 +1,6 @@
 """Sphinx configuration for pyx12 documentation."""
 
-import subprocess
+import importlib
 import sys
 from importlib.metadata import version as _get_version
 from pathlib import Path
@@ -25,11 +25,12 @@ extensions = [
 ]
 
 
-# Capture --help output for each console script using sys.executable so
-# Windows Smart App Control's reputation-based block on entry-point shims
-# (and Windows' CreateProcess PATH resolution differing from PATH search)
-# never matter. Output goes under docs/_generated/cli/ and is included by
-# docs/cli.rst via literalinclude.
+# Capture --help output for each console script by importing each module's
+# build_parser() and calling format_help() in-process. Previously this used
+# a subprocess with sys.executable, which silently produced empty .txt files
+# in environments where the subprocess Python could not import pyx12 (e.g.
+# Read the Docs). In-process import surfaces any failure as a Sphinx build
+# error instead of an empty <pre> block on the rendered page.
 _CLI_SCRIPTS = ("x12valid", "x12norm", "x12html", "x12info", "x12xml", "xmlx12")
 
 
@@ -37,19 +38,9 @@ def _capture_cli_help() -> None:
     out_dir = Path(__file__).parent / "_generated" / "cli"
     out_dir.mkdir(parents=True, exist_ok=True)
     for script in _CLI_SCRIPTS:
-        # Set sys.argv[0] before main() runs so argparse picks the entry-point
-        # name as prog (instead of "python.exe -m pyx12.scripts.x12norm").
-        runner = (
-            f"import sys; sys.argv = ['{script}', '--help']; "
-            f"from pyx12.scripts.{script} import main; main()"
-        )
-        result = subprocess.run(
-            [sys.executable, "-c", runner],
-            capture_output=True,
-            text=True,
-            check=False,
-        )
-        (out_dir / f"{script}.txt").write_text(result.stdout, encoding="utf-8")
+        mod = importlib.import_module(f"pyx12.scripts.{script}")
+        parser = mod.build_parser()
+        (out_dir / f"{script}.txt").write_text(parser.format_help(), encoding="utf-8")
 
 
 _capture_cli_help()

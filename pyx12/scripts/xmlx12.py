@@ -14,6 +14,7 @@
 Create an X12 document from a XML data file
 """
 
+import argparse
 import logging
 import sys
 
@@ -27,11 +28,9 @@ __version__ = pyx12.__version__
 __date__ = pyx12.__date__
 
 
-def main():
-    """Script main program."""
-    import argparse
-
-    parser = argparse.ArgumentParser(description="XML to X12 conversion")
+def build_parser() -> argparse.ArgumentParser:
+    """Build the argparse parser. Exposed so docs/conf.py can render --help."""
+    parser = argparse.ArgumentParser(prog="xmlx12", description="XML to X12 conversion")
     parser.add_argument("--log-file", "-l", action="store", dest="logfile", default=None)
     parser.add_argument("--verbose", "-v", action="count", default=0)
     parser.add_argument("--debug", "-d", action="store_true")
@@ -43,6 +42,12 @@ def main():
         version=f"{parser.prog} {__version__}",
     )
     parser.add_argument("input_file")
+    return parser
+
+
+def main():
+    """Script main program."""
+    parser = build_parser()
     args = parser.parse_args()
 
     logger = logging.getLogger("pyx12")
