@@ -19,8 +19,6 @@ from typing import Mapping
 
 import pyx12.path
 
-from .decorators import dump_args
-
 
 class NodeCounter:
     """

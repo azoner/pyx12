@@ -200,7 +200,7 @@ def is_valid_date(data_type: str, val: str) -> bool:
                     if not is_valid_time(val[8:12]):
                         raise IsValidError
             except TypeError:
-                raise IsValidError
+                raise IsValidError from None
         else:
             raise IsValidError
     except IsValidError:

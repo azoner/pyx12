@@ -128,7 +128,6 @@ class x12xml:
         """
         if not seg_node.is_segment():
             raise EngineError("Node must be a segment")
-        parent = pop_to_parent_loop(seg_node)  # Get enclosing loop
         for loop in pop_loops:
             self.writer.pop()
         for loop in push_loops:

@@ -343,7 +343,7 @@ class X12Reader(X12Base):
         """
         self.need_to_close = False
         try:
-            res = src_file_obj.closed  # type: ignore[union-attr]
+            _ = src_file_obj.closed  # type: ignore[union-attr]
             self.fd_in = src_file_obj  # type: ignore[assignment]
         except AttributeError:
             if src_file_obj == "-":
@@ -511,7 +511,7 @@ class X12Writer(X12Base):
         """
         self.need_to_close = False
         try:
-            res = src_file_obj.write  # type: ignore[union-attr]
+            _ = src_file_obj.write  # type: ignore[union-attr]
             # isinstance(f, file)
             self.fd_out = src_file_obj  # type: ignore[assignment]
         except AttributeError:

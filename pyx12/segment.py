@@ -20,7 +20,6 @@ All indexing is zero based.
 
 from __future__ import annotations
 
-import logging
 import re
 from collections.abc import Iterator
 

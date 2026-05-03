@@ -541,10 +541,10 @@ class X12LoopDataNode(X12DataNode):
                     if is_match:
                         return seg.seg_data
                 return None
-            except errors.EngineError as e:
+            except errors.EngineError:
                 raise errors.X12PathError(
                     "X12 Path is invalid or was not found: %s" % (x12_path_str)
-                )
+                ) from None
         else:
             next_id = xpath.loop_list[0]
             del xpath.loop_list[0]
@@ -556,10 +556,10 @@ class X12LoopDataNode(X12DataNode):
                         )
                         return result
                 return None
-            except errors.EngineError as e:
+            except errors.EngineError:
                 raise errors.X12PathError(
                     "X12 Path is invalid or was not found: %s" % (x12_path_str)
-                )
+                ) from None
 
     def _get_segment(self, seg_obj: pyx12.segment.Segment | str) -> pyx12.segment.Segment:
         """
@@ -739,8 +739,10 @@ class X12SegmentDataNode(X12DataNode):
                 seg_result: pyx12.segment.Segment | None = curr.seg_data
                 return seg_result
             return None
-        except errors.EngineError as e:
-            raise errors.X12PathError("X12 Path is invalid or was not found: %s" % (x12_path_str))
+        except errors.EngineError:
+            raise errors.X12PathError(
+                "X12 Path is invalid or was not found: %s" % (x12_path_str)
+            ) from None
 
     def iterate_segments(self) -> Iterator[dict[str, Any]]:
         """
@@ -1156,7 +1158,7 @@ class X12ContextReader:
         except Exception:
             mypath = self.x12_map_node.get_path()
             err_str = "X12SegmentDataNode failed: x12_path={}, seg_date={}".format(mypath, seg_data)
-            raise errors.EngineError(err_str)
+            raise errors.EngineError(err_str) from None
         try:
             new_node.parent = cur_loop_node
             if cur_loop_node is None:
@@ -1168,7 +1170,7 @@ class X12ContextReader:
             err_str += ", orig_datanode=%s" % (orig_data_node.cur_path)
             err_str += ", cur_datanode=%s" % (cur_data_node.cur_path)
             err_str += ", seg_data=%s" % (seg_data)
-            raise errors.EngineError(err_str)
+            raise errors.EngineError(err_str) from None
         return new_node
 
     def _apply_loop_count(self, orig_node: Any, new_map: Any) -> None:
