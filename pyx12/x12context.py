@@ -28,7 +28,7 @@ import pyx12
 import pyx12.segment
 
 from . import error_handler, errors, map_if, map_index, path, x12file
-from .map_walker import pop_to_parent_loop, walk_tree
+from .map_walker import apply_walk_errors, pop_to_parent_loop, walk_tree
 
 
 class X12DataNode:
@@ -918,14 +918,14 @@ class X12ContextReader:
                 self.x12_map_node = self.control_map.getnodebypath(tpath)
             else:
                 try:
-                    seg_node, pop_loops, push_loops = self.walker.walk(
+                    seg_node, pop_loops, push_loops, walk_errors = self.walker.walk_errors(
                         self.x12_map_node,
                         seg,
-                        errh,
                         self.src.get_seg_count(),
                         self.src.get_cur_line(),
                         self.src.get_ls_id(),
                     )
+                    apply_walk_errors(errh, walk_errors)
                     self.x12_map_node = seg_node
                 except errors.EngineError:
                     raise
