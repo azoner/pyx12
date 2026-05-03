@@ -204,6 +204,7 @@
   <data_ele ele_num="332" data_type="R" min_len="1" max_len="6" name="Percent, Decimal Format"/>
   <data_ele ele_num="337" data_type="TM" min_len="4" max_len="8" name="Time"/>
   <data_ele ele_num="338" data_type="R" min_len="1" max_len="6" name="Terms Discount Percent"/>
+  <data_ele ele_num="347" data_type="R" min_len="1" max_len="10" name="Hash Total"/>
   <data_ele ele_num="349" data_type="ID" min_len="1" max_len="1" name="Item Description Type"/>
   <data_ele ele_num="350" data_type="AN" min_len="1" max_len="20" name="Assigned Identification"/>
   <data_ele ele_num="352" data_type="AN" min_len="1" max_len="80" name="Description"/>
@@ -215,6 +216,7 @@
   <data_ele ele_num="364" data_type="AN" min_len="1" max_len="256" name="Communication Number"/>
   <data_ele ele_num="365" data_type="ID" min_len="2" max_len="2" name="Communication Number Qualifier"/>
   <data_ele ele_num="366" data_type="ID" min_len="2" max_len="2" name="Contact Function Code"/>
+  <data_ele ele_num="367" data_type="AN" min_len="1" max_len="30" name="Contract Number"/>
   <data_ele ele_num="373" data_type="DT" min_len="8" max_len="8" name="Date"/>
   <data_ele ele_num="374" data_type="ID" min_len="3" max_len="3" name="Date/Time Qualifier"/>
   <data_ele ele_num="378" data_type="ID" min_len="1" max_len="1" name="Allowance/Charge Percent Qualifier"/>
@@ -305,6 +307,7 @@
   <data_ele ele_num="770" data_type="AN" min_len="1" max_len="20" name="Option Number"/>
   <data_ele ele_num="782" data_type="R" min_len="1" max_len="18" name="Monetary Amount"/>
   <data_ele ele_num="786" data_type="ID" min_len="2" max_len="2" name="Security Level Code"/>
+  <data_ele ele_num="790" data_type="AN" min_len="1" max_len="132" name="Entity Title"/>
   <data_ele ele_num="799" data_type="AN" min_len="1" max_len="30" name="Version Identifier"/>
   <data_ele ele_num="81" data_type="R" min_len="1" max_len="10" name="Weight"/>
   <data_ele ele_num="812" data_type="ID" min_len="1" max_len="10" name="Payment Format Code"/>
@@ -348,4 +351,13 @@
   <data_ele ele_num="I17" data_type="ID" min_len="1" max_len="1" name="I17"/>
   <data_ele ele_num="I18" data_type="ID" min_len="3" max_len="3" name="I18"/>
   <data_ele ele_num="I65" data_type="AN" min_len="1" max_len="1" name="I65"/>
+  <!-- Non-HIPAA elements: 830 (Planning Schedule) and 841 (Specifications/Technical Information). Ref #135. -->
+  <data_ele ele_num="347" data_type="R" min_len="1" max_len="10" name="Hash Total"/>
+  <data_ele ele_num="367" data_type="AN" min_len="1" max_len="30" name="Contract Number"/>
+  <data_ele ele_num="790" data_type="AN" min_len="1" max_len="132" name="Entity Title"/>
+  <data_ele ele_num="791" data_type="AN" min_len="1" max_len="80" name="Entity Purpose"/>
+  <data_ele ele_num="792" data_type="ID" min_len="1" max_len="1" name="Entity Status Code"/>
+  <data_ele ele_num="795" data_type="ID" min_len="1" max_len="1" name="Revision Level Code"/>
+  <data_ele ele_num="796" data_type="AN" min_len="1" max_len="30" name="Revision Value"/>
+  <data_ele ele_num="1401" data_type="ID" min_len="1" max_len="3" name="Proposal Data Detail Identifier Code"/>
 </data_elements>
