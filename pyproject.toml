@@ -65,8 +65,13 @@ x12norm = "pyx12.scripts.x12norm:main"
 x12xml = "pyx12.scripts.x12xml:main"
 xmlx12 = "pyx12.scripts.xmlx12:main"
 
-[tool.setuptools]
-packages = ["pyx12", "pyx12.scripts"]
+[tool.setuptools.packages.find]
+# Ship every pyx12 sub-package; exclude dev-only directories. Using `find`
+# (rather than an explicit list) so future sub-packages are picked up
+# automatically — the previous explicit list silently dropped pyx12.map_if
+# when it was added in PR #129, breaking `pip install` (RTD, PyPI release).
+include = ["pyx12", "pyx12.*"]
+exclude = ["pyx12.test*", "pyx12.tests*", "pyx12.examples*"]
 
 [tool.setuptools.package-data]
 "*" = ["*.xml", "*.md"]
