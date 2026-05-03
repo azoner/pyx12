@@ -167,17 +167,6 @@ class element_if(x12_node):
         # match also by ID
         raise NotImplementedError("Override in sub-class")
 
-    def is_valid(self, elem: Any, errh: Any, type_list: list[str | None] | None = None) -> bool:
-        """
-        Backwards-compatible wrapper: drives the pure is_valid_errors and
-        forwards the produced errors into the legacy err_handler API.
-        """
-        errh.add_ele(self)
-        ok, errors = self.is_valid_errors(elem, type_list)
-        for e in errors:
-            errh.ele_error(e.err_cde, e.err_str, e.err_val, e.refdes)
-        return ok
-
     def is_valid_errors(
         self, elem: Any, type_list: list[str | None] | None = None
     ) -> tuple[bool, list[EleError]]:
