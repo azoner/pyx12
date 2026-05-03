@@ -369,19 +369,17 @@ class CompositeRequirement(unittest.TestCase):
         self.errh = pyx12.error_handler.errh_null()
 
     def test_comp_required_ok1(self):
-        self.errh.err_cde = None
         node = self.map.getnodebypath("/ISA_LOOP/GS_LOOP/ST_LOOP/DETAIL/2000A/2000B/2300/CLM")
         node = node.get_child_node_by_idx(4)
         self.assertNotEqual(node, None)
         # self.assertEqual(node.id, 'CLM05', node.id)
         self.assertEqual(node.base_name, "composite")
         comp = pyx12.segment.Composite("03::1", ":")
-        result = node.is_valid(comp, self.errh)
+        result, errors = node.is_valid_errors(comp)
         self.assertTrue(result)
-        self.assertEqual(self.errh.err_cde, None)
+        self.assertEqual([e.err_cde for e in errors], [])
 
     def test_comp_required_ok2(self):
-        self.errh.err_cde = None
         map = pyx12.map_if.load_map_file("comp_test.xml", self.param)
         node = map.getnodebypath("/TST")
         self.assertNotEqual(node, None)
@@ -389,12 +387,11 @@ class CompositeRequirement(unittest.TestCase):
         self.assertNotEqual(node, None)
         self.assertEqual(node.base_name, "composite")
         comp = pyx12.segment.Composite("::1", ":")
-        result = node.is_valid(comp, self.errh)
+        result, errors = node.is_valid_errors(comp)
         self.assertTrue(result)
-        self.assertEqual(self.errh.err_cde, None)
+        self.assertEqual([e.err_cde for e in errors], [])
 
     def test_comp_S_sub_R_ok3(self):
-        self.errh.err_cde = None
         map = pyx12.map_if.load_map_file("837Q3.I.5010.X223.A1.xml", self.param)
         node = map.getnodebypath("/ISA_LOOP/GS_LOOP/ST_LOOP/DETAIL/2000A/2000B/2300/2400/SV2")
         node = node.get_child_node_by_idx(1)  # SV202
@@ -402,20 +399,19 @@ class CompositeRequirement(unittest.TestCase):
         self.assertEqual(node.base_name, "composite")
         # self.assertEqual(node.id, 'SV202')
         comp = pyx12.segment.Composite("", ":")
-        result = node.is_valid(comp, self.errh)
+        result, errors = node.is_valid_errors(comp)
         self.assertTrue(result)
-        self.assertEqual(self.errh.err_cde, None)
+        self.assertEqual([e.err_cde for e in errors], [])
 
     def test_comp_required_fail1(self):
-        self.errh.err_cde = None
         node = self.map.getnodebypath("/ISA_LOOP/GS_LOOP/ST_LOOP/DETAIL/2000A/2000B/2300/CLM")
         node = node.get_child_node_by_idx(4)
         self.assertNotEqual(node, None)
         self.assertEqual(node.base_name, "composite")
         comp = pyx12.segment.Composite("", ":")
-        result = node.is_valid(comp, self.errh)
+        result, errors = node.is_valid_errors(comp)
         self.assertFalse(result)
-        self.assertEqual(self.errh.err_cde, "2")
+        self.assertEqual([e.err_cde for e in errors], ["2"])
 
     def test_comp_not_used_fail1(self):
         self.errh.err_cde = None

@@ -18,7 +18,23 @@ from xml.etree.ElementTree import Element
 
 from ..error_item import EleError
 from ._base import _required_attr, x12_node
-from ._element import apply_element_errors, element_if
+from ._element import element_if
+
+
+def apply_composite_errors(child_node: composite_if, comp_data: Any, errh: Any) -> bool:
+    """Drive a composite validation: run is_valid_errors, forward errors with
+    cursor maintenance. Composite-level errors leave the cursor untouched
+    (matches the historical behavior of attaching to the prior cursor);
+    sub-element errors switch the cursor via add_ele(map_node) before
+    forwarding."""
+    ok, errors = child_node.is_valid_errors(comp_data)
+    prev_cursor = None
+    for e in errors:
+        if e.map_node is not None and e.map_node is not prev_cursor:
+            errh.add_ele(e.map_node)
+            prev_cursor = e.map_node
+        errh.ele_error(e.err_cde, e.err_str, e.err_val, e.refdes)
+    return ok
 
 
 ############################################################
@@ -66,14 +82,6 @@ class composite_if(x12_node):
         for e in elem.findall("element"):
             self.children.append(element_if(self.root, self, e))
 
-    def _error(self, errh: Any, err_str: str, err_cde: str, elem_val: str) -> None:
-        """
-        Forward the error to an error_handler
-        """
-        err_str2 = err_str.replace("\n", "").replace("\r", "")
-        elem_val2 = elem_val.replace("\n", "").replace("\r", "")
-        errh.ele_error(err_cde, err_str2, elem_val2, self.refdes)
-
     def debug_print(self) -> None:
         sys.stdout.write(self.__repr__())
         for node in self.children:
@@ -102,56 +110,13 @@ class composite_if(x12_node):
             sub_elem.xml()
         sys.stdout.write("</composite>\n")
 
-    def is_valid(self, comp_data: Any, errh: Any) -> bool:
-        """
-        Validates the composite
-        :param comp_data: data composite instance, has multiple values
-        :param errh: instance of error_handler
-        :rtype: boolean
-        """
-        valid = True
-        if (comp_data is None or comp_data.is_empty()) and self.usage in ("N", "S"):
-            return True
-
-        if self.usage == "R":
-            good_flag = False
-            if comp_data is not None:
-                for sub_ele in comp_data:
-                    if sub_ele is not None and len(sub_ele.get_value()) > 0:
-                        good_flag = True
-                        break
-            if not good_flag:
-                err_str = 'At least one component of composite "%s" (%s) is required' % (
-                    self.name,
-                    self.refdes,
-                )
-                errh.ele_error("2", err_str, None, self.refdes)
-                return False
-
-        if self.usage == "N" and not comp_data.is_empty():
-            err_str = 'Composite "%s" (%s) is marked as Not Used' % (self.name, self.refdes)
-            errh.ele_error("5", err_str, None, self.refdes)
-            return False
-
-        if len(comp_data) > self.get_child_count():
-            err_str = 'Too many sub-elements in composite "%s" (%s)' % (self.name, self.refdes)
-            errh.ele_error("3", err_str, None, self.refdes)
-            valid = False
-        for i in range(min(len(comp_data), self.get_child_count())):
-            valid &= apply_element_errors(self.get_child_node_by_idx(i), comp_data[i], errh)
-        for i in range(min(len(comp_data), self.get_child_count()), self.get_child_count()):
-            if i < self.get_child_count():
-                # Check missing required elements
-                valid &= apply_element_errors(self.get_child_node_by_idx(i), None, errh)
-        return valid
-
     def is_valid_errors(self, comp_data: Any) -> tuple[bool, list[EleError]]:
         """
-        Pure validator parallel to is_valid: returns (ok, errors) without
-        touching an error handler. Composite-level errors leave map_node
-        unset (=None), so a wrapper iterating with cursor tracking will
-        attach them to whatever cursor was last set — matches the historical
-        behavior of the errh.ele_error calls in is_valid.
+        Pure validator: returns (ok, errors) without touching an error
+        handler. Composite-level errors leave map_node unset (=None) so a
+        wrapper iterating with cursor tracking attaches them to whatever
+        cursor was last set — matches the historical behavior of the
+        per-composite errh.ele_error calls.
         """
         valid = True
         errors: list[EleError] = []
