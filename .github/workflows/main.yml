@@ -34,6 +34,20 @@ jobs:
       - name: Run mypy
         run: uv run mypy
 
+  check-maps:
+    name: Validate bundled X12 maps
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - name: Install uv
+        uses: astral-sh/setup-uv@v8.1.0
+        with:
+          python-version: '3.12'
+      - name: Install dev dependencies
+        run: uv sync --extra dev
+      - name: Run map validator
+        run: uv run python tools/check_maps.py
+
   docs:
     name: Build documentation
     runs-on: ubuntu-latest
