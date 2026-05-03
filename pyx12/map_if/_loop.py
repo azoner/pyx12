@@ -14,7 +14,7 @@ from __future__ import annotations
 
 import sys
 from collections.abc import Iterator
-from typing import Any
+from typing import TYPE_CHECKING
 from xml.etree.ElementTree import Element
 
 import pyx12.segment
@@ -23,6 +23,9 @@ from ..errors import EngineError
 from ..path import X12Path
 from ._base import MAXINT, _required_attr, x12_node
 from ._segment import segment_if
+
+if TYPE_CHECKING:
+    from ._root import map_if
 
 
 ############################################################
@@ -33,16 +36,15 @@ class loop_if(x12_node):
     Loop Interface
     """
 
-    root: Any
-    pos_map: dict[int, list[Any]]
+    root: map_if
+    pos_map: dict[int, list[x12_node]]
     base_name: str
     _cur_count: int
     type: str | None
-    usage: str | None
     pos: int
     repeat: str | None
 
-    def __init__(self, root: Any, parent: Any, elem: Element) -> None:
+    def __init__(self, root: map_if, parent: x12_node, elem: Element) -> None:
         """ """
         x12_node.__init__(self)
         self.root = root
@@ -76,16 +78,17 @@ class loop_if(x12_node):
         # For the segments with duplicate ordinals, adjust the path to be unique
         for ord1 in sorted(self.pos_map):
             if len(self.pos_map[ord1]) > 1:
-                for seg_node in [n for n in self.pos_map[ord1] if n.is_segment()]:
+                for seg_node in [n for n in self.pos_map[ord1] if isinstance(n, segment_if)]:
                     id_elem = seg_node.guess_unique_key_id_element()
                     if id_elem is not None:
-                        seg_node.path = seg_node.path + "[" + id_elem.valid_codes[0] + "]"
+                        seg_node.path = seg_node.path + "[" + (id_elem.valid_codes[0] or "") + "]"
 
     def debug_print(self) -> None:
         sys.stdout.write(self.__repr__())
         for ord1 in sorted(self.pos_map):
             for node in self.pos_map[ord1]:
-                node.debug_print()
+                if isinstance(node, (loop_if, segment_if)):
+                    node.debug_print()
 
     def __len__(self) -> int:
         i = 0
@@ -118,28 +121,28 @@ class loop_if(x12_node):
             return MAXINT
         return int(self.repeat)
 
-    def get_parent(self) -> Any:
+    def get_parent(self) -> x12_node | None:
         return self.parent
 
-    def get_first_node(self) -> Any:
+    def get_first_node(self) -> x12_node | None:
         pos_keys = sorted(self.pos_map)
         if len(pos_keys) > 0:
             return self.pos_map[pos_keys[0]][0]
         else:
             return None
 
-    def get_first_seg(self) -> Any:
+    def get_first_seg(self) -> segment_if | None:
         first = self.get_first_node()
-        if first.is_segment():
+        if isinstance(first, segment_if):
             return first
         else:
             return None
 
-    def childIterator(self) -> Iterator[Any]:
+    def childIterator(self) -> Iterator[x12_node]:
         for ord1 in sorted(self.pos_map):
             yield from self.pos_map[ord1]
 
-    def getnodebypath(self, spath: str) -> Any:
+    def getnodebypath(self, spath: str) -> x12_node | None:
         """
         :param spath: remaining path to match
         :type spath: string
@@ -150,13 +153,14 @@ class loop_if(x12_node):
             return None
         for ord1 in sorted(self.pos_map):
             for child in self.pos_map[ord1]:
-                if child.is_loop():
+                assert child.id is not None
+                if isinstance(child, loop_if):
                     if child.id.upper() == pathl[0].upper():
                         if len(pathl) == 1:
                             return child
                         else:
                             return child.getnodebypath("/".join(pathl[1:]))
-                elif child.is_segment() and len(pathl) == 1:
+                elif isinstance(child, segment_if) and len(pathl) == 1:
                     if pathl[0].find("[") == -1:  # No id to match
                         if pathl[0] == child.id:
                             return child
@@ -169,7 +173,7 @@ class loop_if(x12_node):
                                 return child
         raise EngineError('getnodebypath failed. Path "%s" not found' % spath)
 
-    def getnodebypath2(self, path_str: str) -> Any:
+    def getnodebypath2(self, path_str: str) -> x12_node | None:
         """
         Try x12 path
 
@@ -182,7 +186,8 @@ class loop_if(x12_node):
             return None
         for ord1 in sorted(self.pos_map):
             for child in self.pos_map[ord1]:
-                if child.is_loop() and len(x12path.loop_list) > 0:
+                assert child.id is not None
+                if isinstance(child, loop_if) and len(x12path.loop_list) > 0:
                     if child.id.upper() == x12path.loop_list[0].upper():
                         if len(x12path.loop_list) == 1 and x12path.seg_id is None:
                             return child
@@ -190,7 +195,7 @@ class loop_if(x12_node):
                             del x12path.loop_list[0]
                             return child.getnodebypath2(x12path.format())
                 elif (
-                    child.is_segment()
+                    isinstance(child, segment_if)
                     and len(x12path.loop_list) == 0
                     and x12path.seg_id is not None
                 ):
@@ -209,7 +214,7 @@ class loop_if(x12_node):
     def get_child_count(self) -> int:
         return self.__len__()
 
-    def get_child_node_by_idx(self, idx: int) -> Any:
+    def get_child_node_by_idx(self, idx: int) -> x12_node | None:
         """
         :param idx: zero based
         """
@@ -241,9 +246,9 @@ class loop_if(x12_node):
         """
         pos_keys = sorted(self.pos_map)
         child = self.pos_map[pos_keys[0]][0]
-        if child.is_loop():
+        if isinstance(child, loop_if):
             return bool(child.is_match(seg_data))
-        elif child.is_segment():
+        elif isinstance(child, segment_if):
             if child.is_match(seg_data):
                 return True
             else:
@@ -251,21 +256,21 @@ class loop_if(x12_node):
         else:
             return False
 
-    def get_child_seg_node(self, seg_data: pyx12.segment.Segment) -> Any:
+    def get_child_seg_node(self, seg_data: pyx12.segment.Segment) -> segment_if | None:
         """
         Return the child segment matching the segment data
         """
         for child in self.childIterator():
-            if child.is_segment() and child.is_match(seg_data):
+            if isinstance(child, segment_if) and child.is_match(seg_data):
                 return child
         return None
 
-    def get_child_loop_node(self, seg_data: pyx12.segment.Segment) -> Any:
+    def get_child_loop_node(self, seg_data: pyx12.segment.Segment) -> loop_if | None:
         """
         Return the child segment matching the segment data
         """
         for child in self.childIterator():
-            if child.is_loop() and child.is_match(seg_data):
+            if isinstance(child, loop_if) and child.is_match(seg_data):
                 return child
         return None
 
@@ -303,9 +308,11 @@ class loop_if(x12_node):
         """
         raise DeprecationWarning("Moved to nodeCounter")
 
-    def loop_segment_iterator(self) -> Iterator[Any]:
+    def loop_segment_iterator(self) -> Iterator[x12_node]:
         yield self
         for ord1 in sorted(self.pos_map):
             for child in self.pos_map[ord1]:
-                if child.is_loop() or child.is_segment():
+                if isinstance(child, loop_if):
                     yield from child.loop_segment_iterator()
+                elif isinstance(child, segment_if):
+                    yield child

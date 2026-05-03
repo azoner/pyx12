@@ -157,6 +157,8 @@ def get_x12file_metadata(
             st_data["TransactionSetCreationTime"] = seg.get_value("BHT05")
             st_data["ClaimorEncounterIdentifier"] = seg.get_value("BHT06")
 
+        assert isinstance(node, pyx12.map_if.segment_if)
+        assert node.parent is not None
         x12path = node.get_path()
         # parent
         if do_node_summary and node_summary is not None:
@@ -180,8 +182,10 @@ def get_x12file_metadata(
 
             for refdes, ele_ord, comp_ord, val in seg.values_iterator():
                 ele_node = node.getnodebypath2(refdes)
-                if ele_node.is_composite():
+                if isinstance(ele_node, pyx12.map_if.composite_if):
                     ele_node = ele_node.get_child_node_by_ordinal(1)
+                assert isinstance(ele_node, pyx12.map_if.element_if)
+                assert ele_node.parent is not None
                 elepath = ele_node.get_path()
 
                 if elepath in node_summary:

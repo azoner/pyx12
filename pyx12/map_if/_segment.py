@@ -14,7 +14,7 @@ from __future__ import annotations
 
 import sys
 from collections.abc import Iterator
-from typing import Any
+from typing import TYPE_CHECKING, Any
 from xml.etree.ElementTree import Element
 
 import pyx12.segment
@@ -26,6 +26,9 @@ from ..syntax import is_syntax_valid
 from ._base import MAXINT, _required_attr, x12_node
 from ._composite import composite_if
 from ._element import element_if
+
+if TYPE_CHECKING:
+    from ._root import map_if
 
 
 def apply_segment_errors(node: segment_if, seg_data: pyx12.segment.Segment, errh: Any) -> bool:
@@ -49,18 +52,18 @@ class segment_if(x12_node):
     Segment Interface
     """
 
-    root: Any
+    root: map_if
+    children: list[element_if | composite_if]  # type: ignore[assignment]
     base_name: str
     _cur_count: int
     syntax: list[list[Any]]
     type: str | None
-    usage: str | None
     pos: int
     max_use: str | None
     repeat: str | None
     end_tag: str | None
 
-    def __init__(self, root: Any, parent: Any, elem: Element) -> None:
+    def __init__(self, root: map_if, parent: x12_node, elem: Element) -> None:
         """
         :param parent: parent node
         """
@@ -124,7 +127,7 @@ class segment_if(x12_node):
         out += "\n"
         return out
 
-    def get_child_node_by_idx(self, idx: int) -> Any:
+    def get_child_node_by_idx(self, idx: int) -> element_if | composite_if | None:
         """
         :param idx: zero based
         """
@@ -137,7 +140,7 @@ class segment_if(x12_node):
             else:
                 raise EngineError("idx %i not found in %s" % (idx, self.id))
 
-    def get_child_node_by_ordinal(self, ord: int) -> Any:
+    def get_child_node_by_ordinal(self, ord: int) -> element_if | composite_if | None:
         """
         Get a child element or composite by the X12 ordinal
         :param ord: one based element/composite index.  Corresponds to the map <seq> element
@@ -145,7 +148,7 @@ class segment_if(x12_node):
         """
         return self.get_child_node_by_idx(ord - 1)
 
-    def getnodebypath2(self, path_str: str) -> Any:
+    def getnodebypath2(self, path_str: str) -> x12_node | None:
         """
         Try x12 path
 
@@ -161,14 +164,16 @@ class segment_if(x12_node):
         ele = self.get_child_node_by_ordinal(x12path.ele_idx)
         if x12path.subele_idx is None:
             return ele
-        return ele.get_child_node_by_ordinal(x12path.subele_idx)
+        if isinstance(ele, composite_if):
+            return ele.get_child_node_by_ordinal(x12path.subele_idx)
+        return None
 
     def get_max_repeat(self) -> int:
         if self.max_use is None or self.max_use == ">1":
             return MAXINT
         return int(self.max_use)
 
-    def get_parent(self) -> Any:
+    def get_parent(self) -> x12_node | None:
         """
         :return: ref to parent class instance
         :rtype: pyx12.x12_node
@@ -179,7 +184,10 @@ class segment_if(x12_node):
         """
         :rtype: boolean
         """
-        if self is self.get_parent().get_first_seg():
+        from ._loop import loop_if  # local import: loop_if imports segment_if at module load
+
+        parent = self.get_parent()
+        if isinstance(parent, loop_if) and self is parent.get_first_seg():
             return True
         else:
             return False
@@ -230,7 +238,7 @@ class segment_if(x12_node):
 
     def _resolve_unique_key_field(
         self, seg_id: str | None, *, with_qual: bool
-    ) -> tuple[Any, int, int | None] | None:
+    ) -> tuple[element_if, int, int | None] | None:
         """
         Locate the child node carrying this segment's qualifier (if any).
 
@@ -242,117 +250,113 @@ class segment_if(x12_node):
         composite as a valid qualifier carrier; ``with_qual=True`` (used by
         ``is_match_qual``) only honors ID-typed qualifier fields.
         """
-        # Element at position 01 ??? the common case
+        c0 = self.children[0] if len(self.children) > 0 else None
+        c1 = self.children[1] if len(self.children) > 1 else None
+        c2 = self.children[2] if len(self.children) > 2 else None
+        # Element at position 01 — the common case
         if (
-            self.children[0].is_element()
-            and self.children[0].get_data_type() == "ID"
-            and self.children[0].usage == "R"
-            and len(self.children[0].valid_codes) > 0
+            isinstance(c0, element_if)
+            and c0.get_data_type() == "ID"
+            and c0.usage == "R"
+            and len(c0.valid_codes) > 0
         ):
-            return (self.children[0], 1, None)
+            return (c0, 1, None)
         # ENT-segment carries its qualifier at element 02 (820 special case)
         if (
             seg_id == "ENT"
-            and self.children[1].is_element()
-            and self.children[1].get_data_type() == "ID"
-            and len(self.children[1].valid_codes) > 0
+            and isinstance(c1, element_if)
+            and c1.get_data_type() == "ID"
+            and len(c1.valid_codes) > 0
         ):
-            return (self.children[1], 2, None)
+            return (c1, 2, None)
         # CTX-segment can have an AN-typed composite at 01-1 (999 special case);
         # is_match_qual ignores this branch.
         if (
             not with_qual
             and seg_id == "CTX"
-            and self.children[0].is_composite()
-            and self.children[0].children[0].get_data_type() == "AN"
-            and len(self.children[0].children[0].valid_codes) > 0
+            and isinstance(c0, composite_if)
+            and c0.children[0].get_data_type() == "AN"
+            and len(c0.children[0].valid_codes) > 0
         ):
-            return (self.children[0].children[0], 1, 1)
+            return (c0.children[0], 1, 1)
         # General ID-typed composite at 01-1
         if (
-            self.children[0].is_composite()
-            and self.children[0].children[0].get_data_type() == "ID"
-            and len(self.children[0].children[0].valid_codes) > 0
+            isinstance(c0, composite_if)
+            and c0.children[0].get_data_type() == "ID"
+            and len(c0.children[0].valid_codes) > 0
         ):
-            return (self.children[0].children[0], 1, 1)
+            return (c0.children[0], 1, 1)
         # HL-segment carries its qualifier at element 03
-        if (
-            seg_id == "HL"
-            and self.children[2].is_element()
-            and len(self.children[2].valid_codes) > 0
-        ):
-            return (self.children[2], 3, None)
+        if seg_id == "HL" and isinstance(c2, element_if) and len(c2.valid_codes) > 0:
+            return (c2, 3, None)
         return None
 
-    def guess_unique_key_id_element(self) -> Any:
+    def guess_unique_key_id_element(self) -> element_if | None:
         """
         Some segments, like REF, DTP, and DTP are duplicated.  They are matched using the value of an ID element.
         Which element to use varies.  This function tries to find a good candidate.
         """
-        if (
-            self.children[0].is_element()
-            and self.children[0].get_data_type() == "ID"
-            and len(self.children[0].valid_codes) > 0
-        ):
-            return self.children[0]
+        c0 = self.children[0] if len(self.children) > 0 else None
+        c1 = self.children[1] if len(self.children) > 1 else None
+        c2 = self.children[2] if len(self.children) > 2 else None
+        if isinstance(c0, element_if) and c0.get_data_type() == "ID" and len(c0.valid_codes) > 0:
+            return c0
         # Special Case for 820
         elif (
             self.id == "ENT"
-            and self.children[1].is_element()
-            and self.children[1].get_data_type() == "ID"
-            and len(self.children[1].valid_codes) > 0
+            and isinstance(c1, element_if)
+            and c1.get_data_type() == "ID"
+            and len(c1.valid_codes) > 0
         ):
-            return self.children[1]
+            return c1
         elif (
-            self.children[0].is_composite()
-            and self.children[0].children[0].get_data_type() == "ID"
-            and len(self.children[0].children[0].valid_codes) > 0
+            isinstance(c0, composite_if)
+            and c0.children[0].get_data_type() == "ID"
+            and len(c0.children[0].valid_codes) > 0
         ):
-            return self.children[0].children[0]
-        elif (
-            self.id == "HL"
-            and self.children[2].is_element()
-            and len(self.children[2].valid_codes) > 0
-        ):
-            return self.children[2]
+            return c0.children[0]
+        elif self.id == "HL" and isinstance(c2, element_if) and len(c2.valid_codes) > 0:
+            return c2
         return None
 
-    def get_unique_key_id_element(self, id_val: str) -> Any:
+    def get_unique_key_id_element(self, id_val: str) -> element_if | None:
         """
         Some segments, like REF, DTP, and DTP are duplicated.  They are matched using the value of an ID element.
         Which element to use varies.  This function tries to find a good candidate, using a key value
         """
-
+        c0 = self.children[0] if len(self.children) > 0 else None
+        c1 = self.children[1] if len(self.children) > 1 else None
+        c2 = self.children[2] if len(self.children) > 2 else None
         if (
-            self.children[0].is_element()
-            and self.children[0].get_data_type() == "ID"
-            and len(self.children[0].valid_codes) > 0
-            and id_val in self.children[0]._valid_codes_set
+            isinstance(c0, element_if)
+            and c0.get_data_type() == "ID"
+            and len(c0.valid_codes) > 0
+            and id_val in c0._valid_codes_set
         ):
-            return self.children[0]
+            return c0
         # Special Case for 820
         elif (
             self.id == "ENT"
-            and self.children[1].is_element()
-            and self.children[1].get_data_type() == "ID"
-            and len(self.children[1].valid_codes) > 0
-            and id_val in self.children[1]._valid_codes_set
+            and isinstance(c1, element_if)
+            and c1.get_data_type() == "ID"
+            and len(c1.valid_codes) > 0
+            and id_val in c1._valid_codes_set
         ):
-            return self.children[1]
+            return c1
         elif (
-            self.children[0].is_composite()
-            and self.children[0].children[0].get_data_type() == "ID"
-            and len(self.children[0].children[0].valid_codes) > 0
-            and id_val in self.children[0].children[0]._valid_codes_set
+            isinstance(c0, composite_if)
+            and c0.children[0].get_data_type() == "ID"
+            and len(c0.children[0].valid_codes) > 0
+            and id_val in c0.children[0]._valid_codes_set
         ):
-            return self.children[0].children[0]
+            return c0.children[0]
         elif (
             self.id == "HL"
-            and self.children[2].is_element()
-            and len(self.children[2].valid_codes) > 0
-            and id_val in self.children[2]._valid_codes_set
+            and isinstance(c2, element_if)
+            and len(c2.valid_codes) > 0
+            and id_val in c2._valid_codes_set
         ):
-            return self.children[2]
+            return c2
         return None
 
     def is_segment(self) -> bool:
@@ -390,12 +394,16 @@ class segment_if(x12_node):
         type_list: list[str | None] = []
         for i in range(min(len(seg_data), child_count)):
             child_node = self.get_child_node_by_idx(i)
-            if child_node.is_composite():
+            if isinstance(child_node, composite_if):
                 ref_des = "%02i" % (i + 1)
                 comp_data = seg_data.get(ref_des)
+                # When the map says the position holds a composite, seg_data.get
+                # returns either a Composite or None — Element only appears for
+                # element-typed positions.
+                assert comp_data is None or isinstance(comp_data, pyx12.segment.Composite)
                 subele_count = child_node.get_child_count()
                 if seg_data.ele_len(ref_des) > subele_count and child_node.usage != "N":
-                    subele_node = child_node.get_child_node_by_idx(subele_count + 1)
+                    subele_node = child_node.children[subele_count + 1]
                     err_str = 'Too many sub-elements in composite "%s" (%s)' % (
                         subele_node.name,
                         subele_node.refdes,
@@ -412,7 +420,7 @@ class segment_if(x12_node):
                 ok, comp_errors = child_node.is_valid_errors(comp_data)
                 valid &= ok
                 errors += comp_errors
-            elif child_node.is_element():
+            elif isinstance(child_node, element_if):
                 if (
                     i == 1
                     and seg_data.get_seg_id() == "DTP"
@@ -433,9 +441,14 @@ class segment_if(x12_node):
 
         for i in range(min(len(seg_data), child_count), child_count):
             child_node = self.get_child_node_by_idx(i)
-            ok, child_errors = child_node.is_valid_errors(None)
-            valid &= ok
-            errors += child_errors
+            if isinstance(child_node, composite_if):
+                ok, child_errors = child_node.is_valid_errors(None)
+                valid &= ok
+                errors += child_errors
+            elif isinstance(child_node, element_if):
+                ok, child_errors = child_node.is_valid_errors(None)
+                valid &= ok
+                errors += child_errors
 
         for syn in self.syntax:
             bResult, syn_err = is_syntax_valid(seg_data, syn)
@@ -487,5 +500,5 @@ class segment_if(x12_node):
         """
         raise DeprecationWarning("Moved to nodeCounter")
 
-    def loop_segment_iterator(self) -> Iterator[Any]:
+    def loop_segment_iterator(self) -> Iterator[x12_node]:
         yield self
