@@ -72,6 +72,15 @@ class ISAError(ErrorItem):
 class SegError(ErrorItem):
     err_val: str | None = None
     src_line: int | None = None
+    # Walker-supplied context for errh.add_seg(map_node, seg_data, seg_count,
+    # cur_line=src_line, ls_id) before the err_handler tree attaches the
+    # error. None means the wrapper should leave the cursor where it was
+    # (used for "usage='N'" emissions that historically attach to the prior
+    # segment cursor).
+    map_node: Any = None
+    seg_data: Any = None
+    seg_count: int | None = None
+    ls_id: str | None = None
 
     def __post_init__(self) -> None:
         if self.err_cde not in seg_errors:
