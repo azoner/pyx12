@@ -1,6 +1,5 @@
 import unittest
 
-import pyx12.error_handler
 import pyx12.map_if
 import pyx12.params
 
@@ -8,10 +7,8 @@ import pyx12.params
 class UniqueNodePath(unittest.TestCase):
     def setUp(self):
         self.param = pyx12.params.params()
-        self.errh = pyx12.error_handler.errh_null()
 
     def _get_paths(self, map_file):
-        self.errh.reset()
         paths = set()
         map1 = pyx12.map_if.load_map_file(map_file, self.param)
         for x in [a for a in map1.loop_segment_iterator() if a.is_loop()]:
@@ -21,7 +18,6 @@ class UniqueNodePath(unittest.TestCase):
         return paths
 
     def test_all_unique(self):
-        self.errh.reset()
         paths = set()
         map1 = pyx12.map_if.load_map_file("837.4010.X098.A1.xml", self.param)
         for x in map1.loop_segment_iterator():
