@@ -56,7 +56,7 @@ def x12n_iterator(param, src_file, map_path=None):
             print("--------------------------------------------")
             # reset to control map for ISA and GS loops
             print("------- counters before --------")
-            print((walker.counter._dict))
+            print(walker.counter._dict)
         if seg.get_seg_id() == "ISA":
             node = control_map.getnodebypath("/ISA_LOOP/ISA")
             walker.forceWalkCounterToLoopStart("/ISA_LOOP", "/ISA_LOOP/ISA")
@@ -76,7 +76,7 @@ def x12n_iterator(param, src_file, map_path=None):
 
         if False:
             print("------- counters after --------")
-            print((walker.counter._dict))
+            print(walker.counter._dict)
         if node is None:
             node = orig_node
         else:
@@ -91,9 +91,7 @@ def x12n_iterator(param, src_file, map_path=None):
                 if map_file != map_file_new:
                     map_file = map_file_new
                     if map_file is None:
-                        err_str = "Map not found.  icvn={}, fic={}, vriic={}".format(
-                            icvn, fic, vriic
-                        )
+                        err_str = f"Map not found.  icvn={icvn}, fic={fic}, vriic={vriic}"
                         raise pyx12.errors.EngineError(err_str)
                     cur_map = pyx12.map_if.load_map_file(map_file, param, map_path)
                     src.check_837_lx = True if cur_map.id == "837" else False
@@ -110,9 +108,7 @@ def x12n_iterator(param, src_file, map_path=None):
                     if map_file != map_file_new:
                         map_file = map_file_new
                         if map_file is None:
-                            err_str = "Map not found.  icvn={}, fic={}, vriic={}, tspc={}".format(
-                                icvn, fic, vriic, tspc
-                            )
+                            err_str = f"Map not found.  icvn={icvn}, fic={fic}, vriic={vriic}, tspc={tspc}"
                             raise pyx12.errors.EngineError(err_str)
                         cur_map = pyx12.map_if.load_map_file(map_file, param, map_path)
                         src.check_837_lx = True if cur_map.id == "837" else False
@@ -192,16 +188,12 @@ def clean_name(name):
 
 def check_map_path_arg(map_path):
     if not os.path.isdir(map_path):
-        raise argparse.ArgumentError(
-            None, "The MAP_PATH '{}' is not a valid directory".format(map_path)
-        )
+        raise argparse.ArgumentError(None, f"The MAP_PATH '{map_path}' is not a valid directory")
     index_file = "maps.xml"
     if not os.path.isfile(os.path.join(map_path, index_file)):
         raise argparse.ArgumentError(
             None,
-            "The MAP_PATH '{}' does not contain the map index file '{}'".format(
-                map_path, index_file
-            ),
+            f"The MAP_PATH '{map_path}' does not contain the map index file '{index_file}'",
         )
     return map_path
 
@@ -223,7 +215,7 @@ def main():
     parser.add_argument(
         "--version",
         action="version",
-        version="{prog} {version}".format(prog=parser.prog, version=__version__),
+        version=f"{parser.prog} {__version__}",
     )
     parser.add_argument("input_files", nargs="*")
     args = parser.parse_args()
@@ -252,7 +244,7 @@ def main():
             hdlr = logging.FileHandler(args.logfile)
             hdlr.setFormatter(formatter)
             logger.addHandler(hdlr)
-        except IOError:
+        except OSError:
             logger.exception("Could not open log file: %s" % (args.logfile))
 
     for src_filename in args.input_files:
@@ -267,7 +259,7 @@ def main():
             with open(json_file, "w") as fd:
                 json.dump(res, fd, indent=4)
 
-        except IOError:
+        except OSError:
             logger.exception("Could not open files")
             return False
         except KeyboardInterrupt:

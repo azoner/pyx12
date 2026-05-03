@@ -80,7 +80,7 @@ def get_x12file_metadata(
             map_file_new = map_index_if.get_filename(icvn, vriic, fic)
             if map_file != map_file_new:
                 if map_file_new is None:
-                    err_str = "Map not found.  icvn={}, fic={}, vriic={}".format(icvn, fic, vriic)
+                    err_str = f"Map not found.  icvn={icvn}, fic={fic}, vriic={vriic}"
                     raise pyx12.errors.EngineError(err_str)
                 map_file = map_file_new
                 cur_map = pyx12.map_if.load_map_file(map_file, param, map_path)
@@ -96,8 +96,8 @@ def get_x12file_metadata(
                 logger.debug("New map file: %s" % (map_file_new))
                 if map_file != map_file_new:
                     if map_file_new is None:
-                        err_str = "Map not found.  icvn={}, fic={}, vriic={}, tspc={}".format(
-                            icvn, fic, vriic, tspc
+                        err_str = (
+                            f"Map not found.  icvn={icvn}, fic={fic}, vriic={vriic}, tspc={tspc}"
                         )
                         raise pyx12.errors.EngineError(err_str)
                     map_file = map_file_new

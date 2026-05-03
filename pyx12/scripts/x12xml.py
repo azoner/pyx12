@@ -36,16 +36,12 @@ __date__ = pyx12.__date__
 
 def check_map_path_arg(map_path):
     if not isdir(map_path):
-        raise argparse.ArgumentError(
-            None, "The MAP_PATH '{}' is not a valid directory".format(map_path)
-        )
+        raise argparse.ArgumentError(None, f"The MAP_PATH '{map_path}' is not a valid directory")
     index_file = "maps.xml"
     if not isfile(os.path.join(map_path, index_file)):
         raise argparse.ArgumentError(
             None,
-            "The MAP_PATH '{}' does not contain the map index file '{}'".format(
-                map_path, index_file
-            ),
+            f"The MAP_PATH '{map_path}' does not contain the map index file '{index_file}'",
         )
     return map_path
 
@@ -79,7 +75,7 @@ def main():
     parser.add_argument(
         "--version",
         action="version",
-        version="{prog} {version}".format(prog=parser.prog, version=__version__),
+        version=f"{parser.prog} {__version__}",
     )
     parser.add_argument("input_file")
     args = parser.parse_args()
@@ -110,7 +106,7 @@ def main():
             hdlr = logging.FileHandler(args.logfile)
             hdlr.setFormatter(formatter)
             logger.addHandler(hdlr)
-        except IOError:
+        except OSError:
             logger.exception("Could not open log file: %s" % (args.logfile))
 
     if args.input_file:

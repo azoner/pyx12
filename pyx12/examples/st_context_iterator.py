@@ -23,8 +23,7 @@ def st_generator():
             # yield (k, g)
             print("-----------------------------------------------------------")
             print(k)
-            for d in g:
-                yield d
+            yield from g
             print("-----------------------------------------------------------")
         # for d in iterate_2000(fd_in):
         #    yield d
@@ -67,7 +66,7 @@ def save_many(src_filename, targetformat=None):
         if targetformat is not None:
             newname = targetformat.format(isa_id=isa_id, gs_id=gs_id, st_id=st_id)
         else:
-            newname = "newfile_{isa_id}.txt".format(isa_id=isa_id)
+            newname = f"newfile_{isa_id}.txt"
         with open(newname, "w", encoding="ascii") as fd_out:
             fd_temp.seek(0)
             fd_out.write(fd_temp.read())
@@ -75,12 +74,12 @@ def save_many(src_filename, targetformat=None):
 
 
 def update_isa_id(seg_data, isa_id):
-    seg_data.set("ISA13", "{0:0>9}".format(int(isa_id)))
+    seg_data.set("ISA13", f"{int(isa_id):0>9}")
     return seg_data
 
 
 def update_gs_id(seg_data, gs_id):
-    seg_data.set("GS06", "{0}".format(int(gs_id)))
+    seg_data.set("GS06", f"{int(gs_id)}")
     return seg_data
 
 
@@ -151,14 +150,14 @@ def _get_unique_isa_id():
     """
     Generate a random, 4 to 9 character ISA ID
     """
-    return "{0:0>9}".format(random.randint(1000, 999999999))
+    return f"{random.randint(1000, 999999999):0>9}"
 
 
 def _get_unique_gs_id():
     """
     Generate a random, 3 to 9 character GS ID
     """
-    return "{0}".format(random.randint(100, 999999999))
+    return f"{random.randint(100, 999999999)}"
 
 
 def _get_unique_st_id():
@@ -166,7 +165,7 @@ def _get_unique_st_id():
     Generate a random, 4 to 9 character ST ID
     """
     # return '%04i' % (random.randint(10, 999999999))
-    return "{0:0>4}".format(random.randint(100, 999999999))
+    return f"{random.randint(100, 999999999):0>4}"
 
 
 def main():

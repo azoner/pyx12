@@ -137,8 +137,7 @@ class loop_if(x12_node):
 
     def childIterator(self) -> Iterator[Any]:
         for ord1 in sorted(self.pos_map):
-            for child in self.pos_map[ord1]:
-                yield child
+            yield from self.pos_map[ord1]
 
     def getnodebypath(self, spath: str) -> Any:
         """
@@ -309,5 +308,4 @@ class loop_if(x12_node):
         for ord1 in sorted(self.pos_map):
             for child in self.pos_map[ord1]:
                 if child.is_loop() or child.is_segment():
-                    for c in child.loop_segment_iterator():
-                        yield c
+                    yield from child.loop_segment_iterator()

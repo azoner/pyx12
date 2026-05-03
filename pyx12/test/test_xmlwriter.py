@@ -38,7 +38,7 @@ class TestWriter(unittest.TestCase):
             while len(writer) > 0:
                 writer.pop()
 
-        with open(filename, "r") as fd:
+        with open(filename) as fd:
             self.assertEqual(fd.read(), self.res)
 
         try:

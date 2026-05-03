@@ -84,14 +84,14 @@ class x12xml:
         self.writer.push(xname, attrib)
         for i in range(len(seg_data)):
             child_node = seg_node.get_child_node_by_idx(i)
-            _ele = seg_data.get("{idx:02d}".format(idx=i + 1))
+            _ele = seg_data.get(f"{i + 1:02d}")
             assert _ele is not None  # within range(len(seg_data))
             if child_node.usage == "N" or _ele.is_empty():
                 pass  # Do not try to ouput for invalid or empty elements
             elif child_node.is_composite():
                 (xname, attrib) = self._get_comp_info(seg_node_id)
                 self.writer.push(xname, attrib)
-                comp_data = seg_data.get("{idx:02d}".format(idx=i + 1))
+                comp_data = seg_data.get(f"{i + 1:02d}")
                 assert isinstance(comp_data, pyx12.segment.Composite)
                 for j in range(len(comp_data)):
                     subele_node = child_node.get_child_node_by_idx(j)
@@ -99,7 +99,7 @@ class x12xml:
                     self.writer.elem(xname, comp_data[j].get_value(), attrib)
                 self.writer.pop()  # end composite
             elif child_node.is_element():
-                ele_val = seg_data.get_value("{idx:02d}".format(idx=i + 1))
+                ele_val = seg_data.get_value(f"{i + 1:02d}")
                 if ele_val == "" or ele_val is None:
                     pass
                     # self.writer.empty(u"ele", attrs={u'id': child_node.id})
@@ -137,14 +137,14 @@ class x12xml:
         self.writer.push(xname, attrib)
         for i in range(len(seg_data)):
             child_node = seg_node.get_child_node_by_idx(i)
-            _ele = seg_data.get("{idx:02d}".format(idx=i + 1))
+            _ele = seg_data.get(f"{i + 1:02d}")
             assert _ele is not None  # within range(len(seg_data))
             if child_node.usage == "N" or _ele.is_empty():
                 pass  # Do not try to ouput for invalid or empty elements
             elif child_node.is_composite():
                 (xname, attrib) = self._get_comp_info(seg_node.id)
                 self.writer.push(xname, attrib)
-                comp_data = seg_data.get("{idx:02d}".format(idx=i + 1))
+                comp_data = seg_data.get(f"{i + 1:02d}")
                 assert isinstance(comp_data, pyx12.segment.Composite)
                 for j in range(len(comp_data)):
                     subele_node = child_node.get_child_node_by_idx(j)
@@ -152,7 +152,7 @@ class x12xml:
                     self.writer.elem(xname, comp_data[j].get_value(), attrib)
                 self.writer.pop()  # end composite
             elif child_node.is_element():
-                ele_val = seg_data.get_value("{idx:02d}".format(idx=i + 1))
+                ele_val = seg_data.get_value(f"{i + 1:02d}")
                 if ele_val == "" or ele_val is None:
                     pass
                     # self.writer.empty(u"ele", attrs={u'id': child_node.id})

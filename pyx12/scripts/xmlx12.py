@@ -40,7 +40,7 @@ def main():
     parser.add_argument(
         "--version",
         action="version",
-        version="{prog} {version}".format(prog=parser.prog, version=__version__),
+        version=f"{parser.prog} {__version__}",
     )
     parser.add_argument("input_file")
     args = parser.parse_args()
@@ -64,7 +64,7 @@ def main():
             hdlr = logging.FileHandler(args.logfile)
             hdlr.setFormatter(formatter)
             logger.addHandler(hdlr)
-        except IOError:
+        except OSError:
             logger.exception("Could not open log file: %s" % (args.logfile))
 
     if args.input_file:

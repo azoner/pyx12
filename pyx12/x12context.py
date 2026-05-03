@@ -258,8 +258,7 @@ class X12DataNode:
                     else:
                         child_path = path.X12Path(x12path.format())
                         child_path.loop_list = cur_loop_list
-                        for n in child._select(child_path):
-                            yield n
+                        yield from child._select(child_path)
 
     def __copy__(self) -> X12DataNode:
         """
@@ -375,8 +374,7 @@ class X12LoopDataNode(X12DataNode):
         Iterate over this node and children
         """
         for child in [x for x in self.children if x.type is not None]:
-            for a in child.iterate_segments():
-                yield a
+            yield from child.iterate_segments()
 
     def iterate_loop_segments(self) -> Iterator[dict[str, Any]]:
         """
@@ -386,8 +384,7 @@ class X12LoopDataNode(X12DataNode):
             yield {"node": loop, "type": "loop_end", "id": loop.id}
         yield {"type": "loop_start", "id": self.id, "node": self.x12_map_node}
         for child in [x for x in self.children if x.type is not None]:
-            for a in child.iterate_loop_segments():
-                yield a
+            yield from child.iterate_loop_segments()
         yield {"type": "loop_end", "id": self.id, "node": self.x12_map_node}
 
     def add_segment(self, seg_data: pyx12.segment.Segment | str) -> X12SegmentDataNode:
@@ -1157,7 +1154,7 @@ class X12ContextReader:
             new_node = X12SegmentDataNode(self.x12_map_node, seg_data)
         except Exception:
             mypath = self.x12_map_node.get_path()
-            err_str = "X12SegmentDataNode failed: x12_path={}, seg_date={}".format(mypath, seg_data)
+            err_str = f"X12SegmentDataNode failed: x12_path={mypath}, seg_date={seg_data}"
             raise errors.EngineError(err_str) from None
         try:
             new_node.parent = cur_loop_node
