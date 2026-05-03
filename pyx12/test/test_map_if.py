@@ -115,7 +115,6 @@ class ElementIsValid(unittest.TestCase):
         param = pyx12.params.params()
         self.map = pyx12.map_if.load_map_file("837.5010.X222.A1.xml", param)
         self.node = self.map.getnodebypath("/ISA_LOOP/GS_LOOP/ST_LOOP/DETAIL/2000A/2000B/2300/CLM")
-        self.errh = pyx12.error_handler.errh_null()
 
     def test_len_ID(self):
         node = self.node.get_child_node_by_idx(11)
@@ -123,98 +122,67 @@ class ElementIsValid(unittest.TestCase):
         self.assertEqual(node.id, "CLM12")
         self.assertEqual(node.base_name, "element")
 
-        # elem = pyx12.segment.Element('1')
-        # result = node.is_valid(elem, self.errh)
-        # self.assertFalse(result)
-        # self.assertEqual(self.errh.err_cde, '4')
-
-        self.errh.err_cde = None
         elem = pyx12.segment.Element("02")
-        result = node.is_valid(elem, self.errh)
+        result, errors = node.is_valid_errors(elem)
         self.assertTrue(result)
-        self.assertEqual(self.errh.err_cde, None)
-
-        # self.errh.err_cde = None
-        # elem = pyx12.segment.Element('01010')
-        # result = node.is_valid(elem, self.errh)
-        # self.assertFalse(result)
-        # self.assertEqual(self.errh.err_cde, '5')
+        self.assertEqual([e.err_cde for e in errors], [])
 
     def test_len_R(self):
-        self.errh.err_cde = None
         node = self.node.get_child_node_by_idx(1)
         self.assertNotEqual(node, None)
         self.assertEqual(node.id, "CLM02")
         self.assertEqual(node.base_name, "element")
 
-        self.errh.err_cde = None
         elem = pyx12.segment.Element("-5.2344")
-        result = node.is_valid(elem, self.errh)
+        result, errors = node.is_valid_errors(elem)
         self.assertTrue(result)
-        self.assertEqual(self.errh.err_cde, None)
+        self.assertEqual([e.err_cde for e in errors], [])
 
-        self.errh.err_cde = None
         elem = pyx12.segment.Element("-5.23442673245673345")
-        result = node.is_valid(elem, self.errh)
+        result, errors = node.is_valid_errors(elem)
         self.assertTrue(result)
-        self.assertEqual(self.errh.err_cde, None)
+        self.assertEqual([e.err_cde for e in errors], [])
 
-        self.errh.err_cde = None
         elem = pyx12.segment.Element("-5.234426732456733454")
-        result = node.is_valid(elem, self.errh)
+        result, errors = node.is_valid_errors(elem)
         self.assertFalse(result)
-        self.assertEqual(self.errh.err_cde, "5")
+        self.assertEqual([e.err_cde for e in errors], ["5"])
 
     def test_bad_char_R(self):
-        self.errh.err_cde = None
         node = self.node.get_child_node_by_idx(1)
         self.assertNotEqual(node, None)
         self.assertEqual(node.id, "CLM02")
         self.assertEqual(node.base_name, "element")
 
-        self.errh.err_cde = None
         elem = pyx12.segment.Element("-5.AB4")
-        result = node.is_valid(elem, self.errh)
+        result, errors = node.is_valid_errors(elem)
         self.assertFalse(result)
-        self.assertEqual(self.errh.err_cde, "6")
-
-    # def test_bad_char_DT(self):
-    #    node = self.map.getnodebypath('/ISA_LOOP/GS_LOOP/ST_LOOP/2000A/2000B/2300/DTP')
-    #    node = self.node.get_child_node_by_idx(2)
-    #    self.assertNotEqual(node, None)
-    #    self.assertEqual(node.id, 'DTP03')
-    #    self.assertEqual(node.base_name, 'element')
-
-    #    result = node.is_valid('2003010Z', self.errh)
-    #    self.assertFalse(result)
-    #    self.assertEqual(self.errh.err_cde, '6')
+        self.assertEqual([e.err_cde for e in errors], ["6"])
 
     def test_valid_codes_ok1(self):
         # CLM05-01   02 bad, 11 good, no external
-        self.errh.err_cde = None
         node = self.node.get_child_node_by_idx(4)  # CLM05
         node = node.get_child_node_by_idx(0)  # CLM05-1
         self.assertNotEqual(node, None)
         self.assertEqual(node.id, "CLM05-01")
         self.assertEqual(node.base_name, "element")
         elem = pyx12.segment.Element("11")
-        result = node.is_valid(elem, self.errh)
+        result, errors = node.is_valid_errors(elem)
         self.assertTrue(result)
-        self.assertEqual(self.errh.err_cde, None)
+        self.assertEqual([e.err_cde for e in errors], [])
 
     def test_valid_codes_bad1(self):
-        self.errh.err_cde = None
         node = self.node.get_child_node_by_idx(4)  # CLM05
         node = node.get_child_node_by_idx(0)  # CLM05-1
         self.assertNotEqual(node, None)
         self.assertEqual(node.id, "CLM05-01")
         self.assertEqual(node.base_name, "element")
         elem = pyx12.segment.Element("AA")
-        self.assertFalse(node.is_valid(elem, self.errh))
-        self.assertEqual(self.errh.err_cde, "7")
+        result, errors = node.is_valid_errors(elem)
+        self.assertFalse(result)
+        self.assertEqual([e.err_cde for e in errors], ["7"])
 
     def test_valid_codes_bad_spaces(self):
-        self.errh.err_cde = None
         node = self.map.getnodebypath("/ISA_LOOP/GS_LOOP/ST_LOOP/DETAIL/2000A/2000B/2300/2400/SV1")
         node = node.get_child_node_by_idx(0)  # SV101
         node = node.get_child_node_by_idx(0)  # SV101-1
@@ -222,12 +190,11 @@ class ElementIsValid(unittest.TestCase):
         self.assertEqual(node.id, "SV101-01")
         self.assertEqual(node.base_name, "element")
         elem = pyx12.segment.Element("  ")
-        result = node.is_valid(elem, self.errh)
+        result, errors = node.is_valid_errors(elem)
         self.assertFalse(result)
-        self.assertEqual(self.errh.err_cde, "7")
+        self.assertEqual([e.err_cde for e in errors], ["7"])
 
     def test_external_codes_ok1(self):
-        self.errh.err_cde = None
         # CLM11-04 external states, no valid_codes
         node = self.node.get_child_node_by_idx(10)  # CLM11
         node = node.get_child_node_by_idx(3)  # CLM11-4
@@ -235,93 +202,87 @@ class ElementIsValid(unittest.TestCase):
         self.assertEqual(node.id, "CLM11-04")
         self.assertEqual(node.base_name, "element")
         elem = pyx12.segment.Element("MI")
-        self.assertTrue(node.is_valid(elem, self.errh), "Error Code: %s" % (self.errh.err_cde))
-        self.assertEqual(self.errh.err_cde, None)
+        result, errors = node.is_valid_errors(elem)
+        self.assertTrue(result, "Error codes: %s" % [e.err_cde for e in errors])
+        self.assertEqual([e.err_cde for e in errors], [])
 
     def test_external_codes_bad1(self):
-        self.errh.err_cde = None
         node = self.node.get_child_node_by_idx(10)  # CLM11
         node = node.get_child_node_by_idx(3)  # CLM11-4
         self.assertNotEqual(node, None)
         self.assertEqual(node.id, "CLM11-04")
         self.assertEqual(node.base_name, "element")
         elem = pyx12.segment.Element("NA")
-        self.assertFalse(node.is_valid(elem, self.errh))
-        self.assertEqual(self.errh.err_cde, "7")
+        result, errors = node.is_valid_errors(elem)
+        self.assertFalse(result)
+        self.assertEqual([e.err_cde for e in errors], ["7"])
 
     def test_bad_passed_comp_to_ele_node(self):
-        self.errh.err_cde = None
         node = self.node.get_child_node_by_idx(0)
         self.assertNotEqual(node, None)
         self.assertEqual(node.id, "CLM01")
         self.assertEqual(node.base_name, "element")
         comp = pyx12.segment.Composite("NA::1", ":")
-        result = node.is_valid(comp, self.errh)
+        result, errors = node.is_valid_errors(comp)
         self.assertFalse(result)
-        self.assertEqual(self.errh.err_cde, "6")
+        self.assertEqual([e.err_cde for e in errors], ["6"])
 
     def test_null_N(self):
-        self.errh.err_cde = None
         node = self.node.get_child_node_by_idx(2)
         self.assertNotEqual(node, None)
         self.assertEqual(node.id, "CLM03")
         self.assertEqual(node.base_name, "element")
-        result = node.is_valid(None, self.errh)
+        result, errors = node.is_valid_errors(None)
         self.assertTrue(result)
-        self.assertEqual(self.errh.err_cde, None)
+        self.assertEqual([e.err_cde for e in errors], [])
 
     def test_blank_N(self):
-        self.errh.err_cde = None
         node = self.node.get_child_node_by_idx(2)
         self.assertNotEqual(node, None)
         self.assertEqual(node.id, "CLM03")
         self.assertEqual(node.base_name, "element")
         elem = pyx12.segment.Element("")
-        result = node.is_valid(elem, self.errh)
+        result, errors = node.is_valid_errors(elem)
         self.assertTrue(result)
-        self.assertEqual(self.errh.err_cde, None)
+        self.assertEqual([e.err_cde for e in errors], [])
 
     def test_null_S(self):
-        self.errh.err_cde = None
         node = self.node.get_child_node_by_idx(9)
         self.assertNotEqual(node, None)
         self.assertEqual(node.id, "CLM10")
         self.assertEqual(node.base_name, "element")
-        result = node.is_valid(None, self.errh)
+        result, errors = node.is_valid_errors(None)
         self.assertTrue(result)
-        self.assertEqual(self.errh.err_cde, None)
+        self.assertEqual([e.err_cde for e in errors], [])
 
     def test_blank_S(self):
-        self.errh.err_cde = None
         node = self.node.get_child_node_by_idx(9)
         self.assertNotEqual(node, None)
         self.assertEqual(node.id, "CLM10")
         self.assertEqual(node.base_name, "element")
         elem = pyx12.segment.Element("")
-        result = node.is_valid(elem, self.errh)
+        result, errors = node.is_valid_errors(elem)
         self.assertTrue(result)
-        self.assertEqual(self.errh.err_cde, None)
+        self.assertEqual([e.err_cde for e in errors], [])
 
     def test_null_R(self):
-        self.errh.err_cde = None
         node = self.node.get_child_node_by_idx(0)
         self.assertNotEqual(node, None)
         self.assertEqual(node.id, "CLM01")
         self.assertEqual(node.base_name, "element")
-        result = node.is_valid(None, self.errh)
+        result, errors = node.is_valid_errors(None)
         self.assertFalse(result)
-        self.assertEqual(self.errh.err_cde, "1")
+        self.assertEqual([e.err_cde for e in errors], ["1"])
 
     def test_blank_R(self):
-        self.errh.err_cde = None
         node = self.node.get_child_node_by_idx(0)
         self.assertNotEqual(node, None)
         self.assertEqual(node.id, "CLM01")
         self.assertEqual(node.base_name, "element")
         elem = pyx12.segment.Element("")
-        result = node.is_valid(elem, self.errh)
+        result, errors = node.is_valid_errors(elem)
         self.assertFalse(result)
-        self.assertEqual(self.errh.err_cde, "1")
+        self.assertEqual([e.err_cde for e in errors], ["1"])
 
 
 class GetNodeByPath(unittest.TestCase):
@@ -473,43 +434,39 @@ class TrailingSpaces(unittest.TestCase):
     def setUp(self):
         param = pyx12.params.params()
         self.map = pyx12.map_if.load_map_file("837.4010.X098.A1.xml", param)
-        self.errh = pyx12.error_handler.errh_null()
 
     def test_trailing_ID_ok(self):
-        self.errh.err_cde = None
         node = self.map.getnodebypath("/ISA_LOOP/ISA")
         node = node.get_child_node_by_idx(5)
         self.assertNotEqual(node, None)
         self.assertEqual(node.id, "ISA06")
         self.assertEqual(node.base_name, "element")
         elem = pyx12.segment.Element("TEST           ")
-        result = node.is_valid(elem, self.errh)
+        result, errors = node.is_valid_errors(elem)
         self.assertTrue(result)
-        self.assertEqual(self.errh.err_cde, None)
+        self.assertEqual([e.err_cde for e in errors], [])
 
     def test_no_trailing_AN_ok(self):
-        self.errh.err_cde = None
         node = self.map.getnodebypath("/ISA_LOOP/GS_LOOP/ST_LOOP/DETAIL/2000A/2000B/2300/CLM")
         node = node.get_child_node_by_idx(0)
         self.assertNotEqual(node, None)
         self.assertEqual(node.id, "CLM01")
         self.assertEqual(node.base_name, "element")
         elem = pyx12.segment.Element("TEST")
-        result = node.is_valid(elem, self.errh)
+        result, errors = node.is_valid_errors(elem)
         self.assertTrue(result)
-        self.assertEqual(self.errh.err_cde, None)
+        self.assertEqual([e.err_cde for e in errors], [])
 
     def test_trailing_AN_bad(self):
-        self.errh.err_cde = None
         node = self.map.getnodebypath("/ISA_LOOP/GS_LOOP/ST_LOOP/DETAIL/2000A/2000B/2300/CLM")
         node = node.get_child_node_by_idx(0)
         self.assertNotEqual(node, None)
         self.assertEqual(node.id, "CLM01")
         self.assertEqual(node.base_name, "element")
         elem = pyx12.segment.Element("TEST     ")
-        result = node.is_valid(elem, self.errh)
+        result, errors = node.is_valid_errors(elem)
         self.assertFalse(result)
-        self.assertEqual(self.errh.err_cde, "6", self.errh.err_str)
+        self.assertEqual([e.err_cde for e in errors], ["6"])
 
 
 class ElementRequirement(unittest.TestCase):
@@ -531,16 +488,15 @@ class ElementRequirement(unittest.TestCase):
         self.assertEqual(self.errh.err_cde, "10")
 
     def test_ele_required_ok1(self):
-        self.errh.err_cde = None
         node = self.map.getnodebypath("/ISA_LOOP/GS_LOOP/ST_LOOP/DETAIL/2000A/2000B/2300/CLM")
         node = node.get_child_node_by_idx(1)
         self.assertNotEqual(node, None)
         # self.assertEqual(node.id, 'CLM05', node.id)
         self.assertEqual(node.base_name, "element")
         ele_data = pyx12.segment.Element("0398090")
-        result = node.is_valid(ele_data, self.errh)
+        result, errors = node.is_valid_errors(ele_data)
         self.assertTrue(result)
-        self.assertEqual(self.errh.err_cde, None)
+        self.assertEqual([e.err_cde for e in errors], [])
 
 
 class NodeEquality(unittest.TestCase):
