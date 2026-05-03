@@ -40,3 +40,6 @@ See the [/test](.claude/commands/test.md) skill for invocation, reporting, and a
 
 ## Preferences
 - Save preferences to this CLAUDE.md file so they persist across sessions
+- No pickle / opaque deserialization for shipped or loaded artifacts — prefer generated `.py` modules (security: `__reduce__` is an arbitrary-code-execution surface unacceptable in a healthcare-data library)
+- Every production release tag (`vN.N.N`) needs a matching `gh release create --latest` after the PyPI upload step
+- Keep unreachable safety-net `return` statements in walker `while True` loops — they document intent and protect against future control-flow changes
