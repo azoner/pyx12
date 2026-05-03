@@ -19,6 +19,7 @@ from xml.etree.ElementTree import Element
 
 from .. import validation
 from ..dataele import _DataEle
+from ..error_item import EleError
 from ..errors import EngineError
 from ._base import _required_attr, x12_node
 
@@ -119,11 +120,8 @@ class element_if(x12_node):
             return self._data_ele
         return cast(_DataEle, self.root.data_elements.get_by_elem_num(self.data_ele))
 
-    def _error(self, errh: Any, err_str: str, err_cde: str, elem_val: str | None) -> None:
-        """
-        Forward the error to an error_handler
-        """
-        errh.ele_error(err_cde, err_str, elem_val, self.refdes)
+    def _ele_error(self, err_cde: str, err_str: str, err_val: str | None) -> EleError:
+        return EleError(err_cde=err_cde, err_str=err_str, err_val=err_val, refdes=self.refdes)
 
     def _valid_code(self, code: str | None) -> bool:
         """
@@ -149,55 +147,63 @@ class element_if(x12_node):
 
     def is_valid(self, elem: Any, errh: Any, type_list: list[str | None] | None = None) -> bool:
         """
-        Is this a valid element?
+        Backwards-compatible wrapper: drives the pure is_valid_errors and
+        forwards the produced errors into the legacy err_handler API.
+        """
+        errh.add_ele(self)
+        ok, errors = self.is_valid_errors(elem, type_list)
+        for e in errors:
+            errh.ele_error(e.err_cde, e.err_str, e.err_val, e.refdes)
+        return ok
 
-        :param elem: element instance
-        :type elem: L{element<segment.Element>}
-        :param errh: instance of error_handler
-        :param type_list: Optional data/time type list
-        :type type_list: list[string]
-        :return: True if valid
-        :rtype: boolean
+    def is_valid_errors(
+        self, elem: Any, type_list: list[str | None] | None = None
+    ) -> tuple[bool, list[EleError]]:
+        """
+        Pure validator: returns (ok, errors) without touching an error handler.
         """
         if type_list is None:
             type_list = []
-        errh.add_ele(self)
+        errors: list[EleError] = []
 
         if elem and elem.is_composite():
             err_str = 'Data element "%s" (%s) is an invalid composite' % (self.name, self.refdes)
-            self._error(errh, err_str, "6", elem.__repr__())
-            return False
+            errors.append(self._ele_error("6", err_str, elem.__repr__()))
+            return False, errors
         if elem is None or elem.get_value() == "":
-            return self._validate_when_empty(errh)
+            empty_errors = self._validate_when_empty()
+            return (not empty_errors, empty_errors)
         if self.usage == "N" and elem.get_value() != "":
             err_str = 'Data element "%s" (%s) is marked as Not Used' % (self.name, self.refdes)
-            self._error(errh, err_str, "10", None)
-            return False
+            errors.append(self._ele_error("10", err_str, None))
+            return False, errors
 
         elem_val = elem.get_value()
-        valid = self._validate_length(elem_val, errh)
-        if not self._validate_control_chars(elem_val, errh):
-            return False  # control char errors trump later checks
-        valid &= self._validate_trailing_spaces(elem_val, errh)
-        valid &= self._is_valid_code(elem_val, errh)
-        valid &= self._validate_data_type(elem_val, errh)
+        errors += self._validate_length(elem_val)
+        ctrl_errors = self._validate_control_chars(elem_val)
+        errors += ctrl_errors
+        if ctrl_errors:
+            # control char errors trump later checks
+            return False, errors
+        errors += self._validate_trailing_spaces(elem_val)
+        errors += self._is_valid_code(elem_val)
+        errors += self._validate_data_type(elem_val)
         if type_list:
-            valid &= self._validate_type_list(elem_val, type_list, errh)
-        valid &= self._validate_regex(elem_val, errh)
-        return bool(valid)
+            errors += self._validate_type_list(elem_val, type_list)
+        errors += self._validate_regex(elem_val)
+        return (not errors, errors)
 
-    def _validate_when_empty(self, errh: Any) -> bool:
+    def _validate_when_empty(self) -> list[EleError]:
         if self.usage in ("N", "S"):
-            return True
+            return []
         if self.usage == "R" and (
             self.seq != 1 or not self.parent.is_composite() or self.parent.usage == "R"
         ):
             err_str = 'Mandatory data element "%s" (%s) is missing' % (self.name, self.refdes)
-            self._error(errh, err_str, "1", None)
-            return False
-        return True
+            return [self._ele_error("1", err_str, None)]
+        return []
 
-    def _validate_length(self, elem_val: str, errh: Any) -> bool:
+    def _validate_length(self, elem_val: str) -> list[EleError]:
         data_ele = self._resolve_data_ele()
         data_type = data_ele["data_type"]
         min_len = data_ele["min_len"]
@@ -208,7 +214,7 @@ class element_if(x12_node):
         else:
             measured = elem_val
         elem_len = len(measured)
-        valid = True
+        out: list[EleError] = []
         if elem_len < min_len:
             err_str = 'Data element "%s" (%s) is too short: len("%s") = %i < %i (min_len)' % (
                 self.name,
@@ -217,8 +223,7 @@ class element_if(x12_node):
                 elem_len,
                 min_len,
             )
-            self._error(errh, err_str, "4", elem_val)
-            valid = False
+            out.append(self._ele_error("4", err_str, elem_val))
         if elem_len > max_len:
             err_str = 'Data element "%s" (%s) is too long: len("%s") = %i > %i (max_len)' % (
                 self.name,
@@ -227,67 +232,64 @@ class element_if(x12_node):
                 elem_len,
                 max_len,
             )
-            self._error(errh, err_str, "5", elem_val)
-            valid = False
-        return valid
+            out.append(self._ele_error("5", err_str, elem_val))
+        return out
 
-    def _validate_control_chars(self, elem_val: str, errh: Any) -> bool:
+    def _validate_control_chars(self, elem_val: str) -> list[EleError]:
         res, bad_string = validation.contains_control_character(elem_val)
         if not res:
-            return True
+            return []
         err_str = 'Data element "%s" (%s), contains an invalid control character(%s)' % (
             self.name,
             self.refdes,
             bad_string,
         )
-        self._error(errh, err_str, "6", bad_string)
-        return False
+        return [self._ele_error("6", err_str, bad_string)]
 
-    def _validate_trailing_spaces(self, elem_val: str, errh: Any) -> bool:
+    def _validate_trailing_spaces(self, elem_val: str) -> list[EleError]:
         data_ele = self._resolve_data_ele()
         if data_ele["data_type"] not in ("AN", "ID") or elem_val[-1] != " ":
-            return True
+            return []
         if len(elem_val.rstrip()) < data_ele["min_len"]:
-            return True
+            return []
         err_str = 'Data element "%s" (%s) has unnecessary trailing spaces. (%s)' % (
             self.name,
             self.refdes,
             elem_val,
         )
-        self._error(errh, err_str, "6", elem_val)
-        return False
+        return [self._ele_error("6", err_str, elem_val)]
 
-    def _validate_data_type(self, elem_val: str, errh: Any) -> bool:
+    def _validate_data_type(self, elem_val: str) -> list[EleError]:
         data_type = self._resolve_data_ele()["data_type"]
         if validation.IsValidDataType(
             elem_val, cast(str, data_type), self.root.param.get("charset"), self.root.icvn
         ):
-            return True
+            return []
         if data_type in ("RD8", "DT", "D8", "D6"):
             err_str = 'Data element "%s" (%s) contains an invalid date (%s)' % (
                 self.name,
                 self.refdes,
                 elem_val,
             )
-            self._error(errh, err_str, "8", elem_val)
-        elif data_type == "TM":
+            return [self._ele_error("8", err_str, elem_val)]
+        if data_type == "TM":
             err_str = 'Data element "%s" (%s) contains an invalid time (%s)' % (
                 self.name,
                 self.refdes,
                 elem_val,
             )
-            self._error(errh, err_str, "9", elem_val)
-        else:
-            err_str = 'Data element "%s" (%s) is type %s, contains an invalid character(%s)' % (
-                self.name,
-                self.refdes,
-                data_type,
-                elem_val,
-            )
-            self._error(errh, err_str, "6", elem_val)
-        return False
+            return [self._ele_error("9", err_str, elem_val)]
+        err_str = 'Data element "%s" (%s) is type %s, contains an invalid character(%s)' % (
+            self.name,
+            self.refdes,
+            data_type,
+            elem_val,
+        )
+        return [self._ele_error("6", err_str, elem_val)]
 
-    def _validate_type_list(self, elem_val: str, type_list: list[str | None], errh: Any) -> bool:
+    def _validate_type_list(
+        self, elem_val: str, type_list: list[str | None]
+    ) -> list[EleError]:
         valid_type = False
         for dtype in type_list:
             if dtype is not None:
@@ -295,49 +297,41 @@ class element_if(x12_node):
                     elem_val, dtype, self.root.param.get("charset")
                 )
         if valid_type:
-            return True
+            return []
         if "TM" in type_list:
             err_str = 'Data element "%s" (%s) contains an invalid time (%s)' % (
                 self.name,
                 self.refdes,
                 elem_val,
             )
-            self._error(errh, err_str, "9", elem_val)
-        elif any(t in type_list for t in ("RD8", "DT", "D8", "D6")):
+            return [self._ele_error("9", err_str, elem_val)]
+        if any(t in type_list for t in ("RD8", "DT", "D8", "D6")):
             err_str = 'Data element "%s" (%s) contains an invalid date (%s)' % (
                 self.name,
                 self.refdes,
                 elem_val,
             )
-            self._error(errh, err_str, "8", elem_val)
-        return False
+            return [self._ele_error("8", err_str, elem_val)]
+        return []
 
-    def _validate_regex(self, elem_val: str, errh: Any) -> bool:
+    def _validate_regex(self, elem_val: str) -> list[EleError]:
         if self.rec is None or self.rec.search(elem_val):
-            return True
+            return []
         err_str = 'Data element "%s" with a value of (%s)' % (self.name, elem_val)
         err_str += ' failed to match the regular expression "%s"' % (self.res)
-        self._error(errh, err_str, "7", elem_val)
-        return False
+        return [self._ele_error("7", err_str, elem_val)]
 
-    def _is_valid_code(self, elem_val: str, errh: Any) -> bool:
-        """
-        :rtype: boolean
-        """
-        bValidCode = False
+    def _is_valid_code(self, elem_val: str) -> list[EleError]:
         if not self._valid_codes_set and self.external_codes is None:
-            bValidCode = True
+            return []
         if elem_val in self._valid_codes_set:
-            bValidCode = True
+            return []
         if self.external_codes is not None and self.root.ext_codes.isValid(
             self.external_codes, elem_val
         ):
-            bValidCode = True
-        if not bValidCode:
-            err_str = "(%s) is not a valid code for %s (%s)" % (elem_val, self.name, self.refdes)
-            self._error(errh, err_str, "7", elem_val)
-            return False
-        return True
+            return []
+        err_str = "(%s) is not a valid code for %s (%s)" % (elem_val, self.name, self.refdes)
+        return [self._ele_error("7", err_str, elem_val)]
 
     def get_data_type(self) -> str | None:
         return self._resolve_data_ele()["data_type"]
