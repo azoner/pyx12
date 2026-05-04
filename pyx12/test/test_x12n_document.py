@@ -105,26 +105,44 @@ class Test834(X12DocumentTestCase):
     def test_834_ls_le_ls(self):
         self._test_999("834_ls_le_ls")
 
+    def test_834_ls_le_ls_json(self):
+        self._test_json("834_ls_le_ls")
+
 
 class Test835(X12DocumentTestCase):
     def test_835id(self):
         self._test_997("835id")
+
+    def test_835id_json(self):
+        self._test_json("835id")
 
 
 class ExplicitMissing(X12DocumentTestCase):
     def test_837miss(self):
         self._test_997("837miss")
 
+    def test_837miss_json(self):
+        self._test_json("837miss")
+
 
 class X12Structure(X12DocumentTestCase):
     def test_mult_isa(self):
         self._test_997("mult_isa")
 
+    def test_mult_isa_json(self):
+        self._test_json("mult_isa")
+
     def test_trailer_errors(self):
         self._test_997("trailer_errors")
 
+    def test_trailer_errors_json(self):
+        self._test_json("trailer_errors")
+
     def test_trailing_terms(self):
         self._test_997("trailing_terms")
+
+    def test_trailing_terms_json(self):
+        self._test_json("trailing_terms")
 
     def test_bad_2010AA_bug(self):
         self._test_997("bad_2010AA_bug")
@@ -135,49 +153,94 @@ class X12Structure(X12DocumentTestCase):
     def test_elements(self):
         self._test_997("elements")
 
+    def test_elements_json(self):
+        self._test_json("elements")
+
     def test_bad_header_looping(self):
         self._test_997("bad_header_looping")
+
+    def test_bad_header_looping_json(self):
+        self._test_json("bad_header_looping")
 
     def test_blank1(self):
         self._test_997("blank1")
 
+    def test_blank1_json(self):
+        self._test_json("blank1")
+
     def test_ele(self):
         self._test_997("ele")
+
+    def test_ele_json(self):
+        self._test_json("ele")
 
     def test_fail_no_IEA(self):
         self._test_997("fail_no_IEA")
 
+    def test_fail_no_IEA_json(self):
+        self._test_json("fail_no_IEA")
+
     def test_loop_counting(self):
         self._test_997("loop_counting")
+
+    def test_loop_counting_json(self):
+        self._test_json("loop_counting")
 
     def test_loop_counting2(self):
         self._test_997("loop_counting2")
 
+    def test_loop_counting2_json(self):
+        self._test_json("loop_counting2")
+
     def test_multiple_trn(self):
         self._test_997("multiple_trn")
+
+    def test_multiple_trn_json(self):
+        self._test_json("multiple_trn")
 
     def test_ordinal(self):
         self._test_997("ordinal")
 
+    def test_ordinal_json(self):
+        self._test_json("ordinal")
+
     def test_per_segment_repeat(self):
         self._test_997("per_segment_repeat")
+
+    def test_per_segment_repeat_json(self):
+        self._test_json("per_segment_repeat")
 
     def test_repeat_init_segment(self):
         self._test_997("repeat_init_segment")
 
+    def test_repeat_init_segment_json(self):
+        self._test_json("repeat_init_segment")
+
     def test_simple1(self):
         self._test_997("simple1")
 
+    def test_simple1_json(self):
+        self._test_json("simple1")
+
     def test_simple_837p(self):
         self._test_997("simple_837p")
+
+    def test_simple_837p_json(self):
+        self._test_json("simple_837p")
 
 
 class Test5010(X12DocumentTestCase):
     def test_834_lui_id_5010(self):
         self._test_999("834_lui_id_5010")
 
+    def test_834_lui_id_5010_json(self):
+        self._test_json("834_lui_id_5010")
+
     def test_834_eol_in_element(self):
         self._test_999("834_eol_in_element")
+
+    def test_834_eol_in_element_json(self):
+        self._test_json("834_eol_in_element")
 
 
 class TestTemp(X12DocumentTestCase):
