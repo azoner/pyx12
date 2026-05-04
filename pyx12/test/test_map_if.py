@@ -1,4 +1,5 @@
 import unittest
+from typing import Any
 
 import pyx12.map_if
 import pyx12.params
@@ -758,7 +759,7 @@ class _RecordingErrh:
     """Captures errh.add_ele/ele_error/seg_error calls for assertions."""
 
     def __init__(self) -> None:
-        self.calls: list[tuple] = []
+        self.calls: list[tuple[Any, ...]] = []
 
     def add_ele(self, map_node):
         self.calls.append(("add_ele", map_node))
