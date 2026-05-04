@@ -28,6 +28,7 @@ import pyx12
 import pyx12.segment
 
 from . import error_handler, errors, map_if, map_index, path, x12file
+from .map_if._segment import apply_segment_errors
 from .map_walker import apply_walk_errors, pop_to_parent_loop, walk_tree
 
 
@@ -827,7 +828,7 @@ class X12ContextReader:
 
     param: Any
     map_path: str | None
-    errh: error_handler.errh_list
+    errh: Any
     icvn: str | None
     fic: str | None
     vriic: str | None
@@ -856,7 +857,17 @@ class X12ContextReader:
         """
         self.param = param
         self.map_path = map_path
-        self.errh = error_handler.errh_list()
+        # Use the caller's error handler. The historical hardcode here
+        # discarded the parameter, leaving callers no way to capture
+        # validation errors (and `iter_segments` only ever attached
+        # errors to data nodes via a fresh local errh_list, never
+        # populating a tree). Threading the parameter through unlocks
+        # the err_handler tree path: callers who pass an
+        # `error_handler.err_handler()` get a populated tree they can
+        # walk with a visitor (e.g. `errh_json_visitor`); callers who
+        # keep passing `errh_null()` see no behavior change since all
+        # the lifecycle methods are no-ops there.
+        self.errh = errh
         self.icvn = None
         self.fic = None
         self.vriic = None
@@ -926,6 +937,10 @@ class X12ContextReader:
                         self.src.get_ls_id(),
                     )
                     apply_walk_errors(errh, walk_errors)
+                    # Also propagate the same walker errors into the caller's
+                    # error handler so the err_handler tree (when caller
+                    # passed `error_handler.err_handler()`) carries them.
+                    apply_walk_errors(self.errh, walk_errors)
                     self.x12_map_node = seg_node
                 except errors.EngineError:
                     raise
@@ -935,6 +950,11 @@ class X12ContextReader:
                 seg_id = seg.get_seg_id()
                 if seg_id == "ISA":
                     icvn = seg.get_value("ISA12")
+                    self.errh.add_isa_loop(seg, self.src)
+                    self.errh.handle_errors(self.src.pop_errors())
+                elif seg_id == "IEA":
+                    self.errh.handle_errors(self.src.pop_errors())
+                    self.errh.close_isa_loop(self.x12_map_node, seg, self.src)
                 elif seg_id == "GS":
                     fic = seg.get_value("GS01")
                     vriic = seg.get_value("GS08")
@@ -954,6 +974,17 @@ class X12ContextReader:
                     self._reset_counter_to_gs_counts()
                     tpath = "/ISA_LOOP/GS_LOOP/GS"
                     self.x12_map_node = cur_map.getnodebypath(tpath)
+                    self.errh.add_gs_loop(seg, self.src)
+                    self.errh.handle_errors(self.src.pop_errors())
+                elif seg_id == "GE":
+                    self.errh.handle_errors(self.src.pop_errors())
+                    self.errh.close_gs_loop(self.x12_map_node, seg, self.src)
+                elif seg_id == "ST":
+                    self.errh.add_st_loop(seg, self.src)
+                    self.errh.handle_errors(self.src.pop_errors())
+                elif seg_id == "SE":
+                    self.errh.handle_errors(self.src.pop_errors())
+                    self.errh.close_st_loop(self.x12_map_node, seg, self.src)
                 elif seg_id == "BHT":
                     if vriic in ("004010X094", "004010X094A1"):
                         tspc = seg.get_value("BHT02")
@@ -976,6 +1007,34 @@ class X12ContextReader:
                             self._apply_loop_count(self.x12_map_node, cur_map)
                             tpath = "/ISA_LOOP/GS_LOOP/ST_LOOP/HEADER/BHT"
                             self.x12_map_node = cur_map.getnodebypath(tpath)
+                    self.errh.add_seg(
+                        self.x12_map_node,
+                        seg,
+                        self.src.get_seg_count(),
+                        self.src.get_cur_line(),
+                        self.src.get_ls_id(),
+                    )
+                    self.errh.handle_errors(self.src.pop_errors())
+                else:
+                    self.errh.add_seg(
+                        self.x12_map_node,
+                        seg,
+                        self.src.get_seg_count(),
+                        self.src.get_cur_line(),
+                        self.src.get_ls_id(),
+                    )
+                    self.errh.handle_errors(self.src.pop_errors())
+                # Run element / segment-level validation against the
+                # caller's error handler. Skipped for envelope segments
+                # which are matched via the control map and not the
+                # transaction map; element validation against the control
+                # map is x12n_document's job, not the streaming context
+                # reader's. errh_null silently absorbs all of these calls
+                # so existing context-reader tests are unchanged.
+                if seg_id not in ("ISA", "IEA", "GS", "GE", "ST", "SE") and isinstance(
+                    self.x12_map_node, map_if.segment_if
+                ):
+                    apply_segment_errors(self.x12_map_node, seg, self.errh)
 
             node_x12path = self.x12_map_node.x12path
             # If we are in the requested tree, wait until we have the whole thing

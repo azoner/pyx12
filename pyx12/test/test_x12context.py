@@ -1,6 +1,9 @@
+import json
 import unittest
 from io import StringIO
+from typing import Any
 
+import pyx12.errh_json
 import pyx12.error_handler
 import pyx12.params
 import pyx12.x12context
@@ -589,3 +592,53 @@ class TreeCopy(X12fileTestCase):
                     self.assertFalse(svc is new_svc)
                     self.assertNotEqual(svc.get_value("SVC01"), new_svc.get_value("SVC01"))
                     break
+
+
+class JsonErrorOutput(X12fileTestCase):
+    """X12ContextReader populates a passed-in err_handler tree as it
+    iterates segments. After iteration, the tree is walkable by
+    errh_json_visitor, producing the same JSON document as the
+    x12n_document orchestrator path.
+
+    The historical X12ContextReader silently discarded the `errh`
+    parameter and hardcoded `errh_list()` (a flat list, not walkable by
+    a visitor); the slice-#4 refactor threads the parameter through and
+    lifecycle-populates the tree alongside the existing per-data-node
+    errh_list flow."""
+
+    def _json_via_context_reader(self, datakey: str) -> dict[str, Any]:
+        fd = self._makeFd(datafiles[datakey]["source"])
+        errh = pyx12.error_handler.err_handler()
+        src = pyx12.x12context.X12ContextReader(self.param, errh, fd)
+        for _datatree in src.iter_segments():
+            pass
+        out = StringIO()
+        errh.accept(pyx12.errh_json.errh_json_visitor(out))
+        out.seek(0)
+        result: dict[str, Any] = json.loads(out.read())
+        return result
+
+    def test_834_lui_id_matches_x12n_document_resJson(self):
+        # Clean fixture (no validation errors). X12ContextReader's tree
+        # should match the resJson written by x12n_document.
+        actual = self._json_via_context_reader("834_lui_id")
+        self.assertEqual(actual, datafiles["834_lui_id"]["resJson"])
+
+    def test_bad_2010AA_bug_matches_x12n_document_resJson(self):
+        # Walker-level error fixture (Mandatory loop missing). The seg
+        # error is emitted by the walker during iter_segments and lands
+        # on the tree via apply_walk_errors(self.errh, walk_errors).
+        actual = self._json_via_context_reader("bad_2010AA_bug")
+        self.assertEqual(actual, datafiles["bad_2010AA_bug"]["resJson"])
+
+    def test_simple_837p_round_trip(self):
+        # No fixture comparison — just verify that a real 837P document
+        # round-trips through iter_segments without raising and produces
+        # a structurally-complete JSON document with the right top-level
+        # shape (interchanges/groups/transactions/segments).
+        doc = self._json_via_context_reader("simple_837p")
+        self.assertIn("interchanges", doc)
+        self.assertEqual(len(doc["interchanges"]), 1)
+        groups = doc["interchanges"][0]["groups"]
+        self.assertEqual(len(groups), 1)
+        self.assertEqual(len(groups[0]["transactions"]), 1)
