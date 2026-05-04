@@ -38,6 +38,5 @@ class TestEleErrorBeforeAddEle(unittest.TestCase):
         self.assertTrue(eh.ele_node_added)
         self.assertEqual(len(eh.cur_seg_node.elements), 1)
 
-
 if __name__ == "__main__":
     unittest.main()

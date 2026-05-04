@@ -33,14 +33,23 @@ if TYPE_CHECKING:
 
 def apply_segment_errors(node: segment_if, seg_data: pyx12.segment.Segment, errh: Any) -> bool:
     """Drive a segment validation: run is_valid_errors and forward errors
-    with cursor maintenance. Seg-level errors (too many elements, syntax)
-    leave map_node=None so they attach to the prior cursor; per-element
-    errors carry map_node from the leaf and trigger add_ele(map_node)
-    when the cursor changes."""
+    with cursor maintenance. Per-element errors carry map_node from the
+    leaf and trigger add_ele(map_node) when the cursor changes. Seg-level
+    errors (too many elements, too many sub-elements, syntax violations,
+    mandatory composite missing, composite-not-used) leave map_node=None;
+    they have no element to attach to, so they route through seg_error
+    with X12 IK3 code "8" ("segment has data element errors") — the only
+    IK3 code that semantically fits these data-element-level issues.
+    Their original IK4 codes ("3", "10", "1", "5", "2") collide with
+    different IK3 semantics and would produce wrong or dropped 999
+    output."""
     ok, errors = node.is_valid_errors(seg_data)
     prev_cursor = None
     for e in errors:
-        if e.map_node is not None and e.map_node is not prev_cursor:
+        if e.map_node is None:
+            errh.seg_error("8", e.err_str, e.err_val)
+            continue
+        if e.map_node is not prev_cursor:
             errh.add_ele(e.map_node)
             prev_cursor = e.map_node
         errh.ele_error(e.err_cde, e.err_str, e.err_val, e.refdes)

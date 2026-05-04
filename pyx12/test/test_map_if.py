@@ -752,3 +752,49 @@ class CompositeRequiredMissing(unittest.TestCase):
         result, errors = self.node.is_valid_errors(seg_data)
         self.assertFalse(result)
         self.assertEqual([e.err_cde for e in errors], ["1"])
+
+
+class _RecordingErrh:
+    """Captures errh.add_ele/ele_error/seg_error calls for assertions."""
+
+    def __init__(self) -> None:
+        self.calls: list[tuple] = []
+
+    def add_ele(self, map_node):
+        self.calls.append(("add_ele", map_node))
+
+    def ele_error(self, err_cde, err_str, err_val=None, refdes=None):
+        self.calls.append(("ele_error", err_cde, err_val, refdes))
+
+    def seg_error(self, err_cde, err_str, err_val=None, src_line=None):
+        self.calls.append(("seg_error", err_cde, err_val))
+
+
+class ApplySegmentErrorsRouting(unittest.TestCase):
+    """Regression for the 4.0.0rc2 AttributeError: seg-level errors with
+    map_node=None must route through errh.seg_error (IK3) rather than
+    errh.ele_error (IK4), since the latter dereferences cur_ele_node which
+    is None on the first error of a segment."""
+
+    def setUp(self):
+        from pyx12.map_if._segment import apply_segment_errors
+
+        self.apply = apply_segment_errors
+        param = pyx12.params.params()
+        self.map = pyx12.map_if.load_map_file("837.4010.X098.A1.xml", param)
+
+    def test_composite_not_used_routes_to_seg_error(self):
+        # REF segment with REF04 (a composite marked Not Used) supplied:
+        # _composite emits err_cde="5" with map_node=None. Without the
+        # upstream remap this would call errh.ele_error against a None
+        # cur_ele_node and crash with AttributeError (the production
+        # 4.0.0rc2 traceback). With the remap it must route to seg_error
+        # with code "8" — the only valid IK3 code that fits.
+        ref_node = self.map.getnodebypath("/ISA_LOOP/GS_LOOP/ST_LOOP/HEADER/REF")
+        seg_data = pyx12.segment.Segment("REF*87*004010X098A1**:1~", "~", "*", ":")
+        errh = _RecordingErrh()
+        ok = self.apply(ref_node, seg_data, errh)
+        self.assertFalse(ok)
+        self.assertIn(("seg_error", "8", None), errh.calls)
+        self.assertFalse(any(c[0] == "ele_error" for c in errh.calls))
+        self.assertFalse(any(c[0] == "add_ele" for c in errh.calls))
