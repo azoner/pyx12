@@ -19,6 +19,7 @@ import logging
 from collections.abc import Callable
 from typing import Any, TextIO
 
+import pyx12.errh_json
 import pyx12.error_997
 import pyx12.error_999
 
@@ -59,6 +60,7 @@ def x12n_document(
     fd_997: TextIO | None,
     fd_html: TextIO | None,
     fd_xmldoc: TextIO | None = None,
+    fd_json: TextIO | None = None,
     xslt_files: Any = None,
     map_path: str | None = None,
     callback: Callable[..., Any] | None = None,
@@ -74,6 +76,8 @@ def x12n_document(
     :type fd_html: file descriptor
     :param fd_xmldoc: XML output document
     :type fd_xmldoc: file descriptor
+    :param fd_json: JSON error output document
+    :type fd_json: file descriptor
     :rtype: boolean
     """
     logger = logging.getLogger("pyx12")
@@ -267,6 +271,14 @@ def x12n_document(
                 del visit_999
             except Exception:
                 logger.exception("Failed to create 999 response")
+
+    if fd_json:
+        try:
+            visit_json = pyx12.errh_json.errh_json_visitor(fd_json)
+            errh.accept(visit_json)
+            del visit_json
+        except Exception:
+            logger.exception("Failed to write JSON error output")
     src.close()
     try:
         if not valid or errh.get_error_count() > 0:

@@ -1,4 +1,6 @@
-datafiles = {
+from typing import Any
+
+datafiles: dict[str, dict[str, Any]] = {
     "834_lui_id": {
         "source": """ISA*00*          *00*          *ZZ*D00XXX         *ZZ*00AA           *070305*1832*U*00401*000701336*0*P*:~
 GS*BE*D00XXX*00AA*20070305*1832*13360001*X*004010X095A1~
@@ -36,6 +38,41 @@ SE*6*0001~
 GE*1*13360001~
 IEA*1*703201721~
 """,
+        "resJson": {
+            "interchanges": [
+                {
+                    "isa_trn_set_id": "000701336",
+                    "ta1_req": "0",
+                    "orig_date": "070305",
+                    "orig_time": "1832",
+                    "cur_line": 24,
+                    "errors": [],
+                    "groups": [
+                        {
+                            "gs_control_num": "13360001",
+                            "fic": "BE",
+                            "vriic": "004010X095A1",
+                            "ack_code": "A",
+                            "st_count_orig": 1,
+                            "st_count_recv": 1,
+                            "cur_line": 23,
+                            "errors": [],
+                            "transactions": [
+                                {
+                                    "trn_set_id": "834",
+                                    "trn_set_control_num": "0001",
+                                    "vriic": None,
+                                    "ack_code": "A",
+                                    "cur_line": 22,
+                                    "errors": [],
+                                    "segments": [],
+                                }
+                            ],
+                        }
+                    ],
+                }
+            ]
+        },
     },
     "834_ls_le_ls": {
         "source": """ISA*00*          *00*          *ZZ*ORDHS          *ZZ*MB888880       *130312*0206*!*00501*000000238*0*P*:~
@@ -563,6 +600,58 @@ REF*6R*AKLKJ124231AD~
 SE*24*000000001~
 GE*1*56~
 IEA*1*000000288~""",
+        "resJson": {
+            "interchanges": [
+                {
+                    "isa_trn_set_id": "000000288",
+                    "ta1_req": "0",
+                    "orig_date": "040608",
+                    "orig_time": "1333",
+                    "cur_line": 28,
+                    "errors": [],
+                    "groups": [
+                        {
+                            "gs_control_num": "56",
+                            "fic": "HC",
+                            "vriic": "004010X098A1",
+                            "ack_code": "R",
+                            "st_count_orig": 1,
+                            "st_count_recv": 1,
+                            "cur_line": 27,
+                            "errors": [],
+                            "transactions": [
+                                {
+                                    "trn_set_id": "837",
+                                    "trn_set_control_num": "000000001",
+                                    "vriic": None,
+                                    "ack_code": "R",
+                                    "cur_line": 26,
+                                    "errors": [],
+                                    "segments": [
+                                        {
+                                            "seg_id": "NM1",
+                                            "seg_count": 8,
+                                            "pos": 15,
+                                            "name": "Billing Provider Name",
+                                            "ls_id": None,
+                                            "cur_line": 10,
+                                            "errors": [
+                                                {
+                                                    "err_cde": "3",
+                                                    "err_str": 'Mandatory loop "Billing Provider Name" (2010AA) missing',
+                                                    "err_val": None,
+                                                }
+                                            ],
+                                            "elements": [],
+                                        }
+                                    ],
+                                }
+                            ],
+                        }
+                    ],
+                }
+            ]
+        },
     },
     "elements": {
         "res997": """ISA*00*          *00*          *ZZ*RECEIVER       *ZZ*SENDER         *070320*0942*U*00401*703200942*0*P*:~

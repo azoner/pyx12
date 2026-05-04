@@ -68,6 +68,13 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--quiet", "-q", action="store_true")
     parser.add_argument("--html", "-H", action="store_true")
     parser.add_argument(
+        "--json-output",
+        "-J",
+        action="store_true",
+        dest="json_output",
+        help="Write JSON error output alongside the input as <input>.json",
+    )
+    parser.add_argument(
         "--exclude-external-codes",
         "-x",
         action="append",
@@ -112,6 +119,7 @@ def main():
         logger.setLevel(logging.ERROR)
     fd_997 = None
     fd_html = None
+    fd_json = None
     flag_997 = True
     param.set("exclude_external_codes", ",".join(args.exclude_external))
     if args.map_path:
@@ -139,6 +147,12 @@ def main():
                     else:
                         target_html = src_filename + ".html"
                     fd_html = open(target_html, "w", encoding="utf-8")
+                if args.json_output:
+                    if os.path.splitext(src_filename)[1] == ".txt":
+                        target_json = os.path.splitext(src_filename)[0] + ".json"
+                    else:
+                        target_json = src_filename + ".json"
+                    fd_json = open(target_json, "w", encoding="utf-8")
 
                 logger.debug(f"Before x12n_document for {src_filename}")
                 if pyx12.x12n_document.x12n_document(
@@ -147,6 +161,7 @@ def main():
                     fd_997=fd_997,
                     fd_html=fd_html,
                     fd_xmldoc=None,
+                    fd_json=fd_json,
                     map_path=args.map_path,
                 ):
                     sys.stderr.write("%s: OK\n" % (src_filename))
@@ -166,6 +181,9 @@ def main():
                     fd_997.close()
                 if fd_html:
                     fd_html.close()
+                if fd_json:
+                    fd_json.close()
+                    fd_json = None
             except OSError:
                 logger.exception("Could not open files")
                 return False

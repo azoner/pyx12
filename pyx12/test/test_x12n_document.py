@@ -1,3 +1,4 @@
+import json
 import tempfile
 import unittest
 from io import StringIO
@@ -79,10 +80,27 @@ class X12DocumentTestCase(unittest.TestCase):
         fd_997.seek(0)
         self._isX12Diff(fd_997_base, fd_997)
 
+    def _test_json(self, datakey):
+        self.assertIn(datakey, datafiles)
+        self.assertIn("source", datafiles[datakey])
+        self.assertIn("resJson", datafiles[datakey])
+        fd_source = self._makeFd(datafiles[datakey]["source"])
+        fd_997 = StringIO()
+        fd_json = StringIO()
+        pyx12.x12n_document.x12n_document(
+            self.param, fd_source, fd_997, None, None, fd_json=fd_json
+        )
+        fd_json.seek(0)
+        actual = json.loads(fd_json.read())
+        self.assertEqual(actual, datafiles[datakey]["resJson"])
+
 
 class Test834(X12DocumentTestCase):
     def test_834_lui_id(self):
         self._test_997("834_lui_id")
+
+    def test_834_lui_id_json(self):
+        self._test_json("834_lui_id")
 
     def test_834_ls_le_ls(self):
         self._test_999("834_ls_le_ls")
@@ -110,6 +128,9 @@ class X12Structure(X12DocumentTestCase):
 
     def test_bad_2010AA_bug(self):
         self._test_997("bad_2010AA_bug")
+
+    def test_bad_2010AA_bug_json(self):
+        self._test_json("bad_2010AA_bug")
 
     def test_elements(self):
         self._test_997("elements")
