@@ -1,4 +1,8 @@
 #!/usr/bin/env python
+"""Walk an X12 file with the map walker and write a ``node_list.json`` catalog
+of every loop / segment / element node encountered, with type, usage, and
+length metadata.  Output feeds ``generate_spec.py``."""
+
 import argparse
 import json
 import logging
@@ -50,13 +54,6 @@ def x12n_iterator(param, src_file, map_path=None):
         # find node
         orig_node = node
 
-        if False:
-            print("--------------------------------------------")
-            print(seg)
-            print("--------------------------------------------")
-            # reset to control map for ISA and GS loops
-            print("------- counters before --------")
-            print(walker.counter._dict)
         if seg.get_seg_id() == "ISA":
             node = control_map.getnodebypath("/ISA_LOOP/ISA")
             walker.forceWalkCounterToLoopStart("/ISA_LOOP", "/ISA_LOOP/ISA")
@@ -75,9 +72,6 @@ def x12n_iterator(param, src_file, map_path=None):
                 logger.error("Source file line %i" % (src.get_cur_line()))
                 raise
 
-        if False:
-            print("------- counters after --------")
-            print(walker.counter._dict)
         if node is None:
             node = orig_node
         else:

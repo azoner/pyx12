@@ -1,4 +1,7 @@
 #! /usr/bin/env python
+"""De-identify an 834 Enrollment file by replacing member demographics with
+synthetic values.  Demo / not production-ready."""
+
 import getopt
 import logging
 import os.path
@@ -21,13 +24,6 @@ import pyx12.x12file
 __author__ = "John Holland"
 __version__ = "1.0"
 __date__ = "2015-02-12"
-
-"""
-De-indentify 834 Enrollment file
-
-Not production ready
-
-"""
 
 VERBOSE = 0
 

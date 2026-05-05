@@ -1,11 +1,18 @@
 #! /usr/bin/env python
+"""Split an X12 interchange that contains multiple ST/SE transaction sets into
+one X12 file per ST loop, using ``pyx12.x12file.X12Reader`` and
+``itertools.groupby``."""
+
 import random
 import sys
 import tempfile
 from itertools import groupby
 
 import pyx12
+import pyx12.error_handler
+import pyx12.params
 import pyx12.x12context
+import pyx12.x12file
 
 
 def x12_split_on_st(source_filename, isa_id=11, gs_id=21):
@@ -109,7 +116,7 @@ def iterate_2000(fd_in):
 
 
 def main():
-    testfile = "multiple_st_loops.txt"
+    testfile = "834_multiple_st_loops.txt"
     targetformat = None
     save_many(testfile, targetformat)
     return True

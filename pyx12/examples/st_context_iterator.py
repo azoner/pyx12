@@ -1,17 +1,23 @@
 #! /usr/bin/env python
+"""Split an X12 interchange into one file per ST/SE transaction set, the same
+goal as ``st_iterator.py`` but demonstrating ``X12ContextReader`` for loop-aware
+iteration over 834 enrollment 2000 loops."""
+
 import random
 import sys
 import tempfile
 from itertools import groupby
 
 import pyx12
+import pyx12.error_handler
 import pyx12.params
 import pyx12.x12context
+import pyx12.x12file
 
 
 def st_generator():
     """ """
-    testfile = "multiple_st_loops.txt"
+    testfile = "834_multiple_st_loops.txt"
     # wr = edifile.WriteFile(conn)
     with open(testfile, encoding="ascii") as fd_in:
         isa_seg = None
@@ -30,7 +36,7 @@ def st_generator():
 
 
 def simple_reader():
-    testfile = "multiple_st_loops.txt"
+    testfile = "834_multiple_st_loops.txt"
     src = pyx12.x12file.X12Reader(testfile)
     # for d in get_headers_stream(src):
     #    print d
@@ -169,11 +175,7 @@ def _get_unique_st_id():
 
 
 def main():
-    # for s in st_generator():
-    #    print '\t' + s[1].format()
-    # simple_reader()
-    testfile = "multiple_st_loops.txt"
-    testfile = "/home/mdch/download/5014.131020.2350.28i04i5m"
+    testfile = "834_multiple_st_loops.txt"
     targetformat = None
     save_many(testfile, targetformat)
     return True

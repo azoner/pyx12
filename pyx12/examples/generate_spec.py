@@ -1,8 +1,10 @@
 #!/usr/bin/env python
+"""Convert the ``node_list.json`` produced by ``node_iterator.py`` into a
+``out.csv`` field reference and a sectioned ``map.json`` field-mapping file."""
+
 import argparse
 import json
 import logging
-import os
 import os.path
 import sys
 
@@ -50,7 +52,7 @@ def save_csv(rows, csv_file):
         "MinLength",
         "MaxLength",
     ]
-    with open(csv_file, "wb") as outfile:
+    with open(csv_file, "w", newline="", encoding="utf-8") as outfile:
         writer = csv.DictWriter(
             outfile, fieldnames=fields, delimiter=",", quotechar='"', quoting=csv.QUOTE_MINIMAL
         )

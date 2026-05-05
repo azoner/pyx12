@@ -96,7 +96,7 @@
     <Compile Include="pyx12\xmlwriter.py" />
     <Compile Include="pyx12\xmlx12_simple.py" />
     <Compile Include="pyx12\__init__.py" />
-    <Content Include="pyx12\examples\multiple_st_loops.txt" />
+    <Content Include="pyx12\examples\834_multiple_st_loops.txt" />
     <Compile Include="pyx12\examples\st_context_iterator.py" />
     <Compile Include="pyx12\examples\st_iterator.py" />
     <Content Include="pyx12\map\270.4010.X092.A1.xml" />
