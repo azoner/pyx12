@@ -642,3 +642,31 @@ class JsonErrorOutput(X12fileTestCase):
         groups = doc["interchanges"][0]["groups"]
         self.assertEqual(len(groups), 1)
         self.assertEqual(len(groups[0]["transactions"]), 1)
+
+
+class IterSegmentsBindings(X12fileTestCase):
+    """Regression for #107: ``iter_segments`` historically constructed
+    ``X12SegmentDataNode`` with positional args that bound ``push_loops``
+    to ``parent`` and ``pop_loops`` to ``start_loops``, leaving
+    ``end_loops`` empty. The downstream ``parent is None`` guard was
+    spuriously bypassed because a list (even an empty one) is not None.
+    Verify the corrected semantics."""
+
+    def test_streaming_yield_parent_is_node_or_none(self):
+        # parent should be None or an X12DataNode, never a list (the bug).
+        fd = self._makeFd(datafiles["simple_837p"]["source"])
+        errh = pyx12.error_handler.errh_null()
+        src = pyx12.x12context.X12ContextReader(self.param, errh, fd)
+        for seg in src.iter_segments():
+            self.assertFalse(isinstance(seg.parent, list))
+
+    def test_some_segment_closes_a_loop(self):
+        # In any non-trivial 837 there is at least one segment whose
+        # arrival closes a previous loop. Under the misbinding,
+        # ``end_loops`` defaulted to ``[]`` for every yield, so this
+        # assertion would never hold.
+        fd = self._makeFd(datafiles["simple_837p"]["source"])
+        errh = pyx12.error_handler.errh_null()
+        src = pyx12.x12context.X12ContextReader(self.param, errh, fd)
+        any_popped = any(seg.end_loops for seg in src.iter_segments())
+        self.assertTrue(any_popped)
