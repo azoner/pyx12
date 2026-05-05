@@ -338,15 +338,6 @@ class err_handler:
         self.cur_seg_node = self.cur_st_node
         self.seg_node_added = True
 
-    def find_node(self, type: str) -> None:
-        """
-        Find the last node of a type
-        """
-        new_node = self.cur_node
-        node_order = {"ROOT": 1, "ISA": 2, "GS": 3, "ST": 4, "SEG": 5, "ELE": 6}
-        while node_order[type] > new_node[new_node.get_id()]:
-            new_node = new_node.get_parent()
-
     def _get_last_child(self) -> Any:
         """ """
         if len(self.children) != 0:
@@ -1143,12 +1134,6 @@ class errh_null:
         """ """
         pass
 
-    def find_node(self, type: str) -> None:
-        """
-        Find the last node of a type
-        """
-        pass
-
     def get_parent(self) -> None:
         return None
 
@@ -1312,9 +1297,6 @@ class errh_list:
         pass
 
     def close_st_loop(self, node: Any, seg: Any, src: Any) -> None:
-        pass
-
-    def find_node(self, type: str) -> None:
         pass
 
     def get_parent(self) -> None:

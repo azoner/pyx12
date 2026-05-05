@@ -292,12 +292,6 @@ class errh_list:
         """ """
         pass
 
-    def find_node(self, atype: str) -> None:
-        """
-        Find the last node of a type
-        """
-        pass
-
     def get_parent(self) -> None:
         return None
 
