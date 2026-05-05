@@ -84,3 +84,43 @@ accumulate the results into nested ``OrderedDict``\\ s suitable for
 
 .. literalinclude:: ../pyx12/examples/834_x12_json.py
    :language: python
+
+Generating a field reference from a sample file
+-----------------------------------------------
+
+The next two scripts form a small pipeline that derives a
+human-readable field reference for whatever transaction type a sample
+X12 file contains. This is useful when you're integrating a new
+transaction (or a new vendor's flavor of an existing one) and want to
+see exactly which loops, segments, and elements show up — together
+with the implementation-guide metadata pyx12 has for each.
+
+:download:`node_iterator.py <../pyx12/examples/node_iterator.py>`
+walks the input file with :class:`pyx12.x12file.X12Reader` plus a
+:class:`pyx12.map_walker.walk_tree`, manually driving the walker the
+same way :func:`pyx12.x12n_document.x12n_document` does internally,
+and records every distinct map node it encounters along with its
+``base_name``, ``id``, ``name``, ``usage``, ``data_type``, and
+length bounds. The result is written to ``node_list.json`` next to
+the input file. This is also a worked example of using the map
+walker directly, picking the right map via
+:class:`pyx12.map_index.map_index`, and switching maps mid-stream
+when a 4010 837 reveals its tspc in the BHT segment.
+
+.. literalinclude:: ../pyx12/examples/node_iterator.py
+   :language: python
+
+:download:`generate_spec.py <../pyx12/examples/generate_spec.py>`
+consumes the ``node_list.json`` and emits two artifacts:
+
+* ``out.csv`` — one row per node with all of the metadata fields,
+  suitable for review in a spreadsheet.
+* ``map.json`` — element nodes grouped by the section of the
+  transaction they belong to (Header, Patient, Claim, ServiceLine,
+  ProviderStatus, …), with the section heuristics applied to 277CA
+  loop names like ``2200D`` / ``2220D``.  The element list per section
+  collapses duplicate ``FormattedName`` collisions by prefixing the
+  parent loop name.
+
+.. literalinclude:: ../pyx12/examples/generate_spec.py
+   :language: python
