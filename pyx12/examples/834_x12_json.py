@@ -6,12 +6,10 @@ import collections
 import glob
 import json
 import logging
-import logging.handlers
 import os.path
 import sys
 import tempfile
 
-import pyx12
 import pyx12.error_handler
 import pyx12.errors
 import pyx12.params
@@ -465,9 +463,8 @@ class Enrollment834Parser:
         return False
 
 
-def parse_file(fullname):
+def parse_file(fullname, out_dir="."):
     logger = logging.getLogger()
-    out_dir = "."
     if not os.path.isfile(fullname):
         raise Exception(f"File {fullname} was not found")
     if not os.path.isdir(out_dir):
@@ -492,6 +489,12 @@ def main():
     parser = argparse.ArgumentParser(description="834 eligibility to JSON parser")
     parser.add_argument("--verbose", "-v", action="count", default=0)
     parser.add_argument("--debug", "-d", action="store_true")
+    parser.add_argument(
+        "--out-dir",
+        "-o",
+        default=".",
+        help="directory to write JSON output files (default: current directory)",
+    )
     parser.add_argument("files", metavar="N", nargs="*", help="input files")
     args = parser.parse_args()
 
@@ -508,15 +511,15 @@ def main():
 
     if args.files:
         for glob_pattern in args.files:
-            files = [fullpath for fullpath in glob.glob(glob_pattern)]
+            files = glob.glob(glob_pattern)
             print(files)
             for full_name in files:
-                parse_file(full_name)
+                parse_file(full_name, args.out_dir)
     else:
         files = ["834_multiple_st_loops.txt"]
         print(files)
         for full_name in files:
-            parse_file(full_name)
+            parse_file(full_name, args.out_dir)
 
     return True
 
