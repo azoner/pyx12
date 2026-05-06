@@ -1347,7 +1347,7 @@ IEA*1*000484889~""",
                                                     "name": "Explanation of Benefits Indicator",
                                                     "errors": [
                                                         {
-                                                            "err_cde": "1",
+                                                            "err_cde": "ELE_1_mandatory_missing",
                                                             "x12_code": "1",
                                                             "err_str": 'Mandatory data element "Explanation of Benefits Indicator" (CLM18) is missing',
                                                             "err_val": None,
@@ -1568,7 +1568,7 @@ IEA*1*000000288~""",
                                                     "name": "Transmission Type Code",
                                                     "errors": [
                                                         {
-                                                            "err_cde": "7",
+                                                            "err_cde": "ELE_7_invalid_code",
                                                             "x12_code": "7",
                                                             "err_str": "(004010X098A2) is not a valid code for Transmission Type Code (REF02)",
                                                             "err_val": "004010X098A2",
@@ -1594,7 +1594,7 @@ IEA*1*000000288~""",
                                                     "name": "Communication Number Qualifier",
                                                     "errors": [
                                                         {
-                                                            "err_cde": "7",
+                                                            "err_cde": "ELE_7_invalid_code",
                                                             "x12_code": "7",
                                                             "err_str": "(TA) is not a valid code for Communication Number Qualifier (PER03)",
                                                             "err_val": "TA",
@@ -1620,7 +1620,7 @@ IEA*1*000000288~""",
                                                     "name": "Identification Code Qualifier",
                                                     "errors": [
                                                         {
-                                                            "err_cde": "7",
+                                                            "err_cde": "ELE_7_invalid_code",
                                                             "x12_code": "7",
                                                             "err_str": "(47) is not a valid code for Identification Code Qualifier (NM108)",
                                                             "err_val": "47",
@@ -1646,13 +1646,13 @@ IEA*1*000000288~""",
                                                     "name": "Identification Code Qualifier",
                                                     "errors": [
                                                         {
-                                                            "err_cde": "5",
+                                                            "err_cde": "ELE_5_too_long",
                                                             "x12_code": "5",
                                                             "err_str": 'Data element "Identification Code Qualifier" (NM108) is too long: len("MIM") = 3 > 2 (max_len)',
                                                             "err_val": "MIM",
                                                         },
                                                         {
-                                                            "err_cde": "7",
+                                                            "err_cde": "ELE_7_invalid_code",
                                                             "x12_code": "7",
                                                             "err_str": "(MIM) is not a valid code for Identification Code Qualifier (NM108)",
                                                             "err_val": "MIM",
@@ -1678,7 +1678,7 @@ IEA*1*000000288~""",
                                                     "name": "Subscriber Birth Date",
                                                     "errors": [
                                                         {
-                                                            "err_cde": "8",
+                                                            "err_cde": "ELE_8_invalid_date_range",
                                                             "x12_code": "8",
                                                             "err_str": 'Data element "Subscriber Birth Date" (DMG02) contains an invalid date (19461301)',
                                                             "err_val": "19461301",
@@ -1693,7 +1693,7 @@ IEA*1*000000288~""",
                                                     "name": "Subscriber Gender Code",
                                                     "errors": [
                                                         {
-                                                            "err_cde": "7",
+                                                            "err_cde": "ELE_7_invalid_code",
                                                             "x12_code": "7",
                                                             "err_str": "(R) is not a valid code for Subscriber Gender Code (DMG03)",
                                                             "err_val": "R",
@@ -1719,7 +1719,7 @@ IEA*1*000000288~""",
                                                     "name": "Facility Type Code",
                                                     "errors": [
                                                         {
-                                                            "err_cde": "7",
+                                                            "err_cde": "ELE_7_invalid_code",
                                                             "x12_code": "7",
                                                             "err_str": "(95) is not a valid code for Facility Type Code (CLM05-01)",
                                                             "err_val": "95",
@@ -1881,7 +1881,7 @@ IEA*1*000238388~""",
                                                     "name": "Production Date",
                                                     "errors": [
                                                         {
-                                                            "err_cde": "8",
+                                                            "err_cde": "ELE_8_invalid_date",
                                                             "x12_code": "8",
                                                             "err_str": 'Data element "Production Date" (DTM02) contains an invalid date (11111111)',
                                                             "err_val": "11111111",
@@ -2096,7 +2096,7 @@ IEA*1*000484889~""",
                                                     "name": "Product or Service ID Qualifier",
                                                     "errors": [
                                                         {
-                                                            "err_cde": "7",
+                                                            "err_cde": "ELE_7_invalid_code",
                                                             "x12_code": "7",
                                                             "err_str": "(  ) is not a valid code for Product or Service ID Qualifier (SV202-01)",
                                                             "err_val": "  ",
@@ -2111,7 +2111,7 @@ IEA*1*000484889~""",
                                                     "name": "Procedure Code",
                                                     "errors": [
                                                         {
-                                                            "err_cde": "1",
+                                                            "err_cde": "ELE_1_mandatory_missing",
                                                             "x12_code": "1",
                                                             "err_str": 'Mandatory data element "Procedure Code" (SV202-02) is missing',
                                                             "err_val": None,
@@ -2137,7 +2137,7 @@ IEA*1*000484889~""",
                                                     "name": "Product or Service ID Qualifier",
                                                     "errors": [
                                                         {
-                                                            "err_cde": "7",
+                                                            "err_cde": "ELE_7_invalid_code",
                                                             "x12_code": "7",
                                                             "err_str": "(  ) is not a valid code for Product or Service ID Qualifier (SVD03-01)",
                                                             "err_val": "  ",
@@ -2152,7 +2152,7 @@ IEA*1*000484889~""",
                                                     "name": "Procedure Code",
                                                     "errors": [
                                                         {
-                                                            "err_cde": "1",
+                                                            "err_cde": "ELE_1_mandatory_missing",
                                                             "x12_code": "1",
                                                             "err_str": 'Mandatory data element "Procedure Code" (SVD03-02) is missing',
                                                             "err_val": None,
@@ -4588,7 +4588,7 @@ IEA*1*703201721~
                                                     "name": "Subscriber Identifier",
                                                     "errors": [
                                                         {
-                                                            "err_cde": "6",
+                                                            "err_cde": "ELE_6_invalid_type_char",
                                                             "x12_code": "6",
                                                             "err_str": 'Data element "Subscriber Identifier" (REF02) is type AN, contains an invalid character(00389é999)',
                                                             "err_val": "00389é999",
@@ -4691,7 +4691,7 @@ IEA*1*311071503~
                                                     "name": "Member Address Line",
                                                     "errors": [
                                                         {
-                                                            "err_cde": "6",
+                                                            "err_cde": "ELE_6_control_char",
                                                             "x12_code": "6",
                                                             "err_str": 'Data element "Member Address Line" (N301), contains an invalid control character(<LF>)',
                                                             "err_val": "<LF>",

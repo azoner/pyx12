@@ -21,6 +21,22 @@ import pyx12.segment
 
 from .. import validation
 from ..dataele import _DataEle
+from ..error_codes import (
+    ELE_1_MANDATORY_MISSING,
+    ELE_4_TOO_SHORT,
+    ELE_5_TOO_LONG,
+    ELE_6_CONTROL_CHAR,
+    ELE_6_INVALID_COMPOSITE,
+    ELE_6_INVALID_TYPE_CHAR,
+    ELE_6_TRAILING_SPACE,
+    ELE_7_INVALID_CODE,
+    ELE_7_REGEX_FAIL,
+    ELE_8_INVALID_DATE,
+    ELE_8_INVALID_DATE_RANGE,
+    ELE_9_INVALID_TIME,
+    ELE_9_INVALID_TIME_OF_DAY,
+    ELE_10_NOT_USED,
+)
 from ..error_item import EleError
 from ..errors import EngineError
 from ._base import _required_attr, x12_node
@@ -169,14 +185,14 @@ class element_if(x12_node):
 
         if elem and elem.is_composite():
             err_str = 'Data element "%s" (%s) is an invalid composite' % (self.name, self.refdes)
-            errors.append(self._ele_error("6", err_str, elem.__repr__()))
+            errors.append(self._ele_error(ELE_6_INVALID_COMPOSITE, err_str, elem.__repr__()))
             return False, errors
         if elem is None or elem.get_value() == "":
             empty_errors = self._validate_when_empty()
             return (not empty_errors, empty_errors)
         if self.usage == "N" and elem.get_value() != "":
             err_str = 'Data element "%s" (%s) is marked as Not Used' % (self.name, self.refdes)
-            errors.append(self._ele_error("10", err_str, None))
+            errors.append(self._ele_error(ELE_10_NOT_USED, err_str, None))
             return False, errors
 
         elem_val = elem.get_value()
@@ -203,7 +219,7 @@ class element_if(x12_node):
             self.seq != 1 or not self.parent.is_composite() or self.parent.usage == "R"
         ):
             err_str = 'Mandatory data element "%s" (%s) is missing' % (self.name, self.refdes)
-            return [self._ele_error("1", err_str, None)]
+            return [self._ele_error(ELE_1_MANDATORY_MISSING, err_str, None)]
         return []
 
     def _validate_length(self, elem_val: str) -> list[EleError]:
@@ -226,7 +242,7 @@ class element_if(x12_node):
                 elem_len,
                 min_len,
             )
-            out.append(self._ele_error("4", err_str, elem_val))
+            out.append(self._ele_error(ELE_4_TOO_SHORT, err_str, elem_val))
         if elem_len > max_len:
             err_str = 'Data element "%s" (%s) is too long: len("%s") = %i > %i (max_len)' % (
                 self.name,
@@ -235,7 +251,7 @@ class element_if(x12_node):
                 elem_len,
                 max_len,
             )
-            out.append(self._ele_error("5", err_str, elem_val))
+            out.append(self._ele_error(ELE_5_TOO_LONG, err_str, elem_val))
         return out
 
     def _validate_control_chars(self, elem_val: str) -> list[EleError]:
@@ -247,7 +263,7 @@ class element_if(x12_node):
             self.refdes,
             bad_string,
         )
-        return [self._ele_error("6", err_str, bad_string)]
+        return [self._ele_error(ELE_6_CONTROL_CHAR, err_str, bad_string)]
 
     def _validate_trailing_spaces(self, elem_val: str) -> list[EleError]:
         data_ele = self._resolve_data_ele()
@@ -260,7 +276,7 @@ class element_if(x12_node):
             self.refdes,
             elem_val,
         )
-        return [self._ele_error("6", err_str, elem_val)]
+        return [self._ele_error(ELE_6_TRAILING_SPACE, err_str, elem_val)]
 
     def _validate_data_type(self, elem_val: str) -> list[EleError]:
         data_type = self._resolve_data_ele()["data_type"]
@@ -277,21 +293,21 @@ class element_if(x12_node):
                 self.refdes,
                 elem_val,
             )
-            return [self._ele_error("8", err_str, elem_val)]
+            return [self._ele_error(ELE_8_INVALID_DATE, err_str, elem_val)]
         if data_type == "TM":
             err_str = 'Data element "%s" (%s) contains an invalid time (%s)' % (
                 self.name,
                 self.refdes,
                 elem_val,
             )
-            return [self._ele_error("9", err_str, elem_val)]
+            return [self._ele_error(ELE_9_INVALID_TIME, err_str, elem_val)]
         err_str = 'Data element "%s" (%s) is type %s, contains an invalid character(%s)' % (
             self.name,
             self.refdes,
             data_type,
             elem_val,
         )
-        return [self._ele_error("6", err_str, elem_val)]
+        return [self._ele_error(ELE_6_INVALID_TYPE_CHAR, err_str, elem_val)]
 
     def _validate_type_list(self, elem_val: str, type_list: list[str | None]) -> list[EleError]:
         valid_type = False
@@ -308,14 +324,14 @@ class element_if(x12_node):
                 self.refdes,
                 elem_val,
             )
-            return [self._ele_error("9", err_str, elem_val)]
+            return [self._ele_error(ELE_9_INVALID_TIME_OF_DAY, err_str, elem_val)]
         if any(t in type_list for t in ("RD8", "DT", "D8", "D6")):
             err_str = 'Data element "%s" (%s) contains an invalid date (%s)' % (
                 self.name,
                 self.refdes,
                 elem_val,
             )
-            return [self._ele_error("8", err_str, elem_val)]
+            return [self._ele_error(ELE_8_INVALID_DATE_RANGE, err_str, elem_val)]
         return []
 
     def _validate_regex(self, elem_val: str) -> list[EleError]:
@@ -323,7 +339,7 @@ class element_if(x12_node):
             return []
         err_str = 'Data element "%s" with a value of (%s)' % (self.name, elem_val)
         err_str += ' failed to match the regular expression "%s"' % (self.res)
-        return [self._ele_error("7", err_str, elem_val)]
+        return [self._ele_error(ELE_7_REGEX_FAIL, err_str, elem_val)]
 
     def _is_valid_code(self, elem_val: str) -> list[EleError]:
         if not self._valid_codes_set and self.external_codes is None:
@@ -335,7 +351,7 @@ class element_if(x12_node):
         ):
             return []
         err_str = "(%s) is not a valid code for %s (%s)" % (elem_val, self.name, self.refdes)
-        return [self._ele_error("7", err_str, elem_val)]
+        return [self._ele_error(ELE_7_INVALID_CODE, err_str, elem_val)]
 
     def get_data_type(self) -> str | None:
         return self._resolve_data_ele()["data_type"]

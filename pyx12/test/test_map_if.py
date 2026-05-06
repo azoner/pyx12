@@ -22,7 +22,7 @@ class ElementIsValidDate(unittest.TestCase):
         node = self.node.getnodebypath("DTP[434]")
         result, errors = node.is_valid_errors(seg_data)
         self.assertFalse(result)
-        self.assertEqual([e.err_cde for e in errors], ["8"])
+        self.assertEqual([e.err_cde for e in errors], ["ELE_8_invalid_date_range"])
 
     def test_date_ok1(self):
         seg_data = pyx12.segment.Segment("DTP*435*D8*20040110~", "~", "*", ":")
@@ -36,7 +36,7 @@ class ElementIsValidDate(unittest.TestCase):
         node = self.node.getnodebypath("DTP[096]")
         result, errors = node.is_valid_errors(seg_data)
         self.assertFalse(result)
-        self.assertEqual([e.err_cde for e in errors], ["9"])
+        self.assertEqual([e.err_cde for e in errors], ["ELE_9_invalid_time_of_day"])
 
     def test_time_ok1(self):
         seg_data = pyx12.segment.Segment("DTP*096*TM*1215~", "~", "*", ":")
@@ -63,7 +63,7 @@ class ElementIsValidDate(unittest.TestCase):
         self.assertNotEqual(node, None)
         result, errors = node.is_valid_errors(seg_data)
         self.assertFalse(result)
-        self.assertEqual([e.err_cde for e in errors], ["8"])
+        self.assertEqual([e.err_cde for e in errors], ["ELE_8_invalid_date_range"])
 
     def test_date_1251_bad2(self):
         seg_data = pyx12.segment.Segment("DMG*D8*20040109-20040110*M~", "~", "*", ":")
@@ -71,7 +71,7 @@ class ElementIsValidDate(unittest.TestCase):
         self.assertNotEqual(node, None)
         result, errors = node.is_valid_errors(seg_data)
         self.assertFalse(result)
-        self.assertEqual([e.err_cde for e in errors], ["8"])
+        self.assertEqual([e.err_cde for e in errors], ["ELE_8_invalid_date_range"])
 
     def test_date_1251_ok2(self):
         seg_data = pyx12.segment.Segment("DTP*434*RD8*20110101-20110220~", "~", "*", ":")
@@ -133,7 +133,7 @@ class ElementIsValid(unittest.TestCase):
         elem = pyx12.segment.Element("-5.234426732456733454")
         result, errors = node.is_valid_errors(elem)
         self.assertFalse(result)
-        self.assertEqual([e.err_cde for e in errors], ["5"])
+        self.assertEqual([e.err_cde for e in errors], ["ELE_5_too_long"])
 
     def test_bad_char_R(self):
         node = self.node.get_child_node_by_idx(1)
@@ -144,7 +144,7 @@ class ElementIsValid(unittest.TestCase):
         elem = pyx12.segment.Element("-5.AB4")
         result, errors = node.is_valid_errors(elem)
         self.assertFalse(result)
-        self.assertEqual([e.err_cde for e in errors], ["6"])
+        self.assertEqual([e.err_cde for e in errors], ["ELE_6_invalid_type_char"])
 
     def test_valid_codes_ok1(self):
         # CLM05-01   02 bad, 11 good, no external
@@ -167,7 +167,7 @@ class ElementIsValid(unittest.TestCase):
         elem = pyx12.segment.Element("AA")
         result, errors = node.is_valid_errors(elem)
         self.assertFalse(result)
-        self.assertEqual([e.err_cde for e in errors], ["7"])
+        self.assertEqual([e.err_cde for e in errors], ["ELE_7_invalid_code"])
 
     def test_valid_codes_bad_spaces(self):
         node = self.map.getnodebypath("/ISA_LOOP/GS_LOOP/ST_LOOP/DETAIL/2000A/2000B/2300/2400/SV1")
@@ -179,7 +179,7 @@ class ElementIsValid(unittest.TestCase):
         elem = pyx12.segment.Element("  ")
         result, errors = node.is_valid_errors(elem)
         self.assertFalse(result)
-        self.assertEqual([e.err_cde for e in errors], ["7"])
+        self.assertEqual([e.err_cde for e in errors], ["ELE_7_invalid_code"])
 
     def test_external_codes_ok1(self):
         # CLM11-04 external states, no valid_codes
@@ -202,7 +202,7 @@ class ElementIsValid(unittest.TestCase):
         elem = pyx12.segment.Element("NA")
         result, errors = node.is_valid_errors(elem)
         self.assertFalse(result)
-        self.assertEqual([e.err_cde for e in errors], ["7"])
+        self.assertEqual([e.err_cde for e in errors], ["ELE_7_invalid_code"])
 
     def test_bad_passed_comp_to_ele_node(self):
         node = self.node.get_child_node_by_idx(0)
@@ -212,7 +212,7 @@ class ElementIsValid(unittest.TestCase):
         comp = pyx12.segment.Composite("NA::1", ":")
         result, errors = node.is_valid_errors(comp)
         self.assertFalse(result)
-        self.assertEqual([e.err_cde for e in errors], ["6"])
+        self.assertEqual([e.err_cde for e in errors], ["ELE_6_invalid_composite"])
 
     def test_null_N(self):
         node = self.node.get_child_node_by_idx(2)
@@ -259,7 +259,7 @@ class ElementIsValid(unittest.TestCase):
         self.assertEqual(node.base_name, "element")
         result, errors = node.is_valid_errors(None)
         self.assertFalse(result)
-        self.assertEqual([e.err_cde for e in errors], ["1"])
+        self.assertEqual([e.err_cde for e in errors], ["ELE_1_mandatory_missing"])
 
     def test_blank_R(self):
         node = self.node.get_child_node_by_idx(0)
@@ -269,7 +269,7 @@ class ElementIsValid(unittest.TestCase):
         elem = pyx12.segment.Element("")
         result, errors = node.is_valid_errors(elem)
         self.assertFalse(result)
-        self.assertEqual([e.err_cde for e in errors], ["1"])
+        self.assertEqual([e.err_cde for e in errors], ["ELE_1_mandatory_missing"])
 
 
 class GetNodeByPath(unittest.TestCase):
@@ -447,7 +447,7 @@ class TrailingSpaces(unittest.TestCase):
         elem = pyx12.segment.Element("TEST     ")
         result, errors = node.is_valid_errors(elem)
         self.assertFalse(result)
-        self.assertEqual([e.err_cde for e in errors], ["6"])
+        self.assertEqual([e.err_cde for e in errors], ["ELE_6_trailing_space"])
 
 
 class ElementRequirement(unittest.TestCase):
@@ -464,7 +464,7 @@ class ElementRequirement(unittest.TestCase):
         seg_data = pyx12.segment.Segment("REF*87*004010X098A1*Description*~", "~", "*", ":")
         result, errors = node.is_valid_errors(seg_data)
         self.assertFalse(result)
-        self.assertEqual([e.err_cde for e in errors], ["10"])
+        self.assertEqual([e.err_cde for e in errors], ["ELE_10_not_used"])
 
     def test_ele_required_ok1(self):
         node = self.map.getnodebypath("/ISA_LOOP/GS_LOOP/ST_LOOP/DETAIL/2000A/2000B/2300/CLM")

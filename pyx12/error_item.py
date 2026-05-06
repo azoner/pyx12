@@ -15,6 +15,7 @@ from __future__ import annotations
 from dataclasses import dataclass
 from typing import Any
 
+from .error_codes import ERROR_CODES
 from .errors import EngineError
 
 isa_errors = (
@@ -83,7 +84,11 @@ class SegError(ErrorItem):
     ls_id: str | None = None
 
     def __post_init__(self) -> None:
-        if self.err_cde not in seg_errors:
+        # During the PR 2-4 producer migration, accept either legacy
+        # raw-X12 codes ("1"-"8") or new pyx12 codes from ERROR_CODES.
+        # PR 5 narrows this to ERROR_CODES only once every producer has
+        # migrated.
+        if self.err_cde not in seg_errors and self.err_cde not in ERROR_CODES:
             raise EngineError('Invalid segment level error code "%s"' % (self.err_cde))
 
 
@@ -98,5 +103,9 @@ class EleError(ErrorItem):
     map_node: Any = None
 
     def __post_init__(self) -> None:
-        if self.err_cde not in ele_errors:
+        # During the PR 2-4 producer migration, accept either legacy
+        # raw-X12 codes ("1"-"10") or new pyx12 codes from ERROR_CODES.
+        # PR 5 narrows this to ERROR_CODES only once every producer has
+        # migrated.
+        if self.err_cde not in ele_errors and self.err_cde not in ERROR_CODES:
             raise EngineError('Invalid element level error code "%s"' % (self.err_cde))
