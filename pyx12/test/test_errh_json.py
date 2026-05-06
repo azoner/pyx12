@@ -104,7 +104,12 @@ class ErrhJsonVisitorOutput(unittest.TestCase):
     def test_isa_level_error_captured(self):
         isa = self.doc["interchanges"][0]
         self.assertEqual(isa["isa_trn_set_id"], "000000001")
-        self.assertEqual(isa["errors"], [{"err_cde": "100", "err_str": "ISA-level error"}])
+        # x12_code falls through to err_cde for any code not in
+        # pyx12.error_codes.ERROR_CODES (legacy raw-X12 codes; PR 1).
+        self.assertEqual(
+            isa["errors"],
+            [{"err_cde": "100", "x12_code": "100", "err_str": "ISA-level error"}],
+        )
         self.assertEqual(len(isa["groups"]), 1)
 
     def test_gs_level_error_captured(self):
@@ -112,7 +117,10 @@ class ErrhJsonVisitorOutput(unittest.TestCase):
         self.assertEqual(gs["fic"], "HC")
         self.assertEqual(gs["vriic"], "005010X222A1")
         self.assertEqual(gs["ack_code"], "R")
-        self.assertEqual(gs["errors"], [{"err_cde": "4", "err_str": "GS-level error"}])
+        self.assertEqual(
+            gs["errors"],
+            [{"err_cde": "4", "x12_code": "4", "err_str": "GS-level error"}],
+        )
         self.assertEqual(len(gs["transactions"]), 1)
 
     def test_st_level_error_captured(self):
@@ -120,7 +128,10 @@ class ErrhJsonVisitorOutput(unittest.TestCase):
         self.assertEqual(st["trn_set_id"], "837")
         self.assertEqual(st["trn_set_control_num"], "0001")
         self.assertEqual(st["ack_code"], "R")
-        self.assertEqual(st["errors"], [{"err_cde": "23", "err_str": "ST-level error"}])
+        self.assertEqual(
+            st["errors"],
+            [{"err_cde": "23", "x12_code": "23", "err_str": "ST-level error"}],
+        )
         self.assertEqual(len(st["segments"]), 1)
 
     def test_seg_level_error_captured(self):
@@ -132,7 +143,14 @@ class ErrhJsonVisitorOutput(unittest.TestCase):
         self.assertEqual(seg["ls_id"], "2300")
         self.assertEqual(
             seg["errors"],
-            [{"err_cde": "8", "err_str": "Segment has data element errors", "err_val": None}],
+            [
+                {
+                    "err_cde": "8",
+                    "x12_code": "8",
+                    "err_str": "Segment has data element errors",
+                    "err_val": None,
+                }
+            ],
         )
         self.assertEqual(len(seg["elements"]), 2)
 
@@ -145,7 +163,14 @@ class ErrhJsonVisitorOutput(unittest.TestCase):
         self.assertEqual(elements[0]["name"], "Claim Submitter's Identifier")
         self.assertEqual(
             elements[0]["errors"],
-            [{"err_cde": "7", "err_str": "Invalid Code Value", "err_val": "BAD"}],
+            [
+                {
+                    "err_cde": "7",
+                    "x12_code": "7",
+                    "err_str": "Invalid Code Value",
+                    "err_val": "BAD",
+                }
+            ],
         )
         self.assertEqual(elements[1]["ele_pos"], 2)
         self.assertEqual(elements[1]["ele_ref_num"], "782")

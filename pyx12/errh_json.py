@@ -18,7 +18,17 @@ from __future__ import annotations
 import json
 from typing import Any, TextIO
 
+import pyx12.error_codes
 import pyx12.error_visitor
+
+
+def _x12_code(err_cde: str) -> str | None:
+    """Resolve a producer-emitted code to its X12-spec ack code for the
+    JSON `x12_code` field. None means the code does not surface in any
+    ack channel (e.g. parser HL1/HL2/LX). Legacy raw-X12 codes still
+    emitted by un-migrated producers fall through unchanged via
+    `pyx12.error_codes.x12_code_for`."""
+    return pyx12.error_codes.x12_code_for(err_cde)
 
 
 class errh_json_visitor(pyx12.error_visitor.error_visitor):
@@ -78,7 +88,8 @@ class errh_json_visitor(pyx12.error_visitor.error_visitor):
     def visit_isa_post(self, err_isa: Any) -> None:
         isa_dict = self._stack[-1]
         isa_dict["errors"] = [
-            {"err_cde": cde, "err_str": err_str} for (cde, err_str) in err_isa.errors
+            {"err_cde": cde, "x12_code": _x12_code(cde), "err_str": err_str}
+            for (cde, err_str) in err_isa.errors
         ]
         self._stack.pop()
 
@@ -100,7 +111,8 @@ class errh_json_visitor(pyx12.error_visitor.error_visitor):
     def visit_gs_post(self, err_gs: Any) -> None:
         gs_dict = self._stack[-1]
         gs_dict["errors"] = [
-            {"err_cde": cde, "err_str": err_str} for (cde, err_str) in err_gs.errors
+            {"err_cde": cde, "x12_code": _x12_code(cde), "err_str": err_str}
+            for (cde, err_str) in err_gs.errors
         ]
         self._stack.pop()
 
@@ -120,7 +132,8 @@ class errh_json_visitor(pyx12.error_visitor.error_visitor):
     def visit_st_post(self, err_st: Any) -> None:
         st_dict = self._stack[-1]
         st_dict["errors"] = [
-            {"err_cde": cde, "err_str": err_str} for (cde, err_str) in err_st.errors
+            {"err_cde": cde, "x12_code": _x12_code(cde), "err_str": err_str}
+            for (cde, err_str) in err_st.errors
         ]
         self._stack.pop()
 
@@ -133,7 +146,12 @@ class errh_json_visitor(pyx12.error_visitor.error_visitor):
             "ls_id": err_seg.ls_id,
             "cur_line": err_seg.get_cur_line(),
             "errors": [
-                {"err_cde": cde, "err_str": err_str, "err_val": err_val}
+                {
+                    "err_cde": cde,
+                    "x12_code": _x12_code(cde),
+                    "err_str": err_str,
+                    "err_val": err_val,
+                }
                 for (cde, err_str, err_val) in err_seg.errors
             ],
             "elements": [],
@@ -154,7 +172,12 @@ class errh_json_visitor(pyx12.error_visitor.error_visitor):
             "ele_ref_num": err_ele.ele_ref_num,
             "name": err_ele.name,
             "errors": [
-                {"err_cde": cde, "err_str": err_str, "err_val": err_val}
+                {
+                    "err_cde": cde,
+                    "x12_code": _x12_code(cde),
+                    "err_str": err_str,
+                    "err_val": err_val,
+                }
                 for (cde, err_str, err_val) in err_ele.errors
             ],
         }

@@ -19,6 +19,7 @@ import logging
 import time
 from typing import Any, TextIO
 
+import pyx12.error_codes
 import pyx12.segment
 
 from . import error_visitor
@@ -394,8 +395,9 @@ class error_997_visitor(error_visitor.error_visitor):
         :param err_seg: Segment error handler
         :type err_seg: L{error_handler.err_seg}
         """
-        # logger.debug('visit_deg: AK3 - ')
-        # seg_base = ['AK3', err_seg.seg_id, '%i' % err_seg.seg_count]
+        # Legacy raw-X12 codes accepted by the AK304 channel today.
+        # PR 5 will drop this fallback once all producers emit pyx12 codes
+        # routed through pyx12.error_codes.ERROR_CODES.
         valid_AK3_codes = ("1", "2", "3", "4", "5", "6", "7", "8")
         seg_base = pyx12.segment.Segment("AK3", "~", "*", ":")
         seg_base.append(err_seg.seg_id)
@@ -405,17 +407,22 @@ class error_997_visitor(error_visitor.error_visitor):
         else:
             seg_base.append("")
         seg_str = seg_base.format("~", "*", ":")
-        errors = [x[0] for x in err_seg.errors]
-        if "SEG1" in errors:
-            if "8" not in errors:
-                errors.append("8")
-            errors = [x for x in errors if x != "SEG1"]
-        for err_cde in list(set(errors)):
-            if err_cde in valid_AK3_codes:  # unique codes
-                seg_data = pyx12.segment.Segment(seg_str, "~", "*", ":")
-                seg_data.set("AK304", err_cde)
-                self._write(seg_data)
-        if err_seg.child_err_count() > 0 and "8" not in errors:
+        emitted: set[str] = set()
+        for err_cde in [x[0] for x in err_seg.errors]:
+            spec = pyx12.error_codes.ERROR_CODES.get(err_cde)
+            if spec is not None:
+                ak_code = spec.ak_code
+            elif err_cde in valid_AK3_codes:
+                ak_code = err_cde
+            else:
+                ak_code = None
+            if ak_code is None or ak_code in emitted:
+                continue
+            seg_data = pyx12.segment.Segment(seg_str, "~", "*", ":")
+            seg_data.set("AK304", ak_code)
+            self._write(seg_data)
+            emitted.add(ak_code)
+        if err_seg.child_err_count() > 0 and "8" not in emitted:
             seg_data = pyx12.segment.Segment(seg_str, "~", "*", ":")
             seg_data.set("AK304", "8")
             self._write(seg_data)
@@ -425,6 +432,9 @@ class error_997_visitor(error_visitor.error_visitor):
         :param err_ele: Segment error handler
         :type err_ele: L{error_handler.err_ele}
         """
+        # Legacy raw-X12 codes accepted by the AK403 channel today.
+        # PR 5 will drop this fallback once all producers emit pyx12 codes
+        # routed through pyx12.error_codes.ERROR_CODES.
         valid_AK4_codes = ("1", "2", "3", "4", "5", "6", "7", "8", "9", "10")
         seg_base = pyx12.segment.Segment("AK4", "~", "*", ":")
         if err_ele.subele_pos:
@@ -433,16 +443,22 @@ class error_997_visitor(error_visitor.error_visitor):
             seg_base.append("%i" % (err_ele.ele_pos))
         if err_ele.ele_ref_num:
             seg_base.append(err_ele.ele_ref_num)
-        # else:
-        #    seg_base.append('')
         seg_str = seg_base.format("~", "*", ":")
         for err_cde, err_str, bad_value in err_ele.errors:
-            if err_cde in valid_AK4_codes:
-                seg_data = pyx12.segment.Segment(seg_str, "~", "*", ":")
-                seg_data.set("AK403", err_cde)
-                if bad_value:
-                    seg_data.set("AK404", error_visitor.ascii_only(bad_value))
-                self._write(seg_data)
+            spec = pyx12.error_codes.ERROR_CODES.get(err_cde)
+            if spec is not None:
+                ak_code = spec.ak_code
+            elif err_cde in valid_AK4_codes:
+                ak_code = err_cde
+            else:
+                ak_code = None
+            if ak_code is None:
+                continue
+            seg_data = pyx12.segment.Segment(seg_str, "~", "*", ":")
+            seg_data.set("AK403", ak_code)
+            if bad_value:
+                seg_data.set("AK404", error_visitor.ascii_only(bad_value))
+            self._write(seg_data)
 
     def _write(self, seg_data: pyx12.segment.Segment) -> None:
         """

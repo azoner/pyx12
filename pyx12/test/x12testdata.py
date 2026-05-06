@@ -315,6 +315,7 @@ ST*837*11280001~""",
                     "errors": [
                         {
                             "err_cde": "023",
+                            "x12_code": "023",
                             "err_str": 'Mandatory segment "Interchange Control Trailer" (IEA=000010121) missing',
                         }
                     ],
@@ -330,6 +331,7 @@ ST*837*11280001~""",
                             "errors": [
                                 {
                                     "err_cde": "3",
+                                    "x12_code": "3",
                                     "err_str": 'Mandatory segment "Functional Group Trailer" (GE=17) missing',
                                 }
                             ],
@@ -343,6 +345,7 @@ ST*837*11280001~""",
                                     "errors": [
                                         {
                                             "err_cde": "2",
+                                            "x12_code": "2",
                                             "err_str": 'Mandatory segment "Transaction Set Trailer" (SE=11280001) missing',
                                         }
                                     ],
@@ -524,6 +527,7 @@ IEA*3*000010121~""",
                                             "errors": [
                                                 {
                                                     "err_cde": "3",
+                                                    "x12_code": "3",
                                                     "err_str": 'Mandatory loop "Utilization Management Organization (UMO) Level" (2000A) missing',
                                                     "err_val": None,
                                                 }
@@ -550,6 +554,7 @@ IEA*3*000010121~""",
                                             "errors": [
                                                 {
                                                     "err_cde": "3",
+                                                    "x12_code": "3",
                                                     "err_str": 'Mandatory loop "Utilization Management Organization (UMO) Level" (2000A) missing',
                                                     "err_val": None,
                                                 }
@@ -576,6 +581,7 @@ IEA*3*000010121~""",
                                             "errors": [
                                                 {
                                                     "err_cde": "3",
+                                                    "x12_code": "3",
                                                     "err_str": 'Mandatory loop "Utilization Management Organization (UMO) Level" (2000A) missing',
                                                     "err_val": None,
                                                 }
@@ -614,6 +620,7 @@ IEA*3*000010121~""",
                                             "errors": [
                                                 {
                                                     "err_cde": "3",
+                                                    "x12_code": "3",
                                                     "err_str": 'Mandatory segment "Transmission Type Identification" (REF) missing',
                                                     "err_val": None,
                                                 }
@@ -630,6 +637,7 @@ IEA*3*000010121~""",
                                             "errors": [
                                                 {
                                                     "err_cde": "3",
+                                                    "x12_code": "3",
                                                     "err_str": 'Mandatory loop "Submitter Name" (1000A) missing',
                                                     "err_val": None,
                                                 }
@@ -646,6 +654,7 @@ IEA*3*000010121~""",
                                             "errors": [
                                                 {
                                                     "err_cde": "3",
+                                                    "x12_code": "3",
                                                     "err_str": 'Mandatory loop "Receiver Name" (1000B) missing',
                                                     "err_val": None,
                                                 }
@@ -662,6 +671,7 @@ IEA*3*000010121~""",
                                             "errors": [
                                                 {
                                                     "err_cde": "3",
+                                                    "x12_code": "3",
                                                     "err_str": 'Mandatory loop "Billing/Pay-To Provider Hierarchical Level" (2000A) missing',
                                                     "err_val": None,
                                                 }
@@ -700,6 +710,7 @@ IEA*3*000010121~""",
                                             "errors": [
                                                 {
                                                     "err_cde": "3",
+                                                    "x12_code": "3",
                                                     "err_str": 'Mandatory loop "Table 1 - Header" (HEADER) missing',
                                                     "err_val": None,
                                                 }
@@ -738,6 +749,7 @@ IEA*3*000010121~""",
                                             "errors": [
                                                 {
                                                     "err_cde": "3",
+                                                    "x12_code": "3",
                                                     "err_str": 'Mandatory loop "Table 1 - Header" (HEADER) missing',
                                                     "err_val": None,
                                                 }
@@ -776,6 +788,7 @@ IEA*3*000010121~""",
                                             "errors": [
                                                 {
                                                     "err_cde": "3",
+                                                    "x12_code": "3",
                                                     "err_str": 'Mandatory loop "Table 1 - Header" (HEADER) missing',
                                                     "err_val": None,
                                                 }
@@ -824,6 +837,7 @@ IEA*3*000010121~""",
                                             "errors": [
                                                 {
                                                     "err_cde": "3",
+                                                    "x12_code": "3",
                                                     "err_str": 'Mandatory loop "Utilization Management Organization (UMO) Level" (2000A) missing',
                                                     "err_val": None,
                                                 }
@@ -850,6 +864,7 @@ IEA*3*000010121~""",
                                             "errors": [
                                                 {
                                                     "err_cde": "3",
+                                                    "x12_code": "3",
                                                     "err_str": 'Mandatory loop "Utilization Management Organization (UMO) Level" (2000A) missing',
                                                     "err_val": None,
                                                 }
@@ -876,6 +891,7 @@ IEA*3*000010121~""",
                                             "errors": [
                                                 {
                                                     "err_cde": "3",
+                                                    "x12_code": "3",
                                                     "err_str": 'Mandatory loop "Utilization Management Organization (UMO) Level" (2000A) missing',
                                                     "err_val": None,
                                                 }
@@ -914,6 +930,7 @@ IEA*3*000010121~""",
                                             "errors": [
                                                 {
                                                     "err_cde": "3",
+                                                    "x12_code": "3",
                                                     "err_str": 'Mandatory segment "Transmission Type Identification" (REF) missing',
                                                     "err_val": None,
                                                 }
@@ -930,6 +947,7 @@ IEA*3*000010121~""",
                                             "errors": [
                                                 {
                                                     "err_cde": "3",
+                                                    "x12_code": "3",
                                                     "err_str": 'Mandatory loop "Submitter Name" (1000A) missing',
                                                     "err_val": None,
                                                 }
@@ -946,6 +964,7 @@ IEA*3*000010121~""",
                                             "errors": [
                                                 {
                                                     "err_cde": "3",
+                                                    "x12_code": "3",
                                                     "err_str": 'Mandatory loop "Receiver Name" (1000B) missing',
                                                     "err_val": None,
                                                 }
@@ -962,6 +981,7 @@ IEA*3*000010121~""",
                                             "errors": [
                                                 {
                                                     "err_cde": "3",
+                                                    "x12_code": "3",
                                                     "err_str": 'Mandatory loop "Billing/Pay-To Provider Hierarchical Level" (2000A) missing',
                                                     "err_val": None,
                                                 }
@@ -1000,6 +1020,7 @@ IEA*3*000010121~""",
                                             "errors": [
                                                 {
                                                     "err_cde": "3",
+                                                    "x12_code": "3",
                                                     "err_str": 'Mandatory loop "Table 1 - Header" (HEADER) missing',
                                                     "err_val": None,
                                                 }
@@ -1160,8 +1181,16 @@ IEA*5*333~""",
                     "orig_time": "1133",
                     "cur_line": 122,
                     "errors": [
-                        {"err_cde": "001", "err_str": "IEA id=333 does not match ISA id=000484950"},
-                        {"err_cde": "021", "err_str": "IEA count for IEA02=333 is wrong"},
+                        {
+                            "err_cde": "001",
+                            "x12_code": "001",
+                            "err_str": "IEA id=333 does not match ISA id=000484950",
+                        },
+                        {
+                            "err_cde": "021",
+                            "x12_code": "021",
+                            "err_str": "IEA count for IEA02=333 is wrong",
+                        },
                     ],
                     "groups": [
                         {
@@ -1173,7 +1202,11 @@ IEA*5*333~""",
                             "st_count_recv": 2,
                             "cur_line": 121,
                             "errors": [
-                                {"err_cde": "4", "err_str": "GE id=333 does not match GS id=1"}
+                                {
+                                    "err_cde": "4",
+                                    "x12_code": "4",
+                                    "err_str": "GE id=333 does not match GS id=1",
+                                }
                             ],
                             "transactions": [
                                 {
@@ -1185,6 +1218,7 @@ IEA*5*333~""",
                                     "errors": [
                                         {
                                             "err_cde": "4",
+                                            "x12_code": "4",
                                             "err_str": "SE count of 60 for SE02=300207436 is wrong. I count 59",
                                         }
                                     ],
@@ -1299,6 +1333,7 @@ IEA*1*000484889~""",
                                             "errors": [
                                                 {
                                                     "err_cde": "SEG1",
+                                                    "x12_code": "SEG1",
                                                     "err_str": "Segment contains trailing element terminators",
                                                     "err_val": None,
                                                 }
@@ -1313,6 +1348,7 @@ IEA*1*000484889~""",
                                                     "errors": [
                                                         {
                                                             "err_cde": "1",
+                                                            "x12_code": "1",
                                                             "err_str": 'Mandatory data element "Explanation of Benefits Indicator" (CLM18) is missing',
                                                             "err_val": None,
                                                         }
@@ -1407,6 +1443,7 @@ IEA*1*000000288~""",
                                             "errors": [
                                                 {
                                                     "err_cde": "3",
+                                                    "x12_code": "3",
                                                     "err_str": 'Mandatory loop "Billing Provider Name" (2010AA) missing',
                                                     "err_val": None,
                                                 }
@@ -1509,6 +1546,7 @@ IEA*1*000000288~""",
                                     "errors": [
                                         {
                                             "err_cde": "4",
+                                            "x12_code": "4",
                                             "err_str": "SE count of 30 for SE02=000000001 is wrong. I count 29",
                                         }
                                     ],
@@ -1531,6 +1569,7 @@ IEA*1*000000288~""",
                                                     "errors": [
                                                         {
                                                             "err_cde": "7",
+                                                            "x12_code": "7",
                                                             "err_str": "(004010X098A2) is not a valid code for Transmission Type Code (REF02)",
                                                             "err_val": "004010X098A2",
                                                         }
@@ -1556,6 +1595,7 @@ IEA*1*000000288~""",
                                                     "errors": [
                                                         {
                                                             "err_cde": "7",
+                                                            "x12_code": "7",
                                                             "err_str": "(TA) is not a valid code for Communication Number Qualifier (PER03)",
                                                             "err_val": "TA",
                                                         }
@@ -1581,6 +1621,7 @@ IEA*1*000000288~""",
                                                     "errors": [
                                                         {
                                                             "err_cde": "7",
+                                                            "x12_code": "7",
                                                             "err_str": "(47) is not a valid code for Identification Code Qualifier (NM108)",
                                                             "err_val": "47",
                                                         }
@@ -1606,11 +1647,13 @@ IEA*1*000000288~""",
                                                     "errors": [
                                                         {
                                                             "err_cde": "5",
+                                                            "x12_code": "5",
                                                             "err_str": 'Data element "Identification Code Qualifier" (NM108) is too long: len("MIM") = 3 > 2 (max_len)',
                                                             "err_val": "MIM",
                                                         },
                                                         {
                                                             "err_cde": "7",
+                                                            "x12_code": "7",
                                                             "err_str": "(MIM) is not a valid code for Identification Code Qualifier (NM108)",
                                                             "err_val": "MIM",
                                                         },
@@ -1636,6 +1679,7 @@ IEA*1*000000288~""",
                                                     "errors": [
                                                         {
                                                             "err_cde": "8",
+                                                            "x12_code": "8",
                                                             "err_str": 'Data element "Subscriber Birth Date" (DMG02) contains an invalid date (19461301)',
                                                             "err_val": "19461301",
                                                         }
@@ -1650,6 +1694,7 @@ IEA*1*000000288~""",
                                                     "errors": [
                                                         {
                                                             "err_cde": "7",
+                                                            "x12_code": "7",
                                                             "err_str": "(R) is not a valid code for Subscriber Gender Code (DMG03)",
                                                             "err_val": "R",
                                                         }
@@ -1675,6 +1720,7 @@ IEA*1*000000288~""",
                                                     "errors": [
                                                         {
                                                             "err_cde": "7",
+                                                            "x12_code": "7",
                                                             "err_str": "(95) is not a valid code for Facility Type Code (CLM05-01)",
                                                             "err_val": "95",
                                                         }
@@ -1813,6 +1859,7 @@ IEA*1*000238388~""",
                                     "errors": [
                                         {
                                             "err_cde": "4",
+                                            "x12_code": "4",
                                             "err_str": "SE count of 39 for SE02=0001 is wrong. I count 72",
                                         }
                                     ],
@@ -1835,6 +1882,7 @@ IEA*1*000238388~""",
                                                     "errors": [
                                                         {
                                                             "err_cde": "8",
+                                                            "x12_code": "8",
                                                             "err_str": 'Data element "Production Date" (DTM02) contains an invalid date (11111111)',
                                                             "err_val": "11111111",
                                                         }
@@ -1852,6 +1900,7 @@ IEA*1*000238388~""",
                                             "errors": [
                                                 {
                                                     "err_cde": "1",
+                                                    "x12_code": "1",
                                                     "err_str": "Segment N1*PR not found.  Started at /ISA_LOOP/GS_LOOP/ST_LOOP/DETAIL/2000/2100/2110/LQ",
                                                     "err_val": None,
                                                 }
@@ -1868,6 +1917,7 @@ IEA*1*000238388~""",
                                             "errors": [
                                                 {
                                                     "err_cde": "1",
+                                                    "x12_code": "1",
                                                     "err_str": "Segment N3*P.O. BOX 30479 not found.  Started at /ISA_LOOP/GS_LOOP/ST_LOOP/DETAIL/2000/2100/2110/LQ",
                                                     "err_val": None,
                                                 }
@@ -1884,6 +1934,7 @@ IEA*1*000238388~""",
                                             "errors": [
                                                 {
                                                     "err_cde": "1",
+                                                    "x12_code": "1",
                                                     "err_str": "Segment N4*LANSING not found.  Started at /ISA_LOOP/GS_LOOP/ST_LOOP/DETAIL/2000/2100/2110/LQ",
                                                     "err_val": None,
                                                 }
@@ -1900,6 +1951,7 @@ IEA*1*000238388~""",
                                             "errors": [
                                                 {
                                                     "err_cde": "1",
+                                                    "x12_code": "1",
                                                     "err_str": "Segment N1*PE not found.  Started at /ISA_LOOP/GS_LOOP/ST_LOOP/DETAIL/2000/2100/2110/LQ",
                                                     "err_val": None,
                                                 }
@@ -2045,6 +2097,7 @@ IEA*1*000484889~""",
                                                     "errors": [
                                                         {
                                                             "err_cde": "7",
+                                                            "x12_code": "7",
                                                             "err_str": "(  ) is not a valid code for Product or Service ID Qualifier (SV202-01)",
                                                             "err_val": "  ",
                                                         }
@@ -2059,6 +2112,7 @@ IEA*1*000484889~""",
                                                     "errors": [
                                                         {
                                                             "err_cde": "1",
+                                                            "x12_code": "1",
                                                             "err_str": 'Mandatory data element "Procedure Code" (SV202-02) is missing',
                                                             "err_val": None,
                                                         }
@@ -2084,6 +2138,7 @@ IEA*1*000484889~""",
                                                     "errors": [
                                                         {
                                                             "err_cde": "7",
+                                                            "x12_code": "7",
                                                             "err_str": "(  ) is not a valid code for Product or Service ID Qualifier (SVD03-01)",
                                                             "err_val": "  ",
                                                         }
@@ -2098,6 +2153,7 @@ IEA*1*000484889~""",
                                                     "errors": [
                                                         {
                                                             "err_cde": "1",
+                                                            "x12_code": "1",
                                                             "err_str": 'Mandatory data element "Procedure Code" (SVD03-02) is missing',
                                                             "err_val": None,
                                                         }
@@ -2222,6 +2278,7 @@ IEA*1*000484889~""",
                                     "errors": [
                                         {
                                             "err_cde": "3",
+                                            "x12_code": "3",
                                             "err_str": "SE id=300145997 does not match ST id=300145997 ",
                                         }
                                     ],
@@ -2264,6 +2321,7 @@ GE*1*17~""",
                     "errors": [
                         {
                             "err_cde": "023",
+                            "x12_code": "023",
                             "err_str": 'Mandatory segment "Interchange Control Trailer" (IEA=000010121) missing',
                         }
                     ],
@@ -2287,6 +2345,7 @@ GE*1*17~""",
                                     "errors": [
                                         {
                                             "err_cde": "4",
+                                            "x12_code": "4",
                                             "err_str": "SE count of 0 for SE02=11280001 is wrong. I count 2",
                                         }
                                     ],
@@ -2301,6 +2360,7 @@ GE*1*17~""",
                                             "errors": [
                                                 {
                                                     "err_cde": "3",
+                                                    "x12_code": "3",
                                                     "err_str": 'Mandatory loop "Table 1 - Header" (HEADER) missing',
                                                     "err_val": None,
                                                 }
@@ -2317,6 +2377,7 @@ GE*1*17~""",
                                             "errors": [
                                                 {
                                                     "err_cde": "3",
+                                                    "x12_code": "3",
                                                     "err_str": 'Mandatory loop "Billing/Pay-To Provider Hierarchical Level" (2000A) missing',
                                                     "err_val": None,
                                                 }
@@ -2803,6 +2864,7 @@ IEA*1*000001168~""",
                                             "errors": [
                                                 {
                                                     "err_cde": "4",
+                                                    "x12_code": "4",
                                                     "err_str": "Loop 2400 exceeded max count.  Found 51, should have 50",
                                                     "err_val": None,
                                                 }
@@ -2819,6 +2881,7 @@ IEA*1*000001168~""",
                                             "errors": [
                                                 {
                                                     "err_cde": "4",
+                                                    "x12_code": "4",
                                                     "err_str": "Loop 2400 exceeded max count.  Found 52, should have 50",
                                                     "err_val": None,
                                                 }
@@ -2835,6 +2898,7 @@ IEA*1*000001168~""",
                                             "errors": [
                                                 {
                                                     "err_cde": "4",
+                                                    "x12_code": "4",
                                                     "err_str": "Loop 2400 exceeded max count.  Found 53, should have 50",
                                                     "err_val": None,
                                                 }
@@ -2851,6 +2915,7 @@ IEA*1*000001168~""",
                                             "errors": [
                                                 {
                                                     "err_cde": "4",
+                                                    "x12_code": "4",
                                                     "err_str": "Loop 2400 exceeded max count.  Found 54, should have 50",
                                                     "err_val": None,
                                                 }
@@ -3337,6 +3402,7 @@ IEA*1*000001168~""",
                                             "errors": [
                                                 {
                                                     "err_cde": "4",
+                                                    "x12_code": "4",
                                                     "err_str": "Loop 2400 exceeded max count.  Found 51, should have 50",
                                                     "err_val": None,
                                                 }
@@ -3353,6 +3419,7 @@ IEA*1*000001168~""",
                                             "errors": [
                                                 {
                                                     "err_cde": "4",
+                                                    "x12_code": "4",
                                                     "err_str": "Loop 2400 exceeded max count.  Found 52, should have 50",
                                                     "err_val": None,
                                                 }
@@ -3369,6 +3436,7 @@ IEA*1*000001168~""",
                                             "errors": [
                                                 {
                                                     "err_cde": "4",
+                                                    "x12_code": "4",
                                                     "err_str": "Loop 2400 exceeded max count.  Found 53, should have 50",
                                                     "err_val": None,
                                                 }
@@ -3385,6 +3453,7 @@ IEA*1*000001168~""",
                                             "errors": [
                                                 {
                                                     "err_cde": "4",
+                                                    "x12_code": "4",
                                                     "err_str": "Loop 2400 exceeded max count.  Found 54, should have 50",
                                                     "err_val": None,
                                                 }
@@ -3495,6 +3564,7 @@ IEA*3*000010121~""",
                                             "errors": [
                                                 {
                                                     "err_cde": "3",
+                                                    "x12_code": "3",
                                                     "err_str": 'Mandatory loop "Utilization Management Organization (UMO) Level" (2000A) missing',
                                                     "err_val": None,
                                                 }
@@ -3521,6 +3591,7 @@ IEA*3*000010121~""",
                                             "errors": [
                                                 {
                                                     "err_cde": "3",
+                                                    "x12_code": "3",
                                                     "err_str": 'Mandatory loop "Utilization Management Organization (UMO) Level" (2000A) missing',
                                                     "err_val": None,
                                                 }
@@ -3547,6 +3618,7 @@ IEA*3*000010121~""",
                                             "errors": [
                                                 {
                                                     "err_cde": "3",
+                                                    "x12_code": "3",
                                                     "err_str": 'Mandatory loop "Utilization Management Organization (UMO) Level" (2000A) missing',
                                                     "err_val": None,
                                                 }
@@ -3585,6 +3657,7 @@ IEA*3*000010121~""",
                                             "errors": [
                                                 {
                                                     "err_cde": "3",
+                                                    "x12_code": "3",
                                                     "err_str": 'Mandatory segment "Transmission Type Identification" (REF) missing',
                                                     "err_val": None,
                                                 }
@@ -3601,6 +3674,7 @@ IEA*3*000010121~""",
                                             "errors": [
                                                 {
                                                     "err_cde": "3",
+                                                    "x12_code": "3",
                                                     "err_str": 'Mandatory loop "Submitter Name" (1000A) missing',
                                                     "err_val": None,
                                                 }
@@ -3617,6 +3691,7 @@ IEA*3*000010121~""",
                                             "errors": [
                                                 {
                                                     "err_cde": "3",
+                                                    "x12_code": "3",
                                                     "err_str": 'Mandatory loop "Receiver Name" (1000B) missing',
                                                     "err_val": None,
                                                 }
@@ -3633,6 +3708,7 @@ IEA*3*000010121~""",
                                             "errors": [
                                                 {
                                                     "err_cde": "3",
+                                                    "x12_code": "3",
                                                     "err_str": 'Mandatory loop "Billing/Pay-To Provider Hierarchical Level" (2000A) missing',
                                                     "err_val": None,
                                                 }
@@ -3671,6 +3747,7 @@ IEA*3*000010121~""",
                                             "errors": [
                                                 {
                                                     "err_cde": "3",
+                                                    "x12_code": "3",
                                                     "err_str": 'Mandatory loop "Table 1 - Header" (HEADER) missing',
                                                     "err_val": None,
                                                 }
@@ -3884,6 +3961,7 @@ IEA*1*000000288~""",
                                             "errors": [
                                                 {
                                                     "err_cde": "5",
+                                                    "x12_code": "5",
                                                     "err_str": "Segment PER exceeded max count.  Found 3, should have 2",
                                                     "err_val": None,
                                                 }
@@ -4022,6 +4100,7 @@ IEA*1*000010121~""",
                                             "errors": [
                                                 {
                                                     "err_cde": "3",
+                                                    "x12_code": "3",
                                                     "err_str": 'Mandatory loop "Table 1 - Header" (HEADER) missing',
                                                     "err_val": None,
                                                 }
@@ -4038,6 +4117,7 @@ IEA*1*000010121~""",
                                             "errors": [
                                                 {
                                                     "err_cde": "3",
+                                                    "x12_code": "3",
                                                     "err_str": 'Mandatory loop "Billing/Pay-To Provider Hierarchical Level" (2000A) missing',
                                                     "err_val": None,
                                                 }
@@ -4509,8 +4589,9 @@ IEA*1*703201721~
                                                     "errors": [
                                                         {
                                                             "err_cde": "6",
-                                                            "err_str": 'Data element "Subscriber Identifier" (REF02) is type AN, contains an invalid character(00389\xe9999)',
-                                                            "err_val": "00389\xe9999",
+                                                            "x12_code": "6",
+                                                            "err_str": 'Data element "Subscriber Identifier" (REF02) is type AN, contains an invalid character(00389é999)',
+                                                            "err_val": "00389é999",
                                                         }
                                                     ],
                                                 }
@@ -4611,6 +4692,7 @@ IEA*1*311071503~
                                                     "errors": [
                                                         {
                                                             "err_cde": "6",
+                                                            "x12_code": "6",
                                                             "err_str": 'Data element "Member Address Line" (N301), contains an invalid control character(<LF>)',
                                                             "err_val": "<LF>",
                                                         }
