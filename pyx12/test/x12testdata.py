@@ -314,7 +314,7 @@ ST*837*11280001~""",
                     "cur_line": 1,
                     "errors": [
                         {
-                            "err_cde": "023",
+                            "err_cde": "ISA_023_premature_eof",
                             "x12_code": "023",
                             "err_str": 'Mandatory segment "Interchange Control Trailer" (IEA=000010121) missing',
                         }
@@ -1182,12 +1182,12 @@ IEA*5*333~""",
                     "cur_line": 122,
                     "errors": [
                         {
-                            "err_cde": "001",
+                            "err_cde": "ISA_001_control_number_mismatch",
                             "x12_code": "001",
                             "err_str": "IEA id=333 does not match ISA id=000484950",
                         },
                         {
-                            "err_cde": "021",
+                            "err_cde": "ISA_021_invalid_group_count",
                             "x12_code": "021",
                             "err_str": "IEA count for IEA02=333 is wrong",
                         },
@@ -2389,7 +2389,7 @@ GE*1*17~""",
                     "cur_line": 1,
                     "errors": [
                         {
-                            "err_cde": "023",
+                            "err_cde": "ISA_023_premature_eof",
                             "x12_code": "023",
                             "err_str": 'Mandatory segment "Interchange Control Trailer" (IEA=000010121) missing',
                         }

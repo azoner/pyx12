@@ -29,6 +29,11 @@ from typing import Literal, TextIO
 import pyx12.errors
 import pyx12.segment
 from pyx12.error_codes import (
+    ISA_001_CONTROL_NUMBER_MISMATCH,
+    ISA_021_INVALID_GROUP_COUNT,
+    ISA_023_PREMATURE_EOF,
+    ISA_024_INVALID_CONTENT,
+    ISA_025_DUPLICATE_CONTROL_NUMBER,
     SEG_1_INVALID_SEG_ID,
     SEG_1_LEADING_SPACE,
     SEG_8_HL_COUNT_MISMATCH,
@@ -121,7 +126,7 @@ class X12Base:
             if interchange_control_number in self.isa_ids:
                 err_str = "ISA Interchange Control Number "
                 err_str += f"{interchange_control_number} not unique within file"
-                self._isa_error("025", err_str)
+                self._isa_error(ISA_025_DUPLICATE_CONTROL_NUMBER, err_str)
             self.loops.append(("ISA", interchange_control_number))
             self.isa_ids.append(interchange_control_number)
             self.gs_count = 0
@@ -411,16 +416,16 @@ class X12Reader(X12Base):
             if self.loops[-1][0] != "ISA":
                 # Unterminated GS loop
                 err_str = f"Unterminated Loop {self.loops[-1][0]}"
-                self._isa_error("024", err_str)
+                self._isa_error(ISA_024_INVALID_CONTENT, err_str)
                 del self.loops[-1]
             if self.loops[-1][1] != seg_data.get_value("IEA02"):
                 err_str = "IEA id={} does not match ISA id={}".format(
                     seg_data.get_value("IEA02"), self.loops[-1][1]
                 )
-                self._isa_error("001", err_str)
+                self._isa_error(ISA_001_CONTROL_NUMBER_MISMATCH, err_str)
             if self._int(seg_data.get_value("IEA01")) != self.gs_count:
                 err_str = "IEA count for IEA02={} is wrong".format(seg_data.get_value("IEA02"))
-                self._isa_error("021", err_str)
+                self._isa_error(ISA_021_INVALID_GROUP_COUNT, err_str)
             del self.loops[-1]
         elif seg_id == "GE":
             if self.loops[-1][0] != "GS":
@@ -488,7 +493,7 @@ class X12Reader(X12Base):
                 elif seg == "ISA":
                     err_str = 'Mandatory segment "Interchange Control Trailer" '
                     err_str += f"(IEA={id1}) missing"
-                    self._isa_error("023", err_str)
+                    self._isa_error(ISA_023_PREMATURE_EOF, err_str)
                 # elif self.loops[-1][0] == 'LS':
                 #    err_str = 'LS id=%s was not closed with a LE' % \
                 #    (id1, self.loops[-1][1])

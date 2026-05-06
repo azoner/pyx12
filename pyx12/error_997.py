@@ -146,7 +146,11 @@ class error_997_visitor(error_visitor.error_visitor):
             16: "027",
         }
         iea_ele_err_map = {1: "021", 2: "018"}
-        err_codes = [err[0] for err in err_isa.errors]
+        err_codes = [
+            code
+            for err in err_isa.errors
+            if (code := pyx12.error_codes.x12_code_for(err[0])) is not None
+        ]
         for elem in err_isa.elements:
             for err_cde, err_str, bad_value in elem.errors:
                 # Ugly

@@ -6,6 +6,13 @@ import pyx12.error_handler
 
 # from pyx12.errors import *
 import pyx12.x12file
+from pyx12.error_codes import (
+    ISA_001_CONTROL_NUMBER_MISMATCH,
+    ISA_021_INVALID_GROUP_COUNT,
+    ISA_023_PREMATURE_EOF,
+    ISA_024_INVALID_CONTENT,
+    ISA_025_DUPLICATE_CONTROL_NUMBER,
+)
 
 
 class X12fileTestCase(unittest.TestCase):
@@ -112,7 +119,7 @@ ISA*00*          *00*          *ZZ*ZZ000          *ZZ*ZZ001          *030828*112
 IEA*0*000010121~
 """
         (err_cde, err_str) = self._get_first_error(str1)
-        self.assertEqual(err_cde, "025", err_str)
+        self.assertEqual(err_cde, ISA_025_DUPLICATE_CONTROL_NUMBER, err_str)
 
 
 class IEA_Checks(X12fileTestCase):
@@ -123,7 +130,7 @@ class IEA_Checks(X12fileTestCase):
         str1 += "GE*0*17~\n"
         str1 += "IEA*1*000010555~\n"
         (err_cde, err_str) = self._get_first_error(str1)
-        self.assertEqual(err_cde, "001", err_str)
+        self.assertEqual(err_cde, ISA_001_CONTROL_NUMBER_MISMATCH, err_str)
 
     def test_IEA_count(self):
         seg = None
@@ -132,7 +139,7 @@ class IEA_Checks(X12fileTestCase):
         str1 += "GE*0*17~\n"
         str1 += "IEA*2*000010121~\n"
         (err_cde, err_str) = self._get_first_error(str1)
-        self.assertEqual(err_cde, "021", err_str)
+        self.assertEqual(err_cde, ISA_021_INVALID_GROUP_COUNT, err_str)
 
     def test_missing_IEA(self):
         seg = None
@@ -140,7 +147,7 @@ class IEA_Checks(X12fileTestCase):
         str1 += "GS*HC*ZZ000*ZZ001*20030828*1128*17*X*004010X098~\n"
         str1 += "GE*0*17~\n"
         (err_cde, err_str) = self._get_first_error(str1)
-        self.assertEqual(err_cde, "023", err_str)
+        self.assertEqual(err_cde, ISA_023_PREMATURE_EOF, err_str)
 
 
 class GE_Checks(X12fileTestCase):
@@ -177,7 +184,7 @@ class GE_Checks(X12fileTestCase):
         str1 += "GS*HC*ZZ000*ZZ001*20030828*1128*17*X*004010X098~\n"
         str1 += "IEA*1*000010121~\n"
         (err_cde, err_str) = self._get_first_error(str1)
-        self.assertEqual(err_cde, "024", err_str)
+        self.assertEqual(err_cde, ISA_024_INVALID_CONTENT, err_str)
 
 
 class SE_Checks(X12fileTestCase):
