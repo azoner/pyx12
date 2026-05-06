@@ -237,6 +237,17 @@ class Test5010(X12DocumentTestCase):
     def test_834_lui_id_5010_json(self):
         self._test_json("834_lui_id_5010")
 
+    def test_834_lui_id_5010_non_ascii(self):
+        # Non-ASCII char in REF02 → 999 ack must:
+        # - emit IK4*2*127*6 (invalid character at element 2, ref-num 127)
+        # - sanitize bad_value to ASCII (0x3F `?` substitutes the 0xE9 `é`)
+        self._test_999("834_lui_id_5010_non_ascii")
+
+    def test_834_lui_id_5010_non_ascii_json(self):
+        # Same source, JSON output preserves the original codepoint in
+        # err_str / err_val (unicode-safe channel, full fidelity).
+        self._test_json("834_lui_id_5010_non_ascii")
+
     def test_834_eol_in_element(self):
         self._test_999("834_eol_in_element")
 

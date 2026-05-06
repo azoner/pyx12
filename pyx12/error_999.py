@@ -387,5 +387,5 @@ class error_999_visitor(pyx12.error_visitor.error_visitor):
                 seg_data = pyx12.segment.Segment(seg_str, "~", "*", ":")
                 seg_data.set("IK403", err_cde)
                 if bad_value:
-                    seg_data.set("IK404", bad_value)
+                    seg_data.set("IK404", pyx12.error_visitor.ascii_only(bad_value))
                 self.wr.Write(seg_data)

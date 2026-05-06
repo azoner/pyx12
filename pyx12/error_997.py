@@ -441,7 +441,7 @@ class error_997_visitor(error_visitor.error_visitor):
                 seg_data = pyx12.segment.Segment(seg_str, "~", "*", ":")
                 seg_data.set("AK403", err_cde)
                 if bad_value:
-                    seg_data.set("AK404", bad_value)
+                    seg_data.set("AK404", error_visitor.ascii_only(bad_value))
                 self._write(seg_data)
 
     def _write(self, seg_data: pyx12.segment.Segment) -> None:

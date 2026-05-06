@@ -4414,6 +4414,117 @@ IEA*1*703201721~
             ]
         },
     },
+    "834_lui_id_5010_non_ascii": {
+        # Variant of 834_lui_id_5010 with a non-ASCII char (`é`, 0xE9 in
+        # latin-1) embedded in REF02. Demonstrates two things end-to-end:
+        # (a) the parser tolerates non-ASCII bytes (issue #157, #173);
+        # (b) the validator flags the bad char with err_cde "6" via the
+        #     rec_ID_B regex; and
+        # (c) the 999 output sanitizes the bad_value when copying it into
+        #     IK4-04 — `00389é999` becomes `00389?999` so the ack stays
+        #     pure ASCII per X12 spec.
+        # The JSON output preserves the original codepoint in err_str /
+        # err_val (JSON is unicode-safe, full fidelity is useful).
+        "source": """ISA*00*          *00*          *ZZ*D00XXX         *ZZ*00AA           *070305*1832*U*00501*000701336*0*P*:~
+GS*BE*D00XXX*00AA*20070305*1832*13360001*X*005010X220A1~
+ST*834*0001*005010X220A1~
+BGN*00*88880070301  00*20070305*181245****4~
+DTP*007*D8*20070301~
+N1*P5*PAYER 1*FI*999999999~
+N1*IN*KCMHSAS*FI*999999999~
+INS*Y*18*030*XN*A*C**FT~
+REF*0F*00389\xe9999~
+REF*1L*000003409999~
+REF*3H*K129999A~
+DTP*356*D8*20070301~
+NM1*IL*1*DOE*JOHN*A***34*999999999~
+N3*777 ELM ST~
+N4*ALLEGAN*MI*49010**CY*03~
+DMG*D8*19670330*M**O~
+LUI***ESSPANISH~
+HD*030**AK*064703*IND~
+DTP*348*D8*20070301~
+AMT*P3*45.34~
+REF*17*E  1F~
+SE*20*0001~
+GE*1*13360001~
+IEA*1*000701336~
+""",
+        "resAck": """ISA*00*          *00*          *ZZ*00GR           *ZZ*D00111         *070320*1721*U*00501*703201721*0*P*:~
+GS*FA*00GR*D00111*20070320*172121*13360001*X*005010X231~
+ST*999*0001*005010X231~
+AK1*BE*13360001*005010X220A1~
+AK2*834*0001*005010X220A1~
+IK3*REF*7**8~
+IK4*2*127*6*00389?999~
+IK5*R*5~
+AK9*R*1*1*0~
+SE*8*0001~
+GE*1*703201721~
+IEA*1*703201721~
+""",
+        "resJson": {
+            "interchanges": [
+                {
+                    "isa_trn_set_id": "000701336",
+                    "ta1_req": "0",
+                    "orig_date": "070305",
+                    "orig_time": "1832",
+                    "cur_line": 24,
+                    "errors": [],
+                    "groups": [
+                        {
+                            "gs_control_num": "13360001",
+                            "fic": "BE",
+                            "vriic": "005010X220A1",
+                            "ack_code": "R",
+                            "st_count_orig": 1,
+                            "st_count_recv": 1,
+                            "cur_line": 23,
+                            "errors": [],
+                            "transactions": [
+                                {
+                                    "trn_set_id": "834",
+                                    "trn_set_control_num": "0001",
+                                    "vriic": "005010X220A1",
+                                    "ack_code": "R",
+                                    "cur_line": 22,
+                                    "errors": [],
+                                    "segments": [
+                                        {
+                                            "seg_id": "REF",
+                                            "seg_count": 7,
+                                            "pos": 200,
+                                            "name": "Subscriber Identifier",
+                                            "ls_id": None,
+                                            "cur_line": 9,
+                                            "errors": [],
+                                            "elements": [
+                                                {
+                                                    "ele_pos": 2,
+                                                    "subele_pos": None,
+                                                    "repeat_pos": None,
+                                                    "ele_ref_num": "127",
+                                                    "name": "Subscriber Identifier",
+                                                    "errors": [
+                                                        {
+                                                            "err_cde": "6",
+                                                            "err_str": 'Data element "Subscriber Identifier" (REF02) is type AN, contains an invalid character(00389\xe9999)',
+                                                            "err_val": "00389\xe9999",
+                                                        }
+                                                    ],
+                                                }
+                                            ],
+                                        }
+                                    ],
+                                }
+                            ],
+                        }
+                    ],
+                }
+            ]
+        },
+    },
     "834_eol_in_element": {
         "source": """ISA*00*          *00*          *ZZ*D00XXX         *ZZ*00AA           *070305*1832*U*00501*000701336*0*P*:~
 GS*BE*D00XXX*00AA*20070305*1832*13360001*X*005010X220A1~

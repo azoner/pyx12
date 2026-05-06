@@ -17,6 +17,21 @@ from __future__ import annotations
 from typing import Any
 
 
+def ascii_only(value: str) -> str:
+    """Replace non-ASCII codepoints with `?` (0x3F).
+
+    The X12 997/999 acknowledgement output is ASCII-by-spec, but the input
+    file may contain non-ASCII bytes that bubble through validation as
+    `bad_value` payloads on element-level errors. The visitor must
+    sanitize before writing them into IK404/AK4-04, otherwise the ack
+    itself would carry the bad bytes (and the X12Writer's ASCII encode
+    would crash on file output).
+
+    `?` is in the X12 basic charset, so the substitute is always valid
+    in any IK404/AK4-04 context."""
+    return value.encode("ascii", errors="replace").decode("ascii")
+
+
 class error_visitor:
     """ """
 
