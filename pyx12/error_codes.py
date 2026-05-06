@@ -82,6 +82,8 @@ ELE_10_SYNTAX_EXCLUSIVE = "ELE_10_syntax_exclusive"
 ELE_12_TOO_MANY_REPETITIONS = "ELE_12_too_many_repetitions"
 ELE_13_TOO_MANY_COMPONENTS = "ELE_13_too_many_components"
 ELE_I10_NOT_USED = "ELE_I10_NOT_USED"
+ELE_I11_TOO_FEW_REPETITIONS = "ELE_I11_too_few_repetitions"
+ELE_I13_SITUATIONAL_NOT_USED = "ELE_I13_situational_not_used"
 
 # Composite-level pyx12 codes. Composites historically emitted via
 # EleError carrying the seg_error code semantics (see _composite.py).
@@ -113,6 +115,41 @@ SEG_8_HL_COUNT_MISMATCH = "SEG_8_hl_count_mismatch"
 SEG_8_HL_INVALID_PARENT = "SEG_8_hl_invalid_parent"
 SEG_8_LX_COUNT_MISMATCH = "SEG_8_lx_count_mismatch"
 SEG_10_SYNTAX_EXCLUSIVE = "SEG_10_syntax_exclusive"
+
+# Interchange (ISA) level pyx12 codes. Surface as TA1 Interchange Note
+# Codes (TA105) per X12 spec. Sorted: numeric codes 000–031.
+ISA_000_NO_ERROR = "ISA_000_no_error"
+ISA_001_CONTROL_NUMBER_MISMATCH = "ISA_001_control_number_mismatch"
+ISA_002_STANDARDS_NOT_SUPPORTED = "ISA_002_standards_not_supported"
+ISA_003_VERSION_NOT_SUPPORTED = "ISA_003_version_not_supported"
+ISA_004_INVALID_SEGMENT_TERMINATOR = "ISA_004_invalid_segment_terminator"
+ISA_005_INVALID_SENDER_QUALIFIER = "ISA_005_invalid_sender_qualifier"
+ISA_006_INVALID_SENDER_ID = "ISA_006_invalid_sender_id"
+ISA_007_INVALID_RECEIVER_QUALIFIER = "ISA_007_invalid_receiver_qualifier"
+ISA_008_INVALID_RECEIVER_ID = "ISA_008_invalid_receiver_id"
+ISA_009_UNKNOWN_RECEIVER_ID = "ISA_009_unknown_receiver_id"
+ISA_010_INVALID_AUTH_QUALIFIER = "ISA_010_invalid_auth_qualifier"
+ISA_011_INVALID_AUTH_INFO = "ISA_011_invalid_auth_info"
+ISA_012_INVALID_SECURITY_QUALIFIER = "ISA_012_invalid_security_qualifier"
+ISA_013_INVALID_SECURITY_INFO = "ISA_013_invalid_security_info"
+ISA_014_INVALID_DATE = "ISA_014_invalid_date"
+ISA_015_INVALID_TIME = "ISA_015_invalid_time"
+ISA_016_INVALID_STANDARDS_ID = "ISA_016_invalid_standards_id"
+ISA_017_INVALID_VERSION_ID = "ISA_017_invalid_version_id"
+ISA_018_INVALID_CONTROL_NUMBER = "ISA_018_invalid_control_number"
+ISA_019_INVALID_ACK_REQUESTED = "ISA_019_invalid_ack_requested"
+ISA_020_INVALID_TEST_INDICATOR = "ISA_020_invalid_test_indicator"
+ISA_021_INVALID_GROUP_COUNT = "ISA_021_invalid_group_count"
+ISA_022_INVALID_CONTROL_STRUCTURE = "ISA_022_invalid_control_structure"
+ISA_023_PREMATURE_EOF = "ISA_023_premature_eof"
+ISA_024_INVALID_CONTENT = "ISA_024_invalid_content"
+ISA_025_DUPLICATE_CONTROL_NUMBER = "ISA_025_duplicate_control_number"
+ISA_026_INVALID_DATA_ELEMENT_SEPARATOR = "ISA_026_invalid_data_element_separator"
+ISA_027_INVALID_COMPONENT_SEPARATOR = "ISA_027_invalid_component_separator"
+ISA_028_INVALID_DELIVERY_DATE = "ISA_028_invalid_delivery_date"
+ISA_029_INVALID_DELIVERY_TIME = "ISA_029_invalid_delivery_time"
+ISA_030_INVALID_DELIVERY_TIME_CODE = "ISA_030_invalid_delivery_time_code"
+ISA_031_INVALID_GRADE_OF_SERVICE = "ISA_031_invalid_grade_of_service"
 
 
 ERROR_CODES: dict[str, ErrorCodeSpec] = {
@@ -268,6 +305,22 @@ ERROR_CODES: dict[str, ErrorCodeSpec] = {
         ak_code=None,
         ik_code="I10",
         x12_description="Implementation 'Not Used' Data Element Present",
+    ),
+    ELE_I11_TOO_FEW_REPETITIONS: ErrorCodeSpec(
+        code=ELE_I11_TOO_FEW_REPETITIONS,
+        level="ELE",
+        description="Too few repetitions of data element",
+        ak_code=None,
+        ik_code="I11",
+        x12_description="Too Few Repetitions",
+    ),
+    ELE_I13_SITUATIONAL_NOT_USED: ErrorCodeSpec(
+        code=ELE_I13_SITUATIONAL_NOT_USED,
+        level="ELE",
+        description="Implementation: data element marked situational Not Used",
+        ak_code=None,
+        ik_code="I13",
+        x12_description="Implementation Dependent 'Not Used' Data Element Present",
     ),
     # --- Composite-level: sorted by numeric X12 code (1, 3, 5) ---
     COMP_1_MANDATORY_MISSING: ErrorCodeSpec(
@@ -453,6 +506,265 @@ ERROR_CODES: dict[str, ErrorCodeSpec] = {
         ak_code="10",
         ik_code="10",
         x12_description="Exclusion Condition Violated",
+    ),
+    # --- Interchange-level: TA1 Interchange Note Codes (TA105), 000–031.
+    # ak_code == ik_code for all entries since TA1 is shared between
+    # 4010 and 5010 (same I18 element).
+    ISA_000_NO_ERROR: ErrorCodeSpec(
+        code=ISA_000_NO_ERROR,
+        level="ISA",
+        description="No interchange error",
+        ak_code="000",
+        ik_code="000",
+        x12_description="No Error",
+    ),
+    ISA_001_CONTROL_NUMBER_MISMATCH: ErrorCodeSpec(
+        code=ISA_001_CONTROL_NUMBER_MISMATCH,
+        level="ISA",
+        description="ISA13 and IEA02 control numbers do not match",
+        ak_code="001",
+        ik_code="001",
+        x12_description="The Interchange Control Number in the Header and Trailer Do Not Match",
+    ),
+    ISA_002_STANDARDS_NOT_SUPPORTED: ErrorCodeSpec(
+        code=ISA_002_STANDARDS_NOT_SUPPORTED,
+        level="ISA",
+        description="ISA11 control standards identifier is not supported",
+        ak_code="002",
+        ik_code="002",
+        x12_description="Standards in ISA11 (Control Standards) is not supported",
+    ),
+    ISA_003_VERSION_NOT_SUPPORTED: ErrorCodeSpec(
+        code=ISA_003_VERSION_NOT_SUPPORTED,
+        level="ISA",
+        description="Version of controls is not supported",
+        ak_code="003",
+        ik_code="003",
+        x12_description="Version of controls is not supported",
+    ),
+    ISA_004_INVALID_SEGMENT_TERMINATOR: ErrorCodeSpec(
+        code=ISA_004_INVALID_SEGMENT_TERMINATOR,
+        level="ISA",
+        description="Segment terminator is invalid",
+        ak_code="004",
+        ik_code="004",
+        x12_description="Segment Terminator is Invalid",
+    ),
+    ISA_005_INVALID_SENDER_QUALIFIER: ErrorCodeSpec(
+        code=ISA_005_INVALID_SENDER_QUALIFIER,
+        level="ISA",
+        description="ISA05 invalid interchange ID qualifier for sender",
+        ak_code="005",
+        ik_code="005",
+        x12_description="Invalid Interchange ID Qualifier for Sender",
+    ),
+    ISA_006_INVALID_SENDER_ID: ErrorCodeSpec(
+        code=ISA_006_INVALID_SENDER_ID,
+        level="ISA",
+        description="ISA06 invalid interchange sender ID",
+        ak_code="006",
+        ik_code="006",
+        x12_description="Invalid Interchange Sender ID",
+    ),
+    ISA_007_INVALID_RECEIVER_QUALIFIER: ErrorCodeSpec(
+        code=ISA_007_INVALID_RECEIVER_QUALIFIER,
+        level="ISA",
+        description="ISA07 invalid interchange ID qualifier for receiver",
+        ak_code="007",
+        ik_code="007",
+        x12_description="Invalid Interchange ID Qualifier for Receiver",
+    ),
+    ISA_008_INVALID_RECEIVER_ID: ErrorCodeSpec(
+        code=ISA_008_INVALID_RECEIVER_ID,
+        level="ISA",
+        description="ISA08 invalid interchange receiver ID",
+        ak_code="008",
+        ik_code="008",
+        x12_description="Invalid Interchange Receiver ID",
+    ),
+    ISA_009_UNKNOWN_RECEIVER_ID: ErrorCodeSpec(
+        code=ISA_009_UNKNOWN_RECEIVER_ID,
+        level="ISA",
+        description="ISA08 receiver ID is not known to this trading partner",
+        ak_code="009",
+        ik_code="009",
+        x12_description="Unknown Interchange Receiver ID",
+    ),
+    ISA_010_INVALID_AUTH_QUALIFIER: ErrorCodeSpec(
+        code=ISA_010_INVALID_AUTH_QUALIFIER,
+        level="ISA",
+        description="ISA01 invalid authorization information qualifier",
+        ak_code="010",
+        ik_code="010",
+        x12_description="Invalid Authorization Information Qualifier",
+    ),
+    ISA_011_INVALID_AUTH_INFO: ErrorCodeSpec(
+        code=ISA_011_INVALID_AUTH_INFO,
+        level="ISA",
+        description="ISA02 invalid authorization information",
+        ak_code="011",
+        ik_code="011",
+        x12_description="Invalid Authorization Information",
+    ),
+    ISA_012_INVALID_SECURITY_QUALIFIER: ErrorCodeSpec(
+        code=ISA_012_INVALID_SECURITY_QUALIFIER,
+        level="ISA",
+        description="ISA03 invalid security information qualifier",
+        ak_code="012",
+        ik_code="012",
+        x12_description="Invalid Security Information Qualifier",
+    ),
+    ISA_013_INVALID_SECURITY_INFO: ErrorCodeSpec(
+        code=ISA_013_INVALID_SECURITY_INFO,
+        level="ISA",
+        description="ISA04 invalid security information",
+        ak_code="013",
+        ik_code="013",
+        x12_description="Invalid Security Information",
+    ),
+    ISA_014_INVALID_DATE: ErrorCodeSpec(
+        code=ISA_014_INVALID_DATE,
+        level="ISA",
+        description="ISA09 invalid interchange date",
+        ak_code="014",
+        ik_code="014",
+        x12_description="Invalid Interchange Date",
+    ),
+    ISA_015_INVALID_TIME: ErrorCodeSpec(
+        code=ISA_015_INVALID_TIME,
+        level="ISA",
+        description="ISA10 invalid interchange time",
+        ak_code="015",
+        ik_code="015",
+        x12_description="Invalid Interchange Time",
+    ),
+    ISA_016_INVALID_STANDARDS_ID: ErrorCodeSpec(
+        code=ISA_016_INVALID_STANDARDS_ID,
+        level="ISA",
+        description="ISA11 invalid interchange standards identifier",
+        ak_code="016",
+        ik_code="016",
+        x12_description="Invalid Interchange Standards Identifier",
+    ),
+    ISA_017_INVALID_VERSION_ID: ErrorCodeSpec(
+        code=ISA_017_INVALID_VERSION_ID,
+        level="ISA",
+        description="ISA12 invalid interchange version ID",
+        ak_code="017",
+        ik_code="017",
+        x12_description="Invalid Interchange Version ID",
+    ),
+    ISA_018_INVALID_CONTROL_NUMBER: ErrorCodeSpec(
+        code=ISA_018_INVALID_CONTROL_NUMBER,
+        level="ISA",
+        description="ISA13 invalid interchange control number",
+        ak_code="018",
+        ik_code="018",
+        x12_description="Invalid Interchange Control Number",
+    ),
+    ISA_019_INVALID_ACK_REQUESTED: ErrorCodeSpec(
+        code=ISA_019_INVALID_ACK_REQUESTED,
+        level="ISA",
+        description="ISA14 invalid acknowledgment requested value",
+        ak_code="019",
+        ik_code="019",
+        x12_description="Invalid Acknowledgment Requested",
+    ),
+    ISA_020_INVALID_TEST_INDICATOR: ErrorCodeSpec(
+        code=ISA_020_INVALID_TEST_INDICATOR,
+        level="ISA",
+        description="ISA15 invalid usage/test indicator",
+        ak_code="020",
+        ik_code="020",
+        x12_description="Invalid Test Indicator",
+    ),
+    ISA_021_INVALID_GROUP_COUNT: ErrorCodeSpec(
+        code=ISA_021_INVALID_GROUP_COUNT,
+        level="ISA",
+        description="IEA01 included-group count does not match received GS count",
+        ak_code="021",
+        ik_code="021",
+        x12_description="Invalid Number of Included Groups",
+    ),
+    ISA_022_INVALID_CONTROL_STRUCTURE: ErrorCodeSpec(
+        code=ISA_022_INVALID_CONTROL_STRUCTURE,
+        level="ISA",
+        description="Interchange control structure is invalid (e.g. ISA loop missing both TA1 and GS_LOOP)",
+        ak_code="022",
+        ik_code="022",
+        x12_description="Invalid Control Structure",
+    ),
+    ISA_023_PREMATURE_EOF: ErrorCodeSpec(
+        code=ISA_023_PREMATURE_EOF,
+        level="ISA",
+        description="Improper (premature) end-of-file before IEA",
+        ak_code="023",
+        ik_code="023",
+        x12_description="Improper (Premature) End-of-File",
+    ),
+    ISA_024_INVALID_CONTENT: ErrorCodeSpec(
+        code=ISA_024_INVALID_CONTENT,
+        level="ISA",
+        description="Invalid interchange content (e.g. invalid GS segment, unterminated GS loop)",
+        ak_code="024",
+        ik_code="024",
+        x12_description="Invalid Interchange Content (e.g., Invalid GS segment)",
+    ),
+    ISA_025_DUPLICATE_CONTROL_NUMBER: ErrorCodeSpec(
+        code=ISA_025_DUPLICATE_CONTROL_NUMBER,
+        level="ISA",
+        description="ISA13 interchange control number not unique within file",
+        ak_code="025",
+        ik_code="025",
+        x12_description="Duplicate Interchange Control Number",
+    ),
+    ISA_026_INVALID_DATA_ELEMENT_SEPARATOR: ErrorCodeSpec(
+        code=ISA_026_INVALID_DATA_ELEMENT_SEPARATOR,
+        level="ISA",
+        description="Invalid data element separator",
+        ak_code="026",
+        ik_code="026",
+        x12_description="Invalid Data Element Separator",
+    ),
+    ISA_027_INVALID_COMPONENT_SEPARATOR: ErrorCodeSpec(
+        code=ISA_027_INVALID_COMPONENT_SEPARATOR,
+        level="ISA",
+        description="ISA16 invalid component element separator",
+        ak_code="027",
+        ik_code="027",
+        x12_description="Invalid Component Element Separator",
+    ),
+    ISA_028_INVALID_DELIVERY_DATE: ErrorCodeSpec(
+        code=ISA_028_INVALID_DELIVERY_DATE,
+        level="ISA",
+        description="Invalid delivery date in deferred delivery request",
+        ak_code="028",
+        ik_code="028",
+        x12_description="Invalid Delivery Date in Deferred Delivery Request",
+    ),
+    ISA_029_INVALID_DELIVERY_TIME: ErrorCodeSpec(
+        code=ISA_029_INVALID_DELIVERY_TIME,
+        level="ISA",
+        description="Invalid delivery time in deferred delivery request",
+        ak_code="029",
+        ik_code="029",
+        x12_description="Invalid Delivery Time in Deferred Delivery Request",
+    ),
+    ISA_030_INVALID_DELIVERY_TIME_CODE: ErrorCodeSpec(
+        code=ISA_030_INVALID_DELIVERY_TIME_CODE,
+        level="ISA",
+        description="Invalid delivery time code in deferred delivery request",
+        ak_code="030",
+        ik_code="030",
+        x12_description="Invalid Delivery Time Code in Deferred Delivery Request",
+    ),
+    ISA_031_INVALID_GRADE_OF_SERVICE: ErrorCodeSpec(
+        code=ISA_031_INVALID_GRADE_OF_SERVICE,
+        level="ISA",
+        description="Invalid grade of service",
+        ak_code="031",
+        ik_code="031",
+        x12_description="Invalid Grade of Service",
     ),
 }
 

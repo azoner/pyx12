@@ -13,6 +13,7 @@ PREFIX_TO_LEVEL = {
     "ELE_": "ELE",
     "COMP_": "ELE",
     "SEG_": "SEG",
+    "ISA_": "ISA",
 }
 
 
