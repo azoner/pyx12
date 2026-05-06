@@ -81,7 +81,7 @@ class X12fileTestCase(unittest.TestCase):
                 if len(errors) > 0:
                     err_cde = errors[0][1]
                     err_str = errors[0][2]
-        self.assertEqual(err_cde, "SEG1", err_str)
+        self.assertEqual(err_cde, "SEG_8_trailing_terminators", err_str)
 
 
 class ISA_header(X12fileTestCase):
@@ -260,7 +260,7 @@ class HL_Checks(X12fileTestCase):
         str1 += "GE*1*17~\n"
         str1 += "IEA*1*000010121~\n"
         (err_cde, err_str) = self._get_first_error(str1)
-        self.assertEqual(err_cde, "HL1", err_str)
+        self.assertEqual(err_cde, "SEG_8_hl_count_mismatch", err_str)
 
     def test_HL_parent_good(self):
         seg = None
@@ -290,7 +290,7 @@ class HL_Checks(X12fileTestCase):
         str1 += "GE*1*17~\n"
         str1 += "IEA*1*000010121~\n"
         (err_cde, err_str) = self._get_first_error(str1)
-        self.assertEqual(err_cde, "HL2", err_str)
+        self.assertEqual(err_cde, "SEG_8_hl_invalid_parent", err_str)
 
     def xtest_HL_parent_bad_blank(self):
         seg = None
@@ -305,7 +305,7 @@ class HL_Checks(X12fileTestCase):
         str1 += "GE*1*17~\n"
         str1 += "IEA*1*000010121~\n"
         (err_cde, err_str) = self._get_first_error(str1)
-        self.assertEqual(err_cde, "HL2", err_str)
+        self.assertEqual(err_cde, "SEG_8_hl_invalid_parent", err_str)
 
 
 class Formatting(X12fileTestCase):
@@ -344,7 +344,7 @@ class Segment_ID_Checks(X12fileTestCase):
         str1 = "ISA*00*          *00*          *ZZ*ZZ000          *ZZ*ZZ001          *030828*1128*U*00401*000010121*0*T*:~\n"
         str1 += "Z*0019~\n"
         (err_cde, err_str) = self._get_first_error(str1)
-        self.assertEqual(err_cde, "1", err_str)
+        self.assertEqual(err_cde, "SEG_1_invalid_seg_id", err_str)
 
     def test_segment_last_space(self):
         str1 = "ISA*00*          *00*          *ZZ*ZZ000          *ZZ*ZZ001          *030828*1128*U*00401*000010121*0*T*:~\n"
@@ -361,25 +361,25 @@ class Segment_ID_Checks(X12fileTestCase):
         str1 = "ISA*00*          *00*          *ZZ*ZZ000          *ZZ*ZZ001          *030828*1128*U*00401*000010121*0*T*:~\n"
         str1 += "ZZZZ*0019~\n"
         (err_cde, err_str) = self._get_first_error(str1)
-        self.assertEqual(err_cde, "1", err_str)
+        self.assertEqual(err_cde, "SEG_1_invalid_seg_id", err_str)
 
     def test_segment_id_empty(self):
         str1 = "ISA*00*          *00*          *ZZ*ZZ000          *ZZ*ZZ001          *030828*1128*U*00401*000010121*0*T*:~\n"
         str1 += "*1~\n"
         (err_cde, err_str) = self._get_first_error(str1)
-        self.assertEqual(err_cde, "1", err_str)
+        self.assertEqual(err_cde, "SEG_1_invalid_seg_id", err_str)
 
     def test_segment_empty(self):
         str1 = "ISA*00*          *00*          *ZZ*ZZ000          *ZZ*ZZ001          *030828*1128*U*00401*000010121*0*T*:~\n"
         str1 += "TST~\n"
         (err_cde, err_str) = self._get_first_error(str1)
-        self.assertEqual(err_cde, "8", err_str)
+        self.assertEqual(err_cde, "SEG_8_segment_empty", err_str)
 
     def test_segment_trailing_space(self):
         str1 = "ISA*00*          *00*          *ZZ*ZZ000          *ZZ*ZZ001          *030828*1128*U*00401*000010121*0*T*:~ \n"
         str1 += "ZZ*0019~ \n"
         (err_cde, err_str) = self._get_first_error(str1)
-        self.assertEqual(err_cde, "1", err_str)
+        self.assertEqual(err_cde, "SEG_1_leading_space", err_str)
 
 
 class FileString(X12fileTestCase):
@@ -606,7 +606,7 @@ class LX_Checks(X12fileTestCase):
         str1 += "GE*1*17~\n"
         str1 += "IEA*1*000010121~\n"
         (err_cde, err_str) = self._get_first_error(str1, "837")
-        self.assertEqual(err_cde, "LX", err_str)
+        self.assertEqual(err_cde, "SEG_8_lx_count_mismatch", err_str)
 
 
 class InterchangeVersion(X12fileTestCase):

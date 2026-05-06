@@ -234,7 +234,7 @@ class Implicit_Loops(unittest.TestCase):
         apply_walk_errors(self.errh, walk_errors)
         # result = node.is_valid(seg_data, self.errh)
         # self.assertFalse(result)
-        self.assertEqual(self.errh.err_cde, "3", self.errh.err_str)
+        self.assertEqual(self.errh.err_cde, "SEG_3_mandatory_loop_missing", self.errh.err_str)
         self.assertEqual(get_id_list(pop), [])
         self.assertEqual(get_id_list(push), ["2000B"])
 
@@ -415,7 +415,7 @@ class SegmentWalk(unittest.TestCase):
         seg_data = pyx12.segment.Segment("N4*NOWHERE*MA*30001~", "~", "*", ":")
         (node, pop, push, walk_errors) = self.walker.walk_errors(node, seg_data, 5, 4, None)
         apply_walk_errors(self.errh, walk_errors)
-        self.assertEqual(self.errh.err_cde, "3", self.errh.err_str)
+        self.assertEqual(self.errh.err_cde, "SEG_3_mandatory_loop_missing", self.errh.err_str)
         self.assertEqual(get_id_list(pop), [])
         self.assertEqual(get_id_list(push), [])
 
@@ -432,7 +432,7 @@ class SegmentWalk(unittest.TestCase):
         apply_walk_errors(self.errh, walk_errors)
         # result = node.is_valid(comp, self.errh)
         # self.assertTrue(result)
-        self.assertEqual(self.errh.err_cde, "2", self.errh.err_str)
+        self.assertEqual(self.errh.err_cde, "SEG_2_segment_not_used", self.errh.err_str)
         self.assertEqual(get_id_list(pop), [])
         self.assertEqual(get_id_list(push), [])
 
@@ -484,7 +484,7 @@ class Segment_ID_Checks(unittest.TestCase):
         (node, pop, push, walk_errors) = self.walker.walk_errors(node, seg_data, 5, 4, None)
         apply_walk_errors(self.errh, walk_errors)
         self.assertEqual(node, None)
-        self.assertEqual(self.errh.err_cde, "1", self.errh.err_str)
+        self.assertEqual(self.errh.err_cde, "SEG_1_segment_not_found", self.errh.err_str)
         self.assertEqual(get_id_list(pop), [])
         self.assertEqual(get_id_list(push), [])
 
@@ -495,7 +495,7 @@ class Segment_ID_Checks(unittest.TestCase):
         (node, pop, push, walk_errors) = self.walker.walk_errors(node, seg_data, 5, 4, None)
         apply_walk_errors(self.errh, walk_errors)
         self.assertEqual(node, None)
-        self.assertEqual(self.errh.err_cde, "1", self.errh.err_str)
+        self.assertEqual(self.errh.err_cde, "SEG_1_segment_not_found", self.errh.err_str)
         self.assertEqual(get_id_list(pop), [])
         self.assertEqual(get_id_list(push), [])
 
@@ -558,7 +558,7 @@ class Counting(unittest.TestCase):
         self.assertNotEqual(node, None, "Node not found")
         (node, pop, push, walk_errors) = self.walker.walk_errors(node, seg_data, 5, 4, None)
         apply_walk_errors(self.errh, walk_errors)
-        self.assertEqual(self.errh.err_cde, "5", self.errh.err_str)
+        self.assertEqual(self.errh.err_cde, "SEG_5_segment_repeat_exceeded", self.errh.err_str)
         self.assertEqual(get_id_list(pop), [])
         self.assertEqual(get_id_list(push), [])
 
@@ -602,7 +602,7 @@ class LoopCounting(unittest.TestCase):
         self.errh.reset()
         (node, pop, push, walk_errors) = self.walker.walk_errors(node, seg_data, 5, 4, None)
         apply_walk_errors(self.errh, walk_errors)
-        self.assertEqual(self.errh.err_cde, "4", self.errh.err_str)
+        self.assertEqual(self.errh.err_cde, "SEG_4_loop_repeat_exceeded", self.errh.err_str)
         self.assertEqual(get_id_list(pop), ["2400"])
         self.assertEqual(get_id_list(push), ["2400"])
 
@@ -703,7 +703,7 @@ class CountOrdinal(unittest.TestCase):
         seg_data = pyx12.segment.Segment("REF*17*A232~", "~", "*", ":")
         (node, pop, push, walk_errors) = self.walker.walk_errors(node, seg_data, 5, 4, None)
         apply_walk_errors(self.errh, walk_errors)
-        self.assertEqual(self.errh.err_cde, "1", self.errh.err_str)
+        self.assertEqual(self.errh.err_cde, "SEG_1_segment_not_found", self.errh.err_str)
         self.assertEqual(get_id_list(pop), [])
         self.assertEqual(get_id_list(push), [])
 
@@ -980,7 +980,10 @@ class TryMatchSegmentChild(unittest.TestCase):
         self.assertIsNone(result)
         self.assertEqual(len(self.walker.mandatory_segs_missing), 1)
         self.assertEqual(self.walker.mandatory_segs_missing[0].seg_node, child)
-        self.assertEqual(self.walker.mandatory_segs_missing[0].err_cde, "3")
+        self.assertEqual(
+            self.walker.mandatory_segs_missing[0].err_cde,
+            "SEG_3_mandatory_segment_missing",
+        )
 
     def test_no_match_required_already_counted_no_accumulation(self):
         """Required child with count >= 1 + non-matching seg -> None, no accumulation."""
@@ -1007,7 +1010,10 @@ class TryMatchSegmentChild(unittest.TestCase):
             loop_node, child, seg_data, child, 5, 4, None, []
         )
         self.assertIsNotNone(result)
-        self.assertEqual([e.err_cde for e in self.walker.errors_pending], ["2"])
+        self.assertEqual(
+            [e.err_cde for e in self.walker.errors_pending],
+            ["SEG_2_segment_not_used"],
+        )
 
     def test_match_exceeds_max_count_emits_error_5(self):
         """Increment past max_repeat on R/S match -> err_cde '5' accumulated."""
@@ -1025,7 +1031,10 @@ class TryMatchSegmentChild(unittest.TestCase):
             loop_node, child, seg_data, child, 5, 4, None, []
         )
         self.assertIsNotNone(result)
-        self.assertEqual([e.err_cde for e in self.walker.errors_pending], ["5"])
+        self.assertEqual(
+            [e.err_cde for e in self.walker.errors_pending],
+            ["SEG_5_segment_repeat_exceeded"],
+        )
 
 
 class TryMatchLoopChild(unittest.TestCase):
@@ -1092,7 +1101,10 @@ class TryMatchLoopChild(unittest.TestCase):
         self.assertEqual(len(self.walker.mandatory_segs_missing), 1)
         # The accumulated entry references the loop's first child, not the loop itself.
         self.assertEqual(self.walker.mandatory_segs_missing[0].seg_node, first_child)
-        self.assertEqual(self.walker.mandatory_segs_missing[0].err_cde, "3")
+        self.assertEqual(
+            self.walker.mandatory_segs_missing[0].err_cde,
+            "SEG_3_mandatory_loop_missing",
+        )
 
     def test_no_match_required_counted_no_accumulation(self):
         """Required loop with count >= 1 + non-matching seg -> None, no accumulation."""
@@ -1112,7 +1124,10 @@ class TryMatchLoopChild(unittest.TestCase):
         seg_data = pyx12.segment.Segment("LX*51", "~", "*", ":")
         result = self.walker._try_match_loop_child(child, seg_data, 5, 4, None, [])
         self.assertIsNotNone(result)
-        self.assertEqual([e.err_cde for e in self.walker.errors_pending], ["4"])
+        self.assertEqual(
+            [e.err_cde for e in self.walker.errors_pending],
+            ["SEG_4_loop_repeat_exceeded"],
+        )
 
     # ---- pop list pass-through ----
 

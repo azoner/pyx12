@@ -526,7 +526,7 @@ IEA*3*000010121~""",
                                             "cur_line": 5,
                                             "errors": [
                                                 {
-                                                    "err_cde": "3",
+                                                    "err_cde": "SEG_3_mandatory_loop_missing",
                                                     "x12_code": "3",
                                                     "err_str": 'Mandatory loop "Utilization Management Organization (UMO) Level" (2000A) missing',
                                                     "err_val": None,
@@ -553,7 +553,7 @@ IEA*3*000010121~""",
                                             "cur_line": 8,
                                             "errors": [
                                                 {
-                                                    "err_cde": "3",
+                                                    "err_cde": "SEG_3_mandatory_loop_missing",
                                                     "x12_code": "3",
                                                     "err_str": 'Mandatory loop "Utilization Management Organization (UMO) Level" (2000A) missing',
                                                     "err_val": None,
@@ -580,7 +580,7 @@ IEA*3*000010121~""",
                                             "cur_line": 11,
                                             "errors": [
                                                 {
-                                                    "err_cde": "3",
+                                                    "err_cde": "SEG_3_mandatory_loop_missing",
                                                     "x12_code": "3",
                                                     "err_str": 'Mandatory loop "Utilization Management Organization (UMO) Level" (2000A) missing',
                                                     "err_val": None,
@@ -619,7 +619,7 @@ IEA*3*000010121~""",
                                             "cur_line": 16,
                                             "errors": [
                                                 {
-                                                    "err_cde": "3",
+                                                    "err_cde": "SEG_3_mandatory_segment_missing",
                                                     "x12_code": "3",
                                                     "err_str": 'Mandatory segment "Transmission Type Identification" (REF) missing',
                                                     "err_val": None,
@@ -636,7 +636,7 @@ IEA*3*000010121~""",
                                             "cur_line": 16,
                                             "errors": [
                                                 {
-                                                    "err_cde": "3",
+                                                    "err_cde": "SEG_3_mandatory_loop_missing",
                                                     "x12_code": "3",
                                                     "err_str": 'Mandatory loop "Submitter Name" (1000A) missing',
                                                     "err_val": None,
@@ -653,7 +653,7 @@ IEA*3*000010121~""",
                                             "cur_line": 16,
                                             "errors": [
                                                 {
-                                                    "err_cde": "3",
+                                                    "err_cde": "SEG_3_mandatory_loop_missing",
                                                     "x12_code": "3",
                                                     "err_str": 'Mandatory loop "Receiver Name" (1000B) missing',
                                                     "err_val": None,
@@ -670,7 +670,7 @@ IEA*3*000010121~""",
                                             "cur_line": 16,
                                             "errors": [
                                                 {
-                                                    "err_cde": "3",
+                                                    "err_cde": "SEG_3_mandatory_loop_missing",
                                                     "x12_code": "3",
                                                     "err_str": 'Mandatory loop "Billing/Pay-To Provider Hierarchical Level" (2000A) missing',
                                                     "err_val": None,
@@ -709,7 +709,7 @@ IEA*3*000010121~""",
                                             "cur_line": 20,
                                             "errors": [
                                                 {
-                                                    "err_cde": "3",
+                                                    "err_cde": "SEG_3_mandatory_loop_missing",
                                                     "x12_code": "3",
                                                     "err_str": 'Mandatory loop "Table 1 - Header" (HEADER) missing',
                                                     "err_val": None,
@@ -748,7 +748,7 @@ IEA*3*000010121~""",
                                             "cur_line": 24,
                                             "errors": [
                                                 {
-                                                    "err_cde": "3",
+                                                    "err_cde": "SEG_3_mandatory_loop_missing",
                                                     "x12_code": "3",
                                                     "err_str": 'Mandatory loop "Table 1 - Header" (HEADER) missing',
                                                     "err_val": None,
@@ -787,7 +787,7 @@ IEA*3*000010121~""",
                                             "cur_line": 28,
                                             "errors": [
                                                 {
-                                                    "err_cde": "3",
+                                                    "err_cde": "SEG_3_mandatory_loop_missing",
                                                     "x12_code": "3",
                                                     "err_str": 'Mandatory loop "Table 1 - Header" (HEADER) missing',
                                                     "err_val": None,
@@ -836,7 +836,7 @@ IEA*3*000010121~""",
                                             "cur_line": 35,
                                             "errors": [
                                                 {
-                                                    "err_cde": "3",
+                                                    "err_cde": "SEG_3_mandatory_loop_missing",
                                                     "x12_code": "3",
                                                     "err_str": 'Mandatory loop "Utilization Management Organization (UMO) Level" (2000A) missing',
                                                     "err_val": None,
@@ -863,7 +863,7 @@ IEA*3*000010121~""",
                                             "cur_line": 38,
                                             "errors": [
                                                 {
-                                                    "err_cde": "3",
+                                                    "err_cde": "SEG_3_mandatory_loop_missing",
                                                     "x12_code": "3",
                                                     "err_str": 'Mandatory loop "Utilization Management Organization (UMO) Level" (2000A) missing',
                                                     "err_val": None,
@@ -890,7 +890,7 @@ IEA*3*000010121~""",
                                             "cur_line": 41,
                                             "errors": [
                                                 {
-                                                    "err_cde": "3",
+                                                    "err_cde": "SEG_3_mandatory_loop_missing",
                                                     "x12_code": "3",
                                                     "err_str": 'Mandatory loop "Utilization Management Organization (UMO) Level" (2000A) missing',
                                                     "err_val": None,
@@ -929,7 +929,7 @@ IEA*3*000010121~""",
                                             "cur_line": 46,
                                             "errors": [
                                                 {
-                                                    "err_cde": "3",
+                                                    "err_cde": "SEG_3_mandatory_segment_missing",
                                                     "x12_code": "3",
                                                     "err_str": 'Mandatory segment "Transmission Type Identification" (REF) missing',
                                                     "err_val": None,
@@ -946,7 +946,7 @@ IEA*3*000010121~""",
                                             "cur_line": 46,
                                             "errors": [
                                                 {
-                                                    "err_cde": "3",
+                                                    "err_cde": "SEG_3_mandatory_loop_missing",
                                                     "x12_code": "3",
                                                     "err_str": 'Mandatory loop "Submitter Name" (1000A) missing',
                                                     "err_val": None,
@@ -963,7 +963,7 @@ IEA*3*000010121~""",
                                             "cur_line": 46,
                                             "errors": [
                                                 {
-                                                    "err_cde": "3",
+                                                    "err_cde": "SEG_3_mandatory_loop_missing",
                                                     "x12_code": "3",
                                                     "err_str": 'Mandatory loop "Receiver Name" (1000B) missing',
                                                     "err_val": None,
@@ -980,7 +980,7 @@ IEA*3*000010121~""",
                                             "cur_line": 46,
                                             "errors": [
                                                 {
-                                                    "err_cde": "3",
+                                                    "err_cde": "SEG_3_mandatory_loop_missing",
                                                     "x12_code": "3",
                                                     "err_str": 'Mandatory loop "Billing/Pay-To Provider Hierarchical Level" (2000A) missing',
                                                     "err_val": None,
@@ -1019,7 +1019,7 @@ IEA*3*000010121~""",
                                             "cur_line": 50,
                                             "errors": [
                                                 {
-                                                    "err_cde": "3",
+                                                    "err_cde": "SEG_3_mandatory_loop_missing",
                                                     "x12_code": "3",
                                                     "err_str": 'Mandatory loop "Table 1 - Header" (HEADER) missing',
                                                     "err_val": None,
@@ -1332,8 +1332,8 @@ IEA*1*000484889~""",
                                             "cur_line": 24,
                                             "errors": [
                                                 {
-                                                    "err_cde": "SEG1",
-                                                    "x12_code": "SEG1",
+                                                    "err_cde": "SEG_8_trailing_terminators",
+                                                    "x12_code": "8",
                                                     "err_str": "Segment contains trailing element terminators",
                                                     "err_val": None,
                                                 }
@@ -1442,7 +1442,7 @@ IEA*1*000000288~""",
                                             "cur_line": 10,
                                             "errors": [
                                                 {
-                                                    "err_cde": "3",
+                                                    "err_cde": "SEG_3_mandatory_loop_missing",
                                                     "x12_code": "3",
                                                     "err_str": 'Mandatory loop "Billing Provider Name" (2010AA) missing',
                                                     "err_val": None,
@@ -1899,7 +1899,7 @@ IEA*1*000238388~""",
                                             "cur_line": 41,
                                             "errors": [
                                                 {
-                                                    "err_cde": "1",
+                                                    "err_cde": "SEG_1_segment_not_found",
                                                     "x12_code": "1",
                                                     "err_str": "Segment N1*PR not found.  Started at /ISA_LOOP/GS_LOOP/ST_LOOP/DETAIL/2000/2100/2110/LQ",
                                                     "err_val": None,
@@ -1916,7 +1916,7 @@ IEA*1*000238388~""",
                                             "cur_line": 42,
                                             "errors": [
                                                 {
-                                                    "err_cde": "1",
+                                                    "err_cde": "SEG_1_segment_not_found",
                                                     "x12_code": "1",
                                                     "err_str": "Segment N3*P.O. BOX 30479 not found.  Started at /ISA_LOOP/GS_LOOP/ST_LOOP/DETAIL/2000/2100/2110/LQ",
                                                     "err_val": None,
@@ -1933,7 +1933,7 @@ IEA*1*000238388~""",
                                             "cur_line": 43,
                                             "errors": [
                                                 {
-                                                    "err_cde": "1",
+                                                    "err_cde": "SEG_1_segment_not_found",
                                                     "x12_code": "1",
                                                     "err_str": "Segment N4*LANSING not found.  Started at /ISA_LOOP/GS_LOOP/ST_LOOP/DETAIL/2000/2100/2110/LQ",
                                                     "err_val": None,
@@ -1950,7 +1950,7 @@ IEA*1*000238388~""",
                                             "cur_line": 44,
                                             "errors": [
                                                 {
-                                                    "err_cde": "1",
+                                                    "err_cde": "SEG_1_segment_not_found",
                                                     "x12_code": "1",
                                                     "err_str": "Segment N1*PE not found.  Started at /ISA_LOOP/GS_LOOP/ST_LOOP/DETAIL/2000/2100/2110/LQ",
                                                     "err_val": None,
@@ -2359,7 +2359,7 @@ GE*1*17~""",
                                             "cur_line": 4,
                                             "errors": [
                                                 {
-                                                    "err_cde": "3",
+                                                    "err_cde": "SEG_3_mandatory_loop_missing",
                                                     "x12_code": "3",
                                                     "err_str": 'Mandatory loop "Table 1 - Header" (HEADER) missing',
                                                     "err_val": None,
@@ -2376,7 +2376,7 @@ GE*1*17~""",
                                             "cur_line": 4,
                                             "errors": [
                                                 {
-                                                    "err_cde": "3",
+                                                    "err_cde": "SEG_3_mandatory_loop_missing",
                                                     "x12_code": "3",
                                                     "err_str": 'Mandatory loop "Billing/Pay-To Provider Hierarchical Level" (2000A) missing',
                                                     "err_val": None,
@@ -2863,7 +2863,7 @@ IEA*1*000001168~""",
                                             "cur_line": 387,
                                             "errors": [
                                                 {
-                                                    "err_cde": "4",
+                                                    "err_cde": "SEG_4_loop_repeat_exceeded",
                                                     "x12_code": "4",
                                                     "err_str": "Loop 2400 exceeded max count.  Found 51, should have 50",
                                                     "err_val": None,
@@ -2880,7 +2880,7 @@ IEA*1*000001168~""",
                                             "cur_line": 394,
                                             "errors": [
                                                 {
-                                                    "err_cde": "4",
+                                                    "err_cde": "SEG_4_loop_repeat_exceeded",
                                                     "x12_code": "4",
                                                     "err_str": "Loop 2400 exceeded max count.  Found 52, should have 50",
                                                     "err_val": None,
@@ -2897,7 +2897,7 @@ IEA*1*000001168~""",
                                             "cur_line": 401,
                                             "errors": [
                                                 {
-                                                    "err_cde": "4",
+                                                    "err_cde": "SEG_4_loop_repeat_exceeded",
                                                     "x12_code": "4",
                                                     "err_str": "Loop 2400 exceeded max count.  Found 53, should have 50",
                                                     "err_val": None,
@@ -2914,7 +2914,7 @@ IEA*1*000001168~""",
                                             "cur_line": 408,
                                             "errors": [
                                                 {
-                                                    "err_cde": "4",
+                                                    "err_cde": "SEG_4_loop_repeat_exceeded",
                                                     "x12_code": "4",
                                                     "err_str": "Loop 2400 exceeded max count.  Found 54, should have 50",
                                                     "err_val": None,
@@ -3401,7 +3401,7 @@ IEA*1*000001168~""",
                                             "cur_line": 387,
                                             "errors": [
                                                 {
-                                                    "err_cde": "4",
+                                                    "err_cde": "SEG_4_loop_repeat_exceeded",
                                                     "x12_code": "4",
                                                     "err_str": "Loop 2400 exceeded max count.  Found 51, should have 50",
                                                     "err_val": None,
@@ -3418,7 +3418,7 @@ IEA*1*000001168~""",
                                             "cur_line": 394,
                                             "errors": [
                                                 {
-                                                    "err_cde": "4",
+                                                    "err_cde": "SEG_4_loop_repeat_exceeded",
                                                     "x12_code": "4",
                                                     "err_str": "Loop 2400 exceeded max count.  Found 52, should have 50",
                                                     "err_val": None,
@@ -3435,7 +3435,7 @@ IEA*1*000001168~""",
                                             "cur_line": 401,
                                             "errors": [
                                                 {
-                                                    "err_cde": "4",
+                                                    "err_cde": "SEG_4_loop_repeat_exceeded",
                                                     "x12_code": "4",
                                                     "err_str": "Loop 2400 exceeded max count.  Found 53, should have 50",
                                                     "err_val": None,
@@ -3452,7 +3452,7 @@ IEA*1*000001168~""",
                                             "cur_line": 408,
                                             "errors": [
                                                 {
-                                                    "err_cde": "4",
+                                                    "err_cde": "SEG_4_loop_repeat_exceeded",
                                                     "x12_code": "4",
                                                     "err_str": "Loop 2400 exceeded max count.  Found 54, should have 50",
                                                     "err_val": None,
@@ -3563,7 +3563,7 @@ IEA*3*000010121~""",
                                             "cur_line": 5,
                                             "errors": [
                                                 {
-                                                    "err_cde": "3",
+                                                    "err_cde": "SEG_3_mandatory_loop_missing",
                                                     "x12_code": "3",
                                                     "err_str": 'Mandatory loop "Utilization Management Organization (UMO) Level" (2000A) missing',
                                                     "err_val": None,
@@ -3590,7 +3590,7 @@ IEA*3*000010121~""",
                                             "cur_line": 8,
                                             "errors": [
                                                 {
-                                                    "err_cde": "3",
+                                                    "err_cde": "SEG_3_mandatory_loop_missing",
                                                     "x12_code": "3",
                                                     "err_str": 'Mandatory loop "Utilization Management Organization (UMO) Level" (2000A) missing',
                                                     "err_val": None,
@@ -3617,7 +3617,7 @@ IEA*3*000010121~""",
                                             "cur_line": 11,
                                             "errors": [
                                                 {
-                                                    "err_cde": "3",
+                                                    "err_cde": "SEG_3_mandatory_loop_missing",
                                                     "x12_code": "3",
                                                     "err_str": 'Mandatory loop "Utilization Management Organization (UMO) Level" (2000A) missing',
                                                     "err_val": None,
@@ -3656,7 +3656,7 @@ IEA*3*000010121~""",
                                             "cur_line": 16,
                                             "errors": [
                                                 {
-                                                    "err_cde": "3",
+                                                    "err_cde": "SEG_3_mandatory_segment_missing",
                                                     "x12_code": "3",
                                                     "err_str": 'Mandatory segment "Transmission Type Identification" (REF) missing',
                                                     "err_val": None,
@@ -3673,7 +3673,7 @@ IEA*3*000010121~""",
                                             "cur_line": 16,
                                             "errors": [
                                                 {
-                                                    "err_cde": "3",
+                                                    "err_cde": "SEG_3_mandatory_loop_missing",
                                                     "x12_code": "3",
                                                     "err_str": 'Mandatory loop "Submitter Name" (1000A) missing',
                                                     "err_val": None,
@@ -3690,7 +3690,7 @@ IEA*3*000010121~""",
                                             "cur_line": 16,
                                             "errors": [
                                                 {
-                                                    "err_cde": "3",
+                                                    "err_cde": "SEG_3_mandatory_loop_missing",
                                                     "x12_code": "3",
                                                     "err_str": 'Mandatory loop "Receiver Name" (1000B) missing',
                                                     "err_val": None,
@@ -3707,7 +3707,7 @@ IEA*3*000010121~""",
                                             "cur_line": 16,
                                             "errors": [
                                                 {
-                                                    "err_cde": "3",
+                                                    "err_cde": "SEG_3_mandatory_loop_missing",
                                                     "x12_code": "3",
                                                     "err_str": 'Mandatory loop "Billing/Pay-To Provider Hierarchical Level" (2000A) missing',
                                                     "err_val": None,
@@ -3746,7 +3746,7 @@ IEA*3*000010121~""",
                                             "cur_line": 20,
                                             "errors": [
                                                 {
-                                                    "err_cde": "3",
+                                                    "err_cde": "SEG_3_mandatory_loop_missing",
                                                     "x12_code": "3",
                                                     "err_str": 'Mandatory loop "Table 1 - Header" (HEADER) missing',
                                                     "err_val": None,
@@ -3960,7 +3960,7 @@ IEA*1*000000288~""",
                                             "cur_line": 9,
                                             "errors": [
                                                 {
-                                                    "err_cde": "5",
+                                                    "err_cde": "SEG_5_segment_repeat_exceeded",
                                                     "x12_code": "5",
                                                     "err_str": "Segment PER exceeded max count.  Found 3, should have 2",
                                                     "err_val": None,
@@ -4099,7 +4099,7 @@ IEA*1*000010121~""",
                                             "cur_line": 4,
                                             "errors": [
                                                 {
-                                                    "err_cde": "3",
+                                                    "err_cde": "SEG_3_mandatory_loop_missing",
                                                     "x12_code": "3",
                                                     "err_str": 'Mandatory loop "Table 1 - Header" (HEADER) missing',
                                                     "err_val": None,
@@ -4116,7 +4116,7 @@ IEA*1*000010121~""",
                                             "cur_line": 4,
                                             "errors": [
                                                 {
-                                                    "err_cde": "3",
+                                                    "err_cde": "SEG_3_mandatory_loop_missing",
                                                     "x12_code": "3",
                                                     "err_str": 'Mandatory loop "Billing/Pay-To Provider Hierarchical Level" (2000A) missing',
                                                     "err_val": None,

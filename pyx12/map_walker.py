@@ -25,6 +25,15 @@ import pyx12.path
 import pyx12.segment
 
 # Intrapackage imports
+from .error_codes import (
+    SEG_1_SEGMENT_NOT_FOUND,
+    SEG_2_LOOP_NOT_USED,
+    SEG_2_SEGMENT_NOT_USED,
+    SEG_3_MANDATORY_LOOP_MISSING,
+    SEG_3_MANDATORY_SEGMENT_MISSING,
+    SEG_4_LOOP_REPEAT_EXCEEDED,
+    SEG_5_SEGMENT_REPEAT_EXCEEDED,
+)
 from .error_item import SegError
 from .errors import EngineError
 from .nodeCounter import NodeCounter
@@ -250,7 +259,9 @@ class walk_tree:
             raise EngineError("Segment usage must be R, S, or N (got %r)" % (seg_node.usage,))
         if seg_node.usage == "N":
             err_str = "Segment %s found but marked as not used" % (seg_node.id)
-            self.errors_pending.append(SegError(err_cde="2", err_str=err_str, src_line=cur_line))
+            self.errors_pending.append(
+                SegError(err_cde=SEG_2_SEGMENT_NOT_USED, err_str=err_str, src_line=cur_line)
+            )
         elif seg_node.usage == "R" or seg_node.usage == "S":
             if (
                 self.counter.get_count(seg_node.x12path) > seg_node.get_max_repeat()
@@ -262,7 +273,7 @@ class walk_tree:
                 )
                 self.errors_pending.append(
                     SegError(
-                        err_cde="5",
+                        err_cde=SEG_5_SEGMENT_REPEAT_EXCEEDED,
                         err_str=err_str,
                         src_line=cur_line,
                         map_node=seg_node,
@@ -319,7 +330,15 @@ class walk_tree:
             fake_seg = pyx12.segment.Segment("%s" % (child.id), "~", "*", ":")
             err_str = 'Mandatory segment "%s" (%s) missing' % (child.name, child.id)
             self.mandatory_segs_missing.append(
-                MissingMandatorySeg(child, fake_seg, "3", err_str, seg_count, cur_line, ls_id)
+                MissingMandatorySeg(
+                    child,
+                    fake_seg,
+                    SEG_3_MANDATORY_SEGMENT_MISSING,
+                    err_str,
+                    seg_count,
+                    cur_line,
+                    ls_id,
+                )
             )
         return None
 
@@ -462,7 +481,7 @@ class walk_tree:
         err_str = "Segment %s not found.  Started at %s" % (seg_str, orig_node.get_path())
         self.errors_pending.append(
             SegError(
-                err_cde="1",
+                err_cde=SEG_1_SEGMENT_NOT_FOUND,
                 err_str=err_str,
                 src_line=cur_line,
                 map_node=orig_node,
@@ -521,7 +540,13 @@ class walk_tree:
         err_str = 'Mandatory loop "%s" (%s) missing' % (loop_node.name, loop_node.id)
         self.mandatory_segs_missing.append(
             MissingMandatorySeg(
-                first_child_node, fake_seg, "3", err_str, seg_count, cur_line, ls_id
+                first_child_node,
+                fake_seg,
+                SEG_3_MANDATORY_LOOP_MISSING,
+                err_str,
+                seg_count,
+                cur_line,
+                ls_id,
             )
         )
 
@@ -672,7 +697,9 @@ class walk_tree:
             raise EngineError("Loop usage must be R, S, or N (got %r)" % (loop_node.usage,))
         if loop_node.usage == "N":
             err_str = "Loop %s found but marked as not used" % (loop_node.id)
-            self.errors_pending.append(SegError(err_cde="2", err_str=err_str, src_line=cur_line))
+            self.errors_pending.append(
+                SegError(err_cde=SEG_2_LOOP_NOT_USED, err_str=err_str, src_line=cur_line)
+            )
         elif loop_node.usage in ("R", "S"):
             self.counter.reset_to_node(loop_node.x12path)
             self.counter.increment(loop_node.x12path)
@@ -684,7 +711,7 @@ class walk_tree:
                 )
                 self.errors_pending.append(
                     SegError(
-                        err_cde="4",
+                        err_cde=SEG_4_LOOP_REPEAT_EXCEEDED,
                         err_str=err_str,
                         src_line=cur_line,
                         map_node=loop_node,

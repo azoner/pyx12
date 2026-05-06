@@ -89,10 +89,13 @@ SEG_2_SEGMENT_NOT_USED = "SEG_2_segment_not_used"
 SEG_2_LOOP_NOT_USED = "SEG_2_loop_not_used"
 SEG_3_MANDATORY_SEGMENT_MISSING = "SEG_3_mandatory_segment_missing"
 SEG_3_MANDATORY_LOOP_MISSING = "SEG_3_mandatory_loop_missing"
-SEG_4_SEGMENT_REPEAT_EXCEEDED = "SEG_4_segment_repeat_exceeded"
+SEG_5_SEGMENT_REPEAT_EXCEEDED = "SEG_5_segment_repeat_exceeded"
 SEG_4_LOOP_REPEAT_EXCEEDED = "SEG_4_loop_repeat_exceeded"
 # From x12file.py parser. SEG1 historically remapped inline to AK/IK "8";
 # HL1/HL2/LX historically had no ack remap (filtered out).
+SEG_1_INVALID_SEG_ID = "SEG_1_invalid_seg_id"
+SEG_1_LEADING_SPACE = "SEG_1_leading_space"
+SEG_8_SEGMENT_EMPTY = "SEG_8_segment_empty"
 SEG_8_TRAILING_TERMINATORS = "SEG_8_trailing_terminators"
 SEG_8_HL_COUNT_MISMATCH = "SEG_8_hl_count_mismatch"
 SEG_8_HL_INVALID_PARENT = "SEG_8_hl_invalid_parent"
@@ -286,21 +289,42 @@ ERROR_CODES: dict[str, ErrorCodeSpec] = {
         ak_code="3",
         ik_code="3",
     ),
-    SEG_4_SEGMENT_REPEAT_EXCEEDED: ErrorCodeSpec(
-        code=SEG_4_SEGMENT_REPEAT_EXCEEDED,
+    SEG_5_SEGMENT_REPEAT_EXCEEDED: ErrorCodeSpec(
+        code=SEG_5_SEGMENT_REPEAT_EXCEEDED,
         level="SEG",
-        description="Segment repeat count exceeded",
-        ak_code="4",
-        ik_code="4",
+        description="Segment repeat count exceeded (segment exceeds maximum use)",
+        ak_code="5",
+        ik_code="5",
     ),
     SEG_4_LOOP_REPEAT_EXCEEDED: ErrorCodeSpec(
         code=SEG_4_LOOP_REPEAT_EXCEEDED,
         level="SEG",
-        description="Loop repeat count exceeded",
+        description="Loop repeat count exceeded (loop occurs over maximum times)",
         ak_code="4",
         ik_code="4",
     ),
     # --- Segment-level: parser ---
+    SEG_1_INVALID_SEG_ID: ErrorCodeSpec(
+        code=SEG_1_INVALID_SEG_ID,
+        level="SEG",
+        description="Segment identifier is malformed (parser-time invalid seg ID)",
+        ak_code="1",
+        ik_code="1",
+    ),
+    SEG_1_LEADING_SPACE: ErrorCodeSpec(
+        code=SEG_1_LEADING_SPACE,
+        level="SEG",
+        description="Segment line started with leading whitespace (parser-time)",
+        ak_code="1",
+        ik_code="1",
+    ),
+    SEG_8_SEGMENT_EMPTY: ErrorCodeSpec(
+        code=SEG_8_SEGMENT_EMPTY,
+        level="SEG",
+        description="Segment is empty (parser-time)",
+        ak_code="8",
+        ik_code="8",
+    ),
     # SEG_8_TRAILING_TERMINATORS captures the historical "SEG1" code which
     # the visitors inline-remapped to AK/IK "8". This table entry replaces
     # the inline remap.

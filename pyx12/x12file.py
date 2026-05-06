@@ -28,6 +28,15 @@ from typing import Literal, TextIO
 # Intrapackage imports
 import pyx12.errors
 import pyx12.segment
+from pyx12.error_codes import (
+    SEG_1_INVALID_SEG_ID,
+    SEG_1_LEADING_SPACE,
+    SEG_8_HL_COUNT_MISMATCH,
+    SEG_8_HL_INVALID_PARENT,
+    SEG_8_LX_COUNT_MISMATCH,
+    SEG_8_SEGMENT_EMPTY,
+    SEG_8_TRAILING_TERMINATORS,
+)
 from pyx12.rawx12file import RawX12File
 
 # (kind, code, message, value, src_line)
@@ -99,10 +108,10 @@ class X12Base:
         """
         if seg_data.is_empty():
             err_str = f'Segment "{seg_data}" is empty'
-            self._seg_error("8", err_str, None, src_line=self.cur_line + 1)
+            self._seg_error(SEG_8_SEGMENT_EMPTY, err_str, None, src_line=self.cur_line + 1)
         if not seg_data.is_seg_id_valid():
             err_str = f'Segment identifier "{seg_data.get_seg_id()}" is invalid'
-            self._seg_error("1", err_str, None, src_line=self.cur_line + 1)
+            self._seg_error(SEG_1_INVALID_SEG_ID, err_str, None, src_line=self.cur_line + 1)
         seg_id = seg_data.get_seg_id()
         if seg_id == "ISA":
             if len(seg_data) != 16:
@@ -156,12 +165,12 @@ class X12Base:
                 #   'My HL count %i does not match your HL count %s' \
                 #    % (self.hl_count, seg[1])
                 err_str = f"My HL count {self.hl_count:d} does not match your HL count {hl_count}"
-                self._seg_error("HL1", err_str)
+                self._seg_error(SEG_8_HL_COUNT_MISMATCH, err_str)
             if seg_data.get_value("HL02") != "":
                 hl_parent = self._int(seg_data.get_value("HL02"))
                 if hl_parent not in self.hl_stack:
                     err_str = f"HL parent ({hl_parent}) is not a valid parent"
-                    self._seg_error("HL2", err_str)
+                    self._seg_error(SEG_8_HL_INVALID_PARENT, err_str)
                 while self.hl_stack and hl_parent != self.hl_stack[-1]:
                     del self.hl_stack[-1]
             else:
@@ -180,7 +189,7 @@ class X12Base:
                         seg_data.get_value("LX01"), self.lx_count
                     )
                 )
-                self._seg_error("LX", err_str)
+                self._seg_error(SEG_8_LX_COUNT_MISMATCH, err_str)
         # count all regular segments
         if seg_id not in ("ISA", "IEA", "GS", "GE", "ST", "SE"):
             self.seg_count += 1
@@ -450,11 +459,13 @@ class X12Reader(X12Base):
             # We have not yet incremented cur_line
             if line.startswith(" "):
                 err_str = "Segment contains a leading space"
-                self._seg_error("1", err_str, None, src_line=self.cur_line + 1)
+                self._seg_error(SEG_1_LEADING_SPACE, err_str, None, src_line=self.cur_line + 1)
                 line = line.lstrip()
             if line[-1] == self.ele_term:
                 err_str = "Segment contains trailing element terminators"
-                self._seg_error("SEG1", err_str, None, src_line=self.cur_line + 1)
+                self._seg_error(
+                    SEG_8_TRAILING_TERMINATORS, err_str, None, src_line=self.cur_line + 1
+                )
             seg_data = pyx12.segment.Segment(line, self.seg_term, self.ele_term, self.subele_term)  # type: ignore[arg-type]
             self._parse_segment(seg_data)
             yield seg_data
