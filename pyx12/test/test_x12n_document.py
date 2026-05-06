@@ -136,6 +136,58 @@ class TA1Gate(X12DocumentTestCase):
         )
 
 
+class ISALoopContent(X12DocumentTestCase):
+    """X12 spec: an ISA loop is valid iff it contains at least one of
+    a TA1 segment or a GS_LOOP. PR 5 / issue #160 changes GS_LOOP to
+    usage='S' so bare ISA/TA1/IEA validates, then enforces the
+    "at least one" rule via ISA_022_INVALID_CONTROL_STRUCTURE emitted
+    against the ISA trailer."""
+
+    def _collect_isa_codes(self, source: str) -> list[str]:
+        """Drive an input through x12n_document and return the list of
+        err_cde values surfaced at any level in the JSON output."""
+        fd_source = self._makeFd(source)
+        fd_json = StringIO()
+        pyx12.x12n_document.x12n_document(self.param, fd_source, None, None, None, fd_json=fd_json)
+        fd_json.seek(0)
+        doc = json.loads(fd_json.read())
+        codes: list[str] = []
+        for isa in doc.get("interchanges", []):
+            codes.extend(e["err_cde"] for e in isa.get("errors", []))
+            for gs in isa.get("groups", []):
+                codes.extend(e["err_cde"] for e in gs.get("errors", []))
+                for st in gs.get("transactions", []):
+                    codes.extend(e["err_cde"] for e in st.get("errors", []))
+                    for seg in st.get("segments", []):
+                        codes.extend(e["err_cde"] for e in seg.get("errors", []))
+        return codes
+
+    def test_bare_ta1_is_valid(self):
+        # Issue #160: ISA wrapping only TA1 (no GS_LOOP) used to fail
+        # with "Mandatory loop GS_LOOP missing" because GS_LOOP was R.
+        # PR 5 makes it S; TA1 satisfies the "at least one" rule so no
+        # ISA_022 either.
+        src = (
+            "ISA*00*          *00*          *ZZ*ENCOUNTER      *ZZ*0102           "
+            "*260407*1510*^*00501*000000001*0*P*:~\n"
+            "TA1*000142582*260407*1423*A*000~\n"
+            "IEA*0*000000001~\n"
+        )
+        codes = self._collect_isa_codes(src)
+        self.assertNotIn("SEG_3_mandatory_loop_missing", codes)
+        self.assertNotIn("ISA_022_invalid_control_structure", codes)
+
+    def test_bare_isa_iea_emits_isa_022(self):
+        # ISA + IEA with neither TA1 nor GS_LOOP must raise ISA_022.
+        src = (
+            "ISA*00*          *00*          *ZZ*ENCOUNTER      *ZZ*0102           "
+            "*260407*1510*^*00501*000000001*0*P*:~\n"
+            "IEA*0*000000001~\n"
+        )
+        codes = self._collect_isa_codes(src)
+        self.assertIn("ISA_022_invalid_control_structure", codes)
+
+
 class Test834(X12DocumentTestCase):
     def test_834_lui_id(self):
         self._test_997("834_lui_id")

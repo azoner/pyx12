@@ -169,7 +169,7 @@
 <!--End of ISA segment-->
     <loop xid="GS_LOOP" type="explicit">
       <name>Functional Group Header</name>
-      <usage>R</usage>
+      <usage>S</usage>
       <pos>020</pos>
       <repeat>&gt;1</repeat>
       <segment xid="GS">

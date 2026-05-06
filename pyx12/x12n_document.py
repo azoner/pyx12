@@ -32,6 +32,7 @@ import pyx12.map_index
 import pyx12.params
 import pyx12.x12file
 import pyx12.x12xml_simple
+from pyx12.error_codes import ISA_022_INVALID_CONTROL_STRUCTURE
 from pyx12.map_if._segment import apply_segment_errors
 from pyx12.map_walker import apply_walk_errors, walk_tree
 
@@ -117,6 +118,11 @@ def x12n_document(
     # erx = errh_xml.err_handler(basedir=basedir)
 
     valid = True
+    # X12 spec: an ISA loop must contain at least one of TA1 or GS_LOOP.
+    # GS_LOOP is now usage="S" in the control map (PR 5 / issue #160) so
+    # bare ISA/TA1/IEA passes; this flag tracks whether either was seen
+    # so we can emit ISA_022 against an ISA loop containing neither.
+    isa_has_content = False
     for seg in src:
         # find node
         orig_node = node
@@ -152,15 +158,24 @@ def x12n_document(
         if node is None:
             node = orig_node
         else:
-            if seg.get_seg_id() == "ISA":
+            seg_id = seg.get_seg_id()
+            if seg_id in ("GS", "TA1"):
+                isa_has_content = True
+            if seg_id == "ISA":
                 errh.add_isa_loop(seg, src)
                 icvn = seg.get_value("ISA12")
                 errh.handle_errors(src.pop_errors())
-            elif seg.get_seg_id() == "IEA":
+                isa_has_content = False
+            elif seg_id == "IEA":
                 errh.handle_errors(src.pop_errors())
+                if not isa_has_content:
+                    errh.isa_error(
+                        ISA_022_INVALID_CONTROL_STRUCTURE,
+                        "Interchange contains neither a TA1 segment nor a GS_LOOP",
+                    )
                 errh.close_isa_loop(node, seg, src)
                 # Generate 997
-            elif seg.get_seg_id() == "GS":
+            elif seg_id == "GS":
                 fic = seg.get_value("GS01")
                 vriic = seg.get_value("GS08")
                 map_file_new = map_index_if.get_filename(icvn, vriic, fic)
@@ -180,7 +195,7 @@ def x12n_document(
                 node = cur_map.getnodebypath("/ISA_LOOP/GS_LOOP/GS")
                 errh.add_gs_loop(seg, src)
                 errh.handle_errors(src.pop_errors())
-            elif seg.get_seg_id() == "BHT":
+            elif seg_id == "BHT":
                 # special case for 4010 837P
                 if vriic in ("004010X094", "004010X094A1"):
                     tspc = seg.get_value("BHT02")
@@ -199,13 +214,13 @@ def x12n_document(
                         node = cur_map.getnodebypath("/ISA_LOOP/GS_LOOP/ST_LOOP/HEADER/BHT")
                 errh.add_seg(node, seg, src.get_seg_count(), src.get_cur_line(), src.get_ls_id())
                 errh.handle_errors(src.pop_errors())
-            elif seg.get_seg_id() == "GE":
+            elif seg_id == "GE":
                 errh.handle_errors(src.pop_errors())
                 errh.close_gs_loop(node, seg, src)
-            elif seg.get_seg_id() == "ST":
+            elif seg_id == "ST":
                 errh.add_st_loop(seg, src)
                 errh.handle_errors(src.pop_errors())
-            elif seg.get_seg_id() == "SE":
+            elif seg_id == "SE":
                 errh.handle_errors(src.pop_errors())
                 errh.close_st_loop(node, seg, src)
             else:
