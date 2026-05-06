@@ -23,6 +23,7 @@ from ..error_codes import (
     SEG_2_SYNTAX_RELATIONAL,
     SEG_3_TOO_MANY_ELEMENTS,
     SEG_3_TOO_MANY_SUBELEMENTS,
+    SEG_8_HAS_DATA_ELEMENT_ERRORS,
     SEG_10_SYNTAX_EXCLUSIVE,
 )
 from ..error_item import EleError
@@ -61,7 +62,12 @@ def apply_segment_errors(node: segment_if, seg_data: pyx12.segment.Segment, errh
     prev_cursor = None
     for e in errors:
         if e.map_node is None:
-            errh.seg_error("8", e.err_str, e.err_val)
+            # Element-level validator errors collapsed to a seg-level code
+            # per PR #161: use SEG_8_HAS_DATA_ELEMENT_ERRORS so the
+            # err_handler tree carries a SEG_-prefixed code consistent
+            # with where it lands (err_seg.errors). The original
+            # element-level pyx12 code is preserved in e.err_str.
+            errh.seg_error(SEG_8_HAS_DATA_ELEMENT_ERRORS, e.err_str, e.err_val)
             continue
         if e.map_node is not prev_cursor:
             errh.add_ele(e.map_node)

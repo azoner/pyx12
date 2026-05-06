@@ -95,6 +95,7 @@ SEG_4_LOOP_REPEAT_EXCEEDED = "SEG_4_loop_repeat_exceeded"
 # HL1/HL2/LX historically had no ack remap (filtered out).
 SEG_1_INVALID_SEG_ID = "SEG_1_invalid_seg_id"
 SEG_1_LEADING_SPACE = "SEG_1_leading_space"
+SEG_8_HAS_DATA_ELEMENT_ERRORS = "SEG_8_has_data_element_errors"
 SEG_8_SEGMENT_EMPTY = "SEG_8_segment_empty"
 SEG_8_TRAILING_TERMINATORS = "SEG_8_trailing_terminators"
 SEG_8_HL_COUNT_MISMATCH = "SEG_8_hl_count_mismatch"
@@ -317,6 +318,19 @@ ERROR_CODES: dict[str, ErrorCodeSpec] = {
         description="Segment line started with leading whitespace (parser-time)",
         ak_code="1",
         ik_code="1",
+    ),
+    SEG_8_HAS_DATA_ELEMENT_ERRORS: ErrorCodeSpec(
+        code=SEG_8_HAS_DATA_ELEMENT_ERRORS,
+        level="SEG",
+        description=(
+            "Segment has data element errors. Used by apply_segment_errors "
+            "to roll up element-level validator errors (too-many-elements, "
+            "syntax violations, mandatory composite missing, etc.) into a "
+            "spec-correct IK3-04 / AK3-04 code per PR #161. The original "
+            "element-level pyx12 code is preserved in the err_str."
+        ),
+        ak_code="8",
+        ik_code="8",
     ),
     SEG_8_SEGMENT_EMPTY: ErrorCodeSpec(
         code=SEG_8_SEGMENT_EMPTY,

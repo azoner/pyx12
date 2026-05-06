@@ -7,6 +7,7 @@ from typing import Any
 
 import pyx12.error_handler
 import pyx12.params
+import pyx12.x12context
 import pyx12.x12n_document
 from pyx12.test.x12testdata import datafiles
 
@@ -298,6 +299,92 @@ class UnicodeInput(X12DocumentTestCase):
             pyx12.x12n_document.x12n_document(self.param, temppath, fd_997, None, None)
         finally:
             os.unlink(temppath)
+
+
+class ErrorCodePrefixPlacement(X12DocumentTestCase):
+    """The pyx12 code prefix must match the X12 node type in the
+    err_handler tree:
+
+    * Codes stored on err_seg.errors must start with ``SEG_``.
+    * Codes stored on err_ele.errors must start with ``ELE_`` or
+      ``COMP_`` (composites surface as element-level errors).
+
+    Verified by running representative fixtures through x12n_document
+    and walking the resulting err_handler tree."""
+
+    def _walk_tree(self, datakey: str) -> pyx12.error_handler.err_handler:
+        errh = pyx12.error_handler.err_handler()
+        fd_source = self._makeFd(datafiles[datakey]["source"])
+        fd_997 = StringIO()
+        fd_html = StringIO()
+        # x12n_document creates its own err_handler internally, so we
+        # can't pass ours. Drive X12ContextReader instead — it accepts
+        # a caller-provided errh and threads it through (PR #166).
+        src = pyx12.x12context.X12ContextReader(self.param, errh, fd_source)
+        for _ in src.iter_segments():
+            pass
+        return errh
+
+    def _collect(self, errh: pyx12.error_handler.err_handler) -> tuple[list[str], list[str]]:
+        seg_codes: list[str] = []
+        ele_codes: list[str] = []
+        for isa in errh.children:
+            for gs in isa.children:
+                for st in gs.children:
+                    for seg in st.children:
+                        seg_codes.extend(c for c, *_ in seg.errors)
+                        for ele in seg.elements:
+                            ele_codes.extend(c for c, *_ in ele.errors)
+        return seg_codes, ele_codes
+
+    def test_walker_seg_errors_have_seg_prefix(self):
+        # bad_2010AA_bug -> walker emits SEG_3_mandatory_loop_missing.
+        errh = self._walk_tree("bad_2010AA_bug")
+        seg_codes, _ = self._collect(errh)
+        self.assertTrue(seg_codes, "expected at least one seg-level error")
+        for code in seg_codes:
+            self.assertTrue(
+                code.startswith("SEG_"),
+                f"seg-level err_cde {code!r} does not start with SEG_",
+            )
+
+    def test_validator_ele_errors_have_ele_or_comp_prefix(self):
+        # 834_lui_id_5010_non_ascii -> ELE_6_invalid_type_char on REF02.
+        errh = self._walk_tree("834_lui_id_5010_non_ascii")
+        _, ele_codes = self._collect(errh)
+        self.assertTrue(ele_codes, "expected at least one element-level error")
+        for code in ele_codes:
+            self.assertTrue(
+                code.startswith("ELE_") or code.startswith("COMP_"),
+                f"element-level err_cde {code!r} does not start with ELE_ or COMP_",
+            )
+
+    def test_no_raw_x12_code_leaks_into_seg_or_ele_errors(self):
+        # Run several fixtures through and verify the prefix invariant
+        # holds across the corpus.
+        for datakey in (
+            "bad_2010AA_bug",
+            "834_lui_id_5010_non_ascii",
+            "elements",
+            "trailing_terms",
+            "loop_counting",
+            "loop_counting2",
+            "multiple_trn",
+        ):
+            with self.subTest(datakey=datakey):
+                errh = self._walk_tree(datakey)
+                seg_codes, ele_codes = self._collect(errh)
+                for code in seg_codes:
+                    self.assertTrue(
+                        code.startswith("SEG_"),
+                        f"[{datakey}] seg-level err_cde {code!r} is not a SEG_-prefixed pyx12 code",
+                    )
+                for code in ele_codes:
+                    self.assertTrue(
+                        code.startswith("ELE_") or code.startswith("COMP_"),
+                        f"[{datakey}] element-level err_cde {code!r} is not "
+                        f"an ELE_- or COMP_-prefixed pyx12 code",
+                    )
 
 
 class SuppressErrorCodes(X12DocumentTestCase):

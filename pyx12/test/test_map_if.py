@@ -796,6 +796,6 @@ class ApplySegmentErrorsRouting(unittest.TestCase):
         errh = _RecordingErrh()
         ok = self.apply(ref_node, seg_data, errh)
         self.assertFalse(ok)
-        self.assertIn(("seg_error", "8", None), errh.calls)
+        self.assertIn(("seg_error", "SEG_8_has_data_element_errors", None), errh.calls)
         self.assertFalse(any(c[0] == "ele_error" for c in errh.calls))
         self.assertFalse(any(c[0] == "add_ele" for c in errh.calls))
