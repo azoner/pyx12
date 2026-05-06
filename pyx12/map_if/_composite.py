@@ -18,6 +18,11 @@ from xml.etree.ElementTree import Element
 
 import pyx12.segment
 
+from ..error_codes import (
+    COMP_1_MANDATORY_MISSING,
+    COMP_3_TOO_MANY_SUBELEMENTS,
+    COMP_5_NOT_USED,
+)
 from ..error_item import EleError
 from ._base import _required_attr, x12_node
 from ._element import element_if
@@ -128,7 +133,9 @@ class composite_if(x12_node):
                     self.name,
                     self.refdes,
                 )
-                return False, [EleError(err_cde="1", err_str=err_str, refdes=self.refdes)]
+                return False, [
+                    EleError(err_cde=COMP_1_MANDATORY_MISSING, err_str=err_str, refdes=self.refdes)
+                ]
 
         # Past here, comp_data is non-None: the (None or empty)+(N/S) branch
         # short-circuited it; the R branch returned on missing comp_data.
@@ -136,11 +143,13 @@ class composite_if(x12_node):
 
         if self.usage == "N" and not comp_data.is_empty():
             err_str = 'Composite "%s" (%s) is marked as Not Used' % (self.name, self.refdes)
-            return False, [EleError(err_cde="5", err_str=err_str, refdes=self.refdes)]
+            return False, [EleError(err_cde=COMP_5_NOT_USED, err_str=err_str, refdes=self.refdes)]
 
         if len(comp_data) > self.get_child_count():
             err_str = 'Too many sub-elements in composite "%s" (%s)' % (self.name, self.refdes)
-            errors.append(EleError(err_cde="3", err_str=err_str, refdes=self.refdes))
+            errors.append(
+                EleError(err_cde=COMP_3_TOO_MANY_SUBELEMENTS, err_str=err_str, refdes=self.refdes)
+            )
             valid = False
         for i in range(min(len(comp_data), self.get_child_count())):
             ok, sub_errors = self.children[i].is_valid_errors(comp_data[i])

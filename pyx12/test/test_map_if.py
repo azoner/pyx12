@@ -94,7 +94,7 @@ class SegmentIsValid(unittest.TestCase):
         node = self.node.getnodebypath("DTP[435]")
         result, errors = node.is_valid_errors(seg_data)
         self.assertFalse(result)
-        self.assertEqual([e.err_cde for e in errors], ["3"])
+        self.assertEqual([e.err_cde for e in errors], ["SEG_3_too_many_elements"])
 
 
 class ElementIsValid(unittest.TestCase):
@@ -397,7 +397,7 @@ class CompositeRequirement(unittest.TestCase):
         comp = pyx12.segment.Composite("", ":")
         result, errors = node.is_valid_errors(comp)
         self.assertFalse(result)
-        self.assertEqual([e.err_cde for e in errors], ["1"])
+        self.assertEqual([e.err_cde for e in errors], ["COMP_1_mandatory_missing"])
 
     def test_comp_not_used_fail1(self):
         node = self.map.getnodebypath("/ISA_LOOP/GS_LOOP/ST_LOOP/HEADER/REF")
@@ -408,7 +408,7 @@ class CompositeRequirement(unittest.TestCase):
         seg_data = pyx12.segment.Segment("REF*87*004010X098A1**:1~", "~", "*", ":")
         result, errors = node.is_valid_errors(seg_data)
         self.assertFalse(result)
-        self.assertEqual([e.err_cde for e in errors], ["5"])
+        self.assertEqual([e.err_cde for e in errors], ["COMP_5_not_used"])
 
 
 class TrailingSpaces(unittest.TestCase):
@@ -752,7 +752,7 @@ class CompositeRequiredMissing(unittest.TestCase):
         seg_data = pyx12.segment.Segment("PLB*123*20211108**-100.00~", "~", "*", ":")
         result, errors = self.node.is_valid_errors(seg_data)
         self.assertFalse(result)
-        self.assertEqual([e.err_cde for e in errors], ["1"])
+        self.assertEqual([e.err_cde for e in errors], ["COMP_1_mandatory_missing"])
 
 
 class _RecordingErrh:

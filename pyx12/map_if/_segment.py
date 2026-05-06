@@ -19,6 +19,12 @@ from xml.etree.ElementTree import Element
 
 import pyx12.segment
 
+from ..error_codes import (
+    SEG_2_SYNTAX_RELATIONAL,
+    SEG_3_TOO_MANY_ELEMENTS,
+    SEG_3_TOO_MANY_SUBELEMENTS,
+    SEG_10_SYNTAX_EXCLUSIVE,
+)
 from ..error_item import EleError
 from ..errors import EngineError
 from ..path import X12Path
@@ -396,7 +402,14 @@ class segment_if(x12_node):
             )
             ref_des = "%02i" % (child_count + 1)
             err_value = seg_data.get_value(ref_des)
-            errors.append(EleError(err_cde="3", err_str=err_str, err_val=err_value, refdes=ref_des))
+            errors.append(
+                EleError(
+                    err_cde=SEG_3_TOO_MANY_ELEMENTS,
+                    err_str=err_str,
+                    err_val=err_value,
+                    refdes=ref_des,
+                )
+            )
             valid = False
 
         dtype: list[str | None] = []
@@ -420,7 +433,7 @@ class segment_if(x12_node):
                     err_value = seg_data.get_value(ref_des)
                     errors.append(
                         EleError(
-                            err_cde="3",
+                            err_cde=SEG_3_TOO_MANY_SUBELEMENTS,
                             err_str=err_str,
                             err_val=err_value,
                             refdes=ref_des,
@@ -464,7 +477,7 @@ class segment_if(x12_node):
             if not bResult:
                 # When is_syntax_valid returns False, syn_err is the message string.
                 assert syn_err is not None
-                code = "10" if syn[0] == "E" else "2"
+                code = SEG_10_SYNTAX_EXCLUSIVE if syn[0] == "E" else SEG_2_SYNTAX_RELATIONAL
                 errors.append(EleError(err_cde=code, err_str=syn_err, refdes=syn[1]))
                 valid = False
 
