@@ -35,26 +35,34 @@ class TestISAError(unittest.TestCase):
 
 
 class TestSegError(unittest.TestCase):
+    # PR 5 (#TBD) tightens SegError validation to require pyx12 codes
+    # from pyx12.error_codes.ERROR_CODES. Raw X12 codes like "1" / "8"
+    # are no longer accepted.
     def test_valid_code(self):
-        e = SegError("1", "segment error")
-        self.assertEqual(e.err_cde, "1")
+        e = SegError("SEG_1_segment_not_found", "segment error")
+        self.assertEqual(e.err_cde, "SEG_1_segment_not_found")
         self.assertEqual(e.err_str, "segment error")
 
     def test_valid_code_8(self):
-        e = SegError("8", "seg error")
-        self.assertEqual(e.err_cde, "8")
+        e = SegError("SEG_8_trailing_terminators", "seg error")
+        self.assertEqual(e.err_cde, "SEG_8_trailing_terminators")
 
     def test_err_val_default_none(self):
-        e = SegError("1", "seg error")
+        e = SegError("SEG_1_segment_not_found", "seg error")
         self.assertIsNone(e.err_val)
 
     def test_err_val_set(self):
-        e = SegError("2", "seg error", err_val="BAD*SEG")
+        e = SegError("SEG_2_segment_not_used", "seg error", err_val="BAD*SEG")
         self.assertEqual(e.err_val, "BAD*SEG")
 
     def test_invalid_code_raises(self):
         with self.assertRaises(EngineError):
             SegError("99", "bad code")
+
+    def test_invalid_code_legacy_raw_X12_rejected(self):
+        # Raw X12 codes were accepted pre-PR-5. Now rejected.
+        with self.assertRaises(EngineError):
+            SegError("1", "bad code")
 
     def test_invalid_code_zero(self):
         with self.assertRaises(EngineError):
@@ -62,34 +70,42 @@ class TestSegError(unittest.TestCase):
 
 
 class TestEleError(unittest.TestCase):
+    # PR 5 (#TBD) tightens EleError validation to require pyx12 codes
+    # from pyx12.error_codes.ERROR_CODES. Raw X12 codes like "1" / "10"
+    # are no longer accepted.
     def test_valid_code(self):
-        e = EleError("1", "element error")
-        self.assertEqual(e.err_cde, "1")
+        e = EleError("ELE_1_mandatory_missing", "element error")
+        self.assertEqual(e.err_cde, "ELE_1_mandatory_missing")
         self.assertEqual(e.err_str, "element error")
 
     def test_valid_code_10(self):
-        e = EleError("10", "element error")
-        self.assertEqual(e.err_cde, "10")
+        e = EleError("ELE_10_not_used", "element error")
+        self.assertEqual(e.err_cde, "ELE_10_not_used")
 
     def test_refdes_default_none(self):
-        e = EleError("1", "element error")
+        e = EleError("ELE_1_mandatory_missing", "element error")
         self.assertIsNone(e.refdes)
 
     def test_refdes_set(self):
-        e = EleError("1", "element error", refdes="03")
+        e = EleError("ELE_1_mandatory_missing", "element error", refdes="03")
         self.assertEqual(e.refdes, "03")
 
     def test_err_val_default_none(self):
-        e = EleError("1", "element error")
+        e = EleError("ELE_1_mandatory_missing", "element error")
         self.assertIsNone(e.err_val)
 
     def test_err_val_set(self):
-        e = EleError("2", "element error", err_val="BADVAL")
+        e = EleError("ELE_4_too_short", "element error", err_val="BADVAL")
         self.assertEqual(e.err_val, "BADVAL")
 
     def test_invalid_code_raises(self):
         with self.assertRaises(EngineError):
             EleError("11", "bad code")
+
+    def test_invalid_code_legacy_raw_X12_rejected(self):
+        # Raw X12 codes were accepted pre-PR-5. Now rejected.
+        with self.assertRaises(EngineError):
+            EleError("1", "bad code")
 
     def test_invalid_code_zero(self):
         with self.assertRaises(EngineError):

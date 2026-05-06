@@ -52,8 +52,6 @@ isa_errors = (
     "030",
     "031",
 )
-seg_errors = ("1", "2", "3", "4", "5", "6", "7", "8")
-ele_errors = ("1", "2", "3", "4", "5", "6", "7", "8", "9", "10")
 
 
 @dataclass(slots=True, frozen=True)
@@ -84,12 +82,14 @@ class SegError(ErrorItem):
     ls_id: str | None = None
 
     def __post_init__(self) -> None:
-        # During the PR 2-4 producer migration, accept either legacy
-        # raw-X12 codes ("1"-"8") or new pyx12 codes from ERROR_CODES.
-        # PR 5 narrows this to ERROR_CODES only once every producer has
-        # migrated.
-        if self.err_cde not in seg_errors and self.err_cde not in ERROR_CODES:
-            raise EngineError('Invalid segment level error code "%s"' % (self.err_cde))
+        # PR 5: producers all emit pyx12 codes from ERROR_CODES. The
+        # legacy raw-X12 fallback that accepted "1"-"8" is gone; an
+        # unknown err_cde here is now a hard error.
+        if self.err_cde not in ERROR_CODES:
+            raise EngineError(
+                'Unknown pyx12 error code "%s" (not in pyx12.error_codes.ERROR_CODES)'
+                % (self.err_cde)
+            )
 
 
 @dataclass(slots=True, frozen=True)
@@ -103,9 +103,11 @@ class EleError(ErrorItem):
     map_node: Any = None
 
     def __post_init__(self) -> None:
-        # During the PR 2-4 producer migration, accept either legacy
-        # raw-X12 codes ("1"-"10") or new pyx12 codes from ERROR_CODES.
-        # PR 5 narrows this to ERROR_CODES only once every producer has
-        # migrated.
-        if self.err_cde not in ele_errors and self.err_cde not in ERROR_CODES:
-            raise EngineError('Invalid element level error code "%s"' % (self.err_cde))
+        # PR 5: producers all emit pyx12 codes from ERROR_CODES. The
+        # legacy raw-X12 fallback that accepted "1"-"10" is gone; an
+        # unknown err_cde here is now a hard error.
+        if self.err_cde not in ERROR_CODES:
+            raise EngineError(
+                'Unknown pyx12 error code "%s" (not in pyx12.error_codes.ERROR_CODES)'
+                % (self.err_cde)
+            )

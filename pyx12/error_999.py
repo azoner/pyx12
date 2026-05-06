@@ -325,29 +325,23 @@ class error_999_visitor(pyx12.error_visitor.error_visitor):
         :param err_seg: Segment error handler
         :type err_seg: L{error_handler.err_seg}
         """
-        # Legacy raw-X12 codes accepted by the IK304 channel today.
-        # PR 5 will drop this fallback once all producers emit pyx12 codes
-        # routed through pyx12.error_codes.ERROR_CODES.
-        valid_IK3_codes = ("1", "2", "3", "4", "5", "6", "7", "8", "I4", "I6", "I7", "I8", "I9")
         seg_base = pyx12.segment.Segment("IK3", "~", "*", ":")
         seg_base.set("01", err_seg.seg_id)
         seg_base.set("02", "%i" % err_seg.seg_count)
         if err_seg.ls_id:
             seg_base.set("03", err_seg.ls_id)
         seg_str = seg_base.format("~", "*", ":")
-        # Resolve each err_cde to its IK3-04 code via the pyx12.error_codes
-        # table. None means "drop" (e.g. parser HL1/HL2/LX). Falls through
-        # to legacy raw-X12 lookup for codes not in the table.
+        # Every err_cde reaching this point is a pyx12 code from
+        # pyx12.error_codes.ERROR_CODES (PRs #175-#178 migrated all
+        # producers). None spec or None ik_code means the code does not
+        # surface in the 5010 IK3 channel (e.g. parser HL1/HL2/LX).
         emitted: set[str] = set()
         for err_cde in [x[0] for x in err_seg.errors]:
             spec = pyx12.error_codes.ERROR_CODES.get(err_cde)
-            if spec is not None:
-                ik_code = spec.ik_code
-            elif err_cde in valid_IK3_codes:
-                ik_code = err_cde
-            else:
-                ik_code = None
-            if ik_code is None or ik_code in emitted:
+            if spec is None or spec.ik_code is None:
+                continue
+            ik_code = spec.ik_code
+            if ik_code in emitted:
                 continue
             seg_data = pyx12.segment.Segment(seg_str, "~", "*", ":")
             seg_data.set("IK304", ik_code)
@@ -363,29 +357,6 @@ class error_999_visitor(pyx12.error_visitor.error_visitor):
         :param err_ele: Segment error handler
         :type err_ele: L{error_handler.err_ele}
         """
-        # Legacy raw-X12 codes accepted by the IK403 channel today.
-        # PR 5 will drop this fallback once all producers emit pyx12 codes
-        # routed through pyx12.error_codes.ERROR_CODES.
-        valid_IK4_codes = (
-            "1",
-            "2",
-            "3",
-            "4",
-            "5",
-            "6",
-            "7",
-            "8",
-            "9",
-            "10",
-            "12",
-            "13",
-            "I10",
-            "I11",
-            "I12",
-            "I13",
-            "I6",
-            "I9",
-        )
         seg_base = pyx12.segment.Segment("IK4", "~", "*", ":")
         seg_base.set("01-1", "%i" % (err_ele.ele_pos))
         if err_ele.subele_pos:
@@ -397,16 +368,10 @@ class error_999_visitor(pyx12.error_visitor.error_visitor):
         seg_str = seg_base.format("~", "*", ":")
         for err_cde, err_str, bad_value in err_ele.errors:
             spec = pyx12.error_codes.ERROR_CODES.get(err_cde)
-            if spec is not None:
-                ik_code = spec.ik_code
-            elif err_cde in valid_IK4_codes:
-                ik_code = err_cde
-            else:
-                ik_code = None
-            if ik_code is None:
+            if spec is None or spec.ik_code is None:
                 continue
             seg_data = pyx12.segment.Segment(seg_str, "~", "*", ":")
-            seg_data.set("IK403", ik_code)
+            seg_data.set("IK403", spec.ik_code)
             if bad_value:
                 seg_data.set("IK404", pyx12.error_visitor.ascii_only(bad_value))
             self.wr.Write(seg_data)

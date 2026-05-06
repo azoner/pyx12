@@ -395,10 +395,6 @@ class error_997_visitor(error_visitor.error_visitor):
         :param err_seg: Segment error handler
         :type err_seg: L{error_handler.err_seg}
         """
-        # Legacy raw-X12 codes accepted by the AK304 channel today.
-        # PR 5 will drop this fallback once all producers emit pyx12 codes
-        # routed through pyx12.error_codes.ERROR_CODES.
-        valid_AK3_codes = ("1", "2", "3", "4", "5", "6", "7", "8")
         seg_base = pyx12.segment.Segment("AK3", "~", "*", ":")
         seg_base.append(err_seg.seg_id)
         seg_base.append("%i" % err_seg.seg_count)
@@ -407,16 +403,17 @@ class error_997_visitor(error_visitor.error_visitor):
         else:
             seg_base.append("")
         seg_str = seg_base.format("~", "*", ":")
+        # Every err_cde reaching this point is a pyx12 code from
+        # pyx12.error_codes.ERROR_CODES (PRs #175-#178 migrated all
+        # producers). None spec or None ak_code means the code does not
+        # surface in the 4010 AK3 channel (e.g. parser HL1/HL2/LX).
         emitted: set[str] = set()
         for err_cde in [x[0] for x in err_seg.errors]:
             spec = pyx12.error_codes.ERROR_CODES.get(err_cde)
-            if spec is not None:
-                ak_code = spec.ak_code
-            elif err_cde in valid_AK3_codes:
-                ak_code = err_cde
-            else:
-                ak_code = None
-            if ak_code is None or ak_code in emitted:
+            if spec is None or spec.ak_code is None:
+                continue
+            ak_code = spec.ak_code
+            if ak_code in emitted:
                 continue
             seg_data = pyx12.segment.Segment(seg_str, "~", "*", ":")
             seg_data.set("AK304", ak_code)
@@ -432,10 +429,6 @@ class error_997_visitor(error_visitor.error_visitor):
         :param err_ele: Segment error handler
         :type err_ele: L{error_handler.err_ele}
         """
-        # Legacy raw-X12 codes accepted by the AK403 channel today.
-        # PR 5 will drop this fallback once all producers emit pyx12 codes
-        # routed through pyx12.error_codes.ERROR_CODES.
-        valid_AK4_codes = ("1", "2", "3", "4", "5", "6", "7", "8", "9", "10")
         seg_base = pyx12.segment.Segment("AK4", "~", "*", ":")
         if err_ele.subele_pos:
             seg_base.append("%i:%i" % (err_ele.ele_pos, err_ele.subele_pos))
@@ -446,16 +439,10 @@ class error_997_visitor(error_visitor.error_visitor):
         seg_str = seg_base.format("~", "*", ":")
         for err_cde, err_str, bad_value in err_ele.errors:
             spec = pyx12.error_codes.ERROR_CODES.get(err_cde)
-            if spec is not None:
-                ak_code = spec.ak_code
-            elif err_cde in valid_AK4_codes:
-                ak_code = err_cde
-            else:
-                ak_code = None
-            if ak_code is None:
+            if spec is None or spec.ak_code is None:
                 continue
             seg_data = pyx12.segment.Segment(seg_str, "~", "*", ":")
-            seg_data.set("AK403", ak_code)
+            seg_data.set("AK403", spec.ak_code)
             if bad_value:
                 seg_data.set("AK404", error_visitor.ascii_only(bad_value))
             self._write(seg_data)
