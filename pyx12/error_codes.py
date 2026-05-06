@@ -769,6 +769,36 @@ ERROR_CODES: dict[str, ErrorCodeSpec] = {
 }
 
 
+# Element-position to ISA_* code maps for envelope segments. When an
+# element validator raises a generic ELE_* error against an ISA or IEA
+# element, apply_segment_errors upgrades the err_cde to the canonical
+# TA1-level pyx12 code via these maps. Keeps element validators in
+# map_if/ ignorant of envelope context.
+ISA_ELE_POSITION_TO_CODE: dict[int, str] = {
+    1: ISA_010_INVALID_AUTH_QUALIFIER,
+    2: ISA_011_INVALID_AUTH_INFO,
+    3: ISA_012_INVALID_SECURITY_QUALIFIER,
+    4: ISA_013_INVALID_SECURITY_INFO,
+    5: ISA_005_INVALID_SENDER_QUALIFIER,
+    6: ISA_006_INVALID_SENDER_ID,
+    7: ISA_007_INVALID_RECEIVER_QUALIFIER,
+    8: ISA_008_INVALID_RECEIVER_ID,
+    9: ISA_014_INVALID_DATE,
+    10: ISA_015_INVALID_TIME,
+    11: ISA_016_INVALID_STANDARDS_ID,
+    12: ISA_017_INVALID_VERSION_ID,
+    13: ISA_018_INVALID_CONTROL_NUMBER,
+    14: ISA_019_INVALID_ACK_REQUESTED,
+    15: ISA_020_INVALID_TEST_INDICATOR,
+    16: ISA_027_INVALID_COMPONENT_SEPARATOR,
+}
+
+IEA_ELE_POSITION_TO_CODE: dict[int, str] = {
+    1: ISA_021_INVALID_GROUP_COUNT,
+    2: ISA_018_INVALID_CONTROL_NUMBER,
+}
+
+
 def x12_code_for(err_cde: str, prefer_5010: bool = True) -> str | None:
     """Resolve a pyx12 error code to its X12 ack code.
 

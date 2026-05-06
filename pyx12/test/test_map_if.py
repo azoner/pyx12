@@ -859,3 +859,64 @@ class ApplySegmentErrorsRouting(unittest.TestCase):
         ok = self.apply(nm1_node, seg_data, errh)
         self.assertTrue(ok)
         self.assertEqual(errh.calls, [])
+
+
+class ApplySegmentErrorsISARouting(unittest.TestCase):
+    """Routing rule for envelope segments: element-level validator
+    errors on ISA / IEA segments are upgraded to canonical ISA_* pyx12
+    codes via ISA_ELE_POSITION_TO_CODE / IEA_ELE_POSITION_TO_CODE before
+    reaching err_handler. Keeps element validators ignorant of envelope
+    context; the visitor for TA1 emission can dereference via the table
+    instead of fragile err_str substring matching."""
+
+    def setUp(self):
+        from pyx12.map_if._segment import apply_segment_errors
+
+        self.apply = apply_segment_errors
+        param = pyx12.params.params()
+        self.map = pyx12.map_if.load_map_file("x12.control.00501.xml", param)
+
+    def test_isa_bad_auth_qualifier_emits_isa_010(self):
+        # ISA01 valid_codes are [00, 03]; "99" fails ELE_7_invalid_code.
+        # Translation: seq=1 → ISA_010_invalid_auth_qualifier.
+        isa_node = self.map.getnodebypath("/ISA_LOOP/ISA")
+        seg_data = pyx12.segment.Segment(
+            "ISA*99*          *00*          *ZZ*ENCOUNTER      *ZZ*0102           "
+            "*260407*1510*^*00501*000000001*0*P*:~",
+            "~",
+            "*",
+            ":",
+        )
+        errh = _RecordingErrh()
+        self.apply(isa_node, seg_data, errh)
+        ele_calls = [c for c in errh.calls if c[0] == "ele_error"]
+        self.assertEqual(len(ele_calls), 1)
+        self.assertEqual(ele_calls[0][1], "ISA_010_invalid_auth_qualifier")
+
+    def test_isa_bad_test_indicator_emits_isa_020(self):
+        # ISA15 valid_codes are [P, T]; "X" fails ELE_7_invalid_code.
+        # Translation: seq=15 → ISA_020_invalid_test_indicator.
+        isa_node = self.map.getnodebypath("/ISA_LOOP/ISA")
+        seg_data = pyx12.segment.Segment(
+            "ISA*00*          *00*          *ZZ*ENCOUNTER      *ZZ*0102           "
+            "*260407*1510*^*00501*000000001*0*X*:~",
+            "~",
+            "*",
+            ":",
+        )
+        errh = _RecordingErrh()
+        self.apply(isa_node, seg_data, errh)
+        ele_calls = [c for c in errh.calls if c[0] == "ele_error"]
+        self.assertEqual(len(ele_calls), 1)
+        self.assertEqual(ele_calls[0][1], "ISA_020_invalid_test_indicator")
+
+    def test_iea_position_1_emits_isa_021(self):
+        # IEA01 (Group Count) bad value → ELE_4_too_short. Translation:
+        # IEA seq=1 → ISA_021_invalid_group_count.
+        iea_node = self.map.getnodebypath("/ISA_LOOP/IEA")
+        seg_data = pyx12.segment.Segment("IEA**000000001~", "~", "*", ":")
+        errh = _RecordingErrh()
+        self.apply(iea_node, seg_data, errh)
+        ele_calls = [c for c in errh.calls if c[0] == "ele_error"]
+        self.assertGreaterEqual(len(ele_calls), 1)
+        self.assertEqual(ele_calls[0][1], "ISA_021_invalid_group_count")

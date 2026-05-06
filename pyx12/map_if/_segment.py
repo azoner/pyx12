@@ -12,6 +12,7 @@ Segment interface - per-segment validator and matcher.
 
 from __future__ import annotations
 
+import dataclasses
 import sys
 from collections.abc import Iterator
 from typing import TYPE_CHECKING, Any
@@ -20,6 +21,8 @@ from xml.etree.ElementTree import Element
 import pyx12.segment
 
 from ..error_codes import (
+    IEA_ELE_POSITION_TO_CODE,
+    ISA_ELE_POSITION_TO_CODE,
     SEG_2_SYNTAX_RELATIONAL,
     SEG_3_TOO_MANY_ELEMENTS,
     SEG_3_TOO_MANY_SUBELEMENTS,
@@ -63,6 +66,23 @@ def apply_segment_errors(node: segment_if, seg_data: pyx12.segment.Segment, errh
     reflects whether the validator found any errors (suppression does
     not flip a bad segment to good)."""
     ok, errors = node.is_valid_errors(seg_data)
+    # Upgrade element-level errors on envelope segments (ISA / IEA) to
+    # canonical ISA_* pyx12 codes via the position map. Keeps element
+    # validators in map_if/ ignorant of envelope context; the visitor
+    # for TA1 emission can then dereference via x12_code_for instead of
+    # the legacy position-based lookup on err_str substrings.
+    pos_map: dict[int, str] | None = None
+    if node.id == "ISA":
+        pos_map = ISA_ELE_POSITION_TO_CODE
+    elif node.id == "IEA":
+        pos_map = IEA_ELE_POSITION_TO_CODE
+    if pos_map is not None:
+        errors = [
+            dataclasses.replace(e, err_cde=pos_map[e.map_node.seq])
+            if (e.map_node is not None and getattr(e.map_node, "seq", None) in pos_map)
+            else e
+            for e in errors
+        ]
     suppressed: set[str] = getattr(errh, "suppress_error_codes", set()) or set()
     if suppressed:
         errors = [e for e in errors if e.err_cde not in suppressed]

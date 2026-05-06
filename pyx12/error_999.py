@@ -117,43 +117,24 @@ class error_999_visitor(pyx12.error_visitor.error_visitor):
         self.wr.Write(gs_seg)
 
     def __get_isa_errors(self, err_isa: Any) -> list[str]:
+        """Build list of TA1 Interchange Note Codes for the err_isa node.
+
+        Top-level err_isa.errors and element-level err_ele.errors carry
+        ISA_* pyx12 codes (post PR 3); dereference via the table.
+        Insertion order is preserved so the first emitted error wins
+        when only the first TA1 code is reported.
         """
-        Build list of TA1 level errors
-        Only the first error is used
-        """
-        isa_ele_err_map = {
-            1: "010",
-            2: "011",
-            3: "012",
-            4: "013",
-            5: "005",
-            6: "006",
-            7: "007",
-            8: "008",
-            9: "014",
-            10: "015",
-            11: "016",
-            12: "017",
-            13: "018",
-            14: "019",
-            15: "020",
-            16: "027",
-        }
-        iea_ele_err_map = {1: "021", 2: "018"}
-        err_codes = [
-            code
-            for err in err_isa.errors
-            if (code := pyx12.error_codes.x12_code_for(err[0])) is not None
-        ]
+        err_codes: list[str] = []
+        for err_cde, _err_str in err_isa.errors:
+            spec = pyx12.error_codes.ERROR_CODES.get(err_cde)
+            if spec is not None and spec.level == "ISA" and spec.ik_code is not None:
+                err_codes.append(spec.ik_code)
         for elem in err_isa.elements:
-            for err_cde, err_str, bad_value in elem.errors:
-                # Ugly
-                if "ISA" in err_str:
-                    err_codes.append(isa_ele_err_map[elem.ele_pos])
-                elif "IEA" in err_str:
-                    err_codes.append(iea_ele_err_map[elem.ele_pos])
-        # return unique codes
-        return list(set(err_codes))
+            for err_cde, _err_str, _bad_value in elem.errors:
+                spec = pyx12.error_codes.ERROR_CODES.get(err_cde)
+                if spec is not None and spec.level == "ISA" and spec.ik_code is not None:
+                    err_codes.append(spec.ik_code)
+        return list(dict.fromkeys(err_codes))
 
     def visit_root_post(self, errh: Any) -> None:
         """
