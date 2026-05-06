@@ -1336,7 +1336,13 @@ IEA*1*000484889~""",
                                                     "x12_code": "8",
                                                     "err_str": "Segment contains trailing element terminators",
                                                     "err_val": None,
-                                                }
+                                                },
+                                                {
+                                                    "err_cde": "SEG_8_has_data_element_errors",
+                                                    "x12_code": "8",
+                                                    "err_str": "Segment has data element errors",
+                                                    "err_val": None,
+                                                },
                                             ],
                                             "elements": [
                                                 {
@@ -1558,7 +1564,14 @@ IEA*1*000000288~""",
                                             "name": "Transmission Type Identification",
                                             "ls_id": None,
                                             "cur_line": 5,
-                                            "errors": [],
+                                            "errors": [
+                                                {
+                                                    "err_cde": "SEG_8_has_data_element_errors",
+                                                    "x12_code": "8",
+                                                    "err_str": "Segment has data element errors",
+                                                    "err_val": None,
+                                                }
+                                            ],
                                             "elements": [
                                                 {
                                                     "ele_pos": 2,
@@ -1584,7 +1597,14 @@ IEA*1*000000288~""",
                                             "name": "Submitter EDI Contact Information",
                                             "ls_id": None,
                                             "cur_line": 7,
-                                            "errors": [],
+                                            "errors": [
+                                                {
+                                                    "err_cde": "SEG_8_has_data_element_errors",
+                                                    "x12_code": "8",
+                                                    "err_str": "Segment has data element errors",
+                                                    "err_val": None,
+                                                }
+                                            ],
                                             "elements": [
                                                 {
                                                     "ele_pos": 3,
@@ -1610,7 +1630,14 @@ IEA*1*000000288~""",
                                             "name": "Receiver Name",
                                             "ls_id": None,
                                             "cur_line": 9,
-                                            "errors": [],
+                                            "errors": [
+                                                {
+                                                    "err_cde": "SEG_8_has_data_element_errors",
+                                                    "x12_code": "8",
+                                                    "err_str": "Segment has data element errors",
+                                                    "err_val": None,
+                                                }
+                                            ],
                                             "elements": [
                                                 {
                                                     "ele_pos": 8,
@@ -1636,7 +1663,14 @@ IEA*1*000000288~""",
                                             "name": "Subscriber Name",
                                             "ls_id": None,
                                             "cur_line": 17,
-                                            "errors": [],
+                                            "errors": [
+                                                {
+                                                    "err_cde": "SEG_8_has_data_element_errors",
+                                                    "x12_code": "8",
+                                                    "err_str": "Segment has data element errors",
+                                                    "err_val": None,
+                                                }
+                                            ],
                                             "elements": [
                                                 {
                                                     "ele_pos": 8,
@@ -1668,7 +1702,14 @@ IEA*1*000000288~""",
                                             "name": "Subscriber Demographic Information",
                                             "ls_id": None,
                                             "cur_line": 20,
-                                            "errors": [],
+                                            "errors": [
+                                                {
+                                                    "err_cde": "SEG_8_has_data_element_errors",
+                                                    "x12_code": "8",
+                                                    "err_str": "Segment has data element errors",
+                                                    "err_val": None,
+                                                }
+                                            ],
                                             "elements": [
                                                 {
                                                     "ele_pos": 2,
@@ -1709,7 +1750,14 @@ IEA*1*000000288~""",
                                             "name": "Claim Information",
                                             "ls_id": None,
                                             "cur_line": 25,
-                                            "errors": [],
+                                            "errors": [
+                                                {
+                                                    "err_cde": "SEG_8_has_data_element_errors",
+                                                    "x12_code": "8",
+                                                    "err_str": "Segment has data element errors",
+                                                    "err_val": None,
+                                                }
+                                            ],
                                             "elements": [
                                                 {
                                                     "ele_pos": 5,
@@ -1871,7 +1919,14 @@ IEA*1*000238388~""",
                                             "name": "Production Date",
                                             "ls_id": None,
                                             "cur_line": 7,
-                                            "errors": [],
+                                            "errors": [
+                                                {
+                                                    "err_cde": "SEG_8_has_data_element_errors",
+                                                    "x12_code": "8",
+                                                    "err_str": "Segment has data element errors",
+                                                    "err_val": None,
+                                                }
+                                            ],
                                             "elements": [
                                                 {
                                                     "ele_pos": 2,
@@ -2086,7 +2141,14 @@ IEA*1*000484889~""",
                                             "name": "Institutional Service Line",
                                             "ls_id": None,
                                             "cur_line": 59,
-                                            "errors": [],
+                                            "errors": [
+                                                {
+                                                    "err_cde": "SEG_8_has_data_element_errors",
+                                                    "x12_code": "8",
+                                                    "err_str": "Segment has data element errors",
+                                                    "err_val": None,
+                                                }
+                                            ],
                                             "elements": [
                                                 {
                                                     "ele_pos": 2,
@@ -2127,7 +2189,14 @@ IEA*1*000484889~""",
                                             "name": "Service Line Adjudication Information",
                                             "ls_id": None,
                                             "cur_line": 61,
-                                            "errors": [],
+                                            "errors": [
+                                                {
+                                                    "err_cde": "SEG_8_has_data_element_errors",
+                                                    "x12_code": "8",
+                                                    "err_str": "Segment has data element errors",
+                                                    "err_val": None,
+                                                }
+                                            ],
                                             "elements": [
                                                 {
                                                     "ele_pos": 3,
@@ -4578,7 +4647,14 @@ IEA*1*703201721~
                                             "name": "Subscriber Identifier",
                                             "ls_id": None,
                                             "cur_line": 9,
-                                            "errors": [],
+                                            "errors": [
+                                                {
+                                                    "err_cde": "SEG_8_has_data_element_errors",
+                                                    "x12_code": "8",
+                                                    "err_str": "Segment has data element errors",
+                                                    "err_val": None,
+                                                }
+                                            ],
                                             "elements": [
                                                 {
                                                     "ele_pos": 2,
@@ -4681,7 +4757,14 @@ IEA*1*311071503~
                                             "name": "Member Residence Street Address",
                                             "ls_id": None,
                                             "cur_line": 14,
-                                            "errors": [],
+                                            "errors": [
+                                                {
+                                                    "err_cde": "SEG_8_has_data_element_errors",
+                                                    "x12_code": "8",
+                                                    "err_str": "Segment has data element errors",
+                                                    "err_val": None,
+                                                }
+                                            ],
                                             "elements": [
                                                 {
                                                     "ele_pos": 1,

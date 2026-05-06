@@ -40,19 +40,26 @@ if TYPE_CHECKING:
 
 def apply_segment_errors(node: segment_if, seg_data: pyx12.segment.Segment, errh: Any) -> bool:
     """Drive a segment validation: run is_valid_errors and forward errors
-    with cursor maintenance. Per-element errors carry map_node from the
-    leaf and trigger add_ele(map_node) when the cursor changes. Seg-level
-    errors (too many elements, too many sub-elements, syntax violations,
-    mandatory composite missing, composite-not-used) leave map_node=None;
-    they have no element to attach to, so they route through seg_error
-    with X12 IK3 code "8" ("segment has data element errors") — the only
-    IK3 code that semantically fits these data-element-level issues.
-    Their original IK4 codes ("3", "10", "1", "5", "2") collide with
-    different IK3 semantics and would produce wrong or dropped 999
-    output.
+    with cursor maintenance.
+
+    Routing rule: any element- or composite-level error (``err_cde`` with
+    prefix ``ELE_`` or ``COMP_``, identified by a non-None ``map_node``)
+    is preserved in ``err_ele.errors`` with its specific pyx12 code, AND
+    triggers a single ``SEG_8_HAS_DATA_ELEMENT_ERRORS`` in
+    ``err_seg.errors``. SEG-level validator errors (``map_node`` is
+    ``None``) collapse to that same single ``SEG_8`` (their specific
+    ``SEG_3_*`` / ``SEG_2_*`` / ``SEG_10_*`` codes are dropped per
+    PR #161 spec correctness — emitting them as IK3-04 would map to
+    wrong X12 semantics).
+
+    Exactly one ``SEG_8`` per segment, no matter how many element /
+    composite / seg-validator errors fired. The first SEG-level
+    validator error's err_str / err_val is preserved on the SEG_8
+    emission for diagnostic detail; if only element/composite errors
+    fired, a generic err_str is used.
 
     Errors whose pyx12 code is in ``errh.suppress_error_codes`` are
-    filtered out before they reach the err_handler tree. ``ok`` still
+    filtered out before reaching the err_handler tree. ``ok`` still
     reflects whether the validator found any errors (suppression does
     not flip a bad segment to good)."""
     ok, errors = node.is_valid_errors(seg_data)
@@ -60,19 +67,27 @@ def apply_segment_errors(node: segment_if, seg_data: pyx12.segment.Segment, errh
     if suppressed:
         errors = [e for e in errors if e.err_cde not in suppressed]
     prev_cursor = None
+    needs_seg_8 = False
+    seg_8_err_str = "Segment has data element errors"
+    seg_8_err_val: str | None = None
     for e in errors:
         if e.map_node is None:
-            # Element-level validator errors collapsed to a seg-level code
-            # per PR #161: use SEG_8_HAS_DATA_ELEMENT_ERRORS so the
-            # err_handler tree carries a SEG_-prefixed code consistent
-            # with where it lands (err_seg.errors). The original
-            # element-level pyx12 code is preserved in e.err_str.
-            errh.seg_error(SEG_8_HAS_DATA_ELEMENT_ERRORS, e.err_str, e.err_val)
+            # SEG-level validator error: preserve the first one's err_str
+            # and err_val on the SEG_8 emission for diagnostic detail.
+            if not needs_seg_8:
+                seg_8_err_str = e.err_str
+                seg_8_err_val = e.err_val
+            needs_seg_8 = True
             continue
+        # Element- or composite-level error: keep it in err_ele.errors
+        # with its specific pyx12 code.
         if e.map_node is not prev_cursor:
             errh.add_ele(e.map_node)
             prev_cursor = e.map_node
         errh.ele_error(e.err_cde, e.err_str, e.err_val, e.refdes)
+        needs_seg_8 = True
+    if needs_seg_8:
+        errh.seg_error(SEG_8_HAS_DATA_ELEMENT_ERRORS, seg_8_err_str, seg_8_err_val)
     return ok
 
 

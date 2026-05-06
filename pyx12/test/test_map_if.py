@@ -772,10 +772,17 @@ class _RecordingErrh:
 
 
 class ApplySegmentErrorsRouting(unittest.TestCase):
-    """Regression for the 4.0.0rc2 AttributeError: seg-level errors with
-    map_node=None must route through errh.seg_error (IK3) rather than
-    errh.ele_error (IK4), since the latter dereferences cur_ele_node which
-    is None on the first error of a segment."""
+    """Routing rule for element/composite/seg-validator errors:
+
+    * Element- and composite-level errors are preserved in
+      ``err_ele.errors`` with their specific pyx12 code AND trigger a
+      single ``SEG_8_HAS_DATA_ELEMENT_ERRORS`` in ``err_seg.errors``.
+    * SEG-validator errors (``map_node`` is ``None``) collapse to that
+      same single ``SEG_8`` (their specific codes are dropped per
+      PR #161 spec correctness).
+    * Exactly one ``SEG_8`` per segment regardless of how many child
+      errors fired.
+    """
 
     def setUp(self):
         from pyx12.map_if._segment import apply_segment_errors
@@ -784,18 +791,71 @@ class ApplySegmentErrorsRouting(unittest.TestCase):
         param = pyx12.params.params()
         self.map = pyx12.map_if.load_map_file("837.4010.X098.A1.xml", param)
 
-    def test_composite_not_used_routes_to_seg_error(self):
+    def test_composite_not_used_routes_to_both_ele_and_seg(self):
         # REF segment with REF04 (a composite marked Not Used) supplied:
-        # _composite emits err_cde="5" with map_node=None. Without the
-        # upstream remap this would call errh.ele_error against a None
-        # cur_ele_node and crash with AttributeError (the production
-        # 4.0.0rc2 traceback). With the remap it must route to seg_error
-        # with code "8" — the only valid IK3 code that fits.
+        # _composite emits COMP_5_NOT_USED with map_node=composite_if.
+        # The composite error must land in err_ele (via ele_error), AND
+        # a SEG_8_HAS_DATA_ELEMENT_ERRORS must land in err_seg.
         ref_node = self.map.getnodebypath("/ISA_LOOP/GS_LOOP/ST_LOOP/HEADER/REF")
         seg_data = pyx12.segment.Segment("REF*87*004010X098A1**:1~", "~", "*", ":")
         errh = _RecordingErrh()
         ok = self.apply(ref_node, seg_data, errh)
         self.assertFalse(ok)
-        self.assertIn(("seg_error", "SEG_8_has_data_element_errors", None), errh.calls)
-        self.assertFalse(any(c[0] == "ele_error" for c in errh.calls))
-        self.assertFalse(any(c[0] == "add_ele" for c in errh.calls))
+        seg_calls = [c for c in errh.calls if c[0] == "seg_error"]
+        ele_calls = [c for c in errh.calls if c[0] == "ele_error"]
+        add_ele_calls = [c for c in errh.calls if c[0] == "add_ele"]
+        self.assertEqual(
+            seg_calls,
+            [("seg_error", "SEG_8_has_data_element_errors", None)],
+        )
+        self.assertEqual(len(ele_calls), 1)
+        self.assertEqual(ele_calls[0][1], "COMP_5_not_used")
+        self.assertEqual(len(add_ele_calls), 1)
+
+    def test_single_element_error_triggers_one_seg_8(self):
+        # BHT segment with BHT04 = invalid date fires ELE_8_invalid_date
+        # at the element. Routing rule: the element error is preserved
+        # in err_ele AND a single SEG_8 lands in err_seg.
+        bht_node = self.map.getnodebypath("/ISA_LOOP/GS_LOOP/ST_LOOP/HEADER/BHT")
+        seg_data = pyx12.segment.Segment("BHT*0019*00*0123*99999999*1432*CH~", "~", "*", ":")
+        errh = _RecordingErrh()
+        ok = self.apply(bht_node, seg_data, errh)
+        self.assertFalse(ok)
+        seg_calls = [c for c in errh.calls if c[0] == "seg_error"]
+        ele_calls = [c for c in errh.calls if c[0] == "ele_error"]
+        self.assertEqual(
+            seg_calls,
+            [("seg_error", "SEG_8_has_data_element_errors", None)],
+        )
+        self.assertEqual(len(ele_calls), 1)
+        self.assertEqual(ele_calls[0][1], "ELE_8_invalid_date")
+
+    def test_multiple_element_errors_emit_one_seg_8(self):
+        # NM1 segment with NM108 = "MIM" fires both ELE_5_too_long
+        # (max_len 2) and ELE_7_invalid_code on the same element.
+        # Both must be preserved in err_ele, and exactly one SEG_8
+        # lands in err_seg.
+        nm1_node = self.map.getnodebypath("/ISA_LOOP/GS_LOOP/ST_LOOP/DETAIL/2000A/2010AA/NM1")
+        seg_data = pyx12.segment.Segment("NM1*85*1*PROVIDER**A***MIM*123~", "~", "*", ":")
+        errh = _RecordingErrh()
+        ok = self.apply(nm1_node, seg_data, errh)
+        self.assertFalse(ok)
+        seg_calls = [c for c in errh.calls if c[0] == "seg_error"]
+        ele_calls = [c for c in errh.calls if c[0] == "ele_error"]
+        self.assertEqual(
+            seg_calls,
+            [("seg_error", "SEG_8_has_data_element_errors", None)],
+        )
+        self.assertGreaterEqual(len(ele_calls), 2)
+        for c in ele_calls:
+            self.assertTrue(c[1].startswith("ELE_"))
+
+    def test_no_errors_emits_no_seg_8(self):
+        # Valid NM1 segment fires zero errors: neither ele_error nor
+        # seg_error should be called.
+        nm1_node = self.map.getnodebypath("/ISA_LOOP/GS_LOOP/ST_LOOP/DETAIL/2000A/2010AA/NM1")
+        seg_data = pyx12.segment.Segment("NM1*85*1*PROVIDER**A***24*123456789~", "~", "*", ":")
+        errh = _RecordingErrh()
+        ok = self.apply(nm1_node, seg_data, errh)
+        self.assertTrue(ok)
+        self.assertEqual(errh.calls, [])
