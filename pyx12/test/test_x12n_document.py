@@ -98,6 +98,44 @@ class X12DocumentTestCase(unittest.TestCase):
         self.assertEqual(actual, datafiles[datakey]["resJson"])
 
 
+class TA1Gate(X12DocumentTestCase):
+    """X12 TA1 emission is gated on ISA14 (ta1_req) = '1'. The gate is
+    a spec requirement: a sender with ISA14='0' is opting out of TA1
+    feedback, so the visitor must not emit TA1 even when ISA-level
+    errors were collected. These tests lock the gate against accidental
+    bypass."""
+
+    # Source with missing IEA → ISA_023_PREMATURE_EOF fires.
+    # ISA14 toggled between '1' and '0' below.
+    _SRC_TEMPLATE = (
+        "ISA*00*          *00*          *ZZ*ZZ000          *ZZ*ZZ001          "
+        "*030828*1128*U*00401*000010121*{ta1_req}*T*:~\n"
+        "GS*HC*ZZ000*ZZ001*20030828*1128*17*X*004010X098A1~\n"
+        "ST*837*11280001~\n"
+        "SE*0*11280001~\n"
+        "GE*1*17~\n"
+    )
+
+    def _run_and_collect_segments(self, source: str) -> list[str]:
+        fd_source = self._makeFd(source)
+        fd_997 = StringIO()
+        pyx12.x12n_document.x12n_document(self.param, fd_source, fd_997, None, None)
+        fd_997.seek(0)
+        return [line.split("*", 1)[0] for line in fd_997.read().splitlines() if line]
+
+    def test_ta1_emitted_when_ta1_req_is_1(self):
+        seg_ids = self._run_and_collect_segments(self._SRC_TEMPLATE.format(ta1_req="1"))
+        self.assertIn("TA1", seg_ids, f"Expected TA1 in output, got {seg_ids}")
+
+    def test_ta1_not_emitted_when_ta1_req_is_0(self):
+        seg_ids = self._run_and_collect_segments(self._SRC_TEMPLATE.format(ta1_req="0"))
+        self.assertNotIn(
+            "TA1",
+            seg_ids,
+            f"TA1 must not emit when ISA14=0 even with ISA-level errors; got {seg_ids}",
+        )
+
+
 class Test834(X12DocumentTestCase):
     def test_834_lui_id(self):
         self._test_997("834_lui_id")
