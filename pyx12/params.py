@@ -51,6 +51,11 @@ class ParamsBase:
         self.params["charset"] = "E"
         self.params["simple_dtd"] = ""
         self.params["xmlout"] = "simple"
+        # pyx12 error codes to suppress (filtered out before reaching the
+        # err_handler tree, so they don't appear in 997 / 999 / JSON
+        # output). Set via `--suppress CODE,CODE,...` on x12valid or
+        # programmatically via params.set("suppress_error_codes", {...}).
+        self.params["suppress_error_codes"] = set()
 
     def get(self, option: str) -> Any:
         """

@@ -99,6 +99,7 @@ class err_handler:
     cur_ele_node: Any
     ele_node_added: bool
     cur_line: int
+    suppress_error_codes: set[str]
 
     def __init__(self) -> None:
         """ """
@@ -113,6 +114,12 @@ class err_handler:
         self.seg_node_added = False
         self.cur_ele_node = None
         self.ele_node_added = False
+        # pyx12 error codes to filter out before they reach the err_handler
+        # tree. Populated by orchestrators (x12n_document, X12ContextReader)
+        # from params.get("suppress_error_codes"). Read by the
+        # apply_segment_errors / apply_walk_errors bridges in
+        # pyx12.map_if._segment and pyx12.map_walker.
+        self.suppress_error_codes = set()
         self.cur_line = 0
 
     def accept(self, visitor: Any) -> None:
@@ -1004,6 +1011,7 @@ class errh_null:
     cur_line: int
     err_cde: str | None
     err_str: str | None
+    suppress_error_codes: set[str]
 
     def __init__(self) -> None:
         self.id = "ROOT"
@@ -1011,6 +1019,7 @@ class errh_null:
         self.cur_line = 0
         self.err_cde = None
         self.err_str = None
+        self.suppress_error_codes = set()
 
     def reset(self) -> None:
         """
@@ -1176,6 +1185,7 @@ class errh_list:
     err_st: list[tuple[str, str]]
     err_seg: list[tuple[str, str, str | None]]
     err_ele: list[tuple[str, str, str | None, str | None]]
+    suppress_error_codes: set[str]
 
     def __init__(self) -> None:
         self.id = "ROOT"
@@ -1186,6 +1196,7 @@ class errh_list:
         self.err_st = []
         self.err_seg = []
         self.err_ele = []
+        self.suppress_error_codes = set()
 
     def reset(self) -> None:
         """

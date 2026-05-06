@@ -75,6 +75,20 @@ def build_parser() -> argparse.ArgumentParser:
         help="Write JSON error output alongside the input as <input>.json",
     )
     parser.add_argument(
+        "--suppress",
+        "-S",
+        action="append",
+        dest="suppress",
+        default=[],
+        metavar="CODE,CODE,...",
+        help=(
+            "Suppress pyx12 error codes from the err_handler tree, "
+            "997/999 ack output, and JSON output. Comma-separated; "
+            "may be given multiple times. Example: "
+            "--suppress ELE_6_invalid_composite,SEG_3_too_many_elements"
+        ),
+    )
+    parser.add_argument(
         "--exclude-external-codes",
         "-x",
         action="append",
@@ -122,6 +136,12 @@ def main():
     fd_json = None
     flag_997 = True
     param.set("exclude_external_codes", ",".join(args.exclude_external))
+    if args.suppress:
+        # `--suppress A,B --suppress C` -> {"A", "B", "C"}.
+        codes: set[str] = set()
+        for chunk in args.suppress:
+            codes.update(c.strip() for c in chunk.split(",") if c.strip())
+        param.set("suppress_error_codes", codes)
     if args.map_path:
         param.set("map_path", args.map_path)
 

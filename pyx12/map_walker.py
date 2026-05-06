@@ -124,12 +124,18 @@ def apply_walk_errors(errh: Any, errors: list[SegError]) -> None:
     map_node=None preserves the existing cursor (used for usage='N'
     emissions that historically attach to the prior segment).
 
+    Errors whose pyx12 code is in ``errh.suppress_error_codes`` are
+    filtered out before they reach the err_handler tree.
+
     :param errh: Error handler
     :type errh: L{error_handler.err_handler}
     :param errors: SegErrors accumulated by walk_errors()
     :type errors: [L{SegError}]
     """
+    suppressed: set[str] = getattr(errh, "suppress_error_codes", set()) or set()
     for e in errors:
+        if e.err_cde in suppressed:
+            continue
         if e.map_node is not None:
             errh.add_seg(e.map_node, e.seg_data, e.seg_count, e.src_line, e.ls_id)
         errh.seg_error(e.err_cde, e.err_str, e.err_val, e.src_line)

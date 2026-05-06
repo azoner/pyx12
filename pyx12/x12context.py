@@ -868,6 +868,9 @@ class X12ContextReader:
         # keep passing `errh_null()` see no behavior change since all
         # the lifecycle methods are no-ops there.
         self.errh = errh
+        suppress = param.get("suppress_error_codes")
+        if suppress:
+            self.errh.suppress_error_codes = set(suppress)
         self.icvn = None
         self.fic = None
         self.vriic = None

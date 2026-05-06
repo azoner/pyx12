@@ -82,6 +82,9 @@ def x12n_document(
     """
     logger = logging.getLogger("pyx12")
     errh = pyx12.error_handler.err_handler()
+    suppress = param.get("suppress_error_codes")
+    if suppress:
+        errh.suppress_error_codes = set(suppress)
 
     # Get X12 DATA file
     try:

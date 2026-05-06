@@ -48,8 +48,16 @@ def apply_segment_errors(node: segment_if, seg_data: pyx12.segment.Segment, errh
     IK3 code that semantically fits these data-element-level issues.
     Their original IK4 codes ("3", "10", "1", "5", "2") collide with
     different IK3 semantics and would produce wrong or dropped 999
-    output."""
+    output.
+
+    Errors whose pyx12 code is in ``errh.suppress_error_codes`` are
+    filtered out before they reach the err_handler tree. ``ok`` still
+    reflects whether the validator found any errors (suppression does
+    not flip a bad segment to good)."""
     ok, errors = node.is_valid_errors(seg_data)
+    suppressed: set[str] = getattr(errh, "suppress_error_codes", set()) or set()
+    if suppressed:
+        errors = [e for e in errors if e.err_cde not in suppressed]
     prev_cursor = None
     for e in errors:
         if e.map_node is None:

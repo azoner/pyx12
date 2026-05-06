@@ -3,6 +3,7 @@ import os
 import tempfile
 import unittest
 from io import StringIO
+from typing import Any
 
 import pyx12.error_handler
 import pyx12.params
@@ -297,3 +298,114 @@ class UnicodeInput(X12DocumentTestCase):
             pyx12.x12n_document.x12n_document(self.param, temppath, fd_997, None, None)
         finally:
             os.unlink(temppath)
+
+
+class SuppressErrorCodes(X12DocumentTestCase):
+    """PR 6 of the error-code generalization plan: pyx12 codes can be
+    suppressed via params.suppress_error_codes. Suppressed codes are
+    filtered out at the apply_segment_errors / apply_walk_errors bridge
+    point, so they never reach the err_handler tree, the 997/999 ack,
+    or JSON output."""
+
+    def setUp(self):
+        super().setUp()
+        # 834_lui_id_5010_non_ascii has REF02 = "00389\xe9999" which the
+        # validator rejects as ELE_6_invalid_type_char. We use it as the
+        # fixture source for the suppression scenario.
+        self.suppress_target_source = datafiles["834_lui_id_5010_non_ascii"]["source"]
+
+    def _run_with_suppression(self, codes: set[str]) -> tuple[str, dict[str, Any]]:
+        param = pyx12.params.params()
+        param.set("suppress_error_codes", codes)
+        fd_source = self._makeFd(self.suppress_target_source)
+        fd_997 = StringIO()
+        fd_json = StringIO()
+        pyx12.x12n_document.x12n_document(param, fd_source, fd_997, None, None, fd_json=fd_json)
+        fd_997.seek(0)
+        fd_json.seek(0)
+        return fd_997.read(), json.loads(fd_json.read())
+
+    def test_suppression_removes_element_error_from_999(self):
+        # Without suppression, the 999 ack contains an IK4 segment for
+        # the bad REF02 value.
+        ack_no_suppress, _ = self._run_with_suppression(set())
+        self.assertIn("IK4", ack_no_suppress)
+        # With ELE_6_invalid_type_char suppressed, no IK4 in the ack.
+        ack_suppressed, _ = self._run_with_suppression({"ELE_6_invalid_type_char"})
+        self.assertNotIn("IK4", ack_suppressed)
+
+    def test_suppression_removes_element_error_from_json(self):
+        # Without suppression, the JSON output has an element error
+        # entry with err_cde = "ELE_6_invalid_type_char".
+        _, doc_no_suppress = self._run_with_suppression(set())
+        all_errs_no_suppress = self._collect_err_cdes(doc_no_suppress)
+        self.assertIn("ELE_6_invalid_type_char", all_errs_no_suppress)
+        # With suppression, that code is gone from the JSON tree.
+        _, doc_suppressed = self._run_with_suppression({"ELE_6_invalid_type_char"})
+        all_errs_suppressed = self._collect_err_cdes(doc_suppressed)
+        self.assertNotIn("ELE_6_invalid_type_char", all_errs_suppressed)
+
+    def test_unrelated_code_suppression_is_no_op(self):
+        # Suppressing a code that doesn't appear in this fixture's
+        # errors leaves output unchanged.
+        baseline_ack, baseline_doc = self._run_with_suppression(set())
+        with_unrelated, with_unrelated_doc = self._run_with_suppression(
+            {"SEG_4_loop_repeat_exceeded"}
+        )
+        self.assertEqual(baseline_doc, with_unrelated_doc)
+        # The 999 ack content (modulo dynamic timestamps in the envelope)
+        # should be byte-identical between the two runs. Skip envelope
+        # comparison and just check that the IK segments match.
+        self.assertEqual(
+            [seg for seg in baseline_ack.split("~") if seg.startswith("IK")],
+            [seg for seg in with_unrelated.split("~") if seg.startswith("IK")],
+        )
+
+    @staticmethod
+    def _collect_err_cdes(doc: dict[str, Any]) -> list[str]:
+        """Walk the JSON err_handler tree and return every err_cde."""
+        out: list[str] = []
+        for isa in doc.get("interchanges", []):
+            out.extend(e["err_cde"] for e in isa.get("errors", []))
+            for gs in isa.get("groups", []):
+                out.extend(e["err_cde"] for e in gs.get("errors", []))
+                for st in gs.get("transactions", []):
+                    out.extend(e["err_cde"] for e in st.get("errors", []))
+                    for seg in st.get("segments", []):
+                        out.extend(e["err_cde"] for e in seg.get("errors", []))
+                        for ele in seg.get("elements", []):
+                            out.extend(e["err_cde"] for e in ele.get("errors", []))
+        return out
+
+
+class SuppressCLIArg(unittest.TestCase):
+    """The --suppress CLI flag on x12valid parses comma-separated codes
+    into a set and stores them in params.suppress_error_codes."""
+
+    def test_single_code_via_argparse(self):
+        from pyx12.scripts.x12valid import build_parser
+
+        args = build_parser().parse_args(["--suppress", "ELE_6_invalid_type_char", "f.x12"])
+        self.assertEqual(args.suppress, ["ELE_6_invalid_type_char"])
+
+    def test_comma_separated_via_argparse(self):
+        from pyx12.scripts.x12valid import build_parser
+
+        args = build_parser().parse_args(
+            ["-S", "ELE_6_invalid_type_char,SEG_3_too_many_elements", "f.x12"]
+        )
+        self.assertEqual(args.suppress, ["ELE_6_invalid_type_char,SEG_3_too_many_elements"])
+
+    def test_repeated_flag_via_argparse(self):
+        from pyx12.scripts.x12valid import build_parser
+
+        args = build_parser().parse_args(
+            [
+                "--suppress",
+                "ELE_6_invalid_type_char",
+                "-S",
+                "SEG_3_too_many_elements",
+                "f.x12",
+            ]
+        )
+        self.assertEqual(args.suppress, ["ELE_6_invalid_type_char", "SEG_3_too_many_elements"])
