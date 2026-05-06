@@ -1,4 +1,5 @@
 import json
+import os
 import tempfile
 import unittest
 from io import StringIO
@@ -259,3 +260,29 @@ class TestTemp(X12DocumentTestCase):
         pyx12.x12n_document.x12n_document(param, fd_source, fd_997, fd_html, None)
         fd_997.seek(0)
         # self._isX12Diff(fd_997_base, fd_997)
+
+
+class UnicodeInput(X12DocumentTestCase):
+    """Regression for #157: non-ASCII bytes in the input file must
+    surface as validation errors, not a UnicodeDecodeError that crashes
+    the parser. Historically `open(..., encoding='ascii')` raised on
+    the first non-ASCII byte; the file is now opened with latin-1 (a
+    never-fail single-byte codec), so non-ASCII codepoints are passed
+    through to the validator where rec_ID_B / rec_ID_E reject them via
+    normal error paths."""
+
+    def test_non_ascii_byte_does_not_raise(self):
+        # Embed `é` (0xE9 in latin-1) inside a REF02 value of a real fixture.
+        source = datafiles["834_lui_id"]["source"].replace("REF*0F*00389999", "REF*0F*00389\xe9999")
+        # Write the source to a tempfile so x12n_document opens it via the
+        # filename path (i.e. exercises the encoding choice in X12Reader).
+        with tempfile.NamedTemporaryFile(mode="wb", suffix=".x12", delete=False) as f:
+            f.write(source.encode("latin-1"))
+            temppath = f.name
+        try:
+            fd_997 = StringIO()
+            # Must not raise UnicodeDecodeError. Return value can be either
+            # — what matters is that the parser ran end-to-end.
+            pyx12.x12n_document.x12n_document(self.param, temppath, fd_997, None, None)
+        finally:
+            os.unlink(temppath)

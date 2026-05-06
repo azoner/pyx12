@@ -347,7 +347,14 @@ class X12Reader(X12Base):
             if src_file_obj == "-":
                 self.fd_in = sys.stdin
             else:
-                self.fd_in = open(src_file_obj, encoding="ascii")  # type: ignore[arg-type]
+                # X12 requires ASCII, but a non-ASCII byte in the input
+                # should surface as a validation error (caught by the
+                # rec_ID_* regexes in pyx12.validation), not a parse-time
+                # UnicodeDecodeError that crashes the whole pipeline.
+                # latin-1 maps every byte 0-255 to a Unicode codepoint and
+                # never raises, so non-ASCII bytes get through to the
+                # validator where they're rejected by normal error paths.
+                self.fd_in = open(src_file_obj, encoding="latin-1")  # type: ignore[arg-type]
                 self.need_to_close = True
         X12Base.__init__(self)
         try:
