@@ -256,6 +256,13 @@ class Test5010(X12DocumentTestCase):
     def test_834_eol_in_element_json(self):
         self._test_json("834_eol_in_element")
 
+    def test_simple_837d(self):
+        # 5010 Dental (837D / X224A2) — clean claim acks A on the 999.
+        self._test_999("simple_837d")
+
+    def test_simple_837d_json(self):
+        self._test_json("simple_837d")
+
 
 class TestTemp(X12DocumentTestCase):
     def test_999_temp(self):
