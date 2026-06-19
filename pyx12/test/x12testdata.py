@@ -4490,6 +4490,82 @@ IEA*1*000484889~""",
             ]
         },
     },
+    "simple_837d": {
+        "source": """ISA*00*          *00*          *ZZ*SUBMITTER123   *ZZ*RECEIVER456    *260619*1430*^*00501*000000001*0*P*:~
+GS*HC*SUBMITTER123*RECEIVER456*20260619*1430*1*X*005010X224A2~
+ST*837*0001*005010X224A2~
+BHT*0019*00*0123*20260619*1430*CH~
+NM1*41*2*PREMIER DENTAL GROUP*****46*SUBMITTER123~
+PER*IC*CONTACT*TE*8005551212~
+NM1*40*2*MEDICAID OF SOMESTATE*****46*RECEIVER456~
+HL*1**20*1~
+NM1*85*2*PREMIER DENTAL GROUP*****XX*1234567893~
+N3*123 MAIN STREET~
+N4*ANYTOWN*PA*17000~
+REF*EI*123456789~
+HL*2*1*22*0~
+SBR*P*18*******MC~
+NM1*IL*1*DOE*JOHN****MI*MEMBER001~
+N3*456 OAK AVENUE~
+N4*ANYTOWN*PA*17000~
+DMG*D8*19800101*M~
+NM1*PR*2*MEDICAID OF SOMESTATE*****PI*PAYER001~
+CLM*PATIENTACCT1*150***11:B:1*Y*A*Y*Y~
+HI*ABK:K089~
+LX*1~
+SV3*AD:D1110*150*11***1~
+DTP*472*D8*20260601~
+SE*23*0001~
+GE*1*1~
+IEA*1*000000001~
+""",
+        "resAck": """ISA*00*          *00*          *ZZ*RECEIVER456    *ZZ*SUBMITTER123   *260619*1430*^*00501*000000001*0*P*:~
+GS*FA*RECEIVER456*SUBMITTER123*20260619*1430*1*X*005010X231~
+ST*999*0001*005010X231~
+AK1*HC*1*005010X224A2~
+AK2*837*0001*005010X224A2~
+IK5*A~
+AK9*A*1*1*1~
+SE*6*0001~
+GE*1*1~
+IEA*1*000000001~
+""",
+        "resJson": {
+            "interchanges": [
+                {
+                    "isa_trn_set_id": "000000001",
+                    "ta1_req": "0",
+                    "orig_date": "260619",
+                    "orig_time": "1430",
+                    "cur_line": 27,
+                    "errors": [],
+                    "groups": [
+                        {
+                            "gs_control_num": "1",
+                            "fic": "HC",
+                            "vriic": "005010X224A2",
+                            "ack_code": "A",
+                            "st_count_orig": 1,
+                            "st_count_recv": 1,
+                            "cur_line": 26,
+                            "errors": [],
+                            "transactions": [
+                                {
+                                    "trn_set_id": "837",
+                                    "trn_set_control_num": "0001",
+                                    "vriic": "005010X224A2",
+                                    "ack_code": "A",
+                                    "cur_line": 25,
+                                    "errors": [],
+                                    "segments": [],
+                                }
+                            ],
+                        }
+                    ],
+                }
+            ]
+        },
+    },
     "834_lui_id_5010": {
         "source": """ISA*00*          *00*          *ZZ*D00XXX         *ZZ*00AA           *070305*1832*U*00501*000701336*0*P*:~
 GS*BE*D00XXX*00AA*20070305*1832*13360001*X*005010X220A1~
