@@ -111,6 +111,12 @@ class Test834(X12DocumentTestCase):
     def test_834_ls_le_ls_json(self):
         self._test_json("834_ls_le_ls")
 
+    def test_834_repeated_composite(self):
+        self._test_999("834_repeated_composite")
+
+    def test_834_repeated_composite_json(self):
+        self._test_json("834_repeated_composite")
+
 
 class Test835(X12DocumentTestCase):
     def test_835id(self):

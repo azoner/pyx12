@@ -4794,6 +4794,15 @@ IEA*1*311071503~
     },
 }
 
+datafiles["834_repeated_composite"] = {
+    "source": datafiles["834_ls_le_ls"]["source"].replace(
+        "DMG*D8*19830719*F**C:RET:2186-5~",
+        "DMG*D8*19830719*F**C:RET:2186-5!B:RET:1002-5~",
+    ),
+    "resAck": datafiles["834_ls_le_ls"]["resAck"],
+    "resJson": datafiles["834_ls_le_ls"]["resJson"],
+}
+
 if __name__ == "__main__":
     import os.path
 
