@@ -122,9 +122,16 @@ class Composite:
 
     subele_term: str
     subele_term_orig: str
+    repetition_term: str | None
+    repetitions: list[list[Element]]
     elements: list[Element]
 
-    def __init__(self, ele_str: str, subele_term: str | None = None) -> None:
+    def __init__(
+        self,
+        ele_str: str,
+        subele_term: str | None = None,
+        repetition_term: str | None = None,
+    ) -> None:
         """
         :type ele_str: string
         :raises EngineError: If a terminator is None and no default
@@ -135,21 +142,18 @@ class Composite:
             )
         self.subele_term = subele_term
         self.subele_term_orig = subele_term
+        self.repetition_term = repetition_term
         if ele_str is None:
             raise EngineError("Element string is None")
-        members = ele_str.split(self.subele_term)
-        self.elements = []
-        for elem in members:
-            self.elements.append(Element(elem))
+        values = ele_str.split(repetition_term) if repetition_term else [ele_str]
+        self.repetitions = [
+            [Element(elem) for elem in value.split(self.subele_term)] for value in values
+        ]
+        self.elements = self.repetitions[0]
 
     def __eq__(self, other: object) -> bool:
         if isinstance(other, Composite):
-            if len(self.elements) != len(other.elements):
-                return False
-            for i in range(len(self.elements)):
-                if self.elements[i] != other.elements[i]:
-                    return False
-            return True
+            return self.repetitions == other.repetitions
         return NotImplemented
 
     def __lt__(self, other: object) -> bool:
@@ -198,10 +202,36 @@ class Composite:
             subele_term = self.subele_term
         if subele_term is None:
             raise EngineError("subele_term is None")
-        for i in range(len(self.elements) - 1, -1, -1):
-            if not self.elements[i].is_empty():
+        values = [self._format_repetition(elements, subele_term) for elements in self.repetitions]
+        if self.repetition_term is None:
+            return values[0]
+        return self.repetition_term.join(values)
+
+    @staticmethod
+    def _format_repetition(elements: list[Element], subele_term: str) -> str:
+        last = -1
+        for i in range(len(elements) - 1, -1, -1):
+            if not elements[i].is_empty():
+                last = i
                 break
-        return subele_term.join([Element.__repr__(x) for x in self.elements[: i + 1]])
+        return subele_term.join(Element.__repr__(x) for x in elements[: last + 1])
+
+    def get_values(self) -> tuple[str, ...]:
+        """Return each repetition as a formatted value."""
+        return tuple(
+            self._format_repetition(elements, self.subele_term) for elements in self.repetitions
+        )
+
+    def get_repetition(self, idx: int) -> Composite:
+        """Return one repetition as a non-repeating value."""
+        return Composite(self.get_values()[idx], self.subele_term)
+
+    def get_repetition_count(self) -> int:
+        return len(self.repetitions)
+
+    def max_len(self) -> int:
+        """Return the largest component count among repetitions."""
+        return max(len(elements) for elements in self.repetitions)
 
     def get_value(self) -> str:
         """
@@ -223,7 +253,7 @@ class Composite:
         """
         :rtype: boolean
         """
-        if len(self.elements) > 1:
+        if self.max_len() > 1:
             return True
         else:
             return False
@@ -232,7 +262,7 @@ class Composite:
         """
         :rtype: boolean
         """
-        if len(self.elements) == 1:
+        if self.max_len() == 1:
             return True
         else:
             return False
@@ -241,9 +271,10 @@ class Composite:
         """
         :rtype: boolean
         """
-        for ele in self.elements:
-            if not ele.is_empty():
-                return False
+        for elements in self.repetitions:
+            for ele in elements:
+                if not ele.is_empty():
+                    return False
         return True
 
     def values_iterator(self) -> Iterator[tuple[str, str]]:
@@ -264,7 +295,7 @@ class Segment:
     ele_term_orig: str
     subele_term: str
     subele_term_orig: str
-    repetition_term: str
+    repetition_term: str | None
     seg_id: str | None
     elements: list[Composite]
 
@@ -274,7 +305,7 @@ class Segment:
         seg_term: str,
         ele_term: str,
         subele_term: str,
-        repetition_term: str = "^",
+        repetition_term: str | None = "^",
     ) -> None:
         """ """
         self.seg_term = seg_term
@@ -300,7 +331,7 @@ class Segment:
                 # guarantee subele_term will not be matched
                 self.elements.append(Composite(ele, ele_term))
             else:
-                self.elements.append(Composite(ele, subele_term))
+                self.elements.append(Composite(ele, subele_term, repetition_term))
 
     def __eq__(self, other: object) -> bool:
         if isinstance(other, Segment):
@@ -336,7 +367,7 @@ class Segment:
         :param val: String value of composite
         :type val: string
         """
-        self.elements.append(Composite(val, self.subele_term))
+        self.elements.append(Composite(val, self.subele_term, self.repetition_term))
 
     def __len__(self) -> int:
         """
@@ -403,6 +434,21 @@ class Segment:
         else:
             return comp1.format()
 
+    def get_values(self, ref_des: str) -> tuple[str, ...] | None:
+        """Return all repetitions for an element or component."""
+        ele_idx, comp_idx = self._parse_refdes(ref_des)
+        if ele_idx is None:
+            raise IndexError(f"{ref_des} is not a valid element index")
+        if ele_idx >= len(self.elements):
+            return None
+        composite = self.elements[ele_idx]
+        if comp_idx is None:
+            return composite.get_values()
+        values: list[str] = []
+        for elements in composite.repetitions:
+            values.append(elements[comp_idx].get_value() if comp_idx < len(elements) else "")
+        return tuple(values)
+
     def get_value_by_ref_des(self, ref_des: str) -> str:
         """
         :param ref_des: X12 Reference Designator
@@ -434,7 +480,7 @@ class Segment:
             self.elements[ele_idx] = Composite(val, self.ele_term)
             return
         if comp_idx is None:
-            self.elements[ele_idx] = Composite(val, self.subele_term)
+            self.elements[ele_idx] = Composite(val, self.subele_term, self.repetition_term)
         else:
             while len(self.elements[ele_idx]) <= comp_idx:
                 # insert blank values before our value if needed
@@ -471,7 +517,7 @@ class Segment:
         ele_idx = self._parse_refdes(ref_des)[0]
         if ele_idx is None:
             raise IndexError(f"{ref_des} is not a valid element index")
-        return len(self.elements[ele_idx])
+        return self.elements[ele_idx].max_len()
 
     def set_seg_term(self, seg_term: str) -> None:
         """
@@ -570,7 +616,13 @@ class Segment:
         return self.__copy__()
 
     def __copy__(self) -> Segment:
-        return Segment(self.format(), self.seg_term, self.ele_term, self.subele_term)
+        return Segment(
+            self.format(),
+            self.seg_term,
+            self.ele_term,
+            self.subele_term,
+            self.repetition_term,
+        )
 
     def values_iterator(self) -> Iterator[tuple[str, str, str | None, str]]:
         """
