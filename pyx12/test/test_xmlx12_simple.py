@@ -2,6 +2,7 @@ import logging
 import tempfile
 import unittest
 from io import StringIO
+from types import SimpleNamespace
 
 import pyx12.error_handler
 import pyx12.params
@@ -137,3 +138,27 @@ class X12Structure(XmlTransformTestCase):
 
     def test_simple_837p(self):
         self._test_x12xml_simple("simple_837p")
+
+
+def _seg_node(seg_id, loop_path, first_in_loop):
+    loop = SimpleNamespace(
+        is_loop=lambda: True, is_map_root=lambda: False, get_path=lambda: loop_path
+    )
+    return SimpleNamespace(
+        id=seg_id,
+        parent=loop,
+        is_segment=lambda: True,
+        is_map_root=lambda: False,
+        is_first_seg_in_loop=lambda: first_in_loop,
+    )
+
+
+class LoopPathTransition(unittest.TestCase):
+    def test_sibling_loop_ids_sharing_a_string_prefix(self):
+        # "B" is a string prefix of sibling "BC"; entering B must not close and reopen parent A
+        fd = StringIO()
+        xml = pyx12.x12xml_simple.x12xml_simple(fd)
+        xml.seg(_seg_node("S1", "/A/BC", True), [])
+        xml.seg(_seg_node("S2", "/A/B", True), [])
+        xml.close()
+        self.assertEqual(fd.getvalue().count("<loop id='A'>"), 1)

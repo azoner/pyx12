@@ -15,7 +15,6 @@ Create a XML rendering of the X12 document
 from __future__ import annotations
 
 import logging
-from os.path import commonprefix
 from typing import Any, TextIO
 
 # Intrapackage imports
@@ -57,8 +56,7 @@ class x12xml_simple(x12xml):
         else:
             last_path = self.last_path
             match_idx = self._get_path_match_idx(last_path, cur_path)
-            root_path = self._path_list(commonprefix(["/".join(cur_path), "/".join(last_path)]))
-            if seg_node.is_first_seg_in_loop() and root_path == cur_path:
+            if seg_node.is_first_seg_in_loop() and match_idx == len(cur_path):
                 match_idx -= 1
             for i in range(len(last_path) - 1, match_idx - 1, -1):
                 self.writer.pop()
