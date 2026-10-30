@@ -133,6 +133,33 @@ class X12InterchangeControlVersion(X12fileTestCase):
         self.assertRaises(pyx12.errors.X12Error, pyx12.rawx12file.RawX12File, fd)
 
 
+class BlankSegments(X12fileTestCase):
+    ISA = "ISA*00*          *00*          *ZZ*ZZ000          *ZZ*ZZ001          *030828*1128*U*00401*000010121*0*T*:~"
+
+    def _seg_ids(self, x12str):
+        return [line.split("*", 1)[0] for line in pyx12.rawx12file.RawX12File(self._makeFd(x12str))]
+
+    def test_double_terminator_does_not_end_file(self):
+        str1 = (
+            self.ISA + "GS*HC*ZZ000*ZZ001*20030828*1128*17*X*004010X098~~GE*0*17~IEA*1*000010121~"
+        )
+        self.assertEqual(self._seg_ids(str1), ["ISA", "GS", "GE", "IEA"])
+
+    def test_blank_line_does_not_end_file(self):
+        str1 = self.ISA + "\nGS*HC*ZZ000*ZZ001*20030828*1128*17*X*004010X098~\r\n~\r\nGE*0*17~\n"
+        str1 += "IEA*1*000010121~\n"
+        self.assertEqual(self._seg_ids(str1), ["ISA", "GS", "GE", "IEA"])
+
+    def test_blank_segment_between_interchanges(self):
+        str1 = self.ISA + "IEA*0*000010121~~" + self.ISA.replace("000010121", "000010122")
+        str1 += "IEA*0*000010122~"
+        self.assertEqual(self._seg_ids(str1), ["ISA", "IEA", "ISA", "IEA"])
+
+    def test_trailing_blank_segments(self):
+        str1 = self.ISA + "IEA*0*000010121~~\n~\n"
+        self.assertEqual(self._seg_ids(str1), ["ISA", "IEA"])
+
+
 class RawISA_header(X12fileTestCase):
     def test_starts_with_ISA(self):
         fd = self._makeFd(" ISA~")
