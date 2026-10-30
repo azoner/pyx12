@@ -96,6 +96,13 @@ class SegmentIsValid(unittest.TestCase):
         self.assertFalse(result)
         self.assertEqual([e.err_cde for e in errors], ["SEG_3_too_many_elements"])
 
+    def test_composite_too_many_subelements(self):
+        # CLM05 has 3 sub-elements; used to raise IndexError in segment_if
+        seg_data = pyx12.segment.Segment("CLM*A37YH556*500***11:A:1:X:Y**A*Y*Y~", "~", "*", ":")
+        result, errors = self.node.getnodebypath("CLM").is_valid_errors(seg_data)
+        self.assertFalse(result)
+        self.assertEqual([e.err_cde for e in errors], ["COMP_3_too_many_subelements"])
+
 
 class ElementIsValid(unittest.TestCase):
     def setUp(self):
