@@ -20,6 +20,7 @@ from typing import Any, cast
 # Intrapackage imports
 import pyx12.segment
 
+from .error_codes import ISA_024_INVALID_CONTENT
 from .errors import IterOutOfBounds  # , IterDone
 
 logger = logging.getLogger("pyx12.error_handler")
@@ -289,6 +290,17 @@ class err_handler:
         :param err_str: Description of the error
         :type err_str: string
         """
+        if not self.seg_node_added and (self.cur_st_node is None or self.cur_st_node.is_closed()):
+            # Outside any open transaction set, so no AK3/IK3 can carry it. Report it on the
+            # innermost open envelope. In a group: AK9 R with AK905 "5", the code X12 RFI 1339
+            # suggests when no group code fits. Otherwise the interchange (TA1 024); X12 RFI 2435
+            # scopes the TA1 to ISA/IEA, so a fault inside a group must not land there.
+            gs = self.cur_gs_node
+            if gs is not None and not gs.is_closed() and gs.parent is self.cur_isa_node:
+                self.gs_error("5", err_str)
+            else:
+                self.isa_error(ISA_024_INVALID_CONTENT, err_str)
+            return
         sout = ""
         try:
             self._add_cur_seg()

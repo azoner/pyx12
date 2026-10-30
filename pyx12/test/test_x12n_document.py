@@ -263,6 +263,12 @@ class X12Structure(X12DocumentTestCase):
     def test_blank_segments_json(self):
         self._test_json("blank_segments")
 
+    def test_gs_without_st(self):
+        self._test_997("gs_without_st")
+
+    def test_gs_without_st_json(self):
+        self._test_json("gs_without_st")
+
     def test_trailing_terms(self):
         self._test_997("trailing_terms")
 

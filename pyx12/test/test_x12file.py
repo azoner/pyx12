@@ -292,9 +292,8 @@ class SE_Checks(X12fileTestCase):
         str1 += "GE*1*17~\n"
         str1 += "IEA*1*000010121~\n"
         errors = self._get_errors(str1)
-        self.assertEqual(
-            errors, [("isa", ISA_024_INVALID_CONTENT, "SE segment has no open ST loop")]
-        )
+        # Inside an open GS, so a group fault (AK905 5), not an interchange one
+        self.assertEqual(errors, [("gs", "5", "SE segment has no open ST loop")])
 
     def test_SE_without_ST(self):
         str1 = "ISA*00*          *00*          *ZZ*ZZ000          *ZZ*ZZ001          *030828*1128*U*00401*000010121*0*T*:~\n"

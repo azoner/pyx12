@@ -175,7 +175,8 @@ Code        Meaning
 ==========  ==================================================
 ``'3'``     Unterminated GS loop / mandatory ``GE`` missing
 ``'4'``     ``GE02`` does not match the matching ``GS06``
-``'5'``     ``GE01`` count of transaction sets in the group is wrong
+``'5'``     ``GE01`` count of transaction sets in the group is wrong, or a segment
+            sits in the group outside any transaction set (see below)
 ``'6'``     ``GS06`` group control number is not unique within the file
 ==========  ==================================================
 
@@ -192,12 +193,33 @@ Code        Meaning
 ``'001'``   ``IEA02`` does not match the matching ``ISA13``
 ``'021'``   ``IEA01`` count of functional groups in the interchange is wrong
 ``'023'``   Mandatory ``IEA`` (Interchange Control Trailer) missing at EOF
-``'024'``   Unterminated GS loop within the interchange
+``'024'``   Unterminated GS loop within the interchange, or a segment in the
+            interchange outside any functional group (see below)
 ``'025'``   ``ISA13`` interchange control number is not unique within the file
 ==========  ==================================================
 
 Source: ``X12Reader._parse_segment`` and ``X12Reader.cleanup`` in
 :doc:`api/pyx12/x12file/index`.
+
+Segments outside a transaction set
+----------------------------------
+
+A segment with no open transaction set (a functional group with no ``ST``,
+a repeated ``SE``, ``GE`` or ``IEA``) cannot be reported in an ``AK3``/``IK3``.
+pyx12 reports it on the innermost envelope that is still open:
+
+* **Inside an open functional group:** the group is rejected (``AK9*R``) with
+  ``AK905`` code ``5``. No ``AK905`` code describes these faults exactly; in
+  `RFI 1339 <https://x12.org/resources/requests-for-interpretation/rfi-1339-997999-error-invalid-st>`_
+  X12 recommends code ``5`` for a group-level rejection with no specific code.
+* **Otherwise:** the interchange gets ``024`` (``ISA_024_invalid_content``),
+  which goes out on the TA1 when ``ISA14`` is ``1``.
+
+A fault inside a group is not reported on the TA1. In
+`RFI 2435 <https://x12.org/resources/requests-for-interpretation/rfi-2435-ta1-acknowledgment-status-and-note-code-24>`_
+X12 says only the ``ISA`` and ``IEA`` are in the TA1's scope. A sender that
+sets ``ISA14`` to ``0`` gets no TA1 at all, so it would otherwise see
+``AK9*A`` for a group that was rejected.
 
 Worked example: ``SEG_5_segment_repeat_exceeded``
 -------------------------------------------------
