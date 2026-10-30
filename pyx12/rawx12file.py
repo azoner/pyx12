@@ -86,7 +86,7 @@ class RawX12File:
             (line, self.buffer) = self.buffer.split(self.seg_term, 1)
             line = line.lstrip("\n\r")
             if line == "":
-                break
+                continue
             yield line
 
     def get_term(self) -> tuple[str, str, str, str, str | None]:
