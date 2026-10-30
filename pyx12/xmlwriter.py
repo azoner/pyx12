@@ -27,7 +27,7 @@ class XMLWriter:
         >>>writer.push(u"vendor")
         >>>#Element with simple text (#PCDATA) content
         >>>writer.elem(u"name", u"Centigrade systems")
-        >>>writer.elem(u"email", u"info@centigrade.bogus")
+        >>>writer.elem(u"email", u"support@example.invalid")
         >>>writer.elem(u"vendor", u"Centigrade systems")
         >>>#Close currently open element ("vendor)
         >>>writer.pop()

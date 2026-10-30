@@ -525,7 +525,7 @@ class Counting(unittest.TestCase):
         node = self.node
         # node.cur_count = 1
         self.walker.setCountState(self.countState)
-        seg_data = pyx12.segment.Segment("PER*IC*Name1*EM*dev@example.invalid~", "~", "*", ":")
+        seg_data = pyx12.segment.Segment("PER*IC*Name1*EM*support@example.invalid~", "~", "*", ":")
         (node, pop, push, walk_errors) = self.walker.walk_errors(node, seg_data, 5, 4, None)
         apply_walk_errors(self.errh, walk_errors)
         self.assertNotEqual(node, None)
@@ -540,7 +540,7 @@ class Counting(unittest.TestCase):
             self.node.x12path: 2,
         }
         self.walker.setCountState(countState)
-        seg_data = pyx12.segment.Segment("PER*IC*Name1*EM*dev@example.invalid~", "~", "*", ":")
+        seg_data = pyx12.segment.Segment("PER*IC*Name1*EM*support@example.invalid~", "~", "*", ":")
         (node, pop, push, walk_errors) = self.walker.walk_errors(node, seg_data, 5, 4, None)
         apply_walk_errors(self.errh, walk_errors)
         self.assertNotEqual(node, None)
@@ -554,7 +554,7 @@ class Counting(unittest.TestCase):
         # self.walker.counter.increment(node.x12path)
         # self.walker.counter.increment(node.x12path)
         self.walker.counter.setCount(node.x12path, 3)
-        seg_data = pyx12.segment.Segment("PER*IC*Name1*EM*dev@example.invalid~", "~", "*", ":")
+        seg_data = pyx12.segment.Segment("PER*IC*Name1*EM*support@example.invalid~", "~", "*", ":")
         self.assertNotEqual(node, None, "Node not found")
         (node, pop, push, walk_errors) = self.walker.walk_errors(node, seg_data, 5, 4, None)
         apply_walk_errors(self.errh, walk_errors)
@@ -1026,7 +1026,7 @@ class TryMatchSegmentChild(unittest.TestCase):
                 child.x12path: child.get_max_repeat(),
             }
         )
-        seg_data = pyx12.segment.Segment("PER*IC*Name1*EM*dev@example.invalid", "~", "*", ":")
+        seg_data = pyx12.segment.Segment("PER*IC*Name1*EM*support@example.invalid", "~", "*", ":")
         result = self.walker._try_match_segment_child(
             loop_node, child, seg_data, child, 5, 4, None, []
         )
