@@ -35,6 +35,13 @@ class X12fileTestCase(unittest.TestCase):
             err_str = errors[0][2]
         return (err_cde, err_str)
 
+    def _get_errors(self, x12str):
+        src = pyx12.x12file.X12Reader(self._makeFd(x12str))
+        for _seg in src:
+            pass
+        src.cleanup()
+        return [(kind, err_cde, err_str) for kind, err_cde, err_str, _, _ in src.pop_errors()]
+
     def _makeFd(self, x12str=None):
         try:
             if x12str:
@@ -149,6 +156,29 @@ class IEA_Checks(X12fileTestCase):
         (err_cde, err_str) = self._get_first_error(str1)
         self.assertEqual(err_cde, ISA_023_PREMATURE_EOF, err_str)
 
+    def test_duplicate_IEA(self):
+        str1 = "ISA*00*          *00*          *ZZ*ZZ000          *ZZ*ZZ001          *030828*1128*U*00401*000010121*0*T*:~\n"
+        str1 += "IEA*0*000010121~\n"
+        str1 += "IEA*0*000010121~\n"
+        errors = self._get_errors(str1)
+        self.assertEqual(
+            errors, [("isa", ISA_024_INVALID_CONTENT, "IEA segment has no open ISA loop")]
+        )
+
+    def test_IEA_closes_open_GS_and_ST(self):
+        str1 = "ISA*00*          *00*          *ZZ*ZZ000          *ZZ*ZZ001          *030828*1128*U*00401*000010121*0*T*:~\n"
+        str1 += "GS*HC*ZZ000*ZZ001*20030828*1128*17*X*004010X098~\n"
+        str1 += "ST*837*11280001~\n"
+        str1 += "IEA*1*000010121~\n"
+        errors = self._get_errors(str1)
+        self.assertEqual(
+            errors,
+            [
+                ("isa", ISA_024_INVALID_CONTENT, "Unterminated Loop ST"),
+                ("isa", ISA_024_INVALID_CONTENT, "Unterminated Loop GS"),
+            ],
+        )
+
 
 class GE_Checks(X12fileTestCase):
     def test_GE_id_match_GS_id(self):
@@ -185,6 +215,26 @@ class GE_Checks(X12fileTestCase):
         str1 += "IEA*1*000010121~\n"
         (err_cde, err_str) = self._get_first_error(str1)
         self.assertEqual(err_cde, ISA_024_INVALID_CONTENT, err_str)
+
+    def test_duplicate_GE(self):
+        str1 = "ISA*00*          *00*          *ZZ*ZZ000          *ZZ*ZZ001          *030828*1128*U*00401*000010121*0*T*:~\n"
+        str1 += "GS*HC*ZZ000*ZZ001*20030828*1128*17*X*004010X098~\n"
+        str1 += "GE*0*17~\n"
+        str1 += "GE*0*17~\n"
+        str1 += "IEA*1*000010121~\n"
+        errors = self._get_errors(str1)
+        self.assertEqual(
+            errors, [("isa", ISA_024_INVALID_CONTENT, "GE segment has no open GS loop")]
+        )
+
+    def test_GE_without_GS(self):
+        str1 = "ISA*00*          *00*          *ZZ*ZZ000          *ZZ*ZZ001          *030828*1128*U*00401*000010121*0*T*:~\n"
+        str1 += "GE*0*17~\n"
+        str1 += "IEA*0*000010121~\n"
+        errors = self._get_errors(str1)
+        self.assertEqual(
+            errors, [("isa", ISA_024_INVALID_CONTENT, "GE segment has no open GS loop")]
+        )
 
 
 class SE_Checks(X12fileTestCase):
@@ -232,6 +282,28 @@ class SE_Checks(X12fileTestCase):
         str1 += "IEA*1*000010121~\n"
         (err_cde, err_str) = self._get_first_error(str1)
         self.assertEqual(err_cde, "3", err_str)
+
+    def test_duplicate_SE(self):
+        str1 = "ISA*00*          *00*          *ZZ*ZZ000          *ZZ*ZZ001          *030828*1128*U*00401*000010121*0*T*:~\n"
+        str1 += "GS*HC*ZZ000*ZZ001*20030828*1128*17*X*004010X098~\n"
+        str1 += "ST*837*11280001~\n"
+        str1 += "SE*2*11280001~\n"
+        str1 += "SE*2*11280001~\n"
+        str1 += "GE*1*17~\n"
+        str1 += "IEA*1*000010121~\n"
+        errors = self._get_errors(str1)
+        self.assertEqual(
+            errors, [("isa", ISA_024_INVALID_CONTENT, "SE segment has no open ST loop")]
+        )
+
+    def test_SE_without_ST(self):
+        str1 = "ISA*00*          *00*          *ZZ*ZZ000          *ZZ*ZZ001          *030828*1128*U*00401*000010121*0*T*:~\n"
+        str1 += "SE*1*11280001~\n"
+        str1 += "IEA*0*000010121~\n"
+        errors = self._get_errors(str1)
+        self.assertEqual(
+            errors, [("isa", ISA_024_INVALID_CONTENT, "SE segment has no open ST loop")]
+        )
 
 
 class HL_Checks(X12fileTestCase):
@@ -387,6 +459,13 @@ class Segment_ID_Checks(X12fileTestCase):
         str1 += "ZZ*0019~ \n"
         (err_cde, err_str) = self._get_first_error(str1)
         self.assertEqual(err_cde, "SEG_1_leading_space", err_str)
+
+    def test_segment_only_space(self):
+        str1 = "ISA*00*          *00*          *ZZ*ZZ000          *ZZ*ZZ001          *030828*1128*U*00401*000010121*0*T*:~"
+        str1 += " ~IEA*0*000010121~"
+        src = pyx12.x12file.X12Reader(self._makeFd(str1))
+        self.assertEqual([seg.get_seg_id() for seg in src], ["ISA", "IEA"])
+        self.assertEqual(src.pop_errors()[0][1], "SEG_1_leading_space")
 
 
 class FileString(X12fileTestCase):

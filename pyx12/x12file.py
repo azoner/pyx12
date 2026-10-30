@@ -48,6 +48,8 @@ from pyx12.rawx12file import RawX12File
 _ErrTuple = tuple[str, str, str, str | None, int | None]
 # (loop_type, control_number)
 _LoopTuple = tuple[str, str | None]
+# trailer seg_id -> the loop header it closes
+_TRAILER_HEADERS: dict[str | None, str] = {"IEA": "ISA", "GE": "GS", "SE": "ST"}
 
 
 class X12Base:
@@ -412,9 +414,14 @@ class X12Reader(X12Base):
         """
         X12Base._parse_segment(self, seg_data)
         seg_id = seg_data.get_seg_id()
+        header = _TRAILER_HEADERS.get(seg_id)
+        if header is not None and header not in (loop_type for loop_type, _ in self.loops):
+            # A duplicated or stray trailer: there is no envelope for it to close.
+            err_str = f"{seg_id} segment has no open {header} loop"
+            self._isa_error(ISA_024_INVALID_CONTENT, err_str)
+            return
         if seg_id == "IEA":
-            if self.loops[-1][0] != "ISA":
-                # Unterminated GS loop
+            while self.loops[-1][0] != "ISA":
                 err_str = f"Unterminated Loop {self.loops[-1][0]}"
                 self._isa_error(ISA_024_INVALID_CONTENT, err_str)
                 del self.loops[-1]
@@ -428,7 +435,7 @@ class X12Reader(X12Base):
                 self._isa_error(ISA_021_INVALID_GROUP_COUNT, err_str)
             del self.loops[-1]
         elif seg_id == "GE":
-            if self.loops[-1][0] != "GS":
+            while self.loops[-1][0] != "GS":
                 err_str = f"Unterminated segment {self.loops[-1][1]}"
                 self._gs_error("3", err_str)
                 del self.loops[-1]
@@ -444,8 +451,12 @@ class X12Reader(X12Base):
                 self._gs_error("5", err_str)
             del self.loops[-1]
         elif seg_id == "SE":
+            while self.loops[-1][0] != "ST":
+                err_str = f"Unterminated Loop {self.loops[-1][0]}"
+                self._isa_error(ISA_024_INVALID_CONTENT, err_str)
+                del self.loops[-1]
             se_trn_control_num = seg_data.get_value("SE02")
-            if self.loops[-1][0] != "ST" or self.loops[-1][1] != se_trn_control_num:
+            if self.loops[-1][1] != se_trn_control_num:
                 err_str = f"SE id={se_trn_control_num} does not match ST id={self.loops[-1][1]}"
                 self._st_error("3", err_str)
             if self._int(seg_data.get_value("SE01")) != self.seg_count + 1:
@@ -466,6 +477,8 @@ class X12Reader(X12Base):
                 err_str = "Segment contains a leading space"
                 self._seg_error(SEG_1_LEADING_SPACE, err_str, None, src_line=self.cur_line + 1)
                 line = line.lstrip()
+            if not line:
+                continue
             if line[-1] == self.ele_term:
                 err_str = "Segment contains trailing element terminators"
                 self._seg_error(
