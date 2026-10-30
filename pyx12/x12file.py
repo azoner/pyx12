@@ -416,9 +416,14 @@ class X12Reader(X12Base):
         seg_id = seg_data.get_seg_id()
         header = _TRAILER_HEADERS.get(seg_id)
         if header is not None and header not in (loop_type for loop_type, _ in self.loops):
-            # A duplicated or stray trailer: there is no envelope for it to close.
+            # A duplicated or stray trailer: there is no envelope for it to close. Inside an
+            # open group it is a group fault (AK905 "5", per X12 RFI 1339); otherwise an
+            # interchange fault (TA1 024). See err_handler.seg_error for the same routing.
             err_str = f"{seg_id} segment has no open {header} loop"
-            self._isa_error(ISA_024_INVALID_CONTENT, err_str)
+            if self.loops and self.loops[-1][0] == "GS":
+                self._gs_error("5", err_str)
+            else:
+                self._isa_error(ISA_024_INVALID_CONTENT, err_str)
             return
         if seg_id == "IEA":
             while self.loops[-1][0] != "ISA":

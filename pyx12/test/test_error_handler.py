@@ -40,15 +40,46 @@ class TestEleErrorBeforeAddEle(unittest.TestCase):
 
 
 class TestSegErrorOutsideTransactionSet(unittest.TestCase):
-    def _errh_after_add_seg(self, cur_st_node):
-        # State after errh.add_seg(): a new segment node is pending under cur_st_node
+    def _errh_after_add_seg(self, cur_st_node, gs_closed=None, gs_in_other_isa=False):
+        # State after errh.add_seg(): a new segment node is pending under cur_st_node.
+        # gs_closed=None means no GS has been seen.
         eh = err_handler()
         eh.cur_isa_node = MagicMock()
         eh.cur_isa_node.get_cur_line.return_value = 1
+        if gs_closed is not None:
+            eh.cur_gs_node = MagicMock()
+            eh.cur_gs_node.is_closed.return_value = gs_closed
+            eh.cur_gs_node.get_cur_line.return_value = 1
+            eh.cur_gs_node.parent = MagicMock() if gs_in_other_isa else eh.cur_isa_node
         eh.cur_st_node = cur_st_node
         eh.cur_seg_node = MagicMock()
         eh.seg_node_added = False
         return eh
+
+    def test_open_group_without_transaction_set_goes_to_group(self):
+        eh = self._errh_after_add_seg(None, gs_closed=False)
+        eh.seg_error("SEG_3_mandatory_loop_missing", "ST_LOOP missing")
+        eh.cur_gs_node.add_error.assert_called_once_with("5", "ST_LOOP missing")
+        eh.cur_isa_node.add_error.assert_not_called()
+
+    def test_closed_group_goes_to_interchange(self):
+        st = MagicMock()
+        st.is_closed.return_value = True
+        eh = self._errh_after_add_seg(st, gs_closed=True)
+        eh.seg_error("SEG_5_segment_repeat_exceeded", "Segment GE exceeded max count")
+        eh.cur_isa_node.add_error.assert_called_once_with(
+            "ISA_024_invalid_content", "Segment GE exceeded max count"
+        )
+        eh.cur_gs_node.add_error.assert_not_called()
+
+    def test_unclosed_group_from_earlier_interchange_goes_to_interchange(self):
+        # A GS left open (no GE) in a previous interchange must not absorb new errors
+        eh = self._errh_after_add_seg(None, gs_closed=False, gs_in_other_isa=True)
+        eh.seg_error("SEG_1_segment_not_found", "Segment SE not found")
+        eh.cur_isa_node.add_error.assert_called_once_with(
+            "ISA_024_invalid_content", "Segment SE not found"
+        )
+        eh.cur_gs_node.add_error.assert_not_called()
 
     def test_no_transaction_set_goes_to_interchange(self):
         eh = self._errh_after_add_seg(None)
