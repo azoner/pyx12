@@ -231,6 +231,12 @@ class X12Structure(X12DocumentTestCase):
     def test_trailer_errors_json(self):
         self._test_json("trailer_errors")
 
+    def test_dup_trailers(self):
+        self._test_997("dup_trailers")
+
+    def test_dup_trailers_json(self):
+        self._test_json("dup_trailers")
+
     def test_trailing_terms(self):
         self._test_997("trailing_terms")
 

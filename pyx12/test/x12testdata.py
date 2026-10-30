@@ -4317,6 +4317,195 @@ IEA*1*000001168~""",
             ]
         },
     },
+    "dup_trailers": {
+        "res997": """ISA*00*          *00*          *ZZ*BBBBBBBBB      *ZZ*AAAAAAAA       *261030*1551*U*00401*610301551*0*P*:~
+GS*FA*BBBBBBBBB*AAAA*20261030*155103*1167*X*00401~
+ST*997*0001~
+AK1*HC*1167~
+AK2*837*1179~
+AK3*SE*62**5~
+AK3*GE*62**5~
+AK3*IEA*62**5~
+AK5*R*5~
+AK9*R*1*1*0~
+SE*9*0001~
+GE*1*1167~
+TA1*000001168*041105*1526*R*024~
+IEA*1*610301551~""",
+        "source": """ISA*00*          *00*          *ZZ*AAAAAAAA       *ZZ*BBBBBBBBB      *041105*1526*U*00401*000001168*1*P*:~
+GS*HC*AAAA*BBBBBBBBB*20041105*1526*1167*X*004010X098A1~
+ST*837*1179~
+BHT*0019*00*AAAA1179*20041105*1526*RP~
+REF*87*004010X098A1~
+NM1*41*2*Sender 1*****46*99999~
+PER*IC*SUPPORT*EM*Support@dev.null*TE*8005553333~
+NM1*40*2*Receiver 1*****46*8888888~
+HL*1**20*1~
+NM1*85*2*Sender 1*****24*999999999~
+N3*399 ELM ROAD~
+N4*Kalamazoo*MI*49001~
+REF*1D*333402169~
+HL*2*1*22*0~
+SBR*P*18*******MC~
+NM1*IL*1*THE FIFTH*RICHARD****MI*1212121~
+N3*156 ELM~
+N4*KALAMAZOO*MI*49001~
+DMG*D8*19051104*M~
+NM1*PR*2*PAYER 1*****PI*8888888~
+CLM*3215338*21***12::1*Y*A*Y*A*B~
+CN1*05~
+HI*BK:317~
+NM1*82*2*PROVIDER 1*****24*222185735~
+PRV*PE*ZZ*103T00000X~
+SBR*P*18***MC****MC~
+AMT*B6*0~
+DMG*D8*19051104*M~
+OI***Y*B**I~
+NM1*IL*1*THE FIFTH*RICHARD****MI*0000000004~
+N3*156 ELM~
+N4*KALAMAZOO*MI*49001~
+REF*SY*777777777~
+NM1*PR*2*Sender 1S*****PI*12128909~
+REF*F8*3215338~
+REF*G1*121282~
+LX*1~
+SV1*HC:H2015:TT*21*UN*12***1~
+DTP*472*D8*20040407~
+REF*6R*1057296~
+AMT*AAE*21~
+SVD*174456543*21*HC:H2015:TT**12~
+DTP*573*D8*20040929~
+LX*2~
+SV1*HC:H2015:TT*21*UN*12***1~
+DTP*472*D8*20040414~
+REF*6R*1057297~
+AMT*AAE*21~
+SVD*174456543*21*HC:H2015:TT**12~
+DTP*573*D8*20040929~
+CLM*5555*21***12::1*Y*A*Y*A*B~
+HI*BK:317~
+LX*1~
+SV1*HC:H2015:TT*21*UN*12***1~
+DTP*472*D8*20040407~
+REF*6R*1057296~
+LX*2~
+SV1*HC:H2015:TT*21*UN*12***1~
+DTP*472*D8*20040414~
+REF*6R*1057297~
+LX*3~
+SV1*HC:H2017:TT*1*UN*12***1~
+DTP*472*D8*20050414~
+REF*6R*105797~
+SE*63*1179~
+SE*63*1179~
+GE*1*1167~
+GE*1*1167~
+IEA*1*000001168~
+IEA*1*000001168~""",
+        "resJson": {
+            "interchanges": [
+                {
+                    "isa_trn_set_id": "000001168",
+                    "ta1_req": "1",
+                    "orig_date": "041105",
+                    "orig_time": "1526",
+                    "cur_line": 70,
+                    "errors": [
+                        {
+                            "err_cde": "ISA_024_invalid_content",
+                            "x12_code": "024",
+                            "err_str": "SE segment has no open ST loop",
+                        },
+                        {
+                            "err_cde": "ISA_024_invalid_content",
+                            "x12_code": "024",
+                            "err_str": "GE segment has no open GS loop",
+                        },
+                        {
+                            "err_cde": "ISA_024_invalid_content",
+                            "x12_code": "024",
+                            "err_str": "IEA segment has no open ISA loop",
+                        },
+                    ],
+                    "groups": [
+                        {
+                            "gs_control_num": "1167",
+                            "fic": "HC",
+                            "vriic": "004010X098A1",
+                            "ack_code": "R",
+                            "st_count_orig": 1,
+                            "st_count_recv": 1,
+                            "cur_line": 68,
+                            "errors": [],
+                            "transactions": [
+                                {
+                                    "trn_set_id": "837",
+                                    "trn_set_control_num": "1179",
+                                    "vriic": None,
+                                    "ack_code": "R",
+                                    "cur_line": 66,
+                                    "errors": [],
+                                    "segments": [
+                                        {
+                                            "seg_id": "SE",
+                                            "seg_count": 62,
+                                            "pos": 555,
+                                            "name": "Transaction Set Trailer",
+                                            "ls_id": None,
+                                            "cur_line": 66,
+                                            "errors": [
+                                                {
+                                                    "err_cde": "SEG_5_segment_repeat_exceeded",
+                                                    "x12_code": "5",
+                                                    "err_str": "Segment SE exceeded max count.  Found 2, should have 1",
+                                                    "err_val": None,
+                                                }
+                                            ],
+                                            "elements": [],
+                                        },
+                                        {
+                                            "seg_id": "GE",
+                                            "seg_count": 62,
+                                            "pos": 30,
+                                            "name": "Functional Group Trailer",
+                                            "ls_id": None,
+                                            "cur_line": 68,
+                                            "errors": [
+                                                {
+                                                    "err_cde": "SEG_5_segment_repeat_exceeded",
+                                                    "x12_code": "5",
+                                                    "err_str": "Segment GE exceeded max count.  Found 2, should have 1",
+                                                    "err_val": None,
+                                                }
+                                            ],
+                                            "elements": [],
+                                        },
+                                        {
+                                            "seg_id": "IEA",
+                                            "seg_count": 62,
+                                            "pos": 30,
+                                            "name": "Interchange Control Trailer",
+                                            "ls_id": None,
+                                            "cur_line": 70,
+                                            "errors": [
+                                                {
+                                                    "err_cde": "SEG_5_segment_repeat_exceeded",
+                                                    "x12_code": "5",
+                                                    "err_str": "Segment IEA exceeded max count.  Found 2, should have 1",
+                                                    "err_val": None,
+                                                }
+                                            ],
+                                            "elements": [],
+                                        },
+                                    ],
+                                }
+                            ],
+                        }
+                    ],
+                }
+            ]
+        },
+    },
     "simple_837i": {
         "source": """ISA*00*          *00*          *ZZ*00000AAA       *ZZ*0000BBB        *040709*1439*U*00401*000484889*0*P*:~
 GS*HC*0AAA*0BBB*20040709*1439*1*X*004010X096A1~
