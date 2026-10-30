@@ -418,6 +418,68 @@ class CompositeRequirement(unittest.TestCase):
         self.assertEqual([e.err_cde for e in errors], ["COMP_5_not_used"])
 
 
+class RepeatElement(unittest.TestCase):
+    def setUp(self):
+        param = pyx12.params.params()
+        self.map = pyx12.map_if.load_map_file("834.5010.X220.A1.xml", param)
+
+    def test_repeated_composite_valid(self):
+        node = self.map.getnodebypath("/ISA_LOOP/GS_LOOP/ST_LOOP/DETAIL/2000/2100A/DMG")
+        seg = pyx12.segment.Segment(
+            "DMG*D8*19670722*M*I*C:RET:2186-5^B:RET:1002-5~",
+            "~",
+            "*",
+            ":",
+            "^",
+        )
+        result, errors = node.is_valid_errors(seg)
+        self.assertTrue(result)
+        self.assertEqual([e.err_cde for e in errors], [])
+
+    def test_repeated_composite_validates_each_value(self):
+        node = self.map.getnodebypath("/ISA_LOOP/GS_LOOP/ST_LOOP/DETAIL/2000/2100A/DMG")
+        seg = pyx12.segment.Segment(
+            "DMG*D8*19670722*M*I*C:RET:2186-5^Q:RET:1002-5~",
+            "~",
+            "*",
+            ":",
+            "^",
+        )
+        result, errors = node.is_valid_errors(seg)
+        self.assertFalse(result)
+        self.assertIn("ELE_7_invalid_code", [e.err_cde for e in errors])
+
+    def test_repeated_composite_limit(self):
+        node = self.map.getnodebypath("/ISA_LOOP/GS_LOOP/ST_LOOP/DETAIL/2000/2100A/DMG")
+        repeats = "^".join(["C:RET:2186-5"] * 11)
+        seg = pyx12.segment.Segment(f"DMG*D8*19670722*M*I*{repeats}~", "~", "*", ":", "^")
+        result, errors = node.is_valid_errors(seg)
+        self.assertFalse(result)
+        self.assertIn("ELE_12_too_many_repetitions", [e.err_cde for e in errors])
+
+    def test_repeated_simple_element_valid(self):
+        node = self.map.getnodebypath("/ISA_LOOP/GS_LOOP/ST_LOOP/DETAIL/2000/2300/2320/COB")
+        seg = pyx12.segment.Segment("COB*P**1*1^35~", "~", "*", ":", "^")
+        result, errors = node.is_valid_errors(seg)
+        self.assertTrue(result)
+        self.assertEqual([e.err_cde for e in errors], [])
+
+    def test_repeated_simple_element_validates_each_value(self):
+        node = self.map.getnodebypath("/ISA_LOOP/GS_LOOP/ST_LOOP/DETAIL/2000/2300/2320/COB")
+        seg = pyx12.segment.Segment("COB*P**1*1^XX~", "~", "*", ":", "^")
+        result, errors = node.is_valid_errors(seg)
+        self.assertFalse(result)
+        self.assertIn("ELE_7_invalid_code", [e.err_cde for e in errors])
+
+    def test_repeated_simple_element_limit(self):
+        node = self.map.getnodebypath("/ISA_LOOP/GS_LOOP/ST_LOOP/DETAIL/2000/2300/2320/COB")
+        repeats = "^".join(["1"] * 10)
+        seg = pyx12.segment.Segment(f"COB*P**1*{repeats}~", "~", "*", ":", "^")
+        result, errors = node.is_valid_errors(seg)
+        self.assertFalse(result)
+        self.assertIn("ELE_12_too_many_repetitions", [e.err_cde for e in errors])
+
+
 class TrailingSpaces(unittest.TestCase):
     def setUp(self):
         param = pyx12.params.params()

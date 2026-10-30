@@ -470,6 +470,9 @@ class X12Reader(X12Base):
         """
         Iterate over input segments
         """
+        assert self.seg_term is not None
+        assert self.ele_term is not None
+        assert self.subele_term is not None
         self.err_list = []
         for line in self.raw:
             # We have not yet incremented cur_line
@@ -484,7 +487,13 @@ class X12Reader(X12Base):
                 self._seg_error(
                     SEG_8_TRAILING_TERMINATORS, err_str, None, src_line=self.cur_line + 1
                 )
-            seg_data = pyx12.segment.Segment(line, self.seg_term, self.ele_term, self.subele_term)  # type: ignore[arg-type]
+            seg_data = pyx12.segment.Segment(
+                line,
+                self.seg_term,
+                self.ele_term,
+                self.subele_term,
+                self.repetition_term,
+            )
             self._parse_segment(seg_data)
             yield seg_data
         # yield(None)

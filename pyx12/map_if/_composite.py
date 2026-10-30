@@ -22,6 +22,7 @@ from ..error_codes import (
     COMP_1_MANDATORY_MISSING,
     COMP_3_TOO_MANY_SUBELEMENTS,
     COMP_5_NOT_USED,
+    ELE_12_TOO_MANY_REPETITIONS,
 )
 from ..error_item import EleError
 from ._base import _required_attr, x12_node
@@ -116,6 +117,27 @@ class composite_if(x12_node):
         """
         valid = True
         errors: list[EleError] = []
+
+        if comp_data is not None and comp_data.get_repetition_count() > 1:
+            if comp_data.get_repetition_count() > self.repeat:
+                err_str = 'Too many repetitions in composite "%s" (%s)' % (
+                    self.name,
+                    self.refdes,
+                )
+                errors.append(
+                    EleError(
+                        err_cde=ELE_12_TOO_MANY_REPETITIONS,
+                        err_str=err_str,
+                        err_val=comp_data.format(),
+                        refdes=self.refdes,
+                        map_node=self,
+                    )
+                )
+            for i in range(comp_data.get_repetition_count()):
+                ok, repetition_errors = self.is_valid_errors(comp_data.get_repetition(i))
+                valid &= ok
+                errors += repetition_errors
+            return (valid and not errors, errors)
 
         if (comp_data is None or comp_data.is_empty()) and self.usage in ("N", "S"):
             return True, []
