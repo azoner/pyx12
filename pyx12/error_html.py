@@ -21,6 +21,7 @@ from typing import Any, TextIO
 
 # Intrapackage imports
 import pyx12.segment
+from pyx12.error_codes import ISA_023_PREMATURE_EOF
 
 logger = logging.getLogger("pyx12.error_html")
 logger.setLevel(logging.DEBUG)
@@ -85,7 +86,7 @@ class error_html:
 
     def footer(self) -> None:
         err_st = self.errh.cur_st_node
-        if not err_st.is_closed():
+        if err_st is not None and not err_st.is_closed():
             for err_cde, err_str in err_st.errors:
                 if err_cde == "2":
                     self.fd.write(
@@ -93,7 +94,7 @@ class error_html:
                         % (err_str, err_cde)
                     )
         err_gs = self.errh.cur_gs_node
-        if not err_gs.is_closed():
+        if err_gs is not None and not err_gs.is_closed():
             for err_cde, err_str in err_gs.errors:
                 if err_cde == "3":
                     self.fd.write(
@@ -101,9 +102,9 @@ class error_html:
                         % (err_str, err_cde)
                     )
         err_isa = self.errh.cur_isa_node
-        if not err_isa.is_closed():
+        if err_isa is not None and not err_isa.is_closed():
             for err_cde, err_str in err_isa.errors:
-                if err_cde == "023":
+                if err_cde == ISA_023_PREMATURE_EOF:
                     self.fd.write(
                         '<span class="error">&nbsp;%s (Segment Error Code: %s)</span><br />\n'
                         % (err_str, err_cde)
