@@ -4506,6 +4506,157 @@ IEA*1*000001168~""",
             ]
         },
     },
+    "composite_too_many_subelements": {
+        "res997": """ISA*00*          *00*          *ZZ*BBBBBBBBB      *ZZ*AAAAAAAA       *261030*1623*U*00401*610301623*0*P*:~
+GS*FA*BBBBBBBBB*AAAA*20261030*162339*1167*X*00401~
+ST*997*0001~
+AK1*HC*1167~
+AK2*837*1179~
+AK3*HI*21**8~
+AK4*1*C022*3~
+AK5*R*5~
+AK9*R*1*1*0~
+SE*8*0001~
+GE*1*1167~
+TA1*000001168*041105*1526*A*000~
+IEA*1*610301623~""",
+        "source": """ISA*00*          *00*          *ZZ*AAAAAAAA       *ZZ*BBBBBBBBB      *041105*1526*U*00401*000001168*1*P*:~
+GS*HC*AAAA*BBBBBBBBB*20041105*1526*1167*X*004010X098A1~
+ST*837*1179~
+BHT*0019*00*AAAA1179*20041105*1526*RP~
+REF*87*004010X098A1~
+NM1*41*2*Sender 1*****46*99999~
+PER*IC*SUPPORT*EM*Support@dev.null*TE*8005553333~
+NM1*40*2*Receiver 1*****46*8888888~
+HL*1**20*1~
+NM1*85*2*Sender 1*****24*999999999~
+N3*399 ELM ROAD~
+N4*Kalamazoo*MI*49001~
+REF*1D*333402169~
+HL*2*1*22*0~
+SBR*P*18*******MC~
+NM1*IL*1*THE FIFTH*RICHARD****MI*1212121~
+N3*156 ELM~
+N4*KALAMAZOO*MI*49001~
+DMG*D8*19051104*M~
+NM1*PR*2*PAYER 1*****PI*8888888~
+CLM*3215338*21***12::1*Y*A*Y*A*B~
+CN1*05~
+HI*BK:317:::::::X~
+NM1*82*2*PROVIDER 1*****24*222185735~
+PRV*PE*ZZ*103T00000X~
+SBR*P*18***MC****MC~
+AMT*B6*0~
+DMG*D8*19051104*M~
+OI***Y*B**I~
+NM1*IL*1*THE FIFTH*RICHARD****MI*0000000004~
+N3*156 ELM~
+N4*KALAMAZOO*MI*49001~
+REF*SY*777777777~
+NM1*PR*2*Sender 1S*****PI*12128909~
+REF*F8*3215338~
+REF*G1*121282~
+LX*1~
+SV1*HC:H2015:TT*21*UN*12***1~
+DTP*472*D8*20040407~
+REF*6R*1057296~
+AMT*AAE*21~
+SVD*174456543*21*HC:H2015:TT**12~
+DTP*573*D8*20040929~
+LX*2~
+SV1*HC:H2015:TT*21*UN*12***1~
+DTP*472*D8*20040414~
+REF*6R*1057297~
+AMT*AAE*21~
+SVD*174456543*21*HC:H2015:TT**12~
+DTP*573*D8*20040929~
+CLM*5555*21***12::1*Y*A*Y*A*B~
+HI*BK:317~
+LX*1~
+SV1*HC:H2015:TT*21*UN*12***1~
+DTP*472*D8*20040407~
+REF*6R*1057296~
+LX*2~
+SV1*HC:H2015:TT*21*UN*12***1~
+DTP*472*D8*20040414~
+REF*6R*1057297~
+LX*3~
+SV1*HC:H2017:TT*1*UN*12***1~
+DTP*472*D8*20050414~
+REF*6R*105797~
+SE*63*1179~
+GE*1*1167~
+IEA*1*000001168~""",
+        "resJson": {
+            "interchanges": [
+                {
+                    "isa_trn_set_id": "000001168",
+                    "ta1_req": "1",
+                    "orig_date": "041105",
+                    "orig_time": "1526",
+                    "cur_line": 67,
+                    "errors": [],
+                    "groups": [
+                        {
+                            "gs_control_num": "1167",
+                            "fic": "HC",
+                            "vriic": "004010X098A1",
+                            "ack_code": "R",
+                            "st_count_orig": 1,
+                            "st_count_recv": 1,
+                            "cur_line": 66,
+                            "errors": [],
+                            "transactions": [
+                                {
+                                    "trn_set_id": "837",
+                                    "trn_set_control_num": "1179",
+                                    "vriic": None,
+                                    "ack_code": "R",
+                                    "cur_line": 65,
+                                    "errors": [],
+                                    "segments": [
+                                        {
+                                            "seg_id": "HI",
+                                            "seg_count": 21,
+                                            "pos": 231,
+                                            "name": "Health Care Diagnosis Code",
+                                            "ls_id": None,
+                                            "cur_line": 23,
+                                            "errors": [
+                                                {
+                                                    "err_cde": "SEG_8_has_data_element_errors",
+                                                    "x12_code": "8",
+                                                    "err_str": "Segment has data element errors",
+                                                    "err_val": None,
+                                                }
+                                            ],
+                                            "elements": [
+                                                {
+                                                    "ele_pos": 1,
+                                                    "subele_pos": None,
+                                                    "repeat_pos": None,
+                                                    "ele_ref_num": "C022",
+                                                    "name": "Principal Diagnosis",
+                                                    "errors": [
+                                                        {
+                                                            "err_cde": "COMP_3_too_many_subelements",
+                                                            "x12_code": "3",
+                                                            "err_str": 'Too many sub-elements in composite "Principal Diagnosis" (None)',
+                                                            "err_val": None,
+                                                        }
+                                                    ],
+                                                }
+                                            ],
+                                        }
+                                    ],
+                                }
+                            ],
+                        }
+                    ],
+                }
+            ]
+        },
+    },
     "simple_837i": {
         "source": """ISA*00*          *00*          *ZZ*00000AAA       *ZZ*0000BBB        *040709*1439*U*00401*000484889*0*P*:~
 GS*HC*0AAA*0BBB*20040709*1439*1*X*004010X096A1~

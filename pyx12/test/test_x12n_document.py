@@ -327,6 +327,12 @@ class X12Structure(X12DocumentTestCase):
     def test_simple_837p_json(self):
         self._test_json("simple_837p")
 
+    def test_composite_too_many_subelements(self):
+        self._test_997("composite_too_many_subelements")
+
+    def test_composite_too_many_subelements_json(self):
+        self._test_json("composite_too_many_subelements")
+
 
 class Test5010(X12DocumentTestCase):
     def test_834_lui_id_5010(self):

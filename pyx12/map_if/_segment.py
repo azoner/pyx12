@@ -25,7 +25,6 @@ from ..error_codes import (
     ISA_ELE_POSITION_TO_CODE,
     SEG_2_SYNTAX_RELATIONAL,
     SEG_3_TOO_MANY_ELEMENTS,
-    SEG_3_TOO_MANY_SUBELEMENTS,
     SEG_8_HAS_DATA_ELEMENT_ERRORS,
     SEG_10_SYNTAX_EXCLUSIVE,
 )
@@ -433,7 +432,7 @@ class segment_if(x12_node):
         """
         Pure validator parallel to is_valid: returns (ok, errors) without
         touching an error handler. Seg-level errors (too many elements,
-        too many sub-elements, syntax) leave map_node unset (=None);
+        syntax) leave map_node unset (=None);
         per-element errors carry map_node from the element validator so
         a cursor-tracking wrapper can replay add_ele/ele_error in the
         original order.
@@ -472,22 +471,6 @@ class segment_if(x12_node):
                 # returns either a Composite or None — Element only appears for
                 # element-typed positions.
                 assert comp_data is None or isinstance(comp_data, pyx12.segment.Composite)
-                subele_count = child_node.get_child_count()
-                if seg_data.ele_len(ref_des) > subele_count and child_node.usage != "N":
-                    subele_node = child_node.children[subele_count + 1]
-                    err_str = 'Too many sub-elements in composite "%s" (%s)' % (
-                        subele_node.name,
-                        subele_node.refdes,
-                    )
-                    err_value = seg_data.get_value(ref_des)
-                    errors.append(
-                        EleError(
-                            err_cde=SEG_3_TOO_MANY_SUBELEMENTS,
-                            err_str=err_str,
-                            err_val=err_value,
-                            refdes=ref_des,
-                        )
-                    )
                 ok, comp_errors = child_node.is_valid_errors(comp_data)
                 valid &= ok
                 errors += comp_errors
