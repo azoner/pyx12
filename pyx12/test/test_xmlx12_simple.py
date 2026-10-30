@@ -5,7 +5,9 @@ from io import StringIO
 from types import SimpleNamespace
 
 import pyx12.error_handler
+import pyx12.map_if
 import pyx12.params
+import pyx12.segment
 import pyx12.x12file
 import pyx12.x12n_document
 import pyx12.x12xml_simple
@@ -162,3 +164,44 @@ class LoopPathTransition(unittest.TestCase):
         xml.seg(_seg_node("S2", "/A/B", True), [])
         xml.close()
         self.assertEqual(fd.getvalue().count("<loop id='A'>"), 1)
+
+
+class ValuesBeyondTheMap(XmlTransformTestCase):
+    """Issue #35: values with no map node used to crash the XML writer."""
+
+    def _seg_xml(self, path, seg_str):
+        cmap = pyx12.map_if.load_map_file("837.4010.X098.A1.xml", self.param)
+        fd = StringIO()
+        xml = pyx12.x12xml_simple.x12xml_simple(fd)
+        xml.seg(cmap.getnodebypath(path), pyx12.segment.Segment(seg_str, "~", "*", ":"))
+        xml.close()
+        return fd.getvalue()
+
+    def test_extra_element_is_omitted(self):
+        out = self._seg_xml(
+            "/ISA_LOOP/GS_LOOP/ST_LOOP/DETAIL/2000A/2010AA/N3", "N3*399 ELM ROAD*SUITE 1*EXTRA~"
+        )
+        self.assertIn("SUITE 1", out)
+        self.assertNotIn("EXTRA", out)
+
+    def test_extra_subelement_is_omitted(self):
+        out = self._seg_xml(
+            "/ISA_LOOP/GS_LOOP/ST_LOOP/DETAIL/2000A/2000B/2300/HI", "HI*BK:317:::::::EXTRA~"
+        )
+        self.assertIn("317", out)
+        self.assertNotIn("EXTRA", out)
+
+    def test_document_with_extra_element(self):
+        # The extra element is dropped, so the XML converts back to the original file
+        original = datafiles["simple_837p"]["source"]
+        fd_source = self._makeFd(original.replace("N3*399 ELM ROAD~", "N3*399 ELM ROAD**EXTRA~"))
+        fd_xml = StringIO()
+        result = pyx12.x12n_document.x12n_document(
+            self.param, fd_source, None, None, fd_xmldoc=fd_xml
+        )
+        self.assertFalse(result)
+        fd_xml.seek(0)
+        fd_result = StringIO()
+        pyx12.xmlx12_simple.convert(fd_xml, fd_result)
+        fd_result.seek(0)
+        self._isX12Diff(self._makeFd(original), fd_result)

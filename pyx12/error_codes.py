@@ -103,6 +103,8 @@ SEG_2_SYNTAX_RELATIONAL = "SEG_2_syntax_relational"
 SEG_2_SEGMENT_NOT_USED = "SEG_2_segment_not_used"
 SEG_2_LOOP_NOT_USED = "SEG_2_loop_not_used"
 SEG_3_TOO_MANY_ELEMENTS = "SEG_3_too_many_elements"
+# Deprecated, never emitted: composite_if reports this as COMP_3_TOO_MANY_SUBELEMENTS.
+# Kept importable until 5.0.
 SEG_3_TOO_MANY_SUBELEMENTS = "SEG_3_too_many_subelements"
 SEG_3_MANDATORY_SEGMENT_MISSING = "SEG_3_mandatory_segment_missing"
 SEG_3_MANDATORY_LOOP_MISSING = "SEG_3_mandatory_loop_missing"

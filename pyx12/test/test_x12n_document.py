@@ -188,6 +188,26 @@ class ISALoopContent(X12DocumentTestCase):
         self.assertIn("ISA_022_invalid_control_structure", codes)
 
 
+class HtmlReport(X12DocumentTestCase):
+    def _html(self, source: str) -> str:
+        fd_html = StringIO()
+        pyx12.x12n_document.x12n_document(self.param, self._makeFd(source), None, fd_html, None)
+        return fd_html.getvalue()
+
+    def test_interchange_without_transaction_set(self):
+        src = (
+            "ISA*00*          *00*          *ZZ*ENCOUNTER      *ZZ*0102           "
+            "*260407*1510*^*00501*000000001*0*P*:~\n"
+            "TA1*000142582*260407*1423*A*000~\n"
+            "IEA*0*000000001~\n"
+        )
+        self.assertTrue(self._html(src).endswith("</html>\n"))
+
+    def test_missing_iea_is_reported(self):
+        src = TA1Gate._SRC_TEMPLATE.format(ta1_req="0")
+        self.assertIn('"Interchange Control Trailer" (IEA=000010121) missing', self._html(src))
+
+
 class Test834(X12DocumentTestCase):
     def test_834_lui_id(self):
         self._test_997("834_lui_id")
@@ -338,6 +358,12 @@ class X12Structure(X12DocumentTestCase):
 
     def test_simple_837p_json(self):
         self._test_json("simple_837p")
+
+    def test_composite_too_many_subelements(self):
+        self._test_997("composite_too_many_subelements")
+
+    def test_composite_too_many_subelements_json(self):
+        self._test_json("composite_too_many_subelements")
 
 
 class Test5010(X12DocumentTestCase):

@@ -116,7 +116,7 @@ Raised by :class:`pyx12.map_if.segment_if` (validator), :mod:`pyx12.map_walker`
 pyx12 code                                        AK3   IK3   Meaning
 ================================================  ====  ====  ============================================================
 ``SEG_3_too_many_elements``                       3     3     Segment has too many elements (validator)
-``SEG_3_too_many_subelements``                    3     3     Segment has too many sub-elements in a composite (validator)
+``SEG_3_too_many_subelements``                    3     3     **Deprecated, never emitted; removed in 5.0.** Use ``COMP_3_too_many_subelements``
 ``SEG_2_syntax_relational``                       2     2     Segment syntax rule (relational) violated
 ``SEG_10_syntax_exclusive``                       10    10    Segment syntax rule (exclusive) violated
 ``SEG_1_segment_not_found``                       1     1     Unrecognized segment ID (walker)
@@ -140,8 +140,7 @@ err_handler tree and JSON output but suppressed from the X12 ack
 (historical behavior preserved across the 4.1.0 refactor).
 
 The seg-level **validator** codes (``SEG_3_too_many_elements``,
-``SEG_3_too_many_subelements``, ``SEG_2_syntax_relational``,
-``SEG_10_syntax_exclusive``) plus the composite-level codes flow
+``SEG_2_syntax_relational``, ``SEG_10_syntax_exclusive``) plus the composite-level codes flow
 through the bridge in :func:`pyx12.map_if._segment.apply_segment_errors`,
 which routes seg-level errors via ``errh.seg_error`` with a hardcoded
 ``"8"`` code (X12 spec correctness); the original AK3/IK3 column above
