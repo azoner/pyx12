@@ -654,3 +654,56 @@ class InterchangeVersion(X12fileTestCase):
         if len(errors) > 0:
             err_cde = errors[0][1]
         self.assertEqual(err_cde, None)
+
+
+class UnbalancedEnvelopeTrailers(X12fileTestCase):
+    """
+    Regression tests for CWE-248 — undeclared IndexError escaping from
+    pyx12.x12file.X12Reader on unbalanced envelope trailers / empty segment
+    lines. A consumer guarding `pyx12.errors.X12Error` must never see a bare
+    IndexError.
+    """
+
+    ISA = (
+        "ISA*00*          *00*          "
+        "*ZZ*SENDER         *ZZ*RECEIVER       "
+        "*230101*1200*^*00501*000000001*0*P*:~"
+    )
+
+    def _makeFd(self, x12str):
+        fd = StringIO(x12str)
+        fd.seek(0)
+        return fd
+
+    def _drain(self, x12str):
+        src = pyx12.x12file.X12Reader(self._makeFd(x12str))
+        for _ in src:
+            pass
+
+    def test_double_iea_raises_x12error_not_indexerror(self):
+        # Two IEA trailers — second one hits an empty self.loops stack.
+        s = self.ISA + "IEA*1*000000001~IEA*1*000000001~"
+        with self.assertRaises(pyx12.errors.X12Error):
+            self._drain(s)
+
+    def test_double_ge_raises_x12error_not_indexerror(self):
+        s = self.ISA + "GE*1*1~GE*1*1~"
+        with self.assertRaises(pyx12.errors.X12Error):
+            self._drain(s)
+
+    def test_double_se_raises_x12error_not_indexerror(self):
+        s = self.ISA + "SE*1*0001~SE*1*0001~"
+        with self.assertRaises(pyx12.errors.X12Error):
+            self._drain(s)
+
+    def test_empty_segment_line_does_not_crash(self):
+        # Empty line between segments — line[-1] previously raised IndexError.
+        # Now it should either skip quietly or surface as an X12Error, never a
+        # bare IndexError.
+        s = self.ISA + "\n\n" + "IEA*1*000000001~"
+        try:
+            self._drain(s)
+        except pyx12.errors.X12Error:
+            pass    # allowed: the reader translated the empty line to an X12Error
+        except IndexError as e:
+            self.fail(f"empty segment line escaped as bare IndexError: {e}")

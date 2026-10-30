@@ -413,11 +413,24 @@ class X12Reader(X12Base):
         X12Base._parse_segment(self, seg_data)
         seg_id = seg_data.get_seg_id()
         if seg_id == "IEA":
+            if not self.loops:
+                # Trailer with no open envelope — duplicated or extraneous
+                # IEA would otherwise raise a bare IndexError here, escaping
+                # the documented pyx12.errors.X12Error contract (CWE-248).
+                raise pyx12.errors.X12Error(
+                    "Unbalanced envelope: IEA trailer with no open ISA loop"
+                )
             if self.loops[-1][0] != "ISA":
                 # Unterminated GS loop
                 err_str = f"Unterminated Loop {self.loops[-1][0]}"
                 self._isa_error(ISA_024_INVALID_CONTENT, err_str)
                 del self.loops[-1]
+            if not self.loops:
+                # The recovery del above emptied the stack — no ISA frame
+                # remains to validate against. Surface as X12Error.
+                raise pyx12.errors.X12Error(
+                    "Unbalanced envelope: IEA trailer with no open ISA loop"
+                )
             if self.loops[-1][1] != seg_data.get_value("IEA02"):
                 err_str = "IEA id={} does not match ISA id={}".format(
                     seg_data.get_value("IEA02"), self.loops[-1][1]
@@ -428,10 +441,22 @@ class X12Reader(X12Base):
                 self._isa_error(ISA_021_INVALID_GROUP_COUNT, err_str)
             del self.loops[-1]
         elif seg_id == "GE":
+            if not self.loops:
+                # Trailer with no open envelope — see the IEA branch above
+                # for the CWE-248 contract rationale.
+                raise pyx12.errors.X12Error(
+                    "Unbalanced envelope: GE trailer with no open GS loop"
+                )
             if self.loops[-1][0] != "GS":
                 err_str = f"Unterminated segment {self.loops[-1][1]}"
                 self._gs_error("3", err_str)
                 del self.loops[-1]
+            if not self.loops:
+                # Same pattern as IEA above — the recovery del emptied the
+                # stack. Surface as X12Error, not a bare IndexError.
+                raise pyx12.errors.X12Error(
+                    "Unbalanced envelope: GE trailer with no open GS loop"
+                )
             if self.loops[-1][1] != seg_data.get_value("GE02"):
                 err_str = "GE id={} does not match GS id={}".format(
                     seg_data.get_value("GE02"), self.loops[-1][1]
@@ -444,6 +469,12 @@ class X12Reader(X12Base):
                 self._gs_error("5", err_str)
             del self.loops[-1]
         elif seg_id == "SE":
+            if not self.loops:
+                # Trailer with no open envelope — see the IEA branch above
+                # for the CWE-248 contract rationale.
+                raise pyx12.errors.X12Error(
+                    "Unbalanced envelope: SE trailer with no open ST loop"
+                )
             se_trn_control_num = seg_data.get_value("SE02")
             if self.loops[-1][0] != "ST" or self.loops[-1][1] != se_trn_control_num:
                 err_str = f"SE id={se_trn_control_num} does not match ST id={self.loops[-1][1]}"
@@ -466,6 +497,10 @@ class X12Reader(X12Base):
                 err_str = "Segment contains a leading space"
                 self._seg_error(SEG_1_LEADING_SPACE, err_str, None, src_line=self.cur_line + 1)
                 line = line.lstrip()
+            if not line:
+                # Empty / whitespace-only segment line — avoid a bare
+                # IndexError on `line[-1]` escaping the X12Error contract.
+                continue
             if line[-1] == self.ele_term:
                 err_str = "Segment contains trailing element terminators"
                 self._seg_error(
