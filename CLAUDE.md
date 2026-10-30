@@ -29,19 +29,12 @@ HIPAA X12 EDI document validator and converter. Parses ANSI X12N data files and 
 - No docstrings beyond a single short line when truly needed
 - Prefer functional programming patterns over object oriented patterns
 
-## Response style
-- Trailing summaries and recaps of what was done are welcome
-- Some emojis
-- Reference code locations as `file:line` (or markdown links in VSCode)
-- Short updates at key moments; silent is not acceptable
-
 ## Testing
 See the [/test](.claude/commands/test.md) skill for invocation, reporting, and authoring conventions.
 
 ## Preferences
-- Save preferences to this CLAUDE.md file so they persist across sessions
-- Do not make any changes until you have 95% confidence in what you need to build.  Ask me
-follow-up questions until you reach that confidence.
+- Record project conventions that every contributor should follow in this file. Personal working preferences belong in a gitignored `CLAUDE.local.md`
+- This file and `.claude/` load into every contributor's Claude Code session, and `.claude/settings.json` can grant permissions and run hooks. Keep `settings.json` minimal (no hooks, no broad allows) and review changes to these paths like CI workflow changes
 - No pickle / opaque deserialization for shipped or loaded artifacts — prefer generated `.py` modules (security: `__reduce__` is an arbitrary-code-execution surface unacceptable in a healthcare-data library)
 - Every production release tag (`vN.N.N`) needs a matching `gh release create --latest` after the PyPI upload step
 - Keep unreachable safety-net `return` statements in walker `while True` loops — they document intent and protect against future control-flow changes
