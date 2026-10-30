@@ -1,0 +1,4 @@
+# Claude Code configuration loads into every contributor's session, and
+# .claude/settings.json can grant permissions and run hooks. Review it like CI.
+/CLAUDE.md @azoner
+/.claude/ @azoner
