@@ -17,6 +17,12 @@ class GetFilename(unittest.TestCase):
         )
         self.assertEqual(self.idx.get_abbr("00401", "004010X098A1", "HC"), "837P")
 
+    def test_get_837d(self):
+        self.assertEqual(
+            self.idx.get_filename("00501", "005010X224A2", "HC"), "837.5010.X224.A2.xml"
+        )
+        self.assertEqual(self.idx.get_abbr("00501", "005010X224A2", "HC"), "837D")
+
     def test_get_278_initial(self):
         self.assertEqual(
             self.idx.get_filename("00401", "004010X094A1", "HI"), "278.4010.X094.27.A1.xml"
@@ -49,6 +55,12 @@ class GetFilenameMapPath(unittest.TestCase):
             self.idx.get_filename("00401", "004010X098A1", "HC"), "837.4010.X098.A1.xml"
         )
         self.assertEqual(self.idx.get_abbr("00401", "004010X098A1", "HC"), "837P")
+
+    def test_get_837d(self):
+        self.assertEqual(
+            self.idx.get_filename("00501", "005010X224A2", "HC"), "837.5010.X224.A2.xml"
+        )
+        self.assertEqual(self.idx.get_abbr("00501", "005010X224A2", "HC"), "837D")
 
     def test_get_278_initial(self):
         self.assertEqual(
