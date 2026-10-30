@@ -39,5 +39,46 @@ class TestEleErrorBeforeAddEle(unittest.TestCase):
         self.assertEqual(len(eh.cur_seg_node.elements), 1)
 
 
+class TestSegErrorOutsideTransactionSet(unittest.TestCase):
+    def _errh_after_add_seg(self, cur_st_node):
+        # State after errh.add_seg(): a new segment node is pending under cur_st_node
+        eh = err_handler()
+        eh.cur_isa_node = MagicMock()
+        eh.cur_isa_node.get_cur_line.return_value = 1
+        eh.cur_st_node = cur_st_node
+        eh.cur_seg_node = MagicMock()
+        eh.seg_node_added = False
+        return eh
+
+    def test_no_transaction_set_goes_to_interchange(self):
+        eh = self._errh_after_add_seg(None)
+        eh.seg_error("SEG_3_mandatory_loop_missing", "ST_LOOP missing")
+        eh.cur_isa_node.add_error.assert_called_once_with(
+            "ISA_024_invalid_content", "ST_LOOP missing"
+        )
+        eh.cur_seg_node.add_error.assert_not_called()
+
+    def test_closed_transaction_set_goes_to_interchange(self):
+        st = MagicMock()
+        st.is_closed.return_value = True
+        eh = self._errh_after_add_seg(st)
+        eh.seg_error("SEG_5_segment_repeat_exceeded", "Segment GE exceeded max count")
+        eh.cur_isa_node.add_error.assert_called_once_with(
+            "ISA_024_invalid_content", "Segment GE exceeded max count"
+        )
+        st.children.append.assert_not_called()
+
+    def test_open_transaction_set_keeps_segment_error(self):
+        st = MagicMock()
+        st.is_closed.return_value = False
+        eh = self._errh_after_add_seg(st)
+        eh.seg_error("SEG_5_segment_repeat_exceeded", "Segment N3 exceeded max count")
+        st.children.append.assert_called_once_with(eh.cur_seg_node)
+        eh.cur_seg_node.add_error.assert_called_once_with(
+            "SEG_5_segment_repeat_exceeded", "Segment N3 exceeded max count", None
+        )
+        eh.cur_isa_node.add_error.assert_not_called()
+
+
 if __name__ == "__main__":
     unittest.main()

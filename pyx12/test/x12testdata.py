@@ -4318,20 +4318,17 @@ IEA*1*000001168~""",
         },
     },
     "dup_trailers": {
-        "res997": """ISA*00*          *00*          *ZZ*BBBBBBBBB      *ZZ*AAAAAAAA       *261030*1551*U*00401*610301551*0*P*:~
-GS*FA*BBBBBBBBB*AAAA*20261030*155103*1167*X*00401~
+        "res997": """ISA*00*          *00*          *ZZ*BBBBBBBBB      *ZZ*AAAAAAAA       *261030*1705*U*00401*610301705*0*P*:~
+GS*FA*BBBBBBBBB*AAAA*20261030*170504*1167*X*00401~
 ST*997*0001~
 AK1*HC*1167~
 AK2*837*1179~
-AK3*SE*62**5~
-AK3*GE*62**5~
-AK3*IEA*62**5~
-AK5*R*5~
-AK9*R*1*1*0~
-SE*9*0001~
+AK5*A~
+AK9*A*1*1*1~
+SE*6*0001~
 GE*1*1167~
 TA1*000001168*041105*1526*R*024~
-IEA*1*610301551~""",
+IEA*1*610301705~""",
         "source": """ISA*00*          *00*          *ZZ*AAAAAAAA       *ZZ*BBBBBBBBB      *041105*1526*U*00401*000001168*1*P*:~
 GS*HC*AAAA*BBBBBBBBB*20041105*1526*1167*X*004010X098A1~
 ST*837*1179~
@@ -4414,12 +4411,27 @@ IEA*1*000001168~""",
                         {
                             "err_cde": "ISA_024_invalid_content",
                             "x12_code": "024",
+                            "err_str": "Segment SE exceeded max count.  Found 2, should have 1",
+                        },
+                        {
+                            "err_cde": "ISA_024_invalid_content",
+                            "x12_code": "024",
                             "err_str": "SE segment has no open ST loop",
                         },
                         {
                             "err_cde": "ISA_024_invalid_content",
                             "x12_code": "024",
+                            "err_str": "Segment GE exceeded max count.  Found 2, should have 1",
+                        },
+                        {
+                            "err_cde": "ISA_024_invalid_content",
+                            "x12_code": "024",
                             "err_str": "GE segment has no open GS loop",
+                        },
+                        {
+                            "err_cde": "ISA_024_invalid_content",
+                            "x12_code": "024",
+                            "err_str": "Segment IEA exceeded max count.  Found 2, should have 1",
                         },
                         {
                             "err_cde": "ISA_024_invalid_content",
@@ -4432,7 +4444,7 @@ IEA*1*000001168~""",
                             "gs_control_num": "1167",
                             "fic": "HC",
                             "vriic": "004010X098A1",
-                            "ack_code": "R",
+                            "ack_code": "A",
                             "st_count_orig": 1,
                             "st_count_recv": 1,
                             "cur_line": 68,
@@ -4442,62 +4454,10 @@ IEA*1*000001168~""",
                                     "trn_set_id": "837",
                                     "trn_set_control_num": "1179",
                                     "vriic": None,
-                                    "ack_code": "R",
+                                    "ack_code": "A",
                                     "cur_line": 66,
                                     "errors": [],
-                                    "segments": [
-                                        {
-                                            "seg_id": "SE",
-                                            "seg_count": 62,
-                                            "pos": 555,
-                                            "name": "Transaction Set Trailer",
-                                            "ls_id": None,
-                                            "cur_line": 66,
-                                            "errors": [
-                                                {
-                                                    "err_cde": "SEG_5_segment_repeat_exceeded",
-                                                    "x12_code": "5",
-                                                    "err_str": "Segment SE exceeded max count.  Found 2, should have 1",
-                                                    "err_val": None,
-                                                }
-                                            ],
-                                            "elements": [],
-                                        },
-                                        {
-                                            "seg_id": "GE",
-                                            "seg_count": 62,
-                                            "pos": 30,
-                                            "name": "Functional Group Trailer",
-                                            "ls_id": None,
-                                            "cur_line": 68,
-                                            "errors": [
-                                                {
-                                                    "err_cde": "SEG_5_segment_repeat_exceeded",
-                                                    "x12_code": "5",
-                                                    "err_str": "Segment GE exceeded max count.  Found 2, should have 1",
-                                                    "err_val": None,
-                                                }
-                                            ],
-                                            "elements": [],
-                                        },
-                                        {
-                                            "seg_id": "IEA",
-                                            "seg_count": 62,
-                                            "pos": 30,
-                                            "name": "Interchange Control Trailer",
-                                            "ls_id": None,
-                                            "cur_line": 70,
-                                            "errors": [
-                                                {
-                                                    "err_cde": "SEG_5_segment_repeat_exceeded",
-                                                    "x12_code": "5",
-                                                    "err_str": "Segment IEA exceeded max count.  Found 2, should have 1",
-                                                    "err_val": None,
-                                                }
-                                            ],
-                                            "elements": [],
-                                        },
-                                    ],
+                                    "segments": [],
                                 }
                             ],
                         }
@@ -4723,6 +4683,52 @@ IEA*1*000001169~""",
                         }
                     ],
                 },
+            ]
+        },
+    },
+    "gs_without_st": {
+        "res997": """ISA*00*          *00*          *ZZ*BBBBBBBBB      *ZZ*AAAAAAAA       *261030*1705*U*00401*610301705*0*P*:~
+GS*FA*BBBBBBBBB*AAAA*20261030*170538*1167*X*00401~
+ST*997*0001~
+AK1*HC*1167~
+AK9*A*0*0*0~
+SE*4*0001~
+GE*1*1167~
+TA1*000001168*041105*1526*R*024~
+IEA*1*610301705~""",
+        "source": """ISA*00*          *00*          *ZZ*AAAAAAAA       *ZZ*BBBBBBBBB      *041105*1526*U*00401*000001168*1*P*:~
+GS*HC*AAAA*BBBBBBBBB*20041105*1526*1167*X*004010X098A1~
+GE*0*1167~
+IEA*1*000001168~""",
+        "resJson": {
+            "interchanges": [
+                {
+                    "isa_trn_set_id": "000001168",
+                    "ta1_req": "1",
+                    "orig_date": "041105",
+                    "orig_time": "1526",
+                    "cur_line": 4,
+                    "errors": [
+                        {
+                            "err_cde": "ISA_024_invalid_content",
+                            "x12_code": "024",
+                            "err_str": 'Mandatory loop "Transaction Set Header" (ST_LOOP) missing',
+                        }
+                    ],
+                    "groups": [
+                        {
+                            "gs_control_num": "1167",
+                            "fic": "HC",
+                            "vriic": "004010X098A1",
+                            "ack_code": "A",
+                            "st_count_orig": 0,
+                            "st_count_recv": 0,
+                            "cur_line": 3,
+                            "errors": [],
+                            "transactions": [],
+                        }
+                    ],
+                }
             ]
         },
     },

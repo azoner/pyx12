@@ -20,6 +20,7 @@ from typing import Any, cast
 # Intrapackage imports
 import pyx12.segment
 
+from .error_codes import ISA_024_INVALID_CONTENT
 from .errors import IterOutOfBounds  # , IterDone
 
 logger = logging.getLogger("pyx12.error_handler")
@@ -289,6 +290,11 @@ class err_handler:
         :param err_str: Description of the error
         :type err_str: string
         """
+        if not self.seg_node_added and (self.cur_st_node is None or self.cur_st_node.is_closed()):
+            # The segment is outside any open transaction set (e.g. a GS with no ST, or a
+            # repeated GE), so no transaction ack can carry the error; the interchange does.
+            self.isa_error(ISA_024_INVALID_CONTENT, err_str)
+            return
         sout = ""
         try:
             self._add_cur_seg()
