@@ -101,10 +101,14 @@ class err_handler:
     ele_node_added: bool
     cur_line: int
     suppress_error_codes: set[str]
+    log_data_values: bool
 
-    def __init__(self) -> None:
-        """ """
-
+    def __init__(self, log_data_values: bool = False) -> None:
+        """
+        :param log_data_values: include the error message and offending value in log
+            records. Off by default: messages embed input data (names, ids, dates), so
+            they would reach any log handler the host application has configured.
+        """
         self.id = "ROOT"
         self.children = []
         self.cur_node = self
@@ -122,6 +126,29 @@ class err_handler:
         # pyx12.map_if._segment and pyx12.map_walker.
         self.suppress_error_codes = set()
         self.cur_line = 0
+        self.log_data_values = log_data_values
+
+    def _log(
+        self,
+        level: str,
+        cur_line: int | None,
+        err_cde: str,
+        err_str: str,
+        value: str | None = None,
+        refdes: str | None = None,
+        prefix: str = "",
+    ) -> None:
+        sout = prefix
+        if cur_line is not None:
+            sout += "Line:%i " % cur_line
+        sout += "%s:%s" % (level, err_cde)
+        if refdes:
+            sout += " %s" % refdes
+        if self.log_data_values:
+            sout += " - %s" % err_str
+            if value:
+                sout += " (%s)" % value
+        logger.error(sout)
 
     def accept(self, visitor: Any) -> None:
         """
@@ -245,10 +272,7 @@ class err_handler:
         :param err_str: Description of the error
         :type err_str: string
         """
-        sout = ""
-        sout += "Line:%i " % (self.cur_isa_node.get_cur_line())
-        sout += "ISA:%s - %s" % (err_cde, err_str)
-        logger.error(sout)
+        self._log("ISA", self.cur_isa_node.get_cur_line(), err_cde, err_str)
         self.cur_isa_node.add_error(err_cde, err_str)
 
     def gs_error(self, err_cde: str, err_str: str) -> None:
@@ -258,10 +282,7 @@ class err_handler:
         :param err_str: Description of the error
         :type err_str: string
         """
-        sout = ""
-        sout += "Line:%i " % (self.cur_gs_node.get_cur_line())
-        sout += "GS:%s - %s" % (err_cde, err_str)
-        logger.error(sout)
+        self._log("GS", self.cur_gs_node.get_cur_line(), err_cde, err_str)
         self.cur_gs_node.add_error(err_cde, err_str)
 
     def st_error(self, err_cde: str, err_str: str) -> None:
@@ -271,10 +292,7 @@ class err_handler:
         :param err_str: Description of the error
         :type err_str: string
         """
-        sout = ""
-        sout += "Line:%i " % (self.cur_st_node.get_cur_line())
-        sout += "ST:%s - %s" % (err_cde, err_str)
-        logger.error(sout)
+        self._log("ST", self.cur_st_node.get_cur_line(), err_cde, err_str)
         self.cur_st_node.add_error(err_cde, err_str)
 
     def seg_error(
@@ -301,21 +319,16 @@ class err_handler:
             else:
                 self.isa_error(ISA_024_INVALID_CONTENT, err_str)
             return
-        sout = ""
+        prefix = ""
         try:
             self._add_cur_seg()
             self.cur_seg_node.add_error(err_cde, err_str, err_value)
         except Exception:
-            sout += "No current segment in error_handler. "
-        if src_line:
-            sout += "Line:%i " % (src_line)
-        else:
-            if self.cur_seg_node is not None:
-                sout += "Line:%i " % (self.cur_seg_node.get_cur_line())
-        sout += "SEG:%s - %s" % (err_cde, err_str)
-        if err_value:
-            sout += " (%s)" % err_value
-        logger.error(sout)
+            prefix = "No current segment in error_handler. "
+        cur_line = src_line
+        if not cur_line and self.cur_seg_node is not None:
+            cur_line = self.cur_seg_node.get_cur_line()
+        self._log("SEG", cur_line, err_cde, err_str, err_value, prefix=prefix)
 
     def ele_error(
         self,
@@ -332,12 +345,7 @@ class err_handler:
         """
         self._add_cur_ele()
         self.cur_ele_node.add_error(err_cde, err_str, bad_value)
-        sout = ""
-        sout += "Line:%i " % (self.cur_seg_node.get_cur_line())
-        sout += "ELE:%s - %s" % (err_cde, err_str)
-        if bad_value:
-            sout += " (%s)" % (bad_value)
-        logger.error(sout)
+        self._log("ELE", self.cur_seg_node.get_cur_line(), err_cde, err_str, bad_value, refdes)
 
     def close_isa_loop(self, node: Any, seg: Any, src: Any) -> None:
         """ """

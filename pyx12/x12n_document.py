@@ -82,7 +82,7 @@ def x12n_document(
     :rtype: boolean
     """
     logger = logging.getLogger("pyx12")
-    errh = pyx12.error_handler.err_handler()
+    errh = pyx12.error_handler.err_handler(log_data_values=bool(param.get("log_data_values")))
     suppress = param.get("suppress_error_codes")
     if suppress:
         errh.suppress_error_codes = set(suppress)

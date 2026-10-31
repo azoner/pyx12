@@ -348,3 +348,28 @@ emission, not the three other element-level checks that also map to AK4
 ``"6"`` (control character, trailing space, invalid type character).
 This is the granular control the pyx12 code namespace was introduced to
 provide.
+
+Logging
+-------
+
+Every error is also logged at ``ERROR`` on the ``pyx12`` logger. By default
+the record carries only the location and the code, for example
+``Line:13 ELE:ELE_5_too_long NM103``. The message text and the offending
+value are left out because they embed input data (names, identifiers,
+dates), which would otherwise reach whatever log handler the host
+application has configured. The 997 / 999, HTML and JSON outputs always
+carry the full detail.
+
+To include the message and value in log records, opt in:
+
+.. code-block:: text
+
+   x12valid --log-data-values -- input.x12
+
+.. code-block:: python
+
+   param = pyx12.params.params()
+   param.set("log_data_values", True)
+
+or construct the handler directly with
+``pyx12.error_handler.err_handler(log_data_values=True)``.

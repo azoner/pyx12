@@ -89,6 +89,16 @@ def build_parser() -> argparse.ArgumentParser:
         ),
     )
     parser.add_argument(
+        "--log-data-values",
+        action="store_true",
+        dest="log_data_values",
+        help=(
+            "Include the error message and offending data value in log output. "
+            "Off by default because messages embed input data (PHI); the 997/999, "
+            "HTML and JSON outputs always carry the full detail."
+        ),
+    )
+    parser.add_argument(
         "--exclude-external-codes",
         "-x",
         action="append",
@@ -144,6 +154,8 @@ def main():
         param.set("suppress_error_codes", codes)
     if args.map_path:
         param.set("map_path", args.map_path)
+    if args.log_data_values:
+        param.set("log_data_values", True)
 
     if args.logfile:
         try:

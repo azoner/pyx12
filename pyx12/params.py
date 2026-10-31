@@ -56,6 +56,9 @@ class ParamsBase:
         # output). Set via `--suppress CODE,CODE,...` on x12valid or
         # programmatically via params.set("suppress_error_codes", {...}).
         self.params["suppress_error_codes"] = set()
+        # Error log records carry only line, level, code and reference designator
+        # unless this is on: the messages embed input data values (PHI).
+        self.params["log_data_values"] = False
 
     def get(self, option: str) -> Any:
         """
