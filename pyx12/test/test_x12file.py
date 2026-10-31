@@ -654,6 +654,54 @@ class X12WriterTest(X12fileTestCase):
         self.assertMultiLineEqual(output, newval)
 
 
+class X12WriterDelimiterGuard(X12fileTestCase):
+    """A value holding one of the writer's own delimiters would forge
+    structure on output, so Write refuses it."""
+
+    def _write(self, seg_str, ref_des, value):
+        fd_out = self._makeFd()
+        wr = pyx12.x12file.X12Writer(fd_out, "~", "*", ":", "\n", "^")
+        seg_data = pyx12.segment.Segment(seg_str, "}", "|", ">")
+        seg_data.set(ref_des, value)
+        wr.Write(seg_data)
+        fd_out.seek(0)
+        return fd_out.read()
+
+    def test_segment_terminator_rejected(self):
+        with self.assertRaises(pyx12.errors.EngineError):
+            self._write("NM1|IL|1|DOE", "NM103", "DOE~IEA*1*X")
+
+    def test_element_separator_rejected(self):
+        with self.assertRaises(pyx12.errors.EngineError):
+            self._write("NM1|IL|1|DOE", "NM103", "A*B")
+
+    def test_subelement_separator_rejected(self):
+        with self.assertRaises(pyx12.errors.EngineError):
+            self._write("NM1|IL|1|DOE", "NM103", "A:B")
+
+    def test_repetition_separator_rejected(self):
+        with self.assertRaises(pyx12.errors.EngineError):
+            self._write("NM1|IL|1|DOE", "NM103", "A^B")
+
+    def test_subelement_value_rejected(self):
+        with self.assertRaises(pyx12.errors.EngineError):
+            self._write("DMG|D8|19830719|F||C>RET", "DMG05-2", "R*T")
+
+    def test_clean_value_written(self):
+        self.assertEqual(
+            self._write("NM1|IL|1|DOE", "NM103", "O'DOE-SMITH"), "NM1*IL*1*O'DOE-SMITH~\n"
+        )
+
+    def test_isa_separator_slots_allowed(self):
+        isa = (
+            "ISA|00|          |00|          |ZZ|ZZ000          |ZZ|ZZ001          "
+            "|030828|1128|!|00501|000010121|0|T|>"
+        )
+        out = self._write(isa, "ISA15", "T")
+        self.assertTrue(out.startswith("ISA*00*"))
+        self.assertTrue(out.endswith("*1128*^*00501*000010121*0*T*:~\n"))
+
+
 class LX_Checks(X12fileTestCase):
     """
     837 2400/LX counting

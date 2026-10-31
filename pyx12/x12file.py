@@ -680,6 +680,7 @@ class X12Writer(X12Base):
         :param seg_data: segment to write
         :type seg_data: L{segment<segment.Segment>}
         """
+        self._check_delimiters(seg_data)
         out = seg_data.format(self.seg_term, self.ele_term, self.subele_term) + self.eol
         # self.fd_out.write(out.decode('ascii'))
         self.fd_out.write(out)
@@ -698,9 +699,29 @@ class X12Writer(X12Base):
         if icvn == "00501":
             seg_data.set("ISA11", self.repetition_term)  # type: ignore[arg-type]
         seg_data.set("ISA16", self.subele_term)  # type: ignore[arg-type]
+        self._check_delimiters(seg_data)
         out = seg_data.format(self.seg_term, self.ele_term, self.subele_term) + self.eol
         # self.fd_out.write(out.decode('ascii'))
         self.fd_out.write(out)
+
+    def _check_delimiters(self, seg_data: pyx12.segment.Segment) -> None:
+        """Raise EngineError if a value contains one of this writer's delimiters.
+
+        A segment built with other delimiters (re-delimiting, programmatic
+        set) can hold them as data; formatting would then emit forged
+        structure. ISA11 / ISA16 legitimately carry the separators."""
+        seg_id = seg_data.get_seg_id()
+        terms = [
+            t for t in (self.seg_term, self.ele_term, self.subele_term, self.repetition_term) if t
+        ]
+        for pos, comp in enumerate(seg_data.elements, start=1):
+            if seg_id == "ISA" and pos in (11, 16):
+                continue
+            for ele in comp.elements:
+                if any(t in ele.value for t in terms):
+                    raise pyx12.errors.EngineError(
+                        f"{seg_id}{pos:02d} value {ele.value!r} contains a writer delimiter"
+                    )
 
     def _get_trailer_segment(
         self,
