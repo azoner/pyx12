@@ -11,6 +11,22 @@ import sys
 from typing import TextIO
 
 
+def _xml_legal(text: str) -> str:
+    """Substitute `?` for characters XML 1.0 forbids even when escaped.
+
+    Input is read as latin-1, so control bytes in data reach the writer."""
+    return "".join(ch if _is_xml_char(ord(ch)) else "?" for ch in text)
+
+
+def _is_xml_char(cp: int) -> bool:
+    return (
+        cp in (0x9, 0xA, 0xD)
+        or 0x20 <= cp <= 0xD7FF
+        or 0xE000 <= cp <= 0xFFFD
+        or 0x10000 <= cp <= 0x10FFFF
+    )
+
+
 class XMLWriter:
     """
     Doctest:
@@ -138,13 +154,14 @@ class XMLWriter:
     def _escape_cont(self, text: str | None) -> str | None:
         if text is None:
             return None
-        return text.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;")
+        return _xml_legal(text).replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;")
 
     def _escape_attr(self, text: str | None) -> str | None:
         if text is None:
             return None
         return (
-            text.replace("&", "&amp;")
+            _xml_legal(text)
+            .replace("&", "&amp;")
             .replace("'", "&apos;")
             .replace("<", "&lt;")
             .replace(">", "&gt;")

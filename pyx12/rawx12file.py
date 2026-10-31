@@ -23,6 +23,7 @@ import pyx12.errors
 import pyx12.segment
 
 DEFAULT_BUFSIZE = 8 * 1024
+MAX_SEGMENT_LEN = 1024 * 1024
 ISA_LEN = 106
 
 
@@ -76,12 +77,17 @@ class RawX12File:
         Split the input stream on the delimiter and remove any leading CR-LF
         """
         while True:
-            if self.buffer.find(self.seg_term) == -1:
-                # Need more data
-                self.buffer += self.fd.read(DEFAULT_BUFSIZE)
-            if self.buffer.find(self.seg_term) == -1:
-                # Still have no segment terminator
-                break
+            while self.buffer.find(self.seg_term) == -1:
+                chunk = self.fd.read(DEFAULT_BUFSIZE)
+                if not chunk:
+                    # EOF with no terminator: the partial tail is dropped and
+                    # surfaces upstream as a premature-EOF interchange error.
+                    return
+                self.buffer += chunk
+                if len(self.buffer) > MAX_SEGMENT_LEN:
+                    raise pyx12.errors.X12Error(
+                        f"No segment terminator {self.seg_term!r} within {MAX_SEGMENT_LEN} characters"
+                    )
             # Get first segment in buffer
             (line, self.buffer) = self.buffer.split(self.seg_term, 1)
             line = line.lstrip("\n\r")
