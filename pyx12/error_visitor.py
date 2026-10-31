@@ -16,20 +16,36 @@ from __future__ import annotations
 
 from typing import Any
 
+_ACK_DELIMITERS = frozenset("~*:^")
 
-def ascii_only(value: str) -> str:
-    """Replace non-ASCII codepoints with `?` (0x3F).
+# Ack elements that legitimately hold a delimiter or a composite:
+# ISA11 / ISA16 are the repetition and sub-element separators themselves,
+# IK4-01 / AK4-01 are the C030 position composite built from integers.
+_ACK_PASSTHROUGH = frozenset({("ISA", 11), ("ISA", 16), ("IK4", 1), ("AK4", 1)})
 
-    The X12 997/999 acknowledgement output is ASCII-by-spec, but the input
-    file may contain non-ASCII bytes that bubble through validation as
-    `bad_value` payloads on element-level errors. The visitor must
-    sanitize before writing them into IK404/AK4-04, otherwise the ack
-    itself would carry the bad bytes (and the X12Writer's ASCII encode
-    would crash on file output).
 
-    `?` is in the X12 basic charset, so the substitute is always valid
-    in any IK404/AK4-04 context."""
-    return value.encode("ascii", errors="replace").decode("ascii")
+def ack_safe(value: str) -> str:
+    """Substitute `?` for anything that could forge ack structure.
+
+    The ack writer is hardwired to `~ * : ^` regardless of the input file's
+    delimiters, so any input value copied into the ack can carry them."""
+    return "".join(
+        "?" if ch in _ACK_DELIMITERS or not (0x20 <= ord(ch) < 0x7F) else ch for ch in value
+    )
+
+
+def sanitize_ack_segment(seg_data: Any) -> None:
+    """Apply ack_safe to every element of an ack segment in place."""
+    seg_id = seg_data.get_seg_id()
+    for pos in range(1, len(seg_data) + 1):
+        if (seg_id, pos) in _ACK_PASSTHROUGH:
+            continue
+        ref_des = f"{seg_id}{pos:02d}"
+        value = seg_data.get_value(ref_des)
+        if value:
+            safe = ack_safe(value)
+            if safe != value:
+                seg_data.set(ref_des, safe)
 
 
 class error_visitor:

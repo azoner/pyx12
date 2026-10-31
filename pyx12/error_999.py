@@ -101,7 +101,7 @@ class error_999_visitor(pyx12.error_visitor.error_visitor):
         isa_seg.set("14", "0")  # No need for TA1 response to 999
         isa_seg.set("15", seg.get_value("ISA15"))
         isa_seg.set("16", self.subele_term)
-        self.wr.Write(isa_seg)
+        self._write(isa_seg)
 
         # GS*FA*ENCOUNTER*00GR*20030425*150153*653500001*X*005010
         seg = errh.cur_gs_node.seg_data
@@ -114,7 +114,7 @@ class error_999_visitor(pyx12.error_visitor.error_visitor):
         gs_seg.set("06", self.gs_control_num)
         gs_seg.set("07", seg.get_value("GS07"))
         gs_seg.set("08", self.vriic)
-        self.wr.Write(gs_seg)
+        self._write(gs_seg)
 
     def __get_isa_errors(self, err_isa: Any) -> list[str]:
         """Build list of TA1 Interchange Note Codes for the err_isa node.
@@ -144,7 +144,7 @@ class error_999_visitor(pyx12.error_visitor.error_visitor):
         ge = pyx12.segment.Segment("GE", "~", "*", ":")
         if self.gs_control_num is not None:
             ge.set("02", self.gs_control_num)
-        self.wr.Write(ge)
+        self._write(ge)
 
         # TA1 segment
         err_isa = errh.cur_isa_node
@@ -163,8 +163,8 @@ class error_999_visitor(pyx12.error_visitor.error_visitor):
             else:
                 ta1_seg.append("A")
                 ta1_seg.append("000")
-            self.wr.Write(ta1_seg)
-        self.wr.Write(pyx12.segment.Segment("IEA", "~", "*", ":"))
+            self._write(ta1_seg)
+        self._write(pyx12.segment.Segment("IEA", "~", "*", ":"))
 
     def visit_isa_pre(self, err_isa: Any) -> None:
         """
@@ -189,12 +189,12 @@ class error_999_visitor(pyx12.error_visitor.error_visitor):
         st_seg = pyx12.segment.Segment("ST*999", "~", "*", ":")
         st_seg.set("02", "%04i" % (self.st_control_num))
         st_seg.set("03", self.vriic)
-        self.wr.Write(st_seg)
+        self._write(st_seg)
         ak1 = pyx12.segment.Segment("AK1", "~", "*", ":")
         ak1.set("01", err_gs.fic)
         ak1.set("02", err_gs.gs_control_num)
         ak1.set("03", err_gs.vriic)
-        self.wr.Write(ak1)
+        self._write(ak1)
 
     def __get_gs_errors(self, err_gs: Any) -> list[str]:
         """
@@ -243,13 +243,13 @@ class error_999_visitor(pyx12.error_visitor.error_visitor):
         err_codes = self.__get_gs_errors(err_gs)
         for err_cde in err_codes[:5]:
             seg_data.append(err_cde)
-        self.wr.Write(seg_data)
+        self._write(seg_data)
 
         # SE
         seg_data = pyx12.segment.Segment("SE", "~", "*", ":")
         seg_data.append("%i" % (0))
         seg_data.append("%04i" % self.st_control_num)
-        self.wr.Write(seg_data)
+        self._write(seg_data)
 
     def visit_st_pre(self, err_st: Any) -> None:
         """
@@ -268,7 +268,7 @@ class error_999_visitor(pyx12.error_visitor.error_visitor):
         seg_data.set("01", err_st.trn_set_id)
         seg_data.set("02", err_st.trn_set_control_num.strip())
         seg_data.set("03", err_st.vriic)
-        self.wr.Write(seg_data)
+        self._write(seg_data)
 
     def __get_st_errors(self, err_st: Any) -> list[str]:
         """
@@ -303,7 +303,7 @@ class error_999_visitor(pyx12.error_visitor.error_visitor):
         err_codes = self.__get_st_errors(err_st)
         for err_code in err_codes[:5]:
             seg_data.append(err_code)
-        self.wr.Write(seg_data)
+        self._write(seg_data)
 
     def visit_seg(self, err_seg: Any) -> None:
         """
@@ -330,12 +330,12 @@ class error_999_visitor(pyx12.error_visitor.error_visitor):
                 continue
             seg_data = pyx12.segment.Segment(seg_str, "~", "*", ":")
             seg_data.set("IK304", ik_code)
-            self.wr.Write(seg_data)
+            self._write(seg_data)
             emitted.add(ik_code)
         if err_seg.child_err_count() > 0 and "8" not in emitted:
             seg_data = pyx12.segment.Segment(seg_str, "~", "*", ":")
             seg_data.set("IK304", "8")
-            self.wr.Write(seg_data)
+            self._write(seg_data)
 
     def visit_ele(self, err_ele: Any) -> None:
         """
@@ -358,5 +358,9 @@ class error_999_visitor(pyx12.error_visitor.error_visitor):
             seg_data = pyx12.segment.Segment(seg_str, "~", "*", ":")
             seg_data.set("IK403", spec.ik_code)
             if bad_value:
-                seg_data.set("IK404", pyx12.error_visitor.ascii_only(bad_value))
-            self.wr.Write(seg_data)
+                seg_data.set("IK404", bad_value[:99])
+            self._write(seg_data)
+
+    def _write(self, seg_data: pyx12.segment.Segment) -> None:
+        pyx12.error_visitor.sanitize_ack_segment(seg_data)
+        self.wr.Write(seg_data)
