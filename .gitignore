@@ -25,3 +25,4 @@ docs/_build/
 docs/_generated/
 docs/api/
 .claude/scheduled_tasks.lock
+plans/

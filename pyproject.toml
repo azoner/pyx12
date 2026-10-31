@@ -94,7 +94,6 @@ ignore = ["UP031"]
 # Match the mypy strict-overrides set in [[tool.mypy.overrides]] below.
 [tool.ruff.lint.per-file-ignores]
 "pyx12/test/*" = ["F401", "F403", "F405", "F821", "F841"]
-"pyx12/tests/*" = ["F401", "F403", "F405", "F821", "F841"]
 "pyx12/examples/*" = ["F401", "F403", "F405", "F821", "F841"]
 "pyx12/scripts/*" = ["F401", "F403", "F405", "F821", "F841"]
 

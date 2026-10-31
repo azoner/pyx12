@@ -116,3 +116,52 @@ class TestNodeCounterMakeX12Path(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class TestNodeCounterLoopRepeat(unittest.TestCase):
+    """Walk an 835 skeleton: resetting to a loop keeps that loop's own count
+    (so a repeat increments it) while clearing the counts beneath it."""
+
+    def test_loop_repeat(self):
+        counter = NodeCounter({})
+        counter.reset_to_node("/ISA_LOOP/GS_LOOP/ST_LOOP")
+        counter.increment("/ISA_LOOP/GS_LOOP/ST_LOOP")
+        counter.increment("/ISA_LOOP/GS_LOOP/ST_LOOP/ST")
+        counter.reset_to_node("/ISA_LOOP/GS_LOOP/ST_LOOP/HEADER")
+        counter.increment("/ISA_LOOP/GS_LOOP/ST_LOOP/HEADER")
+        counter.increment("/ISA_LOOP/GS_LOOP/ST_LOOP/HEADER/BPR")
+        counter.increment("/ISA_LOOP/GS_LOOP/ST_LOOP/HEADER/TRN")
+        counter.increment("/ISA_LOOP/GS_LOOP/ST_LOOP/HEADER/REF[EV]")
+        counter.increment("/ISA_LOOP/GS_LOOP/ST_LOOP/HEADER/DTM")
+        counter.reset_to_node("/ISA_LOOP/GS_LOOP/ST_LOOP/HEADER/1000A")
+        counter.increment("/ISA_LOOP/GS_LOOP/ST_LOOP/HEADER/1000A")
+        counter.increment("/ISA_LOOP/GS_LOOP/ST_LOOP/HEADER/1000A/N1")
+        counter.increment("/ISA_LOOP/GS_LOOP/ST_LOOP/HEADER/1000A/N3")
+        counter.increment("/ISA_LOOP/GS_LOOP/ST_LOOP/HEADER/1000A/N4")
+        counter.reset_to_node("/ISA_LOOP/GS_LOOP/ST_LOOP/HEADER/1000B")
+        counter.increment("/ISA_LOOP/GS_LOOP/ST_LOOP/HEADER/1000B")
+        counter.increment("/ISA_LOOP/GS_LOOP/ST_LOOP/HEADER/1000B/N1")
+        counter.reset_to_node("/ISA_LOOP/GS_LOOP/ST_LOOP/DETAIL/2000")
+        counter.increment("/ISA_LOOP/GS_LOOP/ST_LOOP/DETAIL/2000")
+        counter.increment("/ISA_LOOP/GS_LOOP/ST_LOOP/DETAIL/2000/LX")
+        counter.increment("/ISA_LOOP/GS_LOOP/ST_LOOP/DETAIL/2000/TS3")
+        counter.reset_to_node("/ISA_LOOP/GS_LOOP/ST_LOOP/DETAIL/2000/2100")
+        counter.increment("/ISA_LOOP/GS_LOOP/ST_LOOP/DETAIL/2000/2100")
+
+        svc = "/ISA_LOOP/GS_LOOP/ST_LOOP/DETAIL/2000/2100/2110"
+        self.assertEqual(0, counter.get_count(svc))
+        counter.reset_to_node(svc)
+        self.assertEqual(0, counter.get_count(svc))
+        counter.increment(svc)
+        self.assertEqual(1, counter.get_count(svc))
+        counter.increment(svc + "/SVC")
+        counter.increment(svc + "/DTM")
+        counter.increment(svc + "/DTM")
+        counter.increment(svc + "/CAS")
+        counter.increment(svc + "/LQ")
+
+        self.assertEqual(1, counter.get_count(svc))
+        counter.reset_to_node(svc)
+        self.assertEqual(1, counter.get_count(svc))
+        counter.increment(svc)
+        self.assertEqual(2, counter.get_count(svc))
