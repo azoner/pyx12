@@ -24,7 +24,7 @@ jobs:
         with:
           python-version: '3.12'
       - name: Install dev deps
-        run: uv sync --extra dev
+        run: uv sync --locked --extra dev
       - name: Smoke test
         run: uv run pytest -q
       - name: Build sdist + wheel

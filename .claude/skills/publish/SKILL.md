@@ -28,6 +28,7 @@ Tell the user the version (e.g. `4.0.0rc1` or `4.0.0`) and what will happen
 ### 3. Pre-flight verification
 All of these must pass before tagging:
 ```
+uv lock --check          # version bump must have re-locked; CI runs uv sync --locked
 .venv/Scripts/python.exe -m pytest pyx12/test/
 .venv/Scripts/python.exe -m mypy --strict pyx12
 .venv/Scripts/python.exe -m ruff check pyx12

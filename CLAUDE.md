@@ -14,6 +14,7 @@ HIPAA X12 EDI document validator and converter. Parses ANSI X12N data files and 
 - **Runtime deps:** `defusedxml>=0.7` (only)
 - **Build backend:** setuptools (>=61) via `pyproject.toml`; no `setup.py`
 - **Package manager:** `uv` — install Python packages with `uv pip install ...`, not pip
+- **Lockfile:** `uv.lock` is committed and CI installs with `uv sync --locked`. Any PR that touches `pyproject.toml` (dependencies **or** the `version` field, which the lock records) must run `uv lock` and commit the result, or CI fails on lock drift. Dependabot bumps the lock weekly via the `uv` ecosystem
 - **Local environment:** `.venv/` at project root. Always invoke tools via `.venv/Scripts/python.exe -m <tool>` — never `source .venv/Scripts/activate`, since shell state does not persist across Bash tool calls
 - **Test runner:** pytest (+ pytest-cov for coverage); tests written in `unittest.TestCase` style
 - **Format / lint:** ruff (line length 100); `ruff format` + `ruff check --select I` for imports

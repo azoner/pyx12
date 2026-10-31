@@ -18,7 +18,6 @@ Backup/
 *.pyperf
 .tox
 .vscode/
-uv.lock
 .claude/settings.local.json
 CLAUDE.local.md
 docs/_build/
