@@ -21,7 +21,7 @@ jobs:
         with:
           python-version: ${{ matrix.python-version }}
       - name: Install dependencies
-        run: uv sync --extra dev
+        run: uv sync --locked --extra dev
       - name: Test with pytest
         run: uv run pytest
 
@@ -37,7 +37,7 @@ jobs:
         with:
           python-version: '3.12'
       - name: Install dev dependencies
-        run: uv sync --extra dev
+        run: uv sync --locked --extra dev
       - name: Run mypy
         run: uv run mypy
 
@@ -53,7 +53,7 @@ jobs:
         with:
           python-version: '3.12'
       - name: Install dev dependencies
-        run: uv sync --extra dev
+        run: uv sync --locked --extra dev
       - name: Run map validator
         run: uv run python tools/check_maps.py
 
@@ -69,7 +69,7 @@ jobs:
         with:
           python-version: '3.12'
       - name: Install dev dependencies
-        run: uv sync --extra dev
+        run: uv sync --locked --extra dev
       - name: Build wheel and run install regression suite
         run: uv run python tools/test_install.py
 
@@ -85,7 +85,7 @@ jobs:
         with:
           python-version: '3.12'
       - name: Install docs dependencies
-        run: uv sync --extra docs
+        run: uv sync --locked --extra docs
       - name: Build HTML docs
         run: uv run sphinx-build -b html docs docs/_build/html
       - name: Check external links
