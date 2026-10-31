@@ -89,26 +89,17 @@ class error_html:
         if err_st is not None and not err_st.is_closed():
             for err_cde, err_str in err_st.errors:
                 if err_cde == "2":
-                    self.fd.write(
-                        '<span class="error">&nbsp;%s (Segment Error Code: %s)</span><br />\n'
-                        % (err_str, err_cde)
-                    )
+                    self._write_error(err_str, err_cde, "Segment")
         err_gs = self.errh.cur_gs_node
         if err_gs is not None and not err_gs.is_closed():
             for err_cde, err_str in err_gs.errors:
                 if err_cde == "3":
-                    self.fd.write(
-                        '<span class="error">&nbsp;%s (Segment Error Code: %s)</span><br />\n'
-                        % (err_str, err_cde)
-                    )
+                    self._write_error(err_str, err_cde, "Segment")
         err_isa = self.errh.cur_isa_node
         if err_isa is not None and not err_isa.is_closed():
             for err_cde, err_str in err_isa.errors:
                 if err_cde == ISA_023_PREMATURE_EOF:
-                    self.fd.write(
-                        '<span class="error">&nbsp;%s (Segment Error Code: %s)</span><br />\n'
-                        % (err_str, err_cde)
-                    )
+                    self._write_error(err_str, err_cde, "Segment")
         self.fd.write("</div>\n")
         self.fd.write(
             '<p>\n<a href="http://sourceforge.net/projects/pyx12/">pyx12 Validator</a>\n</p>\n'
@@ -164,10 +155,7 @@ class error_html:
                 err_cde = err_tuple[0]
                 err_str = err_tuple[1]
                 if err_cde == "3":
-                    self.fd.write(
-                        '<span class="error">&nbsp;%s (Segment Error Code: %s)</span><br />\n'
-                        % (err_str, err_cde)
-                    )
+                    self._write_error(err_str, err_cde, "Segment")
         if self.loop_info:
             self.gen_info(self.loop_info)
         self.loop_info = None
@@ -181,18 +169,19 @@ class error_html:
                 err_cde = err_tuple[0]
                 err_str = err_tuple[1]
                 if err_cde != "3":
-                    self.fd.write(
-                        '<span class="error">&nbsp;%s (Segment Error Code: %s)</span><br />\n'
-                        % (err_str, err_cde)
-                    )
+                    self._write_error(err_str, err_cde, "Segment")
             for ele in err_node.elements:
                 for err_cde, err_str, err_val in ele.get_error_list(seg_data.get_seg_id(), False):
                     # for (err_cde, err_str, err_val) in ele.errors:
                     if not (seg_data.get_seg_id() == "GE" and "GS" in err_str):  # Ugly hack
-                        self.fd.write(
-                            '<span class="error">&nbsp;%s (Element Error Code: %s)</span><br />\n'
-                            % (err_str, err_cde)
-                        )
+                        self._write_error(err_str, err_cde, "Element")
+
+    def _write_error(self, err_str: str, err_cde: str, kind: str) -> None:
+        # Text node, not an attribute: quotes are safe and stay readable.
+        self.fd.write(
+            '<span class="error">&nbsp;%s (%s Error Code: %s)</span><br />\n'
+            % (html.escape(err_str, quote=False), kind, html.escape(err_cde, quote=False))
+        )
 
     def _seg_str(self, seg_id: str | None, ele_list: list[Any]) -> str:
         """
@@ -200,7 +189,7 @@ class error_html:
         :rtype: string
         """
         return (
-            (seg_id or "")
+            (escape_html_chars(seg_id) or "")
             + self.ele_term
             + seg_str(ele_list, self.seg_term, self.ele_term, self.subele_term, self.eol)
         )
