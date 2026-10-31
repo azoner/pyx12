@@ -114,9 +114,6 @@ def x12n_document(
     if fd_xmldoc:
         xmldoc = pyx12.x12xml_simple.x12xml_simple(fd_xmldoc, param.get("simple_dtd"))
 
-    # basedir = os.path.dirname(src_file)
-    # erx = errh_xml.err_handler(basedir=basedir)
-
     valid = True
     # X12 spec: an ISA loop must contain at least one of TA1 or GS_LOOP.
     # GS_LOOP is now usage="S" in the control map (PR 5 / issue #160) so
