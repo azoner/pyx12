@@ -9,7 +9,10 @@
 ######################################################################
 
 """
-Capture X12 Errors
+Capture X12 Errors to an XML file.
+
+Deprecated: removed in 5.0. Use pyx12.errh_json or the fd_json output of
+x12n_document.
 """
 
 from __future__ import annotations
@@ -17,6 +20,8 @@ from __future__ import annotations
 import logging
 import os
 import tempfile
+import warnings
+import weakref
 from types import TracebackType
 from typing import IO, Any, Literal
 
@@ -24,8 +29,22 @@ from typing import IO, Any, Literal
 from .errors import EngineError
 from .xmlwriter import XMLWriter
 
+warnings.warn(
+    "pyx12.errh_xml is deprecated and will be removed in 5.0; "
+    "use pyx12.errh_json or the fd_json output of x12n_document",
+    DeprecationWarning,
+    stacklevel=2,
+)
+
 # (kind, code, message, value, src_line)
 _ErrTuple = tuple[str, str, str, Any, int | None]
+
+
+def _remove_quietly(path: str) -> None:
+    try:
+        os.remove(path)
+    except OSError:
+        pass
 
 
 class err_handler:
@@ -35,7 +54,7 @@ class err_handler:
 
     logger: logging.Logger
     filename: str
-    fd: IO[Any]
+    fd: IO[str]
     cur_line: int | None
     errors: list[_ErrTuple]
     writer: XMLWriter
@@ -52,17 +71,20 @@ class err_handler:
         else:
             try:
                 (fdesc, self.filename) = tempfile.mkstemp(".xml", "pyx12_")
-                self.fd = os.fdopen(fdesc, "w+b")
+                self.fd = os.fdopen(fdesc, "w", encoding="utf-8")
             except OSError:
                 (fdesc, self.filename) = tempfile.mkstemp(
                     suffix=".xml", prefix="pyx12_", dir=basedir
                 )
-                self.fd = os.fdopen(fdesc, "w+b")
+                self.fd = os.fdopen(fdesc, "w", encoding="utf-8")
+            # The report holds error strings that embed input data; a temp
+            # file nobody asked for must not outlive the process.
+            weakref.finalize(self, _remove_quietly, self.filename)
         self.cur_line = None
         self.errors = []
         if not self.fd:
             raise EngineError("Could not open temp error xml file")
-        self.writer = XMLWriter(self.fd)  # type: ignore[arg-type]
+        self.writer = XMLWriter(self.fd)
         self.writer.push("x12err")
 
     def close(self) -> None:
