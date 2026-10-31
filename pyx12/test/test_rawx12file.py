@@ -181,3 +181,26 @@ class RawISA_header(X12fileTestCase):
 #        for seg in src:
 #            str_out += seg.format() + '\n'
 #        self.assertEqual(str1, str_out)
+
+
+class LongSegments(X12fileTestCase):
+    ISA = BlankSegments.ISA
+
+    def _seg_ids(self, x12str):
+        return [line.split("*", 1)[0] for line in pyx12.rawx12file.RawX12File(self._makeFd(x12str))]
+
+    def test_segment_longer_than_two_read_blocks_is_not_truncated(self):
+        # Reader used to fetch one extra block and give up; a 20 KB segment
+        # silently ended the file.
+        note = "NTE*ADD*" + "X" * (3 * pyx12.rawx12file.DEFAULT_BUFSIZE) + "~"
+        str1 = self.ISA + note + "GE*0*17~IEA*1*000010121~"
+        self.assertEqual(self._seg_ids(str1), ["ISA", "NTE", "GE", "IEA"])
+
+    def test_segment_over_cap_raises(self):
+        str1 = self.ISA + "NTE*ADD*" + "X" * (pyx12.rawx12file.MAX_SEGMENT_LEN + 1) + "~"
+        with self.assertRaises(X12Error):
+            self._seg_ids(str1)
+
+    def test_unterminated_tail_is_dropped(self):
+        str1 = self.ISA + "GE*0*17~IEA*1*000010121"
+        self.assertEqual(self._seg_ids(str1), ["ISA", "GE"])
