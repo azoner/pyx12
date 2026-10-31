@@ -429,7 +429,7 @@ class error_997_visitor(error_visitor.error_visitor):
             seg_data = pyx12.segment.Segment(seg_str, "~", "*", ":")
             seg_data.set("AK403", spec.ak_code)
             if bad_value:
-                seg_data.set("AK404", error_visitor.ascii_only(bad_value))
+                seg_data.set("AK404", bad_value[:99])
             self._write(seg_data)
 
     def _write(self, seg_data: pyx12.segment.Segment) -> None:
@@ -438,6 +438,7 @@ class error_997_visitor(error_visitor.error_visitor):
         :param seg_data: Data segment instance
         :type seg_data: L{segment.Segment}
         """
+        error_visitor.sanitize_ack_segment(seg_data)
         sout = seg_data.format(self.seg_term, self.ele_term, self.subele_term)
         if seg_data.get_seg_id() == "ISA":
             sout = sout[:-1] + self.ele_term + self.subele_term + self.seg_term

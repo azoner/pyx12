@@ -5130,6 +5130,87 @@ IEA*1*703201721~
             ]
         },
     },
+    "834_lui_id_5010_ack_injection": {
+        # Input delimited with `| } > !` so a data value can legally carry the
+        # ack writer's hardwired `~ * : ^`. The over-long NM103 is copied into
+        # IK4-04 as bad_value; without sanitizing, the embedded `~IEA*1*...~`
+        # would forge segments in the 999. Expect every ack delimiter and the
+        # 113-char value truncated to the 99-char max of data element 724.
+        "source": """ISA|00|          |00|          |ZZ|D00XXX         |ZZ|00AA           |070305|1832|!|00501|000701336|0|P|>}
+GS|BE|D00XXX|00AA|20070305|1832|13360001|X|005010X220A1}
+ST|834|0001|005010X220A1}
+BGN|00|88880070301  00|20070305|181245||||4}
+DTP|007|D8|20070301}
+N1|P5|PAYER 1|FI|999999999}
+N1|IN|KCMHSAS|FI|999999999}
+INS|Y|18|030|XN|A|C||FT}
+REF|0F|00389999}
+REF|1L|000003409999}
+REF|3H|K129999A}
+DTP|356|D8|20070301}
+NM1|IL|1|DOE~IEA*1*INJECTED~AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA:X^Y|JOHN|A|||34|999999999}
+N3|777 ELM ST}
+N4|ALLEGAN|MI|49010||CY|03}
+DMG|D8|19670330|M||O}
+LUI|||ESSPANISH}
+HD|030||AK|064703|IND}
+DTP|348|D8|20070301}
+AMT|P3|45.34}
+REF|17|E  1F}
+SE|20|0001}
+GE|1|13360001}
+IEA|1|000701336}
+""",
+        "resAck": """ISA*00*          *00*          *ZZ*00AA           *ZZ*D00XXX         *261031*1758*^*00501*610311758*0*P*:~
+GS*FA*00AA*D00XXX*20261031*175804*608161749*X*005010X231~
+ST*999*0001*005010X231~
+AK1*BE*13360001*005010X220A1~
+AK2*834*0001*005010X220A1~
+IK3*NM1*11**8~
+IK4*3*1035*5*DOE?IEA?1?INJECTED?AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA~
+IK5*R*5~
+AK9*R*1*1*0~
+SE*8*0001~
+GE*1*608161749~
+IEA*1*610311758~
+""",
+    },
+    "270_4010_ack_injection": {
+        # 4010 twin of 834_lui_id_5010_ack_injection: the hostile NM103 lands in
+        # AK4-04 of the 997 with the ack delimiters substituted by `?`.
+        "source": """ISA|00|          |00|          |ZZ|111111536      |ZZ|111111960      |000816|2105|U|00401|000168037|0|T|>}
+GS|HS|111111536|111111960|20070816|2105|1|X|004010X092A1}
+ST|270|0001}
+BHT|0022|13|1764|20070816|2105}
+HL|1||20|1}
+NM1|PR|2|TEST PAYER|||||PI|100111}
+HL|2|1|21|1}
+NM1|1P|2|test|||||SV|111111111}
+HL|3|2|22|0}
+TRN|1|1764|9174458207|test}
+NM1|IL|1|Blok~IEA*1*INJECTED~AAAAAAAAAAAAAAAAAAAA:X^Y|Ingrid||||MI|00111111}
+REF|SY|382111111}
+DMG|D8|19950111}
+DTP|472|D8|20070801}
+EQ|30||IND}
+EQ|30||CHD}
+SE|15|0001}
+GE|1|1}
+IEA|1|000168037}""",
+        "res997": """ISA*00*          *00*          *ZZ*111111960      *ZZ*111111536      *261031*1758*U*00401*610311758*0*T*:~
+GS*FA*111111960*111111536*20261031*175804*1*X*00401~
+ST*997*0001~
+AK1*HS*1~
+AK2*270*0001~
+AK3*NM1*9**8~
+AK4*3*1035*6*Blok?IEA?1?INJECTED?AAAAAAAAAAAAAAAAAAAA?X?Y~
+AK5*R*5~
+AK9*R*1*1*0~
+SE*8*0001~
+GE*1*1~
+IEA*1*610311758~
+""",
+    },
     "834_lui_id_5010_non_ascii": {
         # Variant of 834_lui_id_5010 with a non-ASCII char (`é`, 0xE9 in
         # latin-1) embedded in REF02. Demonstrates two things end-to-end:

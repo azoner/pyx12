@@ -74,6 +74,13 @@ If a curated release-notes draft exists at
 `~/.claude/plans/release-notes-{X.Y.Z}.md`, prefer `--notes-file` over
 `--generate-notes`.
 
+Breaking changes accumulate in `~/.claude/plans/release-notes-next.md` as PRs
+land. Before tagging, rename it to `release-notes-{X.Y.Z}.md`, confirm its
+**Breaking changes** section lists every behaviour change since the last
+production tag (check `git log vPREV..HEAD` and the merged PR descriptions),
+and fix the install line and compare link. Never publish a production release
+whose notes omit a known breaking change.
+
 **Production releases** (no `rc`/`beta`/`alpha` suffix) — mark `--latest`:
 ```
 gh release create v{version} --title "v{version}" --generate-notes --latest
