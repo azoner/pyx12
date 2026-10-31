@@ -1,7 +1,11 @@
 import unittest
+from io import StringIO
 from unittest.mock import MagicMock
 
+import pyx12.params
+import pyx12.x12n_document
 from pyx12.error_handler import err_handler
+from pyx12.test.x12testdata import datafiles
 
 
 class TestErrHandlerInit(unittest.TestCase):
@@ -113,3 +117,74 @@ class TestSegErrorOutsideTransactionSet(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class TestLogDataValues(unittest.TestCase):
+    """Log records omit the message and value unless log_data_values is on."""
+
+    def _errh(self, **kwargs):
+        eh = err_handler(**kwargs)
+        eh.cur_isa_node = MagicMock()
+        eh.cur_isa_node.get_cur_line.return_value = 1
+        eh.cur_seg_node = MagicMock()
+        eh.cur_seg_node.get_cur_line.return_value = 13
+        eh.cur_seg_node.elements = []
+        eh.seg_node_added = True
+        eh.cur_ele_node = MagicMock()
+        return eh
+
+    def test_default_omits_message_and_value(self):
+        eh = self._errh()
+        with self.assertLogs("pyx12.error_handler", level="ERROR") as cm:
+            eh.ele_error(
+                "ELE_5_too_long", 'Data element "Name" is too long (SMITH)', "SMITH", "NM103"
+            )
+            eh.isa_error("ISA_001_control_number_mismatch", "IEA id=9 does not match ISA id=1")
+        self.assertEqual(
+            cm.output,
+            [
+                "ERROR:pyx12.error_handler:Line:13 ELE:ELE_5_too_long NM103",
+                "ERROR:pyx12.error_handler:Line:1 ISA:ISA_001_control_number_mismatch",
+            ],
+        )
+
+    def test_opt_in_includes_message_and_value(self):
+        eh = self._errh(log_data_values=True)
+        with self.assertLogs("pyx12.error_handler", level="ERROR") as cm:
+            eh.ele_error("ELE_5_too_long", 'Data element "Name" is too long', "SMITH", "NM103")
+        self.assertEqual(
+            cm.output,
+            [
+                'ERROR:pyx12.error_handler:Line:13 ELE:ELE_5_too_long NM103 - Data element "Name" is too long (SMITH)'
+            ],
+        )
+
+    def test_seg_error_keeps_prefix_and_line(self):
+        eh = self._errh()
+        eh.cur_st_node = MagicMock()
+        eh.cur_st_node.is_closed.return_value = False
+        with self.assertLogs("pyx12.error_handler", level="ERROR") as cm:
+            eh.seg_error("SEG_1_segment_not_found", "Segment NM1*IL*1*SMITH not found", "SMITH", 7)
+        self.assertEqual(
+            cm.output, ["ERROR:pyx12.error_handler:Line:7 SEG:SEG_1_segment_not_found"]
+        )
+
+
+class TestLogDataValuesEndToEnd(unittest.TestCase):
+    def _run(self, log_data_values):
+        param = pyx12.params.params()
+        if log_data_values:
+            param.set("log_data_values", True)
+        src = StringIO(datafiles["834_lui_id_5010_non_ascii"]["source"])
+        with self.assertLogs("pyx12", level="ERROR") as cm:
+            pyx12.x12n_document.x12n_document(param, src, StringIO(), None, None)
+        return [line for line in cm.output if "ELE:" in line]
+
+    def test_default_hides_value(self):
+        self.assertEqual(
+            self._run(False), ["ERROR:pyx12.error_handler:Line:9 ELE:ELE_6_invalid_type_char REF02"]
+        )
+
+    def test_param_shows_value(self):
+        (line,) = self._run(True)
+        self.assertIn("00389\xe9999", line)
