@@ -1065,7 +1065,7 @@ wheels = [
 
 [[package]]
 name = "pyx12"
-version = "4.1.0rc1"
+version = "4.1.0"
 source = { editable = "." }
 dependencies = [
     { name = "defusedxml" },
