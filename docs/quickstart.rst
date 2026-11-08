@@ -93,6 +93,22 @@ For programmatic access to the parsed document, use
            for seg_node in datatree.iterate_segments():
                print(seg_node.format())
 
+Repeated elements
+-----------------
+
+For 5010 input, the reader obtains the repetition separator from ``ISA11``.
+``get_value()`` preserves the formatted X12 value, while ``get_values()``
+returns the individual repetitions as a tuple:
+
+.. code-block:: python
+
+   import pyx12.x12file
+
+   for segment in pyx12.x12file.X12Reader("enrollment.edi"):
+       if segment.get_seg_id() == "DMG":
+           print(segment.get_value("DMG05"))
+           print(segment.get_values("DMG05"))
+
 What's next
 -----------
 

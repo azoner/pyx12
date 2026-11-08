@@ -117,6 +117,15 @@ class Composite(unittest.TestCase):
         self.assertEqual(self.seg.get_value("TST01-4"), None)
         # self.assertRaises(IndexError, lambda x: self.seg.get('TST01-%i' % (x)), 4)
 
+    def test_repetitions(self):
+        seg = pyx12.segment.Segment("TST*AA:1:Y^BB:2:Z~", "~", "*", ":", "^")
+        self.assertTrue(seg.is_composite("TST01"))
+        self.assertEqual(seg.get_value("TST01"), "AA:1:Y^BB:2:Z")
+        self.assertEqual(seg.get_value("TST01-1"), "AA")
+        self.assertEqual(seg.get_values("TST01"), ("AA:1:Y", "BB:2:Z"))
+        self.assertEqual(seg.get_values("TST01-1"), ("AA", "BB"))
+        self.assertEqual(seg.format(), "TST*AA:1:Y^BB:2:Z~")
+
 
 class Simple(unittest.TestCase):
     def setUp(self):
@@ -143,6 +152,18 @@ class Simple(unittest.TestCase):
         seg = pyx12.segment.Segment(seg_str, "~", "*", ":")
         self.assertEqual(len(seg.get_value("TST02")), 10)
         self.assertEqual(seg.get_value("TST02"), "          ")
+
+    def test_repetitions(self):
+        seg = pyx12.segment.Segment("TST*AA^BB~", "~", "*", ":", "^")
+        self.assertTrue(seg.is_element("TST01"))
+        self.assertEqual(seg.get_value("TST01"), "AA^BB")
+        self.assertEqual(seg.get_values("TST01"), ("AA", "BB"))
+        self.assertEqual(seg.format(), "TST*AA^BB~")
+
+    def test_non_default_repetition_separator(self):
+        seg = pyx12.segment.Segment("TST*AA!BB~", "~", "*", ":", "!")
+        self.assertEqual(seg.get_values("TST01"), ("AA", "BB"))
+        self.assertEqual(seg.format(), "TST*AA!BB~")
 
 
 class GetValue(unittest.TestCase):
