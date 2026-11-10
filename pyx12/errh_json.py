@@ -31,6 +31,26 @@ def _x12_code(err_cde: str) -> str | None:
     return pyx12.error_codes.x12_code_for(err_cde)
 
 
+def _ele_dict(err_ele: Any) -> dict[str, Any]:
+    return {
+        "ele_pos": err_ele.ele_pos,
+        "subele_pos": err_ele.subele_pos,
+        "repeat_pos": err_ele.repeat_pos,
+        "ele_ref_num": err_ele.ele_ref_num,
+        "name": err_ele.name,
+        "cur_line": err_ele.cur_line,
+        "errors": [
+            {
+                "err_cde": cde,
+                "x12_code": _x12_code(cde),
+                "err_str": err_str,
+                "err_val": err_val,
+            }
+            for (cde, err_str, err_val) in err_ele.errors
+        ],
+    }
+
+
 class errh_json_visitor(pyx12.error_visitor.error_visitor):
     """
     Visit an error_handler composite. Accumulate a nested dict mirroring
@@ -40,6 +60,12 @@ class errh_json_visitor(pyx12.error_visitor.error_visitor):
     Streaming JSON during the walk would require closing arrays mid-walk;
     the err_handler tree always fits in memory for any X12 document, so
     accumulate-then-dump is the right shape.
+
+    An interchange, group or transaction entry carries the line of its
+    header (``header_line``), the line of its trailer (``trailer_line``,
+    None when the trailer was never read) and the element errors of both
+    segments (``elements``, each with the ``cur_line`` it was found on), so
+    a consumer never needs the err_handler tree itself.
     """
 
     fd: TextIO
@@ -79,7 +105,10 @@ class errh_json_visitor(pyx12.error_visitor.error_visitor):
             "orig_date": err_isa.orig_date,
             "orig_time": err_isa.orig_time,
             "cur_line": err_isa.get_cur_line(),
+            "header_line": err_isa.cur_line_isa,
+            "trailer_line": err_isa.cur_line_iea,
             "errors": [],
+            "elements": [],
             "groups": [],
         }
         self.doc["interchanges"].append(isa_dict)
@@ -91,6 +120,7 @@ class errh_json_visitor(pyx12.error_visitor.error_visitor):
             {"err_cde": cde, "x12_code": _x12_code(cde), "err_str": err_str}
             for (cde, err_str) in err_isa.errors
         ]
+        isa_dict["elements"] = [_ele_dict(ele) for ele in err_isa.elements]
         self._stack.pop()
 
     def visit_gs_pre(self, err_gs: Any) -> None:
@@ -102,7 +132,10 @@ class errh_json_visitor(pyx12.error_visitor.error_visitor):
             "st_count_orig": err_gs.st_count_orig,
             "st_count_recv": err_gs.st_count_recv,
             "cur_line": err_gs.get_cur_line(),
+            "header_line": err_gs.cur_line_gs,
+            "trailer_line": err_gs.cur_line_ge,
             "errors": [],
+            "elements": [],
             "transactions": [],
         }
         self._stack[-1]["groups"].append(gs_dict)
@@ -114,6 +147,7 @@ class errh_json_visitor(pyx12.error_visitor.error_visitor):
             {"err_cde": cde, "x12_code": _x12_code(cde), "err_str": err_str}
             for (cde, err_str) in err_gs.errors
         ]
+        gs_dict["elements"] = [_ele_dict(ele) for ele in err_gs.elements]
         self._stack.pop()
 
     def visit_st_pre(self, err_st: Any) -> None:
@@ -123,7 +157,10 @@ class errh_json_visitor(pyx12.error_visitor.error_visitor):
             "vriic": err_st.vriic,
             "ack_code": err_st.ack_code,
             "cur_line": err_st.get_cur_line(),
+            "header_line": err_st.cur_line_st,
+            "trailer_line": err_st.cur_line_se,
             "errors": [],
+            "elements": [],
             "segments": [],
         }
         self._stack[-1]["transactions"].append(st_dict)
@@ -135,6 +172,7 @@ class errh_json_visitor(pyx12.error_visitor.error_visitor):
             {"err_cde": cde, "x12_code": _x12_code(cde), "err_str": err_str}
             for (cde, err_str) in err_st.errors
         ]
+        st_dict["elements"] = [_ele_dict(ele) for ele in err_st.elements]
         self._stack.pop()
 
     def visit_seg(self, err_seg: Any) -> None:
@@ -161,24 +199,8 @@ class errh_json_visitor(pyx12.error_visitor.error_visitor):
 
     def visit_ele(self, err_ele: Any) -> None:
         # err_ele.accept is only invoked from err_seg.accept (ISA / GS / ST
-        # accept methods do not walk their .elements list), so a non-None
-        # _cur_seg is guaranteed at this point.
+        # accept methods do not walk their .elements list; the post hooks
+        # above read them), so a non-None _cur_seg is guaranteed here.
         if self._cur_seg is None:
             return
-        ele_dict: dict[str, Any] = {
-            "ele_pos": err_ele.ele_pos,
-            "subele_pos": err_ele.subele_pos,
-            "repeat_pos": err_ele.repeat_pos,
-            "ele_ref_num": err_ele.ele_ref_num,
-            "name": err_ele.name,
-            "errors": [
-                {
-                    "err_cde": cde,
-                    "x12_code": _x12_code(cde),
-                    "err_str": err_str,
-                    "err_val": err_val,
-                }
-                for (cde, err_str, err_val) in err_ele.errors
-            ],
-        }
-        self._cur_seg["elements"].append(ele_dict)
+        self._cur_seg["elements"].append(_ele_dict(err_ele))
