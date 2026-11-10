@@ -988,6 +988,7 @@ class err_ele(err_node):
             self.ele_pos = map_node.seq
             self.subele_pos = None
         self.repeat_pos = None
+        self.cur_line = parent.get_cur_line()
 
         self.id = "ELE"
 
