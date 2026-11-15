@@ -10,7 +10,7 @@ HIPAA X12 EDI document validator and converter. Parses ANSI X12N data files and 
 - Line length: 100 (ruff format), imports sorted via `ruff check --select I --fix`
 
 ## Tech stack
-- **Language:** Python 3.11+ (CI matrix: 3.11, 3.12, 3.13, 3.14)
+- **Language:** Python 3.11+ (CI matrix: 3.11, 3.12, 3.13, 3.14, 3.15)
 - **Runtime deps:** `defusedxml>=0.7` (only)
 - **Build backend:** setuptools (>=61) via `pyproject.toml`; no `setup.py`
 - **Package manager:** `uv` — install Python packages with `uv pip install ...`, not pip
