@@ -175,6 +175,16 @@ class ErrhJsonVisitorOutput(unittest.TestCase):
         self.assertEqual(elements[1]["ele_pos"], 2)
         self.assertEqual(elements[1]["ele_ref_num"], "782")
 
+    def test_element_carries_the_line_of_its_segment(self):
+        seg = self.doc["interchanges"][0]["groups"][0]["transactions"][0]["segments"][0]
+        self.assertEqual([e["cur_line"] for e in seg["elements"]], [42, 42])
+
+    def test_envelope_entries_carry_their_lines_and_elements(self):
+        isa = self.doc["interchanges"][0]
+        st = isa["groups"][0]["transactions"][0]
+        self.assertEqual((isa["header_line"], isa["trailer_line"], isa["elements"]), (1, None, []))
+        self.assertEqual((st["header_line"], st["trailer_line"], st["elements"]), (1, None, []))
+
 
 class ErrhJsonVisitorEmptyTree(unittest.TestCase):
     """A fresh err_handler with no children should produce a well-formed
@@ -210,6 +220,61 @@ class ErrhJsonVisitorIndent(unittest.TestCase):
         out.seek(0)
         text = out.read()
         self.assertNotIn("\n", text)
+
+
+def _ele_map(data_ele, name, seq):
+    ele_map = MagicMock()
+    ele_map.data_ele = data_ele
+    ele_map.name = name
+    ele_map.seq = seq
+    ele_map.parent.is_composite.return_value = False
+    return ele_map
+
+
+class ErrhJsonEnvelopeLinesAndElements(unittest.TestCase):
+    """An interchange, group or transaction entry names the lines of its
+    header and its trailer and carries the element errors of both segments,
+    each with the line it was found on."""
+
+    def setUp(self):
+        eh = pyx12.error_handler.err_handler()
+        eh.add_isa_loop(_isa_segment(), _fake_src(cur_line=1))
+        eh.add_gs_loop(_gs_segment(), _fake_src(cur_line=2))
+        eh.add_st_loop(_st_segment(), _fake_src(cur_line=3))
+        eh.add_ele(_ele_map("1705", "Implementation Convention Reference", 3))
+        eh.ele_error("ELE_I10_NOT_USED", "Element is marked as Not Used", "005010X222A1", "ST03")
+        eh.close_st_loop(None, None, _fake_src(cur_line=9))
+        eh.add_ele(_ele_map("96", "Number of Included Segments", 1))
+        eh.ele_error("ELE_6_invalid_type_char", "Invalid character in data element", "5X", "SE01")
+        eh.close_gs_loop(None, None, _fake_src(cur_line=10))
+        out = StringIO()
+        eh.accept(pyx12.errh_json.errh_json_visitor(out, indent=None))
+        self.isa = json.loads(out.getvalue())["interchanges"][0]
+        self.gs = self.isa["groups"][0]
+        self.st = self.gs["transactions"][0]
+
+    def test_header_and_trailer_lines(self):
+        self.assertEqual(
+            (self.st["header_line"], self.st["trailer_line"], self.st["cur_line"]), (3, 9, 9)
+        )
+        self.assertEqual((self.gs["header_line"], self.gs["trailer_line"]), (2, 10))
+
+    def test_an_unread_trailer_has_no_line(self):
+        self.assertEqual(
+            (self.isa["header_line"], self.isa["trailer_line"], self.isa["cur_line"]), (1, None, 1)
+        )
+
+    def test_element_errors_of_the_header_and_the_trailer(self):
+        self.assertEqual(
+            [
+                (e["ele_pos"], e["cur_line"], e["errors"][0]["err_cde"], e["errors"][0]["err_val"])
+                for e in self.st["elements"]
+            ],
+            [(3, 3, "ELE_I10_NOT_USED", "005010X222A1"), (1, 9, "ELE_6_invalid_type_char", "5X")],
+        )
+
+    def test_an_envelope_without_element_errors_has_an_empty_list(self):
+        self.assertEqual((self.isa["elements"], self.gs["elements"]), ([], []))
 
 
 if __name__ == "__main__":

@@ -46,7 +46,10 @@ IEA*1*703201721~
                     "orig_date": "070305",
                     "orig_time": "1832",
                     "cur_line": 24,
+                    "header_line": 1,
+                    "trailer_line": 24,
                     "errors": [],
+                    "elements": [],
                     "groups": [
                         {
                             "gs_control_num": "13360001",
@@ -56,7 +59,10 @@ IEA*1*703201721~
                             "st_count_orig": 1,
                             "st_count_recv": 1,
                             "cur_line": 23,
+                            "header_line": 2,
+                            "trailer_line": 23,
                             "errors": [],
+                            "elements": [],
                             "transactions": [
                                 {
                                     "trn_set_id": "834",
@@ -64,7 +70,10 @@ IEA*1*703201721~
                                     "vriic": None,
                                     "ack_code": "A",
                                     "cur_line": 22,
+                                    "header_line": 3,
+                                    "trailer_line": 22,
                                     "errors": [],
+                                    "elements": [],
                                     "segments": [],
                                 }
                             ],
@@ -173,7 +182,10 @@ IEA*1*000000238~
                     "orig_date": "130312",
                     "orig_time": "0206",
                     "cur_line": 78,
+                    "header_line": 1,
+                    "trailer_line": 78,
                     "errors": [],
+                    "elements": [],
                     "groups": [
                         {
                             "gs_control_num": "146",
@@ -183,7 +195,10 @@ IEA*1*000000238~
                             "st_count_orig": 1,
                             "st_count_recv": 1,
                             "cur_line": 77,
+                            "header_line": 2,
+                            "trailer_line": 77,
                             "errors": [],
+                            "elements": [],
                             "transactions": [
                                 {
                                     "trn_set_id": "834",
@@ -191,7 +206,10 @@ IEA*1*000000238~
                                     "vriic": "005010X220A1",
                                     "ack_code": "A",
                                     "cur_line": 76,
+                                    "header_line": 3,
+                                    "trailer_line": 76,
                                     "errors": [],
+                                    "elements": [],
                                     "segments": [],
                                 }
                             ],
@@ -260,7 +278,10 @@ IEA*1*000003447~
                     "orig_date": "090220",
                     "orig_time": "1816",
                     "cur_line": 37,
+                    "header_line": 1,
+                    "trailer_line": 37,
                     "errors": [],
+                    "elements": [],
                     "groups": [
                         {
                             "gs_control_num": "3444",
@@ -270,7 +291,10 @@ IEA*1*000003447~
                             "st_count_orig": 1,
                             "st_count_recv": 1,
                             "cur_line": 36,
+                            "header_line": 2,
+                            "trailer_line": 36,
                             "errors": [],
+                            "elements": [],
                             "transactions": [
                                 {
                                     "trn_set_id": "835",
@@ -278,7 +302,10 @@ IEA*1*000003447~
                                     "vriic": None,
                                     "ack_code": "A",
                                     "cur_line": 35,
+                                    "header_line": 3,
+                                    "trailer_line": 35,
                                     "errors": [],
+                                    "elements": [],
                                     "segments": [],
                                 }
                             ],
@@ -312,6 +339,8 @@ ST*837*11280001~""",
                     "orig_date": "030828",
                     "orig_time": "1128",
                     "cur_line": 1,
+                    "header_line": 1,
+                    "trailer_line": None,
                     "errors": [
                         {
                             "err_cde": "ISA_023_premature_eof",
@@ -319,6 +348,7 @@ ST*837*11280001~""",
                             "err_str": 'Mandatory segment "Interchange Control Trailer" (IEA=000010121) missing',
                         }
                     ],
+                    "elements": [],
                     "groups": [
                         {
                             "gs_control_num": "17",
@@ -328,6 +358,8 @@ ST*837*11280001~""",
                             "st_count_orig": 0,
                             "st_count_recv": 0,
                             "cur_line": 2,
+                            "header_line": 2,
+                            "trailer_line": None,
                             "errors": [
                                 {
                                     "err_cde": "3",
@@ -335,6 +367,7 @@ ST*837*11280001~""",
                                     "err_str": 'Mandatory segment "Functional Group Trailer" (GE=17) missing',
                                 }
                             ],
+                            "elements": [],
                             "transactions": [
                                 {
                                     "trn_set_id": "837",
@@ -342,6 +375,8 @@ ST*837*11280001~""",
                                     "vriic": None,
                                     "ack_code": "R",
                                     "cur_line": 3,
+                                    "header_line": 3,
+                                    "trailer_line": None,
                                     "errors": [
                                         {
                                             "err_cde": "2",
@@ -349,6 +384,7 @@ ST*837*11280001~""",
                                             "err_str": 'Mandatory segment "Transaction Set Trailer" (SE=11280001) missing',
                                         }
                                     ],
+                                    "elements": [],
                                     "segments": [],
                                 }
                             ],
@@ -497,7 +533,10 @@ IEA*3*000010121~""",
                     "orig_date": "030828",
                     "orig_time": "1128",
                     "cur_line": 30,
+                    "header_line": 1,
+                    "trailer_line": 30,
                     "errors": [],
+                    "elements": [],
                     "groups": [
                         {
                             "gs_control_num": "17",
@@ -507,7 +546,10 @@ IEA*3*000010121~""",
                             "st_count_orig": 3,
                             "st_count_recv": 3,
                             "cur_line": 12,
+                            "header_line": 2,
+                            "trailer_line": 12,
                             "errors": [],
+                            "elements": [],
                             "transactions": [
                                 {
                                     "trn_set_id": "278",
@@ -515,7 +557,10 @@ IEA*3*000010121~""",
                                     "vriic": None,
                                     "ack_code": "R",
                                     "cur_line": 5,
+                                    "header_line": 3,
+                                    "trailer_line": 5,
                                     "errors": [],
+                                    "elements": [],
                                     "segments": [
                                         {
                                             "seg_id": "HL",
@@ -542,7 +587,10 @@ IEA*3*000010121~""",
                                     "vriic": None,
                                     "ack_code": "R",
                                     "cur_line": 8,
+                                    "header_line": 6,
+                                    "trailer_line": 8,
                                     "errors": [],
+                                    "elements": [],
                                     "segments": [
                                         {
                                             "seg_id": "HL",
@@ -569,7 +617,10 @@ IEA*3*000010121~""",
                                     "vriic": None,
                                     "ack_code": "R",
                                     "cur_line": 11,
+                                    "header_line": 9,
+                                    "trailer_line": 11,
                                     "errors": [],
+                                    "elements": [],
                                     "segments": [
                                         {
                                             "seg_id": "HL",
@@ -600,7 +651,10 @@ IEA*3*000010121~""",
                             "st_count_orig": 1,
                             "st_count_recv": 1,
                             "cur_line": 17,
+                            "header_line": 13,
+                            "trailer_line": 17,
                             "errors": [],
+                            "elements": [],
                             "transactions": [
                                 {
                                     "trn_set_id": "837",
@@ -608,7 +662,10 @@ IEA*3*000010121~""",
                                     "vriic": None,
                                     "ack_code": "R",
                                     "cur_line": 16,
+                                    "header_line": 14,
+                                    "trailer_line": 16,
                                     "errors": [],
+                                    "elements": [],
                                     "segments": [
                                         {
                                             "seg_id": "REF",
@@ -690,7 +747,10 @@ IEA*3*000010121~""",
                             "st_count_orig": 1,
                             "st_count_recv": 1,
                             "cur_line": 21,
+                            "header_line": 18,
+                            "trailer_line": 21,
                             "errors": [],
+                            "elements": [],
                             "transactions": [
                                 {
                                     "trn_set_id": "835",
@@ -698,7 +758,10 @@ IEA*3*000010121~""",
                                     "vriic": None,
                                     "ack_code": "R",
                                     "cur_line": 20,
+                                    "header_line": 19,
+                                    "trailer_line": 20,
                                     "errors": [],
+                                    "elements": [],
                                     "segments": [
                                         {
                                             "seg_id": "BPR",
@@ -729,7 +792,10 @@ IEA*3*000010121~""",
                             "st_count_orig": 1,
                             "st_count_recv": 1,
                             "cur_line": 25,
+                            "header_line": 22,
+                            "trailer_line": 25,
                             "errors": [],
+                            "elements": [],
                             "transactions": [
                                 {
                                     "trn_set_id": "835",
@@ -737,7 +803,10 @@ IEA*3*000010121~""",
                                     "vriic": None,
                                     "ack_code": "R",
                                     "cur_line": 24,
+                                    "header_line": 23,
+                                    "trailer_line": 24,
                                     "errors": [],
+                                    "elements": [],
                                     "segments": [
                                         {
                                             "seg_id": "BPR",
@@ -768,7 +837,10 @@ IEA*3*000010121~""",
                             "st_count_orig": 1,
                             "st_count_recv": 1,
                             "cur_line": 29,
+                            "header_line": 26,
+                            "trailer_line": 29,
                             "errors": [],
+                            "elements": [],
                             "transactions": [
                                 {
                                     "trn_set_id": "835",
@@ -776,7 +848,10 @@ IEA*3*000010121~""",
                                     "vriic": None,
                                     "ack_code": "R",
                                     "cur_line": 28,
+                                    "header_line": 27,
+                                    "trailer_line": 28,
                                     "errors": [],
+                                    "elements": [],
                                     "segments": [
                                         {
                                             "seg_id": "BPR",
@@ -807,7 +882,10 @@ IEA*3*000010121~""",
                     "orig_date": "030828",
                     "orig_time": "1128",
                     "cur_line": 52,
+                    "header_line": 31,
+                    "trailer_line": 52,
                     "errors": [],
+                    "elements": [],
                     "groups": [
                         {
                             "gs_control_num": "17",
@@ -817,7 +895,10 @@ IEA*3*000010121~""",
                             "st_count_orig": 3,
                             "st_count_recv": 3,
                             "cur_line": 42,
+                            "header_line": 32,
+                            "trailer_line": 42,
                             "errors": [],
+                            "elements": [],
                             "transactions": [
                                 {
                                     "trn_set_id": "278",
@@ -825,7 +906,10 @@ IEA*3*000010121~""",
                                     "vriic": None,
                                     "ack_code": "R",
                                     "cur_line": 35,
+                                    "header_line": 33,
+                                    "trailer_line": 35,
                                     "errors": [],
+                                    "elements": [],
                                     "segments": [
                                         {
                                             "seg_id": "HL",
@@ -852,7 +936,10 @@ IEA*3*000010121~""",
                                     "vriic": None,
                                     "ack_code": "R",
                                     "cur_line": 38,
+                                    "header_line": 36,
+                                    "trailer_line": 38,
                                     "errors": [],
+                                    "elements": [],
                                     "segments": [
                                         {
                                             "seg_id": "HL",
@@ -879,7 +966,10 @@ IEA*3*000010121~""",
                                     "vriic": None,
                                     "ack_code": "R",
                                     "cur_line": 41,
+                                    "header_line": 39,
+                                    "trailer_line": 41,
                                     "errors": [],
+                                    "elements": [],
                                     "segments": [
                                         {
                                             "seg_id": "HL",
@@ -910,7 +1000,10 @@ IEA*3*000010121~""",
                             "st_count_orig": 1,
                             "st_count_recv": 1,
                             "cur_line": 47,
+                            "header_line": 43,
+                            "trailer_line": 47,
                             "errors": [],
+                            "elements": [],
                             "transactions": [
                                 {
                                     "trn_set_id": "837",
@@ -918,7 +1011,10 @@ IEA*3*000010121~""",
                                     "vriic": None,
                                     "ack_code": "R",
                                     "cur_line": 46,
+                                    "header_line": 44,
+                                    "trailer_line": 46,
                                     "errors": [],
+                                    "elements": [],
                                     "segments": [
                                         {
                                             "seg_id": "REF",
@@ -1000,7 +1096,10 @@ IEA*3*000010121~""",
                             "st_count_orig": 1,
                             "st_count_recv": 1,
                             "cur_line": 51,
+                            "header_line": 48,
+                            "trailer_line": 51,
                             "errors": [],
+                            "elements": [],
                             "transactions": [
                                 {
                                     "trn_set_id": "835",
@@ -1008,7 +1107,10 @@ IEA*3*000010121~""",
                                     "vriic": None,
                                     "ack_code": "R",
                                     "cur_line": 50,
+                                    "header_line": 49,
+                                    "trailer_line": 50,
                                     "errors": [],
+                                    "elements": [],
                                     "segments": [
                                         {
                                             "seg_id": "BPR",
@@ -1180,6 +1282,8 @@ IEA*5*333~""",
                     "orig_date": "040820",
                     "orig_time": "1133",
                     "cur_line": 122,
+                    "header_line": 1,
+                    "trailer_line": 122,
                     "errors": [
                         {
                             "err_cde": "ISA_001_control_number_mismatch",
@@ -1192,6 +1296,24 @@ IEA*5*333~""",
                             "err_str": "IEA count for IEA02=333 is wrong",
                         },
                     ],
+                    "elements": [
+                        {
+                            "ele_pos": 2,
+                            "subele_pos": None,
+                            "repeat_pos": None,
+                            "ele_ref_num": "I12",
+                            "name": "Interchange Control Number",
+                            "cur_line": 122,
+                            "errors": [
+                                {
+                                    "err_cde": "ISA_018_invalid_control_number",
+                                    "x12_code": "018",
+                                    "err_str": 'Data element "Interchange Control Number" (IEA02) is too short: len("333") = 3 < 9 (min_len)',
+                                    "err_val": "333",
+                                }
+                            ],
+                        }
+                    ],
                     "groups": [
                         {
                             "gs_control_num": "1",
@@ -1201,6 +1323,8 @@ IEA*5*333~""",
                             "st_count_orig": 2,
                             "st_count_recv": 2,
                             "cur_line": 121,
+                            "header_line": 2,
+                            "trailer_line": 121,
                             "errors": [
                                 {
                                     "err_cde": "4",
@@ -1208,6 +1332,7 @@ IEA*5*333~""",
                                     "err_str": "GE id=333 does not match GS id=1",
                                 }
                             ],
+                            "elements": [],
                             "transactions": [
                                 {
                                     "trn_set_id": "837",
@@ -1215,6 +1340,8 @@ IEA*5*333~""",
                                     "vriic": None,
                                     "ack_code": "R",
                                     "cur_line": 61,
+                                    "header_line": 3,
+                                    "trailer_line": 61,
                                     "errors": [
                                         {
                                             "err_cde": "4",
@@ -1222,6 +1349,7 @@ IEA*5*333~""",
                                             "err_str": "SE count of 60 for SE02=300207436 is wrong. I count 59",
                                         }
                                     ],
+                                    "elements": [],
                                     "segments": [],
                                 },
                                 {
@@ -1230,7 +1358,10 @@ IEA*5*333~""",
                                     "vriic": None,
                                     "ack_code": "A",
                                     "cur_line": 120,
+                                    "header_line": 62,
+                                    "trailer_line": 120,
                                     "errors": [],
+                                    "elements": [],
                                     "segments": [],
                                 },
                             ],
@@ -1303,7 +1434,10 @@ IEA*1*000484889~""",
                     "orig_date": "040709",
                     "orig_time": "1439",
                     "cur_line": 42,
+                    "header_line": 1,
+                    "trailer_line": 42,
                     "errors": [],
+                    "elements": [],
                     "groups": [
                         {
                             "gs_control_num": "1",
@@ -1313,7 +1447,10 @@ IEA*1*000484889~""",
                             "st_count_orig": 1,
                             "st_count_recv": 1,
                             "cur_line": 41,
+                            "header_line": 2,
+                            "trailer_line": 41,
                             "errors": [],
+                            "elements": [],
                             "transactions": [
                                 {
                                     "trn_set_id": "837",
@@ -1321,7 +1458,10 @@ IEA*1*000484889~""",
                                     "vriic": None,
                                     "ack_code": "R",
                                     "cur_line": 40,
+                                    "header_line": 3,
+                                    "trailer_line": 40,
                                     "errors": [],
+                                    "elements": [],
                                     "segments": [
                                         {
                                             "seg_id": "CLM",
@@ -1351,6 +1491,7 @@ IEA*1*000484889~""",
                                                     "repeat_pos": None,
                                                     "ele_ref_num": "1073",
                                                     "name": "Explanation of Benefits Indicator",
+                                                    "cur_line": 24,
                                                     "errors": [
                                                         {
                                                             "err_cde": "ELE_1_mandatory_missing",
@@ -1419,7 +1560,10 @@ IEA*1*000000288~""",
                     "orig_date": "040608",
                     "orig_time": "1333",
                     "cur_line": 28,
+                    "header_line": 1,
+                    "trailer_line": 28,
                     "errors": [],
+                    "elements": [],
                     "groups": [
                         {
                             "gs_control_num": "56",
@@ -1429,7 +1573,10 @@ IEA*1*000000288~""",
                             "st_count_orig": 1,
                             "st_count_recv": 1,
                             "cur_line": 27,
+                            "header_line": 2,
+                            "trailer_line": 27,
                             "errors": [],
+                            "elements": [],
                             "transactions": [
                                 {
                                     "trn_set_id": "837",
@@ -1437,7 +1584,10 @@ IEA*1*000000288~""",
                                     "vriic": None,
                                     "ack_code": "R",
                                     "cur_line": 26,
+                                    "header_line": 3,
+                                    "trailer_line": 26,
                                     "errors": [],
+                                    "elements": [],
                                     "segments": [
                                         {
                                             "seg_id": "NM1",
@@ -1531,7 +1681,10 @@ IEA*1*000000288~""",
                     "orig_date": "040608",
                     "orig_time": "1333",
                     "cur_line": 33,
+                    "header_line": 1,
+                    "trailer_line": 33,
                     "errors": [],
+                    "elements": [],
                     "groups": [
                         {
                             "gs_control_num": "56",
@@ -1541,7 +1694,10 @@ IEA*1*000000288~""",
                             "st_count_orig": 1,
                             "st_count_recv": 1,
                             "cur_line": 32,
+                            "header_line": 2,
+                            "trailer_line": 32,
                             "errors": [],
+                            "elements": [],
                             "transactions": [
                                 {
                                     "trn_set_id": "837",
@@ -1549,6 +1705,8 @@ IEA*1*000000288~""",
                                     "vriic": None,
                                     "ack_code": "R",
                                     "cur_line": 31,
+                                    "header_line": 3,
+                                    "trailer_line": 31,
                                     "errors": [
                                         {
                                             "err_cde": "4",
@@ -1556,6 +1714,7 @@ IEA*1*000000288~""",
                                             "err_str": "SE count of 30 for SE02=000000001 is wrong. I count 29",
                                         }
                                     ],
+                                    "elements": [],
                                     "segments": [
                                         {
                                             "seg_id": "REF",
@@ -1579,6 +1738,7 @@ IEA*1*000000288~""",
                                                     "repeat_pos": None,
                                                     "ele_ref_num": "127",
                                                     "name": "Transmission Type Code",
+                                                    "cur_line": 5,
                                                     "errors": [
                                                         {
                                                             "err_cde": "ELE_7_invalid_code",
@@ -1612,6 +1772,7 @@ IEA*1*000000288~""",
                                                     "repeat_pos": None,
                                                     "ele_ref_num": "365",
                                                     "name": "Communication Number Qualifier",
+                                                    "cur_line": 7,
                                                     "errors": [
                                                         {
                                                             "err_cde": "ELE_7_invalid_code",
@@ -1645,6 +1806,7 @@ IEA*1*000000288~""",
                                                     "repeat_pos": None,
                                                     "ele_ref_num": "66",
                                                     "name": "Identification Code Qualifier",
+                                                    "cur_line": 9,
                                                     "errors": [
                                                         {
                                                             "err_cde": "ELE_7_invalid_code",
@@ -1678,6 +1840,7 @@ IEA*1*000000288~""",
                                                     "repeat_pos": None,
                                                     "ele_ref_num": "66",
                                                     "name": "Identification Code Qualifier",
+                                                    "cur_line": 17,
                                                     "errors": [
                                                         {
                                                             "err_cde": "ELE_5_too_long",
@@ -1717,6 +1880,7 @@ IEA*1*000000288~""",
                                                     "repeat_pos": None,
                                                     "ele_ref_num": "1251",
                                                     "name": "Subscriber Birth Date",
+                                                    "cur_line": 20,
                                                     "errors": [
                                                         {
                                                             "err_cde": "ELE_8_invalid_date_range",
@@ -1732,6 +1896,7 @@ IEA*1*000000288~""",
                                                     "repeat_pos": None,
                                                     "ele_ref_num": "1068",
                                                     "name": "Subscriber Gender Code",
+                                                    "cur_line": 20,
                                                     "errors": [
                                                         {
                                                             "err_cde": "ELE_7_invalid_code",
@@ -1765,6 +1930,7 @@ IEA*1*000000288~""",
                                                     "repeat_pos": None,
                                                     "ele_ref_num": "1331",
                                                     "name": "Facility Type Code",
+                                                    "cur_line": 25,
                                                     "errors": [
                                                         {
                                                             "err_cde": "ELE_7_invalid_code",
@@ -1886,7 +2052,10 @@ IEA*1*000238388~""",
                     "orig_date": "041028",
                     "orig_time": "1609",
                     "cur_line": 76,
+                    "header_line": 1,
+                    "trailer_line": 76,
                     "errors": [],
+                    "elements": [],
                     "groups": [
                         {
                             "gs_control_num": "383880001",
@@ -1896,7 +2065,10 @@ IEA*1*000238388~""",
                             "st_count_orig": 1,
                             "st_count_recv": 1,
                             "cur_line": 75,
+                            "header_line": 2,
+                            "trailer_line": 75,
                             "errors": [],
+                            "elements": [],
                             "transactions": [
                                 {
                                     "trn_set_id": "835",
@@ -1904,6 +2076,8 @@ IEA*1*000238388~""",
                                     "vriic": None,
                                     "ack_code": "R",
                                     "cur_line": 74,
+                                    "header_line": 3,
+                                    "trailer_line": 74,
                                     "errors": [
                                         {
                                             "err_cde": "4",
@@ -1911,6 +2085,7 @@ IEA*1*000238388~""",
                                             "err_str": "SE count of 39 for SE02=0001 is wrong. I count 72",
                                         }
                                     ],
+                                    "elements": [],
                                     "segments": [
                                         {
                                             "seg_id": "DTM",
@@ -1934,6 +2109,7 @@ IEA*1*000238388~""",
                                                     "repeat_pos": None,
                                                     "ele_ref_num": "373",
                                                     "name": "Production Date",
+                                                    "cur_line": 7,
                                                     "errors": [
                                                         {
                                                             "err_cde": "ELE_8_invalid_date",
@@ -2114,7 +2290,10 @@ IEA*1*000484889~""",
                     "orig_date": "040709",
                     "orig_time": "1439",
                     "cur_line": 67,
+                    "header_line": 1,
+                    "trailer_line": 67,
                     "errors": [],
+                    "elements": [],
                     "groups": [
                         {
                             "gs_control_num": "1",
@@ -2124,7 +2303,10 @@ IEA*1*000484889~""",
                             "st_count_orig": 1,
                             "st_count_recv": 1,
                             "cur_line": 66,
+                            "header_line": 2,
+                            "trailer_line": 66,
                             "errors": [],
+                            "elements": [],
                             "transactions": [
                                 {
                                     "trn_set_id": "837",
@@ -2132,7 +2314,10 @@ IEA*1*000484889~""",
                                     "vriic": None,
                                     "ack_code": "R",
                                     "cur_line": 65,
+                                    "header_line": 3,
+                                    "trailer_line": 65,
                                     "errors": [],
+                                    "elements": [],
                                     "segments": [
                                         {
                                             "seg_id": "SV2",
@@ -2156,6 +2341,7 @@ IEA*1*000484889~""",
                                                     "repeat_pos": None,
                                                     "ele_ref_num": "235",
                                                     "name": "Product or Service ID Qualifier",
+                                                    "cur_line": 59,
                                                     "errors": [
                                                         {
                                                             "err_cde": "ELE_7_invalid_code",
@@ -2171,6 +2357,7 @@ IEA*1*000484889~""",
                                                     "repeat_pos": None,
                                                     "ele_ref_num": "234",
                                                     "name": "Procedure Code",
+                                                    "cur_line": 59,
                                                     "errors": [
                                                         {
                                                             "err_cde": "ELE_1_mandatory_missing",
@@ -2204,6 +2391,7 @@ IEA*1*000484889~""",
                                                     "repeat_pos": None,
                                                     "ele_ref_num": "235",
                                                     "name": "Product or Service ID Qualifier",
+                                                    "cur_line": 61,
                                                     "errors": [
                                                         {
                                                             "err_cde": "ELE_7_invalid_code",
@@ -2219,6 +2407,7 @@ IEA*1*000484889~""",
                                                     "repeat_pos": None,
                                                     "ele_ref_num": "234",
                                                     "name": "Procedure Code",
+                                                    "cur_line": 61,
                                                     "errors": [
                                                         {
                                                             "err_cde": "ELE_1_mandatory_missing",
@@ -2326,7 +2515,27 @@ IEA*1*000484889~""",
                     "orig_date": "040709",
                     "orig_time": "3339",
                     "cur_line": 67,
+                    "header_line": 1,
+                    "trailer_line": 67,
                     "errors": [],
+                    "elements": [
+                        {
+                            "ele_pos": 10,
+                            "subele_pos": None,
+                            "repeat_pos": None,
+                            "ele_ref_num": "I09",
+                            "name": "Interchange Time",
+                            "cur_line": 1,
+                            "errors": [
+                                {
+                                    "err_cde": "ISA_015_invalid_time",
+                                    "x12_code": "015",
+                                    "err_str": 'Data element "Interchange Time" (ISA10) contains an invalid time (3339)',
+                                    "err_val": "3339",
+                                }
+                            ],
+                        }
+                    ],
                     "groups": [
                         {
                             "gs_control_num": "1",
@@ -2336,7 +2545,43 @@ IEA*1*000484889~""",
                             "st_count_orig": 1,
                             "st_count_recv": 1,
                             "cur_line": 66,
+                            "header_line": 2,
+                            "trailer_line": 66,
                             "errors": [],
+                            "elements": [
+                                {
+                                    "ele_pos": 2,
+                                    "subele_pos": None,
+                                    "repeat_pos": None,
+                                    "ele_ref_num": "142",
+                                    "name": "Application Sender's Code",
+                                    "cur_line": 2,
+                                    "errors": [
+                                        {
+                                            "err_cde": "ELE_6_trailing_space",
+                                            "x12_code": "6",
+                                            "err_str": 'Data element "Application Sender\'s Code" (GS02) has unnecessary trailing spaces. (0AAA )',
+                                            "err_val": "0AAA ",
+                                        }
+                                    ],
+                                },
+                                {
+                                    "ele_pos": 3,
+                                    "subele_pos": None,
+                                    "repeat_pos": None,
+                                    "ele_ref_num": "124",
+                                    "name": "Application Receiver's Code",
+                                    "cur_line": 2,
+                                    "errors": [
+                                        {
+                                            "err_cde": "ELE_6_trailing_space",
+                                            "x12_code": "6",
+                                            "err_str": 'Data element "Application Receiver\'s Code" (GS03) has unnecessary trailing spaces. (0BBB )',
+                                            "err_val": "0BBB ",
+                                        }
+                                    ],
+                                },
+                            ],
                             "transactions": [
                                 {
                                     "trn_set_id": "837",
@@ -2344,11 +2589,37 @@ IEA*1*000484889~""",
                                     "vriic": None,
                                     "ack_code": "R",
                                     "cur_line": 65,
+                                    "header_line": 3,
+                                    "trailer_line": 65,
                                     "errors": [
                                         {
                                             "err_cde": "3",
                                             "x12_code": "3",
                                             "err_str": "SE id=300145997 does not match ST id=300145997 ",
+                                        }
+                                    ],
+                                    "elements": [
+                                        {
+                                            "ele_pos": 2,
+                                            "subele_pos": None,
+                                            "repeat_pos": None,
+                                            "ele_ref_num": "329",
+                                            "name": "Transaction Set Control Number",
+                                            "cur_line": 3,
+                                            "errors": [
+                                                {
+                                                    "err_cde": "ELE_5_too_long",
+                                                    "x12_code": "5",
+                                                    "err_str": 'Data element "Transaction Set Control Number" (ST02) is too long: len("300145997 ") = 10 > 9 (max_len)',
+                                                    "err_val": "300145997 ",
+                                                },
+                                                {
+                                                    "err_cde": "ELE_6_trailing_space",
+                                                    "x12_code": "6",
+                                                    "err_str": 'Data element "Transaction Set Control Number" (ST02) has unnecessary trailing spaces. (300145997 )',
+                                                    "err_val": "300145997 ",
+                                                },
+                                            ],
                                         }
                                     ],
                                     "segments": [],
@@ -2387,6 +2658,8 @@ GE*1*17~""",
                     "orig_date": "030828",
                     "orig_time": "1128",
                     "cur_line": 1,
+                    "header_line": 1,
+                    "trailer_line": None,
                     "errors": [
                         {
                             "err_cde": "ISA_023_premature_eof",
@@ -2394,6 +2667,7 @@ GE*1*17~""",
                             "err_str": 'Mandatory segment "Interchange Control Trailer" (IEA=000010121) missing',
                         }
                     ],
+                    "elements": [],
                     "groups": [
                         {
                             "gs_control_num": "17",
@@ -2403,7 +2677,10 @@ GE*1*17~""",
                             "st_count_orig": 1,
                             "st_count_recv": 1,
                             "cur_line": 5,
+                            "header_line": 2,
+                            "trailer_line": 5,
                             "errors": [],
+                            "elements": [],
                             "transactions": [
                                 {
                                     "trn_set_id": "837",
@@ -2411,6 +2688,8 @@ GE*1*17~""",
                                     "vriic": None,
                                     "ack_code": "R",
                                     "cur_line": 4,
+                                    "header_line": 3,
+                                    "trailer_line": 4,
                                     "errors": [
                                         {
                                             "err_cde": "4",
@@ -2418,6 +2697,7 @@ GE*1*17~""",
                                             "err_str": "SE count of 0 for SE02=11280001 is wrong. I count 2",
                                         }
                                     ],
+                                    "elements": [],
                                     "segments": [
                                         {
                                             "seg_id": "BHT",
@@ -2903,7 +3183,10 @@ IEA*1*000001168~""",
                     "orig_date": "041105",
                     "orig_time": "1526",
                     "cur_line": 417,
+                    "header_line": 1,
+                    "trailer_line": 417,
                     "errors": [],
+                    "elements": [],
                     "groups": [
                         {
                             "gs_control_num": "1167",
@@ -2913,7 +3196,10 @@ IEA*1*000001168~""",
                             "st_count_orig": 1,
                             "st_count_recv": 1,
                             "cur_line": 416,
+                            "header_line": 2,
+                            "trailer_line": 416,
                             "errors": [],
+                            "elements": [],
                             "transactions": [
                                 {
                                     "trn_set_id": "837",
@@ -2921,7 +3207,10 @@ IEA*1*000001168~""",
                                     "vriic": None,
                                     "ack_code": "R",
                                     "cur_line": 415,
+                                    "header_line": 3,
+                                    "trailer_line": 415,
                                     "errors": [],
+                                    "elements": [],
                                     "segments": [
                                         {
                                             "seg_id": "LX",
@@ -3441,7 +3730,10 @@ IEA*1*000001168~""",
                     "orig_date": "041105",
                     "orig_time": "1526",
                     "cur_line": 417,
+                    "header_line": 1,
+                    "trailer_line": 417,
                     "errors": [],
+                    "elements": [],
                     "groups": [
                         {
                             "gs_control_num": "1167",
@@ -3451,7 +3743,10 @@ IEA*1*000001168~""",
                             "st_count_orig": 1,
                             "st_count_recv": 1,
                             "cur_line": 416,
+                            "header_line": 2,
+                            "trailer_line": 416,
                             "errors": [],
+                            "elements": [],
                             "transactions": [
                                 {
                                     "trn_set_id": "837",
@@ -3459,7 +3754,10 @@ IEA*1*000001168~""",
                                     "vriic": None,
                                     "ack_code": "R",
                                     "cur_line": 415,
+                                    "header_line": 3,
+                                    "trailer_line": 415,
                                     "errors": [],
+                                    "elements": [],
                                     "segments": [
                                         {
                                             "seg_id": "LX",
@@ -3603,7 +3901,10 @@ IEA*3*000010121~""",
                     "orig_date": "030828",
                     "orig_time": "1128",
                     "cur_line": 22,
+                    "header_line": 1,
+                    "trailer_line": 22,
                     "errors": [],
+                    "elements": [],
                     "groups": [
                         {
                             "gs_control_num": "17",
@@ -3613,7 +3914,10 @@ IEA*3*000010121~""",
                             "st_count_orig": 3,
                             "st_count_recv": 3,
                             "cur_line": 12,
+                            "header_line": 2,
+                            "trailer_line": 12,
                             "errors": [],
+                            "elements": [],
                             "transactions": [
                                 {
                                     "trn_set_id": "278",
@@ -3621,7 +3925,10 @@ IEA*3*000010121~""",
                                     "vriic": None,
                                     "ack_code": "R",
                                     "cur_line": 5,
+                                    "header_line": 3,
+                                    "trailer_line": 5,
                                     "errors": [],
+                                    "elements": [],
                                     "segments": [
                                         {
                                             "seg_id": "HL",
@@ -3648,7 +3955,10 @@ IEA*3*000010121~""",
                                     "vriic": None,
                                     "ack_code": "R",
                                     "cur_line": 8,
+                                    "header_line": 6,
+                                    "trailer_line": 8,
                                     "errors": [],
+                                    "elements": [],
                                     "segments": [
                                         {
                                             "seg_id": "HL",
@@ -3675,7 +3985,10 @@ IEA*3*000010121~""",
                                     "vriic": None,
                                     "ack_code": "R",
                                     "cur_line": 11,
+                                    "header_line": 9,
+                                    "trailer_line": 11,
                                     "errors": [],
+                                    "elements": [],
                                     "segments": [
                                         {
                                             "seg_id": "HL",
@@ -3706,7 +4019,10 @@ IEA*3*000010121~""",
                             "st_count_orig": 1,
                             "st_count_recv": 1,
                             "cur_line": 17,
+                            "header_line": 13,
+                            "trailer_line": 17,
                             "errors": [],
+                            "elements": [],
                             "transactions": [
                                 {
                                     "trn_set_id": "837",
@@ -3714,7 +4030,10 @@ IEA*3*000010121~""",
                                     "vriic": None,
                                     "ack_code": "R",
                                     "cur_line": 16,
+                                    "header_line": 14,
+                                    "trailer_line": 16,
                                     "errors": [],
+                                    "elements": [],
                                     "segments": [
                                         {
                                             "seg_id": "REF",
@@ -3796,7 +4115,10 @@ IEA*3*000010121~""",
                             "st_count_orig": 1,
                             "st_count_recv": 1,
                             "cur_line": 21,
+                            "header_line": 18,
+                            "trailer_line": 21,
                             "errors": [],
+                            "elements": [],
                             "transactions": [
                                 {
                                     "trn_set_id": "835",
@@ -3804,7 +4126,10 @@ IEA*3*000010121~""",
                                     "vriic": None,
                                     "ack_code": "R",
                                     "cur_line": 20,
+                                    "header_line": 19,
+                                    "trailer_line": 20,
                                     "errors": [],
+                                    "elements": [],
                                     "segments": [
                                         {
                                             "seg_id": "BPR",
@@ -3918,7 +4243,10 @@ IEA*1*000484889~""",
                     "orig_date": "040709",
                     "orig_time": "1439",
                     "cur_line": 67,
+                    "header_line": 1,
+                    "trailer_line": 67,
                     "errors": [],
+                    "elements": [],
                     "groups": [
                         {
                             "gs_control_num": "1",
@@ -3928,7 +4256,10 @@ IEA*1*000484889~""",
                             "st_count_orig": 1,
                             "st_count_recv": 1,
                             "cur_line": 66,
+                            "header_line": 2,
+                            "trailer_line": 66,
                             "errors": [],
+                            "elements": [],
                             "transactions": [
                                 {
                                     "trn_set_id": "837",
@@ -3936,7 +4267,10 @@ IEA*1*000484889~""",
                                     "vriic": None,
                                     "ack_code": "A",
                                     "cur_line": 65,
+                                    "header_line": 3,
+                                    "trailer_line": 65,
                                     "errors": [],
+                                    "elements": [],
                                     "segments": [],
                                 }
                             ],
@@ -4000,7 +4334,10 @@ IEA*1*000000288~""",
                     "orig_date": "040608",
                     "orig_time": "1333",
                     "cur_line": 34,
+                    "header_line": 1,
+                    "trailer_line": 34,
                     "errors": [],
+                    "elements": [],
                     "groups": [
                         {
                             "gs_control_num": "56",
@@ -4010,7 +4347,10 @@ IEA*1*000000288~""",
                             "st_count_orig": 1,
                             "st_count_recv": 1,
                             "cur_line": 33,
+                            "header_line": 2,
+                            "trailer_line": 33,
                             "errors": [],
+                            "elements": [],
                             "transactions": [
                                 {
                                     "trn_set_id": "837",
@@ -4018,7 +4358,10 @@ IEA*1*000000288~""",
                                     "vriic": None,
                                     "ack_code": "R",
                                     "cur_line": 32,
+                                    "header_line": 3,
+                                    "trailer_line": 32,
                                     "errors": [],
+                                    "elements": [],
                                     "segments": [
                                         {
                                             "seg_id": "PER",
@@ -4084,7 +4427,10 @@ IEA*1*000168037~""",
                     "orig_date": "000816",
                     "orig_time": "2105",
                     "cur_line": 19,
+                    "header_line": 1,
+                    "trailer_line": 19,
                     "errors": [],
+                    "elements": [],
                     "groups": [
                         {
                             "gs_control_num": "1",
@@ -4094,7 +4440,10 @@ IEA*1*000168037~""",
                             "st_count_orig": 1,
                             "st_count_recv": 1,
                             "cur_line": 18,
+                            "header_line": 2,
+                            "trailer_line": 18,
                             "errors": [],
+                            "elements": [],
                             "transactions": [
                                 {
                                     "trn_set_id": "270",
@@ -4102,7 +4451,10 @@ IEA*1*000168037~""",
                                     "vriic": None,
                                     "ack_code": "A",
                                     "cur_line": 17,
+                                    "header_line": 3,
+                                    "trailer_line": 17,
                                     "errors": [],
+                                    "elements": [],
                                     "segments": [],
                                 }
                             ],
@@ -4139,7 +4491,10 @@ IEA*1*000010121~""",
                     "orig_date": "030828",
                     "orig_time": "1128",
                     "cur_line": 6,
+                    "header_line": 1,
+                    "trailer_line": 6,
                     "errors": [],
+                    "elements": [],
                     "groups": [
                         {
                             "gs_control_num": "17",
@@ -4149,7 +4504,10 @@ IEA*1*000010121~""",
                             "st_count_orig": 1,
                             "st_count_recv": 1,
                             "cur_line": 5,
+                            "header_line": 2,
+                            "trailer_line": 5,
                             "errors": [],
+                            "elements": [],
                             "transactions": [
                                 {
                                     "trn_set_id": "837",
@@ -4157,7 +4515,10 @@ IEA*1*000010121~""",
                                     "vriic": None,
                                     "ack_code": "R",
                                     "cur_line": 4,
+                                    "header_line": 3,
+                                    "trailer_line": 4,
                                     "errors": [],
+                                    "elements": [],
                                     "segments": [
                                         {
                                             "seg_id": "BHT",
@@ -4289,7 +4650,10 @@ IEA*1*000001168~""",
                     "orig_date": "041105",
                     "orig_time": "1526",
                     "cur_line": 67,
+                    "header_line": 1,
+                    "trailer_line": 67,
                     "errors": [],
+                    "elements": [],
                     "groups": [
                         {
                             "gs_control_num": "1167",
@@ -4299,7 +4663,10 @@ IEA*1*000001168~""",
                             "st_count_orig": 1,
                             "st_count_recv": 1,
                             "cur_line": 66,
+                            "header_line": 2,
+                            "trailer_line": 66,
                             "errors": [],
+                            "elements": [],
                             "transactions": [
                                 {
                                     "trn_set_id": "837",
@@ -4307,7 +4674,10 @@ IEA*1*000001168~""",
                                     "vriic": None,
                                     "ack_code": "A",
                                     "cur_line": 65,
+                                    "header_line": 3,
+                                    "trailer_line": 65,
                                     "errors": [],
+                                    "elements": [],
                                     "segments": [],
                                 }
                             ],
@@ -4407,6 +4777,8 @@ IEA*1*000001168~""",
                     "orig_date": "041105",
                     "orig_time": "1526",
                     "cur_line": 70,
+                    "header_line": 1,
+                    "trailer_line": 70,
                     "errors": [
                         {
                             "err_cde": "ISA_024_invalid_content",
@@ -4429,6 +4801,7 @@ IEA*1*000001168~""",
                             "err_str": "IEA segment has no open ISA loop",
                         },
                     ],
+                    "elements": [],
                     "groups": [
                         {
                             "gs_control_num": "1167",
@@ -4438,6 +4811,8 @@ IEA*1*000001168~""",
                             "st_count_orig": 1,
                             "st_count_recv": 1,
                             "cur_line": 68,
+                            "header_line": 2,
+                            "trailer_line": 68,
                             "errors": [
                                 {
                                     "err_cde": "5",
@@ -4450,6 +4825,7 @@ IEA*1*000001168~""",
                                     "err_str": "SE segment has no open ST loop",
                                 },
                             ],
+                            "elements": [],
                             "transactions": [
                                 {
                                     "trn_set_id": "837",
@@ -4457,7 +4833,10 @@ IEA*1*000001168~""",
                                     "vriic": None,
                                     "ack_code": "A",
                                     "cur_line": 66,
+                                    "header_line": 3,
+                                    "trailer_line": 66,
                                     "errors": [],
+                                    "elements": [],
                                     "segments": [],
                                 }
                             ],
@@ -4628,7 +5007,10 @@ IEA*1*000001169~""",
                     "orig_date": "041105",
                     "orig_time": "1526",
                     "cur_line": 67,
+                    "header_line": 1,
+                    "trailer_line": 67,
                     "errors": [],
+                    "elements": [],
                     "groups": [
                         {
                             "gs_control_num": "1167",
@@ -4638,7 +5020,10 @@ IEA*1*000001169~""",
                             "st_count_orig": 1,
                             "st_count_recv": 1,
                             "cur_line": 66,
+                            "header_line": 2,
+                            "trailer_line": 66,
                             "errors": [],
+                            "elements": [],
                             "transactions": [
                                 {
                                     "trn_set_id": "837",
@@ -4646,7 +5031,10 @@ IEA*1*000001169~""",
                                     "vriic": None,
                                     "ack_code": "A",
                                     "cur_line": 65,
+                                    "header_line": 3,
+                                    "trailer_line": 65,
                                     "errors": [],
+                                    "elements": [],
                                     "segments": [],
                                 }
                             ],
@@ -4659,7 +5047,10 @@ IEA*1*000001169~""",
                     "orig_date": "041105",
                     "orig_time": "1526",
                     "cur_line": 134,
+                    "header_line": 68,
+                    "trailer_line": 134,
                     "errors": [],
+                    "elements": [],
                     "groups": [
                         {
                             "gs_control_num": "1167",
@@ -4669,7 +5060,10 @@ IEA*1*000001169~""",
                             "st_count_orig": 1,
                             "st_count_recv": 1,
                             "cur_line": 133,
+                            "header_line": 69,
+                            "trailer_line": 133,
                             "errors": [],
+                            "elements": [],
                             "transactions": [
                                 {
                                     "trn_set_id": "837",
@@ -4677,7 +5071,10 @@ IEA*1*000001169~""",
                                     "vriic": None,
                                     "ack_code": "A",
                                     "cur_line": 132,
+                                    "header_line": 70,
+                                    "trailer_line": 132,
                                     "errors": [],
+                                    "elements": [],
                                     "segments": [],
                                 }
                             ],
@@ -4776,7 +5173,10 @@ IEA*1*000001168~""",
                     "orig_date": "041105",
                     "orig_time": "1526",
                     "cur_line": 67,
+                    "header_line": 1,
+                    "trailer_line": 67,
                     "errors": [],
+                    "elements": [],
                     "groups": [
                         {
                             "gs_control_num": "1167",
@@ -4786,7 +5186,10 @@ IEA*1*000001168~""",
                             "st_count_orig": 1,
                             "st_count_recv": 1,
                             "cur_line": 66,
+                            "header_line": 2,
+                            "trailer_line": 66,
                             "errors": [],
+                            "elements": [],
                             "transactions": [
                                 {
                                     "trn_set_id": "837",
@@ -4794,7 +5197,10 @@ IEA*1*000001168~""",
                                     "vriic": None,
                                     "ack_code": "R",
                                     "cur_line": 65,
+                                    "header_line": 3,
+                                    "trailer_line": 65,
                                     "errors": [],
+                                    "elements": [],
                                     "segments": [
                                         {
                                             "seg_id": "HI",
@@ -4818,6 +5224,7 @@ IEA*1*000001168~""",
                                                     "repeat_pos": None,
                                                     "ele_ref_num": "C022",
                                                     "name": "Principal Diagnosis",
+                                                    "cur_line": 23,
                                                     "errors": [
                                                         {
                                                             "err_cde": "COMP_3_too_many_subelements",
@@ -4860,7 +5267,10 @@ IEA*1*000001168~""",
                     "orig_date": "041105",
                     "orig_time": "1526",
                     "cur_line": 4,
+                    "header_line": 1,
+                    "trailer_line": 4,
                     "errors": [],
+                    "elements": [],
                     "groups": [
                         {
                             "gs_control_num": "1167",
@@ -4870,6 +5280,8 @@ IEA*1*000001168~""",
                             "st_count_orig": 0,
                             "st_count_recv": 0,
                             "cur_line": 3,
+                            "header_line": 2,
+                            "trailer_line": 3,
                             "errors": [
                                 {
                                     "err_cde": "5",
@@ -4877,6 +5289,7 @@ IEA*1*000001168~""",
                                     "err_str": 'Mandatory loop "Transaction Set Header" (ST_LOOP) missing',
                                 }
                             ],
+                            "elements": [],
                             "transactions": [],
                         }
                     ],
@@ -5029,7 +5442,10 @@ IEA*1*000484889~""",
                     "orig_date": "040709",
                     "orig_time": "1439",
                     "cur_line": 136,
+                    "header_line": 1,
+                    "trailer_line": 136,
                     "errors": [],
+                    "elements": [],
                     "groups": [
                         {
                             "gs_control_num": "1",
@@ -5039,7 +5455,10 @@ IEA*1*000484889~""",
                             "st_count_orig": 1,
                             "st_count_recv": 1,
                             "cur_line": 135,
+                            "header_line": 2,
+                            "trailer_line": 135,
                             "errors": [],
+                            "elements": [],
                             "transactions": [
                                 {
                                     "trn_set_id": "837",
@@ -5047,7 +5466,10 @@ IEA*1*000484889~""",
                                     "vriic": None,
                                     "ack_code": "A",
                                     "cur_line": 134,
+                                    "header_line": 3,
+                                    "trailer_line": 134,
                                     "errors": [],
+                                    "elements": [],
                                     "segments": [],
                                 }
                             ],
@@ -5102,7 +5524,10 @@ IEA*1*703201721~
                     "orig_date": "070305",
                     "orig_time": "1832",
                     "cur_line": 24,
+                    "header_line": 1,
+                    "trailer_line": 24,
                     "errors": [],
+                    "elements": [],
                     "groups": [
                         {
                             "gs_control_num": "13360001",
@@ -5112,7 +5537,10 @@ IEA*1*703201721~
                             "st_count_orig": 1,
                             "st_count_recv": 1,
                             "cur_line": 23,
+                            "header_line": 2,
+                            "trailer_line": 23,
                             "errors": [],
+                            "elements": [],
                             "transactions": [
                                 {
                                     "trn_set_id": "834",
@@ -5120,7 +5548,10 @@ IEA*1*703201721~
                                     "vriic": "005010X220A1",
                                     "ack_code": "A",
                                     "cur_line": 22,
+                                    "header_line": 3,
+                                    "trailer_line": 22,
                                     "errors": [],
+                                    "elements": [],
                                     "segments": [],
                                 }
                             ],
@@ -5268,7 +5699,10 @@ IEA*1*703201721~
                     "orig_date": "070305",
                     "orig_time": "1832",
                     "cur_line": 24,
+                    "header_line": 1,
+                    "trailer_line": 24,
                     "errors": [],
+                    "elements": [],
                     "groups": [
                         {
                             "gs_control_num": "13360001",
@@ -5278,7 +5712,10 @@ IEA*1*703201721~
                             "st_count_orig": 1,
                             "st_count_recv": 1,
                             "cur_line": 23,
+                            "header_line": 2,
+                            "trailer_line": 23,
                             "errors": [],
+                            "elements": [],
                             "transactions": [
                                 {
                                     "trn_set_id": "834",
@@ -5286,7 +5723,10 @@ IEA*1*703201721~
                                     "vriic": "005010X220A1",
                                     "ack_code": "R",
                                     "cur_line": 22,
+                                    "header_line": 3,
+                                    "trailer_line": 22,
                                     "errors": [],
+                                    "elements": [],
                                     "segments": [
                                         {
                                             "seg_id": "REF",
@@ -5310,6 +5750,7 @@ IEA*1*703201721~
                                                     "repeat_pos": None,
                                                     "ele_ref_num": "127",
                                                     "name": "Subscriber Identifier",
+                                                    "cur_line": 9,
                                                     "errors": [
                                                         {
                                                             "err_cde": "ELE_6_invalid_type_char",
@@ -5378,7 +5819,10 @@ IEA*1*311071503~
                     "orig_date": "070305",
                     "orig_time": "1832",
                     "cur_line": 24,
+                    "header_line": 1,
+                    "trailer_line": 24,
                     "errors": [],
+                    "elements": [],
                     "groups": [
                         {
                             "gs_control_num": "13360001",
@@ -5388,7 +5832,10 @@ IEA*1*311071503~
                             "st_count_orig": 1,
                             "st_count_recv": 1,
                             "cur_line": 23,
+                            "header_line": 2,
+                            "trailer_line": 23,
                             "errors": [],
+                            "elements": [],
                             "transactions": [
                                 {
                                     "trn_set_id": "834",
@@ -5396,7 +5843,10 @@ IEA*1*311071503~
                                     "vriic": "005010X220A1",
                                     "ack_code": "R",
                                     "cur_line": 22,
+                                    "header_line": 3,
+                                    "trailer_line": 22,
                                     "errors": [],
+                                    "elements": [],
                                     "segments": [
                                         {
                                             "seg_id": "N3",
@@ -5420,6 +5870,7 @@ IEA*1*311071503~
                                                     "repeat_pos": None,
                                                     "ele_ref_num": "166",
                                                     "name": "Member Address Line",
+                                                    "cur_line": 14,
                                                     "errors": [
                                                         {
                                                             "err_cde": "ELE_6_control_char",
