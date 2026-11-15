@@ -35,6 +35,7 @@ from ..error_codes import (
     ELE_8_INVALID_DATE_RANGE,
     ELE_9_INVALID_TIME,
     ELE_9_INVALID_TIME_OF_DAY,
+    ELE_12_TOO_MANY_REPETITIONS,
     ELE_I10_NOT_USED,
 )
 from ..error_item import EleError
@@ -64,6 +65,7 @@ class element_if(x12_node):
     _data_ele: _DataEle | None
     seq: int
     max_use: str | None
+    repeat: int
     res: str | None
 
     def __init__(self, root: map_if, parent: x12_node, elem: Element) -> None:
@@ -95,6 +97,12 @@ class element_if(x12_node):
         self.seq = int(_required_attr(elem, "seq"))
         self.path = elem.get("seq") if elem.get("seq") else (elem.findtext("seq") or "")  # type: ignore[assignment]
         self.max_use = elem.get("max_use") if elem.get("max_use") else elem.findtext("max_use")
+        if (repeat := elem.get("repeat")) is not None:
+            self.repeat = int(repeat)
+        elif (repeat := elem.findtext("repeat")) is not None:
+            self.repeat = int(repeat)
+        else:
+            self.repeat = 1
         self.res = elem.findtext("regex")
         try:
             if self.res is not None and self.res != "":
@@ -182,6 +190,18 @@ class element_if(x12_node):
         if type_list is None:
             type_list = []
         errors: list[EleError] = []
+
+        if isinstance(elem, pyx12.segment.Composite) and elem.get_repetition_count() > 1:
+            if elem.get_repetition_count() > self.repeat:
+                err_str = 'Too many repetitions of data element "%s" (%s)' % (
+                    self.name,
+                    self.refdes,
+                )
+                errors.append(self._ele_error(ELE_12_TOO_MANY_REPETITIONS, err_str, elem.format()))
+            for i in range(elem.get_repetition_count()):
+                _, repetition_errors = self.is_valid_errors(elem.get_repetition(i), type_list)
+                errors += repetition_errors
+            return (not errors, errors)
 
         if elem and elem.is_composite():
             err_str = 'Data element "%s" (%s) is an invalid composite' % (self.name, self.refdes)
