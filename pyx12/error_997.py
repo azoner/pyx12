@@ -114,7 +114,7 @@ class error_997_visitor(error_visitor.error_visitor):
         gs_seg.append(time.strftime("%H%M%S"))
         gs_seg.append(seg.get_value("GS06"))
         gs_seg.append(seg.get_value("GS07"))
-        gs_seg.append(icvn)
+        gs_seg.append("004010")
         self._write(gs_seg)
         self.gs_seg = gs_seg
         self.gs_id = seg.get_value("GS06")
